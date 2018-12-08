@@ -1,0 +1,17 @@
+C/Makefile
+C/Makeport
+C/cmplc++
+C/complice
+C/config
+C/kern.o
+C/lelisp
+C/lelisp31bin
+C/lelisp31bin.o
+C/lelispbin
+C/llcore/*.core
+C/o/*.o
+Makefile
+common/config.h
+config.log
+config.status
+																																																
