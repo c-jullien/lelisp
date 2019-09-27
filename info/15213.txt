@@ -1,0 +1,180 @@
+
+ 	      Le_Lisp  de  l'INRIA  version 15.21
+	      -----------------------------------
+
+                        Greg  Nuyens
+	                 Juillet 88
+
+Voici les corrections  et les extensions de la nouvelle diffusion 
+de Le-Lisp version 15.21 sous-version 3 date'e du 4 Juillet 1988.
+
+Cette diffusion est la troisie`me diffusion de maintenance de la version
+intitule'e 15.21.  C'est a` dire une diffusion qui comprend uniquement 
+des contournements et corrections faits en Lisp.  
+Comme de'cide' au Club des Porteurs, aucune expansion LLM3 n'est ne'cessaire.
+
+Le contenu de cette diffusion est :
+
+Les catalogues avec tous les fichiers (pour cohe'rence):
+
+	llib:		
+	llmod:
+	llobj:
+	llub:	
+	virbitmap:
+	virtty:
+	common:	
+	gabriel:
+	info:
+	lltest:		
+
+Les catalogues avec seulement les fichiers ne'ce'ssaires pour construire
+des configurations :
+
+	sun:		
+	vax:
+	ibmrt:
+
+Les catalogues non inclus:
+
+	llm3:	aucun fichier
+	lltool:
+	68k:
+	manuel:
+
+Survol de 15.21 sous-version 3
+==============================
+
+Les diffe'rences majeures dans cette diffusion sont:
+
+Des corrections aux erreurs signale'es. (cf RATs)
+
+Une version comple`te du bitmap virtuel pour X Windows Version 11 (X11).
+
+Les RATS
+========
+
+Les changements de Le-Lisp sont ge're's avec des RATs
+(Reque^tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez avoir le texte complet
+d'un rat d'ILOG en nous en communiquant le nume'ro.  (Notez s'il vous
+plai^t que les nume'ros des RATs sont partage's par tous les produits
+ILOG et pas uniquement Le-Lisp.  Ne soyez pas effraye' par les
+nume'ros e'leve's!)
+
+rat 181 area: compiler aspect: complice 
+status: declined origin: J. Duthen [IRCAM] 
+Complice traite mal SYNONYM 
+note: le changement demande' repre'sentera un changement de se'mantique
+de synonym.  Il va falloir fournir une fac,on intentionelle de garantir
+que deux noms ont le me^me effet a` l'interieur d'un me^me module, mais
+sans changer SYNONYM.
+
+rat 185 area: language aspect: arithmetic 
+status: declined origin: kuczynsk 
+en 31BITFLOATS, les flottants manquent cruellement de pre'cision. 
+note: les exemples donne's ne peuvent pas e^tre repre'sente's en 
+31 bits. Pour plus de pre'cision il faut payer la place et utiliser
+64BITFLOATS.
+
+rat 189 area: i/o aspect: formatted-i/o 
+status: declined origin: JC. Sejourne [SemaMetra] 
+PRINTLENGTH PRINTLEVEL et PRINTLINE sont inoperant sur COMPILEFILES et COMPILEMODULE 
+
+rat 190 area: language aspect: interpreter 
+status: declined origin: JC. Sejourne [Sema Metra] 
+RESETFN perd des informations lors d'empilements de redefinitions 
+note: On n'a pas pu reproduire ce proble`me.  Un exemple s'il vous plait.
+
+rat 191 area: compiler aspect: complice 
+status: fixed origin: Gerard Cany 
+Le comportement de COMPILEFILES face aux extensions est parfois bizarre 
+
+rat 195 area: compiler aspect: complice 
+status: fixed origin: devin 
+loadmodule si loader non charge'.
+
+rat 207 area: ports aspect: tools 
+status: fixed origin: kuczynsk 
+confusion de machines a` l'expansion, sous NFS avec plusieurs machines 
+
+rat 209 area: user-contributed-software 
+status: declined origin: P.H. Perret [ACT] 
+Le DEFSTRUCT de Alcyone ne permet pas + de 3 niveaux de packages. 
+note: Alcyone est fourni dans la bibliothe`que des utilisateurs Le-Lisp, 
+laquelle n'est pas maintenue par ILOG.  llib/microceyx est maintenu.
+
+rat 212 area: run-time aspect: external-functions 
+status: fixed origin: erhili 
+pusharg ne marche pas avec les flottants 
+
+rat 215 area: language aspect: extended-types 
+status: fixed origin: nuyens 
+La longeur par de'faut est fausse pour les ope'rations sur les chaines 
+
+rat 218 area: compiler aspect: complice 
+status: fixed origin: GRIMM 
+Optimisation douleureuse de compilateur sur cons et last. 
+
+rat 219 area: other 
+status: fixed origin: J. Chailloux [ILOG] 
+tous les fichiers de llib ne sont pas compile's (pre'sent dans llmod!) 
+
+rat 222 area: ports aspect: loader 
+status: declined origin: F. Montagnac 
+pb de SAVED-BY-LOADER entre 2 modules de me^me nom charge's ensembles. 
+note: l'espace des modules est plat et ne permet pas deux modules
+du me^me nom.  
+
+rat 223 area: i/o aspect: basic-i/o 
+status: declined origin: F. Montagnac 
+#:system:length-float a disparu. 
+note: En fait il est toujours pre'sent, mais n'est pas documente'.  Il 
+faut utiliser FORMAT pour imposer la pre'cision d'impression des flottants.
+
+rat 224 area: ports aspect: tests 
+status: fixed origin: F. Montagnac 
+Pb de EOF non detecte dans les tests de CHARSIN 
+
+rat 226 area: i/o aspect: formatted-i/o 
+status: fixed origin: Jan Rekers  mais aussi Parquier[Bull] 
+RMARGIN et CIRPRIN ne cohabitent pas tres bien. 
+
+rat 227 area: language aspect: interpreter 
+status: fixed origin: Matthieu Devin [Ilog] 
+il faut un point d'entre'e pour HBTEQ 
+note: la fonction est (substring-equal size string1 pos1 string2 pos2)
+
+rat 228 area: ports aspect: loader 
+status: fixed origin: J. Chailloux [Ilog] 
+le calcul empirique des sauts courts n'est pas toujours suffisant. 
+note: la nouvelle variable qui decide la longeur s'appelle
+#:ld68k:max-lap-dpl8
+
+rat 229 area: language aspect: arithmetic 
+status: declined origin: Claire Ardouin [Thomson-CSF-LCR] 
+Pb de repre'sentation des grands flottants. 
+
+rat 230 area: language aspect: interpreter 
+status: fixed origin: F. Fages [Thomson LCR] 
+Comment faire pour tester le type d'une fct a coup su^r? 
+
+rat 231 area: compiler aspect: complice 
+status: declined origin: Jose GRIMM [INRIA] 
+Mauvaise macroexpansion des macros du genre: EVERY... par le compilo. 
+note: les macros ne peuvent pas e^tre "funcall"e'es par souci de double
+e'valuation des arguments.
+
+rat 232 area: compiler aspect: complice 
+status: fixed origin: Jose GRIMM [INRIA] 
+COMPLICE ne sait pas expanseer les macros dans un PROGN 
+
+rat 233 area: compiler aspect: complice 
+status: fixed origin: Jose GRIMM [INRIA] 
+le WARNING W2 de complice sur double definition est parfois bizarre. 
+
+rat 237 area: language aspect: interpreter 
+status: fixed origin: V. Samarcq [Ilog] 
+SORTP ne sait pas traiter les packages non symboliques. 
+
+

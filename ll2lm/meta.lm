@@ -1,0 +1,55 @@
+defmodule meta
+files (meta)
+import (
+defrtprj
+diagnostic
+printlm
+ref
+rtmsg
+rtprint
+)
+
+export (
+#:rtproject:build-meta
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:rtproject:build-meta subr2 ())
+)
+cpfunctions (
+(#:rtproject:build-meta-module subr2)
+(#:rtproject:build-meta-ref subr2)
+)
+cpimport (
+(defrtprj
+(find-rt-group-project . subr1)
+)(rtprint
+(#:crunch:save-file . subr1)
+)(printlm
+(#:diagnostic:printdefmodule . subr2)
+)(ref
+(current-mr . nsubr)
+(standardmodulereferences . nsubr)
+(#:llmodulereferences:write-to-file . subr2)
+))
+cpenv (
+files
+module
+defvar
+sets
+sort
+callext
+defstruct
+path
+kernellm
+pretty
+format
+rtmsg
+rtprint
+readlm
+diagnostic
+ref
+defrtprj
+printlm
+)

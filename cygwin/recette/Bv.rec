@@ -1,0 +1,55 @@
+#!/bin/sh
+set -x
+
+###
+### Ce shell-script doit e^tre lance' depuis le re'pertoire
+### lelisp/$machine/recette en tapant :
+### $ ./Bv.rec
+
+echo "Tests automatiques du BV sur " CYGWIN ","
+
+echo "avec le BV compile' sous X11."
+
+echo "Veuillez patienter."
+
+cd ..
+
+make lelispX11
+
+theone=${LOGNAME-$USER}
+thecomm=./lelispX11
+testdir=`pwd`
+
+###
+### Pour e^tre le moins possible de'pendant de l'environnement, on cre'e
+### des .XXX tre`s spe'ciaux :
+
+rm -f $testdir/.lelisp $testdir/.aida $testdir/.masai $testdir/.Xdefaults
+
+### 1) un .Xdefault (pour certaines machines)
+
+cat > "$testdir/.Xdefaults" << EOI
+lelisp.font:8x13
+lelisp.attributefont:8x13bold
+lelisp.largefont:9x15
+lelisp.smallfont:6x10
+EOI
+
+### 2) un .lelisp
+
+cat > "$testdir/.lelisp" << EOI
+;;;
+;;; Ce .lelisp a e'te' gene're' par la commande $0
+(let ((#:sys-package:tty 'tty)) (print ".lelisp de test"))
+(libload "testbv.ll")
+(end) ; tres important...
+EOI
+
+HOME="$testdir"
+export HOME
+
+(echo "Test effectue par $theone  avec DISPLAY = $DISPLAY" ;\
+ $thecomm)
+
+rm -f $testdir/.lelisp $testdir/.aida $testdir/.masai $testdir/.Xdefaults
+

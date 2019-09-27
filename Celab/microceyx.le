@@ -1,0 +1,65 @@
+;;; GELL 15.26: elaboration file for the module: microceyx
+;;;             translation done: "Wed June 16 93 18:01:14 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: microceyx.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'microceyx)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZmicroceyx" "Wed June 16 93 18:01:14 "
+
+'((deftclass . dmsubr) (defrecord . dmsubr) (tclass-namep . subr1) (record-namep . subr1) (field-list . subr1) (defmake . dmsubr) (omakeq . dmsubr) (ogetq . dmsubr) (oputq . dmsubr) (omatchq . dmsubr) (demethod . dmsubr) (send-error . subr2) (sendq . dmsubr) (sendf . dmsubr) (sendfq . dmsubr) (plink . nsubr) (<=p . dmsubr))
+
+#[tclass-namep record-namep defstruct getprop #:microceyx:errnotarecordoratclass #:microceyx:errnotatclass getfn list #:microceyx:errnotafield deftclass tclass symbol abbrevp get-abbrev #:microceyx:errtclassabbrev progn mcons defabbrev quote errnva defrecord #:microceyx:errrecordtoolong #:microceyx:errbadfield (()) #:microceyx:errrecordabbrev exportable-definition 'structure de make putprop ('defrecord) nconc (&nobind (if (eq (arg) 1) (car (arg 0)) (car (rplaca (arg 0) (arg 1))))) compiler featurep defmacro-open ((o . v) (ifn v (list 'car o) (list 'car (list 'rplaca o (car v))))) ncons cons firstn a nthcdr d &nobind if (eq (arg) 1) (r) append c implodech ((arg 0)) (r) "rplac" concat (r) ((arg 0)) (arg 0) ((arg 1)) (o . v) ifn v (r) (o) (r) (r) (o) ((car v)) (r) (o (car v)) subtypep t field-list errsym defmake omakeq nreconc errwna errbpa #:microceyx:res let (#:microceyx:res) ogetq oputq omatchq typep demethod listp errnla * apply errudm send lambda (#:microceyx:arg1) #:microceyx:arg1 sendf plink #:llcp:errwna put-abbrev #:gell-resetfn:function-name #:gell-resetfn:function-1 send-error #:gell-resetfn:function-2 sendq sendfq #:gell-resetfn:function-n <=p]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'microceyx)))
+(setq #:sys-package:colon 'microceyx)
+(defvar #:microceyx:ceyxv4-compat ())
+(defvar #:microceyx:test-compat ())
+(add-feature 'microceyx)
+(#:messages:put-message '#:microceyx:errnotafield 'french '"l'argument n'est pas un champ de Tclass microceyx" 'defmessage)
+(#:messages:put-message '#:microceyx:errnotafield 'english '"argument not a field of a microceyx Tclass" 'defmessage)
+'#:microceyx:errnotafield
+(#:messages:put-message '#:microceyx:errnotatclass 'french '"l'argument n'est pas un nom de Tclass microceyx" 'defmessage)
+(#:messages:put-message '#:microceyx:errnotatclass 'english '"argument not a name of a microceyx Tclass" 'defmessage)
+'#:microceyx:errnotatclass
+(#:messages:put-message '#:microceyx:errtclassabbrev 'french '"abre'viation de Tclass microceyx de'ja` de'finie" 'defmessage)
+(#:messages:put-message '#:microceyx:errtclassabbrev 'english '"abbrev of microceyx Tclass already defined" 'defmessage)
+'#:microceyx:errtclassabbrev
+(#:messages:put-message '#:microceyx:errrecordabbrev 'french '"abre'viation de Record microceyx de'ja` de'finie" 'defmessage)
+(#:messages:put-message '#:microceyx:errrecordabbrev 'english '"abbrev of microceyx Record already defined" 'defmessage)
+'#:microceyx:errrecordabbrev
+(#:messages:put-message '#:microceyx:errceyxv4 'french '"syntaxe ceyxv4 : entourez d'accolades Tclass et Record" 'defmessage)
+(#:messages:put-message '#:microceyx:errceyxv4 'english '"ceyxv4 syntax: put braces around Tclass and Record" 'defmessage)
+'#:microceyx:errceyxv4
+(#:messages:put-message '#:microceyx:errbadfield 'french '"erreur de syntaxe pour un champ" 'defmessage)
+(#:messages:put-message '#:microceyx:errbadfield 'english '"syntax error in field" 'defmessage)
+'#:microceyx:errbadfield
+(#:messages:put-message '#:microceyx:errrecordtoolong 'french '"un Record ne peut pas avoir plus de 16 champs" 'defmessage)
+(#:messages:put-message '#:microceyx:errrecordtoolong 'english '"16 fields maximum per Record" 'defmessage)
+'#:microceyx:errrecordtoolong
+(#:messages:put-message '#:microceyx:errnotarecordoratclass 'french '"l'argument n'est pas un nom de Tclass ou de Record microceyx" 'defmessage)
+(#:messages:put-message '#:microceyx:errnotarecordoratclass 'english '"argument not a name of microceyx Tclass or Record" 'defmessage)
+'#:microceyx:errnotarecordoratclass
+(defcsetfn 'deftclass "GZmicroceyx" 0)
+(defcsetfn 'defrecord "GZmicroceyx" 1)
+(defcsetfn 'tclass-namep "GZmicroceyx" 2)
+(defcsetfn 'record-namep "GZmicroceyx" 3)
+(defcsetfn 'field-list "GZmicroceyx" 4)
+(defcsetfn 'defmake "GZmicroceyx" 5)
+(defcsetfn 'omakeq "GZmicroceyx" 6)
+(defcsetfn 'ogetq "GZmicroceyx" 7)
+(defcsetfn 'oputq "GZmicroceyx" 8)
+(defcsetfn 'omatchq "GZmicroceyx" 9)
+(defcsetfn 'demethod "GZmicroceyx" 10)
+(defcsetfn 'send-error "GZmicroceyx" 11)
+(defcsetfn 'sendq "GZmicroceyx" 12)
+(defcsetfn 'sendf "GZmicroceyx" 13)
+(defcsetfn 'sendfq "GZmicroceyx" 14)
+(defcsetfn 'plink "GZmicroceyx" 15)
+(defcsetfn '<=p "GZmicroceyx" 16)
+
+(defccheck '(put-abbrev #:llcp:errwna apply listp nreconc subtypep concat implodech append nthcdr firstn featurep nconc mcons get-abbrev abbrevp symbol list getfn getprop record-namep tclass-namep))

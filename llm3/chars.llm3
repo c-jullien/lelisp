@@ -1,0 +1,35 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "17/19" "chars.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 17 "Les fonctions sur les caracte`res"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/chars.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $
+
+          TITLE     CHARS             ; LLM3 : le type caracte`re
+
+          XREFI     LLINIT,MSTACK       ; LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFP     GC,GCCONS           ; GC
+          XREFP     READ,INISYMB        ; READ
+          XREFP     READ,INICST
+
+          XDEFP     INI_CHR
+
+          PURE
+
+;.Section "Initialise les fonctions sur les caracte`res"
+
+INI_CHR   LABEL      
+
+
+          RETURN
+
+
+          END
+

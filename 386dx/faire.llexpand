@@ -1,0 +1,37 @@
+$1 << EOI
+(loadfile "exp386.ll" t)
+(defun core-expand-std (msg)
+   (let ((batch (getenv "EXPFILE")))
+        (cond
+	      ((null batch)
+	       (expand-files))
+	      (t
+	       (loadfile batch t)
+	       (cond
+		     (expand-all
+		      (expandn)
+		      (if unix-as-flag
+			  (translate-all)))
+		     (t
+		      (mapc #'(lambda (file)
+				 (funcall 'expand1 file)
+				 (when unix-as-flag
+				       (funcall 'translate file)))
+			    expand-file-list)))
+	       (end ())))))
+
+(defvar unix386
+   '(aix386 ix386 sco386 solaris386 svr4i386 unixware386 x86macos linux cygwin))
+
+(unless (save-core (catenate (selectq (system)
+                                (msdos     "msdos")
+                                (os2       "os2")
+                                (nt386     "nt386")
+                                (win32     "win32")
+                                (win64     "win64")
+                                (win95     "win95")
+                                (#.unix386 "unix"))
+                             "/llexpand.core"))
+        (core-expand-std "Expanseur"))
+(end ())
+EOI

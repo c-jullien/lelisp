@@ -1,0 +1,87 @@
+defmodule complice
+   ; Utilitaires pour toutes les passes du compilateur.
+   files  (cpmac cp0 cperror)
+   import (files module)
+   export (defmacro-open make-macro-open macro-openp remove-macro-open
+           :macroexpand
+           :flatt :count :complement :setcassq :defvar :globalvarp
+           :get-all-def-in-files
+           :error :errorf :warning :warningf :ierror :set-error :error:eol
+           :syserror
+          )
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(defmacro-open fsubr ())
+(make-macro-open subr2 ())
+(macro-openp subr1 ())
+(remove-macro-open subr1 ())
+(#:complice:macroexpand subr1 (#:messages:current-language))
+(#:complice:error subr2 (#:messages:current-language))
+(#:complice:errorf subr3 (#:messages:current-language))
+(#:complice:set-error subr0 ())
+(#:complice:flatt subr1 ())
+(#:complice:count subr2 ())
+(#:complice:complement subr2 ())
+(#:complice:setcassq subr3 ())
+(#:complice:defvar fsubr ())
+(#:complice:globalvarp subr1 ())
+(#:complice:get-all-def-in-files subr2 (#:messages:current-language))
+(#:complice:warning subr2 (#:messages:current-language))
+(#:complice:warningf subr3 (#:messages:current-language))
+(#:complice:ierror subr2 ())
+(#:complice:error:eol subr0 ())
+(#:complice:syserror subr3 (#:messages:current-language))
+)
+cpfunctions (
+(#:compiler:macroexpand subr1)
+(#:compiler:macroexpand-internal subr2)
+(#:compiler:macroexpand-internal-open subr2)
+(#:compiler:macroexpand-internal-close subr2)
+(#:compiler:mc:cond subr1)
+(#:compiler:mc:dynamic-let subr1)
+(#:compiler:mc:dynamic subr1)
+(#:compiler:map subr3)
+(#:compiler:map-result subr3)
+(#:compiler:map-while subr3)
+(#:compiler:map-next-res subr3)
+(#:compiler:map-funcall subr2)
+(#:compiler:map-next-arg subr2)
+(#:compiler:mapvector subr1)
+(#:compiler:mc:catcherror subr1)
+(#:compiler:mc:errset subr1)
+(#:compiler:mc:eval-when subr1)
+(#:compiler:mc:time subr1)
+(#:compiler:macro-expand-error subr1)
+(#:complice:1ligne nsubr)
+(get-message subr1)
+(flat-auxillaire subr2)
+(#:complice:cp-read-files1 subr2)
+(#:complice:cp-read-files2 nsubr)
+(#:complice:get-exportable subr3)
+(#:complice:get-exportable-aux subr3)
+(#:complice:copy1 subr1)
+)
+cpimport (
+(files
+(featurep . subr1)
+(probepathf . subr1)
+))
+cpenv (
+files
+module
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:compiler:exported-env 't '#:complice:globalvar)
+)((putprop '#:compiler:open-p 't '#:complice:globalvar)
+)((putprop 'dynamic-flag 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:complice:list-of-loaded-file 't '#:complice:globalvar)
+)((putprop '#:complice:exportable-definition 't '#:complice:globalvar)
+)((putprop '#:complice:synonym-definition 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:complice:error-occured 't '#:complice:globalvar)
+)((putprop '#:complice:debug? 't '#:complice:globalvar)
+)((putprop '#:complice:outchan 't '#:complice:globalvar)
+))
+real-export
+()

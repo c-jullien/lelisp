@@ -1,0 +1,41 @@
+;;; GELL 15.26: elaboration file for the module: resetfn
+;;;             translation done: "Wed June 16 93 18:02:59 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: resetfn.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'resetfn)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZresetfn" "Wed June 16 93 18:02:59 "
+
+'((#:gell-resetfn:get-body . subr0) (#:gell-resetfn:function-0 . subr0) (#:gell-resetfn:function-1 . subr0) (#:gell-resetfn:function-2 . subr0) (#:gell-resetfn:function-3 . subr0) (#:gell-resetfn:function-n . subr0) (#:gell-resetfn:function-f . subr0) (resetfn . subr3))
+
+#[#:gell-resetfn:body-property #:gell-resetfn:function-name getprop #:gell-resetfn:errnobody #:gell-resetfn:get-body #:llcp:ffuncall putprop #:defC:list-module-table-adr valfn #:gell-resetfn:errnoredef resetfn printerror llrt_set_trace_fval_p funcall t typefn subr0 subr1 subr2 subr3 nsubr fsubr expr variablep last lambda fexpr flambda #:system:redef-flag autoload #:gell-resetfn:errnocomp setfn compiler featurep macro-openp remove-macro-open #:gell-resetfn:function-0 #:gell-resetfn:function-1 #:gell-resetfn:function-2 #:gell-resetfn:function-3 #:gell-resetfn:function-n #:gell-resetfn:function-f]
+)
+
+(if (not (>= (version) 15.25)) (progn (error 'load 'erricf 'resetfn)))
+(defvar #:sys-package:colon 'gell-resetfn)
+(#:messages:put-message '#:gell-resetfn:errnoredef 'french '"impossible de rede'finir la fonction" 'defmessage)
+(#:messages:put-message '#:gell-resetfn:errnoredef 'english '"can't redefine the function" 'defmessage)
+'#:gell-resetfn:errnoredef
+(#:messages:put-message '#:gell-resetfn:errnocomp 'french '"fonction incompatible" 'defmessage)
+(#:messages:put-message '#:gell-resetfn:errnocomp 'english '"incompatible function" 'defmessage)
+'#:gell-resetfn:errnocomp
+(#:messages:put-message '#:gell-resetfn:errnobody 'french '"corps de rede'finition non pre'sent" 'defmessage)
+(#:messages:put-message '#:gell-resetfn:errnobody 'english '"no body definition" 'defmessage)
+'#:gell-resetfn:errnobody
+(defvar #:gell-resetfn:function-name ())
+(defvar #:gell-resetfn:body-property '#:gell-resetfn:body-property)
+(defcsetfn '#:gell-resetfn:get-body "GZresetfn" 0)
+(defcsetfn '#:gell-resetfn:function-0 "GZresetfn" 1)
+(defcsetfn '#:gell-resetfn:function-1 "GZresetfn" 2)
+(defcsetfn '#:gell-resetfn:function-2 "GZresetfn" 3)
+(defcsetfn '#:gell-resetfn:function-3 "GZresetfn" 4)
+(defcsetfn '#:gell-resetfn:function-n "GZresetfn" 5)
+(defcsetfn '#:gell-resetfn:function-f "GZresetfn" 6)
+(putprop 'resetfn '(#:defC:list-module-table-adr) '#:complice:fvar)
+(defcsetfn 'resetfn "GZresetfn" 7)
+
+(defccheck '(remove-macro-open macro-openp featurep setfn last variablep typefn funcall printerror valfn putprop #:llcp:ffuncall #:gell-resetfn:get-body getprop))

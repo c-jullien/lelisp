@@ -1,0 +1,8 @@
+rm -f /nfs/current/lelisp/ll2lm/*.ll
+rm -f /nfs/current/lelisp/ll2lm/*.lc
+rm -f /nfs/current/lelisp/ll2lm/*.lm
+rm -f /nfs/current/lelisp/ll2lm/*.lo
+cp -p *.ll /nfs/current/lelisp/ll2lm
+cp -p *.lc /nfs/current/lelisp/ll2lm
+cp -p *.lm /nfs/current/lelisp/ll2lm
+cp -p *.lo /nfs/current/lelisp/ll2lm

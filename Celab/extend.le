@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: extend
+;;;             translation done: "Wed June 30 93 17:35:06 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: extend.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'extend)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZextend" "Wed June 30 93 17:35:06 "
+
+'()
+
+#[]
+)
+
+
+(defccheck '())

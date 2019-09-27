@@ -1,0 +1,7 @@
+(test-serie "Minimum LISP-C test" ())
+
+(_cmoinsun)         					-1
+(ctest "ABCdefghijkl" 2.5 1234 (setq v #[(a b) 7777]))	3085.
+v							#[7777 (a b)]
+
+(test-serie "End of Minimum LISP-C test" ())

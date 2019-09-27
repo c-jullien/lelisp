@@ -1,0 +1,88 @@
+defmodule
+sets
+files (
+|sets.ll|
+)
+export (
+intersection
+nintersection
+union
+nunion
+set-difference
+nset-difference
+set-exclusive-or
+nset-exclusive-or
+adjoin
+subsetp
+set-equal
+transitive-closure
+power-set
+cartesian-product
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(intersection nsubr ())
+(nintersection nsubr ())
+(union nsubr ())
+(nunion nsubr ())
+(set-difference nsubr ())
+(nset-difference nsubr ())
+(set-exclusive-or nsubr ())
+(nset-exclusive-or nsubr ())
+(adjoin nsubr ())
+(subsetp nsubr ())
+(set-equal nsubr ())
+(transitive-closure nsubr ())
+(power-set subr1 ())
+(cartesian-product subr2 ())
+)
+cpfunctions (
+(#:sets:intersection subr3)
+(#:sets:member subr3)
+(#:sets:member2 subr3)
+(#:sets:intersectionq subr2)
+(#:sets:nintersection subr3)
+(#:sets:nintersection2 subr3)
+(#:sets:nintersectionq subr2)
+(#:sets:nintersection2q subr2)
+(#:sets:union subr3)
+(#:sets:adjoin subr3)
+(#:sets:unionq subr2)
+(#:sets:adjoinq subr2)
+(#:sets:nunion subr3)
+(#:sets:nunion2 subr3)
+(#:sets:delete subr3)
+(#:sets:delete2 subr3)
+(#:sets:nunionq subr2)
+(#:sets:nunion2q subr2)
+(#:sets:set-difference subr3)
+(#:sets:set-differenceq subr2)
+(#:sets:nset-difference subr3)
+(#:sets:nset-difference2 subr3)
+(#:sets:nset-differenceq subr2)
+(#:sets:nset-difference2q subr2)
+(#:sets:set-exclusive-or subr3)
+(#:sets:set-exclusive-orq subr2)
+(#:sets:nset-exclusive-or subr3 () (#:sets:found))
+(#:sets:nset-exclusive-or2 subr3)
+(#:sets:nset-remove subr3)
+(#:sets:nset-exclusive-orq subr2 () (#:sets:found))
+(#:sets:nset-exclusive-or2q subr2)
+(#:sets:nset-removeq subr2)
+(#:sets:subsetp subr3)
+(#:sets:subsetpq subr2)
+(#:sets:set-equal subr3)
+(#:sets:set-equalq subr2)
+(#:sets:transitive-closure subr3)
+(#:sets:transitive-closureq subr2)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

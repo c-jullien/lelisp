@@ -1,0 +1,88 @@
+defmodule ref
+files (ref)
+import (
+pretty
+format
+defvar
+rtmsg
+kernellm
+rtprint
+readlm
+diagnostic
+)
+
+export (
+(structure llmodulereferences)
+#:llmodulereferences:update-base
+current-mr
+standardmodulereferences
+#:llmodulereferences:read-from-file
+#:llmodulereferences:merge-modules-references
+func-from
+struct-from
+intern-from
+other-from
+abbrev-from
+#:llmodulereferences:pretty
+#:llmodulereferences:member-in-cdr
+#:llmodulereferences:write-to-file
+
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:llmodulereferences:modulesinternal nsubr ())
+(#:llmodulereferences:modulesotherdef nsubr ())
+(#:llmodulereferences:modulesexport nsubr ())
+(#:llmodulereferences:modulesimport nsubr ())
+(#:llmodulereferences:projectname nsubr ())
+(#:llmodulereferences:make subr0 ())
+(#:llmodulereferences:update-base subr3 ())
+(#:llmodulereferences:read-from-file subr2 ())
+(standardmodulereferences nsubr ())
+(#:llmodulereferences:write-to-file subr2 ())
+(current-mr nsubr ())
+(#:llmodulereferences:merge-modules-references subr2 () () () () () (subr2) (()) (subr2) (()) (subr2) (()) (subr2) (()))
+(func-from subr1 ())
+(struct-from subr1 ())
+(intern-from subr1 ())
+(other-from subr1 ())
+(abbrev-from subr1 ())
+(#:llmodulereferences:pretty subr1 ())
+(#:llmodulereferences:member-in-cdr subr2 ())
+)
+cpfunctions (
+(#:llmodulereferences:readpair subr1)
+(#:llmodulereferences:all-memq-in-cdr subr2)
+(#:llmodulereferences:all-member-in-cdr subr2)
+)
+cpimport (
+(readlm
+(#:crunch:openi . subr1)
+)(rtprint
+(#:crunch:save-file . subr1)
+)(pretty
+(pprint . subr1)
+)(format
+(format . nsubr)
+))
+cpenv (
+files
+pretty
+format
+module
+defvar
+rtmsg
+sets
+sort
+callext
+defstruct
+path
+kernellm
+rtprint
+readlm
+diagnostic
+((defabbrev llmodulereferences llmodulereferences)
+)((defstruct llmodulereferences projectname modulesimport modulesexport modulesotherdef modulesinternal)
+)((defmacro read-modules-references (file) (list 'current-mr (list '#:llmodulereferences:read-from-file '(standardmodulereferences) file)))
+))

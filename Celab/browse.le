@@ -1,0 +1,23 @@
+;;; GELL 15.26: elaboration file for the module: browse
+;;;             translation done: "Thu Mar  11 93 15:58:31 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: browse.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'browse)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZbrowse" "Thu Mar  11 93 15:58:31 "
+
+'((check-browse . subr0) (meter-browse . subr0) (test-browse . subr1))
+
+#[(test-browse 1) check-value (count-calls-init) eval (count-calls-stop) t browse-rand copylist gensym putprop pattern ? * string assoc append nconc ((a a a b b b b a a a a a b b a a a) (a a b b b b a a (a a) (b b)) (a a a b (b a) b a b a)) ((*a ?b *b ?b a *a a *b *a) (*a *b *b *a (*a) (*b)) (? ? * (b a) * ? ?)) get check-browse #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-browse test-browse #:gell-resetfn:function-1]
+)
+
+(defcsetfn 'check-browse "GZbrowse" 0)
+(defcsetfn 'meter-browse "GZbrowse" 1)
+(defcsetfn 'test-browse "GZbrowse" 2)
+(defvar browse-rand 21)
+
+(defccheck '(get nconc append assoc string putprop gensym copylist eval check-value))

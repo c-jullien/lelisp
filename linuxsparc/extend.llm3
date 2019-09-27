@@ -1,0 +1,89 @@
+; .EnTete "Le-Lisp version 15.2" "18/19" "extend.llm3"
+; .Chapitre 18 "Les fonctions d'extension"
+; .INRIA
+; .Auteur "Greg Nuyens"
+; .Centre "*****************************************************************"
+; .Centre "Ce fichier est en lecture seule hors du projet Le-Lisp de l'INRIA"
+; .Centre "*****************************************************************"
+; .NoMapLL
+; $Header: /usr/cvs/lelisp/linuxsparc/extend.llm3,v 1.2 2017/10/05 04:04:48 jullien Exp $
+
+          TITLE     EXTEND              ; LLM3 : les fonctions locales
+
+          XREFP     READ,INISYMB
+          XREFP     READ,INICST
+          XREFI     LLINIT,MSTACK
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFP     TOPERR,ERRFS
+          XREFP     GC,GCCONS
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFI     LLINIT,HASHTAB
+          XREFP     PRINT,PROBJ
+          XREFP     PRINT,PROBJT
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRNVA
+          XREFP     TOPERR,ERRWNA
+          XREFP     EVAL,EVALCAR
+          XREFP     EVAL,APPLY
+          XREFI     LLINIT,.UNDEF
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFI     CNTRL,.QUOTE
+          XREFP     BLLSHT,LOC
+          XREFI     CNTRL,TABTYPFN
+
+          XDEFP     INI_EXT
+          PURE
+
+
+;
+;         Cre'ation des symboles
+;         =====================
+;
+
+          PURE
+
+
+INI_EXT   LABEL      
+	  MAKFNT	BLTSMEM,#7,"bltsmem"	; for fasl
+	  MAKFNT	READCS,#6,"readc*"		
+	  MAKFNT        CLOOP,#5,"cloop"
+          RETURN 
+; Entry for fasl
+	  PURE
+;  ----------------------------------------
+          FENTRY    BLTSMEM,SUBRN
+;  ----------------------------------------
+	   POP 	     A4
+	   POP 	     A3
+	   POP 	     A2
+	   POP 	     A1
+	   HBMOVSM   A1,A2,A3,A4
+	   MOVNIL    A1
+	   RETURN     
+
+;  ----------------------------------------
+          FENTRY    READCS,SUBR2
+;  ----------------------------------------
+; reads A1 characters from the current channel into memory at A2
+
+	  C_CALL   INB,ISTREAM,A2,A1,%LL_NCARS
+	  RETURN
+	  
+;;; Test for errors in C.
+
+;  ----------------------------------------
+	  FENTRY    CLOOP,SUBR1
+;  ----------------------------------------
+	  MOV A1,A2
+	  MOV BP,A1
+	  MOV A2,BP
+;	  CBOUCLE                       ; calls the C function cboucle
+	  RETURN
+
+          IMPURE
+
+          END

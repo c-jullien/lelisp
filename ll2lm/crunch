@@ -1,0 +1,114 @@
+#!/bin/sh
+
+AIDADIR=/usr/ilog/aida
+
+olduse="$0: obsolete option for new ANALYZER :"
+usage="$0: unknow option :"
+
+options=
+files=
+write=
+update=1
+defmodule=
+nowrite=
+output=
+project=
+
+while [ x$1 != x ]
+do
+  case $1 in
+  -c|-complice) echo "$olduse -complice; use -makefile"; exit;;
+  -g|-gell)     echo "$olduse -gell; no longer applicable"; exit;;
+  -makebin)     echo "$olduse -makebin; no longer applicable"; shift; exit;;
+  -omit)        echo "$olduse -omit; no longer applicable"; shift; exit;;
+  -split)       echo "$olduse -split; no longer applicable"; exit;;
+
+  -makemod)     write=1;project=$2;options="$options -makefile -p $2"; shift ;;
+  -all)         options="$options -allexports" ;;
+  -b|-build)    options="$options -build $2"; shift;;
+  -load|-f|-file)options="$options -load $2"; shift ;;
+  -i|-import)   options="$options -import $2"; shift;;
+  -k|-keep)     update=1;defmodule= ;;
+  -new)         update= ;defmodule=1;;
+  -o|-output)   write=1; output=$2; options="$options -output $2"; shift ;;
+  -p|-project)  project=$2; options="$options -project $2"; shift;;
+  -s|-silent)   options="$options -v 0";;
+  -try|-relax)  shift;;
+  -u|-update|-update-desc)   write=1;;
+  -usage|-help) options="$options -help";;
+  -v|-verbose)  options="$options -v 2";;
+  -*)           echo "$usage $1"; exit;;
+  *)            files="$files $1";;
+  esac
+  shift
+done
+
+set $files >/dev/null
+ll=
+lm=
+
+if [ -z "$write" ]
+then
+ options="$options -nowrite"
+fi
+
+if [ -z "$project" ]
+then
+ options="$options -load $AIDADIR/modana/aida.prj -p aida"
+fi
+
+if [ $1 ]
+then
+first=$1
+if [ $# = 1 ]
+then
+ case $1 in
+  *.ll) ll=$1;;
+  *.lm) update=1; lm=$1;;
+ esac
+else
+ while [ x$1 != x ]
+ do
+  case $1 in
+   *.ll|*.lh|*.li) ll="$ll $1";;
+   *) ;;
+  esac
+  shift
+ done
+fi
+fi
+
+if [ -z "$output" ]
+then
+ if [ ! -z "$first" ]
+ then
+  output=`echo $first | sed -e 's/\(.*\)\.l./\1/'`.lm
+  options="$options -o $output"
+ fi
+fi
+
+if [ $defmodule ]
+then
+ modname=`echo $first | sed -e 's/\(.*\)\.l./\1/'`
+ options="$options -defmodule $modname"
+else
+ modname=`echo $first | sed -e 's/\(.*\)\.l./\1/'`.lm
+ options="$options -update $modname"
+fi
+
+if [ ! -z "$ll" ]
+then
+ set $ll >/dev/null
+ while [ x$1 != x ]
+ do
+  options="$options -files $1"
+  shift
+ done
+fi  
+
+
+options="-v 2 $options"
+
+echo "** $0 : obsolete form of analyzer"
+echo "** Try this new equivalent form :"
+echo "ll2lm $options"

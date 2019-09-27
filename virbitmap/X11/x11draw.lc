@@ -1,0 +1,38 @@
+defmodule #:display:x11
+files (x11draw.ll)
+include (
+virstruct.ll
+)
+import (
+x11_def
+x11struct
+virgraph ; current-foreground
+)
+export (
+:draw-cursor
+:draw-cn 
+:draw-substring
+:draw-cn-nobackground 
+:draw-substring-nobackground
+:draw-point
+:draw-polymarker 
+:draw-line 
+:draw-rectangle 
+:draw-polyline
+:draw-ellipse 
+:draw-circle 
+:fill-rectangle
+:fill-area 
+:fill-ellipse
+:fill-circle
+
+:draw-arc
+:fill-arc
+:draw-segments
+:draw-rectangles
+:fill-rectangles
+
+:highlight-rectangle
+)
+
+

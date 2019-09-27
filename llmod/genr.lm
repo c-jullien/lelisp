@@ -1,0 +1,79 @@
+defmodule
+r
+files (
+genr
+)
+export (
+**
+precision
+#:r:|+|
+#:r:|-|
+#:r:*
+#:r:/
+#:r:<?>
+#:r:quomod
+#:r:power
+#:r:rationalp
+#:r:numberp
+#:r:eval
+#:r:integerp
+#:r:|0-|
+#:r:1/
+#:r:truncate
+#:r:exp
+#:r:log
+#:r:sqrt
+#:r:atan
+#:r:sin
+#:r:asin
+#:r:cos
+#:r:acos
+#:r:error
+#:float:<?>
+#:fix:<?>
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(** subr2 ())
+(precision nsubr ())
+(#:r:|+| subr2 ())
+(#:r:|-| subr2 ())
+(#:r:* subr2 ())
+(#:r:/ subr2 ())
+(#:r:<?> subr2 ())
+(#:r:quomod subr2 ())
+(#:r:power subr2 ())
+(#:r:rationalp subr1 ())
+(#:r:numberp subr1 ())
+(#:r:eval subr1 ())
+(#:r:integerp subr1 ())
+(#:r:|0-| subr1 ())
+(#:r:1/ subr1 ())
+(#:r:truncate subr1 ())
+(#:r:exp subr1 ())
+(#:r:log subr1 ())
+(#:r:sqrt subr1 ())
+(#:r:atan subr1 ())
+(#:r:sin subr1 ())
+(#:r:asin subr1 ())
+(#:r:cos subr1 ())
+(#:r:acos subr1 ())
+(#:r:error dmsubr ())
+(#:float:<?> subr2 ())
+(#:fix:<?> subr2 ())
+)
+cpfunctions (
+(#:r:**n subr3)
+)
+cpimport
+()
+cpenv (
+((putprop '#:ex:mod 't '#:complice:globalvar)
+)((putprop '#:r:prec 't '#:complice:globalvar)
+)((putprop '#:sys-package:genarith 't '#:complice:globalvar)
+))

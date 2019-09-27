@@ -1,0 +1,139 @@
+%===================================================================
+\Chapter {2}{Limitations and Known Difficulties}
+%===================================================================
+
+%---------------------------------------------------------------------------
+\Section {Restrictions}
+%---------------------------------------------------------------------------
+
+Certain points need to be handled with care:
+
+\begin{itemize}
+
+\item The module used by the {\em Module Analyzer} itself
+(\|path|, \|sets|, \|stringio|,...) 
+can be forgotten in its importation propositions.
+
+\item The methods and the functions called by name (with {\tt
+send}, {\tt map}, ...), if the name of the function 
+does not appear explicitly in a "quoted" manner:  {\tt '<function>}.
+
+\end{itemize}
+
+For these reasons, the diagnostics of the {\em Module Analyzer} 
+may not be complete but will, at least, help refine the module description.
+
+
+%---------------------------------------------------------------------------
+\Section {Known Problems}
+%---------------------------------------------------------------------------
+
+
+\SSection{Hashing of symbols that are too long}
+
+At the time of the writing of the \|.lm| files or the reference bases (.ref), it may occur that a symbol is too long and is "cut-off" or hashed incorrectly.
+For example, the name of the following \Masai2d\ function:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point):ge-contains?
+\end{Longcode*}
+
+ends up being improperly hashed and becomes:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point)
+:ge-contains?
+\end{Longcode*}
+
+This will be reread as two different symbols at the time of the loading of a later file:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point)
+#:user:ge-contains?
+\end{Longcode*}
+
+
+This improper writing will provoke errors at the time of the module analysis, and in turn, provoke errors in all modules using the function in question.
+
+It is, of course, possible to manually modify the \|.lm| file.  The reference file, however, is reread and rewritten to the the analysis of all project modules.  The manual modification of this file is thus not useful.
+
+The only real solution is to change the value of the margin at the time of the analysis by modifying the project description as follows:
+
+\begin{Code*}
+(defun proj-activate-func ()
+  ...
+  (rmargin 255))
+
+(define-rt-project proj
+    required-projects (lisp)	
+    ...
+    activate-function proj-activate-func
+    ...
+    ))
+\end{Code*}
+
+The changing of the margin can, eventually, provoke the same error on other project function names of the project.  In this case, try another value for the margin until the maximum value:
+
+\begin{Code*}
+(rmargin (1+ (slen (outbuf))))
+\end{Code*}
+
+
+\SSection{Structure Heritage}
+
+If your project defines \|microceyx| objects, you probably have chosen between the heritage and the redefinition of the accessors to the fields.  This mechanism is controlled by the global variable \|#:system:defstruct-all-access-flag|.  The \Aida\ and \Masai2d\ projects use the accessor heritage and position the \|#:system:defstruct-all-access-flag| variable at \|()| at the time of the activation of the project. 
+
+If you want the \|#:system:defstruct-all-access-flag| variable 
+positioned at \|t| in your project (this requires the projects \Aida\ or \Masai2d), you need to define an activation function as follows:
+
+\begin{Code*}
+(defun proj-activate-func ()
+  (setq #:system:defstruct-all-access-flag t))		     
+
+(define-rt-project proj
+  required-projects (aida)	
+  ...
+  activate-function maida2d-activate-func
+  )
+\end{Code*}
+
+In this case, the following warning may be displayed at the time of the analysis of your modules:
+
+\begin{Longcode*}
+** W.114 :
+structure image must be defined inside an EVAL-WHEN(COMPILE) in module:
+(image)
+\end{Longcode*}
+
+You can ignore this message.
+
+\SSection{Abbreviations}
+
+Occasionally, an abbreviation is not found at the time of an analysis.
+In effect, the \|cpenv| field of the module may have been altered by the addition of an erroneous abbreviation:  \|{unknown-abbrev}:<abrev>|.  In this case, the following analyses will provoke the following error message: 
+
+\begin{Code*}
+** W.104 : parent structure package unknown-abbrev not found for : {
+unknown-abbrev}:<abrev>
+\end{Code*}
+
+It is, thus, necessary to manually correct the \|.lm| file.  You may even go as far as deleting the \LeLisp\ form that contains the erroneous abbreviation.
+
+\SSection{Conflicts among module names}
+
+It is possible that a file in an application that is being analyzed may
+have the same name as one of the projects in use.  The utilization priority 
+is managed by the system variable, \|#:system:path|.  By default, priority
+goes to imported projects.  It's a good idea to resolve such conflicts
+``manually" with the ideal being to avoid all conflicts between file names.
+
+\SSection{Generation of the compilation {\tt Makefile}}
+
+The generation of the compilation \|Makefile| is done from the reference base (fichier .ref) and not from the modular descriptions (i.e., \|.lm| files).  It is, thus, necessary to creat the reference base -- either by the \|-build| option or by analysing the project modules -- before building the compilation \|Makefile|.
+
+When you are using the key \|complice-options| to indicate compilation options, 
+you need to be careful that the character strings
+you use are no longer than one line in the {\tt Makefile}. If a
+character string is longer than a line in the {\tt Makefile}, you
+must remove the instances of \|^M| (that is, {\sc control-M} marking the
+carriage return) to avoid inadvertant side-effects.

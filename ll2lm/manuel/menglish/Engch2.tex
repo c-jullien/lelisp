@@ -1,0 +1,764 @@
+%==========================================================================
+\Chapter {2} {The Module Analyzer}
+%==========================================================================
+
+The {\em Module Analyzer} is a utility that serves to determine the
+description of a module and, in particular, to determine the function 
+list that must be exported by this module, as well as the list of
+other  modules that must be {\em imported} for correct compilation by 
+\|complice| (See Chapter 13 of the \LeLisp\  manual). 
+
+%---------------------------------------------------------------------------
+\Section {The Module Analyzer:  How it works}
+%---------------------------------------------------------------------------
+
+The {\em Module Analyzer} works with the help of the {\bf projet} and creates or modifies a {\tt .lm} module descriptor file.
+
+The {\em Module Analyzer} loads source files indicated in the {\tt files} list of the module and analyzes them (i.e., it reviews all the functions and other entities present in the code and detects the other \LeLisp\ modules exporting/defining these functions/entities).
+
+For this module, it "decides" the list of modules to import (key \|import|) as well as the functions to export (key \|export|).
+
+It compares these lists with those that are mentioned by the programmer in the module descriptor.  It suggests additions and removals to/from this list and justifies these choices.   
+
+An analysis {\tt Makefile} can be created to automate this work on the ensemble of project modules.
+
+Once all modules of a project are created, the analyzer can create a compilation {\tt Makefile} to help the programmer compile the modules with {\tt complice} (Note:  the adoption of the {\tt mms} module under VMS, or of the {\tt Makefile} module under DOS, is mandatory to have this feature. 
+
+%---------------------------------------------------------------------------
+\Section {Project Definition}
+%---------------------------------------------------------------------------
+
+This section describes the manner that you should write a project. To write a project, you use a {\it project file} of the type {\tt <project>.prj}.  It is in this file that you will find all the necessary forms of project definitions, creation functions, and manipulation of a project.
+It is also in this file that you load other projects (see key \|required-project|).
+
+The \Ilog\ product projects are defined in the directories \|modana| of each product in the project file of the product:
+\begin{Code*}
+/usr/ilog/lelisp/modana/lisp.prj
+/usr/ilog/aida/modana/aida.prj
+/usr/ilog/smeci/modana/smeci.prj
+/usr/ilog/rpc/modana/rpc.prj
+ ...
+\end{Code*}
+
+A certain number of functions are furnished with the hope of defining/managing the projets, the form of the definition of a project ({\tt define-rt-project} being the most important).  Refer to Chapter 6 (that describes analyzer extensions) for further details on other forms that may appear in the project file.  You will note, in particular, a form that defines a group of projects ({\tt define-rt-group-project}), a definer of definer ( {\tt defdefiner}), a definer of dynamic form ({\tt defdynamic}) etc.
+
+\SSection {The principal keys of a project definition}
+%---------
+
+\|define-rt-project| allows you to define a named project.  This name allows you to reference the project in another project (via \|required-project|). Several projects are defined for \Ilog\  products but the user can define his/her own projects.
+
+\begin{Side}{\bf Note}
+When you specify a complete directory path, you must end this complete path line with a trailing backslash character (i.e., "/").
+\end{Side}
+
+%****************************************************************************
+\Macro {define-rt-project} {name key1 val1 keyn valn} {N}
+%****************************************************************************
+
+The macro \|define-rt-project| requires (at least) a project name as a first argument.
+A certain number of keys are available to completely describe the project.  Only the principal options are described in the definition that follows.  For a comprehensive description of the ensemble of keys, refer to Chapter 5.  The macro \|define-rt-project| does not evaluate its arguments.  The principal keys of this macro are as follows: 
+
+\begin{itemize}
+
+\item {\Large \|root-directory| {\em path}}: the root directory of the project \|name|. The use of this key allows you to specify relative paths to other keys of directories such as \|directories|, \|system-directory|, or \|crunch-directory|.  When this key is omitted, it is necessary to specify other keys of directory definitions with absolute paths.  For \LeLisp\,:  
+
+\begin{Code*}
+  root-directory #u"/usr/ilog/lelisp/"
+\end{Code*}
+
+Note:  You should also study the \|system-directory| and the \|crunch-directory| keys (see Chapter 5) to organize the system files of the analyzer.
+
+\item {\Large \|directories| {\em list}}: to specify the list of directories that contain the source and/or the modules of the project \|name|.
+This list of directories updates the contents of the \LeLisp\ system variable {\tt \#:system:path}.  This list cannot be empty.  These paths can be relative to {\tt root-directory}.  For example, for \LeLisp\ on sun4: 
+
+\begin{Code*}
+  directories ("sun4/"
+               "llib/"
+               "llmod/"
+               "llobj/"
+               "llub/"
+               )
+\end{Code*}
+
+\begin{Side}{\bf Note}
+The {\em Module Analyzer} verifies the existence of the directories specified by the \|directories| key.  If a directory does not exist, it prints a message of the type:
+\BeginLL
+** check-directory : directory doesn't exist: looks/simplelook/
+\EndLL
+\end{Side}
+
+Note:  You should also study the \|ll-module-directory| and \|ll-object-directory| keys (see Chapter 5) to more precisely manage the module files and their compilation. 
+
+\item {\Large \|required-projects| {\em list}}: the projects that are necessary for the use of the project.  The value of this key is a list of symbols that indicate the names of the required projects.  For example:
+
+\begin{Code*}
+(define-rt-project smeci
+   required-projects (smstr)
+   ...)
+\end{Code*}
+
+{\it Note\,:}
+You will eventually need to make sure to load the files that define the projects required by \|required-project|.  For example, if you use the \LeLisp\ and \Aida\ librairies:
+\begin{Code*}
+% cat myproject.prj
+^L/usr/ilog/lelisp/modana/lisp.prj
+^L/usr/ilog/aida/modana/aida.prj
+
+(define-rt-project myproject
+ ...
+\end{Code*}
+
+\item {\Large \|modules-lists| {\em list}}: this key is used to specifically inform the project of the modules that should be used.  By default, the tables destined for the {\em Module Analyzer} are constructed from all the ({\tt *.lm}) modules contained in the key directory \|directories|.  However, if \|modules-lists| exists, it, in itself, will allow you to specify a list of files (*.lst) containing the list of moduals that make up the project.  The files (*.lst) mentioned by the modules list key are looked for in each of the directories of the \|directories| key or \|ll-module-directory| key. 
+For example, in order to compile \Masai2d\ product
+(whose project is {\tt maida2d}), 
+we've specified the list of modules to use in the \|modules.lst| 
+files divided among the directories specified by the \|directories|\ key:
+
+\begin{Code*}
+(define-rt-project maida2d
+        root-directory #p"/usr/ilog/maida2d/"
+        required-projects (aida)  
+        directories (#u"src/")
+        modules-lists ("modules.lst")
+        crunch-directory #u"modana/"
+        ...)
+\end{Code*}
+
+In each directory of the \|directories| key, we define a
+\|modules.lst| file. For example:
+
+\begin{Longcode*}
+% cat /usr/ilog/maida2d/src/modules.lst
+floatdraw
+m2-macro
+m2-object
+m2-point
+m2-bbox
+m2-transfor
+m2-screen
+...
+\end{Longcode*}
+
+
+We'll also study the \|modules| and \|modules-files| key to completely manage the file names.
+
+\item {\Large \|module-extension| {\em string}}: 
+this key, if it exists, contains a character string that indicates the extension used to specify the source file name of the module.  If the user wants to conserve a "non-polluted" version of his/her modular description files by {\tt complice}
+(Remember\,: {\tt complice} writes its own information in the modular description files)
+the user will choose a new file extension different from {\tt
+"lm"} to create a new file.  Usually this extension is called {\tt "lc"}.
+This key is used by the \|-init|, \|-makefile|, and \|-build| options of the {\em Module Analyzer}.
+The {\tt Makefile}s created with these options use the {\tt "lc"} as a starting point.  For a more detailed discussion of these topics, turn to Chapter 5.
+
+\end{itemize}
+
+\SSection {Examples}
+Her are some examples of project definitions.  You will also find here the projects that correspond to the Virtual Bitmap and to the \LeLisp\ libarary:
+
+\begin{Longcode*}
+;;; all using LL directories
+(setq MODANA #.(catenate #:system:directory "modana/"))
+(setq LLIB   #:system:llib-directory)
+(setq LLUB   #:system:llub-directory)
+(setq SYSTEM #:system:system-directory)
+(setq LLMOD  #:system:llmod-directory)
+(setq LLOBJ  #:system:llobj-directory)
+(setq X11    #.(catenate #:system:virbitmap-directory "X11/"))
+
+;;; sub-project for Bitmap Virtuel : X11
+(setq x11.prj
+(define-rt-project x11
+  root-directory \#.MODANA
+  directories (\#.X11 \#.LLMOD)
+  required-projects (lisp)
+  project-file #p"lisp.prj"
+  modules-lists (#p"virx11.lst")
+))
+\end{Longcode*}
+
+
+In this \|x11| project, two directories contain all the source:  {\tt X11} and {\tt LLMOD}.
+
+The principal project \|lisp|\,:
+
+
+\begin{Longcode*}
+;;; main project, including LL library
+(setq lisp.prj
+(define-rt-project lisp
+  root-directory \#.MODANA
+  directories (\#.SYSTEM
+               \#.LLIB
+               \#.LLOBJ
+               \#.LLMOD
+               \#.LLUB)
+  required-projects ()
+  modules-lists ("llib.lst" "llub.lst" "system.lst" "llmod.lst")
+))
+\end{Longcode*}
+
+In the \|lisp| project definition, the ensemble of module
+names will be found in the {\tt llib.lst,
+llub.lst}, and {\tt system.lst} files divided among the ensemble of the directories of the \|directories| fields.  In reality, the analyzer begins to bring together all modules listed in all the {\tt llib.lst} files of all the project directories, then all the files contained in the {\tt llub.lst} files of all the project directories, then, finally, all the {\tt system.lst} files from all the project directories.  The {\tt llmod.lst} file is "voluntarily" empty. 
+
+To completely finish the \|lisp| project with advanced utilization forms (described in Chapter 6):
+\begin{Longcode*}
+;;; defined new definers for ANALYZER
+;; macro-character
+(defdefiner dmc)
+
+;; splice-macro
+(defdefiner dms)
+
+;; DEFABBREV, DEFSHARP are already declared with DEFDEFINER inside analyzer 
+\end{Longcode*}
+
+The following \Aida\ example demonstrates the projects of the \Aida\ 
+library as well as such advanced modules like
+the \|grapher| and \|hypertext|\ modules. 
+These examples shows how a complex project organization can be set
+through project {\em groups}\,:
+
+\begin{Longcode*}
+(eval-when (load eval compile)
+   (defvar rt-aida-directory #u"/usr/ilog/aida/")
+
+;;;;;;;
+;;; Basic Aida Kernel
+;;;;;;;
+
+(define-rt-project mdakerne
+  required-projects (lisp)
+  root-directory #.rt-aida-directory
+  system-directory #u"modana/"
+  crunch-directory #u"modana/crunchdb/"
+  activate-function aida-activate-func
+  directories (#u"modules/")
+  project-file "aida.prj"
+  )
+
+...
+...
+...
+
+;;;;;;
+;;; Tools
+;;;;;;
+
+(define-rt-project mdatools
+  required-projects (mdakerne)
+  root-directory #.rt-aida-directory
+  system-directory #u"modana/"
+  crunch-directory #u"modana/crunchdb/"
+  directories (#u"modules/")
+  project-file "aida.prj"
+  )
+
+...
+...
+...
+
+;;;;;;
+;;; Grapher
+;;;;;;
+
+(define-rt-project mdagraph
+  required-projects (mdakerne)
+  root-directory #.rt-aida-directory
+  system-directory #u"modana/"
+  crunch-directory #u"modana/crunchdb/"
+  directories (#u"modules/")
+  project-file "aida.prj"
+  )
+
+
+;;;;;;
+;;; HyperText
+;;;;;;
+
+(define-rt-project mdahyper
+  required-projects (mdakerne mdagraph mdamlook mdatexte)
+  root-directory #.rt-aida-directory
+  system-directory #u"modana/"
+  crunch-directory #u"modana/crunchdb/"
+  directories (#u"modules/")
+  project-file "aida.prj"
+  )
+
+...
+...
+...
+
+;;;;;;
+;;; Group-Projects
+;;;;;;
+
+(define-rt-group-project aida
+  required-projects (x11 windows decw mdakerne mdatools))
+
+...
+\end{Longcode*}
+
+You should note in these examples that projects can be dependant.  
+In other terms, the {\tt required-projects} key is treated
+recursively.
+In the first part of the project file sub-projects such as
+\|mdakerne| and \|mdatools| are defined only requiring basic
+projects such as \|lisp|. At the end of the exemple the very \|aida|
+project is defined as a group of many subprojects.
+Projects \|mdagraph| and \|mdahyper| corresponding to \Aida\
+advanced modules are defined separately and can be required
+on their own.
+
+
+%---------------------------------------------------------------------------
+\Section {The Analysis Command}
+%---------------------------------------------------------------------------
+
+To start the {\em Module Analyzer}, you use the {\tt ll2lm} command which is usually found in the directory of the \LeLisp\  machine.  If the command is not immediately operational, you should remake it with the help of the \LeLisp\  {\tt Makefile}.  Here is an example on rs6000:
+\begin{Longcode*}
+unix% cd /usr/ilog/lelisp/rs6000
+unix% make ll2lm
+\end{Longcode*}
+You can start the module analyzer with, for example, either the \|-defmodule| or the \|-update|\ options: 
+\begin{Longcode*}
+unix% ll2lm -load myproject.prj -project myproject -defmodule mymod
+ ...
+unix% ll2lm -load myproject.prj -project myproject -update /tmp/lm/mymod.lm
+ ...
+\end{Longcode*}
+
+You can also use the {\em Module Analyzer} in interactive mode:
+
+\begin{Longcode*}
+unix% ll2lm
+; Welcome to Analyzer System
+= interactive use
+? (sh-analyze -load myproject.prj -project myproject -update mymod.lm)
+ ...
+\end{Longcode*}
+
+{\it Refer to Chapter 6 to learn more about this mode of activation and other advanced utilization techniques.}
+
+The \|ll2lm| command benefits from an intialization file, \|ll2lm.ini|, that is usually organized in the user's {\tt HOME} directory.
+This file contains all the initializations that the user will want to benefit from in the analzyer environment.
+\begin{Longcode*}
+% cd
+% cat ll2lm.ini
+;;; to know what I am doing
+(print ";;; You are using module analyzer")
+;;; default is english
+(current-language 'french)
+% ll2lm
+;;; You are using module analyzer
+; Welcome to Analyzer System
+= interactive use
+? qwertyuiop
+** eval : variable indefinie : qwertyuiop
+ ...
+\end{Longcode*}
+
+\SSection{Principal Analysis Options}
+The {\tt ll2lm} analysis command carries with it a certain number of options that are detailed in Chapter 5.  In this section we will look at the analysis options that are used the most often.
+Among these options, some, named {\it principal options} are mandatory.
+
+\begin{itemize}
+\item {{\bf {\tt Makefile}} generation options:}
+\begin{itemize}
+\item {\tt -init} creates an {\bf initial} {\tt Makefile}: this {\tt Makefile} allows you to start in a single command, the analyzer on all modules of the project
+
+\item {\tt -makefile} creates a {\bf compilation} {\tt Makefile} of those modules already analyzed and constructed 
+\end{itemize}
+
+\item {the analysis options}:
+\begin{itemize}
+\item {\tt -defmodule mod} is used to {\bf define a module} with the name \|mod| (under the {\tt defmodule} key)
+
+\item {\tt -update mod.lm} is used to {\bf update} a \|mod.lm| modular description file that already exists.  
+\end{itemize}
+
+\item {management options form the {\bf reference base}:}
+\begin{itemize}
+\item {\tt -delete} is used to {\bf erase} a module from a reference base
+
+\item {\tt -build} is used to create the reference file ({\bf
+.ref}) of a project from ({\tt .lm}) modular description files
+
+\item {\tt -merge} is used to {\bf concatenate} two reference files of two projects in a single reference file
+
+\item {\tt -meta} is used to create a {\bf meta-module} from a reference file.
+\end{itemize}
+\end{itemize}
+
+For all of these principal options (save \|-merge| for which you specify directly the two projects concerned), it is necessary to at least specify the analysis environment with the \|-project| option (or \|-p|) that must be unique for each analysis.
+
+The following options are those that are used most often:
+\begin{itemize}
+
+\item {\Large \|-project| {\em project}, \|-p| {\em project}}:
+to specify a project.  This option is one of the most important principal 
+options since it must (almost always) be specified regardless of the principal option.
+Only one project at a time can be specified by analysis. 
+See also the \|-load| 
+option.
+
+\item {\Large \|-load| {\em file}}: allows you to load the {\em file} file
+in the analysis environment.  In general, this will be a description file of a project of the {\tt prjname.prj} type and goes before the \|-project| option.
+This option is cumulative.
+
+\item {\Large \|-init|}: 
+this option allows you to create an analysis {\tt Makef
+ile} -- named {\tt
+projectname.mki} -- for a given project.
+It is the {\bf first option} that should be used with the {\tt ll2lm} command.  The use of the {\tt projectname.mki} makefile depends on the state of the project "software".
+
+If the project has never been analyzed and you are attempting your first analysis of source files, it -- the makefile file -- will help to create the modules and the {\tt *.ref} reference files.  This phase is called the start-up phase.  It is normally used only one time for a project. 
+
+If the project has already been run through the start-up phase and and it is necessary to reanalyze the project to make necessary corrections, you will update modules -- we refer to this phase as the incremental phase of the analysis. 
+This is the pricipal use of the module analyzer.
+
+The {\tt projectname.mki} makefile contains specific entries for these two phases:
+
+\begin{Side}{\bf Start-up Phase}
+The predefined entries to the {\tt projectname.mki} makefile that you should use in this phase are {\tt init1} and {\tt init2}:
+\end{Side}
+
+\begin{itemize}
+\item \|init1| \,:  should only be used once at the time of the first analysis.  This option creates the reference base of the ({\tt <project>.ref}) project as well as the ensemble of the modular description files if they don't exist.   
+(Note:  notions how how to determine the ensemble of modules of a project are described earlier in this chapter.)
+
+\item \|init2| \,:  should only be used once at the time of the first analysis just after \|init1|. 
+This option updates the {\tt *.lm} modular description files that have just been created.  These files contain incomplete information at this stage.  In effect, the numerous analyzer messages during the {\tt init1} phase are wholly due to the absence of project reference files.
+\end{itemize}
+
+\begin{Side}{\bf Incremental analysis phase}
+This is the typical use of the {\tt projectname.mki} file.
+The entry point, by default, of the {\tt projectname.mki} makefile creates the equivalent of the \|-update| option on all the modules of the project.  After a correction, in the source files, relative to each important message ({\tt ** ...}) issued from a preceding analysis, it is sufficient to use this entry, by default, so that all the concerned modules are reanalyzed.  
+This entry is called in the following manner:
+\BeginLL
+         % make -f projectname.mki
+\EndLL
+\end{Side}
+
+The ensemble of project modules is taken from the project definition in one of the following manners: 
+\begin{enumerate}
+\item if the \|modules| key is present, it explicitly specifies the list of modules that compose the project.  If the value of \|modules| is {\tt "all"}, this wou
+ld, in fact, produce the same results as those indicated if you were to use Step
+ 3.
+\item if the \|modules-lists| key is present, its value is a list of files in which you will find the list of modules that make up the project.  This list is assembled from modules enumerated directory by directory. This list can be 
+modified by the \|exclude-modules| key which indicates those modules that 
+ought to be removed from the list.  
+This key can contain the {\tt "all"} character string (which would, again, produce the same results as those indicated if you were to use Step 3).
+
+\item If one of the two keys {\tt modules} or {\tt modules-list} contains
+the character string {\tt "all"}, then the list of modules will be assembled
+from the set of source files located in the directories specified by the 
+{\tt directories} key.  During the startup phase, if there is no modular
+description file present, the anyalyzer will build a modular description file
+for each {\tt *.ll} source file.
+\end{enumerate}
+
+If none of those three cases apply, then an error message will appear:
+
+\BeginLL
+        ** -init : no file specified for project: project
+\EndLL
+
+A final entry point -- \|clean| -- is also available.  It erases all the modular description files of the project and the reference base of the project.
+
+It is also possible to specfiy analysis options, module by module, or globally:  see the {\tt analyzer-options} key of {\tt define-rt-project}.
+You should also refer to the \|-dependency| option.
+
+\item {\Large \|-dependency| {\em level}, \|-dep| {\em level}}: to determine the dependency level of the created {\tt Makefile} (see Analysis Options \|-makefile| and \|-init|).  \|level| can take the values {\tt 0} (default), {\tt 1}, {\tt 2} ({\tt 0}=weak dependency; {\tt
+2}=strong dependency).  Details are provided in Chapter 5.
+
+\item {\Large \|-defmodule| {\em module-name}}: this principal option allows you to specify the name of the module that must appear under the \|defmodule| key of the module.  The use of this option indicates to the analyzer to create a new modular file description of the {\em
+module-name} module. 
+By default, this file name is calculated from the name of the module (see \|defmodule|) that ends by the suffix extension {\tt
+.lm}.
+This file is placed in the specified directory by the {\bf ll-module-directory} key if it exists.  If this key doesn't exist, it is placed in the specified directory by the {\bf ll-object-directory}.  If {\bf ll-object-directory} doesn't exist, it is placed in the same directory as that of the source file found in the \|files| field.  Module-name should be a simple symbol and never a pathname.  It is always possible to impose a path and a file name with the option \|-output|.  
+Review the keys of {\tt define-rt-project}:
+the source files that must appear in the \|files| field are calculated by default from the module name.  If the {\tt modules-files} key is present in the concerned project description (see the option \|-project|) and concerns this module, it is the {\tt modules-files} key that furnishes the exhaustive list of source files.  If the {\tt modules-files} key is not present and the {\tt extensions-list} key is present, the {\tt extensions-list} key must contain a list of extensions ({\tt ll, li}, ...) to join to this root to create the sourcefile names.  If the {\tt extensions-list} key is not present, the sourcefile name will be {\tt module-name.ll}.
+
+\item {\Large \|-update| {\em file.lm}, \|-u| {\em file.lm}}:
+This principal option is used to instigate the updating of an already existing module that already contains information that you might want to save.
+Comments will eventually be added in the {\tt file.lm} file. Contrary to the \|defmodule| option, neither the importations nor the exportations already present in the module (and seeming unuseful) will be deleted.
+Exported functions that haven't been defined in the source of this module will generate the warning {\tt W.105}. 
+
+\item {\Large \|-verbose| {\em level}, \|-v| {\em level}}:  used to determine the level of analysis messages.  \|level| can accept the values 0, 1, 2:  
+\begin{itemize}
+\item 0 (default)\ :
+minimum level of messages:  only important messages needing an intervention are printed on the screen
+\item 1 \ :
+the analyzer details the ensemble of operations performed
+\item 2 \ :
+the analyzer provides an additional diagnostic about its analysis describing its choices
+\end{itemize}
+The level of messages required at the time of the creation of a {\tt Makefile} influences the level of messages during the use of this {\tt Makefile}.  This option can be combined with all the other options. 
+
+\end{itemize}
+
+%---------------------------------------------------------------------------
+\Section{The analysis process}
+%---------------------------------------------------------------------------
+
+Once a project is created, the analysis directories are defined, etc., you can start the analysis on each of the project modules.
+We will see in detail how to use the analysis commands in the following paragraph.  This section describes the details of an analysis.  The analysis usually takes place in four steps:
+
+\begin {enumerate}
+
+\item Loading of information linked to the project
+
+\item Analysis of the module
+
+\item Posting of diagnostics concerning imports and exports
+
+\item Writing of results in the module and in the reference base of the concerned project.
+\end {enumerate}
+
+The four following paragraphs describe these four steps. 
+
+%---------------------------------------------------------------------------
+\SSection {Analysis Context}
+%---------------------------------------------------------------------------
+The analysis context is elaborated from the {\bf project}.
+To activate a project, you must specify it in the analysis command with the \|-project| option.
+The first thing the {\em Module Analyzer} does is to update its analysis environment by loading and activating the project definitions of projects required for this analysis (see \|required-projects|).
+The \|#:system:path| variable, in particular, is updated with the contents of the \|directories| key of the required projects, and, eventually with the contents of the \|ll-module-directory| keys.  This value is crucial since all the "look-ups" of modules that happen during the analysis will be done in this environment. 
+Here is an example of the first phase of the analysis on a {\tt
+test} project which requires the {\tt lisp} project:
+\begin{Side}{\bf Note}
+The following example concerning the different analysis phases are all performed in \|-verbose 2| mode. 
+\end{Side}
+\begin{Longcode*}
+=====
+===== STEP 1 : loading context of project : test
+=====
+.. reading file(s) : #p"/usr/ilog/lelisp/modana/lisp.ref"
+===== path environment for this analysis:
+   #p""
+   #p"/usr/ilog/lelisp/test/lm/"
+   #p"/usr/ilog/lelisp/test/ll/"
+   #p"/usr/ilog/lelisp/sun4/"
+   #p"/usr/ilog/lelisp/llib/"
+   #p"/usr/ilog/lelisp/llobj/"
+   #p"/usr/ilog/lelisp/llmod/"
+\end{Longcode*}
+
+\begin{Side}{\bf Remember}
+To ease the analysis of modules, projects (or \|define-rt-project|)
+have been predefined for each \Ilog\  product.  You will find these
+definitions for \LeLisp, \Aida\ or \Smeci\ as well as 
+for the advanced \Aida\ modules such as the {\tt grapher} 
+or {\tt hypertext}.
+\end{Side}
+
+
+%---------------------------------------------------------------------------
+\SSection {Analysis of a module}
+%---------------------------------------------------------------------------
+
+The analysis, itself, is the second phase:  the source files of the analyzed modules are first read, the "read" code is analyzed in detail, form by form.  It is a good idea to note that the algorithms used during this analysis are the same as those used by the {\tt complice} compiler.  The following is an example of the analysis phase on the {\tt product} module of the standard \LeLisp\ library:  
+
+\begin{Longcode*}
+=====
+===== STEP 2 : browsing files of module : product
+=====          involved files are : (product.ll)
+=====
+.. reading file(s) : (product.ll)
+.. unknown function make-hash-table-eq - it's exported by module : (hash)
+.. evaluating CPENV field of module : setf
+.. evaluating CPENV field of module : cpmac
+.. evaluating CPENV field of module : hash
+.. scanning functions : ...
+.. unknown function puthash - it's exported by module : (hash)
+.. unknown function gethash - it's exported by module : (hash)
+.. unknown function #:hash-table:vect - it's exported by module : (hash)
+
+\end{Longcode*}
+
+%---------------------------------------------------------------------------
+\SSection {Diagnostics}
+%---------------------------------------------------------------------------
+
+The {\em Module Analyzer}, after having analyzed a module, and if it is in maximum \|verbose| mode, provides a certain number of diagnostics on the results of its analysis:  this is the third phase of a complete analysis.  This information is relative to the reasons why you might import modules and the reasons why you might export (or might not export) a particular function.
+
+It is strongly recommended that you read the module file descriptors ({\tt .lm}) resulting from the analysis to understand the work of the analyzer.  The lists indicated in the {\tt .lm} are annotated to this effect. 
+Let's take our example of the {\tt product} module of the \LeLisp\ library:
+\begin{Longcode*}
+=====
+===== STEP 3 : diagnostic
+=====
+
+===== Concerning IMPORTS :
+- Modules that are required for compilation :
+- You have to import "hash" because of :
+ make-hash-table-eq puthash gethash #:hash-table:vect .
+
+===== Concerning EXPORTS :
+- The following functions will be unused unless exported :
+     product-print
+     product-all-names
+     set-product-comment
+     product-comment
+     set-product-subversion
+     product-subversion
+     set-product-version
+     product-version
+     set-product-date
+     product-date
+     set-product-id
+     product-id
+     product-build-info
+- The following exports are not necessary :
+     #:product:gethash
+
+\end{Longcode*}
+
+%---------------------------------------------------------------------------
+\SSSection {Module importation}
+%---------------------------------------------------------------------------
+
+If the {\em Module Analyzer} has detected functions that are not defined in the interior of the analyzed module, it generates a list of these functions.
+
+If, for example, the module contains a use of {\tt
+unknown-function-1} and {\tt motif-pushbutton} functions as well as the {\tt myabbrev} abbreviation that are not defined by either the module itself or by \Aida\ or \LeLisp, the {\em Module Analyzer} will indicate:
+
+\begin{Longcode*}
+===== Concerning IMPORTS :
+--
+-- Each of the following is "undefined function"
+--      unknown-function-1 
+--      motif-pushbutton
+--
+-- Each of the following is "not an abbreviation"
+--      a-bar1
+--
+-- Modules defining these entities have to be analyzed before module: foo
+-- If these entities are defined in ILOG products, please specify
+-- the correct context(s) for analysis.
+
+\end{Longcode*}
+
+This signifies that the {\em Module Analyzer} has not found the definition of these functions neither in those of the abbreviation nor in any of the accesible modules.  The three most probable causes for this are: 
+
+\begin {Itemize}
+
+\item The functions are in the \Ilog \ products but the project that defines them isn't loaded (this is the case of the \|motif-pushbutton| for which you must specify the \|motif| project).  
+{\it Correction}\ : add a project (or projects) in the {\tt
+required-projects} key of the definition of this project (see {\tt define-rt-project}).
+You could use the \|func-from| function to test whether these functions belong to a module of an \Ilog\  product.
+
+\item These two functions really exist and are not defined in the \Aida\ or \LeLisp\ modules but in a sub-module not yet analyzed in the module that is in the process of being analyzed. 
+{\it Possible corrections}\ : analyze the sub-modules in question before re-analyzing this module, 
+use the \|-import| option to require the importation of these modules, or edit the module in question to require these sub-modules in the {\tt import} field. 
+
+\item the file names in questions are not spelled correctly
+{\it Correction}\ : correct the source.
+
+\end {Itemize}
+
+If our module uses the \LeLisp\ function {\tt new} exported by the {\tt defstruct} module while the {\tt defstruct} module does not figure in the imports of our module, the {\em Module Analyzer} indicates:
+
+\begin{Longcode*}
+- Modules that are required for compilation:
+- You have to import "defstruct" because of:
+ new .
+\end{Longcode*}
+
+If the module uses the \|{scroller}| abbreviation and the {\tt
+verticalscroller} and {\tt horizontalscroller} functions without having imported the {\tt scroller} module that defines it, the {\em Module Analyzer} indicates:
+
+\begin{Longcode*}
+- You have to import "scroller" because of:
+ scroller verticalscroller horizontalscroller .
+\end{Longcode*}
+
+If here, and only at the time of updating (see \|-update| option), a module ({\tt buttonbox} for example) is already present in the \|import| field (or required via the analysis option \|-import|) while the {\em Module Analyzer} has not found any utilization of the functions exported by this module, the {\em Module Analyzer} indicates: 
+
+\begin{Longcode*}
+- these modules do not seem useful :
+ buttonbox .
+\end{Longcode*}
+Note:  If we are in updating phase (\|-update|), the module stays in the importations list of the module.  A manual intervention might eventually be necessary.  In effect, certain cases of dynamic calls, for example, cannot be detected by the {\em Module Analyzer} - even with the analysis option \|-dynamic|.  By contrast, in creating a new module (analysis option \|-defmodule|), the {\tt
+buttonbox} module does not appear in the importations list of the analyzed module.
+
+%---------------------------------------------------------------------------
+\SSSection {Exporting Functions}
+%---------------------------------------------------------------------------
+
+The {\em Module Analyzer} only considers as necessary the exportations concerning defined functions in the analyzed module and that are not used.
+
+The {\em Module Analyzer} signals those exports that it judges unnecessary because they are used internally:
+
+\begin{Longcode*}
+- The following exports are not necessary :
+ client-mode
+ formatted-map-rats
+ formatted-rat-summary
+ rat
+ #:rat:view-rat
+ {application}:abs-x-y
+\end{Longcode*}
+
+To have declared these exports is not an error if in fact these were functions that you wanted to export.
+
+In contrast, if the programmer has indicated in the {\tt export} list (or via the \|-export| option) the functions that are not defined by the module (e.g., the {\tt my-function-1} and {\tt my-function-2} functions), the {\it Module Analyzer} indicates:
+\begin{Longcode*}
+- The following exports are not defined :
+ my-function-1
+ my-function-2
+\end{Longcode*}
+A warning {\tt W.105} would have been indicated for these 2 functions at the time of the module analysis.
+
+If the analyzer discovers functions that are defined in the module and that are not used, it assumes that they must be exported.  For example, if you have defined {\tt f} and {\tt g} without using them internally, the analyzer indicates:
+\begin{Longcode*}
+- The following functions will be unused unless exported:
+ f
+ g
+\end{Longcode*}
+
+Finally, it is sometimes necessary to export functions that are already used internally either for the user or for other modules.  In this case, the internal functions must be specified at least by the \|-export| analysis option (or must be present in the \|export| field of the module being analyzed if this is an \|update|).
+For example, if the {\tt formatted-rat-summary} internal function is exported with the analysis option \|-export|, you will see the message: 
+\begin{Longcode*}
+- The following exports seem necessary for other modules :
+     formatted-rat-summary
+\end{Longcode*}
+\begin{Side}{\bf Note}
+The behavior in question varies according to whether we are in creation mode of a new module (i.e., (\|-defmodule|)) or in updating mode of an existing module (i.e., (\|-update|)).  In the first case, it is necessary to use the \|-export| option to force an exportation (in effect, the module does not yet exist!).  In the second case, it is possible to require the exportation of a module either with the \|-export| option or by editing manually the description file of the module already existing. 
+\end{Side}
+The {\em Module Analyzer} does not always recognize the functions called by {\tt
+apply}, {\tt funcall}, {\tt mapcar}, etc.. because their name can be spread among variables or hidden by other information.  Only the case where the name of the called function appears {\em quoted} is automatically recognizable by the {\em Module Analyzer} on the condition that the analysis option \|-dynamic| and the definer {\tt defdynamic} was used.  (see {\tt defdynamic}).   
+
+%---------------------------------------------------------------------------
+\SSSection {Restrictions}
+%---------------------------------------------------------------------------
+
+See Appendix B for a description of analysis restrictions.
+
+%---------------------------------------------------------------------------
+\SSection {Updating a module file descriptor}
+%---------------------------------------------------------------------------
+
+The fourth and last step of a module analysis is the updating of concerned files:  the modular description file and the reference file.
+Let's finish our example on the {\tt product} module:
+\begin{Longcode*}
+=====
+===== STEP 4 : updating module description : #p"/usr/ilog/lelisp/test/lm/product.lm"
+=====
+.. Previous file #p"/usr/ilog/lelisp/test/lm/product.lm" saved in :
+#p"/usr/ilog/lelisp/test/lm/product.lm~"
+.. updating module description file : #p"/usr/ilog/lelisp/test/lm/product.lm"
+
+=====
+===== STEP 4bis : updating reference file : #p"/usr/ilog/lelisp/test/test.ref"
+=====
+.. reading file(s) : #p"/usr/ilog/lelisp/test/test.ref"
+.. Previous file #p"/usr/ilog/lelisp/test/test.ref" saved in :
+#p"/usr/ilog/lelisp/test/test.ref~"
+.. updating reference file : #p"/usr/ilog/lelisp/test/test.ref"
+\end{Longcode*}
+
+You should make sure to use the \|-nowrite| option in \|-verbose 2| level if you want only to see the diagnostics of the {\em Module Analyzer} without modifying files.
+
+A backup of the old version of this file is done for security.  For example, if the descriptor is called {\tt mymod.lm}, the updating produces a {\tt mymod.lm} file (under Unix) containing the old definition while, at the same time, entirely rewriting the {\tt mymod.lm} file.

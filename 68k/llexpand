@@ -1,0 +1,69 @@
+#! /bin/sh
+################################################################
+#
+#		Le shell-script de l'expanseur
+#			LLM3 -> MOTOROLA
+#
+################################################################
+
+tmp="/tmp/llexpand$$"
+trap "rm -f $tmp; exit" 0 1 2 3 15
+echo "(setq #:expand:re-defvalue t)" >>$tmp
+
+# Les valeurs par defaut:
+ BOOTLISP=/usr/ilog/lelisp/sun/lelisp
+#BOOTLISP="/usr/local/bin/complice -i"
+
+ SYSTEM=sun
+
+ echo "(defvar #:expand:s-dir \"./s31/\")" 	>> $tmp
+ echo "(defvar #:llm3:dir-source \"../llm3/\")"	>> $tmp
+
+while test x$1 != x
+do
+    case $1 in
+# Pour choisir son Lisp d'amorcage:
+	-bootlisp)
+		BOOTLISP="$2"
+		;;
+# Pour de'signer le syste`me:
+	-system)
+		SYSTEM=$2
+		;;
+# Pour loader des fichiers:
+	-load)	
+		echo "(load \"$2\")"				>> $tmp
+		;;
+# Pour aller chercher les sources:
+	-source)
+		echo "(defvar #:llm3:dir-source \"$2\" )"	>> $tmp
+		;;
+# Pour ranger les expansions:
+	-dest)
+		echo "(defvar #:expand:s-dir  \"$2\" )"		>> $tmp
+		;;
+# Pour (re)definir des valeur Lisp:
+	-val)
+		echo "(defvar $2 $3 )"				>> $tmp
+		shift ;;
+# Pour (re)positionner des flags d'expansion:
+	-flag)
+ 		echo "(defvalue $2 $3)"				>> $tmp
+		shift ;;
+# Pour expanser d'autres fichiers:
+	-files)
+		echo "(defvar #:llm3:files '($2))"		>> $tmp
+		;;		
+	*)	echo "llexpand: Mauvaises options"
+		exit ;;
+    esac
+    shift; shift
+done
+
+# L'expansion elle me^me:
+echo "(#:expand:expand-list-of-files #:llm3:files)">> $tmp
+echo "(end)"							>> $tmp
+
+echo "llexpand: Le LeLisp d'expansion= $BOOTLISP, systeme= $SYSTEM"
+$BOOTLISP -r ../$SYSTEM/llcore/expd68k.core < $tmp
+rm -f $tmp

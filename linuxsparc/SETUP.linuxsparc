@@ -1,0 +1,12 @@
+sysctl kernel.randomize_va_space=0
+sysctl vm.legacy_va_layout=1
+
+or add in rc.local
+
+echo 1>/proc/sys/vm/legacy_va_layout
+echo 0>/proc/sys/kernel/randomize_va_space
+
+or add to /etc/sysclt.conf
+
+vm.legacy_va_layout = 1
+kernel.randomize_va_space = 0

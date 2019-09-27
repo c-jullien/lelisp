@@ -1,0 +1,113 @@
+defmodule
+event-loop
+include
+()
+files
+(evloop.ll)
+import
+(virbitmap)
+export
+(
+:tty-input
+evloop-set-timeout
+evloop-select
+evloop-wait
+evloop-readp
+evloop-add-input
+evloop-remove-input
+evloop-change-manage-function
+evloop-add-output
+evloop-remove-output
+evloop-change-output-manage-function
+evloop_build_mask
+evloop_mask_to_fds
+#:tty:evloop:tyi
+evloop-allow-tty-input
+evloop-disallow-tty-input
+evloop-restart
+evloop-stop
+evloop-init
+evloop-input-managed-p
+evloop-initialized-p
+evloop-set-timeout-handler
+evloop-add-display
+evloop-remove-display
+evloop-display-managed-p
+; et parcequ'on utilise FUNCALL:
+#:event-loop:evloop-display-manage
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:event-loop:tty-input subr1 ())
+(evloop-set-timeout subr2 ())
+(evloop-select subr0 ())
+(evloop-initialized-p subr0 ())
+(evloop-remove-input subr1 ())
+(evloop-stop subr0 ())
+(evloop-wait subr0 ())
+(evloop-readp subr0 ())
+(evloop-add-input subr3 ())
+(evloop-change-manage-function subr3 ())
+(evloop-add-output subr3 ())
+(evloop-remove-output subr1 ())
+(evloop-change-output-manage-function subr3 ())
+(evloop_build_mask subr2 ())
+(evloop_mask_to_fds subr2 ())
+(#:tty:evloop:tyi subr0 ())
+(evloop-allow-tty-input subr0 ())
+(evloop-disallow-tty-input subr0 ())
+(evloop-restart subr0 ())
+(evloop-init subr0 ())
+(evloop-input-managed-p subr1 ())
+(evloop-set-timeout-handler subr1 ())
+(evloop-add-display nsubr ())
+(evloop-remove-display subr1 ())
+(evloop-display-managed-p subr1 ())
+(#:event-loop:evloop-display-manage subr1 ())
+)
+cpfunctions (
+(is_ll_fg subr0)
+(is_ll_foreground subr0)
+(evloop_set_timeout subr2)
+(evloop_select_in_out nsubr)
+(evloop_select_in subr2)
+(#:event-loop:select-error subr0)
+(evloop_get_errno subr0)
+(#:event-loop:test-if-valid-fd subr2)
+(evloop_test_if_valid_fd subr2)
+(evloop_remove_file_descriptor subr2)
+(evloop_busy_select subr2)
+(#:event-loop:test-if-function-exist subr2)
+(evloop_add_file_descriptor subr2)
+(#:event-loop:init subr0)
+(evloop_init subr0)
+(evloop_get_out_mask subr0)
+)
+cpimport
+()
+cpenv (
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+((putprop '#:event-loop:number-of-file-descriptors-in 't '#:complice:globalvar)
+)((putprop '#:event-loop:number-of-file-descriptors-out 't '#:complice:globalvar)
+)((putprop '#:event-loop:initialized 't '#:complice:globalvar)
+)((putprop '#:display:all-displays 't '#:complice:globalvar)
+)((putprop '#:event-loop:all-file-descriptors-in 't '#:complice:globalvar)
+)((putprop '#:event-loop:all-file-descriptors-out 't '#:complice:globalvar)
+)((putprop '#:event-loop:mask-file-descriptors-in 't '#:complice:globalvar)
+)((putprop '#:event-loop:mask-file-descriptors-out 't '#:complice:globalvar)
+)((putprop '#:event-loop:result-file-descriptors 't '#:complice:globalvar)
+)((putprop '#:event-loop:type-file-descriptors 't '#:complice:globalvar)
+)((putprop '#:event-loop:something-to-read 't '#:complice:globalvar)
+)((putprop '#:event-loop:timeout-handler 't '#:complice:globalvar)
+))

@@ -1,0 +1,280 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zitsoft:dword
+	extrn	zllsystem:dword
+	extrn	itstate:dword
+	extrn	bstack:dword
+	extrn	mstack:dword
+	extrn	mstack1:dword
+	extrn	mstack2:dword
+	extrn	cpkgc:dword
+	extrn	bufat:dword
+	extrn	dlink:dword
+	extrn	savea4:dword
+	extrn	zeval000:dword
+zlsubr0	dd	0
+pnmac1666	db	'subr0'
+	even
+zlsubr1	dd	0
+pnmac1667	db	'subr1'
+	even
+zlsubr2	dd	0
+pnmac1668	db	'subr2'
+	even
+zlsubr3	dd	0
+pnmac1669	db	'subr3'
+	even
+znlsubr	dd	0
+pnmac1670	db	'nsubr'
+	even
+zflsubr	dd	0
+pnmac1671	db	'fsubr'
+	even
+zllexpr	dd	0
+pnmac1672	db	'expr'
+	even
+zllfexpr	dd	0
+pnmac1673	db	'fexpr'
+	even
+zllmacro	dd	0
+pnmac1674	db	'macro'
+	even
+zlldmacro	dd	0
+pnmac1675	db	'dmacro'
+	even
+zllmsubr	dd	0
+pnmac1676	db	'msubr'
+	even
+zlldmsubr	dd	0
+pnmac1677	db	'dmsubr'
+	even
+pnmac1678	db	'toplevel'
+	even
+zstatoplevel	dd	0
+pnmac1679	db	'toplevel-flag'
+	even
+zprtmsgs	dd	0
+pnmac1680	db	'print-msgs'
+	even
+zprtfltl	dd	0
+pnmac1681	db	'length-float'
+	even
+zfatalerror	dd	0
+pnmac1682	db	'error-tag'
+	even
+pnmac1683	db	'runtime'
+	even
+pnmac1684	db	'sleep'
+	even
+pnmac1685	db	'date'
+	even
+pnmac1686	db	'clockalarm'
+	even
+pnmac1687	db	'with-interrupts'
+	even
+pnmac1688	db	'without-interrupts'
+	even
+pnmac1689	db	'time'
+	even
+pnmac1690	db	'stack-info'
+	even
+pnmac1691	db	'comline'
+	even
+pnmac1692	db	'getenv'
+	even
+pnmac1693	db	'getglobal'
+	even
+pnmac1694	db	'callextern'
+	even
+pnmac1695	db	'cstack'
+	even
+pnmac1696	db	'syserror'
+	even
+pnmac1697	db	'error'
+	even
+pnmac1698	db	'sysdebug'
+	even
+zmserror	dd	0
+pnmac1699	db	'** '
+	even
+zcolon	dd	0
+pnmac1700	db	' : '
+	even
+zerrfstk	dd	0
+pnmac1701	db	'errfstk'
+	even
+zerrfsgc	dd	0
+pnmac1702	db	'errfsgc'
+	even
+zerrfsud	dd	0
+pnmac1703	db	'errfsud'
+	even
+zerrfpgc	dd	0
+pnmac1704	db	'errfpgc'
+	even
+zerrfsym	dd	0
+pnmac1705	db	'errfsym'
+	even
+zerrfcns	dd	0
+pnmac1706	db	'errfcns'
+	even
+zerrfflt	dd	0
+pnmac1707	db	'errfflt'
+	even
+zerrffix	dd	0
+pnmac1708	db	'errffix'
+	even
+zerrfhep	dd	0
+pnmac1709	db	'errfhep'
+	even
+zerrfstr	dd	0
+pnmac1710	db	'errfstr'
+	even
+zerrfvec	dd	0
+pnmac1711	db	'errfvec'
+	even
+zerrmac	dd	0
+pnmac1712	db	'errmac'
+	even
+zerrudv	dd	0
+pnmac1713	db	'errudv'
+	even
+zerrudf	dd	0
+pnmac1714	db	'errudf'
+	even
+zerrudm	dd	0
+pnmac1715	db	'errudm'
+	even
+zerrudt	dd	0
+pnmac1716	db	'errudt'
+	even
+zerrbdf	dd	0
+pnmac1717	db	'errbdf'
+	even
+zerrwna	dd	0
+pnmac1718	db	'errwna'
+	even
+zerrbpa	dd	0
+pnmac1719	db	'errbpa'
+	even
+zerrbal	dd	0
+pnmac1720	db	'errbal'
+	even
+zerrilb	dd	0
+pnmac1721	db	'errilb'
+	even
+zerrsxt	dd	0
+pnmac1722	db	'errsxt'
+	even
+zerrios	dd	0
+pnmac1723	db	'errios'
+	even
+zerr0dv	dd	0
+pnmac1724	db	'err0dv'
+	even
+zerrnna	dd	0
+pnmac1725	db	'errnna'
+	even
+zerrnia	dd	0
+pnmac1726	db	'errnia'
+	even
+zerrnfa	dd	0
+pnmac1727	db	'errnfa'
+	even
+zerrnsa	dd	0
+pnmac1728	db	'errnsa'
+	even
+zerrnaa	dd	0
+pnmac1729	db	'errnaa'
+	even
+zerrnla	dd	0
+pnmac1730	db	'errnla'
+	even
+zerrnva	dd	0
+pnmac1731	db	'errnva'
+	even
+zerroob	dd	0
+pnmac1732	db	'erroob'
+	even
+zerrstl	dd	0
+pnmac1733	db	'errstl'
+	even
+zerrvec	dd	0
+pnmac1734	db	'errvec'
+	even
+zerrnda	dd	0
+pnmac1735	db	'errnda'
+	even
+zerrstc	dd	0
+pnmac1736	db	'errstc'
+	even
+zerrsym	dd	0
+pnmac1737	db	'errsym'
+	even
+zerrgen	dd	0
+pnmac1738	db	'errgen'
+	even
+zerrnab	dd	0
+pnmac1739	db	'errnab'
+	even
+zerrxia	dd	0
+pnmac1740	db	'errxia'
+	even
+zbreak	dd	0
+pnmac1741	db	'break'
+	even
+pnmac1742	db	'user-interrupt'
+	even
+pnmac1743	db	'mouse'
+	even
+pnmac1744	db	'clock'
+	even
+ztoplevel	dd	0
+lab_m__1  db '= '
+	even
+zcstack	dd	0
+lab_m__5  db ' error EVSTKF '
+	even
+zllcline	dd	0
+zllgetenv	dd	0
+zllgetadr	dd	0
+zllcallx	dd	0
+zrunt	dd	0
+	extrn	_accusingle2:dword
+zllsleep	dd	0
+	extrn	_accusingle1:dword
+zlldate	dd	0
+zclkalarm	dd	0
+zwithit	dd	0
+zwithnoit	dd	0
+zlltime	dd	0
+zllshwstk	dd	0
+zlerror	dd	0
+zsyserror	dd	0
+zsysdebug	dd	0
+zuserit	dd	0
+zmouse	dd	0
+zlltclock	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

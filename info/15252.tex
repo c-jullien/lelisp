@@ -1,0 +1,275 @@
+\documentstyle{ilogmanuel}
+
+
+\Begin
+\Title {Diffusion Le-Lisp}
+\SuperTitle {Le-Lisp  de  l'INRIA  version 15.25 \\
+sous-version 2}
+
+\Author {Septembre 1992}
+
+                 
+                            
+\chapter {Version "15.25.2"}
+Voici les corrections et les extensions de la nouvelle diffusion de
+\LeLisp\ version 15.25 dat\'{e}e du 22 septembre 1992.
+
+Il s'agit de la deuxi\`{e}me diffusion de maintenance de la version
+15.25.  Cette diffusion comprend uniquement des 
+contournements et corrections effectu\'{e}s sur les sp\'{e}cificit\'{e}s des
+portages sans toucher au noyau commun.
+Comme d\'{e}cid\'{e} au Club des Porteurs, aucune expansion LLM3 n'est n\'{e}cessaire.
+
+
+La bande de diffusion est explicit\'{e}e ci-dessous.
+
+Les catalogues avec tous les fichiers (pour coh\'{e}rence):
+
+\begin {itemize}
+\item   benchmarks:
+\item   bignum:
+\item   common: 
+\item   info:
+\item   llib:           
+\item   llmod:
+\item   llobj:
+\item   lltest:         
+\item   llub:   
+\item   manl:
+\item   sun:
+\item   virbitmap:
+\item   virtty: 
+\end {itemize}
+
+Les catalogues non inclus:
+
+\begin {itemize}
+\item   llm3:   aucun fichier
+\item   manual: aucun fichier
+\end {itemize}
+
+
+Les diff\'{e}rences notables sont les suivantes:
+
+\begin {itemize}
+
+\item Dans les r\'{e}pertoires {\it machine}:
+\begin {itemize}
+\item {\bf Makefile}\\
+Les fichiers {\tt Makefile} ont \'{e}t\'{e} modifi\'{e} sur un plan
+essentiellement syntaxique. Ainsi les entr\'{e}es g\'{e}n\'{e}riques
+fonctionnent maintenant sur toutes les plateformes.
+
+\item {\bf config}\\
+Am\'{e}lioration de la gestion du r\'{e}pertoire des cores lisp \`{a} la
+fabrication des images m\'{e}moire Le-Lisp.
+Dor\'{e}navant, la variable {\tt \#:system:core-directory} est mise
+\`{a} jour automatiquement \`{a} partir de l'option fournie \`{a} {\tt config}.
+
+\item {\bf complice}\\
+Introduction de deux nouvelles options: {\tt -lldir <path>} pour
+imposer un r\'{e}pertoire de r\'{e}f\'{e}rence diff\'{e}rent (r\^{o}le pricipal: o\`{u}
+aller chercher le binaire?); {\tt -cmplc <cmd>}
+pour imposer une autre commande que {\tt cmplc++} qui est le core lisp
+utilis\'{e} en standard pour compiler les modules Le-Lisp. Le manuel Unix
+a \'{e}t\'{e} revu en cons\'{e}quence. 
+
+\item {\bf cmplc++}\\
+le core utilis\'{e} par {\tt complice} en standard, int\`{e}gre maintenant
+le modules {\tt hash} et {\tt format}, tr\`{e}s couramment utilis\'{e}s.
+Cette modification intervient dans le fichier {\tt Cmplcconf.ll}.
+\end{itemize}
+
+\item Concernant les modules lisp:
+\begin{itemize}
+\item {\bf edlin}\\
+Optimisation de l'effacement des caract\`{e}res.
+
+\item {\bf evloop}\\
+Prise en compte du {\it foreground} dans la boucle d'\'{e}v\'{e}nements.
+
+\item {\bf path}\\
+Introduction de la gestion des pathnames DOS et OS2.
+
+\item {\bf product}\\
+Une d\'{e}finition de {\tt macro-open} manquait, et faisait que ce module
+ne fonctionnait pas en compil\'{e}. De plus ce module est pass\'{e} de {\tt
+llub} en {\tt llib}.
+
+\item {\bf cpmac}\\
+Le fait de recharger le module {\bf cpmac}
+introduisait des erreurs de compilation, dues au {\tt CPENV} qui
+\'{e}tait \'{e}cras\'{e}. C'est r\'{e}par\'{e}.
+
+\item {\bf complice}\\
+Lorsqu'un module import\'{e} {\tt M}, exporte une macro qui n'est pas
+dans un EVAL-WHEN, alors ce module doit \^{e}tre charg\'{e} (LOADMODULE)
+dans l'environnement de la compilation du module qui importe {\tt M}.
+Ce chargement \'{e}tait jusqu'alors fait au moyen de la forme: {\tt
+(loadmodule M t)}. le {\tt T} en second argument de LOADMODULE
+imposait le {\bf re}chargement de tout l'arbre de d\'{e}pendance de {\tt M}. On
+utilise maintenant la forme: {\tt (loadmodule M ())} afin d'all\'{e}ger
+l'environnement de compilation.
+
+\item {\bf Bitmap Virtuel}\\
+Introduction de la gestion des \'{e}crans 24 plans.
+Introduction des {\it stipples}. Ainsi que quelques corrections
+mineures. Tous les fichiers {\tt .c} sont concern\'{e}s, seuls quelques
+fichiers {\tt .ll} ont \'{e}t\'{e} modifi\'{e}s ({\tt x11init, x11graph,
+x11window, x11bitmap, x11draw, x11\_def}).
+\end{itemize}
+
+\item Concernant les sources C:
+\begin{itemize}
+\item Les probl\`{e}mes de {\tt PAGESIZE} qui rendaient parfois les
+cores lisp incompatibles sur une m\^{e}me machine, sont r\'{e}solus. (Cela ne
+concernait, \`{a} priori, que Sun4 et Apollo).
+
+\item L'introduction du portage {\it MSDOS} a introduit de nombreuses
+modifications du code C. Toutefois, ces modifications n'affectent pas 
+le code Unix, puisque ce code a \'{e}t\'{e} ajout\'{e} sous
+la condition: {\tt \#ifdef LLDOS}.
+
+\item Introduction de code C adapt\'{e} au format {\bf ELF} des fichiers objets
+(remplacant le format {\bf COFF} sur M88K, et SVR4 en particulier). Cela
+conserne principalement la fonctionnalit\'{e} {\tt GETGLOBAL}.
+
+\item Le fichier {\tt C/Machine.h} de chaque portage s'est vu
+l\'{e}g\`{e}rement modifi\'{e}, suite \`{a} l'introduction de nouvelles macros
+(LLGETCWD,LLBMEMALIGN).
+\end{itemize}
+
+\item Concernant la distribution:
+\begin{itemize}
+\item {\bf fichiers distribu\'{e}s}\\
+Les fichiers {\tt llib/RCSDIFF} et {\tt common/RCSDIFF}, contenant les
+diff\'{e}rences depuis la derni\`{e}re version, sont
+maintenant pr\'{e}sents dans {\tt USERFILES} au lieu de {\tt PORTFILES}.
+Ceci a pour cons\'{e}quence de distribuer ces deux fichiers \`{a} l'ensemble
+des clients, et non plus seulement aux porteurs. Les clients pourront
+d\`{e}s lors observer eux-m\^{e}mes l'ensemble des modifications r\'{e}alis\'{e}es
+entre deux distributions.
+\end {itemize}
+
+\item Concernant plus sp\'{e}cifiquement les clients Ilog:
+\begin{itemize}
+\item {\bf plombage}\\
+Le plombage introduit par Ilog met en jeu un fichier(ILOGACCESS), 
+qui n'\'{e}tait pas toujours referm\'{e}. C'est r\'{e}par\'{e}.\\
+Introduction de la notion de {\bf clef infinie}. \\
+Possibilit\'{e} de d\'{e}signer le fichier de clefs au travers d'une
+variable d'environnement Unix. 
+
+\item {\bf RS6000}\\
+Le loader du RS6000 a vu l'optimisation de la gestion du cache
+m\'{e}moire. Le passage des arguments de Lisp \`{a} C \'{e}tait d\'{e}fectueux
+dans certains cas d'utilisation de LISPCALL. Tout cela est r\'{e}par\'{e}.
+
+\item {\bf MAGNUM}\\
+Une erreur d'alignement de pile provoquait des erreurs de
+transmission de flottants entre C et Le-Lisp. C'est r\'{e}par\'{e}.
+
+\end {itemize}
+\end{itemize}
+
+\chapter{Corrections d'anomalies}
+
+Les changements et corrections de \LeLisp\ sont g\'{e}r\'{e}s avec des \|RATs|
+(Requ\^{e}tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez obtenir le texte complet
+de chaque RAT sur simple demande.
+
+\begin{tabbing}
+\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \= \kill
+\verb_Rats for le-lisp selected by status-fixed? as of 22/09/1992._\\ \verb_ _\\
+\hspace{-5em}rat 240 \> area: {\it  kernel
+\ }\> aspect: {\it  compiler
+\ }\> origin: {\it  parquier
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_select compiles into nested if
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1084 \> area: {\it  user-contributed-software
+\ }\> origin: {\it  meffre@ilog (Marie Francoise Meffre)
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_detail dans un message d'erreur de LLUB/LOADFILE
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1142 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  E. Canton [Ilog]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_MAP-EXPAND-PATHNAME traite mal certains cas combines avec DIRECTORYP
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1248 \> area: {\it  user-contributed-software
+\ }\> origin: {\it  kuczynsk
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_liaison dynamyque dnageureuse dans le module PRODUCT
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1371 \> area: {\it  ports
+\ }\> aspect: {\it  tools
+\ }\> origin: {\it  J. Chailloux [Ilog]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_le plombeur semble mal fermer le fichier ILOGACCESS
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1599 \> area: {\it  run-time
+\ }\> aspect: {\it  o/s-interface
+\ }\> origin: {\it  kuczynsk
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_le PLOMBEUR oublie de fermer le fichier ILOGACCESS
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1608 \> area: {\it  compiler
+\ }\> aspect: {\it  complice
+\ }\> origin: {\it  le
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_cpenv
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1651 \> area: {\it  compiler
+\ }\> aspect: {\it  complice
+\ }\> origin: {\it  le@ilog
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_la commande shell COMPLICE devrait ouvrir ses variables SHELL
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1661 \> area: {\it  i/o
+\ }\> aspect: {\it  virtty
+\ }\> origin: {\it  eisenman@ilog
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_certains messages qui font peu industriel...
+_\\ 
+\verb_ _\\ 
+\end{tabbing}
+
+\End

@@ -1,0 +1,132 @@
+        (test-serie "[Read functions]" ())
+
+;;; Presentation: 
+;;; form-to-evaluate       result
+;;;     or
+;;; (test-read)           expected-value      tested-value
+
+(defun test-read ()
+       (car (catcherror t (read))))        test-read
+
+
+(setq #:system:read-case-flag ())       ()
+(test-read)             |abcdefg|       abcdefg         
+(test-read)             |abcdefg|       abcdefg
+
+(setq #:system:read-case-flag t)        t
+(test-read)             |abcdefg|       abcdefg         
+(test-read)             |ABCDEFG|       ABCDEFG
+
+(setq #:system:read-case-flag ())       ()
+
+(test-read)                     #.(symbol 'a1 ||)    #:a1:||
+(test-read)                     #.(symbol 'a2 ())    #:a2:||
+(test-read)                     #.(symbol '|| "a4")  #:||:a4
+(test-read)                     #.(symbol () "a5")  #:||:a5
+(setq #:aa:|| 99)               99
+#.(symbol 'aa '||)              #.#:aa:||
+(set (symbol '|| 'a) 88)        88
+#:||:a                          88
+
+(test-read)                     +       +       
+(test-read)                     -       -       
+(test-read)                     10      +10     
+(test-read)                     -10     -10     
+(test-read)                     6       12/2    
+(test-read)                     -6      12/-2
+(test-read)                     -6      -12/2
+(test-read)                     6       12/2
+(test-read)                     |12/|   12/     
+(test-read)                     |/12|   /12     
+(test-read)                     |/-12|  /-12    
+(test-read)                     |12/-|  12/-    
+(test-read)                     |12/+|  12/+    
+(test-read)                     |+/+|   +/+     
+(test-read)                     |-/+|   -/+     
+(test-read)                     |+/-|   +/-     
+(test-read)                     |-/-|   -/-     
+(test-read)                     |12.12/12|      12.12/12        
+(test-read)                     |12/0.|         12/0.     
+(test-read)                     |0./0|  0./0    
+(test-read)                     (ERRGEN / (12 5)) 12/5  
+
+(test-read)			()			`()     
+(test-read)			(ERRSXT |,| 12)		, 
+(test-read)			'1			`1      
+(test-read)			'a			`a      
+(test-read)			x			`,x     
+(test-read)                     (ERRSXT |`| 12)		`,@a
+(test-read)                     (ERRSXT |`| 12)		`,.a
+(test-read)			x			`(,@x)
+(test-read)			(append x y)		`(,@x ,@y)
+(test-read)			(append x y z)		`(,@x ,@y ,@z)
+(test-read)			(append x '(a))		`(,@x a)  
+(test-read)			x			`(,.x)
+(test-read)			(nconc x '(a))		`(,.x a)
+(test-read)			'(a)			`(a)
+(test-read)			(ncons x)		`(,x)
+(test-read)			(list x x)		`(,x ,x)
+(test-read)			(list 'a x)		`(a ,x)
+(test-read)			(cons x '(a))		`(,x a)
+(test-read)			'(a b)			`(a b)
+(test-read)			(mcons 'a x '(b))	`(a ,x b)
+(test-read)			(list 'a 'b x)		`(a b ,x)
+(test-read)			(mcons 'a 'b 'c x)	`(a b c ,@x)
+(test-read)			(cons x y)		`(,x ,@y)       
+
+(test-read)             97              #/a
+(test-read)             32              #\sp
+(test-read) (ERRUDV #:sharp:value foo)  #\foo
+(test-read)             3               #^C
+(test-read)             -21555          #$ABCD
+(test-read)             5               #%101
+(test-read)             127             #8r177
+
+(test-read)             8240            #\sp|/0
+(test-read)             6145            #^X|^A
+(test-read)             257             #^a|^a
+(test-read)             288             #^a|\sp
+(test-read)             353             #^a|/a
+(test-read)             8224            #\sp|\sp
+(test-read)             8289            #\sp|/a
+(test-read)             8193            #\sp|^a
+(test-read) (ERRSXT #:sharp:lowbyte 36) #\sp|$
+(test-read) (ERRUDV #:sharp:value foo)  #^a|\foo
+(test-read)             (function foo)  #'foo
+(test-read)             (97 98 99 32)   #"abc "
+(test-read)             #:(a):b         #:(a):b
+(test-read)             4               #.4
+(test-read)             #(1 . 2)        #.(tcons 1 2)
+(test-read)             ()              #()
+(test-read)             (1 () 2 ())     (1 #() 2 #())
+(test-read)             #.(list 1 '#.(concat 'a 'b) 3)  (1 ab 3)
+(test-read)             #.(makevector 3 1) #[1 1 1]
+(test-read)             2               #+t 2
+(test-read)             3               #-() 3
+(test-read)             ()              #+() 4
+(test-read)             ()              #-t 5
+(test-read)             ()              #| This must not
+be ; in neither case
+ " and then!
+  #|evaluated by the test-read |#
+but result must be nil |#
+
+(dms |%| () 
+     (rplacd (curread)
+             (cons '|%| (cdr (curread))))
+     ())                |%|
+(test-read)             (|%| a b c (|%| d e))   (a b % c (d % e))
+(typecn #/% 'cpname)    cpname
+
+(defsharp 1 ())                         (ERRSYM defsharp 1)
+(stratom t "abcdef" ())                 (ERRNIA stratom t)
+(stratom 3 t ())           	        (ERRNSA stratom t)
+(stratom 3 "abcdef" ())                 abc
+(stratom 3 "01234" ())			12
+(stratom 3 "01234" t)                   |012|
+(stratom 4 " () " ())                   | () |
+(stratom 5 "00012.34" ())               12
+(stratom 6 "00012.34" ())               12.
+(stratom 7 "00012.34" ())               12.3
+
+            (test-serie "[End of test read]" ())

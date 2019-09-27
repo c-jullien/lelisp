@@ -1,0 +1,77 @@
+defmodule #:display:x11
+files (x11bitmap.ll)
+include (
+virstruct.ll
+)
+import (
+virutil
+x11_def
+x11struct
+)
+export (
+:subst-colors
+:create-bitmap 
+:create-window-bitmap 
+:kill-bitmap
+:get-bit-line 
+:set-bit-line 
+:bmref 
+:bmset 
+:set-byte-line
+:get-byte-line 
+:byteref
+:byteset 
+:bitblit
+:kill-stipple
+:create-stipple
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:x11:subst-colors subr3 ())
+(#:display:x11:create-bitmap subr2 ())
+(#:display:x11:create-window-bitmap subr3 ())
+(#:display:x11:kill-bitmap subr2 ())
+(#:display:x11:get-bit-line nsubr ())
+(#:display:x11:set-bit-line nsubr ())
+(#:display:x11:bmref nsubr ())
+(#:display:x11:bmset nsubr ())
+(#:display:x11:set-byte-line nsubr ())
+(#:display:x11:get-byte-line nsubr ())
+(#:display:x11:byteref nsubr ())
+(#:display:x11:byteset nsubr ())
+(#:display:x11:bitblit nsubr ())
+(#:display:x11:kill-stipple subr2 ())
+(#:display:x11:create-stipple subr3 ())
+)
+cpfunctions (
+(#:display:x11:reverse-bit-vector subr1)
+(#:display:x11:bit-reverse subr1)
+)
+cpimport (
+(x11struct
+(#:x11:bitmap:make . subr0)
+)(x11_def
+(x11_subst_colors . nsubr)
+(x11_create_bitmap . subr3)
+(x11_default_gc . subr1)
+(x11_set_background . subr3)
+(x11_set_foreground . subr3)
+(x11_kill_bitmap . subr2)
+(x11_get_bit_line . nsubr)
+(x11_set_bit_line . nsubr)
+(x11_bmref . nsubr)
+(x11_bmset . nsubr)
+(x11_set_byte_line . nsubr)
+(x11_get_byte_line . nsubr)
+(x11_byteref . nsubr)
+(x11_byteset . nsubr)
+(x11_bitblit . nsubr)
+(x11_create_stipple . nsubr)
+))
+cpenv (
+virutil
+x11_def
+x11struct
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

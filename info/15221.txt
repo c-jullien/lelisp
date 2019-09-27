@@ -1,0 +1,365 @@
+		 Le-Lisp  de  l'INRIA  version 15.22
+
+			      Janvier 89
+
+
+Voici les corrections et les extensions de la nouvelle diffusion de
+Le-Lisp version 15.22 (dite ``des Rois Mages'') date'e du 6 janvier
+1989.
+
+Une fois par an, l'INRIA et ILOG livrent aux porteurs une nouvelle
+version de Le-Lisp comprenant des ame'liorations, extensions et
+corrections.  Seule cette diffusion annuelle contient des changements
+a` la souche de Le-Lisp, e'crite en LLM3.
+
+
+Survol de 15.22
+===============
+
+
+Les diffe'rences majeures entre la version 15.21 et la version 15.22 sont
+les suivantes : 
+
+Des corrections aux erreurs signale'es. (cf RATs)
+
+Le traitement des modules a e'te' ame'liore' de plusieurs fac,ons.  On
+peut maintenant inclure des commentaires dans les descriptions des
+modules (les fichiers .lm).  On peut aussi charger les modules en
+interprete' (l'ensemble des fichiers sources est charge' si le
+chargeur n'est pas pre'sent ou si il n'y a pas de version compile'e du
+module).  L'exportation de l'ensemble des de'finitions est aujourd'hui
+possible en de'finissant un nouveau type d'exportation.  Le-Lisp est
+lance' avec un processus unique (il n'y a plus de lelispgo).  Ceci
+permet a` des applications e'crites en Le-Lisp de communiquer beaucoup
+plus simplement avec les syste`mes ho^tes (par exemple, les tuyaux
+Un*x).
+
+Un nouveau traitement d'erreur pile pleine.  De'sormais en mode debug,
+lors d'une erreur pile pleine l'utilisateur voit la trace de la pile
+qui lui permet une correction tre`s simple.
+
+La fonction  end affine le contro^le de la sortie de Le-Lisp.
+ (end t) sort avec un code d'erreur retourne' au syste`me ho^te.
+ (end ()) sort sans imprimer la salutation.  Et bien su^r, 
+(end) conserve le traitement standard.
+
+Du me^me cru, save-core permet maintenant de distinguer le retour de
+cre'ation d'une image me'moire, de sa restoration.  L'appel a`
+save-core retourne a` pre'sent T, et chaque appel a` restore-core
+retourne ().
+
+Il y a une nouvelle imple'mentation des variables ge'ne'ralise'es
+(setf).  Cette fonctionalite' permet d'affecter des positions dans des
+objets arbitraires sans cre'er une fonction (ou un nom) spe'cialise'e.
+
+Il y une implantation comple`te des tables de hachage.  Une table de
+hachage est un type de donne'es permettant un acce`s rapide a` un
+ensemble des valeurs a` l'aide des cle's.
+
+Les appels externes ont e'te' e'tendus pour permettre les variables
+par re'fe'rence (RFIX, RFLOAT) ainsi que les vecteurs d'entiers et de
+flottants (FIXVECTOR, FLOATVECTOR).
+
+Une implantation des noms des fichiers virtuels est dore'navant fournie
+en Le-Lisp.  Les fichiers peuvent e^tre inclus dans du code Le-Lisp
+de fac,on portable.  
+
+Les tests de performance ont e'te' revus facilitant le passage des 
+``benchmarks'' par les utilisateurs eux-me^mes.
+
+Le Bitmap Virtuel a e'te' reconc,u afin de permettre plusieurs
+instances de BV (des display's) dans une me^me image me'moire.  Il y a
+e'galement plus d'accessibilite' aux parame`tres graphiques tels que
+couleur, formes de curseur et polices virtuelles.  Un exemple de
+portage du Bitmap Virtuel au gou^t du jour est fourni pour X11.  Les
+portages pre'ce'dants continuent de fonctionner.
+
+Une deuxie`me implantation de l'arithme'tique ge'ne'rique, plus rapide
+(KerN) est fournie.
+
+Greg Nuyens 
+ILOG, S.A.
+
+
+les RATs
+========
+Les changements de Le-Lisp sont ge're's avec des RATs
+(Reque^tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez avoir le texte complet
+d'un rat d'ILOG en nous en communiquant le nume'ro.  (Notez s'il vous
+plai^t que les nume'ros des RATs sont partage's par tous les produits
+ILOG et pas uniquement Le-Lisp.  Ne soyez pas effraye' par les
+nume'ros e'leve's!)
+
+
+rat 7 area: language aspect: arithmetic 
+status: fixed origin: J. Chailloux 
+documentation de floor ceiling et round 
+
+rat 8 area: ports aspect: tools 
+status: fixed origin: nuyens 
+Have to query stars by number. 
+
+rat 10 area: i/o aspect: formatted-i/o 
+status: fixed origin: Pierre Duquesnoy 
+RMARGIN 257 veut dire infini mais ce n'est documente'. 
+
+rat 12 area: i/o aspect: basic-i/o 
+status: fixed origin: Bernard Serpette [INRIA] 
+SHARP-LOWBYTE/SHARP-VALUE engendrent des messages bizares parfois. 
+
+rat 13 area: language aspect: interpreter 
+status: fixed origin: Alain Laville 
+EXPLODE ajoute tjrs un blanc qd il explose une chaine plus grande que RMARGIN
+
+rat 18 area: i/o aspect: basic-i/o 
+status: fixed origin: B. Serpette 
+(CLOSE) ne reouvre pas la console. 
+
+rat 34 area: ports aspect: tests 
+status: fixed origin: nuyens 
+INCR a1,label ne precise pas si A1 est incremente' en cas de de'bordement. 
+
+rat 39 area: compiler aspect: complice 
+status: fixed origin: F. Fages [Thomson CSF] 
+complice ne respecte pas la trace 
+
+rat 40 area: language aspect: interpreter 
+status: fixed origin: tres vieux! 
+&NOBIND et LET sont incompatibles 
+
+rat 42 area: i/o aspect: virbitmap 
+status: fixed origin: nuyens 
+les tests ne teste pas fill-rectangle, ni "character attributes" 
+
+rat 52 area: language aspect: interpreter 
+status: fixed origin: vieux probleme de l'interprete [Inria, Bull,...] 
+En cas d'erreur sur le nbre d'arguments, les variables deja lie'es sont remanentes. 
+
+rat 53 area: other 
+status: fixed origin: B. Serpette 
+: LLM3 : Une declaration PURE a disparu de gc.llm3 
+
+rat 73 area: language aspect: interpreter 
+status: fixed origin: B. Serpette [INRIA] 
+les TCONS avec car flottant s'ne s'impriment pas. 
+
+rat 74 area: language aspect: interpreter 
+status: fixed origin: B. Serpette [INRIA] 
+FREECONS n'efface pas le type d'un cons type'. 
+
+rat 77 area: programming-environment aspect: step 
+status: fixed origin: J. Duthen [IRCAM] 
+Generalisation des variables d'entree/sortie lors d'un STEP ou TRACE 
+
+rat 80 area: memory-management 
+status: fixed origin: Cyril CAMBIEN [ACT] 
+FREECONS doit verifier que son argument est un CONS. 
+
+rat 81 area: i/o aspect: formatted-i/o 
+status: fixed origin: Cyril CAMBIEN [ACT] 
+#() fait planter la machine (tous systemes) 
+
+rat 82 area: language aspect: interpreter 
+status: fixed origin: Cyril CAMBIEN [ACT] 
+CATENATE devrait verifier la longueur de la chaine resultat. 
+
+rat 84 area: ports aspect: tools 
+status: fixed origin: Julien Basch [ACT] 
+mac68k: MOVXSP avec une cste s'expanse mal sur Mac 
+
+rat 123 area: language aspect: interpreter 
+status: fixed origin: Jose GRIMM 
+DEFSHARP devrait tester le type de son 1er argument. 
+
+rat 126 area: compiler aspect: llcp 
+status: fixed origin: Parquier [BULL] 
+Mauvaise compilation de (REPEAT) : 
+
+rat 128 area: compiler aspect: llcp 
+status: fixed origin: Parquier [BULL] 
+Il faut mieux documenter les cas de la compilation des fonctions. 
+
+rat 130 area: language aspect: interpreter 
+status: fixed origin: Parquier [BULL] 
+message d'erreur a revoir pour les e'chappements inde'finis au toplevel. 
+
+rat 172 area: language aspect: other 
+status: fixed origin: Duthen [IRCAM] 
+Documentation: RASSQ opere sur des paires pointe'es [p 3-60] 
+
+rat 173 area: language aspect: interpreter 
+status: fixed origin: W. Hubert, CRIL 
+apply d'un Mlambda explicite ne marche pas, mais d'un DM marche. 
+
+rat 175 area: memory-management 
+status: fixed origin: Dupont, INRIA 
+LEXPLD, RINGUR, CURREAD, IMPLD ne sont pas restaures apres le GC 
+
+rat 177 area: ports aspect: tests 
+status: fixed origin: Dupont INRIA 
+Les cores executable sont restaure' avec un SPEXT invalide. 
+
+rat 180 area: compiler aspect: complice 
+status: fixed origin: J. Duthen [IRCAM] 
+incompatibilite interprete-compilateur. message d'erruer + explicite du loader?
+
+rat 183 area: other 
+status: fixed origin: Remi Houdaille [SEMA METRA] 
+Documentation: description du system HP9000 incorrect 
+
+rat 187 area: ports aspect: loader 
+status: fixed origin: JC Sejourne [Sema Metra] 
+conflit de nom de 2 fichiers differents, de de me^me nom 
+
+rat 191 area: compiler aspect: complice 
+status: fixed origin: Gerard Cany 
+Le comportement de COMPILEFILES face aux extensions est parfois bizarre 
+
+rat 193 area: language aspect: interpreter 
+status: fixed origin: Parquier [Bull] 
+(PRINT) ne rend pas le mm resultat que (APPLY 'PRINT ()) 
+
+rat 195 area: compiler aspect: complice 
+status: fixed origin: devin 
+loadmodule si loader non charge' 
+
+rat 199 area: i/o aspect: virbitmap 
+status: fixed origin: devin 
+(until (tys)) bloque sous virtty 
+
+rat 207 area: ports aspect: tools 
+status: fixed origin: kuczynsk 
+confusion de machines a` l'expansion, sous NFS avec plusieurs machines 
+
+rat 212 area: run-time aspect: external-functions 
+status: fixed origin: erhili 
+pusharg ne marche pas avec les flottants 
+
+rat 215 area: language aspect: extended-types 
+status: fixed origin: nuyens 
+longeur par defaut est faux pour les operations sur les chaines 
+
+rat 216 area: user-contributed-software 
+status: fixed origin: B. Serpette [INRIA] 
+CEYX ne marche plus dans l'environnement modulaire a` cause de FLAT 
+
+rat 218 area: compiler aspect: complice 
+status: fixed origin: GRIMM 
+Optimisation douleureuse de compilateur sur cons et last. 
+
+rat 227 area: language aspect: interpreter 
+status: fixed origin: Matthieu Devin [Ilog] 
+il faut un point d'entre'e pour HBTEQ 
+
+rat 228 area: ports aspect: loader 
+status: fixed origin: J. Chailloux [Ilog] 
+le clacalcul empirique des sauts courts n'est pas toujours suffisant. 
+
+rat 232 area: compiler aspect: complice 
+status: fixed origin: Jose GRIMM [INRIA] 
+COMPLICE ne sait pas expanseer les macros dans un PROGN 
+
+rat 233 area: compiler aspect: complice 
+status: fixed origin: Jose GRIMM [INRIA] 
+Le WARNING W2 de complice sur double definition est parfois bizarre. 
+
+rat 238 area: language aspect: interpreter 
+status: fixed origin: nuyens 
+document substring-equal 
+
+rat 240 area: i/o aspect: virbitmap 
+status: fixed origin: nuyens 
+il n'y pas bmref/bmset dans le bv pour X10.4 
+
+rat 241 area: i/o aspect: virbitmap 
+status: fixed origin: samarcq 
+de sauver des bitmaps sur fichier prend trop de place et temps. 
+
+rat 242 area: run-time aspect: o/s-interface 
+status: fixed origin: dana besson 
+mode des fichiers crees par le-lisp sur UNIX (sun) 
+
+rat 247 area: run-time aspect: o/s-interface 
+status: fixed origin: devin 
+fill area dans X10 ne marche pas toujours en noir sur blanc 
+
+rat 278 area: other 
+status: fixed origin: Eisenmann Michel [Ilog] 
+le calcul de WIDTH-SUBSTRING ne re'agit pas a` son 1er argument 
+
+rat 279 area: other 
+status: fixed origin: J. Chailloux [Ilog] 
+le nom de complice.rec a change 
+
+rat 280 area: ports aspect: loader 
+status: fixed origin: kuczynsk 
+Le passage de loader.lo dans le directory systeme pose des pbs. 
+
+rat 282 area: compiler aspect: complice 
+status: fixed origin: V. Samarcq [Ilog] 
+cas de mauvais code ge'ne're' avec UNTIL 
+
+rat 283 area: programming-environment aspect: rats 
+status: fixed origin: devin 
+variable #:system:directory ne peut pas e^tre positionne' avant startup 
+
+rat 290 area: run-time aspect: o/s-interface 
+status: fixed origin: devin 
+main() et lelisp() 
+
+rat 298 area: language aspect: interpreter 
+status: fixed origin: chaillou 
+message d'erreur a` l'application des LAMBDAs 
+
+rat 299 area: language aspect: interpreter 
+status: fixed origin: nuyens 
+trace d'= plante l'interprete 
+
+rat 302 area: language aspect: interpreter 
+status: fixed origin: nuyens 
+documentation: def de send-error en chapitre 5 manque.e 
+
+rat 303 area: language aspect: extended-types 
+status: fixed origin: chaillou 
+NUMBERP  teste pas les types e'tendus 
+
+rat 304 area: language aspect: extended-types 
+status: fixed origin: chaillou 
+arithmetique generique testent mal les types e'tendus  
+
+rat 305 area: language aspect: extended-types 
+status: fixed origin: chaillou 
+EQSTRING et EQVECTOR 
+
+rat 308 area: i/o aspect: virbitmap 
+status: fixed origin: devin 
+impossible de re'cuperer les bits d'une icone X10.4 sur e'cran couleur 
+
+rat 310 area: ports aspect: loader 
+status: fixed origin: Ducourneau & CNET 
+llap68k contient des globales non-packagees comme pop et push. 
+
+rat 311 area: i/o aspect: basic-i/o 
+status: fixed origin: neidl 
+primitives LLM3 des pathnames 
+
+rat 312 area: language aspect: interpreter 
+status: fixed origin: chaillou 
+on a besoin de #:system:locint pour hacher des adresses en fixnum 
+
+rat 321 area: i/o aspect: basic-i/o 
+status: fixed origin: neidl 
+save-core et restore-core - resultat significatif 
+
+rat 323 area: programming-environment aspect: trace 
+status: fixed origin: neidl 
+trace - compile - setfn - untrace - pretty 
+
+rat 328 area: memory-management 
+status: fixed origin: nuyens 
+mauvais extension de signe dans le macro llm3 pour subadr 
+
+
+
+

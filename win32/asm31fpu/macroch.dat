@@ -1,0 +1,200 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	zsyspkgc:dword
+	extrn	fcons:dword
+	extrn	mstack:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zllexpr:dword
+	extrn	tabch:dword
+	extrn	zlread:dword
+	extrn	ibase:dword
+	extrn	cpkgc:dword
+	extrn	zstatrc:dword
+	extrn	savea4:dword
+	extrn	zfunction:dword
+	extrn	zquote:dword
+	extrn	znconc:dword
+	extrn	zappend:dword
+	extrn	zmcons:dword
+	extrn	zllcons:dword
+	extrn	zfncons:dword
+	extrn	zlist:dword
+	extrn	zvector:dword
+tabctyp	dd	0
+tabccod	dd	0
+pnmac394	db	'dmc'
+	even
+pnmac395	db	'dms'
+	even
+pnmac396	db	'defsharp'
+	even
+pnmac397	db	'#'
+	even
+zsharp	dd	0
+pnmac398	db	'sharp'
+	even
+pnmac399	db	':'
+	even
+zuser	dd	0
+pnmac400	db	'user'
+	even
+pnmac401	db	'^'
+	even
+pnmac402	db	'['
+	even
+pnmac403	db	']'
+	even
+pnmac404	db	''''
+	even
+pnmac405	db	'`'
+	even
+pnmac406	db	','
+	even
+zcommaat	dd	0
+pnmac407	db	',@'
+	even
+zcommadot	dd	0
+pnmac408	db	',.'
+	even
+zsysharp	dd	0
+pnmac409	db	'sharp'
+	even
+zsyscol	dd	0
+pnmac410	db	'colon'
+	even
+pnmac411	db	'.'
+	even
+pnmac412	db	'+'
+	even
+pnmac413	db	'-'
+	even
+pnmac414	db	''''
+	even
+pnmac415	db	'/'
+	even
+pnmac416	db	'\'
+	even
+pnmac417	db	'^'
+	even
+pnmac418	db	':'
+	even
+pnmac419	db	'$'
+	even
+pnmac420	db	'%'
+	even
+pnmac421	db	'"'
+	even
+pnmac422	db	'|'
+	even
+pnmac423	db	'('
+	even
+pnmac424	db	'['
+	even
+pnmac425	db	'r'
+	even
+zshrpval	dd	0
+pnmac426	db	'value'
+	even
+zslowbyte	dd	0
+pnmac427	db	'lowbyte'
+	even
+pnmac428	db	'typech'
+	even
+pnmac429	db	'typecn'
+	even
+zcnull	dd	0
+pnmac430	db	'cnull'
+	even
+zcbcom	dd	0
+pnmac431	db	'cbcom'
+	even
+zcecom	dd	0
+pnmac432	db	'cecom'
+	even
+zcquote	dd	0
+pnmac433	db	'cquote'
+	even
+zclpar	dd	0
+pnmac434	db	'clpar'
+	even
+zcrpar	dd	0
+pnmac435	db	'crpar'
+	even
+zcdot	dd	0
+pnmac436	db	'cdot'
+	even
+zcsep	dd	0
+pnmac437	db	'csep'
+	even
+zcpackage	dd	0
+pnmac438	db	'cpkgc'
+	even
+zcsplice	dd	0
+pnmac439	db	'csplice'
+	even
+zcmacro	dd	0
+pnmac440	db	'cmacro'
+	even
+zcstring	dd	0
+pnmac441	db	'cstring'
+	even
+zcpname	dd	0
+pnmac442	db	'cpname'
+	even
+zcsymb	dd	0
+pnmac443	db	'csymb'
+	even
+zcmsymb	dd	0
+pnmac444	db	'cmsymb'
+	even
+zdmc	dd	0
+zdms	dd	0
+zdefsharp	dd	0
+zllquote	dd	0
+zllcomma	dd	0
+zllbquote	dd	0
+zllsharp	dd	0
+zshrpdot	dd	0
+zshrpplu	dd	0
+zshrpmoi	dd	0
+zshrpquo	dd	0
+zshrpsla	dd	0
+zshrpbak	dd	0
+zshrphat	dd	0
+zshrpcol	dd	0
+zshrpdol	dd	0
+zshrpprc	dd	0
+zshrprad	dd	0
+zshrpgui	dd	0
+zshrpbar	dd	0
+zshrppar	dd	0
+	extrn	btbin:dword
+zshrpbra	dd	0
+zllcolon	dd	0
+zllhat	dd	0
+zlllbra	dd	0
+zllrbra	dd	0
+ztypech	dd	0
+ztypecod	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

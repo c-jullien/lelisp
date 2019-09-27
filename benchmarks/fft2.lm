@@ -1,0 +1,15 @@
+defmodule
+fft
+files
+(fft2)
+export
+(check-fft meter-fft test-fft fft-test)
+import
+(checkmet)
+cpexport
+((check-fft subr0 ()) (meter-fft subr0 ()) (test-fft subr1 ()) (fft-test subr0
+()))
+cpfunctions
+((fft-bench subr0) (fft subr2) (ipower subr2))
+cpimport
+((checkmet (check-value . subr2) (perform-meter . subr2)))

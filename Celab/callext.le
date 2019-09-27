@@ -1,0 +1,37 @@
+;;; GELL 15.26: elaboration file for the module: callext
+;;;             translation done: "Wed June 16 93 18:01:50 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: callext.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'callext)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZcallext" "Wed June 16 93 18:01:50 "
+
+'((#:system:cached-getglobal . subr1) (getinlib . subr3) (defextern . dmsubr) (buildextern . nsubr) (calllibextern . dmsubr) (defextern-cache . nsubr) (cload . subr1))
+
+#[#:system:defextern-cache string getglobal #:system:getglobal-cache #:system:getinlibp eval vector apply system #:callext:errnotyet getinlib name (name) fix errbal defextern #:system:cached-getglobal buildextern #:llcp:errwna (name) external adress unless or fixp list and consp car cdr error quote 'errnda rfix 'errnia float rfloat floatp 'errnfa stringp 'errnsa fixvector floatvector vectorp 'errvec calllibextern callextern precompile numberp kwote vag nreconc mcons loc zerop errudf defun append1 "arg" concat #:callext:callext symbol InvokeIndirectFunction 0. "floatvector (64BITFLOATS)" errgen t erroob errwna defextern-cache ((lambda (x y) (alphalessp (car x) (car y)))) function sort ((lambda (x y) (alphalessp (car x) (car y)))) substring remfn rplac #:system:cloadp #:system:recloadp #:system:ccode #:system:ecode cload errnsa llgetinlib errvec errnia llcload errnda #:gell-resetfn:function-name #:gell-resetfn:function-1 #:gell-resetfn:function-3 #:gell-resetfn:function-n]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'callext)))
+(defvar #:system:getinlibp (eq (system) 'msdos))
+(defvar #:sys-package:colon 'callext)
+(add-feature 'callext)
+(#:messages:put-message '#:callext:errnotyet 'french '"non imple'mente' dans le syste`me" 'defmessage)
+(#:messages:put-message '#:callext:errnotyet 'english '"not implemented in this system" 'defmessage)
+'#:callext:errnotyet
+(defcsetfn '#:system:cached-getglobal "GZcallext" 0)
+(defcsetfn 'getinlib "GZcallext" 1)
+(defcsetfn 'defextern "GZcallext" 2)
+(defcsetfn 'buildextern "GZcallext" 3)
+(defvar InvokeIndirectFunction (getglobal 'InvokeIndirectFunction))
+(defcsetfn 'calllibextern "GZcallext" 4)
+(defvar #:system:defextern-cache (when (boundp '#:system:defextern-cache) #:system:defextern-cache))
+(defvar #:system:getglobal-cache (when (boundp '#:system:getglobal-cache) #:system:getglobal-cache))
+(defcsetfn 'defextern-cache "GZcallext" 5)
+(defvar #:system:recloadp ())
+(defcsetfn 'cload "GZcallext" 6)
+
+(defccheck '(#:system:ecode #:system:ccode rplac loc remfn substring sort function symbol concat append1 zerop mcons nreconc kwote numberp list #:llcp:errwna buildextern #:system:cached-getglobal getinlib system apply eval getglobal string))

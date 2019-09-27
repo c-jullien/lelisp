@@ -1,0 +1,24 @@
+; The Le-Lisp Benchmarks (4) : ctak
+
+defmodule    ctak
+files       (ctak)
+export      (check-ctak meter-ctak test-ctak)
+import      (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-ctak subr0 ())
+(meter-ctak subr0 ())
+(test-ctak subr1 ())
+)
+cpfunctions (
+(ctak subr3)
+(ctak-aux subr3)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+)

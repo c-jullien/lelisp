@@ -1,0 +1,34 @@
+defmodule
+system
+files (
+loadfile
+)
+export (
+#:system:loadfile:bol
+#:system:loadfile:eof
+#:system:loadfile:syserror
+loadfile
+)
+import (
+messages
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:system:loadfile:bol subr0 ())
+(#:system:loadfile:eof subr1 ())
+(#:system:loadfile:syserror subr3 ())
+(loadfile subr2 ())
+)
+cpfunctions
+()
+cpimport (
+(messages
+(get-message . subr1)
+))
+cpenv (
+messages
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

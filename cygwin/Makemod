@@ -1,0 +1,872 @@
+#  Le Makefile de compilation des librairies lisp
+#  Le-Lisp version 15.2 > 1-Aout-1987
+SHELL=/bin/sh
+
+#  Les syste`mes proprement dit: lelisp/$(SYSTEM)
+SYSTEM=$(shell basename $(PWD))
+
+#  On va chercher un complice "su^r":
+#   (de preference un path absolu: pensez a virbitmap/?*?/?*.lo !)
+CMDDIR=$(PWD)/
+COMPLICE=@$(CMDDIR)complice
+
+CP=@cp
+
+# the default entry
+all: standard
+
+##########################################################################
+# les flags de compilation LL
+
+CMPLCPATH=-p \"../llib/\" -p \"../llmod/\" -p \"../llobj/\" -p \"./\"
+CMPLCUPATH=-p \"../llub/\"
+CMPLCOBJ=-o ../llobj
+#CMPLCOPTIM=-e '(set (symbol (quote rehash)(quote verbose)) t)' -e '(libloadfile (quote rehash) t)'
+COMPLICECFLAGS=	-parano nil -w t
+
+# les flags de compilation
+ICMPLCFLAGS=	$(COMPLICEFLAGS) $(CMPLCPATH) $(CMPLCOBJ)
+# + optimisation
+CMPLCFLAGS=	$(ICMPLCFLAGS) $(CMPLCOPTIM)
+# + llub
+UCMPLCFLAGS=	$(CMPLCUPATH) $(CMPLCFLAGS)
+
+#  Ce que ne sait pas faire ce makefile:
+.PRECIOUS: ../llobj/complice.lo  ../$(SYSTEM)/bnkern.lo ../llobj/llpboot.lo
+#  Ce qui est reserve' aux porteurs:
+.PRECIOUS: ../llobj/files.lo ../llobj/module.lo
+
+# Les fichiers objets issus de llib et charge's en standard:
+#   l'ordre des 3 1eres lignes est important!
+obji= ../llobj/module.lo   ../llobj/files.lo    \
+	../$(SYSTEM)/loader.lo	\
+	../llobj/toplevel.lo	\
+	../llobj/defs.lo	\
+	../llobj/messages.lo	\
+	../llobj/virtty.lo	\
+	../llobj/genarith.lo	\
+	../llobj/fasl.lo	\
+	../llobj/path.lo	\
+	../llobj/setf.lo	\
+	../llobj/sort.lo	\
+	../llobj/array.lo	\
+	../llobj/callext.lo	\
+	../llobj/trace.lo	\
+	../llobj/pretty.lo	\
+	../llobj/defstruct.lo	\
+	../llobj/abbrev.lo	\
+	../llobj/ttywindow.lo	\
+	../llobj/date.lo	\
+	../llobj/debug.lo	\
+	../llobj/microceyx.lo	\
+	../llobj/pepe.lo	\
+	../llobj/cpmac.lo	\
+	../llobj/llcp.lo	\
+	../llobj/virutil.lo	\
+	../llobj/virmenu.lo	\
+	../llobj/vircolor.lo	\
+	../llobj/virbit.lo	\
+	../llobj/virevent.lo	\
+	../llobj/virdraw.lo	\
+	../llobj/virgraph.lo	\
+	../llobj/virwindow.lo	\
+	../llobj/virinit.lo	\
+	../llobj/virbitmap.lo	\
+	../llobj/stringio.lo	\
+	../llobj/format.lo	\
+	../llobj/genr.lo	\
+	../llobj/ratio.lo	\
+	../llobj/hash.lo	\
+	../llobj/evloop.lo	\
+	../llobj/edlin.lo	\
+	../llobj/product.lo	\
+	../llobj/rehash.lo	\
+	../llobj/lmcache.lo
+
+# Les fichiers objets issus de llib mais non charge's en standard:
+objj= \
+	../$(SYSTEM)/bnkern.lo	\
+	../llobj/bngen.lo	\
+	../llobj/bnq.lo		\
+	../llobj/bnz.lo		\
+	../llobj/bnn.lo		\
+	../llobj/complex.lo	\
+	../llobj/schedule.lo	\
+	../llobj/llmenu.lo	\
+	../llobj/libdate.lo	\
+	../llobj/libcir.lo	\
+	../llobj/minimore.lo	\
+	../llobj/topwin.lo	\
+	../llobj/sets.lo
+
+# Les fichiers pour les bitmaps virtuels.
+objb= ../virbitmap/X11/x11.lo \
+      ../virbitmap/bvtty/bvtty.lo
+# bitmaps couramment utilise's
+objbc= ../virbitmap/X11/x11.lo ../virbitmap/bvtty/bvtty.lo
+
+# Tous les fichiers objets issus de llub (et couramment utilise's)
+obju= \
+	../llobj/meme.lo	\
+	../llobj/lledit.lo	\
+	../llobj/lleditor.lo	\
+	../llobj/loadfile.lo
+
+# Tous les fichiers objets issus de llub (et non couramment utilise's)
+objv= ../llobj/mvalues.lo   ../llobj/defun.lo     \
+      ../llobj/croch.lo     ../llobj/macedit.lo   \
+      ../llobj/maceditor.lo ../llobj/timetrace.lo \
+      ../llobj/countcalls.lo
+
+# files inside system directory
+objs=	../$(SYSTEM)/loader.lo	\
+	../$(SYSTEM)/bnkern.lo
+
+##########################################################################
+# L'ensemble des fichiers a` compiler:
+obj= $(obji) $(objj) $(objbc) $(obju)
+
+# L'entre'e standard
+standard: $(obj) $(objv)
+
+# Entre'es spe'cifiques
+std:    $(obji) ../virbitmap/X11/x11.lo
+llib:   $(obji) $(objj)
+bitmap: $(objb)
+llub:   $(obju) $(objv)
+system: $(objs)
+
+# qq entree's utiles
+clean:
+	for m in $(obj) $(objv) ; do \
+		rm -f $$m ; \
+		rm -f ../llmod/`basename $$m .lo`.lm ; \
+	done
+
+i:
+	$(COMPLICE) $(CMPLCFLAGS) -v -i
+
+##########################################################################
+# les modules
+../llobj/abbrev.lo: ../llib/abbrev.ll ../llmod/abbrev.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) abbrev
+
+../llobj/array.lo: ../llib/array.ll ../llmod/array.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) array
+
+../$(SYSTEM)/bnkern.lo: ../$(SYSTEM)/bnkern.ll ../$(SYSTEM)/bnkern.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) -callext t bnkern
+	mv ../llobj/bnkern.lo $@
+
+../llobj/bngen.lo: ../llib/bngen.ll ../llmod/bngen.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) bngen
+
+../llobj/bnn.lo: ../llmod/bnn.lm ../llib/bnn.ll \
+		../$(SYSTEM)/bnkern.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) bnn
+
+../llobj/bnq.lo: ../llmod/bnq.lm ../llib/bnq.ll \
+		../llobj/bngen.lo ../llobj/bnz.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) bnq
+
+../llobj/bnz.lo: ../llib/bnz.ll ../llmod/bnz.lm \
+		../$(SYSTEM)/bnkern.lm \
+		 ../llobj/bngen.lo ../llobj/bnn.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) bnz
+
+../llobj/callext.lo: ../llib/callext.ll ../llmod/callext.lm \
+		../llobj/sort.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) \
+		-e '(de getglobal (x) 1)(compile getglobal)' callext
+
+../llobj/complex.lo: ../llib/complex.ll ../llmod/complex.lm \
+		../llobj/genr.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) complex
+
+../llobj/cpmac.lo : ../llib/cpmac.ll ../llmod/cpmac.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) cpmac
+
+../llobj/cstruct.lo: ../llmod/cstruct.lm ../llib/cstruct.ll \
+		../$(SYSTEM)/o/cstruct.o
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) \
+		-e '(progn (setq #:system:print-for-read t) \
+			   (typecn #/_ (quote cmacro)))' cstruct
+
+../$(SYSTEM)/o/cstruct.o : ../common/cstruct.c
+	@echo Generating $@ because of $?
+	( cd ../$SYSTEM); $(MAKE) o/cstruct.o SYSTEM=$(SYSTEM) )
+
+../llobj/date.lo: ../llib/date.ll ../llmod/date.lm \
+		../llobj/messages.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) date
+
+../llobj/debug.lo: ../llib/debug.ll ../llmod/debug.lm \
+		../llobj/files.lo ../llobj/virtty.lo \
+		../llobj/virbitmap.lo ../llobj/pretty.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) -parano t debug
+
+../llobj/defs.lo: ../llib/defs.ll ../llmod/defs.lm \
+		  ../llobj/cpmac.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(ICMPLCFLAGS) defs
+
+../llobj/defstruct.lo: ../llib/defstruct.ll ../llmod/defstruct.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(ICMPLCFLAGS) defstruct
+
+../llobj/edlin.lo: ../llib/edlin.ll ../llmod/edlin.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) edlin
+
+../llobj/evloop.lo: ../llib/evloop.ll ../llmod/evloop.lm \
+		../llobj/virbitmap.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) \
+		-e '(de getglobal (x) 1)(compile getglobal)'   \
+		-e '(synonymq defextern-cache identity)' \
+		evloop
+
+../llobj/fasl.lo: ../llib/fasl.ll ../llmod/fasl.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) fasl
+
+../llobj/format.lo: ../llib/format.ll ../llmod/format.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) format
+
+../llobj/genarith.lo: ../llib/genarith.ll ../llmod/genarith.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) genarith
+
+../llobj/genr.lo: ../llib/genr.ll ../llmod/genr.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) genr
+
+../llobj/hash.lo: ../llib/hash.ll ../llmod/hash.lm \
+		../llobj/setf.lo ../llobj/cpmac.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) hash
+
+../llobj/libcir.lo: ../llib/libcir.ll ../llmod/libcir.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) libcir
+
+../llobj/libdate.lo: ../llib/libdate.ll ../llmod/libdate.lm \
+		../llobj/date.lo ../llobj/messages.lo \
+		../llobj/path.lo ../llobj/callext.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) \
+		-e '(de getglobal (x) 1)(compile getglobal)' \
+		libdate
+
+../llobj/llcp.lo : ../llib/llcp.ll ../llmod/llcp.lm \
+		../llib/cpmac.ll ../llib/peephole.ll \
+		../llobj/files.lo \
+		../llobj/pretty.lo ../llobj/messages.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) llcp
+
+../llobj/llmenu.lo: ../llib/llmenu.ll ../llmod/llmenu.lm \
+		../llobj/virbitmap.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) llmenu
+
+../llobj/llpboot.lo: ../llib/llpboot.ll ../llmod/llpboot.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) \
+		-e "(loadfile \"../complice/INT.ll\" ())" \
+		-e "(de getglobal (x) 1)(compile getglobal)" llpboot
+
+../llobj/lmcache.lo: ../llib/lmcache.ll ../llmod/lmcache.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(ICMPLCFLAGS) lmcache
+
+../llobj/menu.lo: ../llib/menu.ll ../llmod/menu.lm \
+		../llobj/defstruct.lo ../llobj/virbitmap.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) menu
+
+../llobj/messages.lo: ../llib/messages.ll ../llmod/messages.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) messages
+
+../llobj/microceyx.lo: ../llib/microceyx.ll ../llmod/microceyx.lm \
+		../llobj/abbrev.lo ../llobj/defstruct.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) microceyx
+
+../llobj/minimore.lo: ../llib/minimore.ll ../llmod/minimore.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) minimore
+
+../llobj/path.lo: ../llib/path.ll ../llmod/path.lm \
+		  ../llobj/defstruct.lo ../llobj/callext.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) \
+		-e '(de getglobal (x) 1)(compile getglobal)'   \
+		path
+
+../llobj/peephole.lo : ../llib/peephole.ll ../llmod/peephole.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) peephole
+
+../llobj/pepe.lo: ../llib/pepe.ll ../llmod/pepe.lm \
+		../llobj/files.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) -parano t pepe
+
+../llobj/pretty.lo: ../llib/pretty.ll ../llmod/pretty.lm \
+		../llobj/files.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) pretty
+
+../llobj/product.lo: ../llib/product.ll ../llmod/product.lm \
+		../llobj/hash.lo ../llobj/date.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) product
+
+../llobj/ratio.lo: ../llib/ratio.ll ../llmod/ratio.lm \
+		../llobj/genr.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) ratio
+
+../llobj/rehash.lo: ../llib/rehash.ll ../llmod/rehash.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(ICMPLCFLAGS) rehash
+
+../llobj/schedule.lo: ../llib/schedule.ll ../llmod/schedule.lm \
+		../llobj/debug.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) -parano t schedule
+
+../llobj/setf.lo: ../llib/setf.ll ../llmod/setf.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) setf
+
+../llobj/sets.lo: ../llib/sets.ll ../llmod/sets.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) sets
+
+../llobj/sort.lo: ../llib/sort.ll ../llmod/sort.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) sort
+
+../llobj/stringio.lo: ../llib/stringio.ll ../llmod/stringio.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) stringio
+
+../llobj/toplevel.lo: ../llib/toplevel.ll ../llmod/toplevel.lm \
+		../llobj/messages.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) toplevel
+
+../llobj/topwin.lo: ../llib/topwin.ll ../llmod/topwin.lm \
+		../llobj/pepe.lo ../llobj/virbitmap.lo ../llobj/files.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) topwin
+
+../llobj/trace.lo: ../llib/trace.ll ../llmod/trace.lm \
+		../llobj/toplevel.lo ../llobj/defs.lo \
+		../llobj/virbitmap.lo ../llobj/files.lo ../llobj/messages.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) trace
+
+../llobj/ttywindow.lo: ../llib/ttywindow.ll ../llmod/ttywindow.lm \
+		../llobj/virbitmap.lo ../llobj/defstruct.lo ../llobj/virtty.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) ttywindow
+
+../llobj/virtty.lo: ../llib/virtty.ll ../llmod/virtty.lm \
+		../llobj/files.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virtty
+
+###
+### Les entre'es du bitmap virtuel.
+
+../llobj/virbitmap.lo: ../llmod/virbitmap.lm ../llib/virbitmap.ll \
+		../llobj/virinit.lo \
+		../llobj/virmenu.lo \
+		../llobj/vircolor.lo \
+		../llobj/virbit.lo \
+		../llobj/virevent.lo \
+		../llobj/virdraw.lo \
+		../llobj/virgraph.lo \
+		../llobj/virwindow.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virbitmap
+
+../llobj/virbit.lo: ../llmod/virbit.lm ../llib/virbit.ll \
+		../llobj/virutil.lo ../llib/virmacros.ll ../llobj/vircolor.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virbit
+
+../llobj/vircolor.lo: ../llmod/vircolor.lm ../llib/vircolor.ll \
+		../llobj/virutil.lo ../llib/virmacros.ll
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) vircolor
+
+../llobj/virdraw.lo: ../llmod/virdraw.lm ../llib/virdraw.ll \
+		../llobj/virutil.lo ../llib/virmacros.ll
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virdraw
+
+../llobj/virevent.lo: ../llmod/virevent.lm ../llib/virevent.ll \
+	    ../llobj/virutil.lo ../llib/virmacros.ll ../llobj/virwindow.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virevent
+
+../llobj/virgraph.lo: ../llmod/virgraph.lm ../llib/virgraph.ll \
+		../llobj/virutil.lo ../llib/virmacros.ll
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virgraph
+
+../llobj/virinit.lo: ../llmod/virinit.lm ../llib/virinit.ll \
+	../llib/virmacros.ll \
+	../llobj/virmenu.lo ../llobj/vircolor.lo \
+	../llobj/virbit.lo ../llobj/virevent.lo ../llobj/virdraw.lo \
+	../llobj/virgraph.lo ../llobj/virwindow.lo ../llobj/virutil.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virinit
+
+../llobj/virmenu.lo: ../llmod/virmenu.lm ../llib/virmenu.ll \
+		../llobj/virutil.lo ../llib/virmacros.ll
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virmenu
+
+../llobj/virutil.lo: ../llmod/virutil.lm ../llib/virutil.ll \
+		../llib/virstruct.ll
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virutil
+
+../llobj/virwindow.lo: ../llmod/virwindow.lm ../llib/virwindow.ll \
+		../llobj/virutil.lo ../llib/virmacros.ll
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCFLAGS) virwindow
+
+##########################################################################
+# Les fichiers de la bibliotheque utilisateur llub:
+../llobj/countcalls.lo: ../llub/countcalls.ll ../llmod/countcalls.lm \
+		../llobj/format.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) countcalls
+
+../llobj/croch.lo: ../llub/croch.ll ../llmod/croch.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) croch
+
+../llobj/defun.lo: ../llub/defun.ll ../llmod/defun.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) defun
+
+../llobj/lledit.lo: ../llub/lledit.ll ../llmod/lledit.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) lledit
+
+../llobj/lleditor.lo: ../llub/lleditor.ll ../llmod/lleditor.lm \
+		../llobj/lledit.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) lleditor
+
+../llobj/loadfile.lo: ../llub/loadfile.ll ../llmod/loadfile.lm \
+		../llobj/messages.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) loadfile
+
+../llobj/macedit.lo: ../llub/macedit.ll ../llmod/macedit.lm \
+		../llobj/lledit.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) macedit
+
+../llobj/maceditor.lo: ../llub/maceditor.ll ../llmod/maceditor.lm \
+		../llobj/macedit.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) maceditor
+
+../llobj/makefile.lo: ../llub/makefile.ll ../llmod/makefile.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) makefile
+
+../llobj/meme.lo: ../llub/meme.ll ../llmod/meme.lm \
+		../llobj/lledit.lo ../llobj/lleditor.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) meme
+
+../llobj/mvalues.lo: ../llub/mvalues.ll ../llmod/mvalues.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) mvalues
+
+../llobj/timetrace.lo: ../llub/timetrace.ll ../llmod/timetrace.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(UCMPLCFLAGS) timetrace
+
+##########################################################################
+# Les instances de bitmap virtuel:
+#  il semblerait qu'on ne puisse recompiler x.lo que sous SunOS3.x
+#
+
+../virbitmap/X11/x11.lo: ../virbitmap/X11/x11.ll ../virbitmap/X11/x11.lm \
+	../llobj/virbitmap.lo ../llobj/defstruct.lo
+	@echo Generating $@ because of $?
+	rm -f $@
+	@(cd ../virbitmap/X11; \
+	$(MAKE) -e SYSTEM=$(SYSTEM) COMPLICE=$(COMPLICE) x11.lo)
+
+../virbitmap/bvtty/bvtty.lo: ../virbitmap/bvtty/bvtty.ll ../virbitmap/bvtty/bvtty.lm \
+	../llobj/virbitmap.lo ../llobj/defstruct.lo
+	@echo Generating $@ because of $?
+	rm -f $@
+	@(cd ../virbitmap/bvtty; \
+	$(MAKE) -e SYSTEM=$(SYSTEM) COMPLICE=$(COMPLICE) )
+
+##########################################################################
+# Les fichiers 'speciaux' [pour porteurs uniquement]:
+../llobj/files.lo: ../llib/files.ll ../llmod/files.lm
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(ICMPLCFLAGS) -e "`cat ../lltool/hackcmplc.ll`" files
+
+../llobj/module.lo: ../llib/module.ll ../llmod/module.lm \
+		../llobj/files.lo ../llobj/pretty.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(ICMPLCFLAGS) -e "`cat ../lltool/hackcmplc.ll`" module
+
+##########################################################################
+# Le cas du loader
+
+LOADEROBJ=-o .
+
+../$(SYSTEM)/loader.lo: ../$(SYSTEM)/loader.ll ../$(SYSTEM)/loader.lm \
+		../llobj/messages.lo
+	@echo Generating $@ because of $?
+	$(COMPLICE) $(CMPLCPATH) \
+		    -e '(de getglobal (s) 1)' \
+		    loader
+
+##########################################################################
+# Le cas de complice
+
+../llobj/complice.lo:
+	@echo Generating $@ # because of $?
+	@(cd ../complice; \
+	  make SYSTEM=$(SYSTEM) && cp o/complice.lo ../llobj)
+
+##########################################################################
+#                       descriptions modulaires
+# fichiers speciaux
+../llmod/module.lm: ../llmod/module.lc
+	$(CP) ../llmod/module.lc ../llmod/module.lm
+	@chmod 644 ../llmod/module.lm
+../llmod/files.lm: ../llmod/files.lc
+	$(CP) ../llmod/files.lc ../llmod/files.lm
+	@chmod 644 ../llmod/files.lm
+# la librairie
+../llmod/abbrev.lm: ../llmod/abbrev.lc
+	$(CP) ../llmod/abbrev.lc ../llmod/abbrev.lm
+	@chmod 666 ../llmod/abbrev.lm
+../llmod/array.lm: ../llmod/array.lc
+	$(CP) ../llmod/array.lc ../llmod/array.lm
+	@chmod 666 ../llmod/array.lm
+../llmod/bngen.lm: ../llmod/bngen.lc
+	$(CP) ../llmod/bngen.lc ../llmod/bngen.lm
+	@chmod 666 ../llmod/bngen.lm
+../llmod/bnn.lm: ../llmod/bnn.lc
+	$(CP) ../llmod/bnn.lc ../llmod/bnn.lm
+	@chmod 666 ../llmod/bnn.lm
+../llmod/bnq.lm: ../llmod/bnq.lc
+	$(CP) ../llmod/bnq.lc ../llmod/bnq.lm
+	@chmod 666 ../llmod/bnq.lm
+../llmod/bnz.lm: ../llmod/bnz.lc
+	$(CP) ../llmod/bnz.lc ../llmod/bnz.lm
+	@chmod 666 ../llmod/bnz.lm
+../llmod/callext.lm: ../llmod/callext.lc
+	$(CP) ../llmod/callext.lc ../llmod/callext.lm
+	@chmod 666 ../llmod/callext.lm
+../llmod/complex.lm: ../llmod/complex.lc
+	$(CP) ../llmod/complex.lc ../llmod/complex.lm
+	@chmod 666 ../llmod/complex.lm
+../llmod/cpmac.lm: ../llmod/cpmac.lc
+	$(CP) ../llmod/cpmac.lc ../llmod/cpmac.lm
+	@chmod 666 ../llmod/cpmac.lm
+../llmod/cstruct.lm: ../llmod/cstruct.lc
+	$(CP) ../llmod/cstruct.lc ../llmod/cstruct.lm
+	@chmod 666 ../llmod/cstruct.lm
+../llmod/date.lm: ../llmod/date.lc
+	$(CP) ../llmod/date.lc ../llmod/date.lm
+	@chmod 666 ../llmod/date.lm
+../llmod/debug.lm: ../llmod/debug.lc
+	$(CP) ../llmod/debug.lc ../llmod/debug.lm
+	@chmod 666 ../llmod/debug.lm
+../llmod/defs.lm: ../llmod/defs.lc
+	$(CP) ../llmod/defs.lc ../llmod/defs.lm
+	@chmod 666 ../llmod/defs.lm
+../llmod/defstruct.lm: ../llmod/defstruct.lc
+	$(CP) ../llmod/defstruct.lc ../llmod/defstruct.lm
+	@chmod 666 ../llmod/defstruct.lm
+../llmod/edlin.lm: ../llmod/edlin.lc
+	$(CP) ../llmod/edlin.lc ../llmod/edlin.lm
+	@chmod 666 ../llmod/edlin.lm
+../llmod/evloop.lm: ../llmod/evloop.lc
+	$(CP) ../llmod/evloop.lc ../llmod/evloop.lm
+	@chmod 666 ../llmod/evloop.lm
+../llmod/fasl.lm: ../llmod/fasl.lc
+	$(CP) ../llmod/fasl.lc ../llmod/fasl.lm
+	@chmod 666 ../llmod/fasl.lm
+../llmod/format.lm: ../llmod/format.lc
+	$(CP) ../llmod/format.lc ../llmod/format.lm
+	@chmod 666 ../llmod/format.lm
+../llmod/genarith.lm: ../llmod/genarith.lc
+	$(CP) ../llmod/genarith.lc ../llmod/genarith.lm
+	@chmod 666 ../llmod/genarith.lm
+../llmod/genr.lm: ../llmod/genr.lc
+	$(CP) ../llmod/genr.lc ../llmod/genr.lm
+	@chmod 666 ../llmod/genr.lm
+../llmod/hash.lm: ../llmod/hash.lc
+	$(CP) ../llmod/hash.lc ../llmod/hash.lm
+	@chmod 666 ../llmod/hash.lm
+../llmod/libcir.lm: ../llmod/libcir.lc
+	$(CP) ../llmod/libcir.lc ../llmod/libcir.lm
+	@chmod 666 ../llmod/libcir.lm
+../llmod/llcp.lm: ../llmod/llcp.lc
+	$(CP) ../llmod/llcp.lc ../llmod/llcp.lm
+	@chmod 666 ../llmod/llcp.lm
+../llmod/libdate.lm: ../llmod/libdate.lc
+	$(CP) ../llmod/libdate.lc ../llmod/libdate.lm
+	@chmod 666 ../llmod/libdate.lm
+../llmod/llmenu.lm: ../llmod/llmenu.lc
+	$(CP) ../llmod/llmenu.lc ../llmod/llmenu.lm
+	@chmod 666 ../llmod/llmenu.lm
+../llmod/llpboot.lm: ../llmod/llpboot.lc
+	$(CP) ../llmod/llpboot.lc ../llmod/llpboot.lm
+	@chmod 666 ../llmod/llpboot.lm
+../$(SYSTEM)/loader.lm: ../$(SYSTEM)/loader.lc
+	$(CP) ../$(SYSTEM)/loader.lc ../$(SYSTEM)/loader.lm
+	@chmod 666 ../$(SYSTEM)/loader.lm
+../llmod/lmcache.lm: ../llmod/lmcache.lc
+	$(CP) ../llmod/lmcache.lc ../llmod/lmcache.lm
+	@chmod 666 ../llmod/lmcache.lm
+../llmod/menu.lm: ../llmod/menu.lc
+	$(CP) ../llmod/menu.lc ../llmod/menu.lm
+	@chmod 666 ../llmod/menu.lm
+../llmod/messages.lm: ../llmod/messages.lc
+	$(CP) ../llmod/messages.lc ../llmod/messages.lm
+	@chmod 666 ../llmod/messages.lm
+../llmod/microceyx.lm: ../llmod/microceyx.lc
+	$(CP) ../llmod/microceyx.lc ../llmod/microceyx.lm
+	@chmod 666 ../llmod/microceyx.lm
+../llmod/minimore.lm: ../llmod/minimore.lc
+	$(CP) ../llmod/minimore.lc ../llmod/minimore.lm
+	@chmod 666 ../llmod/minimore.lm
+../llmod/path.lm: ../llmod/path.lc
+	$(CP) ../llmod/path.lc ../llmod/path.lm
+	@chmod 666 ../llmod/path.lm
+../llmod/peephole.lm: ../llmod/peephole.lc
+	$(CP) ../llmod/peephole.lc ../llmod/peephole.lm
+	@chmod 666 ../llmod/peephole.lm
+../llmod/pepe.lm: ../llmod/pepe.lc
+	$(CP) ../llmod/pepe.lc ../llmod/pepe.lm
+	@chmod 666 ../llmod/pepe.lm
+../llmod/pretty.lm: ../llmod/pretty.lc
+	$(CP) ../llmod/pretty.lc ../llmod/pretty.lm
+	@chmod 666 ../llmod/pretty.lm
+../llmod/product.lm: ../llmod/product.lc
+	$(CP) ../llmod/product.lc ../llmod/product.lm
+	@chmod 666 ../llmod/product.lm
+../llmod/ratio.lm: ../llmod/ratio.lc
+	$(CP) ../llmod/ratio.lc ../llmod/ratio.lm
+	@chmod 666 ../llmod/ratio.lm
+../llmod/rehash.lm: ../llmod/rehash.lc
+	$(CP) ../llmod/rehash.lc ../llmod/rehash.lm
+	@chmod 666 ../llmod/rehash.lm
+../llmod/schedule.lm: ../llmod/schedule.lc
+	$(CP) ../llmod/schedule.lc ../llmod/schedule.lm
+	@chmod 666 ../llmod/schedule.lm
+../llmod/setf.lm: ../llmod/setf.lc
+	$(CP) ../llmod/setf.lc ../llmod/setf.lm
+	@chmod 666 ../llmod/setf.lm
+../llmod/sort.lm: ../llmod/sort.lc
+	$(CP) ../llmod/sort.lc ../llmod/sort.lm
+	@chmod 666 ../llmod/sort.lm
+../llmod/stringio.lm: ../llmod/stringio.lc
+	$(CP) ../llmod/stringio.lc ../llmod/stringio.lm
+	@chmod 666 ../llmod/stringio.lm
+../llmod/toplevel.lm: ../llmod/toplevel.lc
+	$(CP) ../llmod/toplevel.lc ../llmod/toplevel.lm
+	@chmod 666 ../llmod/toplevel.lm
+../llmod/topwin.lm: ../llmod/topwin.lc
+	$(CP) ../llmod/topwin.lc ../llmod/topwin.lm
+	@chmod 666 ../llmod/topwin.lm
+../llmod/trace.lm: ../llmod/trace.lc
+	$(CP) ../llmod/trace.lc ../llmod/trace.lm
+	@chmod 666 ../llmod/trace.lm
+../llmod/ttywindow.lm: ../llmod/ttywindow.lc
+	$(CP) ../llmod/ttywindow.lc ../llmod/ttywindow.lm
+	@chmod 666 ../llmod/ttywindow.lm
+../llmod/virtty.lm: ../llmod/virtty.lc
+	$(CP) ../llmod/virtty.lc ../llmod/virtty.lm
+	@chmod 666 ../llmod/virtty.lm
+
+../llmod/virbitmap.lm: ../llmod/virbitmap.lc
+	$(CP) ../llmod/virbitmap.lc ../llmod/virbitmap.lm
+	@chmod 666 ../llmod/virbitmap.lm
+../llmod/virutil.lm: ../llmod/virutil.lc
+	$(CP) ../llmod/virutil.lc ../llmod/virutil.lm
+	@chmod 666 ../llmod/virutil.lm
+../llmod/virmenu.lm: ../llmod/virmenu.lc
+	$(CP) ../llmod/virmenu.lc ../llmod/virmenu.lm
+	@chmod 666 ../llmod/virmenu.lm
+../llmod/vircolor.lm: ../llmod/vircolor.lc
+	$(CP) ../llmod/vircolor.lc ../llmod/vircolor.lm
+	@chmod 666 ../llmod/vircolor.lm
+../llmod/virbit.lm: ../llmod/virbit.lc
+	$(CP) ../llmod/virbit.lc ../llmod/virbit.lm
+	@chmod 666 ../llmod/virbit.lm
+../llmod/virevent.lm: ../llmod/virevent.lc
+	$(CP) ../llmod/virevent.lc ../llmod/virevent.lm
+	@chmod 666 ../llmod/virevent.lm
+../llmod/virdraw.lm: ../llmod/virdraw.lc
+	$(CP) ../llmod/virdraw.lc ../llmod/virdraw.lm
+	@chmod 666 ../llmod/virdraw.lm
+../llmod/virgraph.lm: ../llmod/virgraph.lc
+	$(CP) ../llmod/virgraph.lc ../llmod/virgraph.lm
+	@chmod 666 ../llmod/virgraph.lm
+../llmod/virwindow.lm: ../llmod/virwindow.lc
+	$(CP) ../llmod/virwindow.lc ../llmod/virwindow.lm
+	@chmod 666 ../llmod/virwindow.lm
+../llmod/virinit.lm: ../llmod/virinit.lc
+	$(CP) ../llmod/virinit.lc ../llmod/virinit.lm
+	@chmod 666 ../llmod/virinit.lm
+
+../llmod/countcalls.lm: ../llmod/countcalls.lc
+	$(CP) ../llmod/countcalls.lc ../llmod/countcalls.lm
+	@chmod 666 ../llmod/countcalls.lm
+../llmod/croch.lm: ../llmod/croch.lc
+	$(CP) ../llmod/croch.lc ../llmod/croch.lm
+	@chmod 666 ../llmod/croch.lm
+../llmod/defun.lm: ../llmod/defun.lc
+	$(CP) ../llmod/defun.lc ../llmod/defun.lm
+	@chmod 666 ../llmod/defun.lm
+../llmod/lledit.lm: ../llmod/lledit.lc
+	$(CP) ../llmod/lledit.lc ../llmod/lledit.lm
+	@chmod 666 ../llmod/lledit.lm
+../llmod/lleditor.lm: ../llmod/lleditor.lc
+	$(CP) ../llmod/lleditor.lc ../llmod/lleditor.lm
+	@chmod 666 ../llmod/lleditor.lm
+../llmod/loadfile.lm: ../llmod/loadfile.lc
+	$(CP) ../llmod/loadfile.lc ../llmod/loadfile.lm
+	@chmod 666 ../llmod/loadfile.lm
+../llmod/macedit.lm: ../llmod/macedit.lc
+	$(CP) ../llmod/macedit.lc ../llmod/macedit.lm
+	@chmod 666 ../llmod/macedit.lm
+../llmod/maceditor.lm: ../llmod/maceditor.lc
+	$(CP) ../llmod/maceditor.lc ../llmod/maceditor.lm
+	@chmod 666 ../llmod/maceditor.lm
+../llmod/meme.lm: ../llmod/meme.lc
+	$(CP) ../llmod/meme.lc ../llmod/meme.lm
+	@chmod 666 ../llmod/meme.lm
+../llmod/mvalues.lm: ../llmod/mvalues.lc
+	$(CP) ../llmod/mvalues.lc ../llmod/mvalues.lm
+	@chmod 666 ../llmod/mvalues.lm
+../llmod/sets.lm: ../llmod/sets.lc
+	$(CP) ../llmod/sets.lc ../llmod/sets.lm
+	@chmod 666 ../llmod/sets.lm
+../llmod/timetrace.lm: ../llmod/timetrace.lc
+	$(CP) ../llmod/timetrace.lc ../llmod/timetrace.lm
+	@chmod 666 ../llmod/timetrace.lm
+
+../virbitmap/X11/x11.lm: ../virbitmap/X11/x11.lc
+	$(CP) ../virbitmap/X11/x11.lc ../virbitmap/X11/x11.lm
+	@chmod 666 ../virbitmap/X11/x11.lm
+../virbitmap/bvtty/bvtty.lm: ../virbitmap/bvtty/bvtty.lc
+	$(CP) ../virbitmap/bvtty/bvtty.lc ../virbitmap/bvtty/bvtty.lm
+	@chmod 666 ../virbitmap/bvtty/bvtty.lm
+
+##########################################################################
+#                              Alias
+abbrev:		../llobj/abbrev.lo
+array:		../llobj/array.lo
+bnkern:		../$(SYSTEM)/bnkern.lo
+bngen:		../llobj/bngen.lo
+bnn:		../llobj/bnn.lo
+bnq:		../llobj/bnq.lo
+bnz:		../llobj/bnz.lo
+callext:	../llobj/callext.lo
+complex:	../llobj/complex.lo
+cpmac:		../llobj/cpmac.lo
+cstruct:	../llobj/cstruct.lo
+date:		../llobj/date.lo
+debug:		../llobj/debug.lo
+defs:		../llobj/defs.lo
+defstruct:	../llobj/defstruct.lo
+edlin:		../llobj/edlin.lo
+evloop:		../llobj/evloop.lo
+fasl:		../llobj/fasl.lo
+files:		../llobj/files.lo
+format:		../llobj/format.lo
+genarith:	../llobj/genarith.lo
+genr:		../llobj/genr.lo
+hash:		../llobj/hash.lo
+libcir:		../llobj/libcir.lo
+libdate:	../llobj/libdate.lo
+llmenu:		../llobj/llmenu.lo
+llpboot:	../llobj/llpboot.lo
+lmcache:	../llobj/lmcache.lo
+loader:		../$(SYSTEM)/loader.lo
+menu:		../llobj/menu.lo
+messages:	../llobj/messages.lo
+microceyx:	../llobj/microceyx.lo
+minimore:	../llobj/minimore.lo
+path:		../llobj/path.lo
+peephole:	../llobj/peephole.lo
+pepe:		../llobj/pepe.lo
+pretty:		../llobj/pretty.lo
+product:	../llobj/product.lo
+ratio:		../llobj/ratio.lo
+schedule:	../llobj/schedule.lo
+setf:		../llobj/setf.lo
+sort:		../llobj/sort.lo
+stringio:	../llobj/stringio.lo
+toplevel:	../llobj/toplevel.lo
+topwin:		../llobj/topwin.lo
+trace:		../llobj/trace.lo
+ttywindow:	../llobj/ttywindow.lo
+virtty:		../llobj/virtty.lo
+
+virbitmap:	../llobj/virbitmap.lo
+virutil:	../llobj/virutil.lo
+virmenu:	../llobj/virmenu.lo
+vircolor:	../llobj/vircolor.lo
+virbit:		../llobj/virbit.lo
+virevent:	../llobj/virevent.lo
+virdraw:	../llobj/virdraw.lo
+virgraph:	../llobj/virgraph.lo
+virwindow:	../llobj/virwindow.lo
+virinit:	../llobj/virinit.lo
+
+countcalls:	../llobj/countcalls.lo
+croch:		../llobj/croch.lo
+defun:		../llobj/defun.lo
+lledit:		../llobj/lledit.lo
+lleditor:	../llobj/lleditor.lo
+loadfile:	../llobj/loadfile.lo
+macedit:	../llobj/macedit.lo
+maceditor:	../llobj/maceditor.lo
+meme:		../llobj/meme.lo
+mvalues:	../llobj/mvalues.lo
+sets:		../llobj/sets.lo
+timetrace:	../llobj/timetrace.lo
+
+x11:	../virbitmap/X11/x11.lo
+bvtty:	../virbitmap/bvtty/bvtty.lo

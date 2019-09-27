@@ -1,0 +1,348 @@
+
+                Notice de configuration de Le-Lisp 15.26
+                       Pour Windows NT/95/98/2000
+                             sous CYGWIN1.x
+
+                                  ELIGIS
+                          4, villa des Reinettes
+                             95390 Saint Prix
+                                  France
+                         Tel. +33 (1) 34.27.60.09
+
+Cher client Eligis,
+Vous avez install'e Le-Lisp 15.26 sur vos disques. Cette version fonctionne
+avec les outils GNU porte's par Cygnus.
+
+Vous pouvez r'ecupe'rer la derni`ere version de ces outils sur:
+ `http://sourceware.cygnus.com/cygwin/'.
+
+Cette notice vous permet de (re)configurer Le-Lisp selon vos
+besoins. Il serait sans doute souhaitable de voir un exemplaire de ce
+document sur le bureau de chaque utilisateur de Le-Lisp .
+Cette notice est divise'e en trois parties :
+
+     . la premie`re partie de'crit tous les modes de reconfiguration
+       de Le-Lisp , quant aux binaires et aux images me'moire.
+       Vous y trouverez la manie`re de fabriquer les binaires et images
+       me'moire standard mais aussi comment fabriquer vos propres binaires
+       et/ou images personnalise's.
+
+      . la deuxie`me partie fournit quelques renseignements supple'mentaires
+        pour les plus curieux quant a` certains traits de Le-Lisp .
+        On y explique e'galement comment utiliser le manuel UNIX fourni
+        avec Le-Lisp , ainsi que la facon de lancer les jeux de tests
+        validant Le-Lisp .
+        Le dernier paragraphe concerne les e'volutions du produit.
+
+      . la troisie`me partie de'crit ce qu'il est ne'cessaire de faire
+        si Le-Lisp n'est pas installe' de facon standard en /usr/ilog/lelisp.
+
+I/   CONFIGURATIONS POSSIBLES.
+==============================
+
+Fabrication de binaires.
+------------------------
+
+Un certain nombre de binaires Le-Lisp sont fournis
+et pre^ts a` e^tre utilise's.
+Ces binaires re'sident dans le re'pertoire lelisp/cygwin.
+On trouve en standard :
+
+	  lelispbin     :  binaire standard du noyau Le-Lisp.
+	  leX11bin      :  binaire associe' a X-windows 11, utilise' par
+	                     Aida, Masai, Smeci ...
+
+D'autres binaires peuvent e^tre fabrique's a` l'aide du Makefile de Le-Lisp .
+Toutes les combinaisons sont ainsi possibles entre les parame`tres suivants :
+
+      . choix des flottants 31 bits ou des flottants 64 bits
+        (voir de'tails plus loin)
+
+      . inte'gration du code C relatif a` X11 dans le binaire
+
+Au total, il est possible de fabriquer en standard tous les binaires
+suivants avec le Makefile de Le-Lisp sur PC/AT 386 :
+
+lelisp31bin,
+
+lelisp64bin,
+
+lelisp31X11bin,
+
+lelisp64X11bin,
+
+lelisp31M11bin,
+
+lelisp64M11bin,
+
+Exemple :
+
+             $ cd /usr/ilog/lelisp/cygwin
+
+             $ make lelisp64bin FLT=64 -> avec flottants 64bits
+
+Vous pouvez fabriquer vos propres binaires Le-Lisp en y inte'grant
+tout le code (C, FORTRAN ...) de'sire', en vue de cre'er
+une interface de ce code avec Le-Lisp . Pour se faire, on utilise
+les entre'es dites `ge'ne'riques' du Makefile. Ces entre'es
+ge'ne'riques sont rede'finissables afin de prendre le nom que vous
+desirez, avec les arguments que vous de'sirez. On peut ainsi
+rede'finir le nom du binaire Le-Lisp fabrique', mais aussi la liste
+de fichiers compile's inte'gre's dans ce binaire, les flags de
+compilation utilise's, les librairies charge'es.
+La liste comple`te des variables de Makefile rede'finissables,
+ainsi que le mode d'emploi et des exemples sont fournis
+dans le manuel UNIX de Le-Lisp (lelisp(l)).
+
+N'he'sitez pas a` consulter les pages du manuel UNIX de Le-Lisp (lelisp(l))
+pour en savoir plus.
+
+Fabrication d'images me'moire.
+------------------------------
+
+Certaines images me'moire sont fournies en standard.
+Les images standard sont les suivantes :
+lelisp   :  image Le-Lisp standard.
+cmplc++  :  image du compilateur modulaire, utilise'e par la commande complice.
+
+Ces images peuvent e^tre rege'ne're'es (si ne'cessaire)
+a` l'aide de la commande make :
+
+             $ cd /usr/ilog/lelisp/cygwin
+             $ make
+
+D'autres entre'es sont pre'sentes en standard dans le Makefile
+pour fabriquer des images :
+
+nom          fabrication               : description
+
+lelispX11    make lelispX11           : image Le-Lisp
+	                                      inte'grant l'incarnation du BV sur X11.
+
+lelispi      make lelispi             : image Le-Lisp  interpre'te'.
+
+lelisp64     make lelisp64 FLT=64     : image Le-Lisp  avec flottants 64 bits.
+
+Vous pouvez fabriquer vos propres images me'moire Le-Lisp ,
+lesquelles utiliseront les binaires et fichiers de configuration
+de votre choix et seront dimensionne'es comme vous l'entendez.
+Pour se faire, on utilise comme pour les binaires
+les entre'es `ge'ne'riques' du Makefile.
+La liste comple`te des variables de Makefile rede'finissables,
+ainsi que le mode d'emploi et des exemples
+sont fournies dans le manuel UNIX de Le-Lisp (lelisp(l)).
+
+N'he'sitez pas a` consulter les pages du manuel UNIX de Le-Lisp
+(lelisp(l)) pour en savoir plus.
+
+II/ POUR CEUX QUI VEULENT EN SAVOIR PLUS :
+==========================================
+
+Codage des flottants sur 64bits.
+--------------------------------
+
+En standard, le codage des flottants Le-Lisp  est fait sur 32bits
+(en re'alite' 31bits!) par souci de performances et d'e'conomie de place.
+Ce codage offre une pre'cision d'environ 7 chiffres.
+
+Si votre besoin de pre'cision est supe'rieur, il vous est possible
+de reconfigurer vos binaires Le-Lisp afin que les flottants soient
+code's sur 64 bits.
+La pre'cision sera alors d'environ 12 chiffres.
+Mais vous devez savoir que les calculs seront alors moins rapides
+(environ 2 fois) et que la me'moire de votre syste`me sera alourdie d'autant
+(allocation des flottants). Le Makefile standard permet de re'aliser
+une image me'moire de Le-Lisp sur 64 bits :
+
+            $ cd /usr/ilog/lelisp/cygwin
+            $ make lelisp64 FLT=64
+
+Les e'ditions de liens.
+-----------------------
+
+Dans le cadre d'une communication entre Le-Lisp et un autre langage
+(C, FORTRAN), l'utilisateur se doit de re'aliser une e'dition de liens
+entre le binaire Le-Lisp et son programme externe.
+
+Cette e'dition de liens ne peut e^tre que statique
+avec le portage de Le-Lisp sur PC/AT 386, la fonction tt CLOAD
+(cf chapitre 14 du manuel de re'fe'rence Le-Lisp )
+n'e'tant pas imple'mente'e.
+Reportez-vous au paragraphe sur la fabrication des binaires,
+ainsi qu'au manuel UNIX lelisp(l) pour re'aliser de tels liens.
+
+Remarque : la compilation des fichiers du programme externe,
+ainsi que l'e'dition de liens avec le binaire Le-Lisp ne'cessitent
+la pre'sence d'une chai^ne de compilation comple`te sur votre machine.
+
+(compilateur C
+
+, editeur de liens, librairies correctement installe'es, etc).
+
+Le-Lisp en background.
+----------------------
+
+Il est parfois inte'ressant de lancer un process en background.
+L'utilisateur re'cupe`re alors imme'diatement le contro^le dans
+son terminal apre`s une commande de la forme `user-process &'.
+Le fonctionnement de Le-Lisp en background est intimement
+lie' a la boucle d'e've'nement ge'rant les entre'es sorties
+du terminal.
+Cette possibilite' est surtout inte'ressante pour les produits
+base's sur Le-Lisp et de'finissant leur propre terminal (exemple:
+le terminal AIDA).
+
+Une commande comme `aida &' s'exe'cute en background et devient
+utilisable interactivement via ce terminal. On peut ainsi continuer
+a` faire du SHELL dans la fene^tre de lancement d'AIDA.
+
+Bien que Le-Lisp ne posse`de pas son propre terminal,
+il est ne'anmoins possible de le lancer en background
+sur PC/AT 386,
+mais en mode non interactif (pas d'entre'e clavier).
+
+Les manuels UNIX pour Le-Lisp.
+------------------------------
+
+Des manuels au format Unix, accessibles via la commande man,
+sont livre's avec la bande Le-Lisp .
+Ils se trouvent dans le re'pertoire
+/usr/ilog/lelisp/manl.
+
+Il s'agit de :
+	    . lelisp.l qui de'crit la commande lelisp et ses consoeurs,
+	      avec des explications quant a` la facon de fabriquer
+	      ces commandes, mais aussi sur l'outil de fabrication
+	      (voir make(1)).
+	    . complice.l qui de'crit le compilateur modulaire complice.
+	    . config.l qui de'crit la commande config permettant d'engendrer
+	      des images Le-Lisp .
+	    . newdir.l qui de'crit la commande newdir mettant les chemins
+	      UNIX a` jour au moment de l'installation.
+
+Vous pouvez consulter ces manuels en indiquant a` la commande man Unix
+(voir man(1)) ou` aller chercher le texte de ces manuels, ou bien
+en installant de'finitivement ces manuels sur votre site.
+Si vous de'sirez lire le manuel de complice par exemple,
+vous pouvez soit executer la commande suivante :
+
+             $ nroff -man /usr/ilog/lelisp/manl/complice.l
+             ...
+
+soit recopier ces fichiers dans le manuel `local' de votre machine :
+/usr/catman/local\_man/man1.
+Si ce repertoire n'existe pas, le creer (comme super-utilisateur) :
+
+             $ su
+	     password: <mot de passe du super-utilisateur>
+	     # mkdir /usr/catman/local\_man/man1
+	     # cd /usr/catman/local\_man/man1
+	     # cp /usr/ilog/lelisp/manl/complice.txt complice.1
+	     # cp /usr/ilog/lelisp/manl/lelisp.txt lelisp.1
+	     # <ctrl-D>
+	     $ man complice
+	     ...
+
+Il existe une version pre'formatte'e de ces manuels,
+dans le repertoire /usr/ilog/lelisp/manl .
+Ils sont de la forme <file>.txt, et directement lisibles :
+
+            $ cat /usr/ilog/lelisp/manl/complice.txt
+            ...
+
+Validation de Le-Lisp.
+----------------------
+
+Note : Ce paragraphe ne doit pas e^tre syste'matiquement suivi
+lors d'une installation standard. Mais ces informations peuvent
+e^tre ne'cessaires dans certains cas de comportements anormaux afin
+d'en de'celer l'origine.
+
+Pour ve'rifier l'installation de Le-Lisp, ou pour effectuer des mesures
+de performances, vous disposez de plusieurs commandes dans le re'pertoire
+/usr/ilog/lelisp/cygwin/recette  qui permettent soit de lancer les
+recettes comple`tes de Le-Lisp sur votre machine, soit de
+lancer des tests de performances de Le-Lisp sur votre machine.
+
+Remarque : le lancement des recettes comple`tes forcant la
+recompilation des fichiers C de Le-Lisp, cela ne'cessite la pre'sence
+d'une chai^ne de compilation comple`te sur votre machine.
+
+(compilateur C
+
+, e'diteur de liens, librairies correctement installe'es, etc).
+
+Les cores fournis en standard devront e^tre refaits e'galement.
+
+            $ cd /usr/ilog/lelisp/cygwin/recette
+            $ sh Suites            # pour lancer les recettes completes
+            ...
+
+Selon la machine utilise'e, ces tests peuvent prendre de 2 a` 8 heures.
+
+            $ sh Bench             # pour lancer les mesures de performances
+            ...
+
+Les re'sultats de ces mesures de performances ne fournissent en aucun cas
+une mesure fiable de la machine. Il s'agit tout au plus de se faire
+une ide'e des performances du syste`me Le-Lisp, en comparant ces
+re'sultats avec leur e'quivalent sur d'autres machines.
+Ces recettes de'truisant les binaires existants, il convient de les
+refabriquer :
+
+            $ cd ..                # on retourne en lelisp/cygwin
+            $ make                 # pour tout remettre en ordre
+            ...
+
+Informations sur les versions de Le-Lisp .
+------------------------------------------
+
+Il existe un certain nombre de versions de Le-Lisp marquant
+l'e'volution du produit. Toutes les informations sur ces
+diffe'rentes versions sont regroupe'es sous le re'pertoire lelisp/info.
+On trouvera en particulier quelques notes concernant la version 16 de Le-Lisp .
+N'he'sitez pas a` consulter ces fichiers pour en savoir plus.
+Ils existent au format LaTeX(.tex), au format ascii(.txt)
+directement lisibles, ou au format postcript(.dvi) pre^ts a` e^tre imprime's
+si vous posse'dez le device ade'quat sur votre imprimante.
+
+III/ Installation non standard.
+===============================
+
+Vous venez de recopier Le-Lisp du support magne'tique livre',
+sur vos disques.
+Mais vous ne l'avez pas installe' en /usr/ilog/lelisp
+(me^me au moyen de liens symboliques).
+Nous appelerons cet endroit :
+<repertoire-lelisp>.
+
+Mise a` jour des paths dans Le-Lisp.
+------------------------------------
+
+Cela vous oblige a` reconfigurer partiellement Le-Lisp afin de lui indiquer
+ce re'pertoire d'installation. Pour cela  vous allez vous placer dans le
+re'pertoire Isystem de Le-Lisp et lancer la commande newdir
+qui mettra ce chemin absolu a` jour (voir newdir(l)).
+Il ne vous reste plus qu'a` refabriquer les images me'moire standard
+
+en lancant la commande make (voir lelisp(l), make(1)).
+
+             $ cd <repertoire-lelisp>/cygwin
+             $ sh newdir           # pour actualiser les paths
+             $ make                # pour fabriquer les images standard
+
+Accessibilite' des commandes.
+----------------------------
+
+C'est fini, Le-Lisp est installe'.
+Les commandes qui permettent de lancer Le-Lisp ( lelisp, complice)
+se trouvent dans le repertoire /usr/ilog/lelisp/cygwin .
+Vous pouvez les copier dans un re'pertoire ou elles seront accessibles
+par tout le monde. Par exemple dans /usr/local/bin :
+
+             $ cd <repertoire-lelisp>/cygwin
+             $ su
+	     password: <mot de passe du super-utilisateur>
+	     # cp complice lelisp /usr/local/bin
+	     # <ctrl-d>
+

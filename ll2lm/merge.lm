@@ -1,0 +1,48 @@
+defmodule merge
+files (merge)
+import (
+sets
+rtmsg
+defrtprj
+ref
+)
+export (
+#:llmodule:merge-ref
+#:llmodule:nconc
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:llmodule:merge-ref subr3 () () () () (subr2) (()))
+(#:llmodule:nconc subr2 () () (subr2) (()))
+)
+cpfunctions
+()
+cpimport (
+(ref
+(standardmodulereferences . nsubr)
+(#:llmodulereferences:read-from-file . subr2)
+(#:llmodulereferences:write-to-file . subr2)
+)(sets
+(intersection . nsubr)
+(union . nsubr)
+))
+cpenv (
+sets
+format
+rtmsg
+files
+module
+defvar
+sort
+callext
+defstruct
+path
+kernellm
+pretty
+rtprint
+readlm
+diagnostic
+ref
+defrtprj
+)

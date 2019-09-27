@@ -1,0 +1,26 @@
+;;; GELL 15.26: elaboration file for the module: takl
+;;;             translation done: "Thu Mar  11 93 15:55:31 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: takl.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'takl)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZtakl" "Thu Mar  11 93 15:55:31 "
+
+'((check-takl . subr0) (meter-takl . subr0) (test-takl . subr1) (listn . subr1))
+
+#[(7 6 5 4 3 2 1) (test-takl 1) check-value (count-calls-init) eval ll-6 ll-12 ll-18 (count-calls-stop) t check-takl #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-takl test-takl #:gell-resetfn:function-1 listn]
+)
+
+(defcsetfn 'check-takl "GZtakl" 0)
+(defcsetfn 'meter-takl "GZtakl" 1)
+(defcsetfn 'test-takl "GZtakl" 2)
+(defcsetfn 'listn "GZtakl" 3)
+(defvar ll-18 (listn 18))
+(defvar ll-12 (listn 12))
+(defvar ll-6 (listn 6))
+
+(defccheck '(eval check-value))

@@ -1,0 +1,14 @@
+solaris386/llsolaris386.llm3
+solaris386/macsol.ll
+solaris386/LISEZMOI
+solaris386/PortFILES
+solaris386/kern.o
+solaris386/Makeport
+solaris386/recette/lelispstat
+solaris386/recette/log/?*.log
+solaris386/recette/log/?*.err
+solaris386/recette/log/?*.*-*-*
+solaris386/extend.llm3
+solaris386/makellm3
+solaris386/faire.llexpand
+solaris386/llexpand

@@ -1,0 +1,138 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	zundef:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zvoid:dword
+	extrn	zitsoft:dword
+	extrn	zsyspkgc:dword
+	extrn	mstack:dword
+	extrn	cpkgc:dword
+	extrn	zlambda:dword
+	extrn	zflambda:dword
+	extrn	zmlambda:dword
+llink	dd	0
+evalst	dd	0
+forme	dd	0
+funct	dd	0
+savea1	dd	0
+savea2	dd	0
+savea3	dd	0
+savea4	dd	0
+errname	dd	0
+intret	dd	0
+intllink	dd	0
+dlink	dd	0
+rvbser	dd	0
+zsysits	dd	0
+pnmac97	db	'itsoft'
+	even
+pnmac98	db	'eval'
+	even
+pnmac99	db	'eval-when'
+	even
+pnmac100	db	'symeval'
+	even
+pnmac101	db	'arg'
+	even
+znobind	dd	0
+pnmac102	db	'&nobind'
+	even
+pnmac103	db	'traceval'
+	even
+pnmac104	db	'stepeval'
+	even
+pnmac105	db	'apply'
+	even
+pnmac106	db	'funcall'
+	even
+pnmac107	db	'tag'
+	even
+pnmac108	db	'evtag'
+	even
+pnmac109	db	'untilexit'
+	even
+pnmac110	db	'exit'
+	even
+pnmac111	db	'evexit'
+	even
+pnmac112	db	'unwind'
+	even
+pnmac113	db	'unexit'
+	even
+pnmac114	db	'lock'
+	even
+pnmac115	db	'protect'
+	even
+pnmac116	db	'let'
+	even
+pnmac117	db	'lets'
+	even
+pnmac118	db	'letv'
+	even
+pnmac119	db	'letvq'
+	even
+pnmac120	db	'flet'
+	even
+pnmac121	db	'function'
+	even
+zclosure	dd	0
+pnmac122	db	'_closure_'
+	even
+zrarrow	dd	0
+pnmac123	db	'-> '
+	even
+zlarrow	dd	0
+pnmac124	db	'<- '
+	even
+zeval000	dd	0
+zevalwhen	dd	0
+	extrn	itstate:dword
+	extrn	itcount:dword
+	extrn	_itloop:dword
+zsymeval	dd	0
+zllarg	dd	0
+ztraceval	dd	0
+zstepeval	dd	0
+	extrn	btbin:dword
+zfuncall	dd	0
+zuapply	dd	0
+lab_m__18  db ' error UNBINP '
+	even
+zlet	dd	0
+zletseq	dd	0
+zletv	dd	0
+zletvq	dd	0
+zflet	dd	0
+ztag	dd	0
+zevtag	dd	0
+zevexit	dd	0
+zuntlxit	dd	0
+zffexit	dd	0
+zunexit	dd	0
+zunwind	dd	0
+zllock	dd	0
+zprotect	dd	0
+zfunction	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

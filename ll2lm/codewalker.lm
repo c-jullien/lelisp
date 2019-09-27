@@ -1,0 +1,86 @@
+defmodule codewalker
+files (codewalker)
+import (
+module
+defvar
+kernellm
+rtprint
+diagnostic
+ref
+parse
+printlm
+rtmsg
+sets
+defrtprj
+)
+export (
+#:llmodule:agree-mod
+crunch-function-is-used
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:llmodule:agree-mod subr3 () (mod))
+(crunch-function-is-used subr1 ())
+)
+cpfunctions (
+(assert-code-walker subr0)
+(#:llmodule:analyse-files subr3)
+(#:llmodule:munion nsubr)
+(#:llmodule:simplify-list-but-exportable subr1)
+(#:llmodule:circular-dependancies-p subr3)
+(#:llmodule:c-d-p subr3)
+)
+cpimport (
+(sets
+(union . nsubr)
+)(parse
+(#:llmodule:get-all-def-in-files . subr1)
+(#:llmodule:parse . subr1)
+)(kernellm
+(simplify-list . subr1)
+(#:llmodule:unknow-abbrev-p . subr1)
+)(module
+(getdefmodule . subr2)
+)(diagnostic
+(#:llmodule:analyze:allsynd . nsubr)
+(#:llmodule:analyze:allexpd . nsubr)
+(#:llmodule:analyze:allother . nsubr)
+(#:llmodule:analyze:allcpenv . nsubr)
+(#:llmodule:analyze:include . nsubr)
+(#:llmodule:analyze:allunknow . nsubr)
+(#:llmodule:analyze:used-f . nsubr)
+(#:llmodule:analyze:allextd . nsubr)
+(#:llmodule:analyze:allexti . nsubr)
+(#:llmodule:analyze:defd-f . nsubr)
+(#:llmodule:analyze:allfnt . nsubr)
+(#:llmodule:analyze:alldyn . nsubr)
+(#:diagnostic:set-diagnostic-from-analyze . subr3)
+)(ref
+(#:llmodulereferences:read-from-file . subr2)
+(standardmodulereferences . nsubr)
+))
+cpenv (
+files
+module
+defvar
+sets
+sort
+callext
+defstruct
+path
+kernellm
+format
+rtmsg
+rtprint
+diagnostic
+pretty
+readlm
+ref
+syserror
+parse
+printlm
+defrtprj
+((putprop '#:llmodule:mod 't '#:complice:globalvar)
+)((putprop '#:llmodule:codewalker 't '#:complice:globalvar)
+))

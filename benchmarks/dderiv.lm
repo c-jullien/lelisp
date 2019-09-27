@@ -1,0 +1,30 @@
+; The Le-Lisp Benchmarks (13) : dderiv
+
+defmodule     dderiv
+files        (dderiv)
+export       (check-dderiv meter-dderiv test-dderiv
+              +dderiv -dderiv *dderiv /dderiv)
+import       (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-dderiv subr0 ())
+(meter-dderiv subr0 ())
+(test-dderiv subr1 ())
+(+dderiv subr1 ())
+(-dderiv subr1 ())
+(*dderiv subr1 ())
+(/dderiv subr1 ())
+)
+cpfunctions (
+(dderiv-run subr0)
+(dderiv subr1)
+(dderiv-aux subr1)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+)

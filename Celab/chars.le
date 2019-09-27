@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: chars
+;;;             translation done: "Wed June 30 93 17:35:06 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: chars.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'chars)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZchars" "Wed June 30 93 17:35:06 "
+
+'()
+
+#[]
+)
+
+
+(defccheck '())

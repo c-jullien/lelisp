@@ -1,0 +1,18 @@
+
+#!/bin/sh
+# check usage
+usage="ll2lm [options...][-help]"
+
+ll2lm=`which $0 || echo $0`
+cll2lm=`echo $ll2lm | sed -e 's_\(.*\)/\(.*\)$_\1/c\2_'`
+
+trap "echo $usage;exit 1" 1 2 3 15
+
+if [ $# -gt 0 ]
+then
+  LL2LMARGS=$*; export LL2LMARGS
+  exec $cll2lm
+else
+  exec $cll2lm
+fi
+

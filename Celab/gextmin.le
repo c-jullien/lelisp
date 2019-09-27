@@ -1,0 +1,21 @@
+;;; GELL 15.26: elaboration file for the module: gextmin
+;;;             translation done: "Tue Aug  24 93 14:04:25 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: gextmin.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'gextmin)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZgextmin" "Tue Aug  24 93 14:04:25 "
+
+'((|(_cmoinsun)| . subr0) (|(ctest ABCdefghijkl 2.5 1234 (setq v #[(a b) 7777]))| . subr0))
+
+#[(_cmoinsun) eval (ctest "ABCdefghijkl" 2.5 1234 (setq v #[(a b) 7777])) |(_cmoinsun)| #:gell-resetfn:function-name #:gell-resetfn:function-0 |(ctest ABCdefghijkl 2.5 1234 (setq v #[(a b) 7777]))|]
+)
+
+(defcsetfn '|(_cmoinsun)| "GZgextmin" 0)
+(defcsetfn '|(ctest ABCdefghijkl 2.5 1234 (setq v #[(a b) 7777]))| "GZgextmin" 1)
+
+(defccheck '(eval))

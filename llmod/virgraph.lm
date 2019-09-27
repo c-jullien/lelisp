@@ -1,0 +1,265 @@
+defmodule
+graph
+files (
+|virgraph.ll|
+)
+export (
+create-stipple
+create-stipple16
+make-stipple-bitmap
+make-stipple
+make-stipple-2
+current-stipple
+current-fill-mode
+kill-stipple
+graph-env-stipple
+graph-env-fill-mode
+;;; Default methods
+#:display:create-stipple
+#:display:kill-stipple
+#:display:current-fill-mode
+#:display:current-stipple
+#:display:graph-env-stipple
+#:display:graph-env-fill-mode
+
+#:display:font-ascent
+#:display:font-height
+current-foreground
+current-background
+clear-graph-env
+current-clip
+current-font
+font-max
+load-font
+font-name
+font-height
+font-ascent
+width-substring
+height-substring
+x-base-substring
+y-base-substring
+x-inc-substring
+y-inc-substring
+current-line-style
+line-style-max
+current-pattern
+pattern-max
+make-pattern
+current-mode
+current-arc-mode
+width-space
+height-space
+x-base-space
+y-base-space
+cursor-max
+current-cursor
+move-cursor
+cursor-name
+make-cursor
+make-named-cursor
+make-line-style
+graph-env-line-style
+graph-env-set-clip
+make-graph-env
+kill-graph-env
+graph-env-font
+graph-env-mode
+graph-env-arc-mode
+graph-env-pattern
+graph-env-background
+graph-env-foreground
+graph-env-line-style
+#:display:make-line-style
+#:display:graph-env-set-clip
+#:display:make-graph-env
+#:display:kill-graph-env
+#:display:current-foreground
+#:display:current-background
+#:display:clear-graph-env
+#:display:current-clip
+#:display:current-font
+#:display:font-max
+#:display:load-font
+#:display:width-substring
+#:display:height-substring
+#:display:x-base-substring
+#:display:y-base-substring
+#:display:x-inc-substring
+#:display:y-inc-substring
+#:display:current-line-style
+#:display:line-style-max
+#:display:current-pattern
+#:display:pattern-max
+#:display:make-pattern
+#:display:current-mode
+#:display:current-arc-mode
+#:display:cursor-max
+#:display:make-cursor
+#:display:make-named-cursor
+#:display:current-cursor
+#:display:cursor-name
+#:display:move-cursor
+#:display:graph-env-font
+#:display:graph-env-mode
+#:display:graph-env-arc-mode
+#:display:graph-env-pattern
+#:display:graph-env-foreground
+#:display:graph-env-background
+#:display:graph-env-set-clips
+graph-env-set-clips
+current-graph-env
+graph-env-change-values
+#:display:graph-env-change-values
+graph-env-subwindow-mode
+#:display:graph-env-subwindow-mode
+#:display:graph-env-line-style
+display-get-font-names
+display-get-font-info
+#:display:get-font-names
+#:display:get-font-info
+)
+import (
+virutil
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(create-stipple subr3 ())
+(create-stipple16 nsubr ())
+(make-stipple-bitmap subr1 ())
+(make-stipple subr1 ())
+(make-stipple-2 subr2 ())
+(current-stipple nsubr ())
+(current-fill-mode nsubr ())
+(kill-stipple subr1 ())
+(graph-env-stipple nsubr ())
+(graph-env-fill-mode nsubr ())
+(#:display:create-stipple nsubr ())
+(#:display:kill-stipple nsubr ())
+(#:display:current-fill-mode nsubr ())
+(#:display:current-stipple nsubr ())
+(#:display:graph-env-stipple nsubr ())
+(#:display:graph-env-fill-mode nsubr ())
+(#:display:font-ascent nsubr ())
+(#:display:font-height nsubr ())
+(current-foreground nsubr ())
+(current-background nsubr ())
+(clear-graph-env subr0 ())
+(current-clip nsubr ())
+(current-font nsubr ())
+(font-max subr0 ())
+(load-font subr1 ())
+(font-name subr1 ())
+(font-height subr0 ())
+(font-ascent subr0 ())
+(width-substring subr3 ())
+(height-substring subr3 ())
+(x-base-substring subr3 ())
+(y-base-substring subr3 ())
+(x-inc-substring subr3 ())
+(y-inc-substring subr3 ())
+(current-line-style nsubr ())
+(line-style-max subr0 ())
+(current-pattern nsubr ())
+(pattern-max subr0 ())
+(make-pattern subr1 ())
+(current-mode nsubr ())
+(current-arc-mode nsubr ())
+(width-space subr0 ())
+(height-space subr0 ())
+(x-base-space subr0 ())
+(y-base-space subr0 ())
+(cursor-max subr0 ())
+(current-cursor nsubr ())
+(move-cursor subr2 ())
+(cursor-name subr1 ())
+(make-cursor nsubr ())
+(make-named-cursor subr1 ())
+(make-line-style subr2 ())
+(graph-env-line-style nsubr ())
+(graph-env-set-clip nsubr ())
+(make-graph-env nsubr ())
+(kill-graph-env subr1 ())
+(graph-env-font nsubr ())
+(graph-env-mode nsubr ())
+(graph-env-arc-mode nsubr ())
+(graph-env-pattern nsubr ())
+(graph-env-background nsubr ())
+(graph-env-foreground nsubr ())
+(#:display:make-line-style nsubr ())
+(#:display:graph-env-set-clip nsubr ())
+(#:display:make-graph-env nsubr ())
+(#:display:kill-graph-env nsubr ())
+(#:display:current-foreground nsubr ())
+(#:display:current-background nsubr ())
+(#:display:clear-graph-env nsubr ())
+(#:display:current-clip nsubr ())
+(#:display:current-font nsubr ())
+(#:display:font-max nsubr ())
+(#:display:load-font nsubr ())
+(#:display:width-substring nsubr ())
+(#:display:height-substring nsubr ())
+(#:display:x-base-substring nsubr ())
+(#:display:y-base-substring nsubr ())
+(#:display:x-inc-substring nsubr ())
+(#:display:y-inc-substring nsubr ())
+(#:display:current-line-style nsubr ())
+(#:display:line-style-max nsubr ())
+(#:display:current-pattern nsubr ())
+(#:display:pattern-max nsubr ())
+(#:display:make-pattern nsubr ())
+(#:display:current-mode nsubr ())
+(#:display:current-arc-mode nsubr ())
+(#:display:cursor-max nsubr ())
+(#:display:make-cursor nsubr ())
+(#:display:make-named-cursor nsubr ())
+(#:display:current-cursor nsubr ())
+(#:display:cursor-name nsubr ())
+(#:display:move-cursor nsubr ())
+(#:display:graph-env-font nsubr ())
+(#:display:graph-env-mode nsubr ())
+(#:display:graph-env-arc-mode nsubr ())
+(#:display:graph-env-pattern nsubr ())
+(#:display:graph-env-foreground nsubr ())
+(#:display:graph-env-background nsubr ())
+(#:display:graph-env-set-clips nsubr ())
+(graph-env-set-clips nsubr ())
+(current-graph-env nsubr ())
+(graph-env-change-values nsubr ())
+(#:display:graph-env-change-values nsubr ())
+(graph-env-subwindow-mode subr2 ())
+(#:display:graph-env-subwindow-mode nsubr ())
+(#:display:graph-env-line-style nsubr ())
+(display-get-font-names nsubr ())
+(display-get-font-info nsubr ())
+(#:display:get-font-names nsubr ())
+(#:display:get-font-info nsubr ())
+)
+cpfunctions
+()
+cpimport (
+(virutil
+(#:bitmap:stipple:make . subr0)
+(#:graph-env:make . subr0)
+(#:font-info:make . subr0)
+))
+cpenv (
+virutil
+((putprop '#:clip:x 't '#:complice:globalvar)
+)((putprop '#:clip:y 't '#:complice:globalvar)
+)((putprop '#:clip:w 't '#:complice:globalvar)
+)((putprop '#:clip:h 't '#:complice:globalvar)
+)((putprop '#:stipple:width 't '#:complice:globalvar)
+)((putprop '#:stipple:height 't '#:complice:globalvar)
+)((defvar #:stipple:width 16)
+(defvar #:stipple:height 16)
+)((putprop '#:display:space 't '#:complice:globalvar)
+)((putprop '#:display:cursor-names 't '#:complice:globalvar)
+)((defvar #:display:cursor-names #["circle" "cross" "crosshair" "diamond-cross" "dot" "exchange" "fleur" "left-hand" "heart" "iron-cross" "left-ptr" "mouse" "pencil" "pirate" "plus" "question" "sizing" "spray" "watch" "i-beam"])
+)((putprop '#:display:cursor-names-length 't '#:complice:globalvar)
+)((defvar #:display:cursor-names-length (vlength #:display:cursor-names))
+))

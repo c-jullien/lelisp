@@ -1,0 +1,28 @@
+defmodule #:display:x11
+files (x11bitmap.ll)
+include (
+virstruct.ll
+)
+import (
+virutil
+x11_def
+x11struct
+)
+export (
+:subst-colors
+:create-bitmap 
+:create-window-bitmap 
+:kill-bitmap
+:get-bit-line 
+:set-bit-line 
+:bmref 
+:bmset 
+:set-byte-line
+:get-byte-line 
+:byteref
+:byteset 
+:bitblit
+:kill-stipple
+:create-stipple
+)
+

@@ -1,0 +1,902 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "6/19" "macroch.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 6 "Les macros-caracte`res"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/macroch.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $
+
+          TITLE     MACROCH             ; LLM3 : les macros-caracte`res
+
+          XREFI     LLINIT,.SYSPKGC     ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,MSTACK
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFP     TOPERR,ERRNIA       ; 2 - TOPERR
+          XREFP     TOPERR,ERRUDF
+          XREFP     TOPERR,ERRUDV
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRSXT
+          XREFP     TOPERR,ERRSYM
+          XREFI     TOPERR,.LLEXPR
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFP     READ,TRYSYMPK
+          XREFP     READ,READI
+          XREFP     READ,GETCH
+          XREFP     READ,ASCIII
+          XREFP     READ,LREAD
+          XREFI     READ,TABCH
+          XREFI     READ,.LREAD
+          XREFI     READ,IBASE
+          XREFI     READ,CPKGC
+          XREFI     READ,.STATRC
+          XREFP     READ,REREADA4
+          XREFP     READ,GETCV
+          XREFP     READ,READ2
+          XREFP     READ,RDPKGC2
+          XREFP     READ,READDLTD
+          XREFP     READ,BASE10P
+          XREFI     EVAL,SAVEA4         ; 8 - EVAL
+          XREFP     EVAL,FFUNCALL
+          XREFP     EVAL,EVALA1
+          XREFP     EVAL,SYSPROT
+          XREFI     EVAL,.FUNCTION
+          XREFP     CNTRL,LLDE          ; 10 - CNTRL
+          XREFI     CNTRL,.QUOTE
+          XREFP     SYMBS,GETFNS        ; 12 - SYMBS
+          XREFP     SYMBS,SETFN
+          XREFP     SYMBS,GETPROP
+          XREFP     FNTSTD,NREVERSE     ; 13 - FNTSTD
+          XREFP     FNTSTD,LLLENGTH
+          XREFI     FNTSTD,.NCONC
+          XREFI     FNTSTD,.APPEND
+          XREFI     FNTSTD,.MCONS
+          XREFI     FNTSTD,.LLCONS
+          XREFI     FNTSTD,.FNCONS
+          XREFI     FNTSTD,.LIST
+          XREFP     FNTSTD,LIST
+          XREFP     FNTSTD,KWOTE
+          XREFP     STRING,STRINGA1     ; 16 - STRING
+          XREFP     STRING,MAKEVECT
+          XREFI     STRING,.VECTOR
+
+          XDEFP     INI_MACH
+          XDEFI     .SYSCOL             ; pour print et read
+          XDEFI     TABCTYP             ; [gc]
+          XDEFI     TABCCOD             ; [gc]
+
+          IMPURE
+
+TABCTYP   ADR       0                   ; table des clairs des types des car
+TABCCOD   ADR       0                   ; table des codes nume'riques des car
+
+          PURE
+
+; .Section "Initialise les macro-caracte`res"
+
+INI_MACH  LABEL      
+
+          MAKFNT    DMC,#3,"dmc"
+          MAKFNT    DMS,#3,"dms" 
+          MAKFNT    DEFSHARP,#8,"defsharp"
+
+          MAKFNT    LLSHARP,#1,"#"      ; le macro caractere #
+          MAKCST    SHARP,#5,"sharp" 
+
+          MAKFNT    LLCOLON,#1,":"      ; le macro caractere :
+          MAKCST    USER,#4,"user"
+
+          MAKFNT    LLHAT,#1,"^"        ; le macro-caractere ^
+          MAKFNT    LLLBRA,#1,"["       ; le macro-caractere [
+          MAKFNT    LLRBRA,#1,"]"       ; le macro-caractere ]
+          MAKFNT    LLQUOTE,#1,"'"      ; le macro-caractere '
+          MAKFNT    LLBQUOTE,#1,"`"     ; le macro-caractere `
+          MAKFNT    LLCOMMA,#1,","      ; le macro-caractere ,
+          MAKCST    COMMAAT,#2,",@"
+          MAKCST    COMMADOT,#2,",."
+
+          MOV       .SYSPKGC,CPKGC      ; les variables de #:sys-package
+          MAKCST    SYSHARP,#5,"sharp"  ;    sharp
+          MOV       .SHARP,CVAL(A1)     ; (setq #:sys-package:sharp 'sharp)
+          MAKCST    SYSCOL,#5,"colon"   ;    colon
+          MOV       .USER,CVAL(A1)      ; (setq #:sys-package:colon 'user)
+
+; Les selecteurs de #-macro
+
+          MOV       .SHARP,CPKGC        ; pour tous les selecteurs de #-macro
+          MAKFNT    SHRPDOT,#1,"."      ; #.
+          MAKFNT    SHRPPLU,#1,"+"      ; #+
+          MAKFNT    SHRPMOI,#1,"-"      ; #-
+          MAKFNT    SHRPQUO,#1,"'"      ; #'
+          MAKFNT    SHRPSLA,#1,"/"      ; #/
+          MAKFNT    SHRPBAK,#1,"\"      ; #\
+          MAKFNT    SHRPHAT,#1,"^"      ; #^
+          MAKFNT    SHRPCOL,#1,":"      ; #:
+          MAKFNT    SHRPDOL,#1,"$"      ; #$
+          MAKFNT    SHRPPRC,#1,"%"      ; #%
+          MAKFNT    SHRPGUI,#1,""""     ; #"
+          MAKFNT    SHRPBAR,#1,"|"      ; #|
+          MAKFNT    SHRPPAR,#1,"("      ; #(
+          MAKFNT    SHRPBRA,#1,"["      ; #[
+          MAKFNT    SHRPRAD,#1,"r"      ; #<base>R
+
+          MAKCST    SHRPVAL,#5,"value"  ; l'indicateur pour les #\
+          MAKCST    SLOWBYTE,#7,"lowbyte"
+
+          MOVNIL    CPKGC               ; retour au package racine
+
+          MAKFNT    TYPECH,#6,"typech" 
+          MAKFNT    TYPECOD,#6,"typecn" 
+;
+;         Fabrication de la table des clairs des types des caracteres
+;
+          MAKCST    CNULL,#5,"cnull"
+          MAKCST    CBCOM,#5,"cbcom"
+          MAKCST    CECOM,#5,"cecom"
+          MAKCST    CQUOTE,#6,"cquote"
+          MAKCST    CLPAR,#5,"clpar"
+          MAKCST    CRPAR,#5,"crpar"
+          MAKCST    CDOT,#4,"cdot"
+          MAKCST    CSEP,#4,"csep"
+          MAKCST    CPACKAGE,#5,"cpkgc"
+          MAKCST    CSPLICE,#7,"csplice"
+          MAKCST    CMACRO,#6,"cmacro"
+          MAKCST    CSTRING,#7,"cstring"
+          MAKCST    CPNAME,#6,"cpname"
+          MAKCST    CSYMB,#5,"csymb"
+          MAKCST    CMSYMB,#6,"cmsymb"
+
+          MOV       #15,A1              ; la taille
+          MOVNIL    A2                  ; valeur par defaut
+          JCALL     MAKEVECT            ; et voila!
+          MOV       A1,TABCTYP          ; TABCTYP est cree
+          HPMOVX    .CNULL,A1,#0        ; type 0 = CNULL
+          HPMOVX    .CBCOM,A1,#1        ; type 1 = CBCOM
+          HPMOVX    .CECOM,A1,#2        ; type 2 = CECOM
+          HPMOVX    .CQUOTE,A1,#3       ; type 3 = CQUOTE
+          HPMOVX    .CLPAR,A1,#4        ; type 4 = CLPAR
+          HPMOVX    .CRPAR,A1,#5        ; type 5 = CRPAR
+          HPMOVX    .CDOT,A1,#6         ; type 6 = CDOT
+          HPMOVX    .CSEP,A1,#7         ; type 7 = CSEP
+          HPMOVX    .CPACKAGE,A1,#8     ; type 8 = CPKGC
+          HPMOVX    .CSPLICE,A1,#9      ; type 9 = CSPLICE
+          HPMOVX    .CMACRO,A1,#10      ; type 10 = CMACRO
+          HPMOVX    .CSTRING,A1,#11     ; type 11 = CSTRING
+          HPMOVX    .CPNAME,A1,#12      ; type 12 = CPNAME
+          HPMOVX    .CSYMB,A1,#13       ; type 13 = CSYMB
+          HPMOVX    .CMSYMB,A1,#14      ; type 14 = CMSYMB
+
+          MOV       #15,A1              ; la taille
+          MOVNIL    A2                  ; valeur par defaut
+          JCALL     MAKEVECT            ; et voila!
+          MOV       A1,TABCCOD          ; TABCCOD est cree
+          HPMOVX    #TCNULL,A1,#0       ; type 0 = CNULL
+          HPMOVX    #TCBCOM,A1,#1       ; type 1 = CBCOM
+          HPMOVX    #TCECOM,A1,#2       ; type 2 = CECOM
+          HPMOVX    #TCQUOTE,A1,#3      ; type 3 = CQUOTE
+          HPMOVX    #TCLPAR,A1,#4       ; type 4 = CLPAR
+          HPMOVX    #TCRPAR,A1,#5       ; type 5 = CRPAR
+          HPMOVX    #TCDOT,A1,#6        ; type 6 = CDOT
+          HPMOVX    #TCSEP,A1,#7        ; type 7 = CSEP
+          HPMOVX    #TCSPKGC,A1,#8      ; type 8 = CPKGC
+          HPMOVX    #TCSPLICE,A1,#9     ; type 9 = CSPLICE
+          HPMOVX    #TCMACRO,A1,#10     ; type 10 = CMACRO
+          HPMOVX    #TCSTRING,A1,#11    ; type 11 = CSTRING
+          HPMOVX    #TCPNAME,A1,#12     ; type 12 = CPNAME
+          HPMOVX    #TCSYMB,A1,#13      ; type 13 = CSYMB
+          HPMOVX    #TCMSYMB,A1,#14     ; type 14 = CMSYMB
+
+          RETURN
+
+
+;  ----------------------------------------
+          FENTRY DMC,SUBRF
+;  ----------------------------------------
+          JCALL     LLDE                ; defini une fonction de meme nom
+          PUSH      A1                  ; valeur de retour
+          PUSH      @DMCRET
+          PUSH      A1                  ; 1er arg de TYPECH
+          PUSH      #TCMACRO            ; type_ch = macrocaractere
+          MOV       #2,A4               ; TYPECH est une NSUBR!
+          BRA       TYPECH              ; et redefini le type du caractere
+DMCRET    POP       A1                  ; recup le caractere (val ret)
+          RETURN
+
+;  ----------------------------------------
+          FENTRY DMS,SUBRF
+;  ----------------------------------------
+          JCALL     LLDE                ; defini une fonction de meme nom
+          PUSH      A1                  ; valeur de retour
+          PUSH      @DMCRET
+          PUSH      A1                  ; 1er arg de TYPECH
+          PUSH      #TCSPLICE           ; type_ch = macro spliced
+          MOV       #2,A4               ; TYPECH est une NSUBR!
+          BRA       TYPECH              ; et redefini le type du caractere
+
+;  ----------------------------------------
+          FENTRY    DEFSHARP,SUBRF
+;  ----------------------------------------
+          MOV       CAR(A1),A2          ; nom du symbole
+          BFSYMB    A2,DEFSHRER         ; il faut un symbole.
+          PUSH      A2                  ; ce sera le re'sultat
+          PUSH      CDR(A1)             ; la de'finition
+          MOV       .SYSHARP,A1         ; #:sys-package:sharp
+          MOV       CVAL(A1),A1
+          JCALL     TRYSYMPK            ; interne dans le package
+          MOV       .LLEXPR,A2          ; de type EXPR
+          POP       A3                  ; le de'finition
+          JCALL     SETFN               ; define it
+          POP       A1                  ; le bon re'sultat
+          RETURN
+DEFSHRER  MOV       A2,A1               ; l'argument de'fectueux
+          MOV       .DEFSHARP,A2        ; qui provoque l'erreur
+          JMP       ERRSYM              ; il faut un symbole.
+
+;
+;         Macro-caracteres standards
+;         ==========================
+;
+;  ----------------------------------------
+          FENTRY LLQUOTE,SUBR0
+;  ----------------------------------------
+;         '<s> = (QUOTE <s>)
+          JCALL     READI               ; lit l'expression <s>
+          NCONS     A1                  ; forme (<s>)
+          CONS      .QUOTE,A1           ; puis (QUOTE <s>)
+          RETURN
+
+
+;----------------------------------------
+          FENTRY    LLCOMMA,SUBR0
+;----------------------------------------
+; 
+; (dmc |,| ()
+;      ; pour pre'venir bien des erreurs
+;      (error '|,| 'errsxt "en dehors d'un `"))
+; 
+;----------------------------------------
+          MOV       #12,A1              ; le nume'ro de l'erreur
+          MOV       .LLCOMMA,A2         ; la fonction qui provoque
+          JMP       ERRSXT
+
+;----------------------------------------
+; La Fval du macro caractere , a` l'interieur d'un backquote
+; 
+;  (cond
+;     ((eq (peekcn) #/@) (readcn) (cons '|,@| (read)))
+;     ((eq (peekcn) #/.) (readcn) (cons '|,.| (read)))
+;     (t (cons '|,| (read))))))
+; 
+;----------------------------------------
+
+COMMAIN   LABEL                         ; la fct , dans une `
+          JCALL     GETCH
+          CNBEQ     A4,#/@,COMMAIN1     ; ,@
+          CNBEQ     A4,#/.,COMMAIN2     ; ,.
+          JCALL     REREADA4            ; re'ingurgite le caractere lu
+          MOV       .LLCOMMA,A1         ; le symbole |,|
+COMMAIN0  PUSH      A1                  ; l'empile
+          JCALL     READI               ; lit un objet
+          POP       A2
+          CONS      A2,A1               ; a1 <- (a1 . a2)
+          RETURN
+
+COMMAIN1  MOV       .COMMAAT,A1         ; ,@
+          BRA       COMMAIN0
+COMMAIN2  MOV       .COMMADOT,A1        ; ,.
+          BRA       COMMAIN0
+          
+
+;----------------------------------------
+          FENTRY    LLBQUOTE,SUBR0
+;----------------------------------------
+; 
+; (dmc |`| ()
+;    (flet ((|,| () <code COMMAIN>))
+;          (backquotify (read))))
+; 
+;----------------------------------------
+          MOV       .LLCOMMA,A1         ; Empile Ftype/Fval de |,|
+          PUSH      FVAL(A1)
+          GFTYPE    A1,A2
+          PUSH      A2
+          MOV       @LLBQUOT1,A3        ; Protege la modif Fval/Ftype de |,|
+          JCALL     SYSPROT
+          MOV       .LLCOMMA,A1         ; Remet les ancien Fval/Ftype
+          SFTYPE    &1,A1               ; le FTYPE empile'
+          MOV       &2,FVAL(A1)         ; la FVAL
+          MOV       &0,A1               ; la valeur de retour
+          ADJSTK    #3
+          BRI       A3
+
+LLBQUOT1  MOV       @COMMAIN,FVAL(A1)   ; Nouveau Fval/Ftype pour |,|
+          SFTYPE    #SUBR0,A1
+          JCALL     READI
+          BRA       BACKQUOT
+
+; 
+; (de backconstant (x)
+;    ; teste si l'objet x est une constante
+;    (or (null x)
+;        (and (consp x) (eq (car x) 'quote) (null (cddr x)))))
+; 
+; Teste si A1 est une constante
+; Ne touche pas a A2 et A3!
+; Re'sultat T/() dans A4
+
+BACKCSTE  LABEL   
+          BTNIL     A1,BACKCST9         ; oui
+          BFCONS    A1,BACKCST8         ; non
+          MOV       CAR(A1),A4          ; est-ce (quote ...)
+          CABNE     A4,.QUOTE,BACKCST8  ; non
+          MOV       CDR(A1),A4
+          BTNIL     CDR(A4),BACKCST9    ; oui!
+BACKCST8  MOVNIL    A4
+          RETURN
+BACKCST9  MOV       .T,A4
+          RETURN
+
+; (de backquotify (x)
+;     ; construction de l'expression "backquote'e"
+;     (cond ((null x) ())
+;           ((atom x) (list 'quote x))
+;           ((eq (car x) '|,|) (cdr x))
+;           ((or (eq (car x) '|,@|) (eq (car x) '|,.|))
+;            (error '|`| 'errsxt 12))   ;  mauvaise forme backquotee
+;           ((and (consp (car x)) (eq (caar x) '|,@|))
+;              ; simplification de l'APPEND       
+;              (let ((a (cdar x)) (d (backquotify (cdr x))))
+;                   (cond
+;                      ; (append x ()) --> x
+;                      ((null d) a)
+;                      ; (append x (append . l)) --> (append x . l)
+;                      ((and (consp d) (eq (car d) 'append))
+;                          (mcons 'append a (cdr d)))
+;                      ; rien a` faire
+;                      (t (list 'append a d)))))
+;           ((and (consp x) (consp (car x)) (eq (caar x) '|,.|))
+;              (if (cdr x)
+;                  (list 'nconc (cdar x)(backquotify (cdr x)))
+;                  (cdar x)))
+;           (t (let ((a (backquotify (car x))) (d (backquotify (cdr x))))
+;                   ; simplification des CONS
+;                   (cond
+;                     ((null d) 
+;                         ; (cons x ()) --> (list x) ou bien '(x)
+;                         (if (backconstant a)
+;                             (list 'quote (list (cadr a)))
+;                             (list 'ncons a)))
+;                     ((and (backconstant a) (backconstant d))
+;                         ; (cons 'x  'y) --> '(x . y)
+;                         (list 'quote (cons (cadr a) (cadr d))))
+;                     ((and (consp d) (eq (car d) 'cons))
+;                         ; (cons x (cons y z)) -->  (mcons x y z)
+;                         (list 'mcons a (cadr d) (caddr d)))
+;                     ((and (consp d) (eq (car d) 'list))
+;                         ; (cons x (list y1 ... yn)) --> (list x y1 ... yn)
+;                         (cons 'list (cons a (cdr d))))
+;                     ((and (consp d) (eq (car d) 'mcons))
+;                         ; (cons x (mcons y1 ... yn)) --> (mcons x y1 ... yn)
+;                         (mcons 'mcons a (cdr d)))
+;                     (t  ; le cas ge'ne'ral
+;                         (list 'cons a d)))))))
+
+BACKQUOT  LABEL                         ; la fct backquotify
+          BFNIL     A1,BACKQUO0         ; NULL?
+          RETURN                        ; rien a faire c'est ()
+BACKQUO0  BTCONS    A1,BACKQUO1         ; Un cons?
+          JMP       KWOTE               ; (LIST 'QUOTE A1)
+
+BACKQUO1  LABEL                         ; C'est un CONS
+          MOV       CAR(A1),A2          ; A2 le car
+          CABNE     A2,.LLCOMMA,BACKQUO2; est-ce (, ..) ?
+          MOV       CDR(A1),A1          ; (, ..x) --> (..)
+          RETURN                        ; on rentre
+
+BACKQUO2  LABEL                         ; Le premier est-il un cons
+          CABEQ     A2,.COMMAAT,BACKQUOR; erreur de syntaxe `,@XXX
+          CABEQ     A2,.COMMADOT,BACKQUOR; erreur de syntaxe `,.XXX
+          BFCONS    A2,BACKQUO3         ; vers le cas normal
+          CABEQ     CAR(A2),.COMMAAT,BACKQUO4; c'est ((,@ ..) ..)
+          CABEQ     CAR(A2),.COMMADOT,BACKQUO5; c'est ((,. ..) ..)
+
+BACKQUO3  LABEL                         ; A1 la forme, A2 son car
+          PUSH      A2                  ; empile le CAR
+          MOV       CDR(A1),A1          ; recurse sur le CDR
+          CALL      BACKQUOT
+          XTOPST    A1                  ; A1 <- le CAR empile
+          CALL      BACKQUOT            ; recurse sur le CAR
+          POP       A2                  ; A1 le CAR, A2 le CDR (backquote's)
+          BFNIL     A2,BACKQU32
+          CALL      BACKCSTE            ; A1 cste ?
+          BTNIL     A4,BACKQU31         ; non
+          MOV       CDR(A1),A1
+          MOV       CAR(A1),A1
+          NCONS     A1
+          JMP       KWOTE
+
+BACKQU31  NCONS     A1
+          CONS      .FNCONS,A1
+          RETURN
+
+BACKQU32  CALL      BACKCSTE
+          BTNIL     A4,BACKQU34
+          MOV       A1,A3               ; car dans A3
+          MOV       A2,A1
+          CALL      BACKCSTE            ; cdr cste ?
+          BTNIL     A4,BACKQU33
+          MOV       CDR(A1),A1          ; cdr cdr
+          MOV       CAR(A1),A1
+          MOV       CDR(A3),A3
+          CONS      CAR(A3),A1
+          JMP       KWOTE
+
+BACKQU33  MOV       A3,A1
+BACKQU34  BFCONS    A2,BACKQU36
+          MOV       CAR(A2),A3
+          CABNE     A3,.LLCONS,BACKQU35
+          PUSH      .MCONS
+          PUSH      A1
+          MOV       CDR(A2),A2
+          PUSH      CAR(A2)
+          MOV       CDR(A2),A2
+          PUSH      CAR(A2)
+          MOV       #4,A4
+          JMP       LIST
+
+BACKQU35  CABEQ     A3,.FNCONS,BACKQU37
+          CABEQ     A3,.LIST,BACKQU38
+          CABEQ     A3,.MCONS,BACKQU38
+
+BACKQU36  NCONS     A2
+          MOV       .LLCONS,A3
+          BRA       BACKQUO7
+
+BACKQU37  MOV       .LIST,A3		; cas spe'cial du NCONS
+BACKQU38  MOV       CDR(A2),A2
+          BRA       BACKQUO7
+
+
+
+; C'est ((,@ ..) ..)
+BACKQUO4  MOV       CAR(A1),A2
+          PUSH      CDR(A2)
+          MOV       CDR(A1),A1
+          CALL      BACKQUOT
+          BFNIL     A1,BACKQU41
+          POP       A1
+          RETURN
+
+BACKQU41  BFCONS    A1,BACKQU42
+          CABNE     CAR(A1),.APPEND,BACKQU42
+          MOV       CDR(A1),A1
+          BRA       BACKQU43
+BACKQU42  NCONS     A1
+BACKQU43  POP       A2
+          CONS      A2,A1
+          CONS      .APPEND,A1
+          RETURN          
+
+
+; C'est ((,. ..) ..)
+BACKQUO5  BFNIL     CDR(A1),BACKQU51
+          MOV       CAR(A1),A1          ; Juste ((,. ..))
+          MOV       CDR(A1),A1
+          RETURN
+
+BACKQU51  PUSH      CAR(A1)
+          MOV       CDR(A1),A1
+          CALL      BACKQUOT            ; backquote le CDR
+          NCONS     A1
+          POP       A2
+          CONS      CDR(A2),A1
+          CONS      .NCONC,A1
+          RETURN
+
+; Ge'ne`re (mcons A3 A1 A2)
+BACKQUO7  XCONS     A2,A1
+          CONS      A3,A1
+          RETURN
+
+; Erreur de syntaxe 12, mauvaise forme backquotee
+BACKQUOR  MOV       #12,A1              ; le nume'ro de l'erreur
+          MOV       .LLBQUOTE,A2        ; la fonction qui provoque
+          JMP       ERRSXT              ; Erreur de Syntaxe!
+
+;         Les SHARP MACROS par defaut
+;  ----------------------------------------
+          FENTRY    LLSHARP,SUBR0
+;  ----------------------------------------
+          JCALL     GETCH               ; le selecteur
+          JCALL     BASE10P             ; entre 0-9?
+          BTNIL     A1,RDSH4            ; pas d'argument nume'rique
+          DIFF      #/0,A4              ; en nombre
+          PUSH      A4                  ; le temps de la lecture
+          BRA       RDSH3
+RDSH2     TIMES     #10,&0              ; horner
+          DIFF      #/0,A4              ; en nombre
+          PLUS      A4,&0               ; a jour sommet de pile
+RDSH3     JCALL     GETCH               ; le suivant
+          JCALL     BASE10P             ; qui suit
+          BFNIL     A1,RDSH2            ; pas un digit
+          PUSH      #1                  ; il y a un argument
+          BRA       RDSH5               ; la suite
+RDSH4     PUSH      #0                  ; pas d'arguments
+; l'argument nume'rique est empile'
+RDSH5     JCALL     ASCIII              ; on interne le selecteur
+          MOV       A1,A2               ; le symbole a` chercher
+          PUSH      A1                  ; en cas de non de'finition
+          MOV       .SYSHARP,A1         ; #:sys-package:sharp
+          MOV       CVAL(A1),A1         ; sa valeur
+          MOVNIL    A3                  ; limite du GETFN
+          JCALL     GETFNS              ; cherche la fonction
+          BTNIL     A1,RDSHR            ; y en a pas
+          ADJSTK    #1                  ; vire la fct empile'e
+          POP       A4                  ; le nombre d'arguments empile's
+          JMP       FFUNCALL            ; funcall interne
+
+RDSHR     POP       A1                  ; re'cupere le nom de la fct
+          MOV       .LLSHARP,A2         ; la fct qui provoque l'erreur
+          JMP       ERRUDF              ; fonction inde'finie
+
+;  ----------------------------------------
+          FENTRY    SHRPDOT,SUBR0
+;  ----------------------------------------
+          JCALL     READI               ; juste un EVAL READ
+          JCALL     EVALA1
+SHRPDOT1  NCONS     A1                  ; car c'est une splice macro
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    SHRPPLU,SUBR0       ; #+
+;  ----------------------------------------
+          JCALL     READI               ; lit la suite
+          JCALL     EVALA1              ; l'`e'value
+          BTNIL     A1,SHRPPLU1         ; c'est faux
+SHRPPLU0  PUSH      @SHRPDOT1           ; pour conser !
+          JMP       READI               ; lit
+SHRPPLU1  JCALL     READI               ; lit et skippe
+          MOVNIL    A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    SHRPMOI,SUBR0       ; #-
+;  ----------------------------------------
+          JCALL     READI
+          JCALL     EVALA1
+          BFNIL     A1,SHRPPLU1         ; c'est pas faux
+          BRA       SHRPPLU0
+
+;  ----------------------------------------
+          FENTRY    SHRPQUO,SUBR0       ; #'
+;  ----------------------------------------
+          JCALL     READI               ; lit l'expression <s>
+          NCONS     A1                  ; forme (<s>)
+          CONS      .FUNCTION,A1        ; puis (FUNCTION <s>)
+          BRA       SHRPDOT1            ; meme final.
+
+;  ----------------------------------------
+          FENTRY    SHRPSLA,SUBR0       ; #/
+;  ----------------------------------------
+          JCALL     GETCH
+          MOV       A4,A1
+          BRA       LOWBYTE
+
+;  ----------------------------------------
+          FENTRY    SHRPBAK,SUBR0       ; #\
+;  ----------------------------------------
+          MOV       .STATRC,A2          ; #:system:read-case-flag
+          PUSH      CVAL(A2)            ; sauvegarde
+          MOVNIL    CVAL(A2)            ; lecture en minuscules
+          JCALL     READI               ; lecture du nom du symbole
+          MOV       .STATRC,A2
+          POP       CVAL(A2)            ; restauration
+          MOV       .SHRPVAL,A2         ; (getprop (read) '#:sharp:value)
+          PUSH      A1                  ; en cas d'erreur
+          JCALL     GETPROP
+          POP       A2                  ; pile ok
+          BFNIL     A1,LOWBYTE          ; on a trouve'
+SHRPBAK1  MOV       A2,A1               ; le mauvais nom
+          MOV       .SHRPVAL,A2
+          JMP       ERRUDV
+
+;  ----------------------------------------
+          FENTRY    SHRPHAT,SUBR0       ; #^
+;  ----------------------------------------
+          JCALL     GETCH
+          LAND      #$1F,A4
+          MOV       A4,A1
+          BRA       LOWBYTE
+
+;  ----------------------------------------
+          FENTRY    SHRPCOL,SUBR0       ; #:<package>:objet-package'
+; <package> est soit un symbole soit une liste.
+;  ----------------------------------------
+          HBXMOV    TABCH,#/:,A2        ; typecn #/:
+          PUSH      A2                  ; dans la pile
+          PUSH      CPKGC
+          MOV       @SHRPCOL1,A3        ; la continuation
+          JCALL     SYSPROT             ; go!
+          POP       A1                  ; le re'sultat
+          POP       CPKGC
+          HBMOVX    &0,TABCH,#/:        ; ancien ctype
+          ADJSTK    #1                  ; mise a jour de la pile
+          BRI       A3                  ; la continuation
+
+SHRPCOL1  MOVNIL    CPKGC               ; pas de package ici
+          HBMOVX    #TCSPKGC,TABCH,#/:  ; typecn #/: 'cpkgc
+          JCALL     READI               ; lit l'objet..
+          BFCONS    A1,SHRPCOL3         ; c'est tout bon
+          JCALL     GETCV               ; consulte le prochain juste apres
+          CNBEQ     A4,#/:,SHRPCOL2     ; #:(foo) se lit comme (foo)
+          JCALL     REREADA4            ; reingurgite le pas :
+          BRA       SHRPCOL3
+SHRPCOL2  MOV       A1,CPKGC            ; le nouveau package
+          JCALL     READI               ; va lire le symbole qui suit
+SHRPCOL3  NCONS     A1                  ; c'est un splice!
+          RETURN
+
+SHRPCOER  MOV       #6,A1               ; erreur 6 mauvais package
+          MOV       .SHRPCOL,A2         ; la fonction
+          JMP       ERRSXT
+
+;  ----------------------------------------
+          FENTRY    SHRPDOL,SUBR0       ; la macro #$
+;  ----------------------------------------
+          PUSH      .SHRPDOL            ; en cas d'erreur
+          MOV       #16,A1              ; la base
+          BRA       SHRPRAD1            ; comme #16R
+          
+;  ----------------------------------------
+          FENTRY    SHRPPRC,SUBR0       ; la macro #%
+;  ----------------------------------------
+          PUSH      .SHRPPRC            ; le nom de la fonction
+          MOV       #2,A1               ; lecture base 2
+          BRA       SHRPRAD1            ; comme #2R
+
+;----------------------------------------
+          FENTRY    SHRPRAD,SUBR1       ; #<base>R
+;----------------------------------------
+          PUSH      .SHRPRAD            ; nom de la fonction (erreur)
+SHRPRAD1  CALL      SHRPRAD2            ; appelle lecture prote'ge'e
+          BFCONS    A1,SHRPRADR         ; ce doit e^tre (<nombre>)
+          BFFIX     CAR(A1),SHRPRADR    ; un nombre!
+          ADJSTK    #1                  ; vire le nom de la fonction
+          RETURN
+
+SHRPRAD2  PUSH      IBASE               ; la base de lecture courante
+          MOV       A1,IBASE            ; la nouvelle base
+          MOV       @READI,A3           ; a lire !
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat
+          POP       IBASE               ; l'ancienne base de lecture
+          NCONS     A1                  ; C'est SPLICE !
+          BRI       A3                  ; c'est la fin
+
+SHRPRADR  POP       A2                  ; le nom de la fonction
+          JMP       ERRSXT              ; c'est tout rate'
+
+
+;  ----------------------------------------
+          FENTRY    SHRPGUI,SUBR0       ; la macro #"
+;  ----------------------------------------
+          MOVNIL    A1                  ; l'accumulateur
+          BRA       SHRPGUI2
+SHRPGUI1  CONS      A4,A1               ; rajoute' en tete
+SHRPGUI2  JCALL     GETCH               ; caractere suivant
+          CNBNE     A4,#34,SHRPGUI1     ; pas un "          
+          JCALL     GETCH               ; est-ce ""
+          CNBEQ     A4,#34,SHRPGUI1     ; oui! devient "
+          JCALL     REREADA4            ; on a trop lu
+          JCALL     NREVERSE            ; on reverse physiquement
+          NCONS     A1                  ; c'est une SPLICE macro
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    SHRPBAR,SUBR0       ; la macro #|
+;  ----------------------------------------
+          JCALL     GETCV               ; GETCV: plus de COMMENT ni car QUOTE
+;SHRPBARI  CNBEQ     A3,#TCSTRING,SHRPBAR1; on traite les chai^nes
+SHRPBARI  CNBEQ     A4,#/#,SHRPBAR0     ; peut-etre un appel re'cursif
+          CNBNE     A4,#/|,SHRPBAR      ; pas une |
+          JCALL     GETCV               ; lit la suite
+          CNBNE     A4,#/#,SHRPBARI     ; pas un #
+          MOVNIL    A1                  ; car c'est une splice macro
+          RETURN
+
+SHRPBAR0  JCALL     GETCV               ; le suivant
+          CNBNE     A4,#/|,SHRPBARI     ; ce n'est pas #|
+          PUSH      @SHRPBAR            ; pour re'curser
+          BRA       SHRPBAR             ; puis on continue
+
+;SHRPBAR1  JCALL     GETCV               ; le suivant
+;          CNBNE     A3,#TCSTRING,SHRPBAR1; pas finie ?
+;          BRA       SHRPBAR             ; continue (et ca marche pour "" !)
+
+;  ----------------------------------------
+          FENTRY    SHRPPAR,SUBR0       ; la MACRO #(
+;  ----------------------------------------
+          JCALL     READ2               ; lit un cons
+          BFCONS    A1,SHRPPRR          ; le cas #()
+          STINVSBL  A1                  ; en fait un TCONS
+SHRPPRR   NCONS     A1                  ; c'est une splice macro
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    SHRPBRA,SUBR0       ; la macro #[
+;  ----------------------------------------
+          CALL      SHRPBRA0            ; construit le vecteur
+          BTNIL     CPKGC,SHRPBRAR      ; pas un vecteur package'
+          MOV       CPKGC,TYP(A1)       ; est mis
+SHRPBRAR  BRA       SHRPDOT1            ; c'est une splice macro!
+
+SHRPBRA0  PUSH      CPKGC               ; lit le contenu dans ||
+          MOV       @SHRPBRA1,A3        ; la routine prote'ge'e
+          JCALL     SYSPROT
+          POP       A1                  ; la valeur
+          POP       CPKGC               ; restaure cpkgc
+          BRI       A3                  ; back home
+
+SHRPBRA1  MOVNIL    CPKGC               ; lit dans ||
+          MOV       #/],A1              ; un ]
+          JCALL     READDLTD            ; (read-delimited-list #/])
+          PUSH      A1                  ; la liste convertie en vecteur
+          JCALL     LLLENGTH            ; la longueur du vecteur
+          PUSH      A1                  ; est sauvee
+          MOVNIL    A2                  ; la valeur initiale
+          JCALL     MAKEVECT            ; cre'e le vecteur
+          POP       A3                  ; la longueur
+          POP       A2                  ; la liste
+          MOV       #0,A4               ; l'index
+          BRA       SHRPBRA3            ; dans la boucle (pour le cas 0)
+SHRPBRA2  HPMOVX    CAR(A2),A1,A4       ; installe un e'le'ment
+          MOV       CDR(A2),A2          ; avance dans la liste
+          INCR      A4                  ; avance l'index
+SHRPBRA3  CNBNE     A4,A3,SHRPBRA2      ; il y en a encore
+          RETURN                        ; le vecteur est fini
+
+
+;  Traite les | apre`s #^, #/, #\
+
+LOWBYTE   LABEL
+          PUSH      @SHRPDOT1           ; pour conser au retour (splice macro)
+          JCALL     GETCH               ; lit la suite
+          CNBEQ     A4,#/|,LOWBYTE0     ; C'est une |
+          JMP       REREADA4            ; non c'est la fin
+LOWBYTE0  BFFIX     A1,LOWBYTE5         ; on veut un nombre
+          LSHIFT    #8,A1               ; A1 est shifte' de 8 a` gauche
+          JCALL     GETCH               ; le caractere suivant
+          CNBEQ     A4,#//,LOWBYTE2     ; un /
+          CNBEQ     A4,#/^,LOWBYTE3     ; un ^
+          CNBEQ     A4,#/\,LOWBYTE4     ; un \
+          MOV       A4,A1               ; le caracte`re 
+          MOV       .SLOWBYTE,A2        ; le symbole #:sharp:low-byte
+          JMP       ERRSXT
+
+LOWBYTE2  JCALL     GETCH
+LOWBYTRE  LOR       A4,A1
+          RETURN
+LOWBYTE3  JCALL     GETCH
+          LAND      #$1F,A4
+          BRA       LOWBYTRE
+LOWBYTE4  PUSH      A1                  ; sauve
+          JCALL     READI               ; lit un symbole
+          PUSH      A1                  ; +en cas d'erreur
+          MOV       .SHRPVAL,A2         ; (getprop (read) '#:sharp:value)
+          JCALL     GETPROP
+          POP       A2                  ; +le nom du symbole si pas trouve'
+          POP       A4                  ; restore l'octet de poids forts.
+          BTNIL     A1,SHRPBAK1         ; on a pas trouve'
+          BTFIX     A1,LOWBYTRE
+LOWBYTE5  MOV       A1,A2
+          MOV       .SHRPVAL,A1
+          JMP       ERRNIA              ; l'argument n'est pas un entier!
+
+
+;  ----------------------------------------
+          FENTRY    LLCOLON,SUBR0       ; le macro caractere :
+;  ----------------------------------------
+          MOV       .SYSCOL,A1          ; #:sys-package:colon
+          MOV       CVAL(A1),A1         ; le package courant          
+          HBMOVX    #TCSPKGC,TABCH,#/:  ; : est un se'parateur de packages
+          MOV       @RDPKGC2,A3         ; lecture d'un symbole package'
+          JCALL     SYSPROT             ; le parapluie
+          HBMOVX    #TCMACRO,TABCH,#/:  ; : redevient un macro-car
+          POP       A1                  ; le symbole lu
+          BRI       A3
+
+;  ----------------------------------------
+          FENTRY    LLHAT,SUBR0         ; le macro caractere ^
+;  ----------------------------------------
+          JCALL     GETCH               ; (readcn)
+          LAND      #$1F,A4             ; (logand 31 ..)
+          JMP       ASCIII              ; (ascii ..)
+
+;  ----------------------------------------
+          FENTRY    LLLBRA,SUBR0        ; le macro caracter [
+;  ----------------------------------------
+          MOV       .LLLBRA,A1          ; (error 'read 'errudf '|[|)
+LLLBRA1   MOV       .LREAD,A2
+          JMP       ERRUDF
+
+;  ----------------------------------------
+          FENTRY    LLRBRA,SUBR0        ; le macro caractere ]
+;  ----------------------------------------
+          MOV       .LLRBRA,A1          ; (error 'read 'errudf '|]|)
+          BRA       LLLBRA1
+
+;
+;          (TYPECH c [n]) acces/modif au type du caractere
+;
+;  ----------------------------------------
+          FENTRY    TYPECH,SUBRN
+;  ----------------------------------------
+          MOV       .TYPECH,A2          ; en cas d'erreur.
+TYPECH0   CNBEQ     A4,#1,TYPECHG1      ; vers le GET seul
+          CNBEQ     A4,#2,TYPECHS1      ; vers le SET seul
+          MOV       #2,A1               ; le vrai nb.
+          JMP       ERRWNA              ; "mauvais nb d'arguments"
+
+TYPECHS1  POP       A1                  ; le type du caractere
+          BTFIX     A1,TYPECHS5         ; C'est une constante nume'rique
+          MOV       #14,A3              ; le compteur dans la table
+TYPECHS2  HPXMOV    TABCTYP,A3,A4       ; A4 <- le code suivant
+          CABEQ     A1,A4,TYPECHS4      ; ok je l'ai
+          SOBGEZ    A3,TYPECHS2         ; les autres codes
+          BRA       TYPECHR1            ; pas le bon : OOB
+TYPECHS4  MOV       A3,A1               ; pour la suite
+          BRA       TYPECHS6            
+TYPECHS5  CNBLT     A1,#0,TYPECHR2      ; pas bon
+          CNBGT     A1,#TCMSYMB,TYPECHR2;  la non plus ...
+TYPECHS6  HPXMOV    TABCCOD,A1,A1       ; le code correspondant
+          XTOPST    A1                  ; le code est empile
+          CABEQ     A2,.TYPECH,TYPECHS7 ; seulement en cas de TYPECH
+          BFFIX     A1,TYPECHR1         ; loose
+          CNBLT     A1,#0,TYPECHR2      ; un code ASCII
+          CNBGE     A1,#256,TYPECHR2
+          BRA       TYPECHS8            ; vers le SET
+TYPECHS7  MOV       A2,SAVEA4           ; pour STRINGA1
+          JCALL     STRINGA1            ; ch = string
+          HBXMOV    A1,#0,A1            ; A1 <- 1er car de la chaine
+TYPECHS8  POP       A2                  ; la nouvelle valeur.
+          HBMOVX    A2,TABCH,A1         ; force la nouvelle valeur
+          HPXMOV    TABCTYP,A2,A1       ; retourne le code du type
+          RETURN
+
+TYPECHG1  POP       A1                  ; recupere le caractere
+          CABEQ     A2,.TYPECH,TYPECHG5 ; seulement en cas de TYPECH
+          BFFIX     A1,TYPECHR1         ; loose
+          CNBLT     A1,#0,TYPECHR2      ; un code ASCII
+          CNBGE     A1,#256,TYPECHR2
+          BRA       TYPECHG7            ; vers le GET
+TYPECHG5  MOV       A2,SAVEA4           ; pour STRINGA1
+          JCALL     STRINGA1            ; ch = string
+          HBXMOV    A1,#0,A1            ; A1 <- 1er car de la chaine
+TYPECHG7  HBXMOV    TABCH,A1,A1         ; lecture du code
+          HPXMOV    TABCTYP,A1,A1       ; retourne le code du type
+          RETURN
+
+TYPECHR1  JMP       ERRNIA
+TYPECHR2  JMP       ERROOB
+
+;
+;          (TYPECN cod [n]) acces/modif au type du caractere (code ascii)
+;
+;  ----------------------------------------
+          FENTRY    TYPECOD,SUBRN
+;  ----------------------------------------
+          MOV       .TYPECOD,A2         ; en cas d'erreur.
+          BRA       TYPECH0             ; apres c'est pareil ...
+
+          END
+

@@ -1,0 +1,52 @@
+;;; GELL 15.26: elaboration file for the module: x11event
+;;;             translation done: "Tue Aug  24 93 10:48:24 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: x11event.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'x11event)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZx11event" "Tue Aug  24 93 10:48:24 "
+
+'((#:display:x11:event-mode . subr2) (#:display:x11:flush-event . subr1) (#:display:x11:eventp . subr1) (#:display:x11:read-event . subr2) (#:display:x11:peek-event . subr2) (#:display:x11:read-mouse . subr2) (#:display:x11:add-event . subr2) (#:display:x11:grab-event . subr2) (#:display:x11:ungrab-event . subr1) (#:display:x11:itsoft-event . subr1) (#:display:x11:default-event-code . subr2) (#:display:x11:ascii-event-code . subr2) (#:display:x11:functionkey-event-code . subr2) (#:display:x11:down-event-code . subr2) (#:display:x11:up-event-code . subr2) (#:display:x11:enterwindow-event-code . subr2) (#:display:x11:leavewindow-event-code . subr2) (#:display:x11:movedrag-event-code . subr2) (#:display:x11:keyboard-focus-event-code . subr2) (#:display:x11:repaint-window-event-code . subr2) (#:display:x11:kill-window-event-code . subr2) (#:display:x11:modify-window-event-code . subr2) (#:display:x11:unmap-window-code . subr2) (#:display:x11:map-window-code . subr2) (#:display:x11:client-message-code . subr2) (#:display:x11:visibility-change-code . subr2) (#:display:x11:reparent-notify-code . subr2) (#:display:x11:parse-event . subr3) (#:display:x11:compute-event-mask . subr1) (#:display:x11:allow-event . subr2) (#:display:x11:disallow-event . subr2) (#:display:x11:allowed-event-p . subr2))
+
+#[x11_flush_event x11_eventp bltvector fillvector x11_read_event t #:display:x11:parse-event x11_peek_event x11_read_mouse #:event:make nconc1 x11_grab_event x11_ungrab_event no-event ascii-event functionkey-event down-event up-event enterwindow-event leavewindow-event drag-event move-event keyboard-focus-event repaint-window-event kill-window-event modify-window-event unmap unmap-window map map-window client-message x11_get_format x11_get_data_string visibility-change reparent-notify funcall makevector repaint-event "Not a valid X11 event" #:display:x11:compute-event-mask printerror x11_build_mask nconc (repaint-event modify-window-event) append append1 delq #:display:x11:event-mode #:gell-resetfn:function-name #:gell-resetfn:function-2 #:display:x11:flush-event #:gell-resetfn:function-1 #:display:x11:eventp #:display:x11:read-event #:display:x11:peek-event #:display:x11:read-mouse #:display:x11:add-event #:display:x11:grab-event #:display:x11:ungrab-event #:display:x11:itsoft-event #:display:x11:default-event-code #:display:x11:ascii-event-code #:display:x11:functionkey-event-code #:display:x11:down-event-code #:display:x11:up-event-code #:display:x11:enterwindow-event-code #:display:x11:leavewindow-event-code #:display:x11:movedrag-event-code #:display:x11:keyboard-focus-event-code #:display:x11:repaint-window-event-code #:display:x11:kill-window-event-code #:display:x11:modify-window-event-code #:display:x11:unmap-window-code #:display:x11:map-window-code #:display:x11:client-message-code #:display:x11:visibility-change-code #:display:x11:reparent-notify-code #:gell-resetfn:function-3 #:display:x11:allow-event #:display:x11:disallow-event #:display:x11:allowed-event-p]
+)
+
+(defvar #:sys-package:colon '#:display:x11)
+(defcsetfn '#:display:x11:event-mode "GZx11event" 0)
+(defcsetfn '#:display:x11:flush-event "GZx11event" 1)
+(defcsetfn '#:display:x11:eventp "GZx11event" 2)
+(defcsetfn '#:display:x11:read-event "GZx11event" 3)
+(defcsetfn '#:display:x11:peek-event "GZx11event" 4)
+(defcsetfn '#:display:x11:read-mouse "GZx11event" 5)
+(defcsetfn '#:display:x11:add-event "GZx11event" 6)
+(defcsetfn '#:display:x11:grab-event "GZx11event" 7)
+(defcsetfn '#:display:x11:ungrab-event "GZx11event" 8)
+(defcsetfn '#:display:x11:itsoft-event "GZx11event" 9)
+(defcsetfn '#:display:x11:default-event-code "GZx11event" 10)
+(defcsetfn '#:display:x11:ascii-event-code "GZx11event" 11)
+(defcsetfn '#:display:x11:functionkey-event-code "GZx11event" 12)
+(defcsetfn '#:display:x11:down-event-code "GZx11event" 13)
+(defcsetfn '#:display:x11:up-event-code "GZx11event" 14)
+(defcsetfn '#:display:x11:enterwindow-event-code "GZx11event" 15)
+(defcsetfn '#:display:x11:leavewindow-event-code "GZx11event" 16)
+(defcsetfn '#:display:x11:movedrag-event-code "GZx11event" 17)
+(defcsetfn '#:display:x11:keyboard-focus-event-code "GZx11event" 18)
+(defcsetfn '#:display:x11:repaint-window-event-code "GZx11event" 19)
+(defcsetfn '#:display:x11:kill-window-event-code "GZx11event" 20)
+(defcsetfn '#:display:x11:modify-window-event-code "GZx11event" 21)
+(defcsetfn '#:display:x11:unmap-window-code "GZx11event" 22)
+(defcsetfn '#:display:x11:map-window-code "GZx11event" 23)
+(defcsetfn '#:display:x11:client-message-code "GZx11event" 24)
+(defcsetfn '#:display:x11:visibility-change-code "GZx11event" 25)
+(defcsetfn '#:display:x11:reparent-notify-code "GZx11event" 26)
+(defcsetfn '#:display:x11:parse-event "GZx11event" 27)
+(defcsetfn '#:display:x11:compute-event-mask "GZx11event" 28)
+(defcsetfn '#:display:x11:allow-event "GZx11event" 29)
+(defcsetfn '#:display:x11:disallow-event "GZx11event" 30)
+(defcsetfn '#:display:x11:allowed-event-p "GZx11event" 31)
+
+(defccheck '(delq #:display:x11:compute-event-mask append1 append nconc x11_build_mask printerror makevector funcall x11_get_data_string x11_get_format x11_ungrab_event x11_grab_event nconc1 #:event:make x11_read_mouse x11_peek_event #:display:x11:parse-event x11_read_event fillvector bltvector x11_eventp x11_flush_event))

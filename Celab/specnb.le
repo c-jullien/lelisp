@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: specnb
+;;;             translation done: "Wed June 30 93 17:34:54 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: specnb.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'specnb)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZspecnb" "Wed June 30 93 17:34:54 "
+
+'((oddp . subr1) (evenp . subr1) (eqn . subr2) (neqn . subr2) (gt . subr2) (ge . subr2) (lt . subr2) (le . subr2) (imin . subr2) (imax . subr2) (add1 . subr1) (sub1 . subr1) (add . subr2) (sub . subr2) (mul . subr2) (div . subr2) (rem . subr2) (scale . subr3) (srandom . nsubr) (random . subr2) (lognot . subr1) (logand . subr2) (logor . subr2) (logxor . subr2) (logshift . subr2) (2** . subr1) (mask-field . subr3) (load-byte . subr3) (load-byte-test . subr3) (deposit-byte . nsubr) (deposit-field . nsubr) (feqn . subr2) (fneqn . subr2) (fgt . subr2) (fge . subr2) (flt . subr2) (fle . subr2) (fmin . subr2) (fmax . subr2) (fadd . subr2) (fsub . subr2) (fmul . subr2) (fdiv . subr2) (#:gell:logshift . subr0) (#:gell:fadd . subr0) (#:gell:fsub . subr0) (#:gell:fmul . subr0) (#:gell:fdiv . subr0) (#:gell:feqn . subr0) (#:gell:fneqn . subr0) (#:gell:fgt . subr0) (#:gell:fge . subr0) (#:gell:flt . subr0) (#:gell:fle . subr0) (floatp . subr1) (fixp . subr1) (plus . nsubr) (difference . nsubr) (times . nsubr) (divide . subr2) (ex+ . subr2) (ex1+ . subr1) (ex- . subr1) (ex* . subr3) (ex/ . subr2) (ex? . subr2))
+
+#[oddp #:gell-resetfn:function-name #:gell-resetfn:function-1 evenp eqn #:gell-resetfn:function-2 neqn gt ge lt le imin imax add1 sub1 add sub mul div rem scale #:gell-resetfn:function-3 srandom #:gell-resetfn:function-n random lognot logand logor logxor logshift 2** mask-field load-byte load-byte-test deposit-byte deposit-field feqn fneqn fgt fge flt fle fmin fmax fadd fsub fmul fdiv #:gell:logshift #:gell-resetfn:function-0 #:gell:fadd #:gell:fsub #:gell:fmul #:gell:fdiv #:gell:feqn #:gell:fneqn #:gell:fgt #:gell:fge #:gell:flt #:gell:fle floatp fixp plus difference times divide ex+ ex1+ ex- ex* ex/ ex?]
+)
+
+
+(defccheck '())

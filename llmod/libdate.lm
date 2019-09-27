@@ -1,0 +1,80 @@
+defmodule
+libdate
+files (
+libdate
+)
+export (
+long-string-date
+number-to-date
+date-to-number
+eqdate =date
+<date
+<=date
+>date
+>=date
+/=date
+date-of-file
+)
+import (
+date
+messages
+path
+callext
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(long-string-date subr1 ())
+(number-to-date subr1 () (n) (date))
+(date-to-number subr1 ())
+(eqdate subr2 ())
+(=date subr2 ())
+(<date subr2 ())
+(<=date subr2 ())
+(>date subr2 ())
+(>=date subr2 ())
+(/=date subr2 ())
+(date-of-file subr1 ())
+)
+cpfunctions (
+(adjust-year subr0)
+(adjust-day subr0)
+(adjust-month subr0)
+(prev-month subr1)
+(next-month subr1)
+(<?date subr3)
+(getfdate subr2)
+)
+cpimport (
+(messages
+(get-message . subr1)
+)(date
+(datep . subr1)
+(leap-number . subr1)
+(leap-year-p . subr1)
+(year-day-number . subr1)
+(month-length . subr2)
+(week-day-number . subr1)
+(create-date . subr0)
+)(path
+(pathnamep . subr1)
+(coerce-namestring . subr1)
+))
+cpenv (
+messages
+date
+sort
+callext
+defstruct
+path
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop 'long-month-names 't '#:complice:globalvar)
+)((putprop 'long-day-names 't '#:complice:globalvar)
+)((putprop 'tropic-year-length 't '#:complice:globalvar)
+)((putprop 'gregorian-year-length 't '#:complice:globalvar)
+)((putprop 'tropic-month-length 't '#:complice:globalvar)
+)((putprop 'moon-month-length 't '#:complice:globalvar)
+)((putprop '#:date:date-min 't '#:complice:globalvar)
+))

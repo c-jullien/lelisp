@@ -1,0 +1,19 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule zee
+
+files (
+|zee.ll|
+)
+
+import ()
+
+export (
+
+; ;;; Functions unused unless exported
+f-zee1
+)
+
+cpenv (
+((de f-zee1 (x y) (|-| x y))
+))

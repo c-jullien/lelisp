@@ -1,0 +1,79 @@
+defmodule make
+files (make)
+import (
+format
+sets
+defvar
+ref
+defrtprj
+rtmsg
+rtprint
+)
+
+export (
+#:rtproject:build-make
+#:rtproject:makefile:comment:eol
+#:rtproject:print-env
+#:rtproject:prinf
+#:rtproject:make-output-filename
+#:rtproject:make-module-filename
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:rtproject:build-make subr2 ())
+(#:rtproject:print-env subr2 ())
+(#:rtproject:prinf subr1 ())
+(#:rtproject:make-output-filename nsubr ())
+(#:rtproject:makefile:comment:eol subr0 ())
+(#:rtproject:make-module-filename subr2 ())
+)
+cpfunctions (
+(#:rtproject:print-modules-makefile subr1)
+(#:rtproject:declare-sed-value subr2)
+(#:rtproject:make-object-filename subr2)
+(#:rtproject:print-complice-command nsubr)
+(#:rtproject:print-lo-dependencies nsubr)
+)
+cpimport (
+(rtprint
+(#:crunch:save-file . subr1)
+)(ref
+(current-mr . nsubr)
+)(defrtprj
+(get-system-directory . subr1)
+(get-main-ll-object-directory . subr1)
+(get-main-ll-module-directory . subr1)
+(list-complice-directories . subr1)
+)(format
+(prinf . nsubr)
+)(sets
+(intersection . nsubr)
+))
+cpenv (
+format
+sets
+files
+module
+defvar
+pretty
+rtmsg
+sort
+callext
+defstruct
+path
+kernellm
+rtprint
+readlm
+diagnostic
+ref
+defrtprj
+((putprop '#:rtproject:makefile:rmargin 't '#:complice:globalvar)
+)((putprop '#:rtproject:complice-command 't '#:complice:globalvar)
+)((putprop '#:rtproject:verbose-makefile 't '#:complice:globalvar)
+)((putprop '#:rtproject:extension 't '#:complice:globalvar)
+)((putprop '#:rtproject:defmod 't '#:complice:globalvar)
+)((putprop '#:rtproject:sed-values 't '#:complice:globalvar)
+)((putprop '#:rtproject:sed-marker 't '#:complice:globalvar)
+)((putprop '#:rtproject:sed-file-p 't '#:complice:globalvar)
+))

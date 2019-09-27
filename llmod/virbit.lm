@@ -1,0 +1,90 @@
+defmodule
+bitmap
+files (
+|virbit.ll|
+)
+export (
+#:bitmap:bits
+create-bitmap
+window-bitmap
+kill-bitmap
+bmref
+bmset
+bitblit
+#:sharp:*
+#:sharp:B
+#:bitvector:read
+#:bitvector:prin
+#:bitmap:prin
+byteref
+byteset
+#:bitmap:bytemap:prin
+#:bitmap:bytes
+create-bytemap
+substitute-color
+bitmap-prologue
+subst-colors
+#:display:subst-colors
+)
+import (
+virutil
+vircolor
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:bitmap:bits nsubr ())
+(create-bitmap nsubr ())
+(window-bitmap subr1 ())
+(kill-bitmap subr1 ())
+(bmref subr3 ())
+(bmset nsubr ())
+(bitblit nsubr ())
+(#:sharp:* nsubr ())
+(#:bitvector:read subr2 ())
+(#:sharp:B subr0 ())
+(#:bitvector:prin subr1 ())
+(#:bitmap:prin subr1 ())
+(byteref subr3 ())
+(byteset nsubr ())
+(#:bitmap:bytemap:prin subr1 ())
+(#:bitmap:bytes nsubr ())
+(create-bytemap nsubr ())
+(substitute-color subr3 ())
+(subst-colors subr2 ())
+(bitmap-prologue subr2 ())
+(#:display:subst-colors subr3 ())
+)
+cpfunctions (
+(#:bitmap:create-bitmap nsubr)
+(#:bitmap:ext->int-encode subr1)
+(#:bitmap:conv-to-hex subr1)
+(#:bitmap:prin-aux subr2)
+(#:bitmap:create-bytemap nsubr)
+(#:bitmap:empty-bytemap subr3)
+(#:bitmap:make-assoc-table subr1)
+(#:bitmap:matching-color subr1)
+(#:bitmap:bytes-to-bits subr1)
+)
+cpimport (
+(vircolor
+(all-colors . nsubr)
+)(virutil
+(#:bitmap:make . subr0)
+(#:bitmap:bytemap:make . subr0)
+))
+cpenv (
+virutil
+vircolor
+((putprop '#:display:dumpdevice 't '#:complice:globalvar)
+)((putprop '#:system:print-bitmap-flag 't '#:complice:globalvar)
+)((putprop '#:bitmap:int->ext-encode-string 't '#:complice:globalvar)
+)((putprop '#:bitmap:ext->int-encode-string 't '#:complice:globalvar)
+)((putprop '#:bitmap:predefined-bytes 't '#:complice:globalvar)
+)((putprop '#:system:compressed-icon 't '#:complice:globalvar)
+)((putprop '#:bitmap:stringbuffer 't '#:complice:globalvar)
+))

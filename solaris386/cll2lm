@@ -1,0 +1,1 @@
+exec /home/jullien/lelisp-opensource-2017-09-23/solaris386/lelispbin -stack 18 -code 400 -heap 1024 -number 0 -vector 10 -string 18 -symbol 15 -cons 15 -float 0 -r /home/jullien/lelisp-opensource-2017-09-23/solaris386/llcore/cll2lm.core $*

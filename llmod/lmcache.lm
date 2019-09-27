@@ -1,0 +1,23 @@
+defmodule lmcache
+files (lmcache)
+import (module)
+export (#:lmcache:readdefmodule lmcacheinit lmcacheend #:lmcache:at-end)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:lmcache:readdefmodule subr1 ())
+(lmcacheinit subr0 ())
+(lmcacheend subr0 ())
+(#:lmcache:at-end nsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+files
+module
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:lmcache:defmodule 't '#:complice:globalvar)
+)((putprop '#:lmcache:verbose 't '#:complice:globalvar)
+))

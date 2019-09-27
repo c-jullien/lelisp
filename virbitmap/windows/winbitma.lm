@@ -1,0 +1,82 @@
+defmodule #:display:windows
+files (
+	winbitma.ll
+)
+include (
+	virstruct
+)
+import (
+	virutil	; make
+	win_def
+	winstruc
+	winwindo
+)
+export (
+:create-bitmap
+:kill-bitmap
+:get-bit-line
+:set-bit-line
+:bmref
+:bmset
+:get-byte-line
+:set-byte-line
+:byteref
+:byteset
+:bitblit
+:create-window-bitmap
+:subst-colors
+
+:create-stipple
+:kill-stipple
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:windows:create-bitmap subr2 ())
+(#:display:windows:kill-bitmap subr2 ())
+(#:display:windows:get-bit-line nsubr ())
+(#:display:windows:set-bit-line nsubr ())
+(#:display:windows:bmref nsubr ())
+(#:display:windows:bmset nsubr ())
+(#:display:windows:get-byte-line nsubr ())
+(#:display:windows:set-byte-line nsubr ())
+(#:display:windows:byteref nsubr ())
+(#:display:windows:byteset nsubr ())
+(#:display:windows:bitblit nsubr ())
+(#:display:windows:create-window-bitmap subr3 ())
+(#:display:windows:subst-colors subr3 ())
+(#:display:windows:create-stipple subr3 ())
+(#:display:windows:kill-stipple subr2 ())
+)
+cpfunctions
+()
+cpimport (
+(winstruc
+(#:windows:bitmap:make . subr0)
+)(winwindo
+(#:display:windows:current-window . subr2)
+)(virutil
+(#:event:make . subr0)
+)(win_def
+(windows_create_bitmap . subr2)
+(windows_kill_bitmap . subr1)
+(windows_get_bit_line . nsubr)
+(windows_set_bit_line . nsubr)
+(windows_bmref . nsubr)
+(windows_bmset . nsubr)
+(windows_get_byte_line . nsubr)
+(windows_set_byte_line . nsubr)
+(windows_byteref . nsubr)
+(windows_byteset . nsubr)
+(windows_bitblit . nsubr)
+(windows_subst_colors . nsubr)
+(windows_create_stipple . subr3)
+))
+cpenv (
+virutil
+win_def
+winstruc
+virwindow
+winwindo
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

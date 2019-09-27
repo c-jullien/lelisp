@@ -1,0 +1,1011 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "9/19" "fspecs.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 9 "Les formes spe'ciales"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/fspecs.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $
+ 
+          TITLE     FSPECS              ; LLM3 : les formes spe'ciales
+
+; .Section "Les De'claratione"
+
+          XREFI     LLINIT,MSTACK       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.UNDEF
+          XREFI     LLINIT,.LLSYSTEM
+          XREFI     LLINIT,ITSTATE
+          XREFI     LLINIT,ITCOUNT
+          XREFP     TOPERR,ERRFS        ; 2 - TOPERR
+          XREFP     TOPERR,ERRES
+          XREFP     TOPERR,ERRNAB
+          XREFP     TOPERR,ERRSYM
+          XREFP     TOPERR,ERRXIA
+          XREFP     TOPERR,ERRWNA
+          XREFP     GC,GCCONS           ; 2 - GC
+          XREFI     READ,CPKGC          ; 5 - READ
+          XREFP     READ,INISYMB
+          XREFP     READ,INICST
+          XREFI     EVAL,DLINK          ; 8 - EVAL
+          XREFP     EVAL,FINDTAG
+          XREFP     EVAL,EVALA1
+          XREFP     EVAL,APPLY
+          XREFI     EVAL,LLINK
+          XREFI     EVAL,SAVEA1
+          XREFI     EVAL,SAVEA2
+          XREFI     EVAL,SAVEA3
+          XREFI     EVAL,SAVEA4
+          XREFI     EVAL,INTRET
+          XREFI     EVAL,ERRNAME
+          XREFI     EVAL,INTLLINK
+          XREFP     EVAL,UNBIND0
+          XREFP     EVAL,UNBIND1
+          XREFP     EVAL,UNBINP1
+          XREFP     EVAL,UNBIND2
+          XREFP     EVAL,UNBIND3
+          XREFP     EVAL,UNBIND4
+          XREFP     EVAL,UNBIND5
+          XREFP     EVAL,UNBIND6
+          XREFP     EVAL,UNBIND7
+          XREFP     EVAL,UNBIND8
+          XREFP     EVAL,UNBIND9
+          XREFP     EVAL,UNBIND10
+          XREFP     EVAL,EVEXPG
+          XREFI     EVAL,ERRNAME
+          XREFP     EVAL,UNBINP
+          XREFP     EVAL,EVPROGN
+          XREFP     EVAL,EVBNDEXT
+          XREFP     EVAL,BNDTRBEX
+          XREFP     EVAL,SYSPROT
+          XREFP     EVAL,FFUNCALL
+          XREFP     EVAL,EVBALE
+          XREFP     FNTSTD,DESET        ; 13 - FNTSTD
+          XREFP     BLLSHT,LOC          ; 19 - BLLSHT
+
+          XDEFP     INI_SPEC
+     IFEQ COMPILO
+          XDEFI     .KLLCP
+     ENDC
+
+          IMPURE
+
+SAVITS    ADR       0                   ; sauvegarde d'itstate
+
+; .Section "Initialisation des formes spe'ciales"
+
+          PURE
+
+INI_SPEC  LABEL      
+
+          MAKFNT    SCHEDULE,#8,"schedule"
+          MAKFNT    SUSPEND,#7,"suspend"
+          MAKFNT    RESUME,#6,"resume"
+          MAKFNT    TAGBODY,#7,"tagbody"
+          MAKFNT    GO,#2,"go"
+          MAKFNT    BLOCK,#5,"block"
+          MAKFNT    LLRET,#6,"return"
+          MAKFNT    LLRETF,#11,"return-from"
+
+     IFEQ COMPILO
+
+          MAKCST    KLLCP,#4,"llcp"     ; pour le #:llcp:xxxx
+          MOV       .KLLCP,CPKGC
+
+          MAKFNT    CBIND0,#6,"cbind0" 
+          MAKFNT    CBIND1,#6,"cbind1" 
+          MAKFNT    CBIND2,#6,"cbind2" 
+          MAKFNT    CBIND3,#6,"cbind3" 
+          MAKFNT    CBINDN,#6,"cbindn" 
+          MOV       @UNBIND1,A1
+          JCALL     LOC
+          MOV       .CBINDN,A2
+          MOV       A1,CVAL(A2)
+          MAKFNT    CBINDL,#6,"cbindl" 
+          MAKFNT    CBINDS,#6,"cbinds" 
+          MAKFNT    CEXIT,#4,"exit" 
+          MAKFNT    CTAG,#3,"tag" 
+          MOV       @UNBIND3,A1
+          JCALL     LOC
+          MOV       .CTAG,A2
+          MOV       A1,CVAL(A2)
+          MAKFNT    CPROT,#4,"prot" 
+          MOV       @UNBIND7,A1
+          JCALL     LOC
+          MOV       .CPROT,A2
+          MOV       A1,CVAL(A2)
+          MAKFNT    CMPLOCK,#4,"lock" 
+          MOV       @UNBIND5,A1
+          JCALL     LOC
+          MOV       .CMPLOCK,A2
+          MOV       A1,CVAL(A2)
+          MAKFNT    CSCHED,#8,"schedule" 
+          MAKFNT    CBLOCK,#5,"block" 
+          MAKFNT    CRETFR,#7,"retfrom"
+          MAKFNT    CGO,#2,"go"
+          MAKFNT    CTAGBODY,#7,"tagbody"
+          MAKFNT    CFFUNCALL,#8,"ffuncall"
+          MAKFNT    CWITHIT,#15,"with-interrupts"
+          MAKFNT    CWITHNOIT,#18,"without-interrupts"
+          MAKFNT    LLCPNLIST,#5,"nlist"
+          MAKFNT    LLCPERWNA,#6,"errwna"
+
+          MAKCST    DDLINK,#5,"dlink"
+          MOV       %DLINK,A1
+          JCALL     LOC
+          MOV       .DDLINK,A2          ; adresse de "#:llcp:dlink"
+          MOV       A1,CVAL(A2)
+          MAKCST    DLLINK,#5,"llink"
+          MOV       %LLINK,A1
+          JCALL     LOC
+          MOV       .DLLINK,A2          ; adresse de "#:llcp:llink"
+          MOV       A1,CVAL(A2)
+          MAKCST    DITCNT,#7,"itcount"
+          MOV       %ITCOUNT,A1
+          JCALL     LOC
+          MOV       .DITCNT,A2          ; adresse de "#:llcp:itcount"
+          MOV       A1,CVAL(A2)
+
+          MOV       .LLSYSTEM,CPKGC     ; sort de #:llcp:xx
+
+          MAKCST    NVAR,#1,"n"         ; #:system:n
+          MOV       A1,A2
+          NCONS     A2                  ; (#:system:n)
+          MOV       .UNDEF,CVAL(A1)
+          MOV       A2,OVAL(A1)         ; pour fibd
+
+          MOVNIL    CPKGC
+
+          MAKFNT    FIBD,#4,"fibd"
+          MAKFNT    FIBL,#4,"fibl"
+          MAKFNT    FIBML,#5,"fibml"
+
+    ENDC
+
+          RETURN
+
+; .Section "Le multi-ta^che Le-Lisp : SCHEDULE, SUSPEND, RESUME"
+
+; .DebLL
+;  ----------------------------------------------------------------------
+;
+;         Utilisent un bloc d'activation de type 8 : SCHEDULE
+;
+;              DLINK ->       [        @UNBIND8      ]
+;                             [      ancien DLINK    ]
+;                             [    fnt du se'quenceur ]
+;                             ------------------------
+;  ----------------------------------------------------------------------
+; .FinLL
+
+;  ----------------------------------------
+          FENTRY    SCHEDULE,SUBRF
+;  ----------------------------------------
+          CHKSTK    MSTACK,ERRFS
+          PUSH      CAR(A1)             ; sauve la fonction du se'quenceur
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND8            ;; type du bloc = SCHEDULE
+          STACK     DLINK               ;; actualise le pointeur bloc
+          MOV       .SCHEDULE,ERRNAME   ; si erreur
+          JMP       EVEXPG              ; vers l'exe'cution du corps.
+
+; .SSection "Les suspensions"
+
+;  --------------------------------
+          FENTRY    SUSPEND,SUBR0
+;  --------------------------------
+ ;         initialisation
+ ;         A1 et A2 sont libres pour les CONS
+ ;         A3 servira pour le DLINK
+ ;         A4 scratch dans un bloc
+
+          MOV       ITSTATE,SAVITS      ; le flag IT
+          MOV       #0,ITSTATE          ; pas d'it
+          MOVNIL    A1                  ; le re'sultat final
+          BRA       SUS00               ; 
+                                        ;;; fin d'un bloc d'activation
+SUS000    CONS      A4,A2               ; le type du bloc
+          CONS      A2,A1               ; la sous-liste d'un bloc
+                                        ;;; zone inter blocs d'activation
+SUS00     MOV       DLINK,A3            ; pointe le type du bloc
+          MOVNIL    A2                  ; la valeur de la zone inter blocs
+          BRA       SUS02               ; vers le test (c'est peutetre vide)
+SUS01     LABEL                         ; on est au bloc des donne'es
+          POP       A4                  ; e'le'ment bullshit
+          CONS      A4,A2               ;   qui est rajoute'
+SUS02     STACK     A4                  ; fin de la zone inter bloc ?
+          CABNE     A4,A3,SUS01         ; non
+          CONS      A2,A1               ; on memorise dans le re'sultat
+          MOVNIL    A2                  ; on reinitialise pour un bloc
+          POP       A4                  ; le type du bloc
+          POP       DLINK               ; pre^t pour la suite
+          CABEQ     A4,@UNBIND0,SUSB0   ; type 0 : bloc terminal
+          CABEQ     A4,@UNBIND1,SUSB1   ; type 1 : bloc LAMBDA
+          CABEQ     A4,@UNBIND2,SUSB2   ; type 2 : bloc FLET
+          CABEQ     A4,@UNBIND3,SUSB3   ; type 3 : bloc TAG
+          CABEQ     A4,@UNBIND4,SUSB4   ; type 4 : bloc ITSOFT
+          CABEQ     A4,@UNBIND5,SUSB5   ; type 5 : bloc LOCK
+          CABEQ     A4,@UNBIND6,SUSB6   ; type 6 : bloc PROTECT
+          CABEQ     A4,@UNBIND7,SUSB7   ; type 7 : bloc SYS-PROTECT
+          CABEQ     A4,@UNBIND8,SUSB8   ; type 8 : bloc SCHEDULE
+          CABEQ     A4,@UNBIND9,SUSB9   ; type 9 : bloc TAGBODY
+          CABEQ     A4,@UNBIND10,SUSB10 ; type 10 : bloc BLOCK
+
+          TTYMSG    #13," error SUSPN "
+
+; .SSSection "SUSB0 : pile vide"
+
+SUSB0     LABEL                         ; c'est un BUG, il n'y avait
+          JMP       ERRES               ; pas de bloc SCHEDULE!
+
+; .SSSection "SUSB1 : sauvegarde d'un bloc de type 1"
+
+SUSB1     LABEL
+          MOV       &2,A2               ; A2 <- lpar
+          CALL      SUS100              ; A2 <- l'arbre des valeurs actuelles.
+          CONS      A2,A1               ; Pousse dans A1.
+          MOV       A1,SAVEA1           ; Fait de la place.
+          MOV       &3,A4               ; A4 <- le nombre de valeurs empile'es
+          PLUS      #4,A4               ; le nombre d'objet a` conser.
+          MOV       #0,A3               ; Index de pile.
+          MOVNIL    A2                  ; Le future frame en cons.
+SUSB11    XSPMOV    A3,A1               ; L'objet suivant.
+          CONS      A1,A2               ; Pousse dans A2.
+          INCR      A3                  ; ajuste A3 sur le suivant.
+SUSB12    SOBGTZ    A4,SUSB11           ; Encore?
+          MOV       SAVEA1,A1           ; Retrouve A1.
+          MOV       @SUSB13,A3          ; La continuation.
+          PUSH      DLINK               ; Pour e^tre compatible avec UNBINP1
+          JMP       UNBINP1             ; Delie vraiment le bloc.
+SUSB13    MOV       @UNBIND1,A4         ; le type
+          BRA       SUS000
+
+ ; A2 <- <lpar>, ramene dans A2 l'arbre des valeurs de <lpar>
+SUS100    BFCONS    A2,SUS101           ; NIL ou variable.
+          PUSH      CAR(A2)             ; Sauve le CAR.
+          MOV       CDR(A2),A2          ; Le reste des variables.
+          CALL      SUS100              ; Recursion CDR
+          XTOPST    A2                  ; Recupe`re le CAR sauve CDR.
+          CALL      SUS100              ; Recursion CAR.
+          POP       A3                  ; A3 <- CDR
+          XCONS     A3,A2               ; A2 <- (A2 . CDR)
+          RETURN                        ; Be done!
+SUS101    BTNIL     A2,SUS102           ; Belle fin de liste
+          MOV       CVAL(A2),A2         ; un &REST
+SUS102    RETURN
+
+; .SSSection "SUSB2 : sauvegarde d'un bloc de type 2 FLET"
+
+SUSB2     LABEL
+          POP       A3                  ; la fnct ou le marqueur
+          CABEQ     A3,#0,SUS23         ; c'est le marqueur c'est fini
+          GFTYPE    A3,A4               ; le type actuel
+          CONS      A4,A2               ; on sauve le type actuel
+          POP       A4                  ; on restaure le type 
+          SFTYPE    A4,A3
+          CONS      FVAL(A3),A2         ; on sauve la fonction
+          POP       FVAL(A3)            ; on restaure la fonction
+          CONS      A3,A2               ; on sauve le nom
+          BRA       SUSB2
+SUS23     MOV       @UNBIND2,A4         ; le type du bloc
+          BRA       SUS000              ; on repart
+
+; .SSection "sauvegarde d'un bloc de type 3 5 6 7 9"
+
+SUSB3     LABEL
+SUSB5     LABEL
+SUSB6     LABEL
+SUSB7     LABEL
+SUSB9     LABEL
+SUSB10    LABEL
+          POP       A2                  ; l'objet unique
+          BRA       SUS000              ; on boucle
+
+; .SSSection "sauvegarde d'un bloc ITSOFT = 4"
+
+SUSB4     LABEL
+          POP       A3
+          POP       A2
+          CONS      A3,A2
+          BRA       SUS000
+
+; .SSSection "sauvegarde d'un bloc SCHEDULE = 8"
+
+SUSB8     LABEL
+          TOPST     A3                  ; la fonction de se'quencement
+                                        ; reconstructions du bloc!
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND8            ;; type du bloc = SCHEDULE
+          STACK     DLINK               ;; actualise le pointeur bloc
+          NCONS     A1
+          MOV       A1,A2
+          MOV       A3,A1
+          MOV       SAVITS,ITSTATE      ; restaure les IT
+          JMP       APPLY
+
+;  --------------------------------
+          FENTRY    RESUME,SUBR1
+;  --------------------------------
+          MOV       ITSTATE,SAVITS      ; sauve les anciennes IT
+          MOV       #0,ITSTATE          ; plus d'IT
+          BTNIL     A1,RESSO            ; ca existe ...
+RESTES    SSTACK    DLINK               ; positionnement au de'but du premier
+          TOPST     A3                  ; bloc SCHEDULE de la pile.
+          CABEQ     A3,@UNBIND8,RESFIN  ; pre^t a` bosser
+          MOV       @RESTES,A3          ; retour de UNBINP
+          JMP       UNBINP              ; depile le bloc <> de SCHEDULE
+
+RES00     LABEL                         ;;; resume un bloc d'activation
+          MOV       CAR(A1),A2          ; le bloc courant
+          MOV       CDR(A1),A1          ; le reste
+          MOV       CAR(A2),A3          ; le type
+          MOV       CDR(A2),A2          ; A2 <- le reste du bloc
+          CABEQ     @UNBIND2,A3,RES20   ; bloc type 2
+          CABEQ     @UNBIND4,A3,RES40   ; bloc 4 ITSOFT
+          CABNE     @UNBIND1,A3,RESN1   ; non bloc type 1
+
+RES11     LABEL                         ;;; bloc de type 1
+          BTNIL     A2,RES12            ; Plus de valeur?
+          PUSH      CAR(A2)             ; On empile la valeur suivante
+          MOV       CDR(A2),A2          ; Le reste des valeurs
+          BRA       RES11
+RES12     TOPST     LLINK               ; Actualise LLINK
+          MOV       CAR(A1),A2          ; Les valeurs actuelles.
+          PUSH      CDR(A1)             ; Sauve le reste de la pile.
+          MOV       &3,A1               ; L'arbre des noms
+          JCALL     DESET               ; DESTRUCT.
+          POP       A1                  ; Retrouve le reste de la pile.
+          PUSH      DLINK
+          PUSH      @UNBIND1            ; le no bloc
+          STACK     DLINK
+          BRA       RESFIN
+
+RES20     LABEL                         ;;; restauration d'un bloc 2
+          PUSH      #0                  ; le marqueur
+RES21     BTNIL     A2,RES22            ; il n'y a rien a` faire
+          MOV       CAR(A2),A3          ; le nom de la fonction
+          MOV       CDR(A2),A2
+          PUSH      FVAL(A3)            ; on sauve la fval actuelle
+          MOV       CAR(A2),FVAL(A3)    ; on restaure la fval
+          MOV       CDR(A2),A2
+          GFTYPE    A3,A4               ; on re'cupe`re le type actuel
+          PUSH      A4                  ; on sauve le type actuel
+          MOV       CAR(A2),A4
+          SFTYPE    A4,A3               ; on remet l'ancien type
+          MOV       CDR(A2),A2
+          PUSH      A3                  ; on empile le nom de la fonction
+          BRA       RES21               ; reste-t-il encore des fonctions ?
+RES22     LABEL                         ; fin d'un bloc de type 2
+          PUSH      DLINK               ; on empile DLINK
+          PUSH      @UNBIND2            ; on empile le type (2)
+          STACK     DLINK               ; le nouveau DLINK
+          BRA       RESFIN
+
+RES40     LABEL                         ;;; restauration d'un bloc 4 ITSOFT
+          PUSH      CDR(A2)
+          MOV       CAR(A2),A2
+                                        ; RESN1 doit suivre ...
+RESN1     LABEL                         ;;; restauration d'un bloc > 2
+          PUSH      A2                  ; l'objet
+          PUSH      DLINK
+          PUSH      A3                  ; on empile le type
+          STACK     DLINK               ; le nouveau DLINK
+                                        ; RESTFIN doit suivre
+RESFIN    LABEL                         ;;; restauration d'un inter-bloc
+          MOV       CAR(A1),A2          ; le bloc d'exe'cution
+          MOV       CDR(A1),A1          ; le reste
+RES14     BTNIL     A2,RES15            ; le bloc est fini
+          PUSH      CAR(A2)             ; on empile
+          MOV       CDR(A2),A2          ; on avance
+          BRA       RES14
+RES15     LABEL                         ; il reste encore des blocs
+          BFNIL     CDR(A1),RES00
+RESSO     LABEL                         ; retour de RESUME
+          MOVNIL    A2
+          MOVNIL    A3
+          MOVNIL    A4
+          MOV       SAVITS,ITSTATE      ; remet les IT comme avant
+          RETURN
+
+; .Section "Les corps de type TAGBODY et les branchements GO"
+
+; .DebLL
+;  ----------------------------------------------------
+; 
+;     Les corps avec e'tiquettes : TAGBODY
+;
+;
+;         Utilisent un bloc d'activation de type 9 : TAGBODY
+;
+;              DLINK ->       [        @UNBIND9      ]
+;                             [      ancien DLINK    ]
+;                             [    adresse de =slot  ]
+;                             [      # de couples    ]
+;                             [         etiq 1       ]
+;                             [         corps 1      ]
+;                             [         ....         ]
+;                             [         etiq N       ]
+;                             [         corps N      ]
+;                             ------------------------
+; 
+;              LLINK ->  ((#0 . dlink)=slot . LLINK)
+;  ----------------------------------------------------------------------
+; .FinLL
+
+;  ----------------------------------------
+          FENTRY    TAGBODY,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,TAGBDR           ; il faut un corps de type liste!
+          MOV       A1,A3               ; histoire de proteger A1
+          MOV       #0,A4               ; le nb de couples.
+TAGBDR2   MOV       CAR(A3),A2          ; l'e'tiquette
+          MOV       CDR(A3),A3          ; le reste
+          BTCONS    A2,TAGBDR3          ; pas un etiquette
+          PUSH      A3                  ; le corps associe
+          PUSH      A2                  ; le nom de l'etiquette
+          INCR      A4                  ; le nb d'e'tiquette
+TAGBDR3   BTCONS    A3,TAGBDR2          ; vers le reste du corps.
+          PUSH      A4                  ; sauve le nb de couples.
+          MOV       #0,A2               ; pourcreer le slot
+          NCONS     A2                  ; (#0)
+          PUSH      A2                  ; sauve l'adresse du slot
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND9            ;; type du bloc = TAGBODY
+          STACK     DLINK               ;; actualise le pointeur bloc
+          MOV       DLINK,CDR(A2)       ; (#0 . dlink)
+          CONS      A2,LLINK            ; ((#0 . slot) . dlink)
+          MOV       A1,A2               ; partir du bon pied
+          BRA       TAGBD4
+TAGBD2    MOV       CAR(A2),A1          ; e'le'ment suivant du corps
+          BFCONS    A1,TAGBD3           ; c'est une e'tiquette
+          PUSH      A2                  ; sauve le reste
+          JCALL     EVALA1              ; calcul l'instruction suivante
+          POP       A2                  ; re'cupe`re le reste
+TAGBD3    MOV       CDR(A2),A2          ; avance dans le corps
+TAGBD4    BTCONS    A2,TAGBD2           ; le corps n'est pas fini
+TAGBDR    MOVNIL    A1                  ; par de'fintion!
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    GO,SUBRF
+;  ----------------------------------------
+          MOV       CAR(A1),A1          ; le nom de l'e'tiquette
+LLGOF1    MOV       LLINK,A4            ; recherche le bon corps.
+          BRA       LLGOF6
+LLGOF2    MOV       CAR(A4),A3          ; (#n . adrslot)
+          CABNE     CAR(A3),#0,LLGOF5   ; pas un LLINK-Blocs de type TAGBODY
+          MOV       CDR(A3),A2          ; <adr du bloc d'activation>
+          BTNIL     A2,LLGOF5           ; bloc perime
+          PUSH      A4                  ; sur le LLINK courant
+          PUSH      A2                  ; l'adresse du bloc d'activation
+          ADJSTKR   A2,#3               ; @UNBIND9/DLINK/slot
+          POPR      A2,A4               ; nb de couples
+          BRA       LLGOF4
+LLGOF3    TOPSTR    A2,A3               ; etiq suivante
+          CABEQ     A3,A1,LLGOF7        ;  Hurra!
+          ADJSTKR   A2,#2               ; saute etiq/val
+LLGOF4    SOBGEZ    A4,LLGOF3 
+          ADJSTK    #1                  ; les reg de travail
+          POP       A4                  ;    itou
+LLGOF5    MOV       CDR(A4),A4          ; avance dans LLINK
+LLGOF6    BTCONS    A4,LLGOF2           ; vers le slot suivant
+          MOV       .GO,A2              ; A1 est pret, A2 = GO
+          JMP       ERRNAB              ; pas de porte'e lexicale!
+LLGOF7    LABEL                         ; UNWIND jusqu'au bon block
+          ADJSTKR   A2,#1               ; saute le nom de l'etiquette
+          TOPSTR    A2,A2               ; le nouveau corps
+          TOPST     A1                  ; l'adresse du bloc d'activation.
+; Tant que les etiquettes sont dans le bloc d'activation dynamique, il
+; est impossible de provoquer l'erreur ERRXIA. Le scope des etiquettes
+; n'est helas plus comme en CL. Pour regler ca il faut absolument que
+; les couples etiq-val soit dans le bloc d'activation lexical.
+;           BFNIL     A1,LLGOF8           ; pas pe'rime'?
+;           MOV       .GO,A2              ; A1 est pre^t (= ())
+;           JMP       ERRXIA              ; pas de porte'e lexicale!
+LLGOF8    MOV       DLINK,A4            ; pour le test,
+          SSTACK    A4                  ; pile en de'but de bloc.
+          CABEQ     A4,A1,LLGOF9        ; c'est le bon block dynamique
+          MOV       @LLGOF8,A3          ; adresse de retour de UNBIND
+          JMP       UNBINP
+LLGOF9    BTLISP    A2,TAGBD4           ; corps interprete
+          BRI       A2                  ; corps compile.
+
+; .Section "La structure de bloc lexicaux : BLOCK/RETURN/RETURN-FROM"
+
+; .DebL
+;  ----------------------------------------------------
+; 
+;     Les blocs lexicaux : BLOCK
+;
+;
+;         Utilisent un bloc d'activation de type 10 : BLOCK
+;
+;              DLINK ->       [       @UNBIND10      ]
+;                             [      ancien DLINK    ]
+;                             [    adresse de =slot  ]
+;                             ------------------------
+; 
+;              LLINK ->  ((#1 . (<nom> . dlink)=slot) . LLINK)
+;                        avec <nom> symbolique du BLOCK
+;  ----------------------------------------------------------------------
+; .FinLL
+
+;  ----------------------------------------
+          FENTRY    BLOCK,SUBRF
+;  ----------------------------------------
+          MOV       CAR(A1),A2          ; le nom
+          BFSYMB    A2,BLCKERR          ; les noms sont toujours symboliques.
+          NCONS     A2                  ; (nom)
+          MOV       A2,A3               ; pour le RPLACD
+          CONS      #1,A2               ; (#1 nom) indic de BLOCK
+          PUSH      A3                  ; sauve l'adresse du slot
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND10           ;; type du bloc = BLOCK
+          STACK     DLINK               ;; actualise le pointeur bloc
+          MOV       DLINK,CDR(A3)       ; (nom . dlink)
+          CONS      A2,LLINK            ; ((#1 nom . slot) . dlink)
+          MOV       .BLOCK,ERRNAME      ; si erreur
+          JMP       EVEXPG              ; exe'cution du corps.
+BLCKERR   MOV       A2,A1               ; le mauvais nom de BLOCK
+          MOV       .BLOCK,A2           ; la fonction BLOCK
+          JMP       ERRSYM              ; il faut un symbole!
+
+;  ----------------------------------------
+          FENTRY    LLRET,SUBRF
+;  ----------------------------------------
+          MOVNIL    A2                  ; le nom du bloc
+          PUSH      A2                  ; pour e^tre comme "return-from"
+          MOV       .LLRET,ERRNAME      ; si erreur
+          BRA       LLRETF1             ; apre`s c'est compatible.
+
+;  ----------------------------------------
+          FENTRY    LLRETF,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; le nom du bloc
+          MOV       CDR(A1),A1          ; la valeur
+          MOV       .LLRETF,ERRNAME     ; si erreur
+LLRETF1   JCALL     EVPROGN             ; valeur de retour
+          POP       A2
+LLRETG    LABEL                         ; A1 <- la valeur, A2 <- le nom
+          MOV       LLINK,A4            ; recherche le nom du bloc
+          BRA       LLRETF4
+LLRETF2   MOV       CAR(A4),A3          ; (#1 nom . adrslot)
+          CABNE     CAR(A3),#1,LLRETF3  ; pas un bloc BLOCK
+          MOV       CDR(A3),A3          ; (nom . adrslot)
+          CABEQ     CAR(A3),A2,LLRETF6  ; c'est le me^me nom
+LLRETF3   MOV       CDR(A4),A4
+LLRETF4   BTCONS    A4,LLRETF2          ; vers les autres blocs
+          MOV       A2,A1               ; nom du bloc
+          MOV       .LLRETF,A2          ; return-from
+          JMP       ERRNAB
+LLRETF6   BFNIL     CDR(A3),LLRETR2     ; vers le vrai UNWIND
+          MOV       A2,A1               ; nom du bloc
+          MOV       .LLRETF,A2          ; return-from
+          JMP       ERRXIA              ; on est de'ja' sorti du bloc!
+LLRETR2   LABEL                         ; vrai UNWIND (cf FINDTAG)
+          MOV       CDR(A3),A2          ; A2 <- l'arre^t du UNWIND
+LLRETR3   MOV       DLINK,A4            ; pour le test,
+          SSTACK    A4                  ; pile en de'but de bloc.
+          TOPST     A3                  ; re'cupe`re le sommet de pile
+          CABNE     A3,@UNBIND10,LLRETR4; c'est un bloc BLOCK
+          CABEQ     A2,A4,LLRETR9       ; le bon et dernier bloc.
+LLRETR4   MOV       @LLRETR3,A3         ; adresse de retour de UNBIND
+          JMP       UNBINP
+LLRETR9   RETURN
+
+; .Section "Points d'entre'e spe'ciaux pour le compilateur"
+
+     IFEQ COMPILO
+
+; .SSection "CBIND0 :  A4 <- fnt"
+
+          FENTRY    CBIND0,SUBR0
+
+          INTEST
+          CABNE     &1,@UNBIND1,CBIND0G ; pas en pos terminale (+ adr de ret)
+          CABNE     &4,A4,CBIND0G       ; pas une fonction re'cursive.
+          MOVNIL    LLINK               ; plus rien de lexical
+          RETURN                        ; oui : ne touche pas la pile.
+CBIND0G   CHKSTK    MSTACK,ERRFS
+          POP       A2                  ; adresse de retour
+          PUSH      #0                  ; #Narg
+          PUSH      NIL                 ; <lparam>
+          PUSH      A4                  ; le nom de la fonction
+          PUSH      LLINK               ; env lex
+          MOVNIL    LLINK               ; plus rien de lexical
+          PUSH      DLINK               ;; fabrique un bloc vide
+          PUSH      @UNBIND1            ;; type du bloc = LAMBDA
+          STACK     DLINK               ;; actualise le dernier bloc
+          BRI       A2                  ; vers la fonction compile'e
+
+; .SSection "CBIND1 : A4 <- fnt A3 <- lparam  A1 <- va1"
+
+          FENTRY    CBIND1,SUBR0
+
+          INTEST
+          CABNE     &1,@UNBIND1,CBIND1G ; pas en pos terminale (+ adr de ret)
+          CABNE     &4,A4,CBIND1G       ; pas une fonction re'cursive.
+          MOV       CAR(A3),A2          ; le nom de la variable
+          MOV       A1,CVAL(A2)         ; oui : plus de liaison dynamique et
+          MOVNIL    LLINK               ; plus rien de lexical
+          RETURN                        ; ne touche pas la pile.
+CBIND1G   CHKSTK    MSTACK,ERRFS
+          TOPST     A2                  ; adresse de retour
+          PUSH      #1                  ; #Nargs
+          PUSH      A3                  ; <lparam>
+          PUSH      A4                  ; nom de la fnt == fval (si compile'e)
+          MOV       CAR(A3),A4          ; A4 <- le symbole
+          MOV       CVAL(A4),&3         ; old VAL1
+          MOV       A1,CVAL(A4)         ; new val
+          PUSH      LLINK               ; de'but du bloc 1
+          MOVNIL    LLINK               ; plus rien de lexical
+          PUSH      DLINK               ;; le vieux DLINK en fond de bloc
+          PUSH      @UNBIND1            ;; type du bloc = lambda
+          STACK     DLINK               ;; actualise le dernier bloc
+          BRI       A2                  ; vers la fonction compile'e
+
+; .SSection "CBIND2 : A4 <- fnt A3 <- (na1 na2)  A1 <- va1  A2 <- va2"
+
+          FENTRY    CBIND2,SUBR0
+
+          INTEST
+          CABNE     &1,@UNBIND1,CBIND2G ; pas en pos terminale (+ adr de ret)
+          CABNE     &4,A4,CBIND2G       ; pas une fonction re'cursive.
+          MOV       CAR(A3),A4          ; nom de la premiere variable
+          MOV       A1,CVAL(A4)         ; liaison 1ere variable
+          MOV       CDR(A3),A4
+          MOV       CAR(A4),A3          ; nom de la 2eme variable
+          MOV       A2,CVAL(A3)         ; liaison 2eme variable
+          MOVNIL    LLINK               ; plus rien de lexical
+          RETURN                        ; et ne touche pas a la pile.
+CBIND2G   CHKSTK    MSTACK,ERRFS
+          TOPST     SAVEA2              ; SAVEA2 <- adr de retour du CBIND2
+          ADJSTK    #-1                 ; slot pour la 2eme valeur.
+          PUSH      #2                  ; nb de valeurs empilees #Nargs
+          PUSH      A3                  ; lparam
+          PUSH      A4                  ; nom de la fnt == fval (si compile'e)
+          MOV       CAR(A3),A4          ; A4 <- na1
+          MOV       CVAL(A4),&4         ; sauve l'ancienne CVAL
+          MOV       A1,CVAL(A4)         ; nouvelle CVAL
+          MOV       CDR(A3),A4          ; A4 <- (na2)
+          MOV       CAR(A4),A4          ; A4 <- na2
+          MOV       CVAL(A4),&3         ; sauve l'ancienne CVAL
+          MOV       A2,CVAL(A4)         ; nouvelle CVAL
+          PUSH      LLINK
+          MOVNIL    LLINK
+          PUSH      DLINK               ;; le vieux DLINK en fond de bloc
+          PUSH      @UNBIND1            ;; type du bloc = lambda
+          STACK     DLINK               ;; actualise le dernier bloc
+          BRI       SAVEA2              ; vers la fonction compile'e
+
+; .SSection "CBIND3 : A4 <- (na1 na2 na3) A1 <- va1, A2 <- va2, A3 <- va3"
+;           et dans la pile FNT : ATTENTION!
+
+          FENTRY    CBIND3,SUBR0
+
+          INTEST
+          MOV       A3,SAVEA3           ; vraiment j'en manque
+          POP       SAVEA2              ; adr de retour
+          POP       SAVEA4              ; nom de la fonction
+          CABNE     &0,@UNBIND1,CBIND3G ; pas en pos terminale (+ adr de ret)
+          CABNE     &3,SAVEA4,CBIND3G   ; pas une fonction re'cursive.
+          MOV       CAR(A4),A3
+          MOV       A1,CVAL(A3)         ; liaison 1ere variable
+          MOV       CDR(A4),A4
+          MOV       CAR(A4),A3
+          MOV       A2,CVAL(A3)         ; liaison 2eme variable
+          MOV       CDR(A4),A4
+          MOV       CAR(A4),A4
+          MOV       SAVEA3,A3           ; A1-2-3 inchanges
+          MOV       A3,CVAL(A4)         ; liaison 3eme variable
+          MOVNIL    LLINK               ; plus rien de lexical
+          BRI       SAVEA2              ; adr de retour
+CBIND3G   CHKSTK    MSTACK,ERRFS
+          ADJSTK    #-3                 ; pre'pare les olds slots
+          MOV       A4,SAVEA1           ; sauve <lparam>
+          MOV       CAR(A4),A3          ; A4 <- (na1 na2 na3) A3 <- na1
+          MOV       CVAL(A3),&2         ; sauve l'ancienne CVAL
+          MOV       A1,CVAL(A3)         ; nouvelle CVAL
+          MOV       CDR(A4),A4          ; A4 <- (na2 na3)
+          MOV       CAR(A4),A3          ; A3 <- na2
+          MOV       CVAL(A3),&1         ; sauve l'ancienne CVAL
+          MOV       A2,CVAL(A3)         ; nouvelle CVAL
+          MOV       CDR(A4),A4          ; A4 <- (na3)
+          MOV       CAR(A4),A4          ; A4 <- na3
+          MOV       CVAL(A4),&0         ; sauve l'ancienne CVAL
+          MOV       SAVEA3,A3           ; tout est rentre dans l'ordre
+          MOV       A3,CVAL(A4)         ; nouvelle CVAL
+          PUSH      #3                  ;  #Nargs
+          PUSH      SAVEA1              ; <lparam>
+          PUSH      SAVEA4              ; nom de la fnt == fval (si compile'e)
+          PUSH      LLINK
+          MOVNIL    LLINK
+          PUSH      DLINK               ;; le vieux DLINK en fond de bloc
+          PUSH      @UNBIND1            ;; type du bloc = lambda
+          STACK     DLINK               ;; actualise le dernier bloc
+          BRI       SAVEA2              ; vers la fonction compile'e
+
+; .SSection "CBINDN : appel d'une EXPR compile'e
+
+ ;         on suppose empile val1/val2/ ... / valN
+ ;         A2=la FVAL de la fonction
+ ;         A3=la liste des parame`tres
+ ;         A4=le nb d'arguments empile's
+ ;         appel par JCALL :CBINDN
+
+          FENTRY    CBINDN,SUBR0
+
+          INTEST
+          CHKSTK    MSTACK,ERRFS
+          MOVNIL    INTLLINK            ; pas d'environ lex
+CBINDNC   POP       INTRET              ; adresse du continue
+CBINDNN   MOV       A3,SAVEA2           ; liste des parametres
+          MOV       A4,SAVEA4           ; #Nargs
+          MOV       A2,SAVEA1           ; la FVAl (test tail-rec)
+          MOV       A2,ERRNAME          ; en cas d'erreur
+          JMP       EVBNDEXT            ; vers la liaison 
+
+; .SSection "CBINDL : appel d'un LET compile'
+
+ ;         on suppose empile val1/val2/ ... / valN
+ ;         A2=la FVAL de la fonction
+ ;         A3=la liste des parame`tres
+ ;         A4=le nb d'arguments empile's
+ ;         appel par JCALL :CBINDL
+
+          FENTRY    CBINDL,SUBR0
+
+          INTEST
+          CHKSTK    MSTACK,ERRFS
+          MOV       LLINK,INTLLINK      ; meme env lex
+          BRA       CBINDNC             ; apre`s idem aux EXPRs
+
+; .SSection "CBINDS : liaison d'une MSUBR ou DMSUBR ou FSUBR compilee
+
+ ;         A1 = la liste des arguments prets
+ ;         A2 = le nom de la fonction appele'e
+ ;         A3 = la liste des parame`tres
+ ;         appel par JCALL :CBINDS
+
+          FENTRY    CBINDS,SUBR0
+
+          INTEST
+          POP       INTRET              ; adresse de retour
+          MOVNIL    INTLLINK            ; pas d'env lex
+          MOV       A3,SAVEA2           ; liste des parametres
+          MOV       A2,SAVEA1           ; la FVAl (test tail-rec)
+          MOV       A2,ERRNAME          ; en cas d'erreur
+          JMP       BNDTRBEX            ; Et on construit.
+
+; .SSection "CTAG : A1 <- le nom du tag"
+
+          FENTRY    CTAG,SUBR0
+
+          POP       A2                  ; adresse de retour de CTAG
+          PUSH      A1                  ;    le nom du TAG
+          PUSH      DLINK               ;; fabrique un bloc d'activation
+          PUSH      @UNBIND3            ;;    de type 3
+          STACK     DLINK               ;; nouveau DLINK
+          BRI       A2                  ; vers le corps compile
+
+; .SSection "CPROT"
+
+          FENTRY    CPROT,SUBR0
+
+          JMP       SYSPROT
+
+; .SSection "CMPLOCK : A1 <- la fonction"
+
+          FENTRY    CMPLOCK,SUBR0
+
+          POP       A2                  ; l'adresse de retour
+          PUSH      A1                  ; le nom de la fonction
+          PUSH      DLINK
+          PUSH      @UNBIND5
+          STACK     DLINK
+          BRI       A2
+
+; .SSection "CSHED : A1 <- la fonction de scheduling"
+
+          FENTRY    CSCHED,SUBR0
+
+          CHKSTK    MSTACK,ERRFS
+          POP       A2                  ; l'adresse du corps (de retour)
+          PUSH      A1                  ; sauve la fonction du se'quenceur
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND8            ;; type du bloc = SCHEDULE
+          STACK     DLINK               ;; actualise le pointeur bloc
+          BRI       A2
+
+; .SSection "CBLOCK : A1 <- le nom"
+
+          FENTRY    CBLOCK,SUBR0
+
+          MOV       A1,A2               ; le nom
+          POP       A1                  ; l'adresse de retour
+          BFSYMB    A2,BLCKERR          ; pour differencier des TAGBODY
+          NCONS     A2                  ; (nom)
+          MOV       A2,A3               ; pour le RPLACD
+          CONS      #1,A2               ; (#1 nom)
+          PUSH      A3                  ; sauve l'adresse du slot
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND10           ;; type du bloc = BLOCK
+          STACK     DLINK               ;; actualise le pointeur bloc
+          MOV       DLINK,CDR(A3)       ; (nom . dlink)
+          CONS      A2,LLINK            ; ((#1 nom . slot) . dlink)
+          BRI       A1                  ; vers le code compile'
+
+; .SSection "CEXIT : A1 <- la valeur, A2 <- le nom du TAG"
+
+          FENTRY    CEXIT,SUBR0
+
+          JMP       FINDTAG
+
+; .SSection "CRETFR    : A1 <- la valeur, A2 <- le nom du BLOCK"
+
+          FENTRY    CRETFR,SUBR0
+
+          BRA       LLRETG
+
+; .SSecton "CGO"  A1 <- l'e'tiquette
+
+          FENTRY    CGO,SUBR0
+
+          BRA       LLGOF1
+
+; .SSection "CTAGBODY"  corp nom ... corps nom #n  de'ja` empile's
+
+          FENTRY    CTAGBODY,SUBR0
+
+          POP       A1                  ; adr du corps
+          MOV       #0,A2               ; indicateur TAGBODY dans LLINK
+          NCONS     A2                  ; (#0)
+          PUSH      A2                  ; sauve l'adresse du slot
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND9            ;; type du bloc = TAGBODY
+          STACK     DLINK               ;; actualise le pointeur bloc
+          MOV       DLINK,CDR(A2)       ; (nom . dlink)
+          CONS      A2,LLINK            ; ((nom . slot) . dlink)
+          BRI       A1                  ; vers le code compile'
+
+          FENTRY    CFFUNCALL,SUBR0
+
+          JMP       FFUNCALL
+
+; .SSection "CWITHIT CWITHNOIT"  
+
+          FENTRY    CWITHIT,SUBR0
+
+          POP       A1                  ; l'adresse du code.
+          PUSH      ITSTATE             ; L'ancien e'tat.
+          MOV       @CWITHIT1,A3        ; la routine prote'ge'e
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat
+          POP       ITSTATE             ; Retrouve l'ancien e'tat.
+          BRI       A3                  ; back home
+
+CWITHIT1  MOV       #1,ITSTATE          ; autorise les choses
+          BRI       A1                  ; vers le code compile'
+
+
+          FENTRY    CWITHNOIT,SUBR0
+
+          POP       A1                  ; l'adresse du code
+          PUSH      ITSTATE             ; L'ancien e'tat.
+          MOV       @CWITHNO1,A3        ; la routine prote'ge'e
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat
+          POP       ITSTATE             ; Retrouve l'ancien e'tat.
+          BRI       A3                  ; back home
+
+CWITHNO1  MOV       #0,ITSTATE          ; It c'est interdit
+          BRI       A1                  ; vers le code compile'
+
+;============================================================
+;         Fonctions utilise'es par les compilateurs eux-me^mes
+;============================================================
+
+;  ----------------------------------------
+          FENTRY    LLCPNLIST,SUBR0
+;  ----------------------------------------
+;         Appel non standard par (JCALL #:LLCP:NLIST)
+;         Retourne la liste des A4 arguments empile's
+;         et les de'pile
+          MOVNIL    A1                  ; la valeur de retour
+          CABNE     A4,#0,LLCPNL1	; il faut en prendre
+          RETURN			; rien a` faire          
+LLCPNL1   POP       A3			; re'cupe`re l'adresse de retour
+          BRA       LLCPNL3
+LLCPNL2   POP       A2                  ; e'le'ment suivant
+          CONS      A2,A1               ; rajoute en te^te
+LLCPNL3   SOBGEZ    A4,LLCPNL2          ; il en reste
+          BRI       A3
+
+;  ----------------------------------------
+          FENTRY    LLCPERWNA,SUBR2
+;  ----------------------------------------
+;         A1 = le nom de la fonction
+;         A2 = bad-arg
+          MOV       A1,A3		; inverse les 2 arguments
+          MOV       A2,A1
+          MOV       A3,A2
+          JMP       ERRWNA              ; vers la bonne erreur.
+
+     ENDC ; du COMPILO
+
+;============================================================
+;         Pour evaluer le compilo
+;============================================================
+
+     IFEQ COMPILO
+
+;  ----------------------------------------
+          FENTRY    FIBD,SUBR1
+;  ----------------------------------------
+          MOV       .NVAR,A3
+          MOV       OVAL(A3),A3         ; (#:system:n)
+          MOV       .FIBD,A4
+          CALL      CBIND1
+          CNBNE     A1,#1,FIBD2
+          MOV       #1,A1
+          RETURN
+FIBD2     CNBNE     A1,#2,FIBD3
+          MOV       #1,A1
+          RETURN
+FIBD3     DECR      A1
+          CALL      FIBD
+          PUSH      A1
+          MOV       .NVAR,A1
+          MOV       CVAL(A1),A1
+          DIFF      #2,A1
+          CALL      FIBD
+          POP       A2
+          PLUS      A2,A1
+          RETURN
+          
+;  ----------------------------------------
+          FENTRY    FIBL,SUBR1
+;  ----------------------------------------
+          PUSH      A1
+          CNBNE     A1,#1,FIBL2
+          MOV       #1,A1
+          BRA       FIBL9
+FIBL2     CNBNE     A1,#2,FIBL3
+          MOV       #1,A1
+          BRA       FIBL9
+FIBL3     DECR      A1
+          CALL      FIBL
+          PUSH      A1
+          XSPMOV    #1,A1
+          DIFF      #2,A1
+          CALL      FIBL
+          POP       A2
+          PLUS      A2,A1
+FIBL9     ADJSTK    #1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    FIBML,SUBR1
+;  ----------------------------------------
+          CNBLE     A1,#2,FIBMLR
+          PUSH      A1
+          DECR      A1
+          CALL      FIBML
+          XTOPST    A1
+          DIFF      #2,A1
+          CALL      FIBML
+          POP       A2
+          PLUS      A2,A1
+          RETURN
+FIBMLR    LABEL
+          MOV       #1,A1
+          RETURN
+
+     ENDC
+
+          END
+

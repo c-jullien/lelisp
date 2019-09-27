@@ -1,0 +1,24 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule guu
+
+files (
+|guu.ll|
+)
+
+import (
+
+; ;;; Imports which seem necessary
+zee
+zyy
+)
+
+export (
+
+; ;;; Functions unused unless exported
+verif
+f-guu1
+
+; ;;; Not exported because only internally used
+; m-guu1
+)

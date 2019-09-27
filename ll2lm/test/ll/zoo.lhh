@@ -1,0 +1,1 @@
+(defmacro m-zoo5 (x) `(defun ,x () 5))

@@ -1,0 +1,989 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "15/19" "specnb.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 15 "Les arithme'tiques spe'cialise'es"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/specnb.llm3,v 1.2 2016/05/21 09:16:58 jullien Exp $
+
+          TITLE     SPECNB              ; LLM3 : les arithme'tiques spe'ciales
+
+          XREFI     LLINIT,.UNDEF       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,.SYSPKGC
+          XREFI     LLINIT,MSTACK
+          XREFP     LLINIT,REENTER
+          XREFP     LLINIT,THEEND
+          XREFP     TOPERR,ERRFS        ; 2 - TOPERR
+          XREFP     TOPERR,ERRGEN
+          XREFP     TOPERR,ERRNNA
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNFA
+          XREFP     TOPERR,ERRNSA
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRNVA
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRSTL
+          XREFP     TOPERR,ERR0DV
+          XREFP     GC,GETTYPE          ; 3 - GC
+          XREFP     GC,GCCONS
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFI     READ,CPKGC
+          XREFP     EVAL,EVALCAR        ; 8 - EVAL
+          XREFP     EVAL,EVALA1
+          XREFP     EVAL,APPLY
+          XREFP     EVAL,FFUNCALL
+     IFEQ COMPILO
+          XREFI     FSPECS,.KLLCP       ; 9 - FSPECS
+     ENDC ; de COMPILO
+          XREFI     CNTRL,.QUOTE        ; 10 - CNTRL
+          XREFP     SYMBS,GETFNS        ; 12 - SYMBS
+          XREFP     FNTSTD,NREVERSE     ; 13 - FNTSTD
+          XREFI     NUMBER,FZERO        ; 14 - NUMBER
+          XREFI     NUMBER,.EX
+          XREFP     STRING,FFSYMBOL     ; 16 - STRING
+
+          XDEFP     INI_SNB
+          XDEFP     FLDIFF
+
+          PURE
+
+; .Section "Cre'ation des symboles et Initialisation"
+
+INI_SNB   LABEL      
+
+          MAKFNT    SCALE,#5,"scale" 
+          MAKFNT    LOGNOT,#6,"lognot" 
+          MAKFNT    LOGAND,#6,"logand" 
+          MAKFNT    LOGOR,#5,"logor" 
+          MAKFNT    LOGXOR,#6,"logxor" 
+          MAKFNT    LOGSHIFT,#8,"logshift" 
+          MAKFNT    DPN,#3,"2**" 
+          MAKFNT    MSKFIELD,#10,"mask-field" 
+          MAKFNT    LDBYTE,#9,"load-byte" 
+          MAKFNT    DPBYTE,#12,"deposit-byte" 
+          MAKFNT    DPFIELD,#13,"deposit-field" 
+          MAKFNT    LDBT,#14,"load-byte-test" 
+          MAKFNT    ODDP,#4,"oddp" 
+          MAKFNT    EVENP,#5,"evenp" 
+          MAKFNT    LLRANDOM,#6,"random" 
+          MAKFNT    LLSRANDOM,#7,"srandom" 
+
+          MAKFNT    FLOATP,#6,"floatp" 
+          MAKFNT    FIXP,#4,"fixp" 
+          MAKFNT    FLPLUS,#4,"plus" 
+          MAKFNT    FLDIFF,#10,"difference" 
+          MAKFNT    FLDIFF,#6,"differ" 
+          MAKFNT    FLTIMES,#5,"times" 
+          MAKFNT    FLQUO,#6,"divide"
+
+          MAKFNT    LLADD1,#4,"add1" 
+          MAKFNT    LLSUB1,#4,"sub1" 
+          MAKFNT    LLADD,#3,"add"
+          MAKFNT    LLSUB,#3,"sub"
+          MAKFNT    LLMUL,#3,"mul"
+          MAKFNT    LL_DIV,#3,"div"
+          MAKFNT    LLREM,#3,"rem"
+          MAKFNT    LLEQN,#3,"eqn" 
+          MAKFNT    LLNEQN,#4,"neqn" 
+          MAKFNT    LLGE,#2,"ge" 
+          MAKFNT    LLGT,#2,"gt" 
+          MAKFNT    LLLE,#2,"le" 
+          MAKFNT    LLLT,#2,"lt" 
+          MAKFNT    LLIMIN,#4,"imin" 
+          MAKFNT    LLIMAX,#4,"imax" 
+ 
+          MAKFNT    LLFADD,#4,"fadd"
+          MAKFNT    LLFSUB,#4,"fsub"
+          MAKFNT    LLFMUL,#4,"fmul"
+          MAKFNT    LLFDIV,#4,"fdiv"
+          MAKFNT    LLFEQN,#4,"feqn" 
+          MAKFNT    LLFNEQN,#5,"fneqn" 
+          MAKFNT    LLFGE,#3,"fge" 
+          MAKFNT    LLFGT,#3,"fgt" 
+          MAKFNT    LLFLE,#3,"fle" 
+          MAKFNT    LLFLT,#3,"flt" 
+          MAKFNT    LLFMIN,#4,"fmin" 
+          MAKFNT    LLFMAX,#4,"fmax" 
+
+
+     IFEQ COMPILO
+          MOV       .KLLCP,CPKGC        ; entre dans #:llcp:xxxx
+          MAKFNT    CLLLSHT,#8,"logshift"
+          MAKFNT    CLLMUL,#3,"mul"
+          MAKFNT    CLLDIV,#3,"div"
+          MAKFNT    CLLREM,#3,"rem"
+          MAKFNT    CLLFADD,#4,"fadd"
+          MAKFNT    CLLFSUB,#4,"fsub"
+          MAKFNT    CLLFMUL,#4,"fmul"
+          MAKFNT    CLLFDIV,#4,"fdiv"
+          MAKFNT    CLLFEQN,#4,"feqn" 
+          MAKFNT    CLLFNEQN,#5,"fneqn" 
+          MAKFNT    CLLFGE,#3,"fge" 
+          MAKFNT    CLLFGT,#3,"fgt" 
+          MAKFNT    CLLFLE,#3,"fle" 
+          MAKFNT    CLLFLT,#3,"flt" 
+          MOVNIL    CPKGC               ; sort de #:llcp:xxx
+     ENDC ; de COMPILO
+
+          MAKCST    EXCARRY,#6,"regret" 
+          MOV       #0,CVAL(A1)
+          MOV       .EX,PKGC(A1)
+          MAKFNT    EXADD,#3,"ex+" 
+          MAKFNT    EXINCR,#4,"ex1+" 
+          MAKFNT    EXINV,#3,"ex-" 
+          MAKFNT    EXMUL,#3,"ex*" 
+          MAKFNT    EXDIV,#3,"ex/" 
+          MAKFNT    EXCOMP,#3,"ex?" 
+
+          RETURN
+
+; .Section "Les points d'entre'e communs aux fonctions nume'riques"
+
+NFALSE    MOVNIL    A1
+          RETURN
+
+RZERO     MOV       #0,A1               ; retourne 0
+          RETURN
+
+RONE      MOV       #1,A1               ; retourne 1
+          RETURN
+;
+;         Erreurs courantes : nom de la fnt dans A4
+;
+
+BANFIX3   MOV       A3,A2               ; l'argument 3 n'est pas un nombre
+BANFIX2   MOV       A2,A1               ; l'argument 2 n'est pas un nombre
+BANFIX1   MOV       A4,A2               ; le nom de la fonction
+          JMP       ERRNIA              ; il faut un nb entier.
+
+BANFLT2   MOV       A2,A1               ; l'argument qui n'est pas un flottant
+BANFLT1   MOV       A4,A2               ; le nom de la fonction
+          JMP       ERRNFA              ; il faut un nb flottant
+
+BANMIX2   MOV       A2,A1               ; l'argument qui n'est pas un nombre
+BANMIX1   MOV       A4,A2               ; le nom de la fonction
+          JMP       ERRNNA              ; il faut un nb (fix ou float)
+
+BAN0DV    MOV       A4,A2               ; le nom de la fonction
+          MOV       #0,A1               ; zero car division par zero
+          JMP       ERR0DV              ; "division par 0"
+
+BANWNA    MOV       A3,A1               ; le mauvais nombre d'arg
+          MOV       A4,A2               ; le nom de la fonction
+          JMP       ERRWNA              ; wrong number of arguments
+
+; .Section "L'Arithme'tique Entie`re"
+
+; .SSection "Les pre'dicats de l'arithme'tique entie`re"
+
+;  ----------------------------------------
+          FENTRY    ODDP,SUBR1
+;  ----------------------------------------
+          MOV       .ODDP,A4            ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          MOV       A1,A2
+          LAND      #1,A2
+          CNBEQ     A2,#0,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    EVENP,SUBR1
+;  ----------------------------------------
+          MOV       .EVENP,A4           ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          MOV       A1,A2
+          LAND      #1,A2
+          CNBNE     A2,#0,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLEQN,SUBR2
+;  ----------------------------------------
+          MOV       .LLEQN,A4           ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBNE     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLNEQN,SUBR2
+;  ----------------------------------------
+          MOV       .LLNEQN,A4          ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBEQ     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLGT,SUBR2
+;  ----------------------------------------
+          MOV       .LLGT,A4            ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBLE     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLGE,SUBR2
+;  ----------------------------------------
+          MOV       .LLGE,A4            ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBLT     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLLT,SUBR2
+;  ----------------------------------------
+          MOV       .LLLT,A4            ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBGE     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLLE,SUBR2
+;  ----------------------------------------
+          MOV       .LLLE,A4            ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBGT     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLIMIN,SUBR2
+;  ----------------------------------------
+          MOV       .LLIMIN,A4          ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBLE     A1,A2,LLIMINR
+          MOV       A2,A1
+LLIMINR   RETURN
+
+;  ----------------------------------------
+          FENTRY    LLIMAX,SUBR2
+;  ----------------------------------------
+          MOV       .LLIMAX,A4          ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBGT     A1,A2,LLIMAXR
+          MOV       A2,A1
+LLIMAXR   RETURN
+
+; .SSection "Les fonctions de l'arithme'tique entie`re"
+
+;  ----------------------------------------
+          FENTRY    LLADD1,SUBR1
+;  ----------------------------------------
+          MOV       .LLADD1,A4
+          BFFIX     A1,BANFIX1
+          INCR      A1,LLA1RET
+LLA1RET   RETURN
+
+;  ----------------------------------------
+          FENTRY    LLSUB1,SUBR1
+;  ----------------------------------------
+          MOV       .LLSUB1,A4
+          BFFIX     A1,BANFIX1
+          DECR      A1,LLS1RET
+LLS1RET   RETURN
+
+;  ----------------------------------------
+          FENTRY    LLADD,SUBR2
+;  ----------------------------------------
+          MOV       .LLADD,A4           ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          PLUS      A2,A1,LLADDRET
+LLADDRET  RETURN
+
+;  ----------------------------------------
+          FENTRY    LLSUB,SUBR2
+;  ----------------------------------------
+          MOV       .LLSUB,A4           ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          DIFF      A2,A1,LLSUBRET
+LLSUBRET  RETURN
+
+;  ----------------------------------------
+          FENTRY    LLMUL,SUBR2
+;  ----------------------------------------
+          MOV       .LLMUL,A4           ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          TIMES     A2,A1,LLMULRET
+LLMULRET  RETURN
+
+;  ----------------------------------------
+          FENTRY    LL_DIV,SUBR2
+;  ----------------------------------------
+          MOV       .LL_DIV,A4           ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBEQ     A2,#0,BAN0DV
+          QUO       A2,A1,LLDIVRET
+LLDIVRET  RETURN
+
+;  ----------------------------------------
+          FENTRY    LLREM,SUBR2
+;  ----------------------------------------
+          MOV       .LLREM,A4           ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          CNBEQ     A2,#0,BAN0DV
+          REM       A2,A1               ; trois arguments ? reste non boxe'
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    SCALE,SUBR3
+;  ----------------------------------------
+          MOV       .SCALE,A4           ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          BFFIX     A3,BANFIX3
+          CNBEQ     A3,#0,BAN0DV
+          MOV       #0,A4
+          CNBGE     A1,#0,SCALE1
+          NEGATE    A1
+          INCR      A4
+SCALE1    CNBGE     A2,#0,SCALE2
+          NEGATE    A2
+          INCR      A4
+SCALE2    CNBGE     A3,#0,SCALE3
+          NEGATE    A3
+          INCR      A4
+SCALE3    ETIMES    A1,A2,#0,#0,A1,A2
+          EDIVIDE   A1,A2,A3,A1,A2
+          CNBEQ     A4,#0,SCALE4
+          CNBEQ     A4,#2,SCALE4
+          NEGATE    A1
+SCALE4    RETURN
+
+; .SSection "Les fonctions de ge'ne'ration de nombres ale'atoires"
+
+          IMPURE
+RANDSEED  ADR      0                    ; La semence des nombres aleatoires
+          PURE
+
+;
+;         (SRANDOM N)
+;         Initialise la seed a  n
+;         N est calcule modulo #RANDMOD, pour que la graine reste
+;         dans des limites sures.
+;
+;  ----------------------------------------
+          FENTRY    LLSRANDOM,SUBRN
+;  ----------------------------------------
+          MOV       A4,A3               ; le nombre d'arg
+          MOV       .LLSRANDOM,A4       ; en cas d'erreur
+          CNBEQ     A3,#0,SRAND1        ; pas d'arg
+          CNBEQ     A3,#1,SRAND0        ; il y a une graine.
+          BRA       BANWNA          
+SRAND0    POP       A1
+          BFFIX     A1,BANFIX1
+          REM       #31213,A1
+          MOV       A1,RANDSEED
+SRAND1    MOV       RANDSEED,A1
+          RETURN
+
+;
+;         (RANDOM N1 N2)
+;         Ramene un nombre aleatoire dans l'intervalle [N1 N2[
+;
+;         Utilise la formule du Knuth tome 2:
+;             X(n+1) = (A*X(n)+C)%M
+;             avec A = (7*13)+1, C = 2731 (nombre premier), M = 7*7*7*7*13,
+;             pour generer les petites graines successives.
+;   
+;  Les nombres ne sont donc pas tres aleatoires pour les intervalles de
+;  largeur multiple de 7 ou 13 (cf Knuth).
+;
+; RANDMUL   EQU        92
+; RANDADD   EQU        2731
+; RANDMOD   EQU        31213    91*343
+;
+;  ----------------------------------------
+          FENTRY     LLRANDOM,SUBR2
+;  ----------------------------------------
+          MOV        .LLRANDOM,A4       ; en cas d'erreur
+          BFFIX      A1,BANFIX1         ; Il faut deux nombres
+          BFFIX      A2,BANFIX2         ; Sinon c'est une erreur
+          CNBEQ      A1,A2,RANDOM1      ; les nombres sont e'gaux
+          CNBLT      A1,A2,RANDOM2      ; Il faut A1 <= A2
+          MOV        A1,A3              ; Sinon on permute
+          MOV        A2,A1
+          MOV        A3,A2
+RANDOM2   DIFF       A1,A2
+RANDOM3   LABEL                         ; A1 "start", A2 "range"
+          MOV        RANDSEED,A3        ; calcul de la graine
+          ETIMES     A3,#92,#2731,#0,A3,A4  
+          EDIVIDE    A3,A4,#31213,A3,A4 ; A4 c'est la nouvelle graine
+          MOV        A4,RANDSEED
+          ETIMES     A4,A2,#0,#0,A3,A4  ; X * (n2 - n1)
+          EDIVIDE    A3,A4,#31213,A3,A4 ; X*(n2-n1)/M
+          CNBGT      A3,A2,RANDOM3      ; il faut re-tirer la graine
+          PLUS       A3,A1              ; plus le deplacement
+RANDOM1   RETURN
+
+
+; .SSection "Les fonctions logiques"
+
+;  ----------------------------------------
+          FENTRY    LOGNOT,SUBR1
+;  ----------------------------------------
+          MOV       .LOGNOT,A4
+          BFFIX     A1,BANFIX1
+          LXOR      #-1,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LOGAND,SUBR2
+;  ----------------------------------------
+          MOV       .LOGAND,A4
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          LAND      A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LOGOR,SUBR2
+;  ----------------------------------------
+          MOV       .LOGOR,A4
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          LOR       A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LOGXOR,SUBR2
+;  ----------------------------------------
+          MOV       .LOGXOR,A4
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          LXOR      A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LOGSHIFT,SUBR2
+;  ----------------------------------------
+          MOV       .LOGSHIFT,A4
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          LSHIFT    A2,A1
+          RETURN
+
+; .SSection "Les fonctions sur champ de bits"
+
+;         (de 2** (n) (logshift 1 n))
+;  ----------------------------------------
+          FENTRY    DPN,SUBR1
+;  ----------------------------------------
+          MOV       .DPN,A4
+          BFFIX     A1,BANFIX1
+          MOV       A1,A2
+          MOV       #1,A1
+          LSHIFT    A2,A1
+          RETURN
+
+;         (de mask-field (val pos size)
+;             (logand (logshift (1- (2** size)) pos) val))
+;  ----------------------------------------
+          FENTRY    MSKFIELD,SUBR3
+;  ----------------------------------------
+          MOV       .MSKFIELD,A4        ; en cas d'erreur
+MSKF0     BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          BFFIX     A3,BANFIX3
+          MOV       #1,A4               ;  pour faire le masque de bits
+          LSHIFT    A3,A4               ;  A4 <- (2** size)
+          DECR      A4,MSKF1            ;  A4   00000011111111
+MSKF1     LSHIFT    A2,A4               ;  A4 <- 0000011111100000
+          LAND      A4,A1               ;  re'sultat = A1, masque = A4
+          RETURN
+
+;
+;         (de load-byte (val pos size)
+;             (logshift (mask-field val pos size) (- pos)))
+;  ----------------------------------------
+          FENTRY    LDBYTE,SUBR3
+;  ----------------------------------------
+          MOV       .LDBYTE,A4          ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          BFFIX     A3,BANFIX3
+          MOV       #1,A4               ;  pour faire le masque de bits
+          LSHIFT    A3,A4               ;  A4 <- (2** size)
+          DECR      A4,LDBY1            ;  A4   00000011111111
+LDBY1     NEGATE    A2                  ;  on cadre le champ a isoler
+          LSHIFT    A2,A1               ;  a` droite
+          LAND      A4,A1               ;  et on masque les poids forts.
+          RETURN
+
+;
+;         (de load-byte-test (val pos size)
+;             (<>0 (load-byte val pos size)))
+;  ----------------------------------------
+          FENTRY    LDBT,SUBR3
+;  ----------------------------------------
+          MOV       .LDBT,A4            ; en cas d'erreur
+          BFFIX     A1,BANFIX1
+          BFFIX     A2,BANFIX2
+          BFFIX     A3,BANFIX3
+          MOV       #1,A4               ;  pour faire le masque de bits
+          LSHIFT    A3,A4               ;  A4 <- (2** size)
+          DECR      A4,LDBT1            ;  A4   00000011111111
+LDBT1     NEGATE    A2                  ;  on cadre le champ a` isoler
+          LSHIFT    A2,A1               ;  a` droite dans A1
+          LAND      A4,A1               ;  on masque les poids forts
+          CNBEQ     A1,#0,NFALSE        ;  et on teste.
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    DPBYTE,SUBRN        ;  (deposit-byte n1 pos size n2)
+;  ----------------------------------------
+          MOV       A4,A3               ;  le nb d'arguments
+          MOV       .DPBYTE,A4          ;  en cas d'erreur
+          BRA       DPFI0
+
+;  ----------------------------------------
+          FENTRY    DPFIELD,SUBRN       ;  (deposit-field n1 pos size n2)
+;  ----------------------------------------
+          MOV       A4,A3               ;  le nombre d'arguments
+          MOV       .DPFIELD,A4         ;  en cas d'erreur
+DPFI0     CNBNE     A3,#4,BANWNA        ;  il faut 4 arguments
+          XSPMOV    #3,A1               ;  n1
+          BFFIX     A1,BANFIX1          ;  pour ve'rifier le type
+          POP       A1                  ;  le nouveau champ
+          POP       A3                  ;  size
+          POP       A2                  ;  pos
+          CABEQ     A4,.DPFIELD,DPFI1   ;  on teste pour de'caler ou non
+          LSHIFT    A2,A1               ;  on de'cale n2 de pos positions
+DPFI1     CALL      MSKF0               ;  on isole le champ et masque
+          POP       A2                  ;  n1
+          LXOR      #-1,A4              ;  on oppose le masque
+          LAND      A4,A2               ;  on reset le champ a` remplacer
+          LOR       A2,A1               ;  et on melange le tout
+          RETURN
+
+; .Section "L'Arithme'tique Flottante"
+
+; .SSection "Les pre'dicats de l'arithme'tique flottante"
+
+;  ----------------------------------------
+          FENTRY    LLFEQN,SUBR2
+;  ----------------------------------------
+          MOV       .LLFEQN,A4           ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBNE     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFNEQN,SUBR2
+;  ----------------------------------------
+          MOV       .LLFNEQN,A4         ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBEQ     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFGT,SUBR2
+;  ----------------------------------------
+          MOV       .LLFGT,A4           ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBLE     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFGE,SUBR2
+;  ----------------------------------------
+          MOV       .LLFGE,A4           ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBLT     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFLT,SUBR2
+;  ----------------------------------------
+          MOV       .LLFLT,A4           ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBGE     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFLE,SUBR2
+;  ----------------------------------------
+          MOV       .LLFLE,A4           ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBGT     A1,A2,NFALSE
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFMIN,SUBR2
+;  ----------------------------------------
+          MOV       .LLFMIN,A4          ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBLE     A1,A2,LLFMINR
+          MOV       A2,A1
+LLFMINR   RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFMAX,SUBR2
+;  ----------------------------------------
+          MOV       .LLFMAX,A4          ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBGT     A1,A2,LLFMAXR
+          MOV       A2,A1
+LLFMAXR   RETURN
+
+; .SSection "Les fonctions de l'arithme'tique flottante"
+
+;  ----------------------------------------
+          FENTRY    LLFADD,SUBR2
+;  ----------------------------------------
+          MOV       .LLFADD,A4          ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          FPLUS     A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFSUB,SUBR2
+;  ----------------------------------------
+          MOV       .LLFSUB,A4          ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          FDIFF     A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFMUL,SUBR2
+;  ----------------------------------------
+          MOV       .LLFMUL,A4          ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          FTIMES    A2,A1
+          RETURN
+
+
+;  ----------------------------------------
+          FENTRY    LLFDIV,SUBR2
+;  ----------------------------------------
+          MOV       .LLFDIV,A4          ; en cas d'erreur
+          BFFLOAT   A1,BANFLT1
+          BFFLOAT   A2,BANFLT2
+          CFBEQ     A2,FZERO,BAN0DV
+          FQUO      A2,A1
+          RETURN
+
+; .SSection "Fonctions spe'ciales du compilateur"
+
+;  Ces fonctions supposent empile's :
+;         arg1 / adr-ret / arg2
+;  Elles ne doivent toucher a` AUCUN registres.
+
+          FENTRY    CLLLSHT,SUBR0
+          LSHIFT    &0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLMUL,SUBR0
+          TIMES     &0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLDIV,SUBR0
+          QUO       &0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLREM,SUBR0
+          REM       &0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFADD,SUBR0
+          FPLUS     &0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFSUB,SUBR0
+          FDIFF     &0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFMUL,SUBR0
+          FTIMES    &0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFDIV,SUBR0
+          FQUO      &0,&2
+          ADJSTK    #1
+          RETURN
+
+CLLRET1   MOV       #1,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFEQN,SUBR0
+          CFBEQ     &0,&2,CLLRET1
+          MOV       #0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFNEQN,SUBR0
+          CFBNE     &0,&2,CLLRET1
+          MOV       #0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFGT,SUBR0
+          CFBGT     &0,&2,CLLRET1
+          MOV       #0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFGE,SUBR0
+          CFBGE     &0,&2,CLLRET1
+          MOV       #0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFLT,SUBR0
+          CFBLT     &0,&2,CLLRET1
+          MOV       #0,&2
+          ADJSTK    #1
+          RETURN
+
+          FENTRY    CLLFLE,SUBR0
+          CFBLE     &0,&2,CLLRET1
+          MOV       #0,&2
+          ADJSTK    #1
+          RETURN
+
+; .Section "L'Arithme'tique Mixte"
+
+;  ----------------------------------------
+          FENTRY    FLOATP,SUBR1
+;  ----------------------------------------
+          BTFLOAT   A1,FLOATP2
+          MOVNIL    A1
+FLOATP2   RETURN
+
+;  ----------------------------------------
+          FENTRY    FIXP,SUBR1
+;  ----------------------------------------
+          BTFIX     A1,FIXP2
+          MOVNIL    A1
+FIXP2     RETURN
+
+;  ----------------------------------------
+          FENTRY    FLPLUS,SUBRN
+;  ----------------------------------------
+          MOV       #0,A1               ; (+) == 0        
+          BRA       FPLUS2
+FPLUS1    POP       A2                  ; argument suivant
+          BTFLOAT   A2,FPLUS5           ; passage en mode flottant
+          BFFIX     A2,FPLUSER1         ; il faut un nb!
+          MOV       A1,A3               ; en cas overflow
+          PLUS      A2,A1,FPLUS4
+FPLUS2    SOBGEZ    A4,FPLUS1
+          RETURN
+FPLUS4    MOV       A3,A1
+          FLOAT     A1
+          BRA       FPLUS7
+FPLUS5    FLOAT     A1
+          BRA       FPLUS8
+FPLUS6    POP       A2
+FPLUS7    BTFLOAT   A2,FPLUS8
+          BFFIX     A2,FPLUSER1         ; dans tous les cas il faut un nb
+          FLOAT     A2
+FPLUS8    FPLUS     A2,A1
+          SOBGEZ    A4,FPLUS6
+FPLUS9    RETURN
+FPLUSER1  MOV       A2,A1
+FPLUSER2  MOV       .FLPLUS,A2
+          JMP       ERRNNA
+
+;  ----------------------------------------
+          FENTRY    FLDIFF,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#0,RZERO         ; (-) == 0
+          CNBNE     A4,#1,FDIF1         
+          MOV       #0,A1               ; (- x) == (- 0 x)
+          XTOPST    A1
+          PUSH      A1
+          INCR      A4
+FDIF1     LABEL
+          MOV       #0,A2
+          BRA       FDIF3
+FDIF2     POP       A1                  ; argument suivant
+          BTFLOAT   A1,FDIF5
+          BFFIX     A1,FDIFERR2         ; il faut un nb!
+          MOV       A2,A3               ; en cas d'overflow
+          PLUS      A1,A2,FDIF4
+FDIF3     SOBGTZ    A4,FDIF2
+          POP       A1
+          BTFLOAT   A1,FDIF10
+          BFFIX     A1,FDIFERR2
+          MOV       A1,A3               ; en cas d'overflow
+          DIFF      A2,A1,FDIF91
+          RETURN
+FDIF4     MOV       A3,A2
+          FLOAT     A1
+FDIF5     FLOAT     A2
+          BRA       FDIF7
+FDIF6     POP       A1
+          BTFLOAT   A1,FDIF7
+          BFFIX     A1,FDIFERR2         ; il faut un nb aussi.
+          FLOAT     A1
+FDIF7     FPLUS     A1,A2
+FDIF8     SOBGTZ    A4,FDIF6
+          POP       A1
+          BTFLOAT   A1,FDIF9
+          BFFIX     A1,FDIFERR2
+          FLOAT     A1
+FDIF9     FDIFF     A2,A1
+          RETURN
+FDIF91    MOV       A3,A1
+          FLOAT     A1
+FDIF10    FLOAT     A2
+          BRA       FDIF9
+FDIFERR1  MOV       A2,A1               ; l'argument de'fectueux.
+FDIFERR2  MOV       .FLDIFF,A2
+          JMP       ERRNNA
+
+;  ----------------------------------------
+          FENTRY    FLTIMES,SUBRN
+;  ----------------------------------------
+          MOV       #1,A1               ; (*) == 1
+          BRA       FTIME2
+FTIME1    POP       A2                  ; argument suivant
+          BTFLOAT   A2,FTIME5           ; passage en mode flottant
+          BFFIX     A2,FTIMERR1         ; il faut un nb!
+          MOV       A1,A3               ; en cas d'overflow
+          TIMES     A2,A1,FTIME4
+FTIME2    SOBGEZ    A4,FTIME1
+          RETURN
+FTIME4    MOV       A3,A1
+FTIME5    FLOAT     A1                  ; le re'sultat est flottant
+          BRA       FTIME7
+FTIME6    POP       A2
+FTIME7    BTFLOAT   A2,FTIME8
+          BFFIX     A2,FTIMERR1         ; dans tous les cas il faut un nb
+          FLOAT     A2
+FTIME8    FTIMES    A2,A1
+          SOBGEZ    A4,FTIME6
+          RETURN
+FTIMERR1  MOV       A2,A1
+FTIMERR2  MOV       .FLTIMES,A2
+          JMP       ERRNNA
+
+;  ----------------------------------------
+          FENTRY    FLQUO,SUBR2         ; a1/a2 -> a1
+;  ----------------------------------------
+          MOV       .FLQUO,A4
+          BTFLOAT   A1,FQUO2
+          BTFLOAT   A2,FQUO3
+          BFFIX     A1,BANMIX1
+          BFFIX     A2,BANMIX2
+          CNBEQ     A2,#0,FQUOOVF
+          MOV       A1,A3               ; en cas de division non juste
+          REM       A2,A1
+          CNBNE     A1,#0,FQUO1
+          MOV       A3,A1               ; ce sera juste.
+          QUO       A2,A1,FQUOOVF
+          RETURN
+FQUO1     MOV       A3,A1
+          FLOAT     A2
+          BRA       FQUO3               ; donc on fait du flottant
+FQUO2     BTFLOAT   A2,FQUO4
+          BFFIX     A2,BANMIX2
+          FLOAT     A2
+          BRA       FQUO4
+FQUO3     BFFIX     A1,BANMIX1
+          FLOAT     A1
+FQUO4     FQUO      A2,A1
+          RETURN
+FQUOOVF   MOV       #0,A1
+          MOV       .FLQUO,A2
+          JMP       ERR0DV
+
+; .Section "L'Arithme'tique Entie`re Etendue"
+
+;         (ex+ int int) & regret => int+int+regret & poids forts => regret
+;  ----------------------------------------
+          FENTRY    EXADD,SUBR2
+;  ----------------------------------------
+          MOV       .EXCARRY,A3
+          EPLUS     A1,A2,CVAL(A3),CVAL(A3),A1
+          RETURN
+
+;         (ex1+ int)  => int +1 & retenue => regret
+;  ----------------------------------------
+          FENTRY    EXINCR,SUBR1
+;  ----------------------------------------
+          MOV       .EXCARRY,A2
+          EPLUS     A1,#1,CVAL(A2),CVAL(A2),A1
+          RETURN
+
+;         (ex- int) => -int -1
+;  ----------------------------------------
+          FENTRY    EXINV,SUBR1
+;  ----------------------------------------
+          NEGATE    A1
+          DECR      A1,EXINVRET
+EXINVRET  RETURN
+
+;         (ex* int1 int2 int3) & regret
+;         => int1*int2++int3+regret & poids forts => regret
+;  ----------------------------------------
+          FENTRY    EXMUL,SUBR3
+;  ----------------------------------------
+          MOV       .EXCARRY,A4
+          ETIMES    A1,A2,A3,CVAL(A4),CVAL(A4),A1
+          RETURN
+
+;         (ex/ int1 int2) & regret 
+;         => regret*B+int1 / int2 & regret*B+int1 \ int2 => regret
+;  ----------------------------------------
+          FENTRY    EXDIV,SUBR2         ; y <-  x|y \ z;  z <-  x|y / z
+;  ----------------------------------------
+          MOV       .EXCARRY,A3
+          EDIVIDE   CVAL(A3),A1,A2,A1,CVAL(A3)
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    EXCOMP,SUBR2        ; retourne -1 0 1
+;  ----------------------------------------
+          ECOMP     A1,A2,EXCOMP1,EXCOMP2,EXCOMP3
+EXCOMP1   MOV       #-1,A1              ; < 0, retourne -1
+          RETURN
+EXCOMP2   MOV       #0,A1               ; = 0, retourne 0
+          RETURN
+EXCOMP3   MOV       #1,A1               ; > 0, retourne 1
+          RETURN
+
+
+          END
+

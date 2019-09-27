@@ -1,0 +1,92 @@
+\documentstyle[11pt,fr]{iarticle}
+
+\begin{document}
+\frenchspacing
+\setlength{\parindent}{0in}
+\setlength{\parskip}{3ex}
+\raggedbottom
+
+\Title {Gell}
+\SuperTitle {portage Gell/Portage Natif \\ La transition sur HP9700}
+
+\Author {janvier 1994}
+\bigskip
+
+Cher client, \\
+Vous \^{e}tes possesseur d'une HP9700, et 
+vous avez eu \`{a} travailler jusqu'\`{a} ce jour avec les produits Ilog
+dont le portage ce nommait {\tt Chp9700}, correspondant \`{a}
+l'utilisation de la technologie {\it GELL}. Nous vous proposons
+d'\'{e}voluer vers notre nouveau portage des m\^{e}mes produits, de
+technologie {\it NATIVE}, nomm\'{e} {\tt hp9700} {\bf plus simple}
+d'utilisation et {\bf plus performant}. 
+\par
+
+\Section {Rappel: Technologie GELL}
+La technologie {\it GELL} consistait \`{a} prendre du code
+\LeLisp\ compil\'{e} ({\tt file.lo}), \`{a} le traduire en C ({\tt file.c,
+file.h}), puis \`{a} compiler ce code C ({\tt file.o}), \`{a} linker ce code
+C compil\'{e} avec les librairies des produits Ilog ({\tt LlibO.o,
+AidaO.o, ...}) afin d'optenir un binaire \LeLisp\ ({\tt leAIX11bin,
+...}). Un outil nomm\'{e} {\tt configurator} vous aidait dans cette d\'{e}marche.
+Il convenait ensuite d'\'{e}xecuter ce binaire, puis d'\'{e}laborer
+les fonctions \LeLisp\ correspondant au code C compil\'{e} ({\tt
+file.le}), et de sauver le tout dans une image m\'{e}moire. Le document
+intitul\'{e} {\tt
+gen\'{e}rateur de runtime sur HP9700} vous aidait dans cette d\'{e}marche.
+\par
+L'avantage de cette technique \'{e}tait essentiellement la
+portabilit\'{e}. Les inconv\'{e}nients \'{e}taient principalement la
+complexit\'{e} de la mise en \oe uvre (cf ci-dessus), le cycle de
+d\'{e}veloppement (pas de chargement dynamique), et les performances
+d\'{e}grad\'{e}es par rapport \`{a} un portage natif.
+
+\Section{Technologie NATIVE}
+Peut-\^{e}tre disposiez-vous d'autres portages des produits Ilog (sun4,
+decstation, ...) auquel cas la simplicit\'{e} d'utilisation d'un portage
+NATIF en regard d'un portage GELL vous parait \'{e}vidente. 
+Si vous ne disposez que du portage des produits Ilog sur Chp9700
+(GELL), vous 
+d\'{e}couvrirez un monde plus simple avec le portage ds m\^{e}mes produits
+sur HP9700 (NATIF): la phase strictement lisp reste la m\^{e}me, jusqu'\`{a}
+la compilation (optention des fichiers {\tt file.lo}). On passe alors
+directement au lancement d'un binaire minimal fourni avec la bande de
+distribution de \LeLisp , dans lequel on charge les fichiers lisp compil\'{e}s
+({\tt <Crtl>A file.lo}). Il existe toujours un {\tt g\'{e}n\'{e}rateur de runtime}
+pour vous aider dans cette phase.
+L'outil {\tt configurator} a disparu, ainsi que la plupart des
+{\tt makefile}. Il ne subsite en effet qu'un seul makefile ({\tt
+lelisp/hp9700/Makefile}) permettant de refabriquer des binaires lisp,
+et les fabricateurs d'images m\'{e}moire {\tt makeaida, makesmeci, ...}.
+\par
+Comme nous venons de le voir, le code \LeLisp\ peut maintenant \^{e}tre
+charg\'{e} dynamiquement en compil\'{e} ({\tt file.lo}) \`{a} l'aide de la
+fonction {\tt loadmodule} (ou du caract\`{e}re sp\'{e}cial {\tt <Crtl>A}). Il est
+possible \'{e}galement de compiler ``\`{a} 
+la vol\'{e}e {''} avec les fonctions {\tt compile, compilemodule,
+compile-all-in-core}. Si vous d\'{e}veloppez du code C en plus du code
+\LeLisp\ , vous n'aurez qu'\`{a} compiler ce code C, puis \`{a} le charger
+dynamiquement \`{a} l'aide de la fonction {\tt cload} (il est \'{e}galement
+possible de linker statiquement ces fichiers C avec le binaire
+\LeLisp\,: cf document de configuration de \LeLisp ).
+\par
+En plus de la simplicit\'{e} d'emploi, il vous sera facile de constater
+une am\'{e}lioration des performances d'un facteur 2 \`{a} 2,5.
+
+\Section {Conclusion}
+L'introduction de la technologie NATIVE sur HP9700 a pour but de
+simplifier le travail des d\'{e}veloppeurs, et de leur permettre de
+produire plus rapidement encore leurs applications, et d'augmenter la
+rapidit\'{e} de celles-ci.
+\par
+Ilog, et toute son \'{e}quipe de developpeurs vous demande
+de les excuser pour les inconv\'{e}nients que pourrait entrainer cette
+\'{e}volution.
+
+\tableofcontents
+
+\end{document}
+
+
+
+

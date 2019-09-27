@@ -1,0 +1,251 @@
+defmodule
+virbitmap
+files (
+|virstruct.ll|
+|virbitmap.ll|
+)
+export (
+(structure display)
+#:display:make
+(structure #:image:rectangle)
+#:image:rectangle:window:title
+#:image:rectangle:window:hilited
+#:image:rectangle:window:visible
+#:image:rectangle:window:graph-env
+#:image:rectangle:window:extend
+#:image:rectangle:window:father
+#:image:rectangle:window:properties
+#:image:rectangle:window:cursor
+#:image:rectangle:window:display
+#:image:rectangle:window:subwindows
+#:image:rectangle:window:events-list
+#:image:rectangle:window:window-type
+#:image:rectangle:window:graphic-properties
+#:image:rectangle:window:state
+#:color:name
+#:color:red
+#:color:green
+#:color:blue
+#:color:mutable
+#:color:display
+#:color:extend
+#:graph-env:font
+#:graph-env:line-style
+#:graph-env:pattern
+#:graph-env:mode
+#:graph-env:arc-mode
+#:graph-env:foreground
+#:graph-env:background
+#:graph-env:clip-x
+#:graph-env:clip-y
+#:graph-env:clip-w
+#:graph-env:clip-h
+#:graph-env:bitmap
+#:graph-env:display
+#:graph-env:extend
+#:graph-env:fill-mode
+#:graph-env:stipple
+(structure event)
+#:menu:title
+#:menu:itemlists
+#:menu:display
+#:menu:extend
+#:menu:itemlist:name
+#:menu:itemlist:active
+#:menu:itemlist:items
+#:menu:item:name
+#:menu:item:active
+#:menu:item:value
+#:bitmap:w
+#:bitmap:h
+#:bitmap:extend
+#:bitmap:display
+#:bitmap:stipple:data
+(structure font-info)
+#:window:events-list
+#:window:background
+#:window:window-type
+#:window:graphic-properties
+#:window:state
+#:window:make
+#:window:left
+#:window:top
+#:window:width
+#:window:height
+#:window:title
+#:window:hilited
+#:window:visible
+#:window:graph-env
+#:window:extend
+#:window:father
+#:window:properties
+#:window:cursor
+#:window:display
+#:window:subwindows
+)
+import (
+virinit
+virmenu
+vircolor
+virbit
+virevent
+virdraw
+virgraph
+virwindow
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:font-info:maxwidth nsubr ())
+(#:font-info:maxdescent nsubr ())
+(#:font-info:maxascent nsubr ())
+(#:font-info:maxlbearing nsubr ())
+(#:font-info:maxrbearing nsubr ())
+(#:font-info:minwidth nsubr ())
+(#:font-info:mindescent nsubr ())
+(#:font-info:minascent nsubr ())
+(#:font-info:minlbearing nsubr ())
+(#:font-info:minrbearing nsubr ())
+(#:font-info:weight nsubr ())
+(#:font-info:angle nsubr ())
+(#:font-info:descent nsubr ())
+(#:font-info:ascent nsubr ())
+(#:font-info:make subr0 ())
+(#:image:rectangle:h nsubr ())
+(#:image:rectangle:w nsubr ())
+(#:image:rectangle:y nsubr ())
+(#:image:rectangle:x nsubr ())
+(#:image:rectangle:make subr0 ())
+(#:event:b nsubr ())
+(#:event:h nsubr ())
+(#:event:w nsubr ())
+(#:event:y nsubr ())
+(#:event:x nsubr ())
+(#:event:gy nsubr ())
+(#:event:gx nsubr ())
+(#:event:detail nsubr ())
+(#:event:window nsubr ())
+(#:event:code nsubr ())
+(#:event:make subr0 ())
+(#:display:stipple-bitmaps nsubr ())
+(#:display:named-cursors nsubr ())
+(#:display:resource nsubr ())
+(#:display:current-selection nsubr ())
+(#:display:graph-envs nsubr ())
+(#:display:extend nsubr ())
+(#:display:cursor-bitmaps nsubr ())
+(#:display:pattern-bitmaps nsubr ())
+(#:display:font-names nsubr ())
+(#:display:colors nsubr ())
+(#:display:menus nsubr ())
+(#:display:bitmaps nsubr ())
+(#:display:windows nsubr ())
+(#:display:foreground nsubr ())
+(#:display:background nsubr ())
+(#:display:main-graph-env nsubr ())
+(#:display:root-window nsubr ())
+(#:display:graph-env nsubr ())
+(#:display:window nsubr ())
+(#:display:keyboard-focus-window nsubr ())
+(#:display:prologuep nsubr ())
+(#:display:eventmode nsubr ())
+(#:display:ymax nsubr ())
+(#:display:xmax nsubr ())
+(#:display:device nsubr ())
+(#:display:package nsubr ())
+(#:display:name nsubr ())
+(#:display:make subr0 ())
+(#:image:rectangle:window:title nsubr ())
+(#:image:rectangle:window:hilited nsubr ())
+(#:image:rectangle:window:visible nsubr ())
+(#:image:rectangle:window:graph-env nsubr ())
+(#:image:rectangle:window:extend nsubr ())
+(#:image:rectangle:window:father nsubr ())
+(#:image:rectangle:window:properties nsubr ())
+(#:image:rectangle:window:cursor nsubr ())
+(#:image:rectangle:window:display nsubr ())
+(#:image:rectangle:window:subwindows nsubr ())
+(#:image:rectangle:window:events-list nsubr ())
+(#:image:rectangle:window:window-type nsubr ())
+(#:image:rectangle:window:graphic-properties nsubr ())
+(#:image:rectangle:window:state nsubr ())
+(#:color:name nsubr ())
+(#:color:red nsubr ())
+(#:color:green nsubr ())
+(#:color:blue nsubr ())
+(#:color:mutable nsubr ())
+(#:color:display nsubr ())
+(#:color:extend nsubr ())
+(#:graph-env:font nsubr ())
+(#:graph-env:line-style nsubr ())
+(#:graph-env:pattern nsubr ())
+(#:graph-env:mode nsubr ())
+(#:graph-env:arc-mode nsubr ())
+(#:graph-env:foreground nsubr ())
+(#:graph-env:background nsubr ())
+(#:graph-env:clip-x nsubr ())
+(#:graph-env:clip-y nsubr ())
+(#:graph-env:clip-w nsubr ())
+(#:graph-env:clip-h nsubr ())
+(#:graph-env:bitmap nsubr ())
+(#:graph-env:display nsubr ())
+(#:graph-env:extend nsubr ())
+(#:graph-env:fill-mode nsubr ())
+(#:graph-env:stipple nsubr ())
+(#:menu:title nsubr ())
+(#:menu:itemlists nsubr ())
+(#:menu:display nsubr ())
+(#:menu:extend nsubr ())
+(#:menu:itemlist:name nsubr ())
+(#:menu:itemlist:active nsubr ())
+(#:menu:itemlist:items nsubr ())
+(#:menu:item:name nsubr ())
+(#:menu:item:active nsubr ())
+(#:menu:item:value nsubr ())
+(#:bitmap:w nsubr ())
+(#:bitmap:h nsubr ())
+(#:bitmap:extend nsubr ())
+(#:bitmap:display nsubr ())
+(#:bitmap:stipple:data nsubr ())
+(#:window:events-list dmsubr ())
+(#:window:background nsubr ())
+(#:window:window-type dmsubr ())
+(#:window:graphic-properties dmsubr ())
+(#:window:state dmsubr ())
+(#:window:make dmsubr ())
+(#:window:left dmsubr ())
+(#:window:top dmsubr ())
+(#:window:width dmsubr ())
+(#:window:height dmsubr ())
+(#:window:title dmsubr ())
+(#:window:hilited dmsubr ())
+(#:window:visible dmsubr ())
+(#:window:graph-env dmsubr ())
+(#:window:extend dmsubr ())
+(#:window:father dmsubr ())
+(#:window:properties dmsubr ())
+(#:window:cursor dmsubr ())
+(#:window:display dmsubr ())
+(#:window:subwindows dmsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+((defstruct event code window detail gx gy x y w h b)
+)((defstruct #:image:rectangle (x 0) (y 0) (w 1) (h 1))
+)((add-feature 'virbitmap)
+))

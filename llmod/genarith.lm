@@ -1,0 +1,45 @@
+defmodule
+genarith
+files (
+genarith
+)
+export (
+#:genarith:|+|
+#:genarith:|-|
+#:genarith:*
+#:genarith:/
+#:genarith:quomod
+floor
+#:genarith:|0-|
+#:genarith:1/
+ceiling
+round
+floor
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:genarith:|+| subr2 ())
+(#:genarith:|-| subr2 ())
+(#:genarith:* subr2 ())
+(#:genarith:/ subr2 ())
+(#:genarith:quomod subr2 ())
+(floor subr1 ())
+(#:genarith:|0-| subr1 ())
+(#:genarith:1/ subr1 ())
+(ceiling subr1 ())
+(round subr2 ())
+)
+cpfunctions (
+(#:genarith:error nsubr)
+)
+cpimport
+()
+cpenv (
+((putprop '#:ex:mod 't '#:complice:globalvar)
+)((putprop '#:sys-package:genarith 't '#:complice:globalvar)
+))

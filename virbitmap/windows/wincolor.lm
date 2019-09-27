@@ -1,0 +1,52 @@
+defmodule #:display:windows
+files   (
+	wincolor.ll
+)
+include (
+	virstruct.ll
+)
+import  (
+	virutil ; ..make
+	win_def
+	winstruc
+)
+export  (
+	:make-color 
+	:make-mutable-color 
+	:make-named-color
+	:kill-color  
+	:red-component
+	:green-component 
+	:blue-component
+	:name-to-rgb
+	:get-rgb-values
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:windows:make-color nsubr ())
+(#:display:windows:make-mutable-color nsubr ())
+(#:display:windows:make-named-color subr3 ())
+(#:display:windows:kill-color subr2 ())
+(#:display:windows:red-component subr3 ())
+(#:display:windows:green-component subr3 ())
+(#:display:windows:blue-component subr3 ())
+(#:display:windows:name-to-rgb subr3 ())
+(#:display:windows:get-rgb-values subr3 ())
+)
+cpfunctions (
+(#:display:windows:do-color nsubr)
+)
+cpimport (
+(win_def
+(windows_make_color . nsubr)
+(windows_select_palette . subr1)
+(windows_kill_color . subr1)
+(windows_color_component . nsubr)
+))
+cpenv (
+virutil
+win_def
+winstruc
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

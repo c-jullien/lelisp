@@ -1,0 +1,775 @@
+\documentstyle{ilogmanuel}
+
+
+\Begin
+\Title {Diffusion Le-Lisp}
+\SuperTitle {Le-Lisp  de  l'INRIA  version 15.25}
+
+\Author {novembre 1991}
+
+		 
+                            
+\chapter {Version "15.25"}
+Voici les corrections et les extensions de la nouvelle diffusion de
+\LeLisp\ version 15.25 date'e du 17 novembre 1991.
+
+Une fois par an, l'INRIA et ILOG livrent aux porteurs une nouvelle
+version de Le-Lisp comprenant des ame'liorations, extensions et
+corrections.  Seule cette diffusion annuelle contient des changements
+a` la souche de Le-Lisp e'crite en LLM3, et au manuel de l'utilisateur.
+
+\Section {Contenu de cette diffusion}
+
+La bande de diffusion se de'compose selon les re'pertoires suivants:
+
+\begin {itemize}
+\item	68k : l'expanseur commun a` tous les 680x0;
+\item	benchmarks : pour re'aliser des mesures de performances des syste`mes Le-Lisp;
+\item	benchmarks/Results : les re'sultats de ces mesures de performances;
+\item   bignum : le module BIGNUM de DEC/INRIA;
+\item   bignum/l : l'interface des bignum avec Le-Lisp;
+\item	common : les fichiers C communs a` tous les portages utilisant C;
+\item	info : ce fichier;
+\item	llib : la librairie Le-Lisp;
+\item	llm3 : le noyau de l'interpre`te Le-Lisp;
+\item	llmod : la description modulaire de tous les fichiers des
+librairies Le-Lisp;
+\item	llobj : le re'sultat de la compilation modulaire de tous les
+fichiers des librairies Le-Lisp;
+\item	lltest : les jeux de tests pour tester, verifier, recetter Le-Lisp;
+\item	lltool : quelques outils utiles aux porteurs;
+\item	llub : une librairie supple'mentaire, remplie par les
+utilisateurs, non maintenue;
+\item   manl : un manuel UNIX des principales commandes pour Le-Lisp;
+\item	manuel : le manuel de re'fe'rence en francais, au format {\tt tcomp};
+\item	sun : le syste`me Sun3;
+\item	sun/C : les fichiers C spe'cifiques a` Sun3;
+\item	sun/conf : les configurateurs d'images Le-Lisp spe'cifiques a` Sun3;
+\item	sun/recette : les commandes permettant de lancer les recettes
+sur Sun3;
+\item	vaxunix : le syste`me Vax Ultrix;
+\item	vaxunix/C : les fichiers C spe'cifiques a` Vax;
+\item	vaxunix/conf : les configurateurs d'images Le-Lisp spe'cifiques a` Vax;
+\item	vaxunix/recette : les commandes permettant de lancer les recettes
+sur Vax; 
+\item	virbitmap : les incarnations de BV et leurs chargeurs;
+\item	virbitmap/bvtty : l'incarnation du BV sur un {\tt tty}
+alphanume'rique simple;
+\item	virbitmap/X11 : l'incarnation du BV sur X11;
+\item	virtty : les descriptions de {\tt tty} de'ja` rencontre's par
+le-Lisp. 
+\end {itemize}
+
+Le contenu exact de la bande de diffusion est explicite'e dans les
+fichiers {\tt LLUSERFILES}, {\tt LLPORTFILES} et {\tt LLPORTMJFILES}
+ainsi que dans les fichiers {\tt UserFILES} et {\tt PortFILES} dans
+les re'pertoires des machines.
+
+\Section{Spe'cifications de la version 15.25}
+
+On rappelle dans cette section, tous les travaux de'ja` effectue's
+dans la version 15.24.2. Cela offre une meilleur ide'e des
+diffe'rences entre les deux versions majeures. La version concerne'e est
+signale'e en te^te de chaque paragraphe.
+
+\begin {enumerate}
+
+\item Intervention d'ordre ge'ne'ral sur le code \LeLisp\ :
+
+\begin {itemize}
+
+\item {\bf 15.24.2} \\
+Un gros travail a e'te' accompli sur le module PATHNAME,
+aussi bien en correction d'anomalies qu'en ajout de se'mantique,
+en particulier le proble`me de la longueur des noms de fichiers (sur
+Sys5 et sur OS/2). On notera la cre'ation d'un outil de
+de'tection de conflit de noms: {\tt lelisp/llub/verifpath.ll}.
+On notera e'galement certaines corrections telles que:
+
+\begin {enumerate}
+
+\item {\bf 15.24.2} \\
+``//'' sur machine {\tt apollo} affecte le champ DEVICE de la structure
+PATHNAME. 
+
+\item {\bf 15.25} \\
+EXPAND-PATHNAME peut rendre  
+un re'sultat aussi long que ne'cessaire (il n'y a plus de
+limitation de buffer). Introduction par la me^me occasion de la
+fonction MAP-EXPAND-PATHNAME, e'vitant ainsi de cou^teux re'sultats
+interme'diaires inutiles. Cela ne'cessite pas mal de modification des
+codes C et lisp plus de nouveaux tests .
+
+\item {\bf 15.25} \\
+le module PATH est comple`tement imple'mente' en OS/2.
+
+\item {\bf 15.25} \\
+la fonction CONTROL-FILE-PATHNAME est revue et corrige'e afin de
+rendre les valeurs ade'quates, selon le produit nomme' et le syste`me
+utilise'. 
+L'algorithme de nommage du fichier d'initialisation d'un produit {\tt
+toto} est le suivant, selon le syste`me d'exploitation:
+\begin{itemize}
+\item os2: {\tt \$HOME\|\|toto.ini}
+\item unix: {\tt \$HOME/.toto}
+\item vaxvms: {\tt sys\$login:.toto}
+\end {itemize}
+Dans tous les cas, le deuxie`me argument e'ventuellement fourni a` la
+fonction CONTROL-FILE-PATHNAME permet de remplacer ce nom par de'faut. 
+
+\end{enumerate}
+
+\item {\bf 15.24.2} \\
+Changement de l'ordre des re'pertoires dans la variable
+\#:SYSTEM:PATH.
+Le re'pertoire {\tt system/} est place' devant les librairies.
+Cela permet de mieux ge'rer l'introduction de nouveaux portages en
+cours d'anne'e, lesquels ne'cessitent parfois une intervention locale dans
+un fichier de la librairie. 
+
+\item {\bf 15.24.2} \\
+Reprise de certaines bizareries autour des longueurs des buffers
+d'entre'e sortie (harmonisation LL/C, mise a` niveau de stringio.ll).
+
+\item {\bf 15.24.2} \\
+Utilisation de DEFMACRO-OPEN sur MAPHASH dans le module {\tt hash}.
+Cela impose quelques modifications au niveaux des importations et
+de'clarations avec EVAL-WHEN notamment danc le module {\tt cpmac}.
+Cela peut provoquer des imcompatibilite's entre code compile' 15.24
+et 15.25. Pour plus de surete': {\bf un module important le module
+{\tt hash} (me^me re'cursivement) devra e^tre recompile' s'il est
+lui-me^me importe' par un module utilisant MAPHASH}.
+
+\item {\bf 15.25} \\
+La longueur de la table de hashage utilise'e par la {\it oblist}
+Le-Lisp est passe'e de {\bf 263} a` {\bf 997}. Ca n'a pas d'autre
+conse'quence que d'optimiser les acce`s aux symboles dans les
+grosses configurations sans vraiment pe'naliser les petites, et de
+modifier le re'sultat de la fonction 
+HASH.
+
+\item {\bf 15.25} \\
+Modification du protocole de recherche des symboles C dans la table
+des symboles: on de'conseille dore'navant l'utilisation du '\_' devant
+les symboles passe's a` GETGLOBAL. Nous conservons la
+possibilite' de le faire, mais au de'triment des performances de
+recherche du symbole. L'option optimale est celle ou` le nom C exact
+apparait comme argument du GETGLOBAL.
+Le code C est modifie' en conse'quence.
+
+\item {\bf 15.25} \\
+Possibilite' de suivre (STEP) les fonctions appele'es par {\tt SEND}
+(sauf en mode graphique).
+
+\item {\bf 15.25} \\
+Quelques interventions ont e'te' faites sur le code du Bitmap Virtuel
+pour corriger certaines erreurs, mais aussi pour permettre
+les incarnations du BV sur Motif et sur PostScript.
+
+\end {itemize}
+
+\item Intervention sur les codes C et assembleur :
+
+\begin {itemize}
+
+\item {\bf 15.24.2} \\
+Traduction du noyau KerN en assembleur au format MOTOROLA sur
+68K permettant l'introduction aise'e de KerN en assembleur sur la
+majorite' des portages 68K. Nous gagnons ainsi un rapport 2 en vitesse
+d'exe'cution des primitives de KerN sur ces machines.
+
+\item {\bf 15.24.2} \\
+Mise au point d'un certain nombre de flags se'mantiques de
+compilation C sur les portages UNIX : 
+LLPAGESIZE (taille des pages me'moire), LLTIMEUNIT
+(fre'quence d'horloge), EXECORE (cores executables), CLOAD/NOCLOAD
+(loader dynamique), ITINREAD (IT a` la lecture), LLFOREGROUND (process
+en foreground), LLVFORK (vfork ou non), LLRENAME (proce'dure rename
+existe ou non), LLGHOSTPROC (processus fanto^me). Et toujours: BSD4x
+et S5. \\
+Cette manipulation des flags offre une plus grande lisibilite' du code
+C,  une plus grande maintenabilite', permet une automatisation plus
+aise'e de la 
+ge'ne'ration de fichiers facilitant ainsi l'introduction de
+nouveaux portages.
+
+
+\item {\bf 15.25} \\
+Inte'gration du portage OS/2 (introduction de
+code C en particulier). 
+
+\item {\bf 15.25} \\
+Re'arrangement du fichier {\tt lelisp.c} en vue de facilite' sa
+maintenance
+et son e'volution. L'ide'e est d'introduire des fichiers C de'pendants
+machine ({\it  exemple: lelisp/sun/C/Execore.c, lelisp/sun/C/Machine.h}) . 
+Le fichier {\tt .c} contient tout le code tre`s spe'cifique au portage
+(mode execore, getglobal, ...), le fichier {\tt .h} contient tous les
+{\tt include}s propres a` ce portage. Tous ces fichiers sont engendre's
+automatiquement. 
+
+\item {\bf 15.25} \\
+Introduction d'un processus fanto^me a` la {\tt lelispgo} permettant
+de re'aliser des appels syste`mes sans exploser n encombrement
+me'moire, sur les machines ne disposant pas de VFORK. Ce processus
+est lance' de`s le de'marrage de \LeLisp\ , et c'est lui qui est
+utiliser pour {\it forker} lors d'appels syste`me tels que
+COMLINE. Cette possibilite'e de'pend du flag de compilation {\tt
+LLGHOSTPROC} et n'est pas ope'rationnelle sur tous les portages.
+
+\item {\bf 15.25} \\
+Ajout de la fonction FCOPY en C, pour l'imple'mentation de la fonction
+lisp COPYFILE.
+\end {itemize}
+
+\item Interventions sur le code LLM3:
+
+\begin {itemize}
+
+\item {\bf 15.25} \\
+Ajout du code ne'cessaire a` la fonction {\tt COPY-FILE}.
+
+\item {\bf 15.25} \\
+Intervention sur les code des fonction GC et GCINFO. Toutes les zones
+doivent exploiter le me^me protocole d'affichage: {\tt n} signifie
+{\tt n} objets, {\tt (n)} signifie {\tt n} kilo-objets. 
+
+\item {\bf 15.25} \\
+Harmonisation de toutes les fonctions sur les chaines de caracte`res.
+Leur comportement est maintenant le me^me face a` des arguments hors
+limite (exemple: le caracte`re de code ASCII 255, soit -1).
+
+\item {\bf 15.25} \\
+Correction d'une anomalie de comportement du GC sur les symboles
+place's en te^te de {\it bucket} dans la {\it table de hashage} de la
+{\it oblist}. 
+
+\item {\bf 15.25} \\
+Le code LLM3 a e'te' localement optimise' en plusieurs endroits.
+
+\end {itemize}
+
+\item Corrections propres a` COMPLICE:
+
+\begin {itemize}
+
+\item {\bf 15.24.2} \\
+On change le nouveau syste`me de DEFVAR qui ne convenait pas
+pour les {\tt (unless (boundp 'kop) (defvar kop ...))}. On rede'fini
+DEFVAR dans complice pour forcer les putprops. On parse quand me^me
+pour pouvoir e'tendre le {\bf cpenv}. Cela implique que si le
+DEFVAR n'est pas en {\it ToplevelForm} alors le {\bf cpenv}
+n'est pas e'tendu. 
+
+\item {\bf 15.24.2} \\
+Correction de la ge'ne'ration en "dur" de l'e'tiquette 0 pour le
+test des {\tt nsubrs} ({\tt :check-nsubr} dans {\tt cp2.ll}).
+On ouvre les fonctions {\tt typevector} et {\tt typestring}.
+
+\item {\bf 15.24.2} \\
+On traite les cas de'ge'ne're's de (AND) et (OR).
+On fait la sauvegarde les {\tt (cvalq x)} protege's pour chaque {\tt
+call} ou {\tt jump}.
+Correction d'un bug d'allocation de registres dans (arg <expr>).
+
+\item {\bf 15.25} \\
+Les fonctions de'finies avec SYNONYM ont le me^me status que les
+fonctions de'finies avec DEFUN. 
+
+\item {\bf 15.25} \\
+COMPILE-ALL-IN-CORE qui ne tenait pas compte de DONT-COMPILE
+le fait maintenant.
+
+\end{itemize}
+
+\item Intervention sur la technologie de portage:
+
+\begin {itemize}
+
+\item {\bf 15.24.2} \\
+Pre'sence unique du LOADER dans le re'pertoire de la machine.
+Le nombre et la complexite' des portages allant en augmentant, il
+apparait que chaque machine exige une ou plusieurs spe'cificite's 
+qui lui est
+propre, qui la diffe'rencie des autres machines utilisant le me^me
+type de processeur.
+exemples: big endian/little indian sur lapmips, introduction du 68040
+sur lap68k, etc  
+
+\item {\bf 15.24.2} \\
+Ame'nagement de la chai^ne de production du binaire \LeLisp\ 
+sur UNIX:
+introduction du fichier {\tt lelispllm3.o} ne contenant strictement que
+l'expansion LLM3, et garantissant ainsi la non-expansion LLM3.
+Avec le temps, la complexite' des portages augmentant, 
+un certains nombres de
+choses sont venues par dessus l'expansion LLM3 (kern.o, plombage,
+spe'cificite's C de certains portages etc) et sont inte'gre'es dans le
+fichier {\tt lelispbin.o} qui lui est fourni aux clients commes base
+de recompilation du syste`me. C'est toujours le makefile {\tt
+Makeport} qui fabrique {\tt lelispbin.o}, mais c'est maintenant un
+makefile {\tt makellm3} qui, en amont du {\tt Makeport}, 
+fabrique le fichier {\tt lelispllm3.o}. Ce
+makefile n'est lance' qu'une fois par an a` l'occasion des versions
+majeures. 
+
+\item {\bf 15.24.2, 15.25} \\
+Homoge'ne'ite' plus pousse'e sur les traits de portages tels que
+EXECORE, CLOAD, 31BITFLOATS et 64BITFLOATS, scheduleur.
+
+\item {\bf 15.24.2} \\
+Encore plus de ge'ne'ration automatique: {\tt complice} et les
+{\it configurateurs} d'images me'moire ({\tt conf/*conf.ll}) sont
+engendre's automatiquement. C'est pourquoi les noms des configurateurs
+commencent maintenant par une majuscule. Le {\tt Makefile} inte`gre
+cela. 
+
+\item {\bf 15.24.2} \\
+Introduction de la recette interpre'te'e.
+
+\item {\bf 15.24.2} \\
+Etant donne' le temps que mettait la recette du module {\it
+KerN} a` s'exe'cuter sur cetaines machines, les tests 13, 18 et 19 ont
+e'te' simplifie's. Les temps sont divise's de 4 a` 8 fois, mais 
+il est bon de savoir que ce sont autant de cas non teste's par
+de'faut. Pour en ame'liorer les performances de facon significative,
+nous ne pouvons que conseiller aux porteurs d'imple'menter le
+module KerN en assembleur sur leur(s) syste`me(s).
+
+\end {itemize}
+
+\end{enumerate}
+
+\Section {Corrections d'anomalies}
+
+Les changements et corrections de \LeLisp\ sont ge're's avec des \|RATs|
+(Reque^tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez obtenir le texte complet
+de chaque RAT sur simple demande.
+
+\begin{tabbing}
+\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \= \kill
+\verb_Rats for lelisp selected by status-fixed as of 25/11/1991._\\ \verb_ _\\
+\hspace{-5em}rat 297 \> area: {\it ports
+\ }\> aspect: {\it tests
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it nuyens
+\ }\\ 
+\verb_tests des chargeurs ne testent pas assez #:ld:special-case-loader.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 344 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_Le scheduleur se comporte differemment d'une machine a l'autre
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 426 \> area: {\it memory-management
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it B. Serpette [INRIA]
+\ }\\ 
+\verb_simplification des llxxx.llm3 a propos de >ECONS/ECONS etc
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 437 \> area: {\it memory-management
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Marco NANNI [BULL]
+\ }\\ 
+\verb_probleme d'affichage des zones > 32767 par GCINFO
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 462 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_symbole de EXPORTABLE-DEFINITION a packager
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 516 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_commetn resoudre le pb des ">" devant les noms de fcts C 
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 579 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it gregory@Gipsi.Gipsi.Fr
+\ }\\ 
+\verb_(UNLESS (AND) ... se compile mal sous complice
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 641 \\ 
+\> status: {\it fixed
+\ }\> origin: {\it le
+\ }\\ 
+\verb_la TRACE de la fonction SEND est problematique
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 667 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it A. Meller [Ilog]
+\ }\\ 
+\verb_nouvelle fonction ensembliste: POWER-SET
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 668 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it A. Meller [Ilog]
+\ }\\ 
+\verb_nouvelle fonction ensembliste: CARTESIAN-PRODUCT
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 677 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it MH Meffre [Ilog]
+\ }\\ 
+\verb_message d'erreur non adapte' pour PRINTDEFMODULE
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 678 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Roland Ducournau cerci2!coltrane.cerci2.fr!ducour
+\ }\\ 
+\verb_compilation de &NOBIND + ARG parfois fantaisiste
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 679 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Roland Ducournau  ducour@cerci2.uucp
+\ }\\ 
+\verb_ mauvaise compilation du LET ou` l'ordre d'evaluation est inverse
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 680 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Roland Ducournau  ducour@cerci2.uucp
+\ }\\ 
+\verb_comportements heterogene de Makestring / Fillstring
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 689 \> area: {\it memory-management
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it R. Ducourneau [Sema]
+\ }\\ 
+\verb_RESTORE-CORE ramene T sur m88k au lieu de ()
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 691 \\ 
+\> status: {\it fixed
+\ }\> origin: {\it le
+\ }\\ 
+\verb_DIRECTORYP devrait rendre le nom d'un directory plutot qu'un fichier
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 694 \> area: {\it run-time
+\ }\> aspect: {\it o/s-interface
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Kuczynski P. [Ilog]
+\ }\\ 
+\verb_il arrive que TTYIN (dans llstdio.c) recupere des codes d'erreur
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 702 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_(EXPAND-PATHNAME "<dir>*/") n'expanse pas les repertoire s "dir*"
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 703 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_une fct definie par SYNONYMQ n'est pas reconnue par complice
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 716 \> area: {\it ports
+\ }\> aspect: {\it loader
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it ing
+\ }\\ 
+\verb_typos d'un message d'erreur du loader 68K
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 717 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it cerci2!ducour%coltrane.cerci2.fr (Roland Ducournau)
+\ }\\ 
+\verb_compilation d'une fct utilisant une MSUBR realisant un effet de bord
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 724 \> area: {\it ports
+\ }\> aspect: {\it tests
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Shumacher [Madicia]
+\ }\\ 
+\verb_le lancement des recettes completes impose une recompilation des binaires
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 725 \> area: {\it run-time
+\ }\> aspect: {\it error-handling
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Shumacher [Madicia]
+\ }\\ 
+\verb_l'affichage de l'erreur d'image memoire incompatible provoque 1 autre erreur
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 726 \> area: {\it language
+\ }\> aspect: {\it extended-types
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Shumacher [Madicia]
+\ }\\ 
+\verb_limitation des noms de fichiers a` 8.3 pour OS2
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 729 \> area: {\it ports
+\ }\> aspect: {\it tests
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Shumacher [madicia]
+\ }\\ 
+\verb_certains tests sur les pathnames sont trop oriente's UNIX
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 731 \> area: {\it ports
+\ }\> aspect: {\it loader
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_petites incoherences des loaders enttre eux
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 740 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it dvergami@crios.inria.fr
+\ }\\ 
+\verb_COMPILE-ALL-IN-CORE ne tient pas compte de DONT-COMPILE
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 755 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_Message au chargement d'un module incorrect
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 758 \> area: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_make lelisp-
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 777 \> area: {\it ports
+\ }\> aspect: {\it loader
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it ducour@sema-taa.fr
+\ }\\ 
+\verb_la div. ent. LLM3  QUO ne sait pas diviser par 128
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 779 \> area: {\it language
+\ }\> aspect: {\it arithmetic
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kerjean
+\ }\\ 
+\verb_la fonction div sur sun4
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 813 \> area: {\it run-time
+\ }\> aspect: {\it error-handling
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_verification des tailles des zones au lancement d'un core insuffisante
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 306 \> area: {\it language
+\ }\> aspect: {\it extended-types
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it chaillou
+\ }\\ 
+\verb_type des types e'tendus
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 372 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it M Nanni [Bull]
+\ }\\ 
+\verb_la taiiles des entiers du langage ext. depend des machines
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 391 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it H Bessonne [Ilog]
+\ }\\ 
+\verb_limite de la sucrerie lexicale des structures dans les exportaion des .lm
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 489 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi
+\ }\\ 
+\verb_La doc de la fonction (err) est douteuse.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 613 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it pommier@ilog
+\ }\\ 
+\verb_dedoublement des clef dans les descripteurs de modules
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 673 \> area: {\it i/o
+\ }\> aspect: {\it virbitmap
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it J. Chailloux [Ilog]
+\ }\\ 
+\verb_code de BLTVECTOR est en avance sur la doc et les tests
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 674 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it J. Chailloux [Ilog]
+\ }\\ 
+\verb_doc. francaise de GETL non conforme.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 684 \> area: {\it i/o
+\ }\> aspect: {\it virbitmap
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Roland Ducournau  ducour@cerci2.uucp
+\ }\\ 
+\verb_BITBLIT de l'undo d'un editeur d'icone semble se faire en mode XOR
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 688 \> area: {\it i/o
+\ }\> aspect: {\it virbitmap
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Roland Ducournau  ducour@cerci2.uucp
+\ }\\ 
+\verb_WINDOW-CLEAR-REGION ne tient pas compte du CLIP
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 693 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it G. Schmacher [MADICIA]
+\ }\\ 
+\verb_INDEX doit etre documente' comme une fct a` 2 ou 3 arguments
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 727 \> area: {\it language
+\ }\> aspect: {\it extended-types
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Shumacher [madicia]
+\ }\\ 
+\verb_CONTROL-FILE-PATHNAME ne remplie pas tjrs correctement son ro^le
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 728 \> area: {\it language
+\ }\> aspect: {\it extended-types
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Shumacher [Madicia]
+\ }\\ 
+\verb_le wildcarding n'est pas possible sur les repertoire en OS2
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 756 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kerjean
+\ }\\ 
+\verb_doc de la fonction probepathf
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 778 \> area: {\it ports
+\ }\> aspect: {\it loader
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it euzenat
+\ }\\ 
+\verb_Bugs documentation modules
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 794 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_pathnames namestring
+_\\ 
+\verb_ _\\ 
+\end{tabbing}
+\newpage
+\bigskip
+
+\tableofcontents
+\listoftables
+
+\End

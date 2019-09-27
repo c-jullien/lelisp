@@ -1,0 +1,101 @@
+This is TeX, C Version 3.14t3 (format=lplain 93.4.28)  16 DEC 1993 17:55
+**&lplain 15253
+(15253.tex
+LaTeX Version 2.09 <7 Dec 1989>
+(/nfs/ishare/lib/TEX3.14/localinputs/iarticle.sty
+(/nfs/ishare/lib/TEX3.14/inputs/article.sty
+Document Style `article' <16 Mar 88>.
+(/nfs/ishare/lib/TEX3.14/inputs/art11.sty)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/verbatim.sty
+Style-Option: `verbatim' v1.4i <92/01/20> (RmS)
+English Documentation          <91/12/18> (RmS)
+\every@verbatim=\toks11
+\verbatim@line=\toks12
+\every@smallverbatim=\toks13
+\smallverbatim@line=\toks14
+) (/nfs/ishare/lib/TEX3.14/localinputs/cartouche.sty
+\circthick=\dimen99
+\cartouter=\dimen100
+\cartinner=\dimen101
+\normbskip=\skip41
+\normpskip=\skip42
+\normlskip=\skip43
+\lskip=\skip44
+\rskip=\skip45
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/epsf.tex
+\epsffilein=\read0
+\epsfxsize=\dimen102
+\epsfysize=\dimen103
+\epsftsize=\dimen104
+\epsfrsize=\dimen105
+\epsftmp=\dimen106
+\pspoints=\dimen107
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/oldverb.sty)
+(/nfs/ishare/lib/TEX3.14/localinputs/compat.sty
+Compatibilite' Ilogtex
+(/nfs/ishare/lib/TEX3.14/localinputs/epsf.tex
+\epsffilein=\read1
+\epsfxsize=\dimen108
+\epsfysize=\dimen109
+\epsftsize=\dimen110
+\epsfrsize=\dimen111
+\epsftmp=\dimen112
+\pspoints=\dimen113
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/oldfunc.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/common.sty
+Common macros
+\c@CodeLine=\count87
+\epsftranslate=\dimen114
+\chgbarwidth=\dimen115
+\chgbarsep=\dimen116
+\@chgbarbegin=\dimen117
+(/nfs/ishare/lib/TEX3.14/localinputs/versions.sty)
+\@functiontranslate=\dimen118
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/ilonames.sty)
+(/nfs/ishare/lib/TEX3.14/localinputs/skycompat.sty
+Compatibilite' SkyStyle
+\MyLength=\skip46
+\MarginBox=\box25
+\DescBox=\box26
+\c@CaptionCounter=\count88
+\c@LineNumber=\count89
+) (/nfs/ishare/lib/TEX3.14/localinputs/nilog.sty
+\@translate=\dimen119
+\@headertranslate=\dimen120
+\@nilogbox=\dimen121
+
+(/nfs/ishare/lib/TEX3.14/localinputs/longcode.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/ilogindex.sty indexing version 2.2,
+\initialskipamount=\skip47
+
+Writing index file 15253.ix 
+\ixindfile=\write3
+) (/nfs/ishare/lib/TEX3.14/localinputs/nindex.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/fr.sty)
+No file 15253.aux.
+[1
+
+] [2] (15253.aux) ) 
+Here is how much of TeX's memory you used:
+ 896 strings out of 4463
+ 8974 string characters out of 63221
+ 55052 words of memory out of 262141
+ 2796 multiletter control sequences out of 9500
+ 19297 words of font info for 73 fonts, out of 72000 for 255
+ 14 hyphenation exceptions out of 607
+ 14i,5n,15p,200b,295s stack positions out of 300i,40n,60p,3000b,4000s
+
+Output written on 15253.dvi (2 pages, 6364 bytes).

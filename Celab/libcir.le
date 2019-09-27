@@ -1,0 +1,38 @@
+;;; GELL 15.26: elaboration file for the module: libcir
+;;;             translation done: "Wed June 16 93 18:01:44 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: libcir.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'libcir)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZlibcir" "Wed June 16 93 18:01:44 "
+
+'((cirprint . subr1) (cirprinflush . subr1) (cirprin . subr1) (#:libcir:double . subr0) (#:libcir:replace . subr1) (cirnequal . subr2) (cirequal . subr2) (circopy . subr1))
+
+#[cirprin print prinflush #:libcir:shared (#:libcir:shared) lambda #:libcir:seen (#:libcir:seen) (#:libcir:seen) prin vector #:libcir:package-parano t pname nconc1 tconsp (35 40) princn (35 58) (58) (35 91) string (35 58) (58) "" catenate (35 58) symbol (32 46 32) rmargin outpos terpri #:libcir:shared-length |+| makevector bltvector #:libcir:old #:libcir:new #:libcir:replace |1-| <= cirequal #:libcir:no #:libcir:seen2 #:libcir:seen1 (#:libcir:seen2 #:libcir:seen1) #:llcp:exit equal #:libcir:copied (#:libcir:copied #:libcir:seen) lastn tcons copy cirprint #:gell-resetfn:function-name #:gell-resetfn:function-1 cirprinflush #:libcir:double #:gell-resetfn:function-0 cirnequal #:gell-resetfn:function-2 circopy]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'libcir)))
+(defvar #:sys-package:colon 'libcir)
+(add-feature 'libcir)
+(if (not (boundp '#:libcir:package-parano)) (defvar #:libcir:package-parano ()))
+(defvar #:libcir:old)
+(defvar #:libcir:new)
+(defvar #:libcir:seen)
+(defcsetfn 'cirprint "GZlibcir" 0)
+(defcsetfn 'cirprinflush "GZlibcir" 1)
+(defcsetfn 'cirprin "GZlibcir" 2)
+(defvar #:libcir:shared)
+(defvar #:libcir:shared-length)
+(defsharp = (#:libcir:n) (ifn (and (boundp '#:libcir:shared) (vectorp #:libcir:shared)) (setq #:libcir:shared #[()] #:libcir:shared-length 1)) (while (>= #:libcir:n #:libcir:shared-length) (#:libcir:double)) (let ((#:libcir:old (ncons #:libcir:n))) (vset #:libcir:shared #:libcir:n #:libcir:old) (let ((#:libcir:new (read)) (#:libcir:seen)) (vset #:libcir:shared #:libcir:n #:libcir:new) (#:libcir:replace #:libcir:new) (list #:libcir:new))))
+(defsharp |#| (#:libcir:n) (list (vref #:libcir:shared #:libcir:n)))
+(defcsetfn '#:libcir:double "GZlibcir" 3)
+(defcsetfn '#:libcir:replace "GZlibcir" 4)
+(defcsetfn 'cirnequal "GZlibcir" 5)
+(defcsetfn 'cirequal "GZlibcir" 6)
+(defcsetfn 'circopy "GZlibcir" 7)
+
+(defccheck '(copy tcons lastn equal #:llcp:exit cirequal <= |1-| #:libcir:replace bltvector makevector |+| terpri outpos rmargin symbol catenate princn tconsp nconc1 pname prin prinflush print cirprin))

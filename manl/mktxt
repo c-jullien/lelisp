@@ -1,0 +1,10 @@
+#!/bin/sh
+cd ..
+for i in lelisp complice config newdir flelisp fcomplice fconfig fnewdir
+do
+echo -n "formatting $i ..."
+rm -f manl/$i.txt
+man -M . $i > manl/$i.txt 2> /dev/null
+chmod 444 manl/$i.txt
+echo "done"
+done

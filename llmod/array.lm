@@ -1,0 +1,27 @@
+defmodule
+user
+files (
+array
+)
+export (
+makearray
+aref
+aset
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(makearray nsubr ())
+(aref dmsubr ())
+(aset dmsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv
+()

@@ -1,0 +1,34 @@
+	Le-Lisp 15.2 : le catalogue de mesure de performances
+	======================================================
+
+
+Ce catalogue contient les fichiers sources et les modules des 
+programmes de mesure de performances de Le-Lisp 15.2
+
+Pour lancer les tests :
+-----------------------
+
+
+% cmplc -cons 24
+...
+?
+? !cd ../benchmarks		super portable ?!?!?
+= t
+?
+? ^Lbenchmarks
+ (do-test)   to run the tests.
+ (do-check)  to check the tests.
+ (do-meter)  to meter the tests.
+= benchmarks
+?
+? (do-test)
+
+Voir aussi lelisp/<system>/recette/dobench
+------------------------------------------
+
+
+Le catalogue benchmarks/Results contient des re'sultats concernant
+un certain nombre de machines de'ja` mesure'es dans la version de 
+Le-Lisp actuelle.
+Le fichier "makeresults.ll" permet de fabriquer le fichier "results.txt"
+lequel contient un re'capitulatif de ces mesures de performances.

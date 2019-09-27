@@ -1,0 +1,141 @@
+;;; GELL 15.26: elaboration file for the module: date
+;;;             translation done: "Thu Jun  24 93 15:51:41 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: date.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'date)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZdate" "Thu Jun  24 93 15:51:41 "
+
+'((week-day-number . subr1) (year-day-number . subr1) (month-length . subr2) (leap-year-p . subr1) (leap-number . subr1) (#:date:make . subr0) (#:date:year . nsubr) (#:date:month . nsubr) (#:date:day . nsubr) (#:date:hour . nsubr) (#:date:minute . nsubr) (#:date:second . nsubr) (#:date:msecond . nsubr) (#:date:week-day . nsubr) (create-date . subr0) (#:date:prin . subr1) (short-string-date . subr1) (datep . subr1))
+
+#[datep errbpa week-day-number leap-number year-day-number modulo <= month-length |+| month-lengths leap-year-p t vector date #:date:year #:system:structaccess #:date:month #:date:day #:date:hour #:date:minute #:date:second #:date:msecond #:date:week-day #:date:erryear #:date:errmonth #:date:errday #:date:errhour #:date:errmin #:date:errsec #:date:errmsec #:date:errwday #:system:print-for-read (#:system:print-for-read) lambda "#:date:#[" " " "]" prin short-string-date short-month-names get-message short-day-names makestring current-language english bltstring slength "00:00:00" #:gell-resetfn:function-name #:gell-resetfn:function-1 #:gell-resetfn:function-2 #:date:make #:gell-resetfn:function-0 #:gell-resetfn:function-n create-date #:date:prin]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'date)))
+(defvar #:sys-package:colon 'date)
+(add-feature 'date)
+(defcsetfn 'week-day-number "GZdate" 0)
+(defcsetfn 'year-day-number "GZdate" 1)
+(defcsetfn 'month-length "GZdate" 2)
+(defcsetfn 'leap-year-p "GZdate" 3)
+(defcsetfn 'leap-number "GZdate" 4)
+(putprop 'date '((() () () () () () () ()) year month day hour minute second msecond week-day) 'defstruct)
+(defcsetfn '#:date:make "GZdate" 5)
+(defcsetfn '#:date:year "GZdate" 6)
+(if (featurep 'setf) (progn (progn (putprop '#:date:year '#:date:year 'setf-inverse) '#:date:year)))
+(if (featurep 'compiler) (progn (defmacro-open #:date:year (struct . valeur) (ifn valeur (list 'vref struct 0) (list 'vset struct 0 (car valeur))))))
+(defcsetfn '#:date:month "GZdate" 7)
+(if (featurep 'setf) (progn (progn (putprop '#:date:month '#:date:month 'setf-inverse) '#:date:month)))
+(if (featurep 'compiler) (progn (defmacro-open #:date:month (struct . valeur) (ifn valeur (list 'vref struct 1) (list 'vset struct 1 (car valeur))))))
+(defcsetfn '#:date:day "GZdate" 8)
+(if (featurep 'setf) (progn (progn (putprop '#:date:day '#:date:day 'setf-inverse) '#:date:day)))
+(if (featurep 'compiler) (progn (defmacro-open #:date:day (struct . valeur) (ifn valeur (list 'vref struct 2) (list 'vset struct 2 (car valeur))))))
+(defcsetfn '#:date:hour "GZdate" 9)
+(if (featurep 'setf) (progn (progn (putprop '#:date:hour '#:date:hour 'setf-inverse) '#:date:hour)))
+(if (featurep 'compiler) (progn (defmacro-open #:date:hour (struct . valeur) (ifn valeur (list 'vref struct 3) (list 'vset struct 3 (car valeur))))))
+(defcsetfn '#:date:minute "GZdate" 10)
+(if (featurep 'setf) (progn (progn (putprop '#:date:minute '#:date:minute 'setf-inverse) '#:date:minute)))
+(if (featurep 'compiler) (progn (defmacro-open #:date:minute (struct . valeur) (ifn valeur (list 'vref struct 4) (list 'vset struct 4 (car valeur))))))
+(defcsetfn '#:date:second "GZdate" 11)
+(if (featurep 'setf) (progn (progn (putprop '#:date:second '#:date:second 'setf-inverse) '#:date:second)))
+(if (featurep 'compiler) (progn (defmacro-open #:date:second (struct . valeur) (ifn valeur (list 'vref struct 5) (list 'vset struct 5 (car valeur))))))
+(defcsetfn '#:date:msecond "GZdate" 12)
+(if (featurep 'setf) (progn (progn (putprop '#:date:msecond '#:date:msecond 'setf-inverse) '#:date:msecond)))
+(if (featurep 'compiler) (progn (defmacro-open #:date:msecond (struct . valeur) (ifn valeur (list 'vref struct 6) (list 'vset struct 6 (car valeur))))))
+(defcsetfn '#:date:week-day "GZdate" 13)
+(if (featurep 'setf) (progn (progn (putprop '#:date:week-day '#:date:week-day 'setf-inverse) '#:date:week-day)))
+(if (featurep 'compiler) (progn (defmacro-open #:date:week-day (struct . valeur) (ifn valeur (list 'vref struct 7) (list 'vset struct 7 (car valeur))))))
+(#:messages:put-message '#:date:erryear 'french '"mauvaise annee" 'defmessage)
+(#:messages:put-message '#:date:erryear 'english '"bad year" 'defmessage)
+'#:date:erryear
+(#:messages:put-message '#:date:errmonth 'french '"mauvais mois" 'defmessage)
+(#:messages:put-message '#:date:errmonth 'english '"bad month" 'defmessage)
+'#:date:errmonth
+(#:messages:put-message '#:date:errday 'french '"mauvais jour" 'defmessage)
+(#:messages:put-message '#:date:errday 'english '"bad day" 'defmessage)
+'#:date:errday
+(#:messages:put-message '#:date:errhour 'french '"mauvaise heure" 'defmessage)
+(#:messages:put-message '#:date:errhour 'english '"bad hour" 'defmessage)
+'#:date:errhour
+(#:messages:put-message '#:date:errmin 'french '"mauvaise minute" 'defmessage)
+(#:messages:put-message '#:date:errmin 'english '"bad minute" 'defmessage)
+'#:date:errmin
+(#:messages:put-message '#:date:errsec 'french '"mauvaise seconde" 'defmessage)
+(#:messages:put-message '#:date:errsec 'english '"bad second" 'defmessage)
+'#:date:errsec
+(#:messages:put-message '#:date:errmsec 'french '"mauvaise milli-seconde" 'defmessage)
+(#:messages:put-message '#:date:errmsec 'english '"bad millisecond" 'defmessage)
+'#:date:errmsec
+(#:messages:put-message '#:date:errwday 'french '"mauvais jour de semaine" 'defmessage)
+(#:messages:put-message '#:date:errwday 'english '"bad day of the week" 'defmessage)
+'#:date:errwday
+(defcsetfn 'create-date "GZdate" 14)
+(defcsetfn '#:date:prin "GZdate" 15)
+(#:messages:put-message '#:date:janv 'french '"janv" 'defmessage)
+(#:messages:put-message '#:date:janv 'english '"Jan" 'defmessage)
+'#:date:janv
+(#:messages:put-message '#:date:fevr 'french '"fevr" 'defmessage)
+(#:messages:put-message '#:date:fevr 'english '"Feb" 'defmessage)
+'#:date:fevr
+(#:messages:put-message '#:date:mars 'french '"mars" 'defmessage)
+(#:messages:put-message '#:date:mars 'english '"Mar" 'defmessage)
+'#:date:mars
+(#:messages:put-message '#:date:avr 'french '"avr" 'defmessage)
+(#:messages:put-message '#:date:avr 'english '"Apr" 'defmessage)
+'#:date:avr
+(#:messages:put-message '#:date:mai 'french '"mai" 'defmessage)
+(#:messages:put-message '#:date:mai 'english '"May" 'defmessage)
+'#:date:mai
+(#:messages:put-message '#:date:juin 'french '"juin" 'defmessage)
+(#:messages:put-message '#:date:juin 'english '"Jun" 'defmessage)
+'#:date:juin
+(#:messages:put-message '#:date:juil 'french '"juil" 'defmessage)
+(#:messages:put-message '#:date:juil 'english '"Jul" 'defmessage)
+'#:date:juil
+(#:messages:put-message '#:date:aout 'french '"aout" 'defmessage)
+(#:messages:put-message '#:date:aout 'english '"Aug" 'defmessage)
+'#:date:aout
+(#:messages:put-message '#:date:sept 'french '"sept" 'defmessage)
+(#:messages:put-message '#:date:sept 'english '"Sep" 'defmessage)
+'#:date:sept
+(#:messages:put-message '#:date:oct 'french '"oct" 'defmessage)
+(#:messages:put-message '#:date:oct 'english '"Oct" 'defmessage)
+'#:date:oct
+(#:messages:put-message '#:date:nov 'french '"nov" 'defmessage)
+(#:messages:put-message '#:date:nov 'english '"Nov" 'defmessage)
+'#:date:nov
+(#:messages:put-message '#:date:dec 'french '"dec" 'defmessage)
+(#:messages:put-message '#:date:dec 'english '"Dec" 'defmessage)
+'#:date:dec
+(defvar short-month-names '((1 . #:date:janv) (2 . #:date:fevr) (3 . #:date:mars) (4 . #:date:avr) (5 . #:date:mai) (6 . #:date:juin) (7 . #:date:juil) (8 . #:date:aout) (9 . #:date:sept) (10 . #:date:oct) (11 . #:date:nov) (12 . #:date:dec)))
+(#:messages:put-message '#:date:lun 'french '"lun" 'defmessage)
+(#:messages:put-message '#:date:lun 'english '"Mon" 'defmessage)
+'#:date:lun
+(#:messages:put-message '#:date:mar 'french '"mar" 'defmessage)
+(#:messages:put-message '#:date:mar 'english '"Tue" 'defmessage)
+'#:date:mar
+(#:messages:put-message '#:date:mer 'french '"mer" 'defmessage)
+(#:messages:put-message '#:date:mer 'english '"Wed" 'defmessage)
+'#:date:mer
+(#:messages:put-message '#:date:jeu 'french '"jeu" 'defmessage)
+(#:messages:put-message '#:date:jeu 'english '"Thu" 'defmessage)
+'#:date:jeu
+(#:messages:put-message '#:date:ven 'french '"ven" 'defmessage)
+(#:messages:put-message '#:date:ven 'english '"Fri" 'defmessage)
+'#:date:ven
+(#:messages:put-message '#:date:sam 'french '"sam" 'defmessage)
+(#:messages:put-message '#:date:sam 'english '"Sat" 'defmessage)
+'#:date:sam
+(#:messages:put-message '#:date:dim 'french '"dim" 'defmessage)
+(#:messages:put-message '#:date:dim 'english '"Sun" 'defmessage)
+'#:date:dim
+(defvar short-day-names '((1 . #:date:lun) (2 . #:date:mar) (3 . #:date:mer) (4 . #:date:jeu) (5 . #:date:ven) (6 . #:date:sam) (7 . #:date:dim)))
+(defvar month-lengths '((1 . 31) (2 . 28) (3 . 31) (4 . 30) (5 . 31) (6 . 30) (7 . 31) (8 . 31) (9 . 30) (10 . 31) (11 . 30) (12 . 31)))
+(defcsetfn 'short-string-date "GZdate" 16)
+(defcsetfn 'datep "GZdate" 17)
+
+(defccheck '(slength bltstring current-language makestring get-message short-string-date prin week-day-number date #:system:structaccess vector leap-year-p |+| month-length <= modulo year-day-number leap-number datep))

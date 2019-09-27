@@ -1,0 +1,12 @@
+defmodule complice
+import (files module loader peephole)
+
+;;; Added automatically, don't type beyond this line.
+cpexport
+()
+cpfunctions
+()
+cpimport
+()
+cpenv
+(files module fasl messages loader)

@@ -1,0 +1,9 @@
+; Standard Le-Lisp with compiler
+(load-std () t t t t t)
+; for warnings
+(debug t)
+(add-feature (if (eq 0.0 0.0)
+		 '31BITFLOATS
+		 '64BITFLOATS))
+(llcp-std #:system:name)
+

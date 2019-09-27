@@ -1,0 +1,20 @@
+
+#!/bin/sh
+set -x
+
+# Recette officielle de Le-Lisp standard.
+date
+cd ..
+rm -f letestextbin
+make letestextbin
+ ./letestextbin -stack 6 -code 750 -heap 300 -number 0 -vector 4 -string 8  -symbol 7 -cons 24 -float 0 \
+	../llib/startup.ll <<Eoi
+(load-std  () t t t t t)
+(debug t)
+(llcp-std ())
+(debug ())
+(libload "recette")
+Eoi
+
+date
+

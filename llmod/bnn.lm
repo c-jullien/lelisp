@@ -1,0 +1,77 @@
+defmodule
+n
+files (
+bnn
+)
+export (
+bniszero
+bncompare
+bnnumbitsindigit
+bnnumbits
+bndivide
+bnmultiply
+bnmultiplyplain
+bnmultiplykaratsuba
+bnkaraswitch
+#:n:boot
+)
+import (
+bnkern
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(bniszero subr3 ())
+(bncompare nsubr ())
+(bnnumbitsindigit subr2 ())
+(bnnumbits subr3 ())
+(bndivide nsubr ())
+(bnmultiply nsubr ())
+(bnmultiplyplain nsubr ())
+(bnmultiplykaratsuba nsubr ())
+(bnkaraswitch subr1 ())
+(#:n:boot subr0 ())
+)
+cpfunctions (
+(ndivide nsubr)
+(#:n:entretampon subr3)
+(b+b*b_kara nsubr)
+(fix->n subr2)
+)
+cpimport (
+(bnkern
+(bnnumdigits . subr3)
+(bnisdigitzero . subr2)
+(bncomparedigits . nsubr)
+(bnnumleadingzerobitsindigit . subr2)
+(bndividedigit . nsubr)
+(bnshiftleft . nsubr)
+(bnassign . nsubr)
+(bncomplement . subr3)
+(bnaddcarry . nsubr)
+(bnmultiplydigit . nsubr)
+(bnadd . nsubr)
+(bnshiftright . nsubr)
+(bngetsize . subr1)
+(bncreate . subr2)
+(bnsettozero . subr3)
+(bnsubtract . nsubr)
+(bnsetdigit . subr3)
+))
+cpenv (
+bnkern
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:n:c0 't '#:complice:globalvar)
+)((putprop '#:n:c-1 't '#:complice:globalvar)
+)((putprop '#:n:creg 't '#:complice:globalvar)
+)((defvar #:n:c0)
+(defvar #:n:c-1)
+(defvar #:n:creg)
+)((putprop '#:n:qapp 't '#:complice:globalvar)
+)((putprop '#:n:cdiv 't '#:complice:globalvar)
+)((putprop '#:n:ntampon 't '#:complice:globalvar)
+)((putprop 'bn_kara_limit 't '#:complice:globalvar)
+)((putprop 'bn_max_size_divided_by_two 't '#:complice:globalvar)
+))

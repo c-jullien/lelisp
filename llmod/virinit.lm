@@ -1,0 +1,215 @@
+defmodule
+display
+files (
+|virinit.ll|
+)
+export (
+inibitmap
+bitprologue
+#:display:bitprologue
+bitepilogue
+#:display:bitepilogue
+bitmap-save
+bitmap-restore
+bitxmax
+bitymax
+root-window
+bitmap-refresh
+bitmap-flush
+bitmap-sync
+standard-roman-font
+standard-bold-font
+large-roman-font
+small-roman-font
+standard-foreground-pattern
+standard-background-pattern
+standard-medium-gray-pattern
+standard-light-gray-pattern
+standard-dark-gray-pattern
+standard-lelisp-cursor
+standard-gc-cursor
+standard-busy-cursor
+standard-foreground
+standard-background
+#:display:bitmap-save
+#:display:bitmap-restore
+#:display:current-display
+#:display:prin
+display-get-selection
+display-store-selection
+#:display:get-selection
+#:display:store-selection
+display-depth
+#:display:display-depth
+#:display:bitmap-refresh
+#:display:bitmap-flush
+#:display:bitmap-sync
+#:display:standard-roman-font
+#:display:standard-bold-font
+#:display:large-roman-font
+#:display:small-roman-font
+#:display:standard-foreground-pattern
+#:display:standard-background-pattern
+#:display:standard-medium-gray-pattern
+#:display:standard-light-gray-pattern
+#:display:standard-dark-gray-pattern
+#:display:standard-lelisp-cursor
+#:display:standard-gc-cursor
+#:display:standard-busy-cursor
+display-synchronize
+#:display:synchronize
+default-window-type
+#:display:default-window-type
+)
+import (
+files ;pour loadfile
+virutil
+virbit
+virwindow
+virgraph
+virevent
+vircolor
+virmenu
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(inibitmap nsubr ())
+(bitprologue nsubr ())
+(#:display:bitprologue nsubr ())
+(bitepilogue nsubr ())
+(#:display:bitepilogue nsubr ())
+(bitmap-save nsubr ())
+(standard-roman-font nsubr ())
+(standard-bold-font nsubr ())
+(large-roman-font nsubr ())
+(small-roman-font nsubr ())
+(bitmap-restore subr1 ())
+(root-window nsubr ())
+(standard-foreground subr0 ())
+(standard-background subr0 ())
+(bitxmax nsubr ())
+(bitymax nsubr ())
+(bitmap-refresh nsubr ())
+(bitmap-flush nsubr ())
+(bitmap-sync nsubr ())
+(standard-foreground-pattern nsubr ())
+(standard-background-pattern nsubr ())
+(standard-medium-gray-pattern nsubr ())
+(standard-light-gray-pattern nsubr ())
+(standard-dark-gray-pattern nsubr ())
+(standard-lelisp-cursor nsubr ())
+(standard-gc-cursor nsubr ())
+(standard-busy-cursor nsubr ())
+(#:display:bitmap-save subr1 ())
+(#:display:bitmap-restore subr1 ())
+(#:display:current-display subr1 ())
+(#:display:prin subr1 ())
+(display-get-selection subr1 ())
+(display-store-selection subr2 ())
+(#:display:get-selection subr1 ())
+(#:display:store-selection subr2 ())
+(display-depth subr1 ())
+(#:display:display-depth nsubr ())
+(#:display:bitmap-refresh nsubr ())
+(#:display:bitmap-flush nsubr ())
+(#:display:bitmap-sync nsubr ())
+(#:display:standard-roman-font nsubr ())
+(#:display:standard-bold-font nsubr ())
+(#:display:large-roman-font nsubr ())
+(#:display:small-roman-font nsubr ())
+(#:display:standard-foreground-pattern nsubr ())
+(#:display:standard-background-pattern nsubr ())
+(#:display:standard-medium-gray-pattern nsubr ())
+(#:display:standard-light-gray-pattern nsubr ())
+(#:display:standard-dark-gray-pattern nsubr ())
+(#:display:standard-lelisp-cursor nsubr ())
+(#:display:standard-gc-cursor nsubr ())
+(#:display:standard-busy-cursor nsubr ())
+(display-synchronize nsubr ())
+(#:display:synchronize nsubr ())
+(default-window-type nsubr ())
+(#:display:default-window-type nsubr ())
+)
+cpfunctions (
+(#:display:do-close subr1)
+(#:display:save-a-display subr1)
+(#:display:save-colortable subr1)
+(#:display:restore-a-display subr1)
+(#:display:exchange-and-subst subr3)
+(#:display:recreate-windows subr2)
+(#:display:recreate-menus subr2)
+)
+cpimport (
+(files
+(loadfile . subr2)
+)(virutil
+(current-display . nsubr)
+)(vircolor
+(make-named-color . subr1)
+(make-mutable-color . subr3)
+(make-color . subr3)
+)(virgraph
+(font-name . subr1)
+(create-stipple . subr3)
+(load-font . subr1)
+(make-pattern . subr1)
+(make-cursor . nsubr)
+(make-named-cursor . subr1)
+(current-font . nsubr)
+(current-line-style . nsubr)
+(current-pattern . nsubr)
+(current-mode . nsubr)
+(current-foreground . nsubr)
+(current-background . nsubr)
+(current-clip . nsubr)
+(current-cursor . nsubr)
+)(virbit
+(#:bitmap:bytes . nsubr)
+(create-bytemap . nsubr)
+(create-bitmap . nsubr)
+(bitblit . nsubr)
+(kill-bitmap . subr1)
+(window-bitmap . subr1)
+)(virmenu
+(create-menu . nsubr)
+(menu-insert-item-list . nsubr)
+(menu-insert-item . nsubr)
+)(virwindow
+(check-window-position . subr1)
+(current-window . nsubr)
+(windowp . subr1)
+(make-window . subr1)
+(current-keyboard-focus-window . nsubr)
+)(virevent
+(flush-event . subr0)
+(event-mode . nsubr)
+))
+cpenv (
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+((putprop '#:sys-package:bitmap 't '#:complice:globalvar)
+)((putprop '#:bitmap:name 't '#:complice:globalvar)
+)((putprop '#:display:default-bitmap 't '#:complice:globalvar)
+)((putprop '#:display:all-bitmaps 't '#:complice:globalvar)
+)((putprop '#:display:all-displays 't '#:complice:globalvar)
+)((putprop '#:window:prologuep 't '#:complice:globalvar)
+)((putprop '#:graph-env:main-graph-env 't '#:complice:globalvar)
+)((putprop '#:mode:set 't '#:complice:globalvar)
+)((putprop '#:mode:or 't '#:complice:globalvar)
+)((putprop '#:mode:xor 't '#:complice:globalvar)
+)((putprop '#:mode:not 't '#:complice:globalvar)
+)((putprop '#:graph-env:current-graph-env 't '#:complice:globalvar)
+)((putprop '#:graph-env:main-graph-env 't '#:complice:globalvar)
+)((putprop '#:window:prologuep 't '#:complice:globalvar)
+))

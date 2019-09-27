@@ -1,0 +1,1043 @@
+This is TeX, C Version 3.14t3 (format=lplain 93.4.28)  26 SEP 1994 14:46
+**&lplain analyzer
+(analyzer.tex
+LaTeX Version 2.09 <7 Dec 1989>
+(/nfs/ishare/lib/TEX3.14/localinputs/ibook.sty
+(/nfs/ishare/lib/TEX3.14/inputs/book.sty
+Document Style `book' <24 Nov 89>.
+(/nfs/ishare/lib/TEX3.14/inputs/bk11.sty)
+\descriptionmargin=\dimen99
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/verbatim.sty
+Style-Option: `verbatim' v1.4i <92/01/20> (RmS)
+English Documentation          <91/12/18> (RmS)
+\every@verbatim=\toks11
+\verbatim@line=\toks12
+\every@smallverbatim=\toks13
+\smallverbatim@line=\toks14
+) (/nfs/ishare/lib/TEX3.14/localinputs/cartouche.sty
+\circthick=\dimen100
+\cartouter=\dimen101
+\cartinner=\dimen102
+\normbskip=\skip41
+\normpskip=\skip42
+\normlskip=\skip43
+\lskip=\skip44
+\rskip=\skip45
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/oldverb.sty)
+(/nfs/ishare/lib/TEX3.14/localinputs/compat.sty
+Compatibilite' Ilogtex
+(/nfs/ishare/lib/TEX3.14/localinputs/epsf.tex
+\epsffilein=\read0
+\epsfxsize=\dimen103
+\epsfysize=\dimen104
+\epsftsize=\dimen105
+\epsfrsize=\dimen106
+\epsftmp=\dimen107
+\pspoints=\dimen108
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/oldfunc.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/common.sty
+Common macros
+\c@CodeLine=\count88
+\epsftranslate=\dimen109
+\chgbarwidth=\dimen110
+\chgbarsep=\dimen111
+\@chgbarbegin=\dimen112
+(/nfs/ishare/lib/TEX3.14/localinputs/versions.sty)
+\@functiontranslate=\dimen113
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/ilonames.sty)
+(/nfs/ishare/lib/TEX3.14/localinputs/skycompat.sty
+Compatibilite' SkyStyle
+\MyLength=\skip46
+\MarginBox=\box25
+\DescBox=\box26
+\c@CaptionCounter=\count89
+\c@LineNumber=\count90
+) (/nfs/ishare/lib/TEX3.14/localinputs/nilog.sty
+\@translate=\dimen114
+\@headertranslate=\dimen115
+\@nilogbox=\dimen116
+
+(/nfs/ishare/lib/TEX3.14/localinputs/longcode.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/ilogindex.sty indexing version 2.2,
+\initialskipamount=\skip47
+
+Writing index file analyzer.ix 
+\ixindfile=\write3
+) (/nfs/ishare/lib/TEX3.14/localinputs/nindex.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/fr.sty)
+(/nfs/ishare/lib/TEX3.14/inputs/verbatimfiles.sty
+\c@lineno=\count91
+) (analyzer.aux)
+LaTeX Warning: No \sf typeface in this size, using \rm.
+[1
+
+
+] [2
+
+] (analyzer.toc [3])
+\tf@toc=\write4
+ (ch1.tex [4]
+Chapitre 1.
+[5
+
+] [6] [7] [8] [9] [10] [11] [12] [13] [14]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 697--697
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 699--699
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 717--717
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 719--719
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[15] [16] [17]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 893--893
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 895--895
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 897--897
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 899--899
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 903--903
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 905--905
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+) (ch2.tex [18] [19] [20
+
+]
+Chapitre 2.
+[21]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 109--109
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 111--111
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[22]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 126--126
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 133--133
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 135--144
+[]|  []|  []  
+
+\hbox(7.60416+38.63335)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 156--156
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 160--160
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 162--167
+[]|  []|  [] 
+
+\hbox(7.60416+27.20001)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 167--167
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 174--174
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[23]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 195--195
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 203--203
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 208--208
+[]|  []  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -55.0
+.\glue 0.0
+.etc.
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 218--218
+[]|  []  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -55.0
+.\glue 0.0
+.etc.
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 223--230
+[]|  []|  []  
+
+\hbox(7.60416+29.32918)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+[24] [25] [26] [27] [28]
+Overfull \hbox (12.40814pt too wide) in paragraph at lines 456--456
+[]\elvtt ? (sh-analyze -load myproject.prj -project myproject -update mymod.lm)
+[] 
+
+\hbox(7.60416+2.43333)x390.0
+.\hbox(0.0+0.0)x0.0
+.\elvtt ?
+.\penalty 10000
+.\glue 5.74869
+.\elvtt (
+.etc.
+
+[29] [30]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 581--585
+[]|  []|  []  
+
+\hbox(7.60416+15.72917)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 602--615
+[]|  []|  []  
+
+\hbox(7.60416+93.03337)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+[31] [32] [33] [34] [35] [36] [37] [38]
+Overfull \hbox (6.24611pt too wide) in paragraph at lines 1074--1075
+[]  \tentt ===== STEP 4 : updating module description : #p"/usr/ilog/lelisp/tes
+t/lm/product.lm"[] 
+
+\hbox(6.94444+2.22223)x390.0
+.\hbox(0.0+0.0)x0.0
+.\glue -50.0
+.\glue 5.24995
+.\tentt =
+.\tentt =
+.etc.
+
+) (ch3.tex [39] [40
+
+]
+Chapitre 3.
+[41] [42] [43]) (ch4.tex [44]
+Chapitre 4.
+[45
+
+] [46] [47] [48]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 267--267
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 270--270
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[49] [50] [51]) (ch5.tex [52]
+Chapitre 5.
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 26--26
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 29--29
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[53
+
+]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 52--52
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 58--58
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 62--62
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 69--69
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 73--73
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 82--82
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 98--98
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 105--105
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[54]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 109--109
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 117--117
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 137--137
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 144--144
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[55]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 151--151
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 154--154
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 157--157
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 163--163
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 170--170
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 173--173
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 198--198
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 206--206
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[56] [57]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 291--297
+[]|  []|  []  
+
+\hbox(7.60416+29.32918)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 315--315
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 322--322
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[58]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 337--345
+[]|  []|  []  
+
+\hbox(7.60416+40.80002)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 375--375
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 379--379
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 389--389
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 391--391
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[59]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 417--422
+[]|  []|  []  
+
+\hbox(7.60416+27.20001)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+[60]
+Overfull \hbox (10.0pt too wide) in paragraph at lines 525--531
+[]|  []|  []  
+
+\hbox(7.60416+15.72917)x380.0
+.\hbox(0.0+0.0)x0.0
+.\rule(*+*)x0.0
+.\penalty 10000
+.\glue -130.0
+.\glue 0.0
+.etc.
+
+[61] [62] [63]) (ch6.tex [64]
+Chapitre 6.
+
+Overfull \hbox (12.40814pt too wide) in paragraph at lines 37--37
+[]\elvtt ? (sh-analyze -load myproject.prj -project myproject -update mymod.lm)
+[] 
+
+\hbox(7.60416+2.43333)x390.0
+.\hbox(0.0+0.0)x0.0
+.\elvtt ?
+.\penalty 10000
+.\glue 5.74869
+.\elvtt (
+.etc.
+
+
+Overfull \hbox (12.40814pt too wide) in paragraph at lines 46--46
+[]\elvtt ? (sh-analyze -load myproject.prj -project myproject -update mymod.lm)
+[] 
+
+\hbox(7.60416+2.43333)x390.0
+.\hbox(0.0+0.0)x0.0
+.\elvtt ?
+.\penalty 10000
+.\glue 5.74869
+.\elvtt (
+.etc.
+
+[65
+
+] [66] [67] [68] [69] [70]) (anx1.tex [71] [72
+
+]
+Appendix A.
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 15--15
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 18--18
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 20--20
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 23--23
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 25--25
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+
+Overfull \hbox (10.0pt too wide) in paragraph at lines 31--31
+[][]  
+
+\hbox(0.4+0.0)x380.0
+.\hbox(0.0+0.0)x0.0
+.\hbox(0.4+0.0)x390.0
+..\rule(0.4+0.0)x390.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0 plus 1.0fil
+
+[73] [74] [75] [76] [77] [78] [79] [80] [81] [82]) (anx2.tex [83] [84
+
+]
+Appendix B.
+
+Overfull \hbox (16.74602pt too wide) in paragraph at lines 36--37
+[] []  \tentt #:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-objec
+t:point):ge-contains?[] 
+
+\hbox(6.94444+2.22223)x390.0
+.\hbox(0.0+0.0)x0.0
+.\glue 0.0
+.\hbox(0.0+0.0)x0.0
+..\glue 0.0
+..\glue 0.0
+..\glue -5.475
+..\hbox(0.0+0.0)x0.0
+..\glue 5.475
+.\penalty 0
+.\glue -50.0
+.etc.
+
+[85] [86]
+Overfull \hbox (0.91077pt too wide) in paragraph at lines 138--138
+[] []\elvtt ** W.104 : parent structure package unknown-abbrev not found for : 
+{[] 
+
+\hbox(7.60416+2.43333)x390.0
+.\hbox(0.0+0.0)x0.0
+.\glue 0.0
+.\hbox(0.0+0.0)x0.0
+..\glue 0.0
+..\glue 0.0
+..\glue -5.475
+..\hbox(0.0+0.0)x0.0
+..\glue 5.475
+.\penalty 0
+.\elvtt *
+.etc.
+
+[87]) [88]
+Appendix C.
+(analyzer.lot.s
+Overfull \hbox (31.45946pt too wide) in paragraph at lines 3--3
+ [][] \twltt (analyze \elvtt mod prj [output exports files imports includes]\tw
+ltt )   \tenrm [\tenit fonction 
+
+\hbox(8.33331+2.66666)x390.0, glue set - 1.0
+.\glue(\leftskip) 41.61012
+.\hbox(0.0+0.0)x16.42503
+.\hbox(0.0+0.0)x0.0
+.\glue -41.61012
+.\twltt (
+.etc.
+
+) [89
+
+] (analyzer.aux) ) 
+Here is how much of TeX's memory you used:
+ 942 strings out of 4463
+ 9342 string characters out of 63221
+ 58970 words of memory out of 262141
+ 2809 multiletter control sequences out of 9500
+ 20119 words of font info for 76 fonts, out of 72000 for 255
+ 14 hyphenation exceptions out of 607
+ 18i,6n,17p,449b,425s stack positions out of 300i,40n,60p,3000b,4000s
+
+Output written on analyzer.dvi (89 pages, 241284 bytes).

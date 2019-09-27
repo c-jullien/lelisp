@@ -1,0 +1,46 @@
+;;; GELL 15.26: elaboration file for the module: x11draw
+;;;             translation done: "Tue Aug  24 93 10:48:21 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: x11draw.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'x11draw)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZx11draw" "Tue Aug  24 93 10:48:21 "
+
+'((#:display:x11:draw-cursor . nsubr) (#:display:x11:draw-substring . nsubr) (#:display:x11:draw-cn . nsubr) (#:display:x11:draw-substring-nobackground . nsubr) (#:display:x11:draw-cn-nobackground . nsubr) (#:display:x11:draw-point . nsubr) (#:display:x11:draw-line . nsubr) (#:display:x11:draw-rectangle . nsubr) (#:display:x11:draw-arc . nsubr) (#:display:x11:draw-ellipse . nsubr) (#:display:x11:draw-circle . nsubr) (#:display:x11:fill-rectangle . nsubr) (#:display:x11:highlight-rectangle . nsubr) (#:display:x11:fill-arc . nsubr) (#:display:x11:fill-ellipse . nsubr) (#:display:x11:fill-circle . nsubr) (#:display:x11:fill-area . nsubr) (#:display:x11:draw-polyline . nsubr) (#:display:x11:draw-polymarker . nsubr) (#:display:x11:draw-segments . nsubr) (#:display:x11:draw-rectangles . nsubr) (#:display:x11:fill-rectangles . nsubr))
+
+#[#:display:x11:draw-cursor #:llcp:errwna x-base-space x11_set_foreground opaque x11_draw_line #:display:x11:draw-substring #:mode:set x11_draw_image_string x11_draw_string #:display:x11:draw-cn "X" chrset #:display:x11:draw-substring-nobackground #:display:x11:draw-cn-nobackground #:display:x11:draw-point x11_draw_point #:display:x11:draw-line #:display:x11:draw-rectangle x11_draw_rectangle #:display:x11:draw-arc x11_draw_arc #:display:x11:draw-ellipse #:display:x11:draw-circle #:display:x11:fill-rectangle pattern x11_fill_rectangle #:display:x11:highlight-rectangle current-mode #:mode:xor x11_set_mode (255 . -1) x11_set_planemask #:display:x11:fill-arc x11_fill_arc #:display:x11:fill-ellipse #:display:x11:fill-circle #:display:x11:fill-area x11_fill_area #:display:x11:draw-polyline x11_draw_lines #:display:x11:draw-polymarker x11_draw_points #:display:x11:draw-segments x11_draw_segments #:display:x11:draw-rectangles #:display:x11:vx #:display:x11:vy #:display:x11:vw #:display:x11:vh x11_draw_rectangles #:display:x11:fill-rectangles x11_fill_rectangles #:gell-resetfn:function-name #:gell-resetfn:function-n]
+)
+
+(defvar #:sys-package:colon '#:display:x11)
+(defcsetfn '#:display:x11:draw-cursor "GZx11draw" 0)
+(defcsetfn '#:display:x11:draw-substring "GZx11draw" 1)
+(defcsetfn '#:display:x11:draw-cn "GZx11draw" 2)
+(defcsetfn '#:display:x11:draw-substring-nobackground "GZx11draw" 3)
+(defcsetfn '#:display:x11:draw-cn-nobackground "GZx11draw" 4)
+(defcsetfn '#:display:x11:draw-point "GZx11draw" 5)
+(defcsetfn '#:display:x11:draw-line "GZx11draw" 6)
+(defcsetfn '#:display:x11:draw-rectangle "GZx11draw" 7)
+(defcsetfn '#:display:x11:draw-arc "GZx11draw" 8)
+(defcsetfn '#:display:x11:draw-ellipse "GZx11draw" 9)
+(defcsetfn '#:display:x11:draw-circle "GZx11draw" 10)
+(defcsetfn '#:display:x11:fill-rectangle "GZx11draw" 11)
+(defcsetfn '#:display:x11:highlight-rectangle "GZx11draw" 12)
+(defcsetfn '#:display:x11:fill-arc "GZx11draw" 13)
+(defcsetfn '#:display:x11:fill-ellipse "GZx11draw" 14)
+(defcsetfn '#:display:x11:fill-circle "GZx11draw" 15)
+(defvar #:display:x11:vx #[0])
+(defvar #:display:x11:vy #[0])
+(defvar #:display:x11:vw #[0])
+(defvar #:display:x11:vh #[0])
+(defcsetfn '#:display:x11:fill-area "GZx11draw" 16)
+(defcsetfn '#:display:x11:draw-polyline "GZx11draw" 17)
+(defcsetfn '#:display:x11:draw-polymarker "GZx11draw" 18)
+(defcsetfn '#:display:x11:draw-segments "GZx11draw" 19)
+(defcsetfn '#:display:x11:draw-rectangles "GZx11draw" 20)
+(defcsetfn '#:display:x11:fill-rectangles "GZx11draw" 21)
+
+(defccheck '(x11_fill_rectangles x11_draw_rectangles x11_draw_segments x11_draw_points x11_draw_lines x11_fill_area x11_fill_arc x11_set_planemask x11_set_mode current-mode x11_fill_rectangle x11_draw_arc x11_draw_rectangle x11_draw_point #:display:x11:draw-substring-nobackground #:display:x11:draw-substring chrset x11_draw_string x11_draw_image_string x11_draw_line x11_set_foreground x-base-space #:llcp:errwna))

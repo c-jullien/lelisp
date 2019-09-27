@@ -1,0 +1,964 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "2/19" "toperr.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 2 "Toplevel et Erreurs"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/toperr.llm3,v 1.2 2016/05/21 09:16:58 jullien Exp $
+
+          TITLE     TOPERR              ; LLM3 : toplevel et erreurs.
+
+          XREFP     LLINIT,LLSYSTEM     ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.ITSOFT
+          XREFP     LLINIT,ITSOFT
+          XREFI     LLINIT,.LLSYSTEM
+          XREFP     LLINIT,REENTER
+          XREFI     LLINIT,ITSTATE
+          XREFI     LLINIT,BSTACK
+          XREFI     LLINIT,MSTACK
+          XREFI     LLINIT,MSTACK1
+          XREFI     LLINIT,MSTACK2
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFI     READ,CPKGC
+          XREFI     READ,BUFAT
+          XREFP     READ,TRYATOM
+          XREFP     READ,LREAD
+          XREFP     PRINT,PROBJ         ; 7 - PRINT
+          XREFP     PRINT,PROBJT
+          XREFP     PRINT,U_PRINT
+          XREFI     EVAL,DLINK          ; 8 - EVAL
+          XREFP     EVAL,FINDTAG
+          XREFP     EVAL,EVAL
+          XREFP     EVAL,EVALA1
+          XREFP     EVAL,SYSPROT
+          XREFI     EVAL,SAVEA4
+          XREFP     EVAL,UNBIND0
+          XREFP     EVAL,UNBIND1
+          XREFP     EVAL,UNBIND2
+          XREFP     EVAL,UNBIND3
+          XREFP     EVAL,UNBIND4
+          XREFP     EVAL,UNBIND5
+          XREFP     EVAL,UNBIND6
+          XREFP     EVAL,UNBIND7
+          XREFP     EVAL,UNBIND8
+          XREFP     EVAL,UNBIND9
+          XREFP     EVAL,UNBIND10
+          XREFP     EVAL,EVPROGN
+          XREFP     EVAL,EVPROGNR
+          XREFI     EVAL,.EVAL
+          XREFP     FNTSTD,NREVERSE     ; 13 - FNTSTD
+          XREFP     SPECNB,FLDIFF       ; 15 - SPECNB
+          XREFP     STRING,STRINGA1     ; 16 - STRING
+          XREFP     STRING,MAKEVECT
+          XREFP     BLLSHT,LOC          ; 19 - BLLSHT
+          XREFP     BLLSHT,VAGA1
+
+          XDEFP     INI_TOP
+          XDEFP     SYSTOP
+          XDEFI     .SYSERROR
+          XDEFI     .PRTMSGS
+          XDEFI     .PRTFLTL
+          XDEFP     ERRFS
+          XDEFP     ERRFN
+          XDEFP     ERRFSGC
+          XDEFP     ERRES
+          XDEFP     ERRFF
+          XDEFP     ERRFSP
+          XDEFP     ERRFR
+          XDEFP     ERRFV
+          XDEFP     ERRFH
+          XDEFP     ERR0DV
+          XDEFP     ERRATO
+          XDEFP     ERRFM
+          XDEFP     ERRUDV
+          XDEFP     ERRUDF
+          XDEFP     ERRUDM
+          XDEFP     ERRUDT
+          XDEFP     ERRBPA
+          XDEFP     ERRBAL
+          XDEFP     ERRWNA
+          XDEFP     ERRILB
+          XDEFP     ERRNAA
+          XDEFP     ERRNNA
+          XDEFP     ERRNIA
+          XDEFP     ERRNFA
+          XDEFP     ERRNSA
+          XDEFP     ERRNLA
+          XDEFP     ERRVEC
+          XDEFP     ERRSYM
+          XDEFP     ERRNVA
+          XDEFP     ERRNDA
+          XDEFP     ERRSTC
+          XDEFP     ERRSTL
+          XDEFP     ERRBDF
+          XDEFP     ERROOB
+          XDEFP     ERRIOS
+          XDEFP     ERRSXT
+          XDEFP     ERRGEN
+          XDEFP     ERRNAB
+          XDEFP     ERRXIA
+          XDEFI     .SYSDEBUG
+          XDEFI     .LSUBR0
+          XDEFI     .LSUBR1
+          XDEFI     .LSUBR2
+          XDEFI     .LSUBR3
+          XDEFI     .NLSUBR
+          XDEFI     .FLSUBR
+          XDEFI     .LLEXPR
+          XDEFI     .LLFEXPR
+          XDEFI     .LLMACRO
+          XDEFI     .LLDMACRO
+          XDEFI     .LLMSUBR
+          XDEFI     .LLDMSUBR
+          XDEFI     .MOUSE
+          XDEFP     LLBREAK
+          XDEFP     LLPANIC
+          XDEFP     LLMERRO
+          XDEFP     LLMOUSE
+          XDEFP     LLCLOCK
+          XDEFP     GETSETN
+
+          PURE
+;
+;         INI_TOP : initialise les constantes systeme
+;         ===========================================
+;
+
+INI_TOP   LABEL      
+
+          MAKCST    LSUBR0,#5,"subr0" 
+          MAKCST    LSUBR1,#5,"subr1" 
+          MAKCST    LSUBR2,#5,"subr2" 
+          MAKCST    LSUBR3,#5,"subr3" 
+          MAKCST    NLSUBR,#5,"nsubr" 
+          MAKCST    FLSUBR,#5,"fsubr" 
+          MAKCST    LLEXPR,#4,"expr" 
+          MAKCST    LLFEXPR,#5,"fexpr" 
+          MAKCST    LLMACRO,#5,"macro" 
+          MAKCST    LLDMACRO,#6,"dmacro" 
+          MAKCST    LLMSUBR,#5,"msubr" 
+          MAKCST    LLDMSUBR,#6,"dmsubr" 
+
+          MAKFNT    TOPLEVEL,#8,"toplevel" 
+
+          MOV       .LLSYSTEM,CPKGC     ; dans le package systeme
+          MAKCST    STATOPLEVEL,#13,"toplevel-flag"
+          MOV       .T,CVAL(A1)         ; init status a T (speak)
+          MAKCST    PRTMSGS,#10,"print-msgs"
+          MOV       #1,CVAL(A1)         ; <> 0 => msgs
+          MAKCST    PRTFLTL,#12,"length-float"
+          MOV       #3,CVAL(A1)         ; 3 digits apres la virgule
+          MAKCST    FATALERROR,#9,"error-tag" ; #:system:error-tag
+
+          MOVNIL    CPKGC               ; retour au package ||
+          MAKFNT    RUNT,#7,"runtime" 
+          MAKFNT    LLSLEEP,#5,"sleep" 
+          MAKFNT    LLDATE,#4,"date"
+          MAKFNT    CLKALARM,#10,"clockalarm"
+          MAKFNT    WITHIT,#15,"with-interrupts"
+          MAKFNT    WITHNOIT,#18,"without-interrupts"
+          MAKFNT    LLTIME,#4,"time"
+          MAKFNT    LLSHWSTK,#10,"stack-info"
+          MAKFNT    LLCLINE,#7,"comline" 
+          MAKFNT    LLGETENV,#6,"getenv" 
+          MAKFNT    LLGETADR,#9,"getglobal" 
+          MAKFNT    LLCALLX,#10,"callextern" 
+          MAKFNT    CSTACK,#6,"cstack" 
+          MAKFNT    SYSERROR,#8,"syserror" 
+          MAKFNT    LERROR,#5,"error"
+          MAKFNT    SYSDEBUG,#8,"sysdebug" 
+          MOVNIL    CVAL(A1)
+          MAKCST    MSERROR,#3,"** "
+          MAKCST    COLON,#3," : "
+
+          MAKCST    ERRFSTK,#7,"errfstk"
+          MAKCST    ERRFSGC,#7,"errfsgc"
+          MAKCST    ERRFSUD,#7,"errfsud"
+          MAKCST    ERRFPGC,#7,"errfpgc"
+          MAKCST    ERRFSYM,#7,"errfsym"
+          MAKCST    ERRFCNS,#7,"errfcns"
+          MAKCST    ERRFFLT,#7,"errfflt"
+          MAKCST    ERRFFIX,#7,"errffix"
+          MAKCST    ERRFHEP,#7,"errfhep"
+          MAKCST    ERRFSTR,#7,"errfstr"
+          MAKCST    ERRFVEC,#7,"errfvec"
+
+          MAKCST    ERRMAC,#6,"errmac"
+          MAKCST    ERRUDV,#6,"errudv"
+          MAKCST    ERRUDF,#6,"errudf"
+          MAKCST    ERRUDM,#6,"errudm"
+          MAKCST    ERRUDT,#6,"errudt"
+          MAKCST    ERRBDF,#6,"errbdf"
+          MAKCST    ERRWNA,#6,"errwna"
+          MAKCST    ERRBPA,#6,"errbpa"
+          MAKCST    ERRBAL,#6,"errbal"
+          MAKCST    ERRILB,#6,"errilb"
+          MAKCST    ERRSXT,#6,"errsxt"
+          MAKCST    ERRIOS,#6,"errios"
+          MAKCST    ERR0DV,#6,"err0dv"
+          MAKCST    ERRNNA,#6,"errnna"
+          MAKCST    ERRNIA,#6,"errnia"
+          MAKCST    ERRNFA,#6,"errnfa"
+          MAKCST    ERRNSA,#6,"errnsa"
+          MAKCST    ERRNAA,#6,"errnaa"
+          MAKCST    ERRNLA,#6,"errnla"
+          MAKCST    ERRNVA,#6,"errnva"
+          MAKCST    ERROOB,#6,"erroob"
+          MAKCST    ERRSTL,#6,"errstl"
+          MAKCST    ERRVEC,#6,"errvec"
+          MAKCST    ERRNDA,#6,"errnda"
+          MAKCST    ERRSTC,#6,"errstc"
+          MAKCST    ERRSYM,#6,"errsym"
+          MAKCST    ERRGEN,#6,"errgen"
+          MAKCST    ERRNAB,#6,"errnab"
+          MAKCST    ERRXIA,#6,"errxia"
+
+          MAKCST    BREAK,#5,"break"
+          MAKFNT    USERIT,#14,"user-interrupt"
+          MAKFNT    MOUSE,#5,"mouse"
+          MAKFNT    LLTCLOCK,#5,"clock"
+
+          RETURN
+
+;
+;         Le toplevel du systeme
+;         ======================
+;
+
+SYSTOP    LABEL                         ; la boucle principale
+          MOVNIL    DLINK               ; rien en pile
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND0            ;; type du bloc final
+          STACK     DLINK               ;; sauve le pointeur de pile courant
+SYSTOP2   MOV       .TOPLEVEL,A1        ; le nom de la fonction a lancer
+          MOVNIL    A2                  ; sans argument
+          JCALL     ITSOFT              ; et on appelle l'IT soft.
+          BRA       SYSTOP2             ; ad vitam aeternam
+
+;
+;         la fonction toplevel standard
+;
+;  ----------------------------------------
+          FENTRY    TOPLEVEL,SUBR0
+;  ----------------------------------------
+          JCALL     LREAD               ; on lit une S-expr
+          PUSH      @TOPLEVR            ; la continuation de EVAL
+          PUSH      A1                  ; la forme
+          PUSH      NIL                 ; l'env lex
+          MOV       #2,A4               ; simulation d'un appel de NSUBR
+          JMP       EVAL                ; on evalue
+TOPLEVR   MOV       .STATOPLEVEL,A2     ; adresse du symbole status
+          MOV       CVAL(A2),A2         ; sa valeur
+          BTNIL     A2,TOPLEND          ; il ne faut rien faire
+          TTYMSG    #2,"= "             ; "= " indique le resultat!
+          JCALL     U_PRINT             ; et impression du resultat
+TOPLEND   RETURN                        ; et c'est tout.
+
+;
+;         Retourne le contenu de la pile : CSTACK
+;
+;  ----------------------------------------
+          FENTRY    CSTACK,SUBR0
+;  ----------------------------------------
+          MOVNIL    A1                  ; pre'pare le re'sultat
+          PUSH      A1                  ;   dans la pile.
+          STACK     A2                  ; A2 le pointeur de pile
+          MOV       DLINK,A4            ; A4 le dlink courant
+EVSTCK0   CABEQ     A2,A4,EVSTCK1       ; arret recherche PROGN au DLINK
+          POPR      A2,A1               ; cherche le premier PROGN
+          CABNE     A1,@EVPROGNR,EVSTCK0; pas dans un PROGN
+          POPR      A2,A1               ; le corps
+          NCONS     A1                  ; (corps)
+          CONS      #11,A1              ; (11 corps) (type bidon 11!)
+          CONS      A1,&0               ; le mets en tete
+          BRA       EVSTCK0             ; continue
+EVSTCK1   MOVNIL    A1                  ; la valeur de ce bloc
+          POPR      A4,A3               ; le type
+          CABEQ     A3,@UNBIND0,EVSTKF  ; type 0 : bloc terminal
+          CABEQ     A3,@UNBIND1,EVSTKL  ; type 1 : bloc LAMBDA
+          CABEQ     A3,@UNBIND2,EVSTKA  ; type 2 : bloc FLET
+          CABEQ     A3,@UNBIND3,EVSTKE  ; type 3 : bloc TAG
+          CABEQ     A3,@UNBIND4,EVSTKS  ; type 4 : bloc ITSOFT
+          CABEQ     A3,@UNBIND5,EVSTKB  ; type 5 : bloc LOCK
+          CABEQ     A3,@UNBIND6,EVSTKU  ; type 6 : bloc PROTECT
+          CABEQ     A3,@UNBIND7,EVSTKY  ; type 7 : bloc SYS-PROTECT
+          CABEQ     A3,@UNBIND8,EVSTKH  ; type 8 : bloc SCHEDULE
+          CABEQ     A3,@UNBIND9,EVSTKT  ; type 9 : bloc TAGBODY
+          CABEQ     A3,@UNBIND10,EVSTKK ; type 10 : bloc BLOCK
+          TTYMSG    #14," error EVSTKF "
+EVSTKF    POP       A1                  ; le re'sultat total
+          JMP       NREVERSE            ; que l'on renverse a` son tour.
+
+;         au retour d'un bloc, SAVEA4 = DLINK, A4=pointeur fin block
+
+EVSTCK2   LABEL                         ; retour d'un bloc
+          PUSH      A4                  ; le pointeur de fin de pile
+          PUSH      SAVEA4              ; le nouveau pbind
+          JCALL     NREVERSE            ; retourne la liste d'1 bloc
+          POP       A4                  ; le pbind dans A4
+          POP       A2                  ; le sp de continuation dans A2
+          CONS      A1,&0               ; accroche le nouveau bloc
+          BRA       EVSTCK0             ; continue le de'pilage
+
+;         Les spe'cialistes des diffe'rents blocs d'activation.
+
+EVSTKL    LABEL                         ;;; bloc LAMBDA
+          CONS      #1,A1               ; type du bloc
+          POPR      A4,SAVEA4           ; le DLINK
+          POPR      A4,A3               ; le LLINK
+          CONS      A3,A1               ; (LLINK #1)
+          POPR      A4,A3               ; la FVAL
+          CONS      A3,A1               ; (FVAL LLINK #1)
+          POPR      A4,A3               ; la lparam
+          CONS      A3,A1               ; (lparam FVAL LLINK #1)
+          POPR      A4,A2               ; le #Nargs
+          BRA       EVSTKL2             ; vers la sortie des old values
+EVSTKL1   LABEL                         ; ajoute A2 elements
+          POPR      A4,A3
+          CONS      A3,A1               ; valeur suivante
+EVSTKL2   SOBGEZ    A2,EVSTKL1          ; il reste des valeurs.
+          BRA       EVSTCK2             ; vers le nouveau bloc
+
+EVSTKA    LABEL                         ;;; bloc LABEL
+          CONS      #2,A1
+          POPR      A4,A2               ; sauve le nouveau DLINK
+          BRA       EVSTKA4             ; au travail
+EVSTKA3   CONS      A3,A1
+          POPR      A4,A3               ; ancienne FVAL
+          CONS      A3,A1
+          POPR      A4,A3               ; ancien FTYP
+          CONS      A3,A1
+EVSTKA4   POPR      A4,A3               ; nom de la fonction
+          CNBNE     A3,#0,EVSTKA3       ; il en reste.
+          MOV       A2,SAVEA4           ; nouveau DLINK
+          BRA       EVSTCK2
+
+EVSTKE    LABEL                         ;;; bloc TAG
+          MOV       #3,A2
+          BRA       EVSTKB1
+
+EVSTKS    LABEL                         ;;; bloc ITSOFT
+          CONS      #4,A1               ; (#4)
+          POPR      A4,SAVEA4           ; nouveau DLINK
+          MOV       #10,A2              ; rajouter 10 objets :
+          BRA       EVSTKL2             ; llink nom etat forme funct
+
+EVSTKB    LABEL                         ;;; bloc LOCK
+          MOV       #5,A2
+EVSTKB1   CONS      A2,A1               ; ajoute le type.
+          POPR      A4,SAVEA4           ; sauve le nouveau DLINK
+EVSTKB2   MOV       #1,A2               ; nb d'elements a ajouter
+          BRA       EVSTKL2
+
+EVSTKU    LABEL                         ;;; bloc PROTECT
+          MOV       #6,A2
+          BRA       EVSTKB1             ; comme LOCK
+
+EVSTKY    LABEL                         ;;; bloc SYS-PROTECT
+          CONS      #7,A1
+          TOPSTR    A4,SAVEA4           ; nouveau DLINK
+          ADJSTKR   A4,#1               ; A4 sur la fin du block
+          BRA       EVSTCK2             ; vers le bloc suivant
+
+EVSTKH    LABEL                         ;;; bloc SCHEDULE
+          MOV       #8,A2
+          BRA       EVSTKB1
+
+EVSTKT    LABEL                         ;;; bloc TAGBODY
+          CONS      #9,A1
+          POPR      A4,SAVEA4           ; sauve le nouveau DLINK
+          ADJSTKR   A4,#1               ; saute le =slot
+          POPR      A4,A2               ; le nb d'e'tiquettes
+          BRA       EVSTKL2             ; au travail
+
+EVSTKK    LABEL                         ;;; bloc BLOCK
+          MOV       #10,A2
+          BRA       EVSTKB1
+
+;
+;         Autres fonctions systeme
+;
+;  ----------------------------------------
+          FENTRY    LLCLINE,SUBR1
+;  ----------------------------------------
+          MOV       .LLCLINE,SAVEA4     ; le nom de l'appelant
+          JCALL     STRINGA1            ; coercion en chaine.
+          CABEQ     ITSTATE,#0,LLCLIN2  ; deja interdit
+          MOV       @LLCLIN1,A3         ; la routine prote'ge'e
+          JCALL     SYSPROT
+          POP       A1                  ; le resultat (T)
+          MOV       #1,ITSTATE          ; de'prote`ge
+          BRI       A3
+
+LLCLIN1   MOV       #0,ITSTATE          ; prote`ge
+LLCLIN2   CLINE     A1                  ; et c'est parti avec une chaine.
+          MOV       .T,A1               ; retourne toujours T
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLGETENV,SUBR1
+;  ----------------------------------------
+          MOV       .LLGETENV,SAVEA4    ; l'appelant
+          JCALL     STRINGA1            ; conversion en chaine
+          GETENVRN  A1,BUFAT,A1
+          CNBNE     A1,#0,GTENV8 
+          MOVNIL    A1
+          RETURN
+GTENV8    MOV       BUFAT,A2            ; A1<-taille, A2<-string
+          JMP       TRYATOM
+
+;  ----------------------------------------
+          FENTRY    LLGETADR,SUBR1
+;  ----------------------------------------
+          MOV       .LLGETADR,SAVEA4    ; le nom de l'appelant
+          JCALL     STRINGA1            ; coercion en chaine
+          GETGLOBAL A1,A1
+          JMP       LOC
+
+;
+;         appel d'une procedure externe
+;         doit preparer une pile pour le module CALLG
+;  ----------------------------------------
+          FENTRY    LLCALLX,SUBRN
+;  ----------------------------------------
+          DECR      A4                  ; SP(A4) -> adresse
+          XSPMOV    A4,A1               ; l'adresse de lancement
+          MOV       .LLCALLX,A2         ; en cas d'erreur
+          JCALL     VAGA1               ; on traduit en adresse
+          MOVXSP    A1,A4               ; repositionne l'adresse
+          INCR      A4                  ; A4 <- le nb total d'objets empiles.
+          CALLG     A4,A1
+          ADJSTK    A4                  ; CALLG ne le fait pas!
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    RUNT,SUBR0
+;  ----------------------------------------
+          RUNTIME   A1                  ; c'est vraiment dependant du systeme!
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLSLEEP,SUBR1
+;  ----------------------------------------
+          BTFLOAT   A1,LLSLEEP1         ; ce sont des secondes flottantes
+          BFFIX     A1,LLSLEEP2
+          FLOAT     A1
+LLSLEEP1  SLEEP     A1                  ; c'est vraiment dependant du systeme!
+          RETURN
+LLSLEEP2  MOV       .LLSLEEP,A2
+          BRA       ERRNNA
+
+;         (DATE) retourne un vecteur de 8 slots
+;  ----------------------------------------
+          FENTRY    LLDATE,SUBR0
+;  ----------------------------------------
+          MOV       #8,A1               ; nb d'e'le'ments
+          MOVNIL    A2                  ; le fill vecteur
+          JCALL     MAKEVECT            ; #[()()()()()()()()]
+          MOV       .LLDATE,TYP(A1)     ; de type #:date:[ ... ]
+          DATE      A1
+          RETURN
+
+
+;         (CLOCKALARM f)  IT horloge en seconde flottante.
+; 
+;  ----------------------------------------
+          FENTRY    CLKALARM,SUBR1
+;  ----------------------------------------
+          BTFLOAT   A1,ALRMS1
+          BFFIX     A1,ALRMER2
+          FLOAT     A1
+ALRMS1    SETALARM  A1
+          RETURN
+ALRMER2   MOV       .CLKALARM,A2
+          BRA       ERRNNA
+
+;----------------------------------------
+          FENTRY    WITHIT,SUBRF
+;----------------------------------------
+          CABNE     ITSTATE,#0,WITHIT2  ; les it e'taient permises
+          MOV       @WITHIT1,A3         ; la routine prote'ge'e
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat
+          MOV       #0,ITSTATE          ; c'est interdit
+          BRI       A3                  ; back home
+
+WITHIT1   MOV       #1,ITSTATE          ; autorise les choses
+WITHIT2   JMP       EVPROGN             ; e'value le corps
+
+;----------------------------------------
+          FENTRY    WITHNOIT,SUBRF
+;----------------------------------------
+          CABEQ     ITSTATE,#0,WITHNO2  ; deja interdit, raf
+          MOV       @WITHNO1,A3         ; la routine prote'ge'e
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat
+          MOV       #1,ITSTATE          ; l'ancien e'tat
+          BRI       A3                  ; back home
+
+WITHNO1   MOV       #0,ITSTATE          ; It c'est interdit
+WITHNO2   JMP       EVPROGN             ; e'value le corps
+
+;
+;         (TIME <e>)   retourne le temps de l'evaluation de e
+;
+;  ----------------------------------------
+          FENTRY    LLTIME,SUBR1
+;  ----------------------------------------
+          RUNTIME   A2                  ; le temps avant evaluation
+          PUSH      A2
+          JCALL     EVALA1              ; realise le calcul dans le meme env
+          RUNTIME   A1                  ; le temps apres EVAL
+          XTOPST    A1                  ; empile le plus grand
+          PUSH      A1                  ; on l'empile
+          MOV       #2,A4               ; le nb d'arguments pour DIFF
+          JMP       FLDIFF              ; vers la fonction generique.
+
+;
+;         (SHOW-STACK <e>)   retourne la consommation de pile par e
+;
+;  ----------------------------------------
+          FENTRY    LLSHWSTK,SUBR1
+;  ----------------------------------------
+          STACK     A4                   ; SP -> A4  (sauvegarde)
+          MOV       BSTACK,A2            ; BSTACK = marqueur de pile -> A2
+          MOV       MSTACK,A3            ; fin de pile -> A3
+LLSHWSTK1 CHKSTK    A3,LLSHWSTK2         ; On deborde ?
+          PUSH      A2                   ; marque pile
+          BRA       LLSHWSTK1            ; jusqu'a fin de pile.
+LLSHWSTK2 SSTACK    A4                   ; Recupere le SP et
+          JCALL     EVALA1               ; realise le calcul dans le meme env.
+          STACK     A3                   ; SP -> A3  (sauvegarde)
+          MOV       #0,A1                ; le compteur d'unite's
+          MOV       #0,A2                ; le compteur de K
+LLSHWSTK3 ADJSTK    #-1                  ; On prend au dessus de la pile
+          XSPMOV    #0,A4                ; dans A4. pile a jour.
+          CABEQ     BSTACK,A4,LLSHWSTK4  ; test d'arret
+          INCRINK   A1,A2                ; On compte.
+          BRA       LLSHWSTK3            ; boucle
+LLSHWSTK4 SSTACK    A3                   ; remet le vrai SP.
+          CNBEQ     #0,A2,LLSHWSTK5      ; pas de millier, on sort A1.
+          CONS      A2,A1                ; On cons.
+LLSHWSTK5 RETURN
+
+;
+;         Erreurs standards
+;         =================
+;
+
+;
+;         LERROR : appel utilisateur
+;         A3= bad-arg, A1= funct, A2= type-err
+;
+;  ----------------------------------------
+          FENTRY    LERROR,SUBR3
+;  ----------------------------------------
+          NCONS     A3                  ; (bad-arg)
+          CONS      A2,A3               ; (typ bad-arg)
+          CONS      A1,A3               ; (arg typ funct)
+          MOV       A3,A2               ; pour ITSOFT
+          MOV       .SYSERROR,A1        ; nom SYSERROR
+          JMP       ITSOFT              ; et on appelle l'IT
+
+;
+;         SERROR : point d'entree de toutes les erreurs interprete
+;         A1= bad-arg, A2= funct, A3= type-err
+;
+
+SERROR    LABEL      
+          NCONS     A1                  ; (bad-arg)
+          CONS      A3,A1               ; (typ bad-arg)
+          XCONS     A1,A2               ; (arg typ funct)
+          MOV       .SYSERROR,A1        ; nom SYSERROR
+          JMP       ITSOFT              ; et on appelle l'IT
+
+;
+;         FERROR : erreur fatale, realise un (EXIT FATAL-ERROR NIL)
+;         A1 <- le symbole de l'erreur.
+;
+
+FERROR    LABEL      
+          PUSH      A1
+          MOV       CVAL(A1),A2         ; si il a une valeur
+          BTSTRG    A2,FERROR1          ; ca a l'air tout bon.
+          JCALL     STRINGA1            ; je traduis le nom en chaine
+          MOV       A1,A2               ; pret dans A2
+FERROR1   HGSIZE    A2,A1               ; la taille de la chaine
+          TTYSTRG   A1,A2               ; je sors la chai^ne.
+          TTYCRLF                       ; sivie d'un retour chariot!
+          POP       A1
+FERROR2   MOVNIL    A1                  ; tout est propre.
+          MOV       .FATALERROR,A2      ; le nom de l'echappement
+          MOVNIL    A3                  ; itou
+          MOVNIL    A4                  ; et voila c'est propre
+          JMP       FINDTAG             ; vers le EXIT.
+
+;
+;         SYSERROR : IT soft appelee en cas d'erreur
+;
+;  ----------------------------------------
+          FENTRY    SYSERROR,SUBR3
+;  ----------------------------------------
+          PUSH      A3                  ; le mauvais argument
+          PUSH      A2                  ; le type de l'erreur
+          PUSH      A1                  ; le nom de la fonction
+          MOV       .MSERROR,A1         ; le message ** Erreur
+          JCALL     PROBJ
+          POP       A1                  ; le nom de la fonction
+          JCALL     PROBJ
+          MOV       .COLON,A1           ; le :
+          JCALL     PROBJ
+          POP       A1                  ; le type de l'erreur
+          JCALL     PROBJ
+          MOV       .COLON,A1           ; le :
+          JCALL     PROBJ
+          POP       A1                  ; le mauvais argument
+          JCALL     PROBJT
+          JMP       REENTER
+
+;  ----------------------------------------
+          FENTRY    SYSDEBUG,SUBR0
+;  ----------------------------------------
+          RETURN
+
+;
+;         quelques erreurs fatales celebres
+;
+
+ERRFS     LABEL                         ;;; Pile pleine.
+          MOV       .ERRFSTK,A1
+          CHKSTK    MSTACK2,FERROR      ; vers FERROR si erreur vraiment fatale
+;                                       ;; ce n'est pas encore fatal
+          MOV       @ERRFS0,A3          ; la routine prote'ge'e
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat empile'
+          MOV       MSTACK1,MSTACK
+          BRI       A3
+          
+ERRFS0    MOV       MSTACK2,MSTACK
+          MOV       A1,A3               ; la chai^ne d'erreur
+          MOV       .EVAL,A2            ; EVAL provoque l'erreur
+          MOVNIL    A1                  ; pas de "badarg"
+          BRA       SERROR
+
+ERRFSGC   LABEL      
+          MOV       .ERRFSGC,A1
+          BRA       FERROR
+
+ERRES     LABEL      
+          MOV       .ERRFSUD,A1
+          MOV       CVAL(A1),A2         ; le nom de l'erreur
+          BTSTRG    A2,ERRES2           ; ca a l'air tout bon.
+          JCALL     STRINGA1            ; je traduis le nom en chaine
+          MOV       A1,A2               ; pret dans A2
+ERRES2    HGSIZE    A2,A1               ; la taille de la chaine
+          TTYSTRG   A1,A2               ; je sors la chai^ne.
+          TTYCRLF                       ; suivie d'un retour chariot!
+          JMP       REENTER
+
+ERRFSP    LABEL      
+          MOV       .ERRFPGC,A1
+          BRA       FERROR
+
+ERRATO    LABEL      
+          MOV       .ERRFSYM,A1
+          BRA       FERROR
+
+ERRFM     LABEL      
+          MOV       .ERRFCNS,A1
+          BRA       FERROR
+
+ERRFF     LABEL      
+          MOV       .ERRFFLT,A1
+          BRA       FERROR
+
+ERRFN     LABEL      
+          MOV       .ERRFFIX,A1
+          BRA       FERROR
+
+ERRFH     LABEL      
+          MOV       .ERRFHEP,A1
+          BRA       FERROR
+
+ERRFR     LABEL      
+          MOV       .ERRFSTR,A1
+          BRA       FERROR
+
+ERRFV     LABEL      
+          MOV       .ERRFVEC,A1
+          BRA       FERROR
+
+;
+;         quelques erreurs standards celebres
+;
+
+ERRUDV    LABEL      
+          MOV       .ERRUDV,A3          ; le numero
+          BRA       SERROR
+ERRUDF    LABEL      
+          MOV       .ERRUDF,A3          ; le numero
+          BRA       SERROR
+ERRUDM    LABEL      
+          MOV       .ERRUDM,A3          ; le numero
+          BRA       SERROR
+ERRUDT    LABEL      
+          MOV       .ERRUDT,A3          ; le numero
+          BRA       SERROR
+ERRBDF    LABEL      
+          MOV       .ERRBDF,A3          ; le numero
+          BRA       SERROR
+ERRWNA    LABEL      
+          MOV       .ERRWNA,A3
+          BRA       SERROR
+ERRBPA    LABEL      
+          MOV       .ERRBPA,A3          ; le numero
+          BRA       SERROR
+ERRBAL    LABEL      
+          MOV       .ERRBAL,A3          ; le numero
+          BRA       SERROR
+ERRILB    LABEL      
+          MOV       .ERRILB,A3          ; le numero
+          BRA       SERROR
+ERRSXT    LABEL      
+          MOV       .ERRSXT,A3          ; le numero
+          BRA       SERROR
+ERRIOS    LABEL      
+          MOV       .ERRIOS,A3          ; le numero
+          BRA       SERROR
+ERR0DV    LABEL      
+          MOV       .ERR0DV,A3          ; le numero
+          BRA       SERROR
+ERRNAA    LABEL      
+          MOV       .ERRNAA,A3          ; le numero
+          BRA       SERROR
+ERRNNA    LABEL      
+          MOV       .ERRNNA,A3          ; le numero
+          BRA       SERROR
+ERRNIA    LABEL      
+          MOV       .ERRNIA,A3          ; le numero
+          BRA       SERROR
+ERRNFA    LABEL      
+          MOV       .ERRNFA,A3          ; le numero
+          BRA       SERROR
+ERRNSA    LABEL      
+          MOV       .ERRNSA,A3          ; le numero
+          BRA       SERROR
+ERRNLA    LABEL      
+          MOV       .ERRNLA,A3          ; le numero
+          BRA       SERROR
+ERRNVA    LABEL      
+          MOV       .ERRNVA,A3          ; le numero
+          BRA       SERROR
+ERRSTL    LABEL      
+          MOV       .ERRSTL,A3          ; le numero
+          BRA       SERROR
+ERROOB    LABEL      
+          MOV       .ERROOB,A3          ; le numero
+          BRA       SERROR
+ERRVEC    LABEL      
+          MOV       .ERRVEC,A3          ; le numero
+          BRA       SERROR
+ERRNDA    LABEL      
+          MOV       .ERRNDA,A3          ; le numero
+          BRA       SERROR
+ERRSTC    LABEL      
+          MOV       .ERRSTC,A3          ; le numero
+          BRA       SERROR
+ERRSYM    LABEL      
+          MOV       .ERRSYM,A3          ; le numero
+          BRA       SERROR
+ERRGEN    LABEL      
+          MOV       .ERRGEN,A3          ; le numero
+          BRA       SERROR
+ERRNAB    LABEL      
+          MOV       .ERRNAB,A3          ; le numero
+          BRA       SERROR
+ERRXIA    LABEL      
+          MOV       .ERRXIA,A3          ; le numero
+          BRA       SERROR
+
+;
+;         Erreurs machine
+;
+
+LLMERRO   LABEL      
+          PUSH      A1                  ; pour le retour eventuel de l'IT
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          JCALL     LLSYSTEM            ; A1 <- le nom du systeme
+          NCONS     A2                  ; le code de l'erreur ou ()
+          CONS      .ERRMAC,A2          ; le type de l'erreur
+          CONS      A1,A2               ; le nom du systeme          
+          MOV       .SYSERROR,A1        ; c'est une IT de type erreur
+          JCALL     ITSOFT              ; l'IT est restartable
+          POP       A4                  ; OUI!
+          POP       A3                  ; on re'cupe`re les registres
+          POP       A2
+          POP       A1
+          RETURN                        ; et on rentre
+
+; Les 4 interruptions standard: BREAK, PANIC, MOUSE et CLOCK
+; 
+;         Interruption utilisateur
+; 
+
+LLBREAK   LABEL      
+          PUSH      A1                  ; pour le retour eventuel de l'IT
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          MOV       .USERIT,A1          ; interruption utilisateur
+          MOVNIL    A2                  ; pas de parame`tres
+          JCALL     ITSOFT              ; l'IT est restartable
+          POP       A4                  ; OUI!
+          POP       A3                  ; on re'cupe`re les registres
+          POP       A2
+          POP       A1
+          RETURN                        ; et on rentre
+
+; 
+;         Interruption panique de l'utilisateur
+; 
+
+LLPANIC   LABEL      
+          PUSH      A1                  ; pour le retour eventuel de l'IT
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          MOVNIL    A2
+          NCONS     A2
+          CONS      .BREAK,A2
+          CONS      .BREAK,A2           ; (break break ())
+          MOV       .SYSERROR,A1
+          JCALL     ITSOFT              ; l'IT est restartable
+          POP       A4                  ; OUI!
+          POP       A3                  ; on re'cupe`re les registres
+          POP       A2
+          POP       A1
+          RETURN                        ; et on rentre
+
+;
+;         Interruption Souris
+; 
+
+LLMOUSE   LABEL      
+          PUSH      A1                  ; pour le retour eventuel de l'IT
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          MOVNIL    A2                  ; pas de parame`tres
+          MOV       .MOUSE,A1           ; MOUSE
+          JCALL     ITSOFT              ; l'IT est restartable
+          POP       A4                  ; OUI!
+          POP       A3                  ; on re'cupe`re les registres
+          POP       A2
+          POP       A1
+          RETURN                        ; et on rentre
+
+; 
+;         Interruption Clock Alarm
+; 
+
+LLCLOCK   LABEL
+          PUSH      A1                  ; on sauve les registres
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          MOV       .LLTCLOCK,A1           ; le nom
+          MOVNIL    A2                  ; pas d'argument
+          JCALL     ITSOFT              ; appel IT
+          POP       A4                  ; restaure les registres
+          POP       A3
+          POP       A2
+          POP       A1
+          RETURN                        ; simule un retour d'IT
+
+; Les handlers standard des interruptions standard
+; 
+;   USER-INTERRUPT
+; 
+;  (de user-interrupt ()
+;      (with-interrupts
+;          (itsoft 'syserror '(break break ()))))
+; 
+;----------------------------------------
+          FENTRY    USERIT,SUBR0
+;----------------------------------------
+          CABEQ     ITSTATE,#1,USERIT2  ; de'ja arme'es
+          MOV       @USERIT1,A3
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat empile'
+          MOV       #0,ITSTATE          ; de'sarme les IT
+          BRI       A3                  ; retour a` l'appelant
+
+USERIT1   MOV       #1,ITSTATE          ; arme les interruptions
+USERIT2   MOVNIL    A2
+          NCONS     A2
+          CONS      .BREAK,A2
+          CONS      .BREAK,A2           ; (break break ())
+          MOV       .SYSERROR,A1
+          JMP       ITSOFT
+          
+
+;         MOUSE , appelee automatiquement apres un evenement souris
+; 
+;  (de mouse () ())
+;  ----------------------------------------
+          FENTRY    MOUSE,SUBR0
+;  ----------------------------------------
+          MOVNIL    A1                  ; il faut bien retourner quelquechose!
+          RETURN                        ; en standard ne fait rien
+
+; 
+;         CLOCK , appelee automatiquement apres chaque alarme
+; 
+;  (de clock () ())
+;  ----------------------------------------
+          FENTRY    LLTCLOCK,SUBR0
+;  ----------------------------------------
+          MOVNIL    A1                  ; il faut bien retourner quelquechose!
+          RETURN                        ; en standard ne fait rien
+
+;
+;         GET/SET numerique :
+;             A2 <- l'appelant
+;             A3 <- l'ancienne valeur
+;             A4 <- le nb d'arguments
+;             pile  /[[arg eventuel]]/[min]/[max]/[adret] ->
+;
+GETSETN   LABEL
+          CNBEQ     A4,#0,GETSETN1      ; en GET
+          CNBEQ     A4,#1,GETSETN2      ; en SET
+          MOV       #1,A1
+          BRA       ERRWNA              ; A2 est pret.
+GETSETN1  POP       A4                  ; adresse de retour
+          MOV       A3,A1               ; la valeur est inchangee
+          ADJSTK    #2
+          BRI       A4
+GETSETN2  LABEL
+          POP       A4                  ; l'adresse de retour
+          POP       A3                  ; le max
+          XSPMOV    #1,A1               ; l'argument
+          BFFIX     A1,ERRNIA           ; GET/SET numerique entier.
+          CNBGT     A1,A3,ERROOB
+          POP       A3
+          CNBLT     A1,A3,ERROOB
+          POP       A1
+          BRI       A4
+
+          END
+
+
+

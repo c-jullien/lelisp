@@ -1,0 +1,178 @@
+defmodule #:display:x11
+files (x11window.ll)
+include (virstruct.ll)
+import (
+virutil ; ...make
+x11_def
+x11struct
+x11event ; compute-event-mask
+)
+export (
+:current-clip
+:set-clip-for-subwindows
+:clear-graph-env 
+:create-window 
+:create-subwindow 
+:current-window 
+:uncurrent-window 
+:modify-window
+:update-window 
+:kill-window 
+:pop-window 
+:move-behind-window 
+:current-keyboard-focus-window 
+:uncurrent-keyboard-focus-window 
+:find-window 
+:map-window
+#:image:rectangle:window:set-window-hints 
+#:image:rectangle:window:modify-window-hints 
+#:tclass:x11window:transparent-window:is-visible 
+#:tclass:x11window:is-visible 
+#:tclass:x11window:woffset-x 
+#:tclass:x11window:woffset-y 
+#:tclass:x11window:transparent-window:woffset-x 
+#:tclass:x11window:transparent-window:woffset-y
+:window-map 
+:window-unmap 
+:window-clear-region
+:window-background 
+:window-border 
+:set-border-color
+:move-window
+:resize-window 
+:move-resize-window 
+:window-events-list
+:window-title 
+:set-icontitle 
+:set-icon-window 
+:window-state
+:x11-create-graph-env
+
+:set-window-bitmap
+:bitmap-to-window
+
+#:image:rectangle:window:woffset-x
+#:image:rectangle:window:woffset-y
+:window-change-attributes
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:x11:current-clip nsubr ())
+(#:display:x11:set-clip-for-subwindows nsubr ())
+(#:display:x11:clear-graph-env subr2 ())
+(#:display:x11:create-window subr2 ())
+(#:display:x11:x11-create-graph-env subr2 ())
+(#:display:x11:create-subwindow subr2 ())
+(#:display:x11:current-window subr2 ())
+(#:display:x11:uncurrent-window subr2 ())
+(#:display:x11:modify-window nsubr ())
+(#:display:x11:move-resize-window nsubr ())
+(#:display:x11:move-window nsubr ())
+(#:display:x11:resize-window nsubr ())
+(#:display:x11:window-border subr3 ())
+(#:display:x11:update-window nsubr ())
+(#:display:x11:kill-window subr2 ())
+(#:display:x11:pop-window subr2 ())
+(#:display:x11:move-behind-window subr3 ())
+(#:display:x11:current-keyboard-focus-window subr2 ())
+(#:display:x11:uncurrent-keyboard-focus-window subr2 ())
+(#:display:x11:find-window subr3 ())
+(#:display:x11:map-window nsubr ())
+(#:image:rectangle:window:set-window-hints subr1 ())
+(#:image:rectangle:window:modify-window-hints subr1 ())
+(#:tclass:x11window:transparent-window:is-visible subr2 ())
+(#:tclass:x11window:is-visible subr2 ())
+(#:tclass:x11window:woffset-x subr2 ())
+(#:tclass:x11window:woffset-y subr2 ())
+(#:tclass:x11window:transparent-window:woffset-x subr2 ())
+(#:tclass:x11window:transparent-window:woffset-y subr2 ())
+(#:display:x11:window-map subr2 ())
+(#:display:x11:window-unmap subr2 ())
+(#:display:x11:window-clear-region nsubr ())
+(#:display:x11:window-background subr3 ())
+(#:display:x11:set-border-color subr3 ())
+(#:display:x11:window-events-list subr3 ())
+(#:display:x11:window-title subr3 ())
+(#:display:x11:set-icontitle subr3 ())
+(#:display:x11:set-icon-window subr3 ())
+(#:display:x11:window-state subr3 ())
+(#:display:x11:set-window-bitmap subr3 ())
+(#:display:x11:bitmap-to-window subr2 ())
+(#:image:rectangle:window:woffset-x subr1 ())
+(#:image:rectangle:window:woffset-y subr1 ())
+(#:display:x11:window-change-attributes nsubr ())
+)
+cpfunctions (
+(#:display:x11:opaque-set-clip-for-subwindows nsubr)
+(#:display:x11:transparent-set-clip-for-subwindows subr2)
+(#:display:x11:transparent-set-clip-for-window subr2)
+(#:display:x11:set-offsets subr1)
+(#:display:x11:set-view-rectangle subr1)
+(#:display:x11:intersect nsubr)
+(#:display:x11:set-visibility subr1)
+(#:display:x11:opaque-clear-graph-env subr3)
+(#:display:x11:transparent-clear-graph-env subr3)
+(#:display:x11:make-top-extend subr2)
+(#:display:x11:x11-create-subwindow subr2)
+(#:display:x11:make-opaque-extend subr2)
+(#:display:x11:x11-create-transparent-window subr2)
+(#:display:x11:make-transparent-extend subr2)
+(#:display:x11:calculate-top-opaque-father subr1)
+(#:display:x11:x11-create-graph-env-for-transparent subr2)
+(#:display:x11:window-raise subr2)
+(#:display:x11:window-lower subr2)
+)
+cpimport (
+(x11event
+(#:display:x11:compute-event-mask . subr1)
+)(x11struct
+(#:tclass:x11window:opaque-window:top-window:make . subr0)
+(#:tclass:x11window:opaque-window:make . subr0)
+(#:tclass:x11window:transparent-window:make . subr0)
+)(virutil
+(#:graph-env:make . subr0)
+(#:image:rectangle:make . subr0)
+(#:image:rectangle:window:make . subr0)
+)(x11_def
+(x11_set_clip . nsubr)
+(x11_clear_window . nsubr)
+(x11_setwindow_background . subr3)
+(x11_create_window . nsubr)
+(x11_new_create_graph_env . nsubr)
+(x11_font_ascent . subr1)
+(x11_font_height . subr1)
+(x11_create_subwindow . nsubr)
+(x11_create_transparentwindow . nsubr)
+(x11_moveresize_window . nsubr)
+(x11_topmoveresize_window . nsubr)
+(x11_move_window . nsubr)
+(x11_topmove_window . nsubr)
+(x11_resize_window . nsubr)
+(x11_topresize_window . nsubr)
+(x11_changewindow_border . subr3)
+(x11_topchangewindow_border . nsubr)
+(x11_change_title . subr3)
+(x11_change_icontitle . subr3)
+(x11_window_map . subr2)
+(x11_window_unmap . subr2)
+(x11_kill_window . subr3)
+(x11_pop_window . subr2)
+(x11_move_behind_window . subr2)
+(x11_find_window . subr3)
+(x11_map_window . nsubr)
+(x11_set_background . subr3)
+(x11_changewindow_bordercolor . subr3)
+(x11_changelongmask_window . subr3)
+(x11_seticon_pixmap . subr3)
+(x11_setwindow_state . subr3)
+(x11_set_window_pixmap . subr3)
+(x11_change_attributes . nsubr)
+))
+cpenv (
+virutil
+x11_def
+x11struct
+x11event
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

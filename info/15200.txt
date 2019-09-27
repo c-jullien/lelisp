@@ -1,0 +1,182 @@
+
+===================================================================
+
+La version 15.2 du 1/11/86, dite "version de tous les saints",
+apporte quelques corrections et ame'liorations par rapport a` la
+version du 18/06/86, dite "version de Londres".  Le manuel a
+e'galement e'te' l'objet de nombreuses corrections.
+
+Les principales corrections et ame'liorations du syste`me sont
+liste'es ci-dessous : 
+
+
+Langage :
+---------
+
+- La fonction NCONC est maintenant interruptible lorsque l'un de
+ses arguments est une liste circulaire sur les CDR.
+
+- La fonction SUBLIS fait effectivement un partage optimal des
+cellules, comme dit dans le manuel.  
+
+- la fonction GETDEF marche correctement sur les fonctions
+compile'es.  
+
+- la fonction FILLVECTOR accepte de remplir un vecteur avec autre
+chose que des nombres positifs.
+
+- La fonction BACKTRACK est maintenant conforme au manuel : le nom
+du TAG est bien BACKTRACK et non plus #:SYSTEM:BACKTRACK.  
+
+- la fonction FEATUREP retourne bien en re'sultat le nom du trait
+cherche'.
+
+Entre'es/sorties :
+------------------
+
+- L'impression des vecteurs est maintenant correcte lorsque la
+marge droite est plus loin que la fin du tampon.
+
+- la fonction ASCII ne provoque plus d'erreur du garbage collector
+lorsqu'elle rec,oit un argument compris entre 128 et 256.
+
+Arithme'tique ge'ne'rique (../llib/genarith.ll) :
+-------------------------------------------------
+
+- rajout des fonctions CEILING et ROUND.
+
+- la division par 0 provoque bien l'erreur 0DIVIDE dans
+l'arithme'tique ge'ne'rique.
+
+- les messages d'erreur "l'argument n'est pas un nombre" ont
+maintenant un libelle' correct.
+
+Structures (../llib/defstruct.ll") :
+------------------------------------
+
+- les champs sont maintenant correctement he'rite's a` partir du
+troisie`me niveau.
+
+- les fonctions d'acce`s aux champs sont plus rapides sous
+l'interpre`te.
+
+Debug (../llib/debug.ll) :
+--------------------------
+
+- meilleure re'cupe'ration des variables sous complice (commande
+v).
+
+- la commande q ne de'sarme plus le mode DEBUG sous complice.
+
+- meilleur affichage de certaines fonctions (plus de colonnes de
+()).
+
+- debug correct des fonctions 'resetfn'.
+
+- meilleure recherche de la partie de la fonction ayant provoque'
+l'erreur.
+
+- le de'buggeur sait retrouver les appels a` la fonction BREAK,
+me^me compile's  par le compilateur standard.
+
+Trace (../llib/trace.ll) :
+--------------------------
+
+- la trace des fonctions utilise'es par les chargeurs me'moire est
+maintenant correcte (bug de (TRACE CASSQ) et de (TRACE CONS)).
+
+- les fonctions suivantes sont maintenant correctement trace'es :
+IF, LET, WHEN, WITH, PROGN, ITSOFT, AND, OR, CALL, CALLN, BOUNDP,
+EVAL, TRACEVAL et EPROGN.
+
+- demander la trace de l'une des fonctions suivantes provoque
+maintenant l'impression d'un message d'erreur (leur trace est
+interdite) : QUOTE, ARG, STEP, UNSTEP et CSTEP.
+
+- la fene^tre TRACEWINDOW est mieux ge're'e
+
+- le pas a` pas des fonctions &NOBIND est maintenant interdit (il
+ne peut pas marcher correctement dans l'implantation actuelle).
+
+- la commande = du pas a` pas et le (TRACE (... (BREAK T)))
+marchent me^me hors du mode DEBUG
+
+Pepe (../llib/pepe.ll) :
+------------------------
+
+- nouvelle "who-line".
+
+- le curseur est correctement positionne' en cas de saut de page.
+
+- les ^N et ^P sautent de YMAX/4 lignes par defaut en bas et haut
+de page.
+
+- les ^S et ESC) sont plus rapides et se positionnent en milieu de
+fene^tre si le curseur n'est plus visible.
+
+- ESC F suivi de ESC S lorsque le fichier n'existe pas ne provoque
+plus d'erreur du syste`me ho^te.
+
+- le tampon de lecture est correctement nettoye' apre`s une erreur
+durant l'e'valuation du tampon (commande ESC E).
+
+Pretty (../llib/pretty.ll) :
+----------------------------
+
+- pretty-print correct des fonctions compile'es.
+
+- pretty-print correct de #(()).
+
+Format (../llib/format.ll) :
+----------------------------
+
+- Rajout de PRINF comme autoload de FORMAT.
+
+Macro-caracte`res :
+-------------------
+
+- ^F fonctionne correctement lorsque la fonction avait e'te'
+de'finie au toplevel.
+
+Virtty et Termcap :
+-------------------
+
+- par de'faut XMAX et YMAX valent 79 et 23.
+
+- un second appel a` la fonction INITTY ne provoque le chargement
+du fichier de description que si le nouveau terminal est diffe'rent
+de l'ancien.
+
+- les champs continuation Termcap (tc=) sont maintenant bien
+ge're's.
+
+Compilateurs :
+--------------
+
+-  les appels aux fonctions WITH-INTERRUPTS et WITHOUT-INTERRUPTS
+sont maintenant compile's.
+
+- le compilateur Complice sait maintenant compiler les schedulers.
+
+- les fonctions EQN/NEQN sont maintenant compile'es ouvertes.
+
+- les appels aux macros rendant des re'sultats atomiques sont bien
+compile's.
+
+- les modules contenant des de'finitions de macro-caracte`res sont
+bien compile's.
+
+- les fonctions resetfn de type FEXPR/MACRO/DMACRO sont maintenant
+bien compile'es par les fonctions COMPILE et COMPILER.
+
+- les macros du compilateur des MAPxxx sont maintenant compatibles
+avec l'interpre`te dans les cas ou` la fonction modifie
+physiquement la liste a` laquelle elle est applique'e.
+
+- le chargeur 68000 nettoie mieux les PLISTES.
+
+Sur UNIX 4.2 :
+--------------
+
+- l'exe'cution de Le_Lisp est reprise normalement apre`s suspension
+d'un COMLINE par ^Z.

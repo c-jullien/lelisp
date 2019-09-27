@@ -1,0 +1,200 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	zsyspkgc:dword
+	extrn	fcons:dword
+	extrn	mstack:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zllexpr:dword
+	extrn	tabch:dword
+	extrn	zlread:dword
+	extrn	ibase:dword
+	extrn	cpkgc:dword
+	extrn	zstatrc:dword
+	extrn	savea4:dword
+	extrn	zfunction:dword
+	extrn	zquote:dword
+	extrn	znconc:dword
+	extrn	zappend:dword
+	extrn	zmcons:dword
+	extrn	zllcons:dword
+	extrn	zfncons:dword
+	extrn	zlist:dword
+	extrn	zvector:dword
+tabctyp	dd	0
+tabccod	dd	0
+pnmac1244	db	'dmc'
+	even
+pnmac1245	db	'dms'
+	even
+pnmac1246	db	'defsharp'
+	even
+pnmac1247	db	'#'
+	even
+zsharp	dd	0
+pnmac1248	db	'sharp'
+	even
+pnmac1249	db	':'
+	even
+zuser	dd	0
+pnmac1250	db	'user'
+	even
+pnmac1251	db	'^'
+	even
+pnmac1252	db	'['
+	even
+pnmac1253	db	']'
+	even
+pnmac1254	db	''''
+	even
+pnmac1255	db	'`'
+	even
+pnmac1256	db	','
+	even
+zcommaat	dd	0
+pnmac1257	db	',@'
+	even
+zcommadot	dd	0
+pnmac1258	db	',.'
+	even
+zsysharp	dd	0
+pnmac1259	db	'sharp'
+	even
+zsyscol	dd	0
+pnmac1260	db	'colon'
+	even
+pnmac1261	db	'.'
+	even
+pnmac1262	db	'+'
+	even
+pnmac1263	db	'-'
+	even
+pnmac1264	db	''''
+	even
+pnmac1265	db	'/'
+	even
+pnmac1266	db	'\'
+	even
+pnmac1267	db	'^'
+	even
+pnmac1268	db	':'
+	even
+pnmac1269	db	'$'
+	even
+pnmac1270	db	'%'
+	even
+pnmac1271	db	'"'
+	even
+pnmac1272	db	'|'
+	even
+pnmac1273	db	'('
+	even
+pnmac1274	db	'['
+	even
+pnmac1275	db	'r'
+	even
+zshrpval	dd	0
+pnmac1276	db	'value'
+	even
+zslowbyte	dd	0
+pnmac1277	db	'lowbyte'
+	even
+pnmac1278	db	'typech'
+	even
+pnmac1279	db	'typecn'
+	even
+zcnull	dd	0
+pnmac1280	db	'cnull'
+	even
+zcbcom	dd	0
+pnmac1281	db	'cbcom'
+	even
+zcecom	dd	0
+pnmac1282	db	'cecom'
+	even
+zcquote	dd	0
+pnmac1283	db	'cquote'
+	even
+zclpar	dd	0
+pnmac1284	db	'clpar'
+	even
+zcrpar	dd	0
+pnmac1285	db	'crpar'
+	even
+zcdot	dd	0
+pnmac1286	db	'cdot'
+	even
+zcsep	dd	0
+pnmac1287	db	'csep'
+	even
+zcpackage	dd	0
+pnmac1288	db	'cpkgc'
+	even
+zcsplice	dd	0
+pnmac1289	db	'csplice'
+	even
+zcmacro	dd	0
+pnmac1290	db	'cmacro'
+	even
+zcstring	dd	0
+pnmac1291	db	'cstring'
+	even
+zcpname	dd	0
+pnmac1292	db	'cpname'
+	even
+zcsymb	dd	0
+pnmac1293	db	'csymb'
+	even
+zcmsymb	dd	0
+pnmac1294	db	'cmsymb'
+	even
+zdmc	dd	0
+zdms	dd	0
+zdefsharp	dd	0
+zllquote	dd	0
+zllcomma	dd	0
+zllbquote	dd	0
+zllsharp	dd	0
+zshrpdot	dd	0
+zshrpplu	dd	0
+zshrpmoi	dd	0
+zshrpquo	dd	0
+zshrpsla	dd	0
+zshrpbak	dd	0
+zshrphat	dd	0
+zshrpcol	dd	0
+zshrpdol	dd	0
+zshrpprc	dd	0
+zshrprad	dd	0
+zshrpgui	dd	0
+zshrpbar	dd	0
+zshrppar	dd	0
+	extrn	btbin:dword
+zshrpbra	dd	0
+zllcolon	dd	0
+zllhat	dd	0
+zlllbra	dd	0
+zllrbra	dd	0
+ztypech	dd	0
+ztypecod	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

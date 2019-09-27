@@ -1,0 +1,26 @@
+defmodule rehash
+files (rehash)
+export (#:rehash:probepathm #:rehash:rehash.lm #:rehash:stats 
+        rehashend rehashinit #:rehash:pr)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:rehash:probepathm subr1 ())
+(#:rehash:|rehash.lm| subr1 ())
+(#:rehash:stats subr1 ())
+(rehashend subr0 ())
+(rehashinit subr0 ())
+(#:rehash:pr dmsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:rehash:all-modules 't '#:complice:globalvar)
+)((putprop '#:rehash:compiling-module 't '#:complice:globalvar)
+)((putprop '#:rehash:imported-modules 't '#:complice:globalvar)
+)((putprop '#:rehash:verbose 't '#:complice:globalvar)
+)((putprop '#:rehash:|path.lm| 't '#:complice:globalvar)
+))

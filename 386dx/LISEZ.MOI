@@ -1,0 +1,70 @@
+
+
+
+	REPERTOIRE D'EXPANSION DU LLM3 VERS L'ASSEMBLEUR 386
+	====================================================
+
+
+
+I ] PRECISIONS SUR LES DEUX SYNTAXES POSSIBLES
+    ------------------------------------------
+
+Les fichiers LLM3 peuvent etre expanses en deux syntaxes differentes :
+
+1. syntaxe UNIX
+
+Commune a tous les systemes UNIX 386, cette syntaxe produit un lelispbin.o dans
+le repertoire  ./386dx/s31 ou ./386dx/s64  qui peut immediatement se linker
+sous les  differents 
+systemes  unix  sans avoir a  expanser ni assembler.  Elle produit  des  objets
+sensiblement plus gros (environ 100k) que la version MASM. Elle est en tout cas
+obligatoire pour les systemes aix386 et solaris386.
+
+
+2. syntaxe MASM
+
+Compatible avec l'assembleur Microsoft,  cette version produit les plus petits
+executables mais elle impose de travailler avec 2 outils non standards (cvtomf
+et  masm)  uniquement disponibles sur SCO.  Cette version est utilise pour les
+systemes ix386 et sco386, elle permet de faire tenir ces deux systemes sur une
+seule disquette 1.2 Mo et c'est la seule raison de son utilisation.
+
+3. Les flottants
+
+Il y a maintenant deux versions de flottants : les 31 bits et les 64 bits. De
+plus on peut utiliser ou non le coprocesseur flottant.
+REMARQUE : Il semble que masm ne genere pas correctement les instructions 
+fdiv, fdivr, fdivp, fdivrp, fsub, fsubr, fsubp et fsubrp lorsqu'elles
+s'appliquent a des registres flottants. (fidv devient fdivr, fdivr devient
+fidv ... )
+
+II ] LES COMMANDES POUR EXPANSER LES DIFFERENTS FICHIERS
+     ---------------------------------------------------
+
+	llexpand [-as|masm] [-os2|unix] [-31|64] [-387|no387] [-all|f1 .. fN]
+
+	llexpand		;; utilise le shell interactif d'expansion
+	llexpand -masm f1 .. fN	;; expanse les fichiers f1 .. fN en syntaxe MASM
+	llexpand -as   f1 .. fN	;; expanse les fichiers f1 .. fN en syntaxe UNIX
+	llexpand -all		;; expanse tous les fichiers
+	llexpand -os2 -all	;; expanse tous les fichiers pour OS/2
+	llexpand -unix -all	;; expanse tous les fichiers pour UNIX
+	llexpand -31 -all	;; expanse tous les fichiers en flottant 31 bits
+	llexpand -64 -all	;; expanse tous les fichiers en flottant 31 bits
+	llexpand -387 -all	;; expanse tous les fichiers avec coprocesseur
+	llexpand -no387 -all	;; expanse tous les fichiers sans coprocesseur
+
+	Les options par defaut sont :
+		* -as   -unix -31 -387 sous UNIX
+		* -masm -os2  -31 -387 sous OS/2
+
+	make as31		;; cree lelisp31llm3 en syntaxe UNIX (387)
+	make masm31		;; cree lelisp31llm3 en syntaxe MASM (387)
+	make as64		;; cree lelisp64llm3 en syntaxe UNIX (387)
+	make masm64		;; cree lelisp64llm3 en syntaxe MASM (387)
+
+	REMARQUE: make recree automatiquement les fichiers assembleurs. Sur des
+		  machines lentes, il est conseille apres une modification de
+		  l'expanseur de detruire d'abord llexpand.core, de lancer
+		  llexpand, de regenerer les fichiers assembleurs, puis de 
+		  lancer le make.

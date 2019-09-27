@@ -1,0 +1,158 @@
+               re'capitulatif des consommation memoire
+          entre le debut d'une recette I (llm.rec, 31bitfloats)
+                et la fin sur toutes les machines UNIX
+
+
+aix386
+------
+
+apollo
+------
+
+decstation
+----------
+1). Test de l'interpre`te
+; date: jeu 25 avr  91 21:01:33   runtime: 28.40052
+; gcinfo: (gc 3 0 0 0 0 0 0 1 cons (188) symbol 5442 string 4434 vector 4040 
+float 0 fix 0 heap (202) code (1336))
+
+17). Test des rationnels (ancienne version: ratio)
+; date: jeu 25 avr  91 21:04:46   runtime: 153.4199
+; gcinfo: (gc 18 0 3 0 0 0 1 97 cons (146) symbol 2899 string 1489 vector 1843
+float 0 fix 0 heap (72) code (659))
+
+29). Test des appels externes
+; date: jeu avr  25 91 21:13:11   runtime: 584.6305
+; gcinfo: (gc 20 0 25 0 0 0 1 329 cons (144) symbol 2352 string 863 vector
+1787 float 0 fix 0 heap (48) code (387))
+
+hp9400
+------
+
+ibmrt
+-----
+
+iris4d
+------
+
+ix386
+-----
+
+m88k
+----
+1). Test de l'interpre`te
+; date: jeu 25 avr  91 20:53:52   runtime: 82.25
+; gcinfo: (gc 3 0 0 0 0 0 0 1 cons (188) symbol 5460 string 4370 vector 4041 
+float 0 fix 0 heap (201) code (1181))
+
+17). Test des rationnels (ancienne version: ratio)
+; date: jeu 25 avr  91 21:02:53   runtime: 558.6699
+; gcinfo: (gc 18 0 3 0 0 0 1 97 cons (146) symbol 2901 string 1464 vector 1844
+float 0 fix 0 heap (72) code (607))
+
+macaux
+------
+
+mips
+----
+1). Test de l'interpre`te
+; date: jeu 25 avr  91 18:58:57   runtime: 29.51
+; gcinfo: (gc 3 0 0 0 0 0 0 1 cons (188) symbol 5434 string 4432 vector 4040 
+float 0 fix 0 heap (202) code (1336))
+
+17). Test des rationnels (ancienne version: ratio)
+; date: jeu 25 avr  91 19:02:45   runtime: 157.89
+; gcinfo: (gc 18 0 3 0 0 0 1 97 cons (146) symbol 2897 string 1487 vector 1843
+float 0 fix 0 heap (72) code (660))
+
+29). Test des appels externes
+; date: jeu avr  25 91 19:10:44   runtime: 602.03
+; gcinfo: (gc 20 0 25 0 0 0 1 329 cons (144) symbol 2351 string 862 vector 
+1787 float 0 fix 0 heap (48) code (387))
+
+rs6000
+------
+1). Test de l'interpre`te
+; date: jeu 25 avr  91 20:57:17   runtime: 38.93
+; gcinfo: (gc 3 0 0 0 0 0 0 1 cons (187) symbol 5502 string 4485 vector 3166 
+float 0 fix 0 heap (188) code (1428))
+
+17). Test des rationnels (ancienne version: ratio)
+; date: jeu 25 avr  91 21:01:06   runtime: 199.51
+; gcinfo: (gc 18 0 3 0 0 0 2 97 cons (145) symbol 3000 string 1610 vector 561 
+float 0 fix 0 heap (52) code (696))
+
+29). Test des appels externes
+; date: jeu avr  25 91 21:16:47   runtime: 1104.64
+; gcinfo: (gc 20 0 24 0 0 0 4 329 cons (142) symbol 2464 string 944 vector 172
+float 0 fix 0 heap (22) code (455))
+
+sco386
+------
+
+sony
+----
+1). Test de l'interpre`te
+; date: jeu 25 avr  91 21:01:27   runtime: 88.18
+; gcinfo: (gc 3 0 0 0 0 0 0 1 cons (188) symbol 5336 string 4312 vector 4040 
+float 0 fix 0 heap (198) code (465))
+
+17). Test des rationnels (ancienne version: ratio)
+; date: jeu 25 avr  91 21:08:01   runtime: 398.42
+; gcinfo: (gc 18 0 3 0 0 0 1 97 cons (146) symbol 2777 string 1373 vector 1843
+float 0 fix 0 heap (69) code (189))
+
+29). Test des fonctions sur les Hash-Table
+; date: jeu avr  25 91 21:42:24   runtime: 2365.6
+; gcinfo: (gc 20 0 26 0 0 0 1 329 cons (144) symbol 2360 string 941 vector 
+1792 float 0 fix 0 heap (51) code (59))
+
+sonyr3000
+---------
+
+sun
+---
+1). Test de l'interpre`te
+; date: jeu 25 avr  91 18:26:49   runtime: 135.8
+; gcinfo: (gc 3 0 0 0 0 0 0 1 cons (188) symbol 5318 string 4309 vector 4040 
+float 0 fix 0 heap (198) code (465))
+
+17). Test des rationnels (ancienne version: ratio)
+; date: jeu 25 avr  91 18:47:22   runtime: 738.38
+; gcinfo: (gc 18 0 3 0 0 0 1 97 cons (146) symbol 2772 string 1368 vector 1843
+float 0 fix 0 heap (69) code (189))
+
+sun386i
+-------
+
+sun4
+----
+1). Test de l'interpre`te
+; date: jeu 25 avr  91 21:05:04   runtime: 75.12
+; gcinfo: (gc 3 0 0 0 0 0 0 1 cons (186) symbol 5211 string 4048 vector 4041 
+float 0 fix 0 heap (191) code (1331))
+
+17). Test des rationnels (ancienne version: ratio)
+; date: jeu 25 avr  91 21:09:36   runtime: 302.
+; gcinfo: (gc 18 0 3 0 0 0 1 97 cons (145) symbol 2681 string 1316 vector 1844
+float 0 fix 0 heap (64) code (611))
+
+29). Test des appels externes
+; date: jeu avr  25 91 21:28:00   runtime: 1388.67
+; gcinfo: (gc 20 0 28 0 0 0 1 329 cons (143) symbol 2134 string 689 vector 
+1787 float 0 fix 0 heap (39) code (337))
+
+unigraph
+--------
+1). Test de l'interpre`te
+; date: jeu 25 avr  91 21:01:02   runtime: 126.2
+; gcinfo: (gc 3 0 0 0 0 0 0 1 cons (188) symbol 5340 string 4325 vector 4040 
+float 0 fix 0 heap (198) code (465))
+
+17). Test des rationnels (ancienne version: ratio)
+; date: jeu 25 avr  91 21:08:30   runtime: 517.05
+; gcinfo: (gc 18 0 3 0 0 0 1 97 cons (146) symbol 2782 string 1378 vector 1843
+float 0 fix 0 heap (69) code (189))
+
+vaxunix
+-------

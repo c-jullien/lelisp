@@ -1,0 +1,25 @@
+;;; GELL 15.26: elaboration file for the module: stak
+;;;             translation done: "Thu Mar  11 93 15:55:20 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: stak.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'stak)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZstak" "Thu Mar  11 93 15:55:20 "
+
+'((check-stak . subr0) (meter-stak . subr0) (test-stak . subr1))
+
+#[(test-stak 1) check-value (count-calls-init) eval (count-calls-stop) t stak-z stak-y stak-x (stak-z stak-y stak-x) (stak-x stak-z stak-y) lambda (stak-x stak-z stak-y) (stak-x stak-z stak-y) (stak-z stak-y stak-x) check-stak #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-stak test-stak #:gell-resetfn:function-1]
+)
+
+(defcsetfn 'check-stak "GZstak" 0)
+(defcsetfn 'meter-stak "GZstak" 1)
+(defcsetfn 'test-stak "GZstak" 2)
+(defvar stak-x ())
+(defvar stak-y ())
+(defvar stak-z ())
+
+(defccheck '(eval check-value))

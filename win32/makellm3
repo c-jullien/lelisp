@@ -1,0 +1,193 @@
+#  Makefile for LLM3
+#  Le-Lisp v15.26.4 (Christian Jullien) Eligis 2007/02/11
+#########################################################
+
+SYSTEM	= win32
+AS	= ml
+DEBUG	= # -Zi
+ASFLAGS	= -c -nologo -coff -Cp -Zm -W3 $(DEBUG)
+SIZES	= -code 2000 -heap 1024 -vector 10 -string 18 -symbol 15 -cons 15 
+
+expand:
+	@cd ..\386dx
+	@..\$(SYSTEM)\lelisp31bin.exe $(SIZES) < faire.masm
+	@cd ..\$(SYSTEM)
+	@xcopy ..\386dx\$(SYSTEM)\asm31fpu\* asm31fpu /q
+	@xcopy ..\386dx\$(SYSTEM)\asm64fpu\* asm64fpu /q
+	@$(MAKE) -f Makellm3 DEBUG=$(DEBUG) llm31 llm64
+
+O31FPU	= \
+	o31fpu/bllsht.obj	\
+	o31fpu/carcdr.obj	\
+	o31fpu/chars.obj	\
+	o31fpu/cntrl.obj	\
+	o31fpu/eval.obj		\
+	o31fpu/extend.obj	\
+	o31fpu/fntstd.obj	\
+	o31fpu/fspecs.obj	\
+	o31fpu/gc.obj		\
+	o31fpu/ll386.obj	\
+	o31fpu/llinit.obj	\
+	o31fpu/macroch.obj	\
+	o31fpu/number.obj	\
+	o31fpu/physio.obj	\
+	o31fpu/print.obj	\
+	o31fpu/read.obj		\
+	o31fpu/specnb.obj	\
+	o31fpu/string.obj	\
+	o31fpu/symbs.obj	\
+	o31fpu/toperr.obj
+
+O64FPU	= \
+	o64fpu/bllsht.obj	\
+	o64fpu/carcdr.obj	\
+	o64fpu/chars.obj	\
+	o64fpu/cntrl.obj	\
+	o64fpu/eval.obj		\
+	o64fpu/extend.obj	\
+	o64fpu/fntstd.obj	\
+	o64fpu/fspecs.obj	\
+	o64fpu/gc.obj		\
+	o64fpu/ll386.obj	\
+	o64fpu/llinit.obj	\
+	o64fpu/macroch.obj	\
+	o64fpu/number.obj	\
+	o64fpu/physio.obj	\
+	o64fpu/print.obj	\
+	o64fpu/read.obj		\
+	o64fpu/specnb.obj	\
+	o64fpu/string.obj	\
+	o64fpu/symbs.obj	\
+	o64fpu/toperr.obj
+
+####################################################
+#	o31fpu
+####################################################
+
+llm31: $(O31FPU)
+
+o31fpu/bllsht.obj: asm31fpu/bllsht.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/bllsht.asm
+
+o31fpu/carcdr.obj: asm31fpu/carcdr.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/carcdr.asm
+
+o31fpu/chars.obj: asm31fpu/chars.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/chars.asm
+
+o31fpu/cntrl.obj: asm31fpu/cntrl.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/cntrl.asm
+
+o31fpu/eval.obj: asm31fpu/eval.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/eval.asm
+
+o31fpu/extend.obj: asm31fpu/extend.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/extend.asm
+
+o31fpu/fntstd.obj: asm31fpu/fntstd.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/fntstd.asm
+
+o31fpu/fspecs.obj: asm31fpu/fspecs.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/fspecs.asm
+
+o31fpu/gc.obj: asm31fpu/gc.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/gc.asm
+
+o31fpu/ll386.obj: asm31fpu/ll386.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/ll386.asm
+
+o31fpu/llinit.obj: asm31fpu/llinit.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/llinit.asm
+
+o31fpu/macroch.obj: asm31fpu/macroch.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/macroch.asm
+
+o31fpu/number.obj: asm31fpu/number.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/number.asm
+
+o31fpu/physio.obj: asm31fpu/physio.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/physio.asm
+
+o31fpu/print.obj: asm31fpu/print.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/print.asm
+
+o31fpu/read.obj: asm31fpu/read.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/read.asm
+
+o31fpu/specnb.obj: asm31fpu/specnb.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/specnb.asm
+
+o31fpu/string.obj: asm31fpu/string.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/string.asm
+
+o31fpu/symbs.obj: asm31fpu/symbs.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/symbs.asm
+
+o31fpu/toperr.obj: asm31fpu/toperr.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm31fpu/toperr.asm
+
+####################################################
+#	o64fpu
+####################################################
+
+llm64: $(O64FPU)
+
+o64fpu/bllsht.obj: asm64fpu/bllsht.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/bllsht.asm
+
+o64fpu/carcdr.obj: asm64fpu/carcdr.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/carcdr.asm
+
+o64fpu/chars.obj: asm64fpu/chars.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/chars.asm
+
+o64fpu/cntrl.obj: asm64fpu/cntrl.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/cntrl.asm
+
+o64fpu/eval.obj: asm64fpu/eval.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/eval.asm
+
+o64fpu/extend.obj: asm64fpu/extend.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/extend.asm
+
+o64fpu/fntstd.obj: asm64fpu/fntstd.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/fntstd.asm
+
+o64fpu/fspecs.obj: asm64fpu/fspecs.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/fspecs.asm
+
+o64fpu/gc.obj: asm64fpu/gc.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/gc.asm
+
+o64fpu/ll386.obj: asm64fpu/ll386.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/ll386.asm
+
+o64fpu/llinit.obj: asm64fpu/llinit.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/llinit.asm
+
+o64fpu/macroch.obj: asm64fpu/macroch.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/macroch.asm
+
+o64fpu/number.obj: asm64fpu/number.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/number.asm
+
+o64fpu/physio.obj: asm64fpu/physio.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/physio.asm
+
+o64fpu/print.obj: asm64fpu/print.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/print.asm
+
+o64fpu/read.obj: asm64fpu/read.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/read.asm
+
+o64fpu/specnb.obj: asm64fpu/specnb.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/specnb.asm
+
+o64fpu/string.obj: asm64fpu/string.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/string.asm
+
+o64fpu/symbs.obj: asm64fpu/symbs.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/symbs.asm
+
+o64fpu/toperr.obj: asm64fpu/toperr.asm
+	@$(AS) $(ASFLAGS) -Fo$@ asm64fpu/toperr.asm

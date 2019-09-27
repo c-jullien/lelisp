@@ -1,0 +1,394 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule #:display:ps
+
+files (
+psprint
+)
+
+import (
+
+; ;;; Imports which seem necessary
+stringio
+abbrev
+virbitmap
+defstruct
+)
+
+export (
+
+; ;;; Functions unused unless exported
+#:display:ps:init-psfile
+#:display:ps:multilayout
+#:display:ps:pscircle
+#:display:ps:psarc
+#:display:ps:psrect
+#:display:ps:pspolyline
+#:display:ps:pssegments
+#:display:ps:psprintbytemap
+#:display:ps:psdrawwin
+ps-fill-main-background
+ps-show-title-function
+ps-title-font
+ps-title-foreground
+ps-title-background
+ps-banner-width
+#:display:ps:pscurwindow
+#:display:ps:standard-find-grey
+ps-find-grey-function
+#:display:ps:standard-find-rgb
+ps-find-rgb-function
+#:display:ps:merge-files
+#:display:ps:window-bitmap
+#:display:ps:psgraph-env
+#:display:ps:pscolor
+#:display:ps:visible
+#:display:ps:font-y
+#:display:ps:font-h
+(structure #:ps:device)
+(structure #:ps:bitmap)
+(structure #:ps:extend)
+(structure #:display:ps)
+
+; ;;; Exports required by other modules
+ps-library-directory
+#:display:ps:pspreamble
+#:display:ps:font-family
+#:display:ps:psfontname
+#:display:ps:pspostambule
+#:display:ps:top-window
+#:display:ps:pstransy
+#:display:ps:stroke
+#:display:ps:psprintbits
+#:display:ps:psprintbytes
+#:display:ps:print-convertbytevector
+#:display:ps:print-bitvector
+#:display:ps:drawbytemap
+#:display:ps:psinit-widget
+#:display:ps:psctm-widget
+#:display:ps:psbanner
+#:display:ps:border-width
+#:display:ps:psclip
+#:display:ps:bounding-box
+#:display:ps:find-grey
+#:display:ps:get-rgb
+#:display:ps:current-color
+#:display:ps:set-current-color
+#:display:ps:ps-set-modecolor
+#:display:ps:psfill
+#:display:ps:drawfore
+#:display:ps:drawback
+#:display:ps:psstring
+#:display:ps:psprin
+#:display:ps:psprint
+#:display:ps:append-pathnames
+#:display:ps:copy-files
+#:display:ps:append-files
+#:display:ps:synchronize-disk
+#:display:ps:readstring
+#:display:ps:rectangle
+#:display:ps:bbox-list
+#:display:ps:compute-all-regions
+#:display:ps:compute-regions
+#:display:ps:compute-regions1
+#:display:ps:intersection
+#:display:ps:intersection1
+#:display:ps:intersectp
+
+; ;;; Not exported because only internally used
+; #:display:ps:indexfile
+; #:display:ps:psdocfont
+; #:display:ps:extendfont
+; #:display:ps:once
+; #:display:ps:psfudge
+; #:display:ps:int-to-ext-encode
+; #:display:ps:prin-aux
+; #:display:ps:pscompressor-widget
+; #:display:ps:pstitle
+; #:display:ps:mround
+; #:display:ps:psfill-pattern
+; #:display:ps:bitmap-name
+; #:display:ps:psfill-stipple
+; #:display:ps:pspattern-widget
+; #:display:ps:view-rect
+; #:display:ps:psbitstr
+; #:display:ps:offset-x
+; #:display:ps:offset-y
+)
+
+;;; Added automatically, don't type beyond this line.
+cpenv (
+stringio
+abbrev
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+defstruct
+((putprop '#:sys-package:bitmap 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:ps:s 't '#:complice:globalvar)
+)((putprop '#:display:ps:moveto 't '#:complice:globalvar)
+)((putprop '#:display:ps:rmoveto 't '#:complice:globalvar)
+)((putprop '#:display:ps:lineto 't '#:complice:globalvar)
+)((putprop '#:display:ps:rlineto 't '#:complice:globalvar)
+)((putprop '#:display:ps:currentgray 't '#:complice:globalvar)
+)((putprop '#:display:ps:setgray 't '#:complice:globalvar)
+)((putprop '#:display:ps:currentrgbcolor 't '#:complice:globalvar)
+)((putprop '#:display:ps:setrgbcolor 't '#:complice:globalvar)
+)((putprop '#:display:ps:fill 't '#:complice:globalvar)
+)((putprop '#:display:ps:stroke 't '#:complice:globalvar)
+)((putprop '#:display:ps:newpath 't '#:complice:globalvar)
+)((putprop '#:display:ps:gsave 't '#:complice:globalvar)
+)((putprop '#:display:ps:grestore 't '#:complice:globalvar)
+)((putprop '#:display:ps:reset 't '#:complice:globalvar)
+)((putprop '#:display:ps:rectpath 't '#:complice:globalvar)
+)((putprop '#:display:ps:ps-lib-directory 't '#:complice:globalvar)
+)((putprop '#:display:ps:ps-linecap 't '#:complice:globalvar)
+)((putprop '#:display:ps:ps-linejoin 't '#:complice:globalvar)
+)((putprop '#:display:ps:ps-other-init 't '#:complice:globalvar)
+)((defstruct #:display:ps reread line-style-vector pattern-vector font-vector font-metrics mode-vector ps-current-ge ps-current-win version hchannel ochannel printer-id engine-id ps-id epsf-id scale-factor pspattern colortable xmin ymin filename orient xori yori margin paper-width paper-height nbcolumns nbrows layout out-file font-aliases family-aliases copies colortype pscompress compressed-icon)
+(defstruct #:ps:extend view-rect offset-x offset-y visible psgraph-env current-pattern font-y font-h)
+(defstruct #:ps:bitmap window bitstr)
+(defstruct #:ps:device xmax ymax xmin ymin filename orient margin paper-width paper-height nbcolumns nbrows layout out-file scale-factor copies colortype compressed-icon)
+(defvar #:display:ps:s " ")
+(defvar #:display:ps:moveto "M")
+(defvar #:display:ps:rmoveto "m")
+(defvar #:display:ps:lineto "L")
+(defvar #:display:ps:rlineto "l")
+(defvar #:display:ps:currentgray "C")
+(defvar #:display:ps:setgray "S")
+(defvar #:display:ps:currentrgbcolor "c")
+(defvar #:display:ps:setrgbcolor "s")
+(defvar #:display:ps:fill "F")
+(defvar #:display:ps:stroke "f")
+(defvar #:display:ps:newpath "N")
+(defvar #:display:ps:gsave "G")
+(defvar #:display:ps:grestore "g")
+(defvar #:display:ps:reset "I")
+(defvar #:display:ps:rectpath "R")
+(defvar #:display:ps:ps-lib-directory)
+(defvar #:display:ps:ps-linecap (if (boundp '#:display:ps:ps-linecap) #:display:ps:ps-linecap 1))
+(defvar #:display:ps:ps-linejoin (if (boundp '#:display:ps:ps-linejoin) #:display:ps:ps-linejoin 1))
+(defvar #:display:ps:ps-other-init (if (boundp '#:display:ps:ps-other-init) #:display:ps:ps-other-init ""))
+)((putprop '#:display:ps:internal-font-aliases 't '#:complice:globalvar)
+)((defmacro #:display:ps:pstransy (y display) (list '|-| (list '#:display:ymax display) y))
+)((defmacro #:display:ps:psfudge (c) (mcons '|+| c '(0.5)))
+)((putprop '#:display:ps:iconmargin 't '#:complice:globalvar)
+)((putprop '#:display:ps:iconmargin2 't '#:complice:globalvar)
+)((putprop '#:display:ps:fill-main-background 't '#:complice:globalvar)
+)((putprop '#:display:ps:border-width 't '#:complice:globalvar)
+)((putprop '#:display:ps:roundcolor 't '#:complice:globalvar)
+)((putprop '#:display:ps:1/roundcolor 't '#:complice:globalvar)
+)((putprop '#:display:ps:find-grey-func 't '#:complice:globalvar)
+)((putprop '#:display:ps:find-grey-hash-table 't '#:complice:globalvar)
+)((putprop '#:display:ps:find-rgb-func 't '#:complice:globalvar)
+)((putprop '#:display:ps:rgb 't '#:complice:globalvar)
+)((putprop '#:display:ps:store-bitmaps 't '#:complice:globalvar)
+)((putprop '#:display:ps:use-comline 't '#:complice:globalvar)
+)((defvar #:display:ps:use-comline (if (boundp '#:display:ps:use-comline) #:display:ps:use-comline t))
+)((defmacro #:display:ps:window-bitmap (bitmap . val) (if val (mcons '#:ps:bitmap:window (list '#:bitmap:extend bitmap) val) (list '#:ps:bitmap:window (list '#:bitmap:extend bitmap))))
+(defmacro #:display:ps:psgraph-env (win . val) (if val (mcons '#:ps:extend:psgraph-env (list '#:window:extend win) val) (list '#:ps:extend:psgraph-env (list '#:window:extend win))))
+(defmacro #:display:ps:pscolor (c . val) (if val (mcons '#:color:extend c val) (list '#:color:extend c)))
+(defmacro #:display:ps:view-rect (ge . val) (if val (mcons '#:ps:extend:view-rect (list '#:graph-env:extend ge) val) (list '#:ps:extend:view-rect (list '#:graph-env:extend ge))))
+(defmacro #:display:ps:psbitstr (bitmap . val) (if val (mcons '#:ps:bitmap:bitstr (list '#:bitmap:extend bitmap) val) (list '#:ps:bitmap:bitstr (list '#:bitmap:extend bitmap))))
+(defmacro #:display:ps:offset-x (win . val) (if val (mcons '#:ps:extend:offset-x (list '#:window:extend win) val) (list '#:ps:extend:offset-x (list '#:window:extend win))))
+(defmacro #:display:ps:offset-y (win . val) (if val (mcons '#:ps:extend:offset-y (list '#:window:extend win) val) (list '#:ps:extend:offset-y (list '#:window:extend win))))
+(defmacro #:display:ps:visible (win . val) (if val (mcons '#:ps:extend:visible (list '#:window:extend win) val) (list '#:ps:extend:visible (list '#:window:extend win))))
+(defmacro #:display:ps:font-y (ge . val) (if val (mcons '#:ps:extend:font-y (list '#:graph-env:extend ge) val) (list '#:ps:extend:font-y (list '#:graph-env:extend ge))))
+(defmacro #:display:ps:font-h (ge . val) (if val (mcons '#:ps:extend:font-h (list '#:graph-env:extend ge) val) (list '#:ps:extend:font-h (list '#:graph-env:extend ge))))
+))
+cpexport (
+(#:ps:device:compressed-icon nsubr ())
+(#:ps:device:colortype nsubr ())
+(#:ps:device:copies nsubr ())
+(#:ps:device:scale-factor nsubr ())
+(#:ps:device:out-file nsubr ())
+(#:ps:device:layout nsubr ())
+(#:ps:device:nbrows nsubr ())
+(#:ps:device:nbcolumns nsubr ())
+(#:ps:device:paper-height nsubr ())
+(#:ps:device:paper-width nsubr ())
+(#:ps:device:margin nsubr ())
+(#:ps:device:orient nsubr ())
+(#:ps:device:filename nsubr ())
+(#:ps:device:ymin nsubr ())
+(#:ps:device:xmin nsubr ())
+(#:ps:device:ymax nsubr ())
+(#:ps:device:xmax nsubr ())
+(#:ps:device:make subr0 ())
+(#:ps:bitmap:bitstr nsubr ())
+(#:ps:bitmap:window nsubr ())
+(#:ps:bitmap:make subr0 ())
+(#:ps:extend:font-h nsubr ())
+(#:ps:extend:font-y nsubr ())
+(#:ps:extend:current-pattern nsubr ())
+(#:ps:extend:psgraph-env nsubr ())
+(#:ps:extend:visible nsubr ())
+(#:ps:extend:offset-y nsubr ())
+(#:ps:extend:offset-x nsubr ())
+(#:ps:extend:view-rect nsubr ())
+(#:ps:extend:make subr0 ())
+(#:display:ps:compressed-icon nsubr ())
+(#:display:ps:pscompress nsubr ())
+(#:display:ps:colortype nsubr ())
+(#:display:ps:copies nsubr ())
+(#:display:ps:family-aliases nsubr ())
+(#:display:ps:font-aliases nsubr ())
+(#:display:ps:out-file nsubr ())
+(#:display:ps:layout nsubr ())
+(#:display:ps:nbrows nsubr ())
+(#:display:ps:nbcolumns nsubr ())
+(#:display:ps:paper-height nsubr ())
+(#:display:ps:paper-width nsubr ())
+(#:display:ps:margin nsubr ())
+(#:display:ps:yori nsubr ())
+(#:display:ps:xori nsubr ())
+(#:display:ps:orient nsubr ())
+(#:display:ps:filename nsubr ())
+(#:display:ps:ymin nsubr ())
+(#:display:ps:xmin nsubr ())
+(#:display:ps:colortable nsubr ())
+(#:display:ps:pspattern nsubr ())
+(#:display:ps:scale-factor nsubr ())
+(#:display:ps:epsf-id nsubr ())
+(#:display:ps:ps-id nsubr ())
+(#:display:ps:engine-id nsubr ())
+(#:display:ps:printer-id nsubr ())
+(#:display:ps:ochannel nsubr ())
+(#:display:ps:hchannel nsubr ())
+(#:display:ps:version nsubr ())
+(#:display:ps:ps-current-win nsubr ())
+(#:display:ps:ps-current-ge nsubr ())
+(#:display:ps:mode-vector nsubr ())
+(#:display:ps:font-metrics nsubr ())
+(#:display:ps:font-vector nsubr ())
+(#:display:ps:pattern-vector nsubr ())
+(#:display:ps:line-style-vector nsubr ())
+(#:display:ps:reread nsubr ())
+(#:display:ps:stipple-bitmaps nsubr ())
+(#:display:ps:named-cursors nsubr ())
+(#:display:ps:resource nsubr ())
+(#:display:ps:current-selection nsubr ())
+(#:display:ps:graph-envs nsubr ())
+(#:display:ps:extend nsubr ())
+(#:display:ps:cursor-bitmaps nsubr ())
+(#:display:ps:pattern-bitmaps nsubr ())
+(#:display:ps:font-names nsubr ())
+(#:display:ps:colors nsubr ())
+(#:display:ps:menus nsubr ())
+(#:display:ps:bitmaps nsubr ())
+(#:display:ps:windows nsubr ())
+(#:display:ps:foreground nsubr ())
+(#:display:ps:background nsubr ())
+(#:display:ps:main-graph-env nsubr ())
+(#:display:ps:root-window nsubr ())
+(#:display:ps:graph-env nsubr ())
+(#:display:ps:window nsubr ())
+(#:display:ps:keyboard-focus-window nsubr ())
+(#:display:ps:prologuep nsubr ())
+(#:display:ps:eventmode nsubr ())
+(#:display:ps:ymax nsubr ())
+(#:display:ps:xmax nsubr ())
+(#:display:ps:device nsubr ())
+(#:display:ps:package nsubr ())
+(#:display:ps:name nsubr ())
+(#:display:ps:make subr0 ())
+(#:display:ps:init-psfile subr1 ())
+(#:display:ps:pspreamble subr1 ())
+(#:display:ps:psfontname subr1 ())
+(#:display:ps:font-family subr1 ())
+(#:display:ps:psinit-widget subr1 ())
+(#:display:ps:synchronize-disk subr0 ())
+(#:display:ps:append-files subr2 ())
+(#:display:ps:readstring subr0 ())
+(#:display:ps:append-pathnames subr2 ())
+(ps-library-directory nsubr ())
+(#:display:ps:psctm-widget subr1 ())
+(#:display:ps:multilayout subr3 ())
+(#:display:ps:copy-files subr2 ())
+(#:display:ps:pspostambule subr2 ())
+(#:display:ps:pscircle nsubr ())
+(#:display:ps:psprin nsubr ())
+(#:display:ps:psfill subr1 ())
+(#:display:ps:current-color subr1 ())
+(#:display:ps:ps-set-modecolor subr3 ())
+(#:display:ps:find-grey subr1 ())
+(#:display:ps:get-rgb subr2 ())
+(#:display:ps:psprint nsubr ())
+(#:display:ps:set-current-color subr1 ())
+(#:display:ps:drawback subr1 ())
+(#:display:ps:drawfore subr1 ())
+(#:display:ps:psprintbits nsubr ())
+(#:display:ps:print-bitvector subr2 ())
+(#:display:ps:psprintbytes nsubr ())
+(#:display:ps:print-convertbytevector subr3 ())
+(#:display:ps:stroke subr1 ())
+(#:display:ps:psarc nsubr ())
+(#:display:ps:psrect nsubr ())
+(#:display:ps:pspolyline nsubr ())
+(#:display:ps:pssegments nsubr ())
+(#:display:ps:psprintbytemap nsubr ())
+(#:display:ps:drawbytemap nsubr ())
+(#:display:ps:psdrawwin nsubr ())
+(#:display:ps:psbanner nsubr ())
+(#:display:ps:border-width subr2 ())
+(#:display:ps:psstring subr2 ())
+(ps-fill-main-background nsubr ())
+(ps-show-title-function nsubr ())
+(ps-title-font subr1 ())
+(ps-title-foreground subr3 ())
+(ps-title-background subr3 ())
+(ps-banner-width nsubr ())
+(#:display:ps:pscurwindow nsubr ())
+(#:display:ps:top-window subr1 ())
+(#:display:ps:psclip subr2 ())
+(#:display:ps:compute-all-regions subr1 ())
+(#:display:ps:compute-regions subr2 ())
+(#:display:ps:compute-regions1 subr2 ())
+(#:display:ps:intersectp subr2 ())
+(#:display:ps:rectangle nsubr ())
+(#:display:ps:intersection1 subr2 ())
+(#:display:ps:intersection subr2 ())
+(#:display:ps:bbox-list subr2 ())
+(#:display:ps:bounding-box subr2 ())
+(#:display:ps:standard-find-grey subr1 ())
+(ps-find-grey-function nsubr ())
+(#:display:ps:standard-find-rgb subr2 ())
+(ps-find-rgb-function nsubr ())
+(#:display:ps:merge-files subr2 ())
+(#:display:ps:window-bitmap dmsubr ())
+(#:display:ps:psgraph-env dmsubr ())
+(#:display:ps:pscolor dmsubr ())
+(#:display:ps:visible dmsubr ())
+(#:display:ps:font-y dmsubr ())
+(#:display:ps:font-h dmsubr ())
+(#:display:ps:pstransy dmsubr ())
+)
+cpfunctions (
+(#:display:ps:psdocfont subr1)
+(#:display:ps:once subr1)
+(#:display:ps:extendfont subr1)
+(#:display:ps:pspattern-widget subr1)
+(#:display:ps:pscompressor-widget subr1)
+(#:display:ps:indexfile subr2)
+(#:display:ps:psfill-pattern subr3)
+(#:display:ps:psfill-stipple nsubr)
+(#:display:ps:bitmap-name subr1)
+(#:display:ps:prin-aux subr2)
+(#:display:ps:pstitle nsubr)
+)
+cpimport (
+(stringio
+(read-from-string . subr1)
+(print-to-string . subr1)
+)(virbitmap
+(#:image:rectangle:make . subr0)
+))

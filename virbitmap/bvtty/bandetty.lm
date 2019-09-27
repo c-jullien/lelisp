@@ -1,0 +1,132 @@
+defmodule
+#:bitmap:bandetty
+files
+(bandetty)
+import
+(virbitmap defstruct)
+export
+(#:bitmap:bandetty:bitprologue #:bitmap:bandetty:bitepilogue #:bitmap:
+bandetty:bitmap-refresh #:bitmap:bandetty:bitmap-flush #:bitmap:bandetty:
+create-window #:bitmap:bandetty:create-subwindow #:image:rectangle:window:
+current-window #:image:rectangle:window:uncurrent-window #:image:rectangle:
+window:modify-window #:image:rectangle:window:kill-window #:image:rectangle:
+window:pop-window #:image:rectangle:window:move-behind-window #:bitmap:
+bandetty:find-window #:image:rectangle:window:map-window #:image:rectangle:
+window:current-keyboard-focus-window #:image:rectangle:window:
+uncurrent-keyboard-focus-window #:bitmap:bandetty:event-mode #:bitmap:
+bandetty:eventp #:bitmap:bandetty:read-event #:bitmap:bandetty:peek-event #:
+bitmap:bandetty:flush-event #:bitmap:bandetty:add-event #:bitmap:bandetty:
+grab-event #:bitmap:bandetty:ungrab-event #:bitmap:bandetty:itsoft-event #:
+bitmap:bandetty:read-mouse #:graph-env:font-max #:tty:window:redisplayscreen 
+#:tty:window:tybeep #:tty:window:tycls #:tty:window:tycleol #:tty:window:
+tynewline #:graph-env:current-font #:graph-env:load-font #:graph-env:
+draw-substring #:graph-env:clear-graph-env #:graph-env:width-substring #:
+graph-env:height-substring #:graph-env:x-base-substring #:graph-env:
+y-base-substring #:graph-env:x-inc-substring #:graph-env:y-inc-substring #:
+graph-env:draw-cursor #:graph-env:current-clip #:graph-env:current-line-style 
+#:graph-env:line-style-max #:graph-env:current-pattern #:graph-env:pattern-max
+#:graph-env:current-mode #:graph-env:draw-polyline #:graph-env:draw-polymarker
+#:graph-env:fill-area #:graph-env:draw-ellipse #:graph-env:fill-ellipse #:
+bitmap:bandetty:create-bitmap #:bitmap:bandetty:create-window-bitmap #:bitmap:
+bandetty:get-bit-line #:bitmap:bandetty:set-bit-line #:bitmap:bandetty:
+kill-bitmap #:bitmap:bandetty:bmref #:bitmap:bandetty:bmset #:bitmap:bandetty:
+bitblit #:bitmap:bandetty:do-redisplay #:bitmap:bandetty:redisplay1)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:bitmap:bandetty:bitprologue subr0 ())
+(#:bitmap:bandetty:bitepilogue subr0 ())
+(#:bitmap:bandetty:bitmap-refresh subr0 ())
+(#:bitmap:bandetty:do-redisplay nsubr ())
+(#:bitmap:bandetty:redisplay1 subr1 ())
+(#:bitmap:bandetty:bitmap-flush subr0 ())
+(#:bitmap:bandetty:create-window subr1 ())
+(#:bitmap:bandetty:create-subwindow subr1 ())
+(#:image:rectangle:window:current-window subr1 ())
+(#:image:rectangle:window:uncurrent-window subr1 ())
+(#:image:rectangle:window:modify-window nsubr ())
+(#:image:rectangle:window:kill-window subr1 ())
+(#:image:rectangle:window:pop-window subr1 ())
+(#:image:rectangle:window:move-behind-window subr2 ())
+(#:bitmap:bandetty:find-window subr2 ())
+(#:image:rectangle:window:map-window nsubr ())
+(#:image:rectangle:window:current-keyboard-focus-window subr1 ())
+(#:image:rectangle:window:uncurrent-keyboard-focus-window subr1 ())
+(#:bitmap:bandetty:event-mode subr1 ())
+(#:bitmap:bandetty:eventp subr0 ())
+(#:bitmap:bandetty:read-event subr1 ())
+(#:bitmap:bandetty:peek-event subr1 ())
+(#:bitmap:bandetty:flush-event subr0 ())
+(#:bitmap:bandetty:add-event subr1 ())
+(#:bitmap:bandetty:grab-event subr1 ())
+(#:bitmap:bandetty:ungrab-event subr0 ())
+(#:bitmap:bandetty:itsoft-event subr1 ())
+(#:bitmap:bandetty:read-mouse subr1 ())
+(#:graph-env:font-max subr1 ())
+(#:tty:window:redisplayscreen nsubr ())
+(#:tty:window:tybeep subr0 ())
+(#:tty:window:tycls subr0 ())
+(#:tty:window:tycleol subr0 ())
+(#:tty:window:tynewline subr0 ())
+(#:graph-env:current-font subr2 ())
+(#:graph-env:load-font subr2 ())
+(#:graph-env:draw-substring nsubr ())
+(#:graph-env:clear-graph-env subr1 ())
+(#:graph-env:width-substring nsubr ())
+(#:graph-env:height-substring nsubr ())
+(#:graph-env:x-base-substring nsubr ())
+(#:graph-env:y-base-substring nsubr ())
+(#:graph-env:x-inc-substring nsubr ())
+(#:graph-env:y-inc-substring nsubr ())
+(#:graph-env:draw-cursor nsubr ())
+(#:graph-env:current-clip nsubr ())
+(#:graph-env:current-line-style subr2 ())
+(#:graph-env:line-style-max subr1 ())
+(#:graph-env:current-pattern subr2 ())
+(#:graph-env:pattern-max subr1 ())
+(#:graph-env:current-mode subr2 ())
+(#:graph-env:draw-polyline nsubr ())
+(#:graph-env:draw-polymarker nsubr ())
+(#:graph-env:fill-area nsubr ())
+(#:graph-env:draw-ellipse nsubr ())
+(#:graph-env:fill-ellipse nsubr ())
+(#:bitmap:bandetty:create-bitmap subr1 ())
+(#:bitmap:bandetty:create-window-bitmap subr2 ())
+(#:bitmap:bandetty:get-bit-line subr3 ())
+(#:bitmap:bandetty:set-bit-line subr3 ())
+(#:bitmap:bandetty:kill-bitmap subr1 ())
+(#:bitmap:bandetty:bmref subr3 ())
+(#:bitmap:bandetty:bmset nsubr ())
+(#:bitmap:bandetty:bitblit nsubr ())
+)
+cpfunctions (
+(#:bitmap:bandetty:full-redisplay subr0)
+(#:bitmap:bandetty:redisplay nsubr)
+(#:bitmap:bandetty:delayed-redisplay nsubr)
+(#:bitmap:bandetty:flush-delayed-redisplay nsubr)
+(#:bitmap:bandetty:redisplay1-mini nsubr)
+(#:bitmap:bandetty:make-framed-screen nsubr)
+(make-ascii-event subr2)
+)
+cpimport
+()
+cpenv (
+sort
+callext
+defstruct
+path
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+((putprop '#:sys-package:bitmap 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

@@ -1,0 +1,99 @@
+;;; GELL 15.26: elaboration file for the module: libdate
+;;;             translation done: "Wed June 16 93 18:02:26 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: libdate.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'libdate)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZlibdate" "Wed June 16 93 18:02:26 "
+
+'((long-string-date . subr1) (eqdate . subr2) (/=date . subr2) (<date . subr2) (<=date . subr2) (>date . subr2) (>=date . subr2) (date-to-number . subr1) (number-to-date . subr1) (date-of-file . subr1))
+
+#[datep errbpa long-string-date long-month-names get-message long-day-names makestring slength |-| bltstring "00h 00mn 00s 000ms" eqvector eqdate t <date date-cmp <= < #:llcp:exit > |+| date-to-number * leap-number year-day-number .04166666 .0006944444 1.157407e-05 1.157407e-08 n (n) makevector date (date) lambda tropic-year-length / fix tropic-month-length |1+| week-day-number 86400. 8.64e+07 |1-| leap-year-p >= abs month-length pathnamep errpathnotpath date-of-file probefile errfile create-date coerce-namestring #:gell-resetfn:function-name #:gell-resetfn:function-1 #:gell-resetfn:function-2 /=date <=date >date >=date number-to-date]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'date)))
+(defvar #:sys-package:colon 'date)
+(if (not (featurep 'date)) (progn (loadmodule 'date)))
+(#:messages:put-message '#:date:ljanv 'french '"janvier" 'defmessage)
+(#:messages:put-message '#:date:ljanv 'english '"January" 'defmessage)
+'#:date:ljanv
+(#:messages:put-message '#:date:lfevr 'french '"fevrier" 'defmessage)
+(#:messages:put-message '#:date:lfevr 'english '"February" 'defmessage)
+'#:date:lfevr
+(#:messages:put-message '#:date:lmars 'french '"mars" 'defmessage)
+(#:messages:put-message '#:date:lmars 'english '"March" 'defmessage)
+'#:date:lmars
+(#:messages:put-message '#:date:lavr 'french '"avril" 'defmessage)
+(#:messages:put-message '#:date:lavr 'english '"April" 'defmessage)
+'#:date:lavr
+(#:messages:put-message '#:date:lmai 'french '"mai" 'defmessage)
+(#:messages:put-message '#:date:lmai 'english '"May" 'defmessage)
+'#:date:lmai
+(#:messages:put-message '#:date:ljuin 'french '"juin" 'defmessage)
+(#:messages:put-message '#:date:ljuin 'english '"June" 'defmessage)
+'#:date:ljuin
+(#:messages:put-message '#:date:ljuil 'french '"juillet" 'defmessage)
+(#:messages:put-message '#:date:ljuil 'english '"July" 'defmessage)
+'#:date:ljuil
+(#:messages:put-message '#:date:laout 'french '"aout" 'defmessage)
+(#:messages:put-message '#:date:laout 'english '"August" 'defmessage)
+'#:date:laout
+(#:messages:put-message '#:date:lsept 'french '"septembre" 'defmessage)
+(#:messages:put-message '#:date:lsept 'english '"September" 'defmessage)
+'#:date:lsept
+(#:messages:put-message '#:date:loct 'french '"octobre" 'defmessage)
+(#:messages:put-message '#:date:loct 'english '"October" 'defmessage)
+'#:date:loct
+(#:messages:put-message '#:date:lnov 'french '"novembre" 'defmessage)
+(#:messages:put-message '#:date:lnov 'english '"November" 'defmessage)
+'#:date:lnov
+(#:messages:put-message '#:date:ldec 'french '"decembre" 'defmessage)
+(#:messages:put-message '#:date:ldec 'english '"December" 'defmessage)
+'#:date:ldec
+(defvar long-month-names '((1 . #:date:ljanv) (2 . #:date:lfevr) (3 . #:date:lmars) (4 . #:date:lavr) (5 . #:date:lmai) (6 . #:date:ljuin) (7 . #:date:ljuil) (8 . #:date:laout) (9 . #:date:lsept) (10 . #:date:loct) (11 . #:date:lnov) (12 . #:date:ldec)))
+(#:messages:put-message '#:date:llun 'french '"lundi" 'defmessage)
+(#:messages:put-message '#:date:llun 'english '"Monday" 'defmessage)
+'#:date:llun
+(#:messages:put-message '#:date:lmar 'french '"mardi" 'defmessage)
+(#:messages:put-message '#:date:lmar 'english '"Tuesday" 'defmessage)
+'#:date:lmar
+(#:messages:put-message '#:date:lmer 'french '"mercredi" 'defmessage)
+(#:messages:put-message '#:date:lmer 'english '"Wednesday" 'defmessage)
+'#:date:lmer
+(#:messages:put-message '#:date:ljeu 'french '"jeudi" 'defmessage)
+(#:messages:put-message '#:date:ljeu 'english '"Thursday" 'defmessage)
+'#:date:ljeu
+(#:messages:put-message '#:date:lven 'french '"vendredi" 'defmessage)
+(#:messages:put-message '#:date:lven 'english '"Friday" 'defmessage)
+'#:date:lven
+(#:messages:put-message '#:date:lsam 'french '"samedi" 'defmessage)
+(#:messages:put-message '#:date:lsam 'english '"Saturday" 'defmessage)
+'#:date:lsam
+(#:messages:put-message '#:date:ldim 'french '"dimanche" 'defmessage)
+(#:messages:put-message '#:date:ldim 'english '"Sunday" 'defmessage)
+'#:date:ldim
+(defvar long-day-names '((1 . #:date:llun) (2 . #:date:lmar) (3 . #:date:lmer) (4 . #:date:ljeu) (5 . #:date:lven) (6 . #:date:lsam) (7 . #:date:ldim)))
+(defcsetfn 'long-string-date "GZlibdate" 0)
+(defcsetfn 'eqdate "GZlibdate" 1)
+(synonym '=date 'eqdate)
+(defcsetfn '/=date "GZlibdate" 2)
+(synonym '<>date '/=date)
+(defcsetfn '<date "GZlibdate" 3)
+(defcsetfn '<=date "GZlibdate" 4)
+(defcsetfn '>date "GZlibdate" 5)
+(defcsetfn '>=date "GZlibdate" 6)
+(defvar tropic-year-length 365.2421)
+(defvar gregorian-year-length 365.2425)
+(defvar tropic-month-length (/ tropic-year-length 12))
+(defvar moon-month-length 29.53059)
+(defcsetfn 'date-to-number "GZlibdate" 7)
+(defcsetfn 'number-to-date "GZlibdate" 8)
+(defcsetfn 'date-of-file "GZlibdate" 9)
+(defvar #:date:date-min (if (boundp '#:date:date-min) #:date:date-min (create-date)))
+(if (not (boundp '#:date:date-min)) (progn (#:date:year #:date:date-min 0) (#:date:month #:date:date-min 0) (#:date:day #:date:date-min 0) (#:date:hour #:date:date-min 0) (#:date:minute #:date:date-min 0) (#:date:second #:date:date-min 0)))
+
+(defccheck '(coerce-namestring create-date probefile pathnamep month-length abs >= leap-year-p |1-| week-day-number |1+| fix / makevector year-day-number leap-number * |+| > #:llcp:exit < <= eqdate eqvector bltstring |-| slength makestring get-message datep))

@@ -1,0 +1,38 @@
+defmodule
+sort
+files (
+sort
+)
+export (
+sort
+sortl
+sortn
+sortlt
+sortp
+pkgcmp
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(sort subr2 ())
+(sortl subr1 ())
+(sortn subr1 ())
+(sortlt subr1 ())
+(sortp subr1 ())
+(pkgcmp subr2 ())
+)
+cpfunctions (
+(#:sort:sort-aux subr3)
+(#:sort:sortl-sort-aux subr2)
+(#:sort:sortn-sort-aux subr2)
+(#:sort:sortlt-sort-aux subr2)
+(#:sort:sortp-sort-aux subr2)
+)
+cpimport
+()
+cpenv
+()

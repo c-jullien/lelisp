@@ -1,0 +1,26 @@
+;;; GELL 15.26: elaboration file for the module: defstruct
+;;;             translation done: "Wed June 16 93 18:01:11 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: defstruct.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'defstruct)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZdefstruct" "Wed June 16 93 18:01:11 "
+
+'((structurep . subr1) (defstruct . dmsubr) (new . subr1))
+
+#[defstruct getprop t errnva errnaa append exportable-definition quote list 'structure putprop ('defstruct) mcons defun make symbol let vector typevector (vector) |1+| #:system:defstruct-all-access-flag &nobind #:system:structaccess ((arg 0) (arg 1) (arg)) when (featurep 'setf) defsetf (featurep 'compiler) defmacro-open (struct . valeur) ifn valeur 'vref struct 'vset ((car valeur)) nreconc apply errstc new structurep #:gell-resetfn:function-name #:gell-resetfn:function-1]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'defstruct)))
+(defvar #:sys-package:colon 'defstruct)
+(add-feature 'defstruct)
+(defvar #:system:defstruct-all-access-flag t)
+(defcsetfn 'structurep "GZdefstruct" 0)
+(defcsetfn 'defstruct "GZdefstruct" 1)
+(defcsetfn 'new "GZdefstruct" 2)
+
+(defccheck '(apply nreconc |1+| symbol mcons list append getprop))

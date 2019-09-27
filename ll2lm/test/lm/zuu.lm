@@ -1,0 +1,24 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule zuu
+
+files (
+|zuu.ll|
+)
+
+import (
+
+; ;;; Imports which seem necessary
+zii
+roo
+)
+
+export (
+
+; ;;; Functions unused unless exported
+(structure s-zuu)
+)
+
+cpenv (
+((defstruct s-zuu (a (#:s-zii:make)) (b (m-roo 0)) (c (new 's-fee)))
+))

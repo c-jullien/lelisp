@@ -1,0 +1,103 @@
+defmodule #:display:x11
+files (x11draw.ll)
+include (
+virstruct.ll
+)
+import (
+x11_def
+x11struct
+virgraph ; current-foreground
+)
+export (
+:draw-cursor
+:draw-cn 
+:draw-substring
+:draw-cn-nobackground 
+:draw-substring-nobackground
+:draw-point
+:draw-polymarker 
+:draw-line 
+:draw-rectangle 
+:draw-polyline
+:draw-ellipse 
+:draw-circle 
+:fill-rectangle
+:fill-area 
+:fill-ellipse
+:fill-circle
+
+:draw-arc
+:fill-arc
+:draw-segments
+:draw-rectangles
+:fill-rectangles
+
+:highlight-rectangle
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:x11:draw-cursor nsubr ())
+(#:display:x11:draw-cn nsubr ())
+(#:display:x11:draw-substring nsubr ())
+(#:display:x11:draw-cn-nobackground nsubr ())
+(#:display:x11:draw-substring-nobackground nsubr ())
+(#:display:x11:draw-point nsubr ())
+(#:display:x11:draw-polymarker nsubr ())
+(#:display:x11:draw-line nsubr ())
+(#:display:x11:draw-rectangle nsubr ())
+(#:display:x11:draw-polyline nsubr ())
+(#:display:x11:draw-ellipse nsubr ())
+(#:display:x11:draw-circle nsubr ())
+(#:display:x11:fill-rectangle nsubr ())
+(#:display:x11:fill-area nsubr ())
+(#:display:x11:fill-ellipse nsubr ())
+(#:display:x11:fill-circle nsubr ())
+(#:display:x11:draw-arc nsubr ())
+(#:display:x11:fill-arc nsubr ())
+(#:display:x11:draw-segments nsubr ())
+(#:display:x11:draw-rectangles nsubr ())
+(#:display:x11:fill-rectangles nsubr ())
+(#:display:x11:highlight-rectangle nsubr ())
+)
+cpfunctions (
+(#:display:x11:set-solid-draws-i subr2)
+(#:display:x11:reset-solid-draws-i subr2)
+(#:display:x11:transparent-fill-arc nsubr)
+)
+cpimport (
+(virgraph
+(x-base-space . subr0)
+(current-mode . nsubr)
+)(x11_def
+(x11_set_foreground . subr3)
+(x11_draw_line . nsubr)
+(x11_draw_image_string . nsubr)
+(x11_draw_string . nsubr)
+(x11_draw_point . nsubr)
+(x11_draw_points . nsubr)
+(x11_set_fill_mode . subr3)
+(x11_draw_rectangle . nsubr)
+(x11_draw_lines . nsubr)
+(x11_draw_arc . nsubr)
+(x11_fill_rectangle . nsubr)
+(x11_fill_area . nsubr)
+(x11_fill_arc . nsubr)
+(x11_draw_segments . nsubr)
+(x11_draw_rectangles . nsubr)
+(x11_fill_rectangles . nsubr)
+(x11_set_mode . subr3)
+(x11_set_planemask . subr3)
+))
+cpenv (
+x11_def
+x11struct
+virutil
+virgraph
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:x11:vx 't '#:complice:globalvar)
+)((putprop '#:display:x11:vy 't '#:complice:globalvar)
+)((putprop '#:display:x11:vw 't '#:complice:globalvar)
+)((putprop '#:display:x11:vh 't '#:complice:globalvar)
+)((putprop '#:display:x11:solid-draws 't '#:complice:globalvar)
+))

@@ -1,0 +1,176 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	zundef:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zvoid:dword
+	extrn	eheap:dword
+	extrn	cheap:dword
+	extrn	fvect:dword
+	extrn	fstrg:dword
+	extrn	zllsystem:dword
+	extrn	ztyrdspl:dword
+	extrn	cpkgc:dword
+	extrn	bufpn:dword
+	extrn	obase:dword
+	extrn	savea1:dword
+	extrn	savea2:dword
+	extrn	savea3:dword
+	extrn	savea4:dword
+ocheap	dd	0
+bufstrg	dd	0
+pnmac681	db	'string'
+	even
+pnmac682	db	'plength'
+	even
+pnmac683	db	'slength'
+	even
+pnmac684	db	'slen'
+	even
+pnmac685	db	'sref'
+	even
+pnmac686	db	'sset'
+	even
+pnmac687	db	'typestring'
+	even
+pnmac688	db	'exchstring'
+	even
+pnmac689	db	'catenate'
+	even
+pnmac690	db	'eqstring'
+	even
+pnmac691	db	'substring-equal'
+	even
+pnmac692	db	'substring'
+	even
+pnmac693	db	'makestring'
+	even
+pnmac694	db	'duplstring'
+	even
+pnmac695	db	'bltstring'
+	even
+pnmac696	db	'fillstring'
+	even
+pnmac697	db	'scanstring'
+	even
+pnmac698	db	'spanstring'
+	even
+pnmac699	db	'chrpos'
+	even
+pnmac700	db	'chrnth'
+	even
+pnmac701	db	'chrset'
+	even
+pnmac702	db	'index'
+	even
+pnmac703	db	'hash'
+	even
+pnmac704	db	'symbol'
+	even
+pnmac705	db	'pname'
+	even
+pnmac706	db	'concat'
+	even
+pnmac707	db	'gensym'
+	even
+pnmac708	db	'alphalessp'
+	even
+pnmac709	db	'bltscreen'
+	even
+pnmac710	db	'typevector'
+	even
+pnmac711	db	'exchvector'
+	even
+pnmac712	db	'makevector'
+	even
+pnmac713	db	'vlength'
+	even
+pnmac714	db	'eqvector'
+	even
+pnmac715	db	'vref'
+	even
+pnmac716	db	'vset'
+	even
+pnmac717	db	'bltvector'
+	even
+pnmac718	db	'vector'
+	even
+pnmac719	db	'fillvector'
+	even
+zgenstrg	dd	0
+pnmac720	db	'gensym-string'
+	even
+zgenscpt	dd	0
+pnmac721	db	'gensym-counter'
+	even
+zstring000	dd	0
+	extrn	_accusingle1:dword
+	extrn	_accudouble1:dword
+zplength	dd	0
+zslength	dd	0
+zslen	dd	0
+zcaten	dd	0
+zsubsequal	dd	0
+zeqstring	dd	0
+zsubstring	dd	0
+zmakestrg	dd	0
+zduplstrg	dd	0
+zbltstrg	dd	0
+zfillstrg	dd	0
+zscanstrg	dd	0
+zspanstrg	dd	0
+zchrpos	dd	0
+zsref	dd	0
+zchrnth	dd	0
+zsset	dd	0
+zchrset	dd	0
+ztypestrg	dd	0
+zexchstrg	dd	0
+zffindex	dd	0
+zalphales	dd	0
+zffsymbol	dd	0
+zconcat	dd	0
+zhash	dd	0
+zfpnam	dd	0
+zgensym	dd	0
+wd	dd	0
+ws	dd	0
+dlx	dd	0
+dly	dd	0
+oldid	dd	0
+oldx	dd	0
+llid	dd	0
+llis	dd	0
+xr	dd	0
+yr	dd	0
+ys	dd	0
+zbltscrn	dd	0
+ztypevect	dd	0
+zmakevect	dd	0
+zvlength	dd	0
+zeqvector	dd	0
+zvref	dd	0
+zvset	dd	0
+zbltvect	dd	0
+zvector	dd	0
+zexchvect	dd	0
+zfillvect	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	mstack:dword
+	extrn	crwork:dword
+_DATA	ends

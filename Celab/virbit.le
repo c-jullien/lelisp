@@ -1,0 +1,48 @@
+;;; GELL 15.26: elaboration file for the module: virbit
+;;;             translation done: "Tue Aug  24 93 10:48:50 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: virbit.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'virbit)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZvirbit" "Tue Aug  24 93 10:48:50 "
+
+'((create-bitmap . nsubr) (bitmap-prologue . subr2) (window-bitmap . subr1) (kill-bitmap . subr1) (bmref . subr3) (bmset . nsubr) (byteref . subr3) (byteset . nsubr) (bitblit . nsubr) (#:sharp:* . nsubr) (#:sharp:B . subr0) (#:bitmap:bits . nsubr) (create-bytemap . nsubr) (#:bitmap:bytes . nsubr) (#:bitvector:read . subr2) (#:bitvector:prin . subr1) (#:bitmap:prin . subr1) (#:bitmap:bytemap:prin . subr1) (substitute-color . subr3) (subst-colors . subr2) (#:display:subst-colors . subr3))
+
+#[#:bitmap:make create-bitmap send nconc1 #:bitmap:bits "* Warning : bitmap created before bitprologue." print #:llcp:errwna errnia errwna makestring makevector errvec #:display:current-display #:display:no-current-display bitmap-prologue display typep #:display:errnotadisplay bitmap #:display:errnotabitmap type-of vector cons errbpa #:image:rectangle:window #:display:errnotawindow window-bitmap create-window-bitmap kill-bitmap delq bmref erroob bmset byteref byteset bitblit list #:display:err-diff-display #:display:dumpdevice #:display:dump:bitblit funcall ncons #:bitvector:read peekcn read apply readcn create-bytemap bitvector get-bit-line mask-field set-bit-line t "* Warning : bytemap created before bitprologue" display-depth bytes subst-colors #:bitmap:bytemap:make |+| 48000. < <= min #:bitmap:bytes get-byte-line set-byte-line #:bitmap:ext->int-encode-string errsxt |#*| #:bitmap:predefined-bytes "#*" complete #:bitmap:stringbuffer |1+| substring #:llcp:exit #:system:print-for-read (#:system:print-for-read) lambda #:system:compressed-icon "#" "*" prin #:bitmap:int->ext-encode-string princn chrpos (#:system:print-for-read) #:system:print-bitmap-flag "(create-bitmap " " " " #[" "#B(" rmargin outbuf terpri equal h w (#:system:print-for-read) "(create-bytemap " "#BC(" all-colors extend red-component green-component blue-component mutable acons 300000. 150000. abs listp errnla color #:display:errnotacolor #:bitmap:not-yet-implemented #:gell-resetfn:function-name #:gell-resetfn:function-n #:gell-resetfn:function-2 #:gell-resetfn:function-1 #:gell-resetfn:function-3 #:sharp:* #:sharp:B #:gell-resetfn:function-0 #:bitvector:prin #:bitmap:prin #:bitmap:bytemap:prin substitute-color #:display:subst-colors]
+)
+
+(defvar #:display:dumpdevice (if (boundp '#:display:dumpdevice) #:display:dumpdevice ()))
+(setq #:sys-package:colon 'bitmap)
+(defcsetfn 'create-bitmap "GZvirbit" 0)
+(defcsetfn 'bitmap-prologue "GZvirbit" 1)
+(defcsetfn 'window-bitmap "GZvirbit" 2)
+(defcsetfn 'kill-bitmap "GZvirbit" 3)
+(defcsetfn 'bmref "GZvirbit" 4)
+(defcsetfn 'bmset "GZvirbit" 5)
+(defcsetfn 'byteref "GZvirbit" 6)
+(defcsetfn 'byteset "GZvirbit" 7)
+(defcsetfn 'bitblit "GZvirbit" 8)
+(defvar #:system:print-bitmap-flag ())
+(defcsetfn '#:sharp:* "GZvirbit" 9)
+(defcsetfn '#:sharp:B "GZvirbit" 10)
+(defcsetfn '#:bitmap:bits "GZvirbit" 11)
+(defcsetfn 'create-bytemap "GZvirbit" 12)
+(defcsetfn '#:bitmap:bytes "GZvirbit" 13)
+(defvar #:bitmap:int->ext-encode-string "0123456789ABCDEFGHIJKLMNOPQRSTUVabcdefghijklmnopqrstuvwxyzWXYZ+*")
+(defvar #:bitmap:ext->int-encode-string ((lambda (strg-buffer) ((lambda (strg-index #:system:for:arg2) (while (<= strg-index #:system:for:arg2) (sset strg-buffer (sref #:bitmap:int->ext-encode-string strg-index) strg-index) (incr strg-index 1))) 0 (|1-| (slength #:bitmap:int->ext-encode-string))) strg-buffer) (makestring 128 255)))
+(defvar #:bitmap:predefined-bytes ((lambda (strg-buffer) (sset strg-buffer 0 0) (sset strg-buffer 1 255) (sset strg-buffer 2 1) (sset strg-buffer 3 2) (sset strg-buffer 4 4) (sset strg-buffer 5 8) (sset strg-buffer 6 16) (sset strg-buffer 7 32) (sset strg-buffer 8 64) (sset strg-buffer 9 128) (sset strg-buffer 10 68) (sset strg-buffer 11 85) (sset strg-buffer 12 170) (sset strg-buffer 13 17) (sset strg-buffer 14 192) (sset strg-buffer 15 3) strg-buffer) (makestring 16 0)))
+(defvar #:system:compressed-icon (when (boundp '#:system:compressed-icon) #:system:compressed-icon))
+(defvar #:bitmap:stringbuffer (makestring 4000 0))
+(defcsetfn '#:bitvector:read "GZvirbit" 14)
+(defcsetfn '#:bitvector:prin "GZvirbit" 15)
+(defcsetfn '#:bitmap:prin "GZvirbit" 16)
+(defcsetfn '#:bitmap:bytemap:prin "GZvirbit" 17)
+(defcsetfn 'substitute-color "GZvirbit" 18)
+(defcsetfn 'subst-colors "GZvirbit" 19)
+(defcsetfn '#:display:subst-colors "GZvirbit" 20)
+
+(defccheck '(listp subst-colors abs acons all-colors equal terpri outbuf rmargin chrpos princn prin #:llcp:exit substring |1+| min <= < |+| #:bitmap:bytemap:make mask-field readcn apply read peekcn #:bitvector:read ncons funcall list delq type-of typep makevector makestring #:llcp:errwna print #:bitmap:bits nconc1 send #:bitmap:make))

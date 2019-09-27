@@ -1,0 +1,115 @@
+defmodule
+macedit
+files (
+macedit
+)
+export (
+buf-new
+buf-link
+buf-unlink
+buf-readonly
+buf-readwrite
+cur-top
+cur-buttom
+cur-begline
+cur-endline
+cur-left
+cur-right
+cur-up
+cur-down
+cur-ygoto
+cur-xgoto
+char-insert
+char-delete
+char-delete-back
+char-transpose
+word-insert
+word-delete
+word-delete-back
+word-first-char
+word-last-char
+word-left
+word-search
+word-reverse-search
+word-get-symbol
+line-insert
+line-new
+line-break
+line-return
+line-delete
+line-get
+line-bol
+line-eol
+mark-set
+mark-exchange
+mark-copy
+mark-delete
+file-read
+file-insert
+file-print
+begin-expr
+next-expr
+previous-expr
+)
+import (
+lledit
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(buf-new dmsubr ())
+(buf-link dmsubr ())
+(buf-unlink dmsubr ())
+(buf-readonly dmsubr ())
+(buf-readwrite dmsubr ())
+(cur-top dmsubr ())
+(cur-buttom dmsubr ())
+(cur-begline dmsubr ())
+(cur-endline dmsubr ())
+(cur-left dmsubr ())
+(cur-right dmsubr ())
+(cur-up dmsubr ())
+(cur-down dmsubr ())
+(cur-ygoto dmsubr ())
+(cur-xgoto dmsubr ())
+(char-insert dmsubr ())
+(char-delete dmsubr ())
+(char-delete-back dmsubr ())
+(char-transpose dmsubr ())
+(word-insert dmsubr ())
+(word-delete dmsubr ())
+(word-delete-back dmsubr ())
+(word-first-char dmsubr ())
+(word-last-char dmsubr ())
+(word-left dmsubr ())
+(word-search dmsubr ())
+(word-reverse-search dmsubr ())
+(word-get-symbol dmsubr ())
+(line-insert dmsubr ())
+(line-new dmsubr ())
+(line-break dmsubr ())
+(line-return dmsubr ())
+(line-delete dmsubr ())
+(line-get dmsubr ())
+(line-bol dmsubr ())
+(line-eol dmsubr ())
+(mark-set dmsubr ())
+(mark-exchange dmsubr ())
+(mark-copy dmsubr ())
+(mark-delete dmsubr ())
+(file-read dmsubr ())
+(file-insert dmsubr ())
+(file-print dmsubr ())
+(begin-expr dmsubr ())
+(next-expr dmsubr ())
+(previous-expr dmsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+lledit
+)

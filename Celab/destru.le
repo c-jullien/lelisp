@@ -1,0 +1,22 @@
+;;; GELL 15.26: elaboration file for the module: destru
+;;;             translation done: "Thu Mar  11 93 15:58:42 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: destru.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'destru)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZdestru" "Thu Mar  11 93 15:58:42 "
+
+'((check-destru . subr0) (meter-destru . subr0) (test-destru . subr1))
+
+#[(test-destru 1) check-value (count-calls-init) eval (count-calls-stop) t nconc check-destru #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-destru test-destru #:gell-resetfn:function-1]
+)
+
+(defcsetfn 'check-destru "GZdestru" 0)
+(defcsetfn 'meter-destru "GZdestru" 1)
+(defcsetfn 'test-destru "GZdestru" 2)
+
+(defccheck '(nconc eval check-value))

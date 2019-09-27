@@ -1,0 +1,257 @@
+%=======================================================================
+\Chapter {6} {Extensions And Advanced Use}
+%=======================================================================
+This chapter discusses certain traits of the analyzer that allow you to
+refine your control of an analysis.
+You will learn how to use the {\it Module Analyzer} through \LeLisp\ toplevel, discover new project management functions to use with the (interactive) analyzer, and/or how to use declarations to modify the status of certain forms.
+
+%-----------------------------------------------------------------------
+\Section {How to directly analyze in a Le-Lisp session}
+%-----------------------------------------------------------------------
+This section describes how to analyze a module directly in a \LeLisp\  {\tt
+toplevel}.
+
+This possibility is especially interesting in the "fine-tuning" phase for an analysis that is a little more complicated.  The access to the analyzer via the {\tt toplevel} of the analyzer allows us to better {\it observe} the work environment, the project (see the following paragraph), and the trace functions. 
+
+You have here, at your disposal, a macro that corresponds exactly to the \|ll2lm| command: {\tt sh-analyze}. 
+
+%**************************************************************************
+\Macro {sh-analyze} {options} {N}
+%**************************************************************************
+All the \|ll2lm| options are applicable to {\tt sh-analyze}.
+
+\begin{Code*}
+unix% ll2lm
+; Welcome to Analyzer System
+= interactive use
+? (sh-analyze -load myproject.prj -project myproject -update mymod.lm)
+ ...
+\end{Code*}
+
+or, better yet, directly in a \LeLisp\ session, by typing the following expression:
+\begin{Code*}
+? ^Lloadll2lm
+= /usr/ilog/lelisp/llib/loadll2lm.ll
+? (sh-analyze -load myproject.prj -project myproject -update mymod.lm)
+ ...
+\end{Code*}
+
+These two forms are exactly the same:
+\begin{Code*}
+% ll2lm -load myproject.prj -project myproject -update mymod.lm
+ ...
+\end{Code*}
+
+It is also possible to analyze a module directly with the help of the {\tt analyze} function.  This will allow you to directly start the analysis of the specfied module without having to pass by the updating step of the environment (activation of required projects, updating of paths, etc. . .).  The functional interface is less rich than {\tt
+sh-analyze} since you use, now, only the essentials concerning the analysis.
+
+%**************************************************************************
+\Function {analyze} {mod prj [output exports files imports includes]} {N}
+%**************************************************************************
+
+This function starts the complete analysis of a {\tt
+mod} module that belongs to the {\tt prj} project.  The following arguments of the {\tt analyse} function are optional:
+{\tt output} allows you to specify the {\tt .lm} file name if necessary, {\tt exports}, {\tt files}
+{\tt imports}, and {\tt includes} are lists (usually empty) that influence the module contents via the fields \|export|,
+\|files|, \|import|, and \|include| respectively.
+
+\NoIndent
+{\tt analyze} is used by the {\tt sh-analyze} macro.
+
+Example\,: a {\tt mymod} module of the {\tt myproject} project.
+You start the analysis after updating the environment by:
+
+\begin{Code*}
+? (analyse 'mymod 'myproject)
+ ...
+\end{Code*}
+
+A precise definition of the of the {\tt \#:system:path} variable is indispensable to allow the {\em Module Analyzer} access to the files. 
+
+%-----------------------------------------------------------------------
+\Section {Project Management}
+%-----------------------------------------------------------------------
+This functional interface allows you to discover new project forms and to better manage a project in an interactive session.
+
+%**************************************************************************
+\Function {declared-rt-projects} {}{0}
+%**************************************************************************
+
+This function returns the project lists that are defined in the analysis environment. 
+
+\begin{Code*}
+? (declared-rt-projects)
+= (lisp x11 windows decw mdakerne mdatools)
+\end{Code*}
+
+{\em Note:} You need to make the distinction between the fact that a project has been {\it defined} and the fact that a project has been {\it activated} by the {\em Module Analyzer}.
+When a project has been {\it activated} by the
+{\em Module Analyzer}, this signifies that the tables destined for the {\em Module Analyzer} are loaded.
+To find out if a project is loaded, it is sufficient to code:
+
+\begin{Code*}
+? (find-rt-project 'lisp)
+= rtproject:<lisp,notloaded>
+? (load-rt-project 'lisp t)
+.. reading file(s) #p"/nfs/work/lelisp/modana/lisp.ref"
+= rtproject:<lisp,loaded>
+? (load-rt-project 'lisp t)
+= rtproject:<lisp,loaded>
+\end{Code*}
+
+%%**************************************************************************
+%\Function {declare-rt-project} {project} {1}
+%%**************************************************************************
+%
+%L'argument \|project| est un objet lisp de type \|rtproject|. La fonction
+%\|declare-rt-project| stocke le projet \|project| comme e'tant un
+%projet existant, sur lequel on peut lancer \|remove-rt-project|,
+%\|find-rt-project|, etc.
+
+%**************************************************************************
+\Function {find-rt-project} {name} {1}
+%**************************************************************************
+
+This function returns the \|rtproject| internal structure defined by the macro \|define-rt-project|.
+
+\begin{Code*}
+? (find-rt-project 'foo)
+= ()
+? (load-rt-project 'aida ())
+= rtproject:<aida,notloaded>
+\end{Code*}
+
+%**************************************************************************
+\Function {load-rt-project} {name env} {2}
+%**************************************************************************
+
+To load the tables destined for the {\em Module Analyzer} for the \|name| project.  If a project necessitates other projects (\|required-projects| key), you must take care to pass a true value (different from NIL) via the \|env| parameter.  The tables of these projects will also be loaded. 
+
+\begin{Code*}
+? (setq #:crunch:verbose 2) ; pour causer...
+= 2
+? (load-rt-project 'mdamlook t)
+.. reading file(s) : #p"/nfs/work/lelisp/modana/lisp.ref"
+.. reading file(s) : #p"/nfs/work/lelisp/modana/x11.ref"
+.. reading file(s) : #p"/nfs/work/aida/modana/mdasimpl.ref"
+.. reading file(s) : #p"/nfs/work/aida/modana/mdakerne.ref"
+...
+= rtproject:<mdmlook,loaded>
+\end{Code*}
+
+If the tables of a project are already loaded, this function does not reload them.  It is necessary to use the \|reload-rt-project| function to force their reloading.
+
+%**************************************************************************
+\Function {reload-rt-project} {name env} {2}
+%**************************************************************************
+
+This function works like the \|load-rt-projet| function but forces the loading of the tables destined for the {\em Module Analyzer} for the \|name| project (and only the \|name| project).  The table of the sub-projects specified with the \|required-projects| key are not reloaded if they have already been loaded or if the \|env| parameter has a false value (NIL).
+
+%**************************************************************************
+\Function {activate-rt-project} {name} {1}
+%**************************************************************************
+
+To "activate" a project before the anlysis of a module.  The invocation of this function is done at each call to the \|analyze| or \|sh-analyze| function on the concerned projects by the analysis of the module in question.  This function activates the specified function with the \|activate-function| key.
+
+%**************************************************************************
+\Function {remove-rt-project} {name} {1}
+%**************************************************************************
+
+To remove a project that has been defined by \|define-rt-project|.
+
+%****************************************************************************
+\Macro {define-rt-group-project} {name key1 val1 keyn valn} {N}
+%****************************************************************************
+
+Allows you to define a project as being a simple regrouping of other projects.  A group of projects is an intermediary notion between notions of a project and those of project concatenation.  The idea here is to offer the possibility to label a group of projects.
+Only the \|required-projects| key (and normally the \|root-directory|) 
+is permitted in a group definition of projects:  the \|required-projects| key describes the names of the projects that compose the group.
+The name of the group of projects defined in this fashion will be used in the \|required-projects| key of other projects.
+
+%%**************************************************************************
+%\Function {declare-rt-group-project} {project} {1}
+%%**************************************************************************
+%
+%stocke le projet \|project| comme e'tant un groupe de projet, existant,
+%sur lequel on peut lancer \|remove-rt-group-project|,
+%\|find-rt-group-project|, etc.
+
+%**************************************************************************
+\Function {find-rt-group-project} {name} {1}
+%**************************************************************************
+
+The \|name| argument is the name of a group of projects and \|find-rt-group-project| returns an \|rtproject| structure defined by the \|define-rt-group-project|macro.
+
+%**************************************************************************
+\Function {remove-rt-group-project} {name} {1}
+%**************************************************************************
+
+To remove a group of projects of name \|name| that has been defined by \|define-rt-group-project|.
+
+%-----------------------------------------------------------------------
+\Section {Analyzer Extensions}
+%-----------------------------------------------------------------------
+
+Other functions of the {\em Module Analyzer} are available to better control the functioning of the analysis.
+
+%**************************************************************************
+\Macro {defdynamiccall} {symbol number} {2}
+%**************************************************************************
+
+This declarative form must allow the {\em Module Analyzer} to recognize calls from calculated functions.  The {\tt symbol} parameter designates the name of a function capable of starting the execution of another calculated function.  
+The {\tt number} parameter designates the argument in the parameter list of this function that contains the calculated function.  The analyzer only knows how to use the calculated function when the calculated functions appear under the {\tt 'function} form.  In the classic case of {\tt funcall}, for example, the calculated functions is found in the first argument of {\tt funcall}\,:
+\begin{Code*}
+(funcall 'foo 1 2) 
+\end{Code*}
+So that the analyzer recognizes that the {\tt foo} function is called by this code (and starts the importation of the module that defines it) you would write:
+\begin{Code*}
+;; the first argument of FUNCALL is a function called dynamically
+(defdynamiccall funcall 1)
+;; the first argument of APPLY is a function called dynamically
+(defdynamiccall apply 1)
+;; the first argument of mapoblist is a function called dynamically
+(defdynamiccall mapoblist 1)
+\end{Code*}
+Another example for \Aida:
+\begin{Code*}
+;; the second argument of SET-ACTION is a function called dynamically
+(defdynamiccall set-action 2)
+\end{Code*}
+These examples are the declarations present (by default) in the respective \LeLisp\ and \Aida\  projects.  The {\tt defdynamiccall} calls of the user could be installed in the ({\tt
+project.prj}) project file concerned.
+The effect of {\tt defdynamiccall} is conditioned by the analysis option \|-dynamic| that must be set at the time of the analysis so that {\tt defdynamiccall} is operational.
+
+%**************************************************************************
+\Macro {defdefiner} {symbol [function]} {1-2}
+%**************************************************************************
+
+This declarative form allows the {\em Module Analyzer} to recognize new definers of entities that are not functions but that must start, all the same, the importation of the module that defines this entity (for the compilation environment.  See CPENV).
+The {\tt symbol} parameter is the name of such a definer.  The optional parameter {\tt function} is a function with one argument.  This function relates to the first parameter of the definer {\tt
+symbol} and indicates the pertinent name to find in the compilation environment.
+An example here is that of {\tt defabbrev} that doesn't define a function but, rather, is often put into a {\tt
+eval-when} so as to be known at the moment of the compilation.  All the modules using this abbreviation must import the module that defines it.
+So that the analyzer recognizes {\tt defabbrev} as such a definer, you would write:
+\begin{Code*}
+(defdefiner defabbrev)
+\end{Code*}
+{\tt defsharp} gives us another example of this.  The name of the associated function to the {\em sharp-character} is always calculated from the \|#:sys-package:sharp| package.  You would write:
+\begin{Code*}
+(definer defsharp (lambda(x)(symbol #:sys-package:sharp x)))
+\end{Code*}
+The two examples here are declared in standard in the memory image of the {\em Module Analyzer}.
+The {\tt dmc} and {\tt dms} definers are defined in the \LeLisp\  project.  The {\tt defdefiner} of the user could be installed in the ({\tt
+<project>.prj}) project file of the concerned project.
+Classically, if such forms are unknown, at the time of the analysis, one of the errors {\tt errudf, errnotanabbrev, ...} will be activated.  The user can occasionally start an activate another, less specific, error type:  {\tt ERRUNK} : "fct : I don't know : arg".  When this error is triggered at the time of the analysis, the analyzer imports the module defining {\tt arg}.  This functioning requires that the defining form {\tt arg} be declared by {\tt defdefiner}.
+
+The symbols declared by {\tt defdefiner} influence directly the analysis of a module that uses such a symbol in {\tt toplevel form}.  These symbols will be added in the (\|<project>.ref|) reference file and, as a "side-effect", this module could be imported at the time of the analysis of another module using this symbol.  In the same light, these symbols will be recognized in the \|CPENV| field of the modules at the time of the creation of a reference file from the modules (analysis option \|-build|).
+
+%**************************************************************************
+\Function {func-from} {symbol} {1}
+%**************************************************************************
+
+This function takes a name of a \LeLisp\ or \Aida\ function and creates a list containing the module names that are exporting this function.  This list contains, generally, one lone element, except in those cases where several modules exporting the same function.
+
+%**************************************************************************
+\Function {abbrev-from} {symbol} {1}
+%**************************************************************************
+This function accepts a symbol designating an abbreviation and returns a list containing the module(s) defining this abbreviation.

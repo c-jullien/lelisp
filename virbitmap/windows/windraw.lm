@@ -1,0 +1,116 @@
+defmodule #:display:windows
+files   (
+	windraw.ll
+)
+include (
+	virstruct.ll
+)
+import  (
+	virgraph ; x-base-space
+	virinit	 ; #:mode:xor
+	wingraph
+	win_def
+	winstruc
+)
+export (
+	:draw-cursor
+	:draw-cn 
+	:draw-substring
+	:draw-cn-nobackground
+	:draw-substring-nobackground
+	:draw-point
+	:draw-polymarker 
+	:draw-line 
+	:draw-rectangle 
+	:draw-polyline
+	:draw-ellipse 
+	:draw-circle 
+	:fill-rectangle
+	:fill-area 
+	:fill-ellipse
+	:fill-circle
+	:draw-arc
+	:fill-arc
+	:draw-segments
+	:draw-rectangles
+	:fill-rectangles
+	:highlight-rectangle
+
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:windows:draw-cursor nsubr ())
+(#:display:windows:draw-cn nsubr ())
+(#:display:windows:fill-rectangle nsubr ())
+(#:display:windows:draw-substring nsubr ())
+(#:display:windows:draw-cn-nobackground nsubr ())
+(#:display:windows:draw-substring-nobackground nsubr ())
+(#:display:windows:draw-point nsubr ())
+(#:display:windows:draw-polymarker nsubr ())
+(#:display:windows:draw-line nsubr ())
+(#:display:windows:draw-rectangle nsubr ())
+(#:display:windows:draw-polyline nsubr ())
+(#:display:windows:draw-ellipse nsubr ())
+(#:display:windows:draw-circle nsubr ())
+(#:display:windows:fill-area nsubr ())
+(#:display:windows:fill-ellipse nsubr ())
+(#:display:windows:fill-circle nsubr ())
+(#:display:windows:draw-arc nsubr ())
+(#:display:windows:fill-arc nsubr ())
+(#:display:windows:draw-segments nsubr ())
+(#:display:windows:draw-rectangles nsubr ())
+(#:display:windows:fill-rectangles nsubr ())
+(#:display:windows:highlight-rectangle nsubr ())
+)
+cpfunctions (
+(#:display:windows:transparent-fill-arc nsubr)
+)
+cpimport (
+(wingraph
+(#:display:windows:current-pattern . subr3)
+)(win_def
+(windows_set_foreground . nsubr)
+(windows_draw_line . nsubr)
+(windows_fill_rectangle . nsubr)
+(windows_draw_cn . nsubr)
+(windows_draw_string . nsubr)
+(windows_draw_cn_noback . nsubr)
+(windows_draw_string_noback . nsubr)
+(windows_draw_point . nsubr)
+(windows_draw_points . nsubr)
+(windows_draw_rectangle . nsubr)
+(windows_draw_lines . nsubr)
+(windows_draw_arc . nsubr)
+(windows_fill_area . nsubr)
+(windows_fill_arc . nsubr)
+(windows_fill_chord . nsubr)
+(windows_draw_segments . nsubr)
+(windows_draw_rectangles . nsubr)
+(windows_fill_rectangles . nsubr)
+)(virgraph
+(x-base-space . subr0)
+(y-base-space . subr0)
+(width-substring . subr3)
+(height-space . subr0)
+(current-mode . nsubr)
+))
+cpenv (
+virutil
+virgraph
+files
+vircolor
+virbit
+virwindow
+virevent
+virmenu
+virinit
+win_def
+winstruc
+wingraph
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:windows:vx 't '#:complice:globalvar)
+)((putprop '#:display:windows:vy 't '#:complice:globalvar)
+)((putprop '#:display:windows:vw 't '#:complice:globalvar)
+)((putprop '#:display:windows:vh 't '#:complice:globalvar)
+))

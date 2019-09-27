@@ -1,0 +1,184 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	zundef:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zvoid:dword
+	extrn	zsyspkgc:dword
+	extrn	mstack:dword
+	extrn	zquote:dword
+moinsun	dd	0
+fzero	dd	0
+fltun	dd	0
+fltmun	dd	0
+fltimax	dd	0
+fltimin	dd	0
+cpfnt	dd	0
+zsysgen	dd	0
+pnmac445	db	'genarith'
+	even
+pnmac446	db	'numberp'
+	even
+pnmac447	db	'integerp'
+	even
+pnmac448	db	'rationalp'
+	even
+pnmac449	db	'float'
+	even
+pnmac450	db	'fix'
+	even
+pnmac451	db	'truncate'
+	even
+pnmac452	db	'1+'
+	even
+pnmac453	db	'1-'
+	even
+pnmac454	db	'abs'
+	even
+pnmac455	db	'+'
+	even
+pnmac456	db	'0-'
+	even
+pnmac457	db	'-'
+	even
+pnmac458	db	'*'
+	even
+pnmac459	db	'1/'
+	even
+pnmac460	db	'//'
+	even
+pnmac461	db	'/'
+	even
+pnmac462	db	'quo'
+	even
+pnmac463	db	'quotient'
+	even
+pnmac464	db	'quomod'
+	even
+zex	dd	0
+pnmac465	db	'ex'
+	even
+zexmod	dd	0
+pnmac466	db	'mod'
+	even
+pnmac467	db	'modulo'
+	even
+pnmac468	db	'<?>'
+	even
+pnmac469	db	'='
+	even
+pnmac470	db	'<>'
+	even
+pnmac471	db	'/='
+	even
+pnmac472	db	'>='
+	even
+pnmac473	db	'>'
+	even
+pnmac474	db	'<='
+	even
+pnmac475	db	'<'
+	even
+pnmac476	db	'zerop'
+	even
+pnmac477	db	'plusp'
+	even
+pnmac478	db	'minusp'
+	even
+pnmac479	db	'min'
+	even
+pnmac480	db	'max'
+	even
+pnmac481	db	'sin'
+	even
+pnmac482	db	'cos'
+	even
+pnmac483	db	'asin'
+	even
+pnmac484	db	'acos'
+	even
+pnmac485	db	'atan'
+	even
+pnmac486	db	'exp'
+	even
+pnmac487	db	'log'
+	even
+pnmac488	db	'log10'
+	even
+pnmac489	db	'power'
+	even
+pnmac490	db	'sqrt'
+	even
+pnmac491	db	'most-positive-fixnum'
+	even
+pnmac492	db	'most-negative-fixnum'
+	even
+pnmac493	db	'minus-0-fixnum'
+	even
+	extrn	_accusingle1:dword
+	extrn	_accusingle2:dword
+znumberp	dd	0
+zintgerp	dd	0
+zrationalp	dd	0
+zllfloat	dd	0
+zlltrunc	dd	0
+	extrn	aux1:dword
+zllfix	dd	0
+zgaadd1	dd	0
+zgasub1	dd	0
+zgaabs	dd	0
+zgaplus	dd	0
+zgatimes	dd	0
+zgadinv	dd	0
+zgadiff	dd	0
+zgadrev	dd	0
+zgadiv	dd	0
+zgaquomod	dd	0
+zgamod	dd	0
+zgacomp	dd	0
+zzerop	dd	0
+zminusp	dd	0
+zplusp	dd	0
+zgaeqen	dd	0
+zganeqn	dd	0
+zgagt	dd	0
+zgage	dd	0
+zgalt	dd	0
+zgale	dd	0
+zmin	dd	0
+zmax	dd	0
+zllsin	dd	0
+zllcos	dd	0
+zllasin	dd	0
+zllacos	dd	0
+zllatan	dd	0
+zllexp	dd	0
+zlllog	dd	0
+zlllog10	dd	0
+zllpower	dd	0
+zllsqrt	dd	0
+zllfixmax	dd	0
+zllfixmin	dd	0
+zllminus0	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

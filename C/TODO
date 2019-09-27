@@ -1,0 +1,4 @@
+* Check why C/llC.c
+  convtype was printing "CALLG: type FLOAT not implemented".
+  buildretval was printing "BUILD: return value FLOAT not implemented".
+  Looks good with Lelispi.rec tests.

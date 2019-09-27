@@ -1,0 +1,144 @@
+#	Le Makefile pour generer un lisp minimal
+
+DIRL	= @SOURCE@
+CC	= @CC@
+LDLIBS  = @LIBS@
+LDEXPORT= @LDEXPORT@
+O	= @OBJEXT@
+CFLAGS  = @CFLAGS@ -I$(DIRL)/C/C -I$(DIRL)/common -DNBSYST=33 -DFILEINI=\"$(DIRL)/llib/startup.ll\"
+
+# X_EXTRA_LIBS = @X_EXTRA_LIBS@
+# X_LIBS       = @X_LIBS@
+# X_PRE_LIBS   = @X_PRE_LIBS@
+# X_CFLAGS     = @X_CFLAGS@
+
+all:	lelisp cmplc++
+
+################################
+# Names of standard binaries
+################################
+
+FLT		= 31
+BIN		= lelisp$(FLT)
+
+lelispbin: $(BIN)bin
+	@rm -f lelispbin
+	ln $(BIN)bin lelispbin
+
+leX11bin: $(BIN)X11bin
+	@rm -f leX11bin
+	ln $(BIN)X11bin leX11bin
+
+llcore:
+	mkdir llcore
+
+lelisp: conf/Lelispiconf.ll lelispbin
+	./config lelisp lelispbin Lelispiconf.ll \
+	-stack 12 -code 0 -heap 400 -number 0 -vector 8 -string 8 -symbol 8 -cons 15
+
+### cmplc++ "big modular complice system"
+cmplc++: conf/Cmplcconf.ll lelispbin
+	./config cmplc++ lelispbin Cmplcconf.ll \
+	-stack 18 -code 0 -heap 1024 -number 0 -vector 10 -string 18 -symbol 15 -cons 15
+
+#
+# C in local C directory
+#
+localcobj = o/llC.$(O) o/Cload.$(O) o/Cfix.$(O) o/Alloc.$(O) o/Getgloba.$(O) \
+	    o/llfloat$(FLT).$(O) # o/llfloat64.$(O)
+
+o/llC.$(O): C/llC.c
+	$(CC) $(CFLAGS) -c C/llC.c -o o/llC.$(O)
+
+o/Cload.$(O): C/Cload.c
+	$(CC) $(CFLAGS) -c C/Cload.c -o o/Cload.$(O)
+
+o/Cfix.$(O): C/Cfix.c
+	$(CC) $(CFLAGS) -c C/Cfix.c -o o/Cfix.$(O)
+
+o/Alloc.$(O): C/Alloc.c
+	$(CC) $(CFLAGS) -c C/Alloc.c -o o/Alloc.$(O)
+
+o/Getgloba.$(O): C/Getgloba.c
+	$(CC) $(CFLAGS) -c C/Getgloba.c -o o/Getgloba.$(O)
+
+o/llfloat31.$(O): C/llfloat31.c
+	$(CC) $(CFLAGS) -c C/llfloat31.c -o o/llfloat31.$(O)
+
+o/llfloat64.$(O): C/llfloat64.c
+	$(CC) $(CFLAGS) -c C/llfloat64.c -o o/llfloat64.$(O)
+
+#
+# C in ../common
+#
+commonobj = o/llmain.$(O) o/lelisp.$(O) o/llstdio.$(O)
+
+o/llmain.$(O): ../common/llmain.c
+	$(CC) $(CFLAGS) -c ../common/llmain.c -o o/llmain.$(O)
+
+o/lelisp.$(O): ../common/lelisp.c
+	$(CC) $(CFLAGS) -c ../common/lelisp.c -o o/lelisp.$(O)
+
+o/llstdio.$(O): ../common/llstdio.c
+	$(CC) $(CFLAGS) -c ../common/llstdio.c -o o/llstdio.$(O)
+
+# Build Bignum kernel using portable C
+
+kern.$(O): ../bignum/c/KerN.c ../bignum/l/common/llkern.c
+	$(CC) $(CFLAGS) -w -DDIGITon32BITS -I../bignum/h -c ../bignum/c/KerN.c -o o/KerN.$(O)
+	$(CC) $(CFLAGS) -w -DDIGITon32BITS -I../bignum/h -c ../bignum/l/common/llkern.c -o o/llkern.$(O)
+	$(CC) @LDRFLAGS@ -o kern.$(O) o/KerN.$(O) o/llkern.$(O)
+
+PHONY += kern.$(O)
+
+x11.$(O): o/x11lib.$(O) o/x11share.$(O) o/x11draw.$(O) o/evloop.$(O)
+	$(CC) @LDRFLAGS@ -o x11.$(O) o/x11lib.$(O) o/x11share.$(O) o/x11draw.$(O) o/evloop.$(O)
+
+o/x11lib.$(O): ../virbitmap/X11/x11lib.c
+	$(CC) $(CFLAGS) @X_CFLAGS@ -D_POSIX_SOURCE -DBP24BP -I../common -I./C -I../virbitmap/X11 -c ../virbitmap/X11/x11lib.c -o o/x11lib.$(O)
+
+o/x11share.$(O): ../virbitmap/X11/x11share.c
+	$(CC) $(CFLAGS) @X_CFLAGS@ -D_POSIX_SOURCE -DBP24BP -I../common -I./C -I../virbitmap/X11 -c ../virbitmap/X11/x11share.c -o o/x11share.$(O)
+
+o/x11draw.$(O): ../virbitmap/X11/x11draw.c
+	$(CC) $(CFLAGS) @X_CFLAGS@ -D_POSIX_SOURCE -DBP24BP -I../common -I./C -I../virbitmap/X11 -c ../virbitmap/X11/x11draw.c  -o o/x11draw.$(O)
+
+o/evloop.$(O): ../common/evloop.c
+	$(CC) $(CFLAGS) @X_CFLAGS@ -D_POSIX_SOURCE -DBP24BP -I../common -I./C -c ../common/evloop.c -o o/evloop.$(O)
+
+PHONY += x11.$(O)
+
+o/testext.$(O): ../lltest/testext.c
+	$(CC) $(CFLAGS) -w -DTEXTLIB -c ../lltest/testext.c -o o/testext.$(O)
+
+#
+# Link
+#
+obj= $(commonobj) $(localcobj) @BIGNUM@
+
+lelisp31bin: $(obj) lelisp31bin.$(O)
+	$(CC) $(CFLAGS) -o lelisp31bin $(obj) lelisp31bin.$(O) $(LDEXPORT) $(LDLIBS)
+
+letestextbin: $(obj) $(BIN)bin.$(O) o/testext.$(O)
+	$(CC) $(CFLAGS) -o letestextbin $(obj) $(BIN)bin.$(O) o/testext.$(O) $(LDEXPORT) $(LDLIBS) -lm
+
+lelisp31X11bin: $(obj) @X11OBJS@ lelisp31bin.$(O)
+	$(CC) $(CFLAGS) -o lelispX11bin $(obj) $(BIN)bin.$(O) @X11OBJS@ $(LDEXPORT) $(LDLIBS) @X_PRE_LIBS@ -lX11
+
+$(BIN)bin.$(O):
+	@MAKE@ -f Makeport $(BIN)bin.$(O)
+
+#
+# cleaning
+#
+clean:
+	rm -f $(obj) C3/*\.$(O) o/*\.$(O) $(BIN)bin\.$(O) $(BIN)bin lelisp$(FLT)X11bin
+
+cleancore:
+	for i in llcore/*.core ; do \
+		rm -f $$i ; \
+		rm -f llcore/$$i.core ; \
+		done
+
+scratch: clean
+	 rm lelisp $(BIN)bin llcore/lelisp.core

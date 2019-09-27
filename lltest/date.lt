@@ -1,0 +1,96 @@
+          (test-serie "[DATE module test]" ())
+
+;;; Functions of module "date" :
+
+#.(setq d (date))              			#.d
+(type-of (date))               			date
+(week-day-number ())				(errbpa week-day-number ())
+(:day d 1)					1
+(:month d 1)					1
+(:year d 0)					0
+(week-day-number d)				6 ; Saturday
+(:year d 1990)					1990
+(week-day-number d)				1 ; Monday
+(year-day-number ())				(errbpa year-day-number ())
+(year-day-number d)				1
+(:month d 2)					2
+(year-day-number d)				32
+(:month d 3)					3
+(year-day-number d)				60 ; 32 + 28
+(:year d 1992)					1992
+(year-day-number d)				61 ; leap-year
+#.(setq d (create-date))       			#.d
+(null (datep d))               			()
+(datep ())                     			()
+(type-of (short-string-date d)) string
+(< 0 (week-day-number d) 8)    			0
+(leap-year-p 1986)              		()
+(leap-year-p 1988)              		t
+(leap-year-p 1989)              		()
+(leap-year-p 1900)              		()
+(leap-year-p 2000)              		t
+(leap-number 0)					0
+(leap-number 1)					1
+(leap-number 4)					1
+(leap-number 5)					2
+(sub (leap-number 2001) (leap-number 2000))	1
+(sub (leap-number 1001) (leap-number 1000))	0
+
+(current-language 'french)			french
+#.(setq f (short-string-date d))		#.f
+(current-language 'english)			english
+(eqstring f (short-string-date d))		()
+
+
+          (test-serie "[LIBDATE module test]" ())
+;;; Functions of module "libdate" :
+
+(progn (sleep 1) ())                    	() ;; time must go on
+(type-of (long-string-date d))  		string
+(eqdate d d)                    		#.d
+(eqdate d (date))               		()
+(<date d (date))                		t   
+(<=date d d)                    		t
+(>date d (date))                		()
+(>=date d (date))               		()
+#.(setq n (date-to-number (setq dd (date)))) 	#.n
+(> 1. (- (number-to-date n) dd))		1.
+(date-to-number (number-to-date 0))		0.
+(date-to-number (number-to-date 1))		1.
+(date-to-number (number-to-date 31))		31.
+(date-to-number (number-to-date 32))		32.
+(date-to-number (number-to-date 365))		365.
+(date-to-number (number-to-date 366))		366.
+(date-to-number (number-to-date 12345))		12345.
+(date-to-number (number-to-date 123456.))      	123456.
+(current-language 'french)			french
+#.(setq f (long-string-date d))			#.f
+(current-language 'english)			english
+(eqstring f (long-string-date d))		()
+
+          (test-serie "[DATE of files test]" ())
+(progn
+ (setq a (temporary-file-pathname "testd1"))
+ (with ((outchan (openo a)))
+  (print "Hello")
+  (close (outchan)))
+ (sleep 1)
+ ())                                            ()
+(progn
+ (setq b (temporary-file-pathname "testd2"))
+ (with ((outchan (openo b)))
+  (print "Hello")
+  (close (outchan)))
+ ())                                            ()
+(setq d1 (date-of-file a)
+      d2 (date-of-file b)
+      d ())                                     ()
+(<date d1 d2)                                   t
+(deletefile a)                                  t
+(deletefile b)                                  t
+(date-of-file ())                              (errpathnotpath date-of-file ())
+(date-of-file "ipar007")                       (errfile date-of-file "ipar007")
+
+          (test-serie "[End of test]" ())
+
+    ()                            ()

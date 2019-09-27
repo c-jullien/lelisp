@@ -1,0 +1,33 @@
+; The Le-Lisp Benchmarks (18) : puzzle
+
+defmodule     triang
+files         (triang)
+export        (check-triang meter-triang test-triang)
+import        (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-triang subr0 ())
+(meter-triang subr0 ())
+(test-triang subr1 ())
+)
+cpfunctions (
+(gogogo subr1)
+(triang-try subr2)
+(triang-last-position subr0)
+(vector-to-list subr1)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+((putprop 'triang-board 't '#:complice:globalvar)
+)((putprop 'triang-sequence 't '#:complice:globalvar)
+)((putprop 'triang-a 't '#:complice:globalvar)
+)((putprop 'triang-b 't '#:complice:globalvar)
+)((putprop 'triang-c 't '#:complice:globalvar)
+)((putprop 'triang-answer 't '#:complice:globalvar)
+)((putprop 'triang-final 't '#:complice:globalvar)
+))

@@ -1,0 +1,63 @@
+
+#!/bin/sh
+set -x
+
+# Recette officielle de Le-Lisp standard modulaire.
+date
+cd ..
+make clean
+
+make letestextbin
+
+date
+ ./letestextbin -stack 6 -code 750 -heap 300 -number 0 -vector 4 -string 8 -symbol 7 -cons 24 -float 0 \
+	../llib/startup.ll << Eoi
+
+(load-stm () t t t t t)
+
+(libload "recette")
+Eoi
+
+rm -f letestextbin
+make letestextbin FLT=64
+date
+ ./letestextbin -stack 6 -code 750 -heap 300 -number 0 -vector 4 -string 8 -symbol 7 -cons 24 -float 16 \
+	../llib/startup.ll <<Eoi
+
+(load-stm () t t t t t)
+
+(libload "recette")
+Eoi
+
+date
+# Pour tester TYS
+ ./letestextbin ../llib/startup.ll << Eoi
+(until (setq c (tys)))
+a
+(if (neq c #/a)
+    (print "***** ERROR TYS")
+  )
+(end)
+Eoi
+
+date
+# Pour tester avec FORTRAN
+if [ -f /bin/f77 ]
+then
+
+rm -f leftestbin
+make leftestbin
+date
+ ./leftestbin -stack 6 -code 750 -heap 300 -number 0 -vector 4 -string 8 -symbol 7 -cons 24 -float 0 \
+	../llib/startup.ll << Eoi
+(load-stm ()()()'(callext) t)
+(libload "../lltest/testfortran.ll" t)
+(end)
+Eoi
+
+else
+echo "**** impossible to test with FORTRAN on this machine: " NetBSD
+fi
+
+date
+

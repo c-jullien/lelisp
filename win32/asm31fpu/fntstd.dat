@@ -1,0 +1,279 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	mstack:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	hashtab:dword
+	extrn	zundef:dword
+	extrn	zt:dword
+	extrn	zvoid:dword
+	extrn	savea1:dword
+	extrn	savea2:dword
+	extrn	savea3:dword
+	extrn	savea4:dword
+	extrn	tabtypfn:dword
+	extrn	tabcodfn:dword
+	extrn	zquote:dword
+	extrn	zprogn:dword
+	extrn	zlambda:dword
+	extrn	zflambda:dword
+	extrn	zmlambda:dword
+pnmac128	db	'true'
+	even
+pnmac129	db	'false'
+	even
+pnmac130	db	'not'
+	even
+pnmac131	db	'null'
+	even
+pnmac132	db	'atom'
+	even
+pnmac133	db	'atomp'
+	even
+pnmac134	db	'symbolp'
+	even
+pnmac135	db	'variablep'
+	even
+pnmac136	db	'constantp'
+	even
+pnmac137	db	'vectorp'
+	even
+pnmac138	db	'stringp'
+	even
+pnmac139	db	'listp'
+	even
+pnmac140	db	'nlistp'
+	even
+pnmac141	db	'consp'
+	even
+pnmac142	db	'boundp'
+	even
+pnmac143	db	'eq'
+	even
+pnmac144	db	'neq'
+	even
+pnmac145	db	'equal'
+	even
+pnmac146	db	'nequal'
+	even
+pnmac147	db	'memq'
+	even
+pnmac148	db	'member'
+	even
+pnmac149	db	'tailp'
+	even
+pnmac150	db	'last'
+	even
+pnmac151	db	'nthcdr'
+	even
+pnmac152	db	'nth'
+	even
+pnmac153	db	'length'
+	even
+pnmac154	db	'cons'
+	even
+pnmac155	db	'xcons'
+	even
+pnmac156	db	'ncons'
+	even
+pnmac157	db	'mcons'
+	even
+pnmac158	db	'list'
+	even
+pnmac159	db	'evlis'
+	even
+pnmac160	db	'kwote'
+	even
+pnmac161	db	'makelist'
+	even
+pnmac162	db	'reverse'
+	even
+pnmac163	db	'append'
+	even
+pnmac164	db	'append1'
+	even
+pnmac165	db	'remq'
+	even
+pnmac166	db	'remove'
+	even
+pnmac167	db	'copy'
+	even
+pnmac168	db	'copylist'
+	even
+pnmac169	db	'firstn'
+	even
+pnmac170	db	'lastn'
+	even
+pnmac171	db	'subst'
+	even
+pnmac172	db	'oblist'
+	even
+pnmac173	db	'boblist'
+	even
+pnmac174	db	'lhoblist'
+	even
+pnmac175	db	'rplaca'
+	even
+pnmac176	db	'rplacd'
+	even
+pnmac177	db	'rplac'
+	even
+pnmac178	db	'placdl'
+	even
+pnmac179	db	'displace'
+	even
+pnmac180	db	'setq'
+	even
+pnmac181	db	'set'
+	even
+pnmac182	db	'setqq'
+	even
+pnmac183	db	'psetq'
+	even
+pnmac184	db	'deset'
+	even
+pnmac185	db	'desetq'
+	even
+pnmac186	db	'cirlist'
+	even
+pnmac187	db	'nreverse'
+	even
+pnmac188	db	'nsubst'
+	even
+pnmac189	db	'delq'
+	even
+pnmac190	db	'delete'
+	even
+pnmac191	db	'nreconc'
+	even
+pnmac192	db	'nextl'
+	even
+pnmac193	db	'newl'
+	even
+pnmac194	db	'newr'
+	even
+pnmac195	db	'nconc'
+	even
+pnmac196	db	'nconc1'
+	even
+pnmac197	db	'acons'
+	even
+pnmac198	db	'pairlis'
+	even
+pnmac199	db	'assq'
+	even
+pnmac200	db	'assoc'
+	even
+pnmac201	db	'cassq'
+	even
+pnmac202	db	'cassoc'
+	even
+pnmac203	db	'rassq'
+	even
+pnmac204	db	'rassoc'
+	even
+pnmac205	db	'sublis'
+	even
+ztrue	dd	0
+zfalse	dd	0
+zllnull	dd	0
+zllnot	dd	0
+zatom	dd	0
+zatomp	dd	0
+zsymbolp	dd	0
+zvariablep	dd	0
+zconstantp	dd	0
+zvectorp	dd	0
+zstringp	dd	0
+zlistp	dd	0
+znlistp	dd	0
+zconsp	dd	0
+zboundp	dd	0
+zlleq	dd	0
+zneq	dd	0
+znequal	dd	0
+zequal	dd	0
+	extrn	itstate:dword
+	extrn	itcount:dword
+	extrn	_itloop:dword
+zmemq	dd	0
+zmember	dd	0
+ztailp	dd	0
+zlast	dd	0
+znth	dd	0
+znthcdr	dd	0
+zlllength	dd	0
+zllcons	dd	0
+zfxcons	dd	0
+zfncons	dd	0
+zmcons	dd	0
+zlist	dd	0
+zevlis	dd	0
+zkwote	dd	0
+zmakelist	dd	0
+zreverse	dd	0
+zappnd1	dd	0
+zappend	dd	0
+zremq	dd	0
+zllremove	dd	0
+zcopylist	dd	0
+zcopy	dd	0
+	extrn	btbin:dword
+zfirstn	dd	0
+zlastn	dd	0
+zsubst	dd	0
+zoblist	dd	0
+zboblist	dd	0
+zlhoblist	dd	0
+zrplaca	dd	0
+zrplacd	dd	0
+zrplac	dd	0
+zdisplace	dd	0
+zplacdl	dd	0
+zsetq	dd	0
+zfset	dd	0
+zsetqq	dd	0
+zpsetq	dd	0
+zdeset	dd	0
+zdesetq	dd	0
+zcirlist	dd	0
+znreconc	dd	0
+znsubst	dd	0
+zdelq	dd	0
+zlldelete	dd	0
+znreverse	dd	0
+znextl	dd	0
+znewl	dd	0
+znewr	dd	0
+znconc1	dd	0
+znconc	dd	0
+zacons	dd	0
+zpairlis	dd	0
+zassq	dd	0
+zassoc	dd	0
+zcassq	dd	0
+zcassoc	dd	0
+zrassq	dd	0
+zrassoc	dd	0
+zsublis	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

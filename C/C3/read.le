@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: read
+;;;             translation done: "Sat Oct   7 17 20:53:12 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: read.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'read)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZread" "Sat Oct   7 17 20:53:12 "
+
+'((read . subr0) (implode . subr1) (implodech . subr1) (readch . subr0) (readcn . subr0) (curread . subr0) (teread . subr0) (reread . subr1) (peekch . subr0) (peekcn . subr0) (readline . subr0) (stratom . subr3) (readstring . subr0) (read-delimited-list . subr1) (ascii . subr1) (cascii . subr1) (concatpkgc . subr2) (uppercase . subr1) (lowercase . subr1) (asciip . subr1) (digitp . subr1) (letterp . subr1) (ibase . nsubr))
+
+#[read #:gell-resetfn:function-name #:gell-resetfn:function-0 implode #:gell-resetfn:function-1 implodech readch readcn curread teread reread peekch peekcn readline stratom #:gell-resetfn:function-3 readstring read-delimited-list ascii cascii concatpkgc #:gell-resetfn:function-2 uppercase lowercase asciip digitp letterp ibase #:gell-resetfn:function-n]
+)
+
+
+(defccheck '())

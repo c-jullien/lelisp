@@ -1,0 +1,198 @@
+
+
+
+COMPLICE(L)              LOCAL COMMANDS               COMPLICE(L)
+
+
+
+NAME
+     complice - Le-Lisp module compiler
+
+SYNOPSIS
+     complice [ -parano flagp ] [ -cons n ] [ -callext flagp ]  [
+     -cmplc  cmd ] [ -lldir path ] [ -e S-expr ] [ -hh ] [ -i ] [
+     -g flagp ] [ -o diro ] [ -p dirp ] [ -r flagp ] [ -v ] [  -w
+     flagp ] [ module1 ... moduleN ]
+
+
+DESCRIPTION
+     _C_o_m_p_l_i_c_e compiles  the  Le-Lisp  modules  _m_o_d_u_l_e_1..._m_o_d_u_l_e_N.
+     _C_o_m_p_l_i_c_e searches for the descriptions of these modules (the
+     file _m_o_d_u_l_e_I._l_m) in the Le-Lisp path of the user, relying on
+     the  global  variable  #:SYSTEM:PATH, and creates binary Le-
+     Lisp files, such as _m_o_d_u_l_e._l_o, in the current directory. The
+     error  messages  and warnings from the compilation appear on
+     the terminal.  If no error message appears on the  terminal,
+     then the modules have been compiled successfully.
+
+
+OPTIONS
+     -parano  flagp
+          sets the Le-Lisp global variable #:COMPLICE:PARANO-FLAG
+          to  the  value  _f_l_a_g_p. _F_l_a_g_p should be a boolean value,
+          one of the two values T or ().  By default,  the  vari-
+          able  has  a  value of (), so _c_o_m_p_l_i_c_e assumes that the
+          functions called by FUNCALL and APPLY  use  no  dynami-
+          cally bound variables.
+
+
+     -cons  n
+          starts the compiler and sets the size of the cons  cell
+          zone  to _n. _n is expressed in 8Kcons.  For details, see
+          the command _l_e_l_i_s_p(_l).
+
+
+     -callext  flagp
+          sets or disables the compile-time redefinition  of  the
+          external  symbol  accessors  GETGLOBAL  and  DEFEXTERN-
+          CACHE.  _f_l_a_g_p should be a boolean value,  either  T  or
+          ().   If _f_l_a_g_p is () (the default value), the accessors
+          are redefined such that  the  compilation  can  proceed
+          without  a  compilation  core  linked  with the foreign
+          code, so the external symbols need not be present  dur-
+          ing  compilation.   (However,  they must be present for
+          module execution.) If the value of _f_l_a_g_p  is  T,  these
+          external symbol accessors are not redefined, and exter-
+          nal symbols are retrieved during compilation.
+
+
+     -cmplc cmd
+
+
+
+Le-Lisp v15.2    Last change: 30 September 1990                 1
+
+
+
+
+
+
+COMPLICE(L)              LOCAL COMMANDS               COMPLICE(L)
+
+
+
+          to use a command other than "cmplc++", which is used by
+          default.   This  command must exec a core with _c_o_m_p_l_i_c_e
+          _m_o_d_u_l_e loaded.
+
+
+     -lldir path
+          to search for Le-Lisp in a new directory, named by _p_a_t_h
+          .
+
+
+     -e  S-expr
+          influences the compilation environment by evaluating  a
+          Le-Lisp  form.  The  Le-Lisp  form  _S-_e_x_p_r is evaluated
+          before the actual compilation of the module.
+
+
+     -hh  uses an internal module  description  file  cache  when
+          looking  for  module description files, whose extension
+          is .lm.  This option can speed up  the  compilation  of
+          modules with many dependencies.
+
+
+     -i   returns to the interactive top level of Complice.  This
+          makes  it  possible to start a Le-Lisp session in which
+          the functions COMPILE and COMPILE-ALL-IN-CORE  use  the
+          _c_o_m_p_l_i_c_e  compiler.   The  arguments  that  follow this
+          option are passed as is to the  evaluator.   (For  more
+          details, see the command _l_e_l_i_s_p(_l).) Normally, the com-
+          mand _c_o_m_p_l_i_c_e(_l) uses the image  _c_m_p_l_c++.  (Again,  see
+          the command _l_e_l_i_s_p(_l).)
+          This image is found in the directory described  in  the
+          _c_o_m_p_l_i_c_e(_l) command itself.  The path is updated by the
+          command _n_e_w_d_i_r(_l).
+
+
+          The simple call:     complice corresponds to the  call:
+              complice -i
+
+
+     -g  flagp
+          prints the state of Le-Lisp's memory using the  command
+          (GC T) after the compilation.
+
+
+     -o  diro
+          stores the files  resulting  from  the  compilation  of
+          modules  in the directory _d_i_r_o. By default, these files
+          are created in the current directory.
+
+
+     -p  dirp
+          adds the directory dirp to the head of the Le-Lisp user
+
+
+
+Le-Lisp v15.2    Last change: 30 September 1990                 2
+
+
+
+
+
+
+COMPLICE(L)              LOCAL COMMANDS               COMPLICE(L)
+
+
+
+          path,  stored  in  the  variable  #:SYSTEM:PATH.   This
+          option can appear more than once in the  command  line.
+          This  feature  makes  it possible to add several direc-
+          tories to the path.
+
+
+     -r  flagp
+          positions the global  Le-Lisp  variable  #:SYSTEM:READ-
+          CASE-FLAG  to  _f_l_a_g_p. This variable decides whether the
+          reader will be case sensitive or not.  If _f_l_a_g_p  is  T,
+          symbols  in  the program conserve their case.  If _f_l_a_g_p
+          is (), symbols in the program are read in  lower  case.
+          The default value is ().
+
+
+     -v   puts _c_o_m_p_l_i_c_e  in  verbose  mode.   The  Le-Lisp  forms
+          evaluated  in the compiler environment are displayed on
+          the screen.
+
+
+     -w  flagp
+          sets the Le-Lisp  global  variable  #:COMPLICE:WARNING-
+          FLAG  to  the  value  _f_l_a_g_w.  _F_l_a_g_w should be a boolean
+          value, one of the value T or ().  By default, its value
+          is T, and _c_o_m_p_l_i_c_e displays warning messages.
+
+
+EXAMPLE
+     The Le-Lisp library itself is entirely  compiled  using  the
+     command  _c_o_m_p_l_i_c_e(_l).  These  compilations  are managed by a
+     _m_a_k_e_f_i_l_e(_1) called _M_a_k_e_m_o_d, located in the <machine>  direc-
+     tory.   This  file, _M_a_k_e_m_o_d, controls the dependencies among
+     the modules of the library as well as the order of  compila-
+     tion  of the modules.  Each module is compiled with the com-
+     mand _c_o_m_p_l_i_c_e(_l) and the options appropriate to that partic-
+     ular module.
+
+
+SEE ALSO
+     lelisp(l), cmplc++(l),
+     Le-Lisp V15.2, the Reference Manual, Je'ro^me  Chailloux  et
+     al., INRIA, Rocquencourt, 78153 Le Chesnay Cedex.
+
+
+FILES
+     cmplc++
+             command to startup the Complice compiler  system  in
+     interactive mode.
+     /tmp/cp$$
+             temporary files created during compilation.
+
+
+
+
+
+Le-Lisp v15.2    Last change: 30 September 1990                 3
+
+
+

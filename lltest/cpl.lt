@@ -1,0 +1,197 @@
+; .Section "Les anciens bugs du compilateur"
+
+
+(de foo-o1 (x)
+   (cons
+      (ncons x)
+      (ifn (eq (car x) 'no) (cdr x)) ))
+
+(de foo-o2 (n l)
+    (tagbody 
+     tour (if (le n 0)
+              (go magne)
+              (newl l (setq n (sub1 n)))
+              (go tour))
+     magne)
+    l)
+
+(de foo-o3 ()
+    (protect (+ 10 20) (+ 20 20)))
+
+(de foo-o4 ()
+    (protect (+ 10 20) 'ok))
+
+(de foo-o5 (x y)
+    (add (car x) (prog1 (car y) (rplaca x 100))))
+
+(de foo-o6 (x y)
+    (add (car y) (progn (rplaca y x) (car y))))
+
+(de foo-o7 (l)
+    (let ((f (nextl l))) (setq l (list f l)))
+    l)
+
+(de foo-o8 (adr)
+    ; courtesy of Greg ...
+    (if (fixp adr)
+	(logshift adr -1)
+        (rplacd adr (if (evenp (car adr))
+			(logshift (cdr adr) -1)
+		        (logor #$8000 (logshift (cdr adr) -1))))
+	(rplaca adr (logshift (car adr) -1))))
+
+
+
+; .Section "Le style du compilateur"
+
+(de foo-t1 (x)
+    (cons x x))
+
+(de foo-t2 (x)
+    (cons (car x) (car x)))
+
+(de foo-t3 (x)
+    (cons (cadr x) (cadr x)))
+
+(de foo-t4 (x)
+    (cons (caddr x) (caddr x)))
+
+(de foo-t5 (x)
+    (cons (caddr x) (cdddr x)))
+
+(de foo-t6 (x)
+    (cons (cadddr x) (cddddr x)))
+
+(de foo-t7 (x)
+    (cons (caddr x) (cddddr x)))
+
+(de foo-t8 (l)
+    (list (car l) (cadr l) (caddr l)))
+
+(de foo-t9 (l)
+    (list (car l) (cdar l) (cddar l)))
+
+(de foo-t10 (x)
+    (if (null x) x ()))
+
+(de foo-t11 (l r)
+    (while (consp l) (newl r (nextl l)))
+    r)
+
+(de foo-t12 (n)
+    (identity (identity (identity (sub1 n)))))
+
+(de foo-t13 (n)
+    (cond ((eq n 1) 1)
+          ((eq n 2) 1)
+          (t (plus (foo-t13 (sub1 n)) (foo-t13 (sub n 2))))))
+
+
+
+;  .Section "compilation destructurante"
+
+(de foo1 (l)
+    (mapcar (lambda ((x . y)) (list x y))
+            L))
+
+(de foo2 (n) (foo21))
+(de foo21 () n)
+
+
+
+; .Section "Les fonctions lexicales"
+
+(de fool1 ()
+    (block bar
+           (return-from bar 10)))
+
+(de fool2 ()
+    (block bar
+           (return-from bar 10)
+           11))
+
+(de fool3 ()
+    (block ()
+           (return 10)
+           11))
+
+(de fool4 ()
+    (block bar 
+           (block gee
+                  (return-from bar 20)
+                  21)
+           22))
+
+(de fool5 (f g x)
+    ; le cas tordu de l'"aluminium book"
+    (if (= x 0)
+        (funcall f)
+        (block here
+               (+ 5 (fool5 g
+                           (function (lambda () (return-from here 4)))
+                           (- x 1))))))
+
+(comment
+; les messages des compilos embrouillent plutot qu'autre chose ...
+          (de fool61 () (return-from bar 20))
+          (de fool6 () (block bar (fool61)))
+
+          (test fool6 (progn (compiler 'fool61 () :speak1 :speak2)
+                             (compiler 'fool6 ()  :speak1 :speak2))
+                (fool6)  (return-from errnab bar))
+)
+
+
+(de fool7 (x) (block bar (let ((y (+ x 1))) (return-from bar y))))
+
+
+
+; .Section "Les &NOBIND"
+
+(de foonob1 &nobind 
+    (list (arg) (arg 0) (arg 1)))
+
+(de foonob2 &nobind
+    (if (gt (arg) 2)
+        "pas GET/SET"
+        (let ((arg1 (if (lt (arg) 1) 'default1 (arg 0)))
+              (arg2 (if (lt (arg) 2) 'default2 (arg 1))))
+             (list arg1 arg2))))
+
+
+
+; .Section "Les fonctions tail-recs"
+
+(de footr0 (n) (footr01))
+(de footr01 () (if (le (setq n (sub1 n)) 0) 'ok (footr01)))
+
+(de footr1 (n) (footr11 n))
+(de footr11 (n) (if (le n 0) 'ok (footr11 (sub n 1))))
+
+(de footr2 (n) (footr21 n n))
+(de footr21 (n m) (if (le n 0) 'ok (footr21 (sub n 1) (sub m 1))))
+
+(de footr3 (n) (footr31 n n n))
+(de footr31 (n m o)
+    (if (le n 0) 'ok (footr31 (sub n 1) (sub m 1) (sub o 1))))
+
+
+(de footr4 (n) (footr41 n n n n))
+(de footr41 (n m o p) 
+    (if (le n 0) 'ok
+           (footr41 (sub n 1) (sub m 1) (sub o 1) (sub p 1))))
+
+(de footr5 (n) (footr51 n n n n n))
+(de footr51 (n m o p q) 
+    (if (le n 0) 'ok
+           (footr51 (sub n 1) (sub m 1) (sub o 1) (sub p 1) (sub q 1))))
+
+
+
+; .Section "Les fonctions de modifications physiques des listes."
+
+(de foo-l0 () (newr l (foo-l1)))
+(de foo-l1 () (newr l 1) 2)
+(setq l ())
+
+

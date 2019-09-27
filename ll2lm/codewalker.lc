@@ -1,0 +1,20 @@
+defmodule codewalker
+files (codewalker)
+import (
+module
+defvar
+kernellm
+rtprint
+diagnostic
+ref
+parse
+printlm
+rtmsg
+sets
+defrtprj
+)
+export (
+#:llmodule:agree-mod
+crunch-function-is-used
+)
+

@@ -1,0 +1,100 @@
+        (test-serie "[Features test]" ())
+#.(setq name (gensym) a ())                  ()
+(featurep name)                              ()
+(car (add-feature name))                     #.name
+(memq name (rem-feature name))               ()
+
+        (test-serie "[Search-in-path test]" ())
+(setq #:pathname:path (mapcar (lambda(p)(pathname p)) #:system:path)
+      a ())                                  ()
+
+(probefile (search-in-path #:system:path "pretty.ll"))            t
+(probefile (search-in-path #:system:path 'pretty.ll))             t
+(probefile (search-in-path #:system:path #u"pretty.ll"))          t
+(probefile (search-in-path #:system:path 456)) (errbpa search-in-path 456)
+(probefile (search-in-path #:pathname:path "pretty.ll"))          t
+(probefile (search-in-path #:pathname:path 'pretty.ll))           t
+(probefile (search-in-path #:pathname:path #u"pretty.ll"))        t
+(probefile (search-in-path #:system:llib-directory "pretty.ll"))  t
+(probefile (search-in-path #:system:llib-directory 'pretty.ll))   t
+(probefile (search-in-path #:system:llib-directory #u"pretty.ll"))t
+(probefile (search-in-path 123 "pretty.ll"))        (errbpa search-in-path 123)
+(probefile (search-in-path 123 'pretty.ll))         (errbpa search-in-path 123)
+(probefile (search-in-path 123 #u"pretty.ll"))      (errbpa search-in-path 123)
+(probefile (search-in-path `(,#:system:llib-directory 123) "pretty.ll"))   t
+(probefile (search-in-path `(,#:system:llib-directory 123) 'pretty.ll))    t
+(probefile (search-in-path `(,#:system:llib-directory 123) #u"pretty.ll")) t
+(probefile (search-in-path `(,#:system:llib-directory 123) "xyz99iop"))
+  (errbpa search-in-path 123)
+(probefile (search-in-path '(123) "pretty.ll"))  (errbpa search-in-path 123)
+(probefile (search-in-path '(123) 'pretty.ll))   (errbpa search-in-path 123)
+(probefile (search-in-path '(123) #u"pretty.ll"))(errbpa search-in-path 123)
+(probefile (search-in-path '(123) 456))          (errbpa search-in-path 456)
+(probefile (search-in-path (list #:system:llib-directory) 'pretty.ll)) t
+
+(search-in-path #:system:llib-directory "pretty.ll")
+  #. (catenate #:system:llib-directory "pretty.ll")
+(search-in-path #:system:llib-directory 'pretty.ll)
+  #. (catenate #:system:llib-directory "pretty.ll")
+(search-in-path #:system:llib-directory #u"pretty.ll")
+  #. (catenate #:system:llib-directory "pretty.ll")
+(search-in-path (pathname #:system:llib-directory) "pretty.ll")
+  #. (pathname (catenate #:system:llib-directory "pretty.ll"))
+(search-in-path (pathname #:system:llib-directory) 'pretty.ll)
+  #. (pathname (catenate #:system:llib-directory "pretty.ll"))
+(search-in-path (pathname #:system:llib-directory) #u"pretty.ll")
+  #. (pathname (catenate #:system:llib-directory "pretty.ll"))
+
+#+#:system:unixp (probefile(search-in-path #:system:path "../llib/pretty.ll"))
+     #+#:system:unixp t
+#+#:system:unixp (search-in-path #:system:path "/foo/xyz/pretty.ll")
+     #+#:system:unixp ()
+
+        (test-serie "[Probepathf test]" ())
+(probefile (probepathf (catenate "pretty" #:system:lelisp-extension)))   t
+(probepathf "trucutroc")                 ()
+#+#:system:unixp (probepathf "/trucutroc/")
+     #+#:system:unixp                    ()
+(setq file #u"pretty" a ())              ()
+(if (>= (slength (probepathf file)) 6)
+    t
+    () )                                 t
+(setq file #u"trucutroc" a ())           ()
+(if (>= (slength (probepathf file)) 9)
+    t
+    () )                                 ()
+      
+
+ (test-serie "[Probepathm test]" ())
+(probefile (probepathm (catenate "pretty" #:system:mod-extension)))   t
+(probepathm "trucutroc")                 ()
+#+#:system:unixp (probepathm "/trucutroc/")
+     #+#:system:unixp                    ()
+(setq file #u"pretty" a ())              ()
+(if (>= (slength (probepathm file)) 6)
+    t
+    () )                                 t
+(setq file #u"trucutroc" a ())           ()
+(if (>= (slength (probepathm file)) 9)
+    t
+    () )                                 ()
+
+ (test-serie "[Probepatho test]" ())
+(probefile (probepatho (catenate "pretty" #:system:obj-extension)))   t
+(probepatho "trucutroc")                 ()
+#+#:system:unixp (probepatho "/trucutroc/")
+     #+#:system:unixp                    ()
+(setq file #u"pretty" a ())              ()
+(if (>= (slength (probepatho file)) 6)
+    t
+    () )                                 t
+(setq file #u"trucutroc" a ())           ()
+(if (>= (slength (probepatho file)) 9)
+    t
+    () )                                 ()
+
+
+        (test-serie "[End of test]" ())
+
+
+

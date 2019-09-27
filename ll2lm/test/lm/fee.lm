@@ -1,0 +1,25 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule fee
+
+files (
+|fee.ll|
+)
+
+import (
+
+;;; Imports which seem necessary
+)
+
+export (
+
+; ;;; Functions unused unless exported
+f-fee
+(structure s-fee2)
+(structure s-fee)
+)
+
+cpenv (
+((defstruct s-fee a b)
+)((defstruct s-fee2 a (b (f-fur)))
+))

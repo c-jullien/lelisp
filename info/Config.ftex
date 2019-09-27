@@ -1,0 +1,169 @@
+% Nom du produit: Le-Lisp
+
+\documentstyle {ilogpaper}
+\pagestyle{myheadings}
+
+\Begin
+\Title {Configurations des portages Le-Lisp 15.25.2}
+\Author {Pascal KUCZYNSKI}
+\Author {ILOG \ \ \  2, avenue Gallie'ni, \\ BP 85  94253 Gentilly Cedex}
+
+\begin{center}
+
+\footnote{Ce document a e'te' engendre' automatiquement a` partir
+des outils de maintenance V15}
+
+\begin{tabular}{|c||c|c||c|c|c|c|} \hline 
+machines &    Unix  &   CPU        & float & Cload & \^\ Z & Core \\ \cline{2-3}
+ &  \multicolumn{2}{|c||}{Authorized Systems} & 31/64 &       &     & Exe.  \\
+\hline \hline \hline
+
+ALPHAOSF &
+osf &
+alpha &
+31 &
+no &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+OSF1 } & & & &
+ \\ \hline \hline
+APOLLO &
+bsd/s5 &
+68k &
+31/64 &
+no &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+SR10.3 [BSD4.3] (default) } & & & & \\
+ & \multicolumn{2}{|c||}{
+SR10.3 [SYS5.3] (use {\it tosystem sys5}) } & & & &
+ \\ \hline \hline
+DECSTATION &
+bsd &
+mips &
+31/64 &
+OK &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+ULTRIX 4.x (default) } & & & & \\
+ & \multicolumn{2}{|c||}{
+ULTRIX 3.x (use {\it tosystem ultrix3}) } & & & &
+ \\ \hline \hline
+HP9400 &
+s5 &
+68k &
+31/64 &
+OK &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+HP/UX 9.0 } & & & &
+ \\ \hline \hline
+HP9700 &
+s5 &
+HPA &
+31/64 &
+OK &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+HP-UX 9.xx } & & & &
+ \\ \hline \hline
+IRIS4D &
+s5 &
+mips &
+31/64 &
+OK &
+no &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+IRIX 4.0.5F } & & & &
+ \\ \hline \hline
+IRIX5 &
+s5 &
+mips &
+31/64 &
+no &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+IRIX 5.x } & & & &
+ \\ \hline \hline
+RS6000 &
+s5 &
+rs6000 &
+31/64 &
+no &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+X11R5 (default) } & & & & \\
+ & \multicolumn{2}{|c||}{
+X11R4 (use {\it tosystem X11R5}) } & & & &
+ \\ \hline \hline
+SCO386 &
+s5 &
+386 &
+31/64 &
+no &
+no &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+Unix sco386 SysV 3.2 (default) } & & & & \\
+ & \multicolumn{2}{|c||}{
+Chorus System 3.2 (use {\it tosystem chorus}) } & & & &
+ \\ \hline \hline
+SOLARIS &
+IUNIX &
+sparc &
+31/64 &
+no &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+SOLARIS2.x } & & & &
+ \\ \hline \hline
+SUN &
+bsd &
+68k &
+31/64 &
+OK &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+SUNOS4.x (default) } & & & & \\
+ & \multicolumn{2}{|c||}{
+SUNOS3.x (use {\it tosystem sunos3}) } & & & &
+ \\ \hline \hline
+SUN4 &
+bsd &
+sparc &
+31/64 &
+OK &
+OK &
+no
+ \\ \cline{2-3}
+ & \multicolumn{2}{|c||}{
+SUNOS4.x (default) } & & & & \\
+ & \multicolumn{2}{|c||}{
+Solaris2.x (use {\it tosystem solaris2}) } & & & &
+ \\ \hline \hline
+\end{tabular}
+
+\end{center}
+
+\End

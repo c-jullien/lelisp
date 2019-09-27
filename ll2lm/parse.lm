@@ -1,0 +1,133 @@
+defmodule parse
+files (cpmac parse)
+import(
+defvar
+kernellm
+syserror
+rtmsg
+ref
+)
+
+export (
+defdefiner
+#:llmodule:definerp
+defdynamiccall
+defstruct
+#:llmodule:get-all-def-in-files
+#:llmodule:parse
+#:compiler:macro-expand-error
+; to avoid warning from complice
+;W.2.parse..Fonction non utilisee:
+     defmacro-open
+;W.2.parse..Fonction non utilisee:
+     make-macro-open
+;W.2.parse..Fonction non utilisee:
+     macro-openp
+;W.2.parse..Fonction non utilisee:
+     remove-macro-open
+
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(defdefiner dmsubr ())
+(#:llmodule:definerp subr1 ())
+(defdynamiccall dmsubr ())
+(defstruct dmsubr ())
+(#:llmodule:get-all-def-in-files subr1 ())
+(#:llmodule:parse subr1 () (#:llmodule:f))
+(#:compiler:macro-expand-error subr1 ())
+(defmacro-open fsubr ())
+(make-macro-open subr2 ())
+(macro-openp subr1 ())
+(remove-macro-open subr1 ())
+)
+cpfunctions (
+(#:llmodule:has-parent subr1)
+(#:llmodule:cp-read-files1 subr2)
+(#:llmodule:cp-read-files2 nsubr)
+(#:llmodule:add-definer subr1)
+(#:llmodule:eval subr1)
+(#:compiler:mc:eval-when subr1)
+(#:llmodule:get-exportable subr3)
+(#:llmodule:get-exportable-aux subr3)
+(#:llmodule:macroexpand subr1)
+(#:compiler:macroexpand subr1)
+(#:compiler:macroexpand-internal subr2)
+(#:compiler:macroexpand-internal-open subr2)
+(#:compiler:macroexpand-internal-close subr2)
+(#:compiler:mc:cond subr1)
+(#:compiler:mc:dynamic-let subr1)
+(#:compiler:mc:dynamic subr1)
+(#:compiler:map subr3)
+(#:compiler:map-result subr3)
+(#:compiler:map-while subr3)
+(#:compiler:map-next-res subr3)
+(#:compiler:map-funcall subr2)
+(#:compiler:map-next-arg subr2)
+(#:compiler:mapvector subr1)
+(#:compiler:mc:catcherror subr1)
+(#:compiler:mc:errset subr1)
+(#:compiler:mc:time subr1)
+(#:llmodule:read subr0)
+(#:llmodule:typefn subr1)
+(#:llmodule:search-module subr1)
+(#:llmodule:parse-lambda subr1)
+(#:llmodule:parse-progn subr1)
+(#:llmodule:parse-exp subr1)
+(#:llmodule:parse-anonymous-exp subr2)
+(#:llmodule:parse-std-function? subr2)
+(#:llmodule:quoted-symbol-p subr1)
+(#:llmodule:parse-lock subr2)
+(#:llmodule:parse-tagbody subr1)
+(#:llmodule:parse-funarg subr2)
+(#:llmodule:parse-letv subr1)
+(#:llmodule:parse-deset subr1)
+(#:llmodule:flatt subr1)
+(#:llmodule:flat-auxillaire subr2)
+(#:llmodule:parse-call subr3)
+(#:llmodule:add-defdynamic subr2)
+(#:llmodule:valfn subr1)
+)
+cpimport (
+(kernellm
+(#:llmodule:unknow-abbrev-p . subr1)
+)(syserror
+(#:crunch:errstc . subr3)
+(#:crunch:load-cpenvs . subr2)
+(#:crunch:add-import . subr2)
+)(ref
+(func-from . subr1)
+(intern-from . subr1)
+))
+cpenv (
+files
+module
+defvar
+sets
+sort
+callext
+defstruct
+path
+kernellm
+format
+rtmsg
+rtprint
+pretty
+readlm
+diagnostic
+ref
+syserror
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:compiler:open-p 't '#:complice:globalvar)
+)((putprop '#:compiler:exported-env 't '#:complice:globalvar)
+)((putprop 'dynamic-flag 't '#:complice:globalvar)
+)((defun #:compiler:map-funcall (corps fnt) (cond ((not (consp fnt)) (mcons 'funcall fnt corps)) ((memq (car fnt) '(function quote)) (if (and (symbolp (cadr fnt)) (memq (typefn (cadr fnt)) '(() fexpr fsubr))) (mcons 'funcall fnt corps) (cons (cadr fnt) corps))) ((eq (car fnt) 'lambda) (cons fnt corps)) ((eq (car fnt) 'flambda) (cons (cons 'lambda (cdr fnt)) corps)) ((eq (car fnt) 'mlambda) (mcons 'funcall fnt corps)) (t (mcons 'funcall fnt corps))))
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:llmodule:x 't '#:complice:globalvar)
+)((unless (getdef '#:llmodule:defstruct) (synonymq #:llmodule:defstruct defstruct))
+(defmacro defstruct (n . l) (if (and #:system:defstruct-all-access-flag #:crunch:defstruct-flag (symbolp n) (setq #:llmodule:x (packagecell n)) (not (memq #:llmodule:x #:crunch:not-parent-structures))) (progn (unless (#:llmodule:has-parent n) (#:crunch:errstc n #:llmodule:x 'errstc)) (mcons '#:llmodule:defstruct n l)) (mcons '#:llmodule:defstruct n l)))
+(defun #:llmodule:has-parent (n) (when n (let ((p (packagecell n))) (if (and (symbolp p) (getprop p 'defstruct)) p ()))))
+)((defmacro defdynamiccall (f n) (unless (symbolp f) (error 'defdynamiccall 'errsym f)) (unless (numberp n) (error 'defdynamiccall 'errnna n)) (mcons 'putprop (list 'quote f) n '('#:llmodule:dynamic)))
+)((defmacro defdefiner (f . ap) (unless (symbolp f) (error 'defdefiner 'errsym f)) (mcons 'putprop (list 'quote f) (list 'quote (if ap (car ap) 'identity)) '('#:llmodule:definer)))
+))

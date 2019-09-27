@@ -1,0 +1,1152 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+
+
+ INRIA
+ Domaine de Voluceau
+ Rocquencourt
+ 78153 Le Chesnay Cedex
+
+
+
+
+
+
+                             Vprint
+
+
+
+                        Le Composeur Ceyx
+
+
+
+
+                 Ge'rard Berry, Jean-Marie Hullot
+
+                            Ete' 1984
+
+
+
+
+
+
+
+
+Re'sume': _N_o_u_s _d_e'_f_i_n_i_s_s_o_n_s  _u_n_e  _m_a_c_h_i_n_e  _v_i_r_t_u_e_l_l_e  _p_e_r_m_e_t_t_a_n_t  _d_e
+_p_r_o_d_u_i_r_e  _d_e_s  _r_e_p_r_e'_s_e_n_t_a_t_i_o_n_s  _t_e_x_t_u_e_l_l_e_s  _d_e _s_t_r_u_c_t_u_r_e_s _L_i_s_p _o_u
+_C_e_y_x _a_r_b_i_t_r_a_i_r_e_s.
+
+
+
+
+
+
+
+
+
+                                2         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                3         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+                             Vprint
+
+                        Le Composeur Ceyx
+
+                 _G_e'_r_a_r_d _B_e_r_r_y, _J_e_a_n-_M_a_r_i_e _H_u_l_l_o_t
+
+
+Nous  de'finissons  une  machine   pour   composer   Ceyx.   Cette
+documentation  donne  les  fonctions  de base de la machine et un
+programme standard de paragraphage (pretty-print) utilisant cette
+machine.
+
+La lecture de ce document suppose une connaissance  pre'alable  de
+Ceyx  et  Le_Lisp.  Nous  renvoyons  pour cela aux rapports INRIA
+suivants:
+
+o+ Le_Lisp de l'INRIA, Le Manuel de Re'fe'rence (J. Chailloux),
+
+o+ Ceyx: Une Initiation (J.-M. Hullot),
+
+o+ Programmer en Ceyx (J.-M. Hullot).
+
+
+
+
+1  La Machine de Composition
+
+
+1.1  Impression des Atomes
+
+
+(with-vprint-output <expr>1 ... <expr>n)
+
+   Les <expr>i sont des expressions  Lisp  quelconques  qui  sont
+   e'value'es  en se'quence. Toutes les fonctions d'impression et de
+   composition de'crites ci-dessous ne fonctionnent que  si  elles
+   sont utilise'es dans le corps d'un with-vprint-output.
+
+
+
+
+                                4         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+(vpatom <atom>)
+
+   Permet d'imprimer un atome Lisp quelconque.
+
+(vprincn <charn>)
+
+   <charn> est un code ascii, cette fonction imprime le caracte`re
+   correspondant.
+
+(vprinch <char>)
+
+   <char> est un symbole monocaracte`re qui est imprime'.
+
+
+Exemples:
+
+? (with-vprint-output (vprinch 'a))
+a
+= t
+? (with-vprint-output (vprincn #/a))
+a
+= t
+? (with-vprint-output (vpatom 'Celui) (vprinch '| |)
+?                     (vpatom "qui") (vprinch '| |)
+?                     (vpatom "sait") (vprinch '| |)
+                      (vpatom "ne") (vprinch '| |)
+                      (vpatom "parle") (vprinch '| |)
+                      (vpatom "pas") (vprincn #/.) (vprinch '| |))
+Celui qui sait ne parle pas.
+= t
+
+
+1.2  Les Blocs de Composition
+
+
+Les fonctions de la section pre'ce'dente permettent  de  construire
+des  _b_l_o_c_s  _d_e  _t_e_x_t_e  monolignes. Pour l'exemple pre'ce'dent, nous
+avons le bloc de texte:
+
+
+*----------------------------*
+
+                                5         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+|Celui qui sait ne parle pas.|
+*----------------------------*
+
+Dans le cas ou` ce bloc tient dans une  ligne  physique  (i.e.  sa
+longueur  est  infe'rieure  a`  (rmargin)), il est imprime' tel que.
+S'il ne tient pas dans une ligne, aucune indication n'est  donne'e
+sur  la  fac,on dont on doit le couper en plusieurs lignes lors de
+l'impression. Nous dirons que les blocs de texte sont _i_n_s_e'_c_a_b_l_e_s.
+
+Nous  donnons  maintenant   des   constructions   permettant   de
+structurer  des  blocs  de  manie`re  a` autoriser l'impression sur
+plusieurs lignes. Pour cela, nous  introduisons  les  notions  de
+_p_o_i_n_t _d_e _c_o_u_p_u_r_e et de _b_l_o_c _d_e _c_o_m_p_o_s_i_t_i_o_n.
+
+(vcutpoint <atom>)
+
+(vcutpoint)
+
+   Cette fonction introduit un point de coupure optionnel qui est
+   interpre'te'  de  manie`re  diffe'rente dans le contexte d'un bloc
+   horizontal, vertical ou mixte (voir ci-dessous).
+
+1.2.1  Les Blocs Horizontaux
+
+(hblock <indent> <expr>1 ... <expr>n)
+
+   <indent> doit avoir pour valeur un entier.  Les  <expr>i  sont
+   des   expressions   Lisp  quelconques  qui  sont  e'value'es  en
+   se'quence. Cette fonction place la machine  de  composition  en
+   mode horizontal.
+
+
+(hblock 3
+    (vpatom "Celui")
+    (vcutpoint)
+    (vpatom "qui")
+    (vcutpoint)
+    (vpatom "sait")    *----------------------------------------*
+    (vcutpoint)        |*-----* *---* *----* *--* *-----* *----*|
+    (vpatom "ne")      ||Celui|^|qui|^|sait|^|ne|^|parle|^|pas.||
+    (vcutpoint)        |*-----* *---* *----* *--* *-----* *----*|
+
+                                6         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+    (vpatom "parle")   *----------------------------------------*
+    (vcutpoint)
+    (vpatom "pas")
+    (vprincn #/.))
+
+En mode horizontal, les points de coupure sont interpre'te's  comme
+des espaces tant que la marge droite n'est pas atteinte, si aucun
+argument n'est donne' a`  vcutpoint.  Si  un  argument  <atom>  est
+donne',  on  imprime  cet  atome a` la place de l'espace.  Ainsi si
+toute  l'expression  tient  sur  la   ligne,   le   re'sultat   de
+l'impression est:
+
+
+Celui qui sait ne parle pas.     |<-- rmargin
+
+Dans le cas contraire, un saut de ligne est produit a` la place du
+dernier  point de coupure sur la ligne, et l'impression reprend a`
+la ligne suivante avec le renfoncement <indent>:
+
+
+Celui qui sait  |<-- rmargin
+   ne parle pas.|
+
+ou, avec une marge droite plus petite,
+
+
+Celui qui    |<-- rmargin
+   sait ne   |
+   parle pas.|
+   Noter que dans ce cas  le  blanc  ou  la  chai^ne  argument  de
+   vcutpoint n'est pas imprime'.
+
+
+{Vprint}:indent   [variable]
+
+   La variable {Vprint}:indent contient la valeur par  de'faut  du
+   renfoncement.   A  l'initialisation du syste`me, elle vaut 3 et
+   elle peut bien sur e^tre modifie'e par l'utilisateur.
+
+
+
+
+                                7         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+1.2.2  Les Blocs Verticaux
+
+(vblock <indent> <expr>1 ... <expr>n)
+
+   <indent> doit avoir pour valeur un entier.  Les  <expr>i  sont
+   des   expressions   Lisp  quelconques  qui  sont  e'value'es  en
+   se'quence. Cette fonction place la machine  de  composition  en
+   mode vertical.
+
+
+Avec l'exemple  pre'ce'dent,  dans  lequel  hblock  est  change'  en
+vblock,
+
+
+(vblock 3 (vpatom "Celui") (vcutpoint) ...)
+
+nous avons syste'matiquement la composition verticale suivante:
+
+
+Celui
+   qui
+   sait
+   ne
+   parle
+   pas.
+
+c'est a` dire que tous les  points  de  coupure  sont  interpre'te's
+comme des sauts de ligne.
+
+
+1.2.3  Les Blocs Mixtes
+
+
+(xblock <indent> <expr>1 ... <expr>n)
+
+   <indent> doit avoir pour valeur un entier.  Les  <expr>i  sont
+   des   expressions   Lisp  quelconques  qui  sont  e'value'es  en
+   se'quence. Cette fonction place la machine  de  composition  en
+   mode mixte.
+
+
+
+                                8         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+Reprenons l'exemple pre'ce'dent dans le cas d'un bloc mixte:
+
+
+(xblock 3 (vpatom "Celui") (vcutpoint) ...)
+
+Ici la composition se fait en mode horizontal si tout  tient  sur
+une seule ligne et en mode vertical dans le cas contraire:
+
+
+Celui qui sait ne parle pas      |<-- rmargin
+
+ou:
+
+
+Celui              |<-- rmargin
+   qui             |
+   sait            |
+   ne              |
+   parle           |
+   pas.            |
+
+Comme pre'ce'demment, (vcutpoint <atom>) imprime l'atome a` la place
+du  blanc  en mode horizontal, et provoque un retour chariot sans
+impression de l'atome en mode  vertical.  De  plus  un  appel  de
+vcutpoint ne provoque pas de retour chariot si rien n'a e'te' e'crit
+dans la ligne courante, afin d'e'viter la  ligne  blanche  qui  en
+re'sulterait.
+
+1.2.4  Exemples
+
+
+Etant donne'e une liste d'atomes L, nous de'finissons  la  fonction
+qui permet d'imprimer cette liste en inse'rant un point de coupure
+entre chacun des e'le'ments de la liste:
+
+
+
+Nous construisons deux  listes  que  nous  allons  utiliser  pour
+visualiser  le  re'sultat  de la composition. La premie`re liste L1
+tient toujours sur une seule ligne, la liste L2 demande plusieurs
+lignes pour s'imprimer:
+
+                                9         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+
+? (setq L1 '(<item>1 <item>2 <item>3))
+= (<item>1 <item>2 <item>3)
+? (setq L2 '(<item>1 <item>2 <item>3 <item>4 <item>5 <item>6 <item>7 <item>8
+?            <item>9 <item>10 <item>11 <item>12 <item>13 <item>14 <item>15))
+= (<item>1 <item>2 <item>3 <item>4 <item>5 <item>6 <item>7 <item>8 <item>9
+<item>10 <item>11 <item>12 <item>13 <item>14 <item>15)
+
+Nous  nous  plac,ons  d'abord  dans   un   mode   de   composition
+horizontale:
+
+
+? (with-vprint-output (hblock 0 (print-list-atoms L1)))
+<item>1 <item>2 <item>3
+= t
+
+Les diffe'rents atomes apparaissent se'pare's par  des  espaces  qui
+sont l'interpre'tation des points de coupure dans ce cas.
+
+Toujours en mode horizontal, mais dans le cas  ou`  une  ligne  ne
+suffit pas pour l'impression, nous avons:
+
+
+? (with-vprint-output (hblock 0 (print-list-atoms L2)))
+<item>1 <item>2 <item>3 <item>4 <item>5 <item>6 <item>7 <item>8 <item>9
+<item>10 <item>11 <item>12 <item>13 <item>14 <item>15
+= t
+
+L'atome <item>10 ne peut dans ce cas tenir sur la ligne; le point
+de  coupure  entre <item>9 et <item>10 est alors interpre'te' comme
+un saut de ligne, les autres continuant a` e^tre  interpre'te'  comme
+des  espaces.  Le renfoncement associe' au bloc horizontal vaut 0,
+<item>10 commence en de'but de ligne. Nous donnons  ci-dessous  un
+exemple avec un renfoncement non nul:
+
+
+? (with-vprint-output (hblock 8 (print-list-atoms L2)))
+<item>1 <item>2 <item>3 <item>4 <item>5 <item>6 <item>7 <item>8 <item>9
+        <item>10 <item>11 <item>12 <item>13 <item>14 <item>15
+= t
+
+
+                               10         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+Nous reprenons maintenant les me^mes  exemples  dans  un  mode  de
+composition verticale:
+
+
+? (with-vprint-output (vblock 0 (print-list-atoms L1)))
+<item>1
+<item>2
+<item>3
+= t
+
+Dans ce cas, tous les points de coupure  sont  interpre'te's  comme
+des sauts de lignes. Avec un renfoncement non nul, nous avons:
+
+
+? (with-vprint-output (vblock 3 (print-list-atoms L1)))
+<item>1
+   <item>2
+   <item>3
+= t
+
+Enfin, dans le cas d'un mode de composition  mixte,  le  mode  de
+composition  horizontale est choisi si l'impression peut se faire
+sur une seule ligne et le mode de composition  verticale  si  une
+ligne n'est pas suffisante:
+
+
+? (with-vprint-output (xblock 0 (print-list-atoms L1)))
+<item>1 <item>2 <item>3
+= t
+? (with-vprint-output (xblock 0 (print-list-atoms L2)))
+<item>1
+<item>2
+<item>3
+<item>4
+<item>5
+<item>6
+<item>7
+<item>8
+<item>9
+<item>10
+<item>11
+
+                               11         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+<item>12
+<item>13
+<item>14
+<item>15
+= t
+Pour les initie's, remarquons que dans  ce  dernier  mode  il  est
+pre'fe'rable  d'introduire  un  point  de coupure de`s le de'but pour
+e'viter les interfe'rences avec  les  blocs  pre'ce'dents.  La  bonne
+fac,on d'imprimer une liste en xblock est ainsi :
+
+? (de print-list-atoms-xblock (l)
+?     (xblock 0
+?        (vcutpoint "")
+?        (vpatom (nextl l))
+?        (while l
+?            (vcutpoint)
+?            (vpatom (nextl l)))))
+= print-list-atoms-xblock
+
+
+
+1.3  Autres Commandes
+
+(vterpri)
+
+   Cette fonction de'clenche un saut de ligne inconditionnel.
+
+(vindent <indent>)
+
+   <indent>  est  un   entier,   cette   fonction   augmente   le
+   renfoncement  du  bloc  de  composition  courant  de la valeur
+   <indent>.
+
+(begin-hblock)
+
+   Cette fonction de'clenche l'ouverture d'un bloc horizontal  qui
+   devra   e^tre   ferme'   ulte'rieurement   par   (end-block).  La
+   construction hblock est de'finie a`  l'aide  de  cette  fonction
+   par:
+
+   (defmacro hblock (indent . body)
+
+                               12         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+       `(progn
+           (begin-hblock)
+           (vindent ,indent)
+           ,@body
+           (end-block)))
+
+(begin-vblock)
+
+   Identique a` la pre'ce'dente pour les blocs verticaux.
+
+(begin-xblock)
+
+   Identique a` la pre'ce'dente pour les blocs mixtes.
+
+(end-block)
+
+   Ferme un bloc de quelque nature qu'il soit.
+
+
+
+
+2  Le Programme Standard d'Impression
+
+En plus de la machine de composition pre'sente'e  dans  la  section
+pre'ce'dente,  nous donnons un programme standard d'impression pour
+les expressions Lisp et Ceyx. Au moment de  l'e'criture  de  cette
+documentation   (Septembre   1984),   le  nombre  de  formats  de
+composition de'finis en standard n'est pas suffisant pour  obtenir
+un  paragraphage  ide'al de toutes les expressions Lisp. Ceci sera
+comple'te' avec le temps.
+
+
+2.1  Fonctions Ge'ne'rales
+
+(vprint <expr> [profondeur])
+
+   Cette  fonction  re'alise  un  paragraphage  (pretty-print)  de
+   l'expression  <expr>,  jusqu'a`  la profondeur donne'e en second
+   argument ou jusqu'a` la profondeur standard  contenue  dans  la
+   variable {Vprint}:level (valant par de'faut (printlevel)). Ceci
+   signifie que l'impression s'arre^te a` la  profondeur  dite,  le
+
+                               13         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+   symbole # e'tant alors imprime' a` la place de la sous-expression
+   correspondante.
+
+   ? (vprint '(a b c))
+   (a b c)
+   = t
+   ? (vprint '((a b)(c d)))
+   ((a b) (c d))
+   = t
+   ? (vprint '((a b)(c d)) 1)
+   (# #)
+   = t
+
+
+(vpretty <function-name> [profondeur])
+
+   Cette fonction re'alise le paragraphage  (pretty-print)  de  la
+   fonction de nom <function-name>.
+
+   ? (vpretty print-list-atoms)
+   (de print-list-atoms (l)
+       (vpatom (nextl l)) (while l (vcutpoint) (vpatom (nextl l))))
+   = t
+
+
+2.2  Contro^le du format d'impression par l'utilisateur
+
+
+La fonction vprint peut e^tre de'finie en Lisp par:
+
+
+(de vprint (x)
+    (let ((x (car args))
+          ({Vprint}:level (if (cadr args) (cadr args) {Vprint}:level)))
+         (with-vprint-output (vprin x))))
+
+et c'est la fonction  vprin  qui  se  charge  de  la  composition
+suivant les cas.
+
+
+
+
+                               14         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+(vprin <expr>)
+
+   Cette  fonction  se  charge  d'aiguiller  la  composition   de
+   l'expression <expr>. Elle peut e^tre de'finie en Lisp par:
+
+   (de vprin (x)
+      (let (({Vprint}:curlevel (1+ {Vprint}:curlevel)))
+       (if (> {Vprint}:curlevel {Vprint}:level)
+           (vprincn #/#)
+           (cond
+             ((tconsp x) (sendq vprin x))
+             ((null x) (vpatom "()"))
+             ((stringp x) (vprincn #/") (vpatom x) (vprincn #/"))
+             ((atom x) (vpatom x))
+             ((consp x)
+              (if (symbolp (car x))
+                  (selectq (ptype (car x))
+                       (1 ({Vformat}:progn x))
+                       (2 ({Vformat}:if x))
+                       (3 ({Vformat}:defun x))
+                       (4 ({Vformat}:cond x))
+                       (5 ({Vformat}:selectq x))
+                       (6 ({Vformat}:setq x))
+                       (t (let ((vformat (getprop (car x) 'vformat)))
+                               (ifn vformat
+                                    ({Vformat}:data x)
+                                    (funcall vformat x)))))
+                  ({Vformat}:data x)))
+             (t (syserror 'vprin "Type Lisp Inconnu"))))))
+
+
+Pour les objets atomiques, le comportement de cette fonction  est
+clair,  nous  nous  attachons dans la suite au cas des objets qui
+sont des tcons ou des cons.
+
+
+2.2.1  Composition des Objets Tagge's (tcons)
+
+
+Dans le cas ou` elle rencontre un objet tagge', la  fonction  vprin
+envoie le message vprin a` l'objet en question.
+
+                               15         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+De'finissons par exemple le Trecord toto par:
+
+
+? (deftrecord toto a b c)
+= toto
+? (setq x (omakeq toto a 1 b 2 c 3))))
+= #(toto 1 2 . 3)
+
+Si nous ne de'finissons pas de  se'mantique  vprin  pour  toto,  la
+se'mantique vprin du mode`le *  est re'cupe're'e, on obtient ainsi une
+composition identique a` celle fournie par Le_Lisp:
+
+
+? (vprint x)
+#(toto 1 2 . 3)
+= t
+
+puisque {*}:vprin est de'fini par:
+
+
+? (de {*}:vprin (x) (prin x))
+= #:*:vprin
+
+L'utilisateur  peut  changer  ce  format  en   rede'finissant   la
+se'mantique vprin pour le mode`le toto:
+
+? (de {toto}:vprin (x)
+?     (vblock 3
+?        (vpatom 'toto)
+?        (vcutpoint)
+?        (vpatom "a: ")
+?        (vprin ({toto}:a x))
+?        (vcutpoint)
+?        (vpatom "b: ")
+?        (vprin ({toto}:b x))
+?        (vcutpoint)
+?        (vpatom "c: ")
+?        (vprin ({toto}:c x))))
+= #:Model:Tmodel:toto:vprin
+? (vprint x)
+toto
+
+                               16         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+   a: 1
+   b: 2
+   c: 3
+= t
+
+
+2.2.2  Composition des Objets de Type Cons
+
+
+Conforme'ment a` l'usage dans les pretty-printer Lisp,  les  objets
+de type cons sont compose's suivant la valuer de leur car. Dans le
+cas ou` ce car n'est pas un atome  on  appliquera  le  format  par
+de'faut  (i.e.  {Vformat}:data), sinon on regarde si un format n'a
+pas e'te' attache' a` cet atome. Pour ce faire  nous  regardons  tout
+d'abord  leur  ptype  a` la Le_Lisp et sinon nous regardons sur la
+pliste de cet atome si une fonction de  composition  leur  a  e'te'
+attache' sous la proprie'te' vformat.
+
+Pour associer une  fonction  de  composition  a`  un  atome,  nous
+de'finissons la fonction deformat:
+
+(deformat <symbol> (<arg>) . <body>))
+
+   Cette construction de'finit la fonction {Vformat}:<symbol>,  et
+   attache  le symbole {Vformat}:symbol sur la pliste de <symbol>
+   sous l'indicateur vformat de manie`re a` ce  qu'il  puisse  e^tre
+   re'cupe're' par vprin:
+
+      (de {Vformat}:symbol (<arg>) ,@<body>)
+
+
+Dans le cas ou` l'appel a` la forme (deformat <symbol>1  <symbol>2)
+{Vformat}:<symbol>2   est  attache'  a` <symbol>1 sous l'indicateur
+vformat.
+
+
+Exemples:
+
+Le format standard est de'fini par:
+
+(deformat data (l)
+
+                               17         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+    (hblock 1 (vprincn #/() (vplist l) (vprincn #/))))
+
+Le format 'progn' est de'fini par (nous rappelons que la  variable
+{Vprint}:indent  contient  un  entier qui est le renfoncement par
+de'faut):
+
+(deformat progn (l)
+    (xblock {Vprint}:indent
+            (vprincn #/()
+            (vplist l)
+            (vprincn #/))))
+
+ou` vplist est de'finie par:
+
+(vplist <lexpr>)
+
+
+   (de vplist (l)
+       (vprin (nextl l))
+       (while (consp l) (vcutpoint) (vprin (nextl l)))
+       (when l
+             (vcutpoint)
+             (vprincn #/.)
+             (vcutpoint)
+             (vprin l)))
+
+
+Le format 'setq' est de'fini par:
+
+(deformat setq (l)
+    (xblock {Vprint}:indent
+            (vprincn #/()
+            (vprin (nextl l))
+            (while l
+                   (vcutpoint)
+                   (xblock 2
+                           (vprin (nextl l))
+                           (vcutpoint)
+                           (vprin (nextl l))))
+            (vprincn #/))))
+
+
+                               18         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+
+Nous aurons ainsi:
+
+? (rmargin 79)
+= 79
+? (vprint '(a b c d e f g h i j))
+(a b c d e f g h i j)
+= t
+? (vprint '(progn a b c d e f g h i j))
+(progn a b c d e f g h i j)
+= t
+? (vprint '(setq a 1 b 2 c 3 d 4 e 5))
+(setq a 1 b 2 c 3 d 4 e 5)
+= t
+? (rmargin 10)
+= 10
+? (vprint '(a b c d e f g h i j))
+(a b c d e
+ f g h i j)
+= t
+? (vprint '(progn a b c d e f g h i j))
+(progn
+   a
+   b
+   c
+   d
+   e
+   f
+   g
+   h
+   i
+   j)
+= t
+? (vprint '(setq a 1 b 2 c 3 d 4 e 5))
+(setq
+   a 1
+   b 2
+   c 3
+   d 4
+   e 5)
+= t
+
+                               19         Mercredi 3 Octobre 1984
+
+
+
+Vprint                                          Le Composeur Ceyx
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                               20         Mercredi 3 Octobre 1984
+
+
+
+                       Table des matie`res
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+                       Table des matie`res
+
+                       Table des matie`res
+
+
+1 La Machine de Composition..............................4
+1.1 Impression des Atomes................................4
+1.2 Les Blocs de Composition.............................5
+1.2.1 Les Blocs Horizontaux..............................6
+1.2.2 Les Blocs Verticaux................................8
+1.2.3 Les Blocs Mixtes...................................8
+1.2.4 Exemples...........................................9
+1.3 Autres Commandes....................................12
+2 Le Programme Standard d'Impression....................13
+2.1 Fonctions Ge'ne'rales.................................13
+2.2 Contro^le du format d'impression par l'utilisateur...14
+2.2.1 Composition des Objets Tagge's (tcons).............15
+2.2.2 Composition des Objets de Type Cons...............17
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                2         Mercredi 3 Octobre 1984
+
+
+
+                    Index des fonctions Lisp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+                    Index des fonctions Lisp
+
+
+                    Index des fonctions Lisp
+
+
+(begin-hblock) .........................................12
+(begin-vblock) .........................................13
+(begin-xblock) .........................................13
+(deformat <symbol> (<arg>) . <body>)) ..................17
+(end-block) ............................................13
+(hblock <indent> <expr>1 ... <expr>n) ...................6
+(vblock <indent> <expr>1 ... <expr>n) ...................8
+(vcutpoint <atom>) ......................................6
+(vcutpoint) .............................................6
+(vindent <indent>) .....................................12
+(vpatom <atom>) .........................................5
+(vplist <lexpr>) .......................................18
+(vpretty <function-name> [profondeur]) .................14
+(vprin <expr>) .........................................15
+(vprinch <char>) ........................................5
+(vprincn <charn>) .......................................5
+(vprint <expr> [profondeur]) ...........................13
+(vterpri) ..............................................12
+(with-vprint-output <expr>1 ... <expr>n) ................4
+(xblock <indent> <expr>1 ... <expr>n) ...................8
+{Vprint}:indent [variable] ..............................7
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                2         Mercredi 3 Octobre 1984
+
+

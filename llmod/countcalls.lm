@@ -1,0 +1,44 @@
+defmodule
+countcalls
+files (
+countcalls
+)
+export (
+count-calls-init
+count-calls-start
+count-calls-stop
+count-calls-infos
+count-calls-printn
+count-calls-printa
+count-calls-clear
+)
+import (
+format
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(count-calls-init nsubr () () () () () (subr1) (()))
+(count-calls-clear subr0 () () () (subr1) (()))
+(count-calls-start subr0 ())
+(count-calls-stop subr0 ())
+(count-calls-infos nsubr ())
+(count-calls-printn nsubr () () () () (subr2) (()))
+(count-calls-printa nsubr () () () () (subr2) (()))
+)
+cpfunctions (
+(#:count-calls:count-calls-init1 subr1)
+(#:count-calls:get-count-calls-infos subr2 (val-min) () (result) (subr1) (()))
+)
+cpimport (
+(format
+(prinf . nsubr)
+))
+cpenv (
+format
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:count-calls:active-flag 't '#:complice:globalvar)
+)((putprop '#:count-calls:debug-flag 't '#:complice:globalvar)
+))

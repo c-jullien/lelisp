@@ -1,0 +1,36 @@
+defmodule
+bitmap
+files (
+|virbit.ll|
+)
+export (
+#:bitmap:bits
+create-bitmap
+window-bitmap
+kill-bitmap
+bmref
+bmset
+bitblit
+#:sharp:*
+#:sharp:B
+#:bitvector:read
+#:bitvector:prin
+#:bitmap:prin
+byteref
+byteset
+#:bitmap:bytemap:prin
+#:bitmap:bytes
+create-bytemap
+substitute-color
+bitmap-prologue
+subst-colors
+#:display:subst-colors
+)
+import (
+virutil
+vircolor
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)

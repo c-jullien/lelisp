@@ -1,0 +1,44 @@
+This is TeX, C Version 3.14t3 (format=lplain 93.4.28)  16 MAY 1994 19:49
+**&lplain Config
+(Config.tex
+LaTeX Version 2.09 <7 Dec 1989>
+(/nfs/ishare/lib/TEX3.14/inputs/ilogpaper.sty
+Document style `ilogpaper'.
+(/nfs/ishare/lib/TEX3.14/inputs/ilogpap11.sty)
+(/nfs/ishare/lib/TEX3.14/inputs/ilogpage.sty
+Page Layout 'fullpage' -- ILOG version of July 1983.
+) (/nfs/ishare/lib/TEX3.14/inputs/ilogmacros.sty
+\chgbarwidth=\dimen99
+\chgbarsep=\dimen100
+\@chgbarbegin=\dimen101
+
+(/nfs/ishare/lib/TEX3.14/localinputs/epsf.tex
+\epsffilein=\read0
+\epsfxsize=\dimen102
+\epsfysize=\dimen103
+\epsftsize=\dimen104
+\epsfrsize=\dimen105
+\epsftmp=\dimen106
+\pspoints=\dimen107
+))
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+) (Config.aux) [1
+
+] (Config.aux) ) 
+Here is how much of TeX's memory you used:
+ 521 strings out of 4463
+ 4575 string characters out of 63221
+ 56490 words of memory out of 262141
+ 2462 multiletter control sequences out of 9500
+ 18996 words of font info for 72 fonts, out of 72000 for 255
+ 14 hyphenation exceptions out of 607
+ 12i,7n,15p,173b,218s stack positions out of 300i,40n,60p,3000b,4000s
+
+Output written on Config.dvi (1 page, 8348 bytes).

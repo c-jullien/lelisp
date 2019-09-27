@@ -1,0 +1,53 @@
+
+
+===================================================================
+
+Voici les corrections  et les extensions de la nouvelle diffusion 
+de Le-Lisp version 15.2 date'e du 15 Aou^t 1987.
+
+Cette diffusion est interne a` ILOG!
+
+
+Interpre`te et fonctions pre'de'finies :
+========================================
+
+- (#:SYSTEM:MAPALLVECTOR fnt)
+  (#:SYSTEM:MAPALLSTRING fnt)
+   applique <fnt> sur tous les vecteurs (chaines) presents dans
+   le syste`me.
+
+- (GCINFO T) retourne les tailles au lancement du syste`me dans
+	le me^me format que GCINFO.
+
+- (OBLIST <symb1> <symb2>) fixe l'argument des 2 erreurs ERRSYM
+
+MAC68K et LAP68K :
+==================
+
+Les flottants 31/64 bits avec/sans MC68881 sont DANS TOUS LES
+CAS correctement traite's.
+Il y a donc 4 binaires liables pour les images me'moires :
+	lesoft31bin.o
+	lesoft64bin.o
+	lefpu31bin.o		avec mc68881
+	lefpu64bin.o		avec mc68881
+Le de'faut est lesoft31bin.o (qui correspond a` l'ancien
+lelispbin.o).
+
+Deux nouveaux traits ont e'te' ajoute's dans les versions 68000 :
+	31BITFLOATS ou 64BITFLOATS
+	MC68881
+
+Bibliothe`que standard :
+========================
+
+- EDLIN : les ame'liorations de J. Dutehn de l'IRCAM ont
+  e'te' inte'gre'es.
+
+- STARTUP : la variable #:SYSTEM:SAVE-STD-GCINFO-LIST
+  contient la liste des GCINFO a` chaque SAVE-STD.
+
+- STARTUP : la variable #:SYSTEM:INIBITMAP-AFTER-RESTORE-FLAG
+  est interpre'te'e dans CORE-INIT-STD
+
+

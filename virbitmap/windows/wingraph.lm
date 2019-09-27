@@ -1,0 +1,410 @@
+defmodule #:display:windows
+files   (
+	wingraph.ll
+)
+include (
+	virmacros.ll
+	virstruct.ll
+)
+import  (
+	virutil  ; ..make
+	virgraph ; #:display:space
+	win_def
+	winstruc
+)
+export  (
+	:graph-env-subwindow-mode
+	:font-max 
+	:load-font 
+	:system-font-name
+	:current-font 
+	:width-substring
+	:height-substring 
+	:x-base-substring 
+	:y-base-substring 
+	:x-inc-substring 
+	:y-inc-substring 
+	:line-style-max 
+	:current-arc-mode
+	:current-line-style 
+	:pattern-max 
+	:make-pattern 
+	:current-pattern
+	:current-mode  
+	:cursor-name
+	:cursor-max
+	:make-cursor 
+	:make-named-cursor 
+	:current-cursor 
+	:move-cursor 
+	:current-foreground 
+	:current-background
+
+	:graph-env-set-clip
+	:make-graph-env
+	:kill-graph-env
+
+	:make-line-style
+	:font-ascent
+	:font-height
+	:graph-env-set-clips
+	:graph-env-change-values
+
+	:get-font-names
+	:get-font-info
+
+	:current-stipple
+	:current-fill-mode
+
+	:hilight-flag
+	:mutable-flag
+	:set-optional-fontname
+
+	:system-parameters
+	#:sys-windows:windows-parameters:make
+	#:sys-windows:windows-parameters:sm_cxscreen
+	#:sys-windows:windows-parameters:sm_cyscreen
+	#:sys-windows:windows-parameters:sm_cxvscroll
+	#:sys-windows:windows-parameters:sm_cyhscroll
+	#:sys-windows:windows-parameters:sm_cycaption
+	#:sys-windows:windows-parameters:sm_cxborder
+	#:sys-windows:windows-parameters:sm_cyborder
+	#:sys-windows:windows-parameters:sm_cxdlgframe
+	#:sys-windows:windows-parameters:sm_cydlgframe
+	#:sys-windows:windows-parameters:sm_cyvthumb
+	#:sys-windows:windows-parameters:sm_cxhthumb
+	#:sys-windows:windows-parameters:sm_cxicon
+	#:sys-windows:windows-parameters:sm_cyicon
+	#:sys-windows:windows-parameters:sm_cxcursor
+	#:sys-windows:windows-parameters:sm_cycursor
+	#:sys-windows:windows-parameters:sm_cymenu
+	#:sys-windows:windows-parameters:sm_cxfullscreen
+	#:sys-windows:windows-parameters:sm_cyfullscreen
+	#:sys-windows:windows-parameters:sm_cykanjiwindow
+	#:sys-windows:windows-parameters:sm_mousepresent
+	#:sys-windows:windows-parameters:sm_cyvscroll
+	#:sys-windows:windows-parameters:sm_cxhscroll
+	#:sys-windows:windows-parameters:sm_debug
+	#:sys-windows:windows-parameters:sm_swapbutton
+	#:sys-windows:windows-parameters:sm_reserved1
+	#:sys-windows:windows-parameters:sm_reserved2
+	#:sys-windows:windows-parameters:sm_reserved3
+	#:sys-windows:windows-parameters:sm_reserved4
+	#:sys-windows:windows-parameters:sm_cxmin
+	#:sys-windows:windows-parameters:sm_cymin
+	#:sys-windows:windows-parameters:sm_cxsize
+	#:sys-windows:windows-parameters:sm_cysize
+	#:sys-windows:windows-parameters:sm_cxframe
+	#:sys-windows:windows-parameters:sm_cyframe
+	#:sys-windows:windows-parameters:sm_cxmintrack
+	#:sys-windows:windows-parameters:sm_cymintrack
+	;;
+	;;      Valid only for Windows 3.1 and above
+	;;
+	#:sys-windows:windows-parameters:sm_cxdoubleclk
+	#:sys-windows:windows-parameters:sm_cydoubleclk
+	#:sys-windows:windows-parameters:sm_cxiconspacing
+	#:sys-windows:windows-parameters:sm_cyiconspacing
+	#:sys-windows:windows-parameters:sm_menudropalignment
+	#:sys-windows:windows-parameters:sm_penwindows
+	#:sys-windows:windows-parameters:sm_dbcsenabled
+	;;
+	;;      Valid only for Windows _NT
+	;;
+	#:sys-windows:windows-parameters:sm_cmousebuttons
+
+	;;;
+	;;; 2) Default system char size (SYSTEM_FIXED_FONT)
+	;;;
+
+	#:sys-windows:windows-parameters:system_fixed_width
+	#:sys-windows:windows-parameters:system_fixed_height
+
+	;;;
+	;;; 3) Display parameters
+	;;;
+
+	#:sys-windows:windows-parameters:horzsize
+	#:sys-windows:windows-parameters:vertsize
+	#:sys-windows:windows-parameters:horzres
+	#:sys-windows:windows-parameters:vertres
+	#:sys-windows:windows-parameters:bitspixel
+	#:sys-windows:windows-parameters:planes
+	#:sys-windows:windows-parameters:aspectx
+	#:sys-windows:windows-parameters:aspecty
+	#:sys-windows:windows-parameters:aspectxy
+	#:sys-windows:windows-parameters:logpixelsx
+	#:sys-windows:windows-parameters:logpixelsy
+	#:sys-windows:windows-parameters:sizepalette
+	#:sys-windows:windows-parameters:colorres
+	#:sys-windows:windows-parameters:numreserved
+
+	;;;
+	;;; 4) System Colors
+	;;;
+
+	#:sys-windows:windows-parameters:color_scrollbar
+	#:sys-windows:windows-parameters:color_background
+	#:sys-windows:windows-parameters:color_activecaption
+	#:sys-windows:windows-parameters:color_inactivecaption
+	#:sys-windows:windows-parameters:color_menu
+	#:sys-windows:windows-parameters:color_window
+	#:sys-windows:windows-parameters:color_windowframe
+	#:sys-windows:windows-parameters:color_menutext
+	#:sys-windows:windows-parameters:color_windowtext
+	#:sys-windows:windows-parameters:color_captiontext
+	#:sys-windows:windows-parameters:color_activeborder
+	#:sys-windows:windows-parameters:color_inactiveborder
+	#:sys-windows:windows-parameters:color_appworkspace
+	#:sys-windows:windows-parameters:color_highlight
+	#:sys-windows:windows-parameters:color_highlighttext
+	#:sys-windows:windows-parameters:color_btnface
+	#:sys-windows:windows-parameters:color_btnshadow
+	#:sys-windows:windows-parameters:color_graytext
+	#:sys-windows:windows-parameters:color_btntext
+	;;;
+	;;;     Valid only for Windows 3.1 and above
+	;;;
+	#:sys-windows:windows-parameters:color_inactivecaptiontext
+	#:sys-windows:windows-parameters:color_btnhighlight
+	;;;
+	;;;     Valid only for Windows 4.0 and above
+	;;;
+	#:sys-windows:windows-parameters:color_3ddkshadow
+	#:sys-windows:windows-parameters:color_3dlight
+	#:sys-windows:windows-parameters:color_infotext
+	#:sys-windows:windows-parameters:color_infobk
+	;;;
+	;;;     System palette colors
+	;;;
+	#:sys-windows:windows-parameters:palette_entry_00
+	#:sys-windows:windows-parameters:palette_entry_01
+	#:sys-windows:windows-parameters:palette_entry_02
+	#:sys-windows:windows-parameters:palette_entry_03
+	#:sys-windows:windows-parameters:palette_entry_04
+	#:sys-windows:windows-parameters:palette_entry_05
+	#:sys-windows:windows-parameters:palette_entry_06
+	#:sys-windows:windows-parameters:palette_entry_07
+	#:sys-windows:windows-parameters:palette_entry_08
+	#:sys-windows:windows-parameters:palette_entry_09
+	#:sys-windows:windows-parameters:palette_entry_10
+	#:sys-windows:windows-parameters:palette_entry_11
+	#:sys-windows:windows-parameters:palette_entry_12
+	#:sys-windows:windows-parameters:palette_entry_13
+	#:sys-windows:windows-parameters:palette_entry_14
+	#:sys-windows:windows-parameters:palette_entry_15
+	#:sys-windows:windows-parameters:palette_entry_16
+	#:sys-windows:windows-parameters:palette_entry_17
+	#:sys-windows:windows-parameters:palette_entry_18
+	#:sys-windows:windows-parameters:palette_entry_19
+	;;;
+	;;;	System work area
+	;;;
+	#:sys-windows:windows-parameters:work_area
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:windows:graph-env-subwindow-mode subr3 ())
+(#:display:windows:font-max subr1 ())
+(#:display:windows:load-font subr2 ())
+(#:display:windows:system-font-name subr0 ())
+(#:display:windows:get-font-names subr3 ())
+(#:display:windows:current-font subr3 ())
+(#:display:windows:width-substring nsubr ())
+(#:display:windows:height-substring nsubr ())
+(#:display:windows:x-base-substring nsubr ())
+(#:display:windows:y-base-substring nsubr ())
+(#:display:windows:x-inc-substring nsubr ())
+(#:display:windows:y-inc-substring nsubr ())
+(#:display:windows:line-style-max subr1 ())
+(#:display:windows:current-arc-mode subr3 ())
+(#:display:windows:current-line-style subr3 ())
+(#:display:windows:pattern-max subr1 ())
+(#:display:windows:make-pattern subr2 ())
+(#:display:windows:current-pattern subr3 ())
+(#:display:windows:current-mode subr3 ())
+(#:display:windows:cursor-name subr2 ())
+(#:display:windows:cursor-max subr1 ())
+(#:display:windows:make-cursor nsubr ())
+(#:display:windows:make-named-cursor subr2 ())
+(#:display:windows:current-cursor subr2 ())
+(#:display:windows:move-cursor subr3 ())
+(#:display:windows:current-foreground subr3 ())
+(#:display:windows:current-stipple subr3 ())
+(#:display:windows:current-background subr3 ())
+(#:display:windows:graph-env-set-clip nsubr ())
+(#:display:windows:make-graph-env nsubr ())
+(#:display:windows:kill-graph-env subr2 ())
+(#:display:windows:make-line-style subr3 ())
+(#:display:windows:font-ascent subr2 ())
+(#:display:windows:font-height subr2 ())
+(#:display:windows:graph-env-set-clips nsubr ())
+(#:display:windows:graph-env-change-values nsubr ())
+(#:display:windows:get-font-info subr3 ())
+(#:display:windows:current-fill-mode subr3 ())
+(#:display:windows:hilight-flag subr1 ())
+(#:display:windows:mutable-flag subr1 ())
+(#:display:windows:set-optional-fontname subr1 ())
+(#:display:windows:system-parameters subr0 ())
+(#:sys-windows:windows-parameters:make subr0 ())
+(#:sys-windows:windows-parameters:sm_cxscreen nsubr ())
+(#:sys-windows:windows-parameters:sm_cyscreen nsubr ())
+(#:sys-windows:windows-parameters:sm_cxvscroll nsubr ())
+(#:sys-windows:windows-parameters:sm_cyhscroll nsubr ())
+(#:sys-windows:windows-parameters:sm_cycaption nsubr ())
+(#:sys-windows:windows-parameters:sm_cxborder nsubr ())
+(#:sys-windows:windows-parameters:sm_cyborder nsubr ())
+(#:sys-windows:windows-parameters:sm_cxdlgframe nsubr ())
+(#:sys-windows:windows-parameters:sm_cydlgframe nsubr ())
+(#:sys-windows:windows-parameters:sm_cyvthumb nsubr ())
+(#:sys-windows:windows-parameters:sm_cxhthumb nsubr ())
+(#:sys-windows:windows-parameters:sm_cxicon nsubr ())
+(#:sys-windows:windows-parameters:sm_cyicon nsubr ())
+(#:sys-windows:windows-parameters:sm_cxcursor nsubr ())
+(#:sys-windows:windows-parameters:sm_cycursor nsubr ())
+(#:sys-windows:windows-parameters:sm_cymenu nsubr ())
+(#:sys-windows:windows-parameters:sm_cxfullscreen nsubr ())
+(#:sys-windows:windows-parameters:sm_cyfullscreen nsubr ())
+(#:sys-windows:windows-parameters:sm_cykanjiwindow nsubr ())
+(#:sys-windows:windows-parameters:sm_mousepresent nsubr ())
+(#:sys-windows:windows-parameters:sm_cyvscroll nsubr ())
+(#:sys-windows:windows-parameters:sm_cxhscroll nsubr ())
+(#:sys-windows:windows-parameters:sm_debug nsubr ())
+(#:sys-windows:windows-parameters:sm_swapbutton nsubr ())
+(#:sys-windows:windows-parameters:sm_reserved1 nsubr ())
+(#:sys-windows:windows-parameters:sm_reserved2 nsubr ())
+(#:sys-windows:windows-parameters:sm_reserved3 nsubr ())
+(#:sys-windows:windows-parameters:sm_reserved4 nsubr ())
+(#:sys-windows:windows-parameters:sm_cxmin nsubr ())
+(#:sys-windows:windows-parameters:sm_cymin nsubr ())
+(#:sys-windows:windows-parameters:sm_cxsize nsubr ())
+(#:sys-windows:windows-parameters:sm_cysize nsubr ())
+(#:sys-windows:windows-parameters:sm_cxframe nsubr ())
+(#:sys-windows:windows-parameters:sm_cyframe nsubr ())
+(#:sys-windows:windows-parameters:sm_cxmintrack nsubr ())
+(#:sys-windows:windows-parameters:sm_cymintrack nsubr ())
+(#:sys-windows:windows-parameters:sm_cxdoubleclk nsubr ())
+(#:sys-windows:windows-parameters:sm_cydoubleclk nsubr ())
+(#:sys-windows:windows-parameters:sm_cxiconspacing nsubr ())
+(#:sys-windows:windows-parameters:sm_cyiconspacing nsubr ())
+(#:sys-windows:windows-parameters:sm_menudropalignment nsubr ())
+(#:sys-windows:windows-parameters:sm_penwindows nsubr ())
+(#:sys-windows:windows-parameters:sm_dbcsenabled nsubr ())
+(#:sys-windows:windows-parameters:sm_cmousebuttons nsubr ())
+(#:sys-windows:windows-parameters:system_fixed_width nsubr ())
+(#:sys-windows:windows-parameters:system_fixed_height nsubr ())
+(#:sys-windows:windows-parameters:horzsize nsubr ())
+(#:sys-windows:windows-parameters:vertsize nsubr ())
+(#:sys-windows:windows-parameters:horzres nsubr ())
+(#:sys-windows:windows-parameters:vertres nsubr ())
+(#:sys-windows:windows-parameters:bitspixel nsubr ())
+(#:sys-windows:windows-parameters:planes nsubr ())
+(#:sys-windows:windows-parameters:aspectx nsubr ())
+(#:sys-windows:windows-parameters:aspecty nsubr ())
+(#:sys-windows:windows-parameters:aspectxy nsubr ())
+(#:sys-windows:windows-parameters:logpixelsx nsubr ())
+(#:sys-windows:windows-parameters:logpixelsy nsubr ())
+(#:sys-windows:windows-parameters:sizepalette nsubr ())
+(#:sys-windows:windows-parameters:colorres nsubr ())
+(#:sys-windows:windows-parameters:numreserved nsubr ())
+(#:sys-windows:windows-parameters:color_scrollbar nsubr ())
+(#:sys-windows:windows-parameters:color_background nsubr ())
+(#:sys-windows:windows-parameters:color_activecaption nsubr ())
+(#:sys-windows:windows-parameters:color_inactivecaption nsubr ())
+(#:sys-windows:windows-parameters:color_menu nsubr ())
+(#:sys-windows:windows-parameters:color_window nsubr ())
+(#:sys-windows:windows-parameters:color_windowframe nsubr ())
+(#:sys-windows:windows-parameters:color_menutext nsubr ())
+(#:sys-windows:windows-parameters:color_windowtext nsubr ())
+(#:sys-windows:windows-parameters:color_captiontext nsubr ())
+(#:sys-windows:windows-parameters:color_activeborder nsubr ())
+(#:sys-windows:windows-parameters:color_inactiveborder nsubr ())
+(#:sys-windows:windows-parameters:color_appworkspace nsubr ())
+(#:sys-windows:windows-parameters:color_highlight nsubr ())
+(#:sys-windows:windows-parameters:color_highlighttext nsubr ())
+(#:sys-windows:windows-parameters:color_btnface nsubr ())
+(#:sys-windows:windows-parameters:color_btnshadow nsubr ())
+(#:sys-windows:windows-parameters:color_graytext nsubr ())
+(#:sys-windows:windows-parameters:color_btntext nsubr ())
+(#:sys-windows:windows-parameters:color_inactivecaptiontext nsubr ())
+(#:sys-windows:windows-parameters:color_btnhighlight nsubr ())
+(#:sys-windows:windows-parameters:color_3ddkshadow nsubr ())
+(#:sys-windows:windows-parameters:color_3dlight nsubr ())
+(#:sys-windows:windows-parameters:color_infotext nsubr ())
+(#:sys-windows:windows-parameters:color_infobk nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_00 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_01 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_02 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_03 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_04 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_05 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_06 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_07 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_08 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_09 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_10 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_11 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_12 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_13 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_14 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_15 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_16 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_17 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_18 nsubr ())
+(#:sys-windows:windows-parameters:palette_entry_19 nsubr ())
+(#:sys-windows:windows-parameters:work_area nsubr ())
+)
+cpfunctions (
+(#:display:windows:add-cursor subr2)
+(#:display:windows:get-sys-color subr3)
+(#:display:windows:get-pal-color subr3)
+(#:display:windows:get-work-area subr2)
+)
+cpimport (
+(virutil
+(current-display . nsubr)
+)(winstruc
+(#:tclass:winwindow:make . subr0)
+)(win_def
+(windows_load_font . subr1)
+(winversion . subr0)
+(windows_system_font_size . subr0)
+(windows_set_font . subr2)
+(windows_font_ascent . subr1)
+(windows_font_height . subr1)
+(windows_width_string . nsubr)
+(windows_height_string . nsubr)
+(windows_set_line_style . nsubr)
+(windows_set_fill_mode . nsubr)
+(windows_set_mode . subr2)
+(windows_get_byte_line . nsubr)
+(windows_create_cursor . subr3)
+(windows_named_cursor . subr1)
+(windows_set_cursor . subr2)
+(windows_move_cursor . subr2)
+(windows_set_foreground . nsubr)
+(windows_set_background . subr2)
+(windows_set_window_background . subr2)
+(windows_set_clip . nsubr)
+(windows_new_create_graph_env . nsubr)
+(windows_free_graph_env . subr1)
+(windows_set_clips . nsubr)
+(windows_font_info . subr2)
+(windows_hilight . subr1)
+(windows_mutable . subr1)
+(windows_set_optional_fontname . subr1)
+(windows_system_parameters . subr2)
+(windows_system_color . subr2)
+(windows_palette_color . subr2)
+(windows_system_work_area . subr1)
+))
+cpenv (
+virutil
+virgraph
+win_def
+winstruc
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((defstruct #:sys-windows:windows-parameters sm_cxscreen sm_cyscreen sm_cxvscroll sm_cyhscroll sm_cycaption sm_cxborder sm_cyborder sm_cxdlgframe sm_cydlgframe sm_cyvthumb sm_cxhthumb sm_cxicon sm_cyicon sm_cxcursor sm_cycursor sm_cymenu sm_cxfullscreen sm_cyfullscreen sm_cykanjiwindow sm_mousepresent sm_cyvscroll sm_cxhscroll sm_debug sm_swapbutton sm_reserved1 sm_reserved2 sm_reserved3 sm_reserved4 sm_cxmin sm_cymin sm_cxsize sm_cysize sm_cxframe sm_cyframe sm_cxmintrack sm_cymintrack sm_cxdoubleclk sm_cydoubleclk sm_cxiconspacing sm_cyiconspacing sm_menudropalignment sm_penwindows sm_dbcsenabled sm_cmousebuttons system_fixed_width system_fixed_height horzsize vertsize horzres vertres bitspixel planes aspectx aspecty aspectxy logpixelsx logpixelsy sizepalette colorres numreserved (color_scrollbar #[0 0 0]) (color_background #[0 0 0]) (color_activecaption #[0 0 0]) (color_inactivecaption #[0 0 0]) (color_menu #[0 0 0]) (color_window #[0 0 0]) (color_windowframe #[0 0 0]) (color_menutext #[0 0 0]) (color_windowtext #[0 0 0]) (color_captiontext #[0 0 0]) (color_activeborder #[0 0 0]) (color_inactiveborder #[0 0 0]) (color_appworkspace #[0 0 0]) (color_highlight #[0 0 0]) (color_highlighttext #[0 0 0]) (color_btnface #[0 0 0]) (color_btnshadow #[0 0 0]) (color_graytext #[0 0 0]) (color_btntext #[0 0 0]) (color_inactivecaptiontext #[0 0 0]) (color_btnhighlight #[0 0 0]) (color_3ddkshadow #[0 0 0]) (color_3dlight #[0 0 0]) (color_infotext #[0 0 0]) (color_infobk #[0 0 0]) (palette_entry_00 #[0 0 0]) (palette_entry_01 #[0 0 0]) (palette_entry_02 #[0 0 0]) (palette_entry_03 #[0 0 0]) (palette_entry_04 #[0 0 0]) (palette_entry_05 #[0 0 0]) (palette_entry_06 #[0 0 0]) (palette_entry_07 #[0 0 0]) (palette_entry_08 #[0 0 0]) (palette_entry_09 #[0 0 0]) (palette_entry_10 #[0 0 0]) (palette_entry_11 #[0 0 0]) (palette_entry_12 #[0 0 0]) (palette_entry_13 #[0 0 0]) (palette_entry_14 #[0 0 0]) (palette_entry_15 #[0 0 0]) (palette_entry_16 #[0 0 0]) (palette_entry_17 #[0 0 0]) (palette_entry_18 #[0 0 0]) (palette_entry_19 #[0 0 0]) (work_area #[0 0 0 0]))
+)((putprop '#:display:windows:system-parameters 't '#:complice:globalvar)
+))

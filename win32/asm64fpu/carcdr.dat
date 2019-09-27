@@ -1,0 +1,116 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	fcons:dword
+	extrn	bvar:dword
+pnmac864	db	'car'
+	even
+pnmac865	db	'cdr'
+	even
+pnmac866	db	'caar'
+	even
+pnmac867	db	'cadr'
+	even
+pnmac868	db	'cdar'
+	even
+pnmac869	db	'cddr'
+	even
+pnmac870	db	'caaar'
+	even
+pnmac871	db	'caadr'
+	even
+pnmac872	db	'cadar'
+	even
+pnmac873	db	'caddr'
+	even
+pnmac874	db	'cdaar'
+	even
+pnmac875	db	'cdadr'
+	even
+pnmac876	db	'cddar'
+	even
+pnmac877	db	'cdddr'
+	even
+pnmac878	db	'caaaar'
+	even
+pnmac879	db	'caaadr'
+	even
+pnmac880	db	'caadar'
+	even
+pnmac881	db	'caaddr'
+	even
+pnmac882	db	'cadaar'
+	even
+pnmac883	db	'cadadr'
+	even
+pnmac884	db	'caddar'
+	even
+pnmac885	db	'cadddr'
+	even
+pnmac886	db	'cdaaar'
+	even
+pnmac887	db	'cdaadr'
+	even
+pnmac888	db	'cdadar'
+	even
+pnmac889	db	'cdaddr'
+	even
+pnmac890	db	'cddaar'
+	even
+pnmac891	db	'cddadr'
+	even
+pnmac892	db	'cdddar'
+	even
+pnmac893	db	'cddddr'
+	even
+zfcar	dd	0
+zfcdr	dd	0
+zca2r	dd	0
+zcadr	dd	0
+zcdar	dd	0
+zcddr	dd	0
+zcaaar	dd	0
+zcaadr	dd	0
+zcadar	dd	0
+zcaddr	dd	0
+zcdaar	dd	0
+zcdadr	dd	0
+zcddar	dd	0
+zcdddr	dd	0
+zcaaaar	dd	0
+zcaaadr	dd	0
+zcaadar	dd	0
+zcaaddr	dd	0
+zcadaar	dd	0
+zcadadr	dd	0
+zcaddar	dd	0
+zcadddr	dd	0
+zcdaaar	dd	0
+zcdaadr	dd	0
+zcdadar	dd	0
+zcdaddr	dd	0
+zcddaar	dd	0
+zcddadr	dd	0
+zcdddar	dd	0
+zcddddr	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	mstack:dword
+	extrn	crwork:dword
+_DATA	ends

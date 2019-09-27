@@ -1,0 +1,138 @@
+##
+##  Le Makefile pour fabriquer lelispbin.o
+##
+###################################################################
+# les variables de Makefile
+
+SYSTEM		= linuxsparc
+HOST		= $(SYSTEM)
+CPU		= sparc
+MAKE		= make --no-print-directory
+AS		= as
+ASFLAGS		= -32
+
+# Pour choisir son Lisp d'amorcage:
+# BOOTLISP="/usr/ilog/lelisp/$(HOST)/complice -i 15"
+BOOTLISP	= "../$(HOST)/lelisp"
+
+# le plombage adequat
+PLOMBE		= ../lltool
+
+# la version de flottants
+
+FLT		= 31
+
+BIN		= lisp$(FLT)
+O		= o$(FLT)
+
+CSYSTEM		= LINUX
+
+# la premiere entree pour tout demarrer
+
+all: default
+
+##################################################################
+
+makeobj		= plombe.o
+
+preciousobj	= kern.o iflush.o
+
+otherobj	= $(preciousobj) $(makeobj)
+
+obj		= $(O)/ll$(SYSTEM).o \
+	          $(O)/llinit.o \
+		  $(O)/toperr.o \
+		  $(O)/gc.o \
+		  $(O)/physio.o \
+		  $(O)/read.o \
+		  $(O)/macroch.o \
+		  $(O)/print.o \
+		  $(O)/eval.o \
+		  $(O)/fspecs.o \
+		  $(O)/cntrl.o \
+		  $(O)/carcdr.o \
+		  $(O)/symbs.o \
+		  $(O)/fntstd.o \
+		  $(O)/number.o \
+		  $(O)/specnb.o \
+		  $(O)/string.o \
+		  $(O)/chars.o \
+		  $(O)/extend.o \
+		  $(O)/bllsht.o
+
+sobj		= $(obj)
+
+##################################################################
+# les entre'es classiques
+
+default: le$(BIN)bin.o
+
+clean:
+	rm -f le$(BIN)bin.o
+	rm -f $(makeobj) $(extra_obj)
+
+.PRECIOUS	= $(preciousobj)
+
+################################################################
+# lelispbin.o
+
+le$(BIN)bin.o: $(sobj) $(otherobj)
+	@$(MAKE) $@ \
+		USERRFILE=$@ \
+		USERRFILES="$(sobj) $(otherobj)"
+
+################################################################
+# les fichiers C et assembleurs divers
+
+plombe.o: $(PLOMBE)/plombe.c
+	@gcc -m32 -c -O2 $(PLOMBE)/plombe.c -o plombe.o
+
+iflush.o:	C/iflush.s
+	$(AS) $(ASFLAGS) -xarch=v8plus C/iflush.s -o iflush.o
+
+###############################################################
+# to make .o files from .llm3 files
+
+MAKELLM3	= makellm3
+
+$(sobj):
+	@$(MAKE) -f $(MAKELLM3) $@ FLT=$(FLT) HOST=$(HOST)
+
+
+##############################################################
+# bignum module
+
+kern.o:
+	$(AS) solkern.s -o kern.o
+
+# Use generated .s
+bootstrap:
+	./newdir > /dev/null
+	-rm -f ../bignum/o/*.o *.o o/*.o o31/*.o o64/*o
+	touch s31/*.s s64/*.s
+	$(MAKE) -f Makeport kern.o
+	$(MAKE) -f Makeport FLT=31
+	$(MAKE) -f Makeport FLT=64
+	$(MAKE) allbin cmplc++
+	$(MAKE)
+
+# Pour tout reconstruire propre. L'ordre est TRES important!!
+
+world:
+	./newdir > /dev/null
+	cat WARNING
+	-rm lelisp
+	-rm kern.o
+	-rm iflush.o
+	-rm plombe.o
+	-rm symval.ll
+	-rm s31/*.s s64/*.s
+	$(MAKE) lelisp
+	$(MAKE) -f makellm3 symval.ll
+	$(MAKE) -f makellm3 FLT=31
+	$(MAKE) -f makellm3 FLT=64
+	$(MAKE) -f Makeport FLT=31
+	$(MAKE) -f Makeport FLT=64
+	-rm o/*.o
+	$(MAKE) allbin
+	make

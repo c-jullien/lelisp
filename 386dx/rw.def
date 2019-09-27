@@ -1,0 +1,30 @@
+LIBRARY   rw
+
+EXETYPE   WINDOWS
+
+CODE	  PRELOAD MOVEABLE DISCARDABLE
+DATA	  PRELOAD SINGLE
+
+HEAPSIZE  1024
+
+EXPORTS
+	WEP			@1	RESIDENTNAME
+	rw_open			@2
+	rw_close		@3
+	rw_flush		@4
+	rw_eofp			@5
+	rw_errorp		@6
+	rw_read_char		@7
+	rw_unread_char		@8
+	rw_read_buf		@9
+	rw_read_line		@10
+;;	rw_read_word		@11
+	rw_read_short		@11
+	rw_write_char		@12
+	rw_write_buf		@13
+	rw_write_line		@14
+	rw_write_word		@15
+	rw_get_page		@16
+	rw_get_offset		@17
+	rw_seek			@18
+

@@ -1,0 +1,18 @@
+LIBRARY   extrnlib
+
+;; DESCRIPTION 'Sample DLL for Le-Lisp'
+
+EXPORTS
+	DllMain			@1
+	WDGOpenFile		@2
+	WDGGetText		@3
+	WDGGetTextDlg		@4
+	WDGGetFont		@5
+	WDGGetColor		@6
+	WDGMessageBox		@7
+	WDGOpenClipboard	@8
+	WDGIsAvailable		@9
+	WDGCloseClipboard	@10
+	WDGGetClipboard		@11
+	WDGSetClipboard		@12
+	WDGResources		@13

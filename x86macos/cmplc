@@ -1,0 +1,1 @@
+exec /Users/jullien/lelisp/x86macos/lelispbin -stack 12 -code 600 -heap 256 -number 0 -vector 4 -string 5 -symbol 5 -cons 4 -float 0 -r /Users/jullien/lelisp/x86macos/llcore/cmplc.core $*

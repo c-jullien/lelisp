@@ -1,0 +1,15 @@
+defmodule
+minimore
+files (
+minimore
+)
+export (
+more
+morend
+#:minimore:bol
+#:minimore:eol
+)
+import
+()
+include
+()

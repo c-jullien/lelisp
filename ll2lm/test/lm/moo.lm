@@ -1,0 +1,23 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule moo
+
+files (
+|moo.ll|
+)
+
+import (
+
+; ;;; Imports which seem necessary
+zyy
+)
+
+export (
+
+; ;;; Functions unused unless exported
+m-moo1
+)
+
+cpenv (
+((defmacro m-moo1 (x) (list 'list (f-zyy1 x)))
+))

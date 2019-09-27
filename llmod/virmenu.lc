@@ -1,0 +1,23 @@
+defmodule
+menu
+files (
+|virmenu.ll|
+)
+export (
+create-menu
+kill-menu
+activate-menu
+menu-insert-item-list
+menu-insert-item
+menu-delete-item-list
+menu-delete-item
+menu-modify-item-list
+menu-modify-item
+)
+import (
+virutil
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)

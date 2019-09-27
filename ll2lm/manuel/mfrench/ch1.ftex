@@ -1,0 +1,918 @@
+%==========================================================================
+\Chapter {1} {Introduction a` la gestion modulaire de l'application}
+%==========================================================================
+
+
+Ce manuel pre'sente comment s'emploient les outils de ge'ne'ration
+de modules de \LeLisp. La fonction et l'inte're^t de ces outils
+sont pre'sente's progressivement dans le pre'sent chapitre.
+
+Les lecteurs non familiers avec les notions de {\em programmation
+modulaire} ou de {\em modules} trouveront dans la premie`re section
+une introduction a` ces notions.
+
+
+%---------------------------------------------------------------------------
+\Section {Application Le-Lisp et modules}
+%---------------------------------------------------------------------------
+
+
+\SSection{A propos de l'application}
+
+
+\SSSection{Inadaptation des fichiers interpre'te's}
+
+Pour assurer dans de bonnes conditions la gestion du code source
+d'une application \LeLisp\ a` des fins de de'veloppement, de
+maintenance, et surtout de livraison a` l'utilisateur final, 
+l'usage direct des fichiers source s'ave`re 
+incommode et peu robuste\,:
+\begin{itemize}
+\item cela impose d'ope'rer des regroupements de fichiers
+pour lesquels le langage n'offre pas de support e'vident\,;
+\item charge's par une forme comme {\tt loadfile} -- et me^me
+incorpore's dans une image me'moire -- les fichiers sources donnent lieu a`
+des codes interpre'te's qui ne sont pas exe'cute's de manie`re
+optimale\,;
+\item livrer une application sous forme de source la fragilise
+-- dans la mesure ou la moindre fonction interne de l'application
+est accessible en modification ou peut-e^tre e'crase'e -- et
+est contraire a` tout objectif de confidentialite'.
+\end{itemize}
+
+
+\SSSection{Disponibilite' du compilateur modulaire}
+
+\LeLisp\ offre la possibilite' de regrouper les fichiers
+sources sous formes de {\em modules} et {\bf de les compiler}.
+Le compilateur modulaire \LeLisp\ produit des fichiers objets
+contenant un code interme'diaire, qui, une fois 
+charge'\footnote{Le chargement du code interme'diaire est effectue'
+par ce que nous appellerons dans la suite le {\em chargeur}
+ou {\em loader}.}, s'exe'cute
+de 3 a` 30 fois plus rapidement que le me^me code interpre'te'.
+Cette compilation, tout en assurant la compatibilite' avec 
+l'interpre`te, introduit un certain nombre d'exigences -- 
+telles que l'interdiction de recourir
+a` des liaisons dynamiques de variables -- et re'alise un
+ensemble de ve'rifications statiques\footnote{Et notamment un
+contro^le syntaxique sur {\bf tout} le code, alors qu'un
+code interpre'te' peut difficilement, dans la pratique,
+e^tre e'value' exhaustivement.} qui concourent a`
+une plus grande solidite' des codes.
+
+
+\SSSection{Principe de modularite'}
+
+La compilation modulaire suppose essentiellement de de'finir
+pour chaque module l'{\tt interface}
+avec les autres modules, c'est a` dire l'ensemble des fonctions
+qui pourront e^tre appele'es depuis l'exte'rieur du module.
+
+Si l'on conside`re un module comme un ensemble de fonctions de 
+l'application regroupe'es logiquement
+(voir plus loin comment constituer cela),
+de'crire l'interface du module consiste a`
+spe'cifier au compilateur un sous-ensemble des fonctions
+de'finies dans le module. Ces fonctions seront dites
+{\em exporte'es}.
+Un module utilisant l'une des fonctions exporte'es par un
+autre module devra alors {\em importer} le module la fournissant pour 
+pouvoir e^tre exe'cute'.
+
+La mise en oeuvre des modules et de leurs relations client-fournisseur
+est l'objet principal de ce manuel\footnote{Voir e'galement
+le Chapitre 13 du {\em Manuel de Re'fe'rence} de Le-Lisp, pour
+une de'finition exhaustive des modules.}.
+L'automatisation presque comple`te
+de cette activite' est re'alise'e par l'{\em Analyseur de Modules}
+de \LeLisp.
+
+Mais avant d'e'tudier comment s'en servir nous donnons les
+informations e'le'mentaires sur les modules qui permettent
+de poursuivre la lecture du manuel.
+
+
+
+\SSection{A propos des modules}
+
+La de'finition intuitive d'un module a de'ja` e'te' donne'e\,:
+il s'agit d'un regroupement de codes \LeLisp\ en vue
+de leur compilation modulaire.
+Ce regroupement s`accompagne de la de'finition de
+l'interface du module.
+
+Pour spe'cifier les fichiers du module, l'interface en question et
+d'autres informations utiles au compilateur, comme les modules
+importe's, il faut employer une {\em description modulaire}.
+Il s'agit d'un fichier d'extension {\tt .lm}, qui comporte
+un certain nombre de cle's conventionnelles.
+
+
+
+\SSSection {Modules interpre'te's}
+
+Commenc,ons par conside'rer le module
+comme un simple regroupement de fichiers source \LeLisp.
+
+Par exemple, un de'veloppeur a e'crit un programme \LeLisp\ assez
+conse'quent scinde' en trois fichiers {\tt a.ll}, {\tt b.ll} et {\tt
+c.ll}. Pour utiliser cette application, il doit explicitement charger
+ces trois fichiers (par {\tt loadfile} ou {\tt libloadfile}).
+
+Il peut structurer cette application en un module pour simplifier son
+chargement.
+
+Appelons ce module {\tt mymod}. Il suffit de cre'er le fichier {\tt
+mymod.lm} ainsi:
+
+\begin{Code*}
+defmodule mymod
+files (a.ll b.ll c.ll)
+\end{Code*}
+
+Ce fichier {\tt mymod.lm} est le descripteur du module {\tt
+mymod}.
+
+Il suffit ensuite d'e'valuer simplement {\tt (loadmodule 'mymod)} pour
+charger en une seule fois les trois fichiers mentionne's dans la
+rubrique {\tt files}: {\tt a.ll}, {\tt b.ll} et {\tt c.ll}.
+
+Le fichiers ainsi charge's dans l'environnement constituent une
+version interpre'te'e de l'application
+
+
+\SSSection{Imports}
+
+Admettons que l'application en question mette en oeuvre une interface
+minimale comprenant un bouton \Aida.
+Le chargement qui vient d'e^tre de'crit a du sens tel quel si on le
+re'alise apre`s avoir lance' \Aida\ et s'e^tre assure' que l'ensemble
+des fonctionnalite's d'\Aida\ que requiert le module {\tt mymod}
+est pre'sent dans l'image me'moire utilise'e.
+
+Par contre, l'application ainsi charge'e
+ne pourrait pas fonctionner sans \Aida.
+
+Pour e'viter ce genre d'e'cueil il faut
+affiner la de'finition du module {\tt mymod} en ajoutant des
+imports au descripteur du module\,:
+
+\begin{Code*}
+defmodule mymod
+files (a.ll b.ll c.ll)
+import (application button)
+\end{Code*}
+
+Si l'on e'value ensuite sous \Aida\ la forme
+{\tt (loadmodule 'mymod)}, le
+chargeur va d'abord s'assurer que sont pre'sents en me'moire les
+modules mentionne's dans la rubrique {\tt import}\footnote{Et cela
+re'cursivement.} (dans notre exemple
+les modules {\tt application} et {\tt button} d'\Aida).
+
+Si l'un de ces deux modules n'est pas pre'sent en me'moire, il sera
+e'galement charge' (par un {\tt loadmodule}) ainsi que ses
+sous-modules s'ils ne sont pas pre'sents non plus.
+
+La rubrique {\tt import}, qui est une simple se'curite' dans le
+cas de cet exemple, devient obligatoire si aucun module
+n'est pre'sent a priori, ce qui est le bon postulat lorsque l'on
+fabrique un exe'cutif.
+
+
+\SSSection {Modules compile's}
+
+
+L'organisation modulaire des fichiers reve^t bien entendu
+son principal inte're^t 
+lorsqu'il s'agit de les compiler avec le 
+compilateur modulaire {\tt Complice}.
+
+Cette compilation 
+(cf. le chapitre 13 du {\em Manuel de re'fe'rence} \LeLisp\  et le guide de
+programmation d'\Aida) ge'ne`re un fichier {\tt mymod.lo} contenant
+une suite d'instructions \|LAP| (cf. le Chapitre 12 du {\em Manuel
+de Re'fe'rence} de \LeLisp).
+
+Nous avons vu que, quand un module est interpre'te', la fonction {\tt
+loadmodule} charge les fichiers indique's dans la rubrique {\tt
+files}.
+
+Quand le module est compile', ce ne sont plus les fichiers source
+({\tt a.ll}, {\tt b.ll} et {\tt c.ll}) qui sont charge's, mais
+seulement le fichier {\tt mymod.lo} re'sultant de leur compilation.
+
+Ce fichier {\tt mymod.lo} contient toutes les fonctions du module
+sous forme compile'e. Ces fonctions ne sont plus charge'es en me'moire
+sous forme de listes (dans la zone {\tt cons}) mais sous forme de
+suites d'instructions en langage machine (dans la zone {\tt code}).
+
+Leur exe'cution est alors plus rapide et il est possible de cacher
+aux autres modules les fonctions strictement internes de ce
+module, en ne les mentionnant pas dans l'interface externe du module.
+
+Par exemple, si dans le module {\tt mymod} on ne de'sire rendre
+visible -- on dit ge'ne'ralement {\em exporter} --
+que deux fonctions {\tt f} et {\tt g}, il suffit d'ajouter la
+ligne suivante au descripteur de module\,:
+
+\begin{Code*}
+defmodule mymod
+files (a.ll b.ll c.ll)
+import (application button)
+export (f g)
+\end{Code*}
+
+
+
+%---------------------------------------------------------------------------
+\Section {Introduction a` l'analyse de modules}
+%---------------------------------------------------------------------------
+
+\LeLisp\ propose un jeu d'outils qui permettent\,:
+\begin{itemize}
+\item d'automatiser la mise au point des 
+descriptions modulaires\,;
+\item de pre'parer
+une compilation de nature incre'mentale\,;
+\item de compiler effectivement, phase a` l'issue
+de laquelle les modules objets sont produits.
+\end{itemize}
+L'utilisation in fine du compilateur est donc l'objectif
+principal de ce guide, et de la me'thodologie qu'il pre'sente.
+Et il s'inte'ressera particulie`rement
+a` la phase permettant de pre'parer la 
+compilation. Nous de'signerons le plus souvent cette phase
+sous le vocable de phase d'{\em analyse} des modules.
+
+
+Au lieu de re'aliser manuellement 
+la spe'cification comple`te des diverses cle's des 
+descriptions modulaires, en pre'alable
+a` une compilation "manuelle", 
+l'emploi de l'{\em Analyseur de Modules} va permettre\,:
+\begin{itemize}
+\item de constituer inte'gralement les descriptions modulaires, a`
+partir d'un de'coupage des sources de l'application fourni par
+l'utilisateur\,;
+\item de pre'parer des scripts de commande de type {\tt Makefile}
+pour re'aliser l'analyse sur l'ensemble des fichiers composant
+l'application \,;
+\item de re'aliser une analyse des codes source, lors
+de la mise au point des descriptions modulaires, qui permette
+de de'tecter des erreurs dans le de'coupage en modules (existence
+de cycles dans les de'pendances inter-modules)
+ou des lacunes dans les informations donne'es sur l'application
+pour la compiler modulairement 
+(manque d'informations syste`me sur l'acce`s
+aux produits utilise's par l'application, manque d'informations
+sur l'environnement devant e^tre pre'sent pendant la compilation,
+etc.) \,;
+\item de pre'parer la compilation modulaire en produisant un
+script de compilation de type {\tt Makefile}
+offrant la possibilite' de compiler l'ensemble de l'application
+incre'mentalement, c'est a` dire en permettant de
+corriger e'ventuellement un a` un les
+modules produisant des erreurs de compilation, et de poursuivre
+la compilation.
+\end{itemize}
+
+
+\SSection{L'Analyseur de Modules\,: premie`res notions}
+
+L'{\em Analyseur de Modules} est l'outil
+qui permet de produire les
+descriptions modulaires et le {\tt Makefile} de compilation a` partir
+d'un certain nombre d'informations de base sur l'application.
+L'analyseur fonctionne en effectuant plusieurs passes sur les fichiers
+sources et les descriptions modulaires de l'application,
+et cela jusqu'a` e'limination par
+le programmeur, des messages d'erreur et de {\em warning} appelant une
+correction.
+
+
+\SSSection{Usage concret de l'Analyseur de Modules}
+
+L'{\em Analyseur de Modules} se pre'sente sous la forme d'une commande
+du syste`me d'exploitation, {\tt ll2lm}, 
+dote'e d'un ensemble d'options
+permettant de parame'trer de manie`re de'taille'e
+la phase d'analyse courante.
+
+L'appel de cette commande permet soit d'analyser directement
+un module, soit de produire 
+des scripts de commande de type {\tt Makefile}, utilisant
+eux-me^mes la commande {\tt ll2lm}, et 
+qui permettront de lancer l'analyse sur tout le projet.
+
+Utiliser l'analyseur revient le plus souvent
+a` ge'ne'rer des scripts de commande et a` les lancer.
+
+\begin{Side}{Note\,:}
+La dernie`re section du chapitre pre'cise ou` trouver
+l'{\em Analyseur de Modules}, comment l'installer et le
+configurer.
+\end{Side}
+
+
+\SSSection{De'marrer avec l'analyseur}
+
+Dans cette section nous abordons l'utilisation de l'analyseur en 
+e'tudiant quelles sont les informations minimales a` fournir pour
+pouvoir ge'ne'rer les modules de l'application.
+
+L'application dans sa forme non modulaire est constitue'e d'un
+ensemble de fichiers source qui sont re'partis dans les
+re'pertoires de de'veloppement.
+En premier lieu, il faut donc spe'cifier a` l'analyseur quels
+sont les fichiers qui constituent l'application et ou` ils
+se trouvent.
+
+Mais nous avons de'ja` expose' le fait qu'un ensemble de fichiers
+source "en vrac" ne constituait pas ne'cessairement un de'coupage
+logique de l'application approprie' a` sa compilation
+et a` sa distribution. 
+Un de'coupage cohe'rent en modules permettra
+en effet de limiter l'interface externe des modules
+aux fonctions qui sont strictement ne'cessaires a` l'usage externe.
+Ce qui est valable pour chaque module est en fait
+valable pour l'application elle-me^me\,: c'est en
+de'coupant l'application en modules que l'on rationalisera
+l'interface externe de l'application.
+
+
+Si l'analyseur peut travailler par de'faut avec pour seule
+base de de'coupage celle des fichiers source de l'application -- il
+ge'ne'rera alors un fichier de description modulaire par
+fichier source --, il est beaucoup plus raisonnable de conside'rer
+que la base de travail doit e^tre donne'e sous
+forme d'un ensemble de descriptions modulaires regroupant
+les fichiers source.
+Ces descriptions modulaires de de'marrage ne doivent en fait
+comporter que les cle's {\tt defmodule} et {\tt files}, 
+sachant que les autres rubriques ({\tt import} et {\tt export}
+notamment) seront remplies par l'analyseur.
+
+
+\SSection{Projets}
+
+
+\SSSection{Notion de projet}
+
+Une fois l'application de'coupe'e (soit en fichiers source si l'on
+s'en contente, soit par le biais de descripteurs de modules
+de de'marrage qui spe'cifient les composantes de l'application)
+il faut indiquer a` l'analyseur\,:
+\begin{itemize}
+\item le de'coupage lui-me^me\,;
+\item les re'pertoires ou` trouver les fichiers source et les
+descriptions modulaires\,;
+\item  les re'pertoires ou` doivent e^tre produits
+les modules, les scripts d'analyse, etc.
+\end{itemize}
+
+L'ensemble de ces spe'cifications, de'crivant le contexte
+d'analyse sont regroupe'es dans ce que l'on appelle
+un {\em projet}.
+
+Il s'agit d'un fichier d'extension {\tt .prj} dans lequel sera
+e'crite une forme de de'finition de projet ou` l'on spe'cifiera
+les informations utiles pour analyser l'application.
+En voici un exemple extre^mement simple\,:
+\BeginLL
+(define-rt-project myappli
+   root-directory #u"/udd/local/myappli/" 
+   directories (#u"sources/")
+   modules-lists ("myappli.lst") 
+\EndLL
+
+La forme ci-dessus de'finit le projet {\tt myappli}
+associe' a` "mon" application. Le projet est de'fini dans
+le fichier {\tt myappli.prj}.
+L'ensemble des re'pertoires lie's a` l'application
+se trouvent sous la racine \|/udd/local/myappli|. Les fichiers
+sources sont dans le re'pertoire {\tt sources} (sous le re'pertoire
+racine). 
+Le de'coupage en modules de l'application est donne' dans le fichier
+{\tt myappli.lst} qui se trouve dans le re'pertoire mentionne' dans la
+cle' {\tt directories}\footnote{Si plusieurs re'pertoires de sources
+existent et sont mentionne's dans cette cle', il faut en fait
+pre'voir dans chacun d'eux un fichier du type de {\tt myappli.lst}.}.
+
+Le projet rassemble donc en premier lieu
+toutes les informations ayant trait\,:
+\begin{itemize}
+\item a` l'application elle-me^me, en tant qu'un ensemble
+de modules (ou de fichiers, a` de'faut). L'option concerne'e
+est {\tt modules-lists}\,;
+\item a` la localisation des ressources constituant l'application
+-- syste`me de re'pertoires relatifs a` un re'pertoire racine --.
+Les principales options concerne'es sont {\tt root-directory}
+et {\tt directories}.
+\end{itemize}
+
+Bien entendu un certain nombre d'autres informations utiles
+a` l'analyseur peuvent ou doivent e^tre spe'cifie'es via le projet\,:
+ou` sont ge'ne're's les modules et leur descriptions, quels sont
+les noms que l'on souhaite donner aux fichiers de script ge'ne're's,
+etc.
+
+L'objectif n'est pas de de'tailler ici toutes ces options\,:
+les plus courantes d'entre-elles sont pre'sente'es dans le
+Chapitre 2 et l'ensemble des options est documente'
+dans le Chapitre 5.
+
+
+
+\SSSection{Projets et produits}
+
+Dans ce premier contact avec la notion de projet,
+nous avons passe' sous silence la fac,on dont
+l'analyseur pouvait ge'rer les imports dans le cas ou` des
+modules externes a` l'application {\tt myappli} e'taient
+ne'cessaires pour qu'elle s'exe'cute.
+Supposons en effet que l'application {\tt myappli} comporte
+le module {\tt mymod} -- pre'sente' ci-dessus dans l'exemple
+sur les modules -- qui utilise des fonctions appartenant
+a` \Aida\ -- les imports devant e^tre produits e'tant
+{\tt application} et {\tt button} --.
+Avec le projet {\tt myappli} de'fini
+au paragraphe pre'ce'dent, l'analyseur n'aura pas les
+moyens de fabriquer la liste des imports ne'cessaires pour
+compiler et charger le module {\tt mymod}.
+
+En d'autres termes, si l'application a` analyser utilise
+une autre application ou un produit tel qu'\Aida, il faut le
+spe'cifier a` l'analyseur.
+
+Pour ce faire, il faut employer la cle' {\tt required-projects}
+de la fac,on suivante\,:
+\BeginLL
+(define-rt-project myappli
+   required-projects (aida)
+   root-directory #u"/udd/local/myappli/" 
+   directories (#u"sources/")
+   modules-lists ("myappli.lst") 
+\EndLL
+
+La forme ci-dessus spe'cifie que le projet {\tt myappli} 
+requiert la pre'sence du projet {\tt aida} lors de l'analyse. 
+Exprimer le fait qu'une application est cliente d'une autre
+application devient ainsi particulie`rement aise'.
+
+L'ensemble des produits d'\Ilog\ base's sur \LeLisp\ sont dote's
+d'une description de projet et du fichier correspondant\,: 
+{\tt lelisp.prj},
+{\tt aida.prj},
+{\tt smeci.prj},
+etc.,
+ceux-ci pouvant e^tre directement re'fe'rence's
+dans les projets des applications.
+
+
+
+\SSection{Organisation informatique de l'application}
+
+Avant de conclure ce chapitre d'introduction par le suivi
+des ope'rations d'analyse et de compilation de A a` Z, nous
+pre'cisons l'organisation informatique de l'application qui
+apparait la plus souhaitable pour mener a` bien toutes
+ces e'tapes.
+
+\SSSection{Re'partition des sources et des modules}
+
+Il est souhaitable de se'parer les sources de l'application
+des modules (y compris les descriptions modulaires 
+mise a` jour par l'{\em Analyseur de Modules})\,:
+\begin{itemize}
+\item la livraison de l'application a` ses utilisateurs en
+sera facilite'e\,: seuls les modules devront e^tre livre's,
+a` moins qu'on ne livre qu'un exe'cutif \,;
+\item la se'paration entre fichiers sources contro^le's par
+le programmeur et fichiers de travail modifie's par l'analyseur
+est ge'ne'ralement appre'ciable.
+On notera d'ailleurs qu'il existe un moyen de maintenir
+des descriptions modulaires d'extension diffe'rente
+de {\tt .lm} (on utilise alors souvent {\tt .lc}).
+Ces descriptions modulaires peuvent e^tre conserve'es avec les
+fichiers sources comme spe'cification du de'coupage de
+l'application en modules.
+\end{itemize}
+
+
+\SSSection{Re'pertoire d'analyse}
+
+Les fichiers de projets et les scripts ge'ne're'es par l'analyseur
+sont en ge'ne'ral groupe's dans un re'pertoire spe'cifique,
+distinct des sources et des modules.
+Ce re'pertoire est appele' {\tt modana} dans la distribution des
+produits \Ilog. Il sera re'fe'rence' dans la de'finition de projet
+en utilisant la cle' {\tt system-directory}, cf. Chapitre 5.
+
+Il faut noter que pour ses besoins propres l'analyseur produit des
+fichiers correspondant a` une {\em table de re'fe'rence} interne,
+dont l'usage et la mise a` jour ne concernent pas l'utilisateur
+en premie`re instance.
+Par contre, l'emplacement de ces fichiers peut-e^tre parame'tre'
+(cf. l'option {\tt crunch-directory} de la de'finition de projet)
+et se trouve e^tre conventionnellement le re'pertoire 
+{\tt modana}.
+
+\begin{Side}{\bf Remarque}
+Les fichiers d'extension {\tt .lst} associe's a` un projet et
+donnant la liste des modules de l'application
+(cf. {\tt myappli.lst} dans l'exemple des pages pre'ce'dentes) sont 
+obligatoirement place's avec les fichiers sources,
+rendus accessibles via la cle' {\tt directories}.
+\end{Side}
+
+
+
+\SSSection{Re'sume'}
+
+L'organisation conventionnelle que nous proposons pour le
+de'veloppement et la compilation des applications est
+-- \|<root-dir>| correspondant au re'pertoire racine de 
+l'application -- \,:
+\begin{itemize}
+\item \|<root-dir>/sources|\,: fichiers source (avec e'ventuellement
+les descriptions modulaires "source" {\tt .lc}) de l'application\,;
+\item \|<root-dir>/modules|\,: descriptions modulaires produites
+par l'analyseur {\tt .lm} et fichiers objets {\tt .lo} produits
+par le compilateur\,;
+\item \|<root-dir>/modana|\,: re'pertoire ou` sont place's
+les projets et les scripts (de type {\tt Makefile})
+produits pour l'analyse ou la compilation.
+\end{itemize}
+
+
+%---------------------------------------------------------------------------
+\Section {Me'thodologie\,: de l'analyse a` la compilation, en 6 e'tapes}
+%---------------------------------------------------------------------------
+
+Cette section pre'sente le de'roulement de la ge'ne'ration
+des modules de l'application {\tt myappli}.
+
+On peut re'sumer le cycle de compilation de l'ensemble des modules
+d'un projet, a` 3 phases principales\,: 
+\begin{enumerate}
+\item la pre'paration du projet\,;
+\item l'analyse\,;
+\item la compilation.
+\end{enumerate}
+
+Chacune de ces phases peut se de'composer. 
+La pre'paration du projet se fait elle me^me en deux ou trois
+e'tapes et la phase de compilation se fait en deux temps.
+Cela donne en fait 6 e'tapes\,:
+\begin{itemize}
+\item {\em description du projet} (en utilisant la forme
+{\tt define-rt-project} de'ja` introduite)\,;
+
+\item si besoin, c'est a` dire quand il manque des descriptions
+modulaires ou quand il n'y en a pas,
+re'alisation d'une {\em analyse de de'marrage}\,;
+\begin{itemize}
+\item fabrication du {\tt Makefile} d'{\em analyse de de'marrage}\,;
+\item re'alisation des deux passes correspondant a`
+l'{\em analyse de de'marrage}\,;
+\end{itemize}
+
+\item fabrication du {\tt Makefile} d'{\em analyse courante}\,;
+
+\item {\em analyse} proprement dite\,: elle correspond
+a` l'emploi incre'mental du script d'analyse courante,
+avec correction du contenu des modules pour lesquels
+sont de'tecte'es des erreurs\,;
+
+\item fabrication du {\tt Makefile} de {\em compilation}\,;
+
+\item {\em compilation} effective des modules. 
+\end{itemize}
+
+Le de'roulement de A a` Z d'une session de ge'ne'ration de modules
+comporte au maximum les 6 e'tapes importantes liste'es ci-dessus,
+sachant que l'e'tape 2 (re'alisation d'une analyse de de'marrage)
+est optionnelle et de'pend des exigences que l'on se donne
+en matie`re de gestion modulaire pour une application donne'e.
+
+
+
+%---------------------------------------------------------------------------
+\SSection{1e`re e'tape: description du projet}
+%---------------------------------------------------------------------------
+
+Pour de'crire le projet (ou e'ventuellement les projets)
+associe'(s) a` l'application,
+il faut utiliser une (ou e'ventuellement plusieurs)
+forme(s) de de'finition de projet {\tt define-rt-project}. 
+
+La de'finition d'un projet sera stocke'e dans un fichier de
+description de nom conventionnel\,: \|<nom de projet>.prj|. 
+Ce fichier rassemblera en fait toutes les informations ne'cessaires
+au projet et notamment les instructions de chargement 
+d'autres projets quand ils sont requis.
+On e'crira alors directement une forme de chargement,
+comme dans l'exemple ci-dessous ou` le projet {\tt aida} est requis
+et doit e^tre pre'alablement charge'\,:
+\begin{Code*}
+(loadfile "/usr/ilog/aida/modana/aida.prj")
+
+(define-rt-project myappli
+   required-projects (aida)
+   root-directory #u"/udd/local/myappli/" 
+   directories (#u"sources/")
+   modules-lists ("myappli.lst")
+   system-directory #u"modana/"
+   crunch-directory #u"modana/")
+\end{Code*}
+
+
+Par de'faut, c'est a` dire si l'option {\tt modules-lists}
+n'est pas employe'e, chaque fichier source (de la forme {\tt
+<file>.ll}) de chaque re'pertoire pre'sent sous la clef \|directories|
+va donner lieu a` un fichier de description modulaire
+(de la forme {\tt <file>.lm}).
+
+Dans l'exemple ci-dessus, l'on pre'fe`re re'fe'rencer 
+explicitement une liste de modules de'ja` spe'cifie's par
+des descriptions modulaires indiquant les fichiers source
+correspondant a` chaque module -- cf. la re'fe'rence au
+fichier \|myappli.lst| --.
+
+\medskip 
+
+{\em Pour le de'tail, cf. Chapitre 2 pour de'marrer et Chapitre 5
+comme Manuel de Re'fe'rence}.
+
+%------------------------------------------------------------------
+\SSection{2e`me e'tape: analyse de de'marrage}
+%------------------------------------------------------------------
+
+
+Dans le cas ou` il manque des descriptions modulaires ou quand il 
+n'y en a pas, c'est a` dire quand on veut les fabriquer a` partir
+des fichiers source, l'analyse ne peut pas re'ellement commencer
+avant de les avoir constitue's.
+Il faut donc effectuer une sorte d'analyse a` blanc, appele'e
+analyse de de'marrage et qui, comme toute analyse, peut
+s'effectuer a` partir d'un fichier de commande de type
+{\tt Makefile}.
+
+
+\SSSection{Fabrication du Makefile d'analyse de de'marrage}
+
+Pour fabriquer le script de commande de l'analyse de de'marrage
+il faut utiliser la commande {\tt ll2lm} avec l'option
+de ge'ne'ration du makefile d'analyse (cette option est \|-init|) 
+et avec la valeur par de'faut de l'option
+de gestion du niveau des de'pendances du makefile
+(il s'agit de l'option \|-dependency| dont la valeur
+doit impe'rativement rester a` 1).
+Il faut donc lancer la commande, une fois place' dans le re'pertoire
+racine mentionne' dans le projet\,:
+\begin{Code*}
+% cd /udd/local/myappli
+% ll2lm -load modana/myappli.prj -p myappli -init
+\end{Code*}
+L'option \|-load| indique quel fichier de projet charger et
+l'option \|-project| (que l'on peut raccourcir en \|-p|)
+indique quel projet doit e^tre analyse'.
+
+L'on obtient ainsi un script d'analyse de nom {\tt myappli.mki}
+dans le re'pertoire d'analyse (mentionne' dans le projet via la
+cle' {\tt system-directory}).
+
+
+\SSSection{Analyse de de'marrage}
+
+L'analyse de de'marrage se fait en lanc,ant le script 
+{\tt myappli.mki} ge'ne're' a` l'e'tape pre'ce'dente, et
+ceci deux fois\,:
+
+\begin{itemize}
+
+\item la premie`re fois avec l'entre'e {\tt init1}\,:
+\begin{Code*}
+% make -f modana/myappli.mki init1
+\end{Code*}
+Cette premie`re passe permet de fabriquer les tables de re'fe'rence
+internes de l'analyseur (cf. \|modana/*.ref|),
+a` partir d'une premie`re version incomple`te
+des descriptions modulaires. 
+
+La plupart des messages et avertissements de cette e'tape ne sont dus
+qu'au fait que l'{\em Analyseur de Modules} ne connai^t pas encore tous
+les modules\,: de nombreuses fonctions et autres de'finitions sont
+inconnues et introuvables. C'est pourquoi on ne tiendra pas compte des
+messages de cette e'tape. 
+
+Si toutefois des erreurs bloquantes surviennent,
+alors on devra revoir l'ordre d'analyse des fichiers, pour
+pouvoir poursuivre.
+
+
+\item la seconde fois avec l'entre'e {\tt init2}\,:
+\begin{Code*}
+% make -f modana/myappli.mki init2
+\end{Code*}
+
+Cette seconde passe se charge de refabriquer tous les modules, 
+comme s'ils n'existaient pas, mais en ayant cette fois connaissance
+de l'environnement complet d'analyse.
+Les messages (de type {\tt warning} ou {\tt error}) 
+affiche's sont de'sormais tout a` fait significatifs et doivent e^tre
+exploite's par le programmeur pour corriger le contenu des modules
+ou pour modifier le de'coupage de l'application.
+Ce travail de mise au point correspond aux phases suivantes dites
+d'{\em analyse courante}.
+\end{itemize}
+
+
+%------------------------------------------------------------------
+\SSection{3e`me e'tape: fabrication du script d'analyse courante}
+%------------------------------------------------------------------
+
+Une fois effectue'e l'analyse de de'marrage, ou dans le cas ou`
+l'ensemble des descriptions modulaires de l'application
+avait e'te' du^ment de'fini a` la main, 
+l'on fabrique un script d'analyse
+courante qui servira pour re'aliser toutes les analyses ulte'rieures.
+
+On lance pour ce faire la commande {\tt ll2lm} avec l'option
+d'analyse \|-init| et avec l'option de niveau de de'pendance
+{\tt -dep 2} afin d'e'tablir une de'pendance sur les modules 
+importe's\,:
+
+\begin{Code*}
+% ll2lm -load myappli.prj -p myappli -init -dep 2
+\end{Code*}
+
+
+%-------------------------------------------------------------------
+\SSection{4e`me e'tape: analyse courante}
+%-------------------------------------------------------------------
+
+L'analyse courante se lance en utilisant le {\tt Makefile}
+ge'ne're' a` l'e'tape pre'ce'dente sans entre'e de type
+{\tt init1} ou {\tt init2}\,:
+\begin{Code*}
+% make -f modana/myappli.mki
+\end{Code*}
+
+De'bute alors une se'rie de cycles analyse / corrections jusqu'a`
+ce qu'aucun message grave, c'est a` dire pre'ce'de' de la marque
+{\tt **}, ne soit plus de'livre' par l'analyseur.
+
+Si certaines corrections imposent de modifier la de'finition du projet
+on reprendra les e'tapes 1 a` 4. Il suffit par contre de relancer l'e'tape 4
+quand les listes d'{\tt import} sont modifie'es, chaque fois qu'une
+de'pendance circulaire est signale'e ou qu'une redondance d'{\tt
+import} est mentionne'e.
+
+Au cas ou` l'on exploite les fichiers {\tt .lc} comme description
+modulaire source, on devra e'diter directement ces fichiers pour 
+corriger les causes des messages d'erreur.
+
+\medskip 
+
+{\em Pour le de'tail, cf. Chapitre 2 pour de'marrer et Chapitre 5
+comme Manuel de Re'fe'rence. Le Chapitre 4 documente l'ensemble des
+messages d'analyse.}
+
+
+%----------------------------------------------------------------
+\SSection{5e`me e'tape: fabrication du script de compilation}
+%----------------------------------------------------------------
+
+Quand l'{\em Analyseur de Modules} n'e'met plus de message supposant
+une correction, la phase de pre'paration de la compilation peut e^tre
+acheve'e en ge'ne'rant un {\tt Makefile} de compilation.
+
+L'option \|-makefile| de la commande d'analyse permet d'engendrer
+le {\tt Makefile} a` partir de la table de re'fe'rences du projet \,:
+
+\begin{Code*}
+% ll2lm -load modana/myappli.prj -p myappli -makefile -dep 2
+\end{Code*}
+
+Le fichier ge'ne're' est nomme' par de'faut {\tt myappli.mk}
+et se trouve dans le re'pertoire d'analyse 
+(mentionne' dans le projet via la cle' {\tt system-directory}).
+
+
+Ce {\tt Makefile} devra 
+e^tre rege'ne're' si de nouveaux modules sont ajoute's au projet, ou
+si la de'finition du projet a e'te' modifie'e.
+Un certain nombre de clefs de la forme de de'finition de projets,
+telles que \|directories|, \|ll-object-directory| (ainsi que
+\|complice-options| qui concerne directement le compilateur,
+cf. Chapitre 3) influent sur le contenu du {\tt Makefile}
+de compilation.
+Il en va de me^me pour la cle' \|-dependency| de la commande d'analyse
+qui spe'cifie e'galement le niveau de de'pendance utilise'
+pour ope'rer les {\tt make}.
+
+\medskip 
+
+{\em Pour le de'tail, cf. Chapitres 3 et 5.}
+
+
+%-----------------------------------------------------------------
+\SSection{6e`me e'tape: compilation}
+%-----------------------------------------------------------------
+
+La dernie`re e'tape consiste a` re'aliser la compilation de l'ensemble
+des modules de l'application, puis, par la suite, la mise a` jour
+des modules compile's.
+
+Il suffit en ge'ne'ral de lancer le {\tt Makefile} de compilation,
+sans pre'ciser d'entre'e  particulie`re\,:
+\begin{Code*}
+% make -f modana/myappli.mk
+\end{Code*}
+
+On utilisera l'entre'e pre'de'finie {\tt clean} pour effacer tous les
+fichiers objets ({\tt .lo}) et l'entre'e {\tt i} pour e^tre sous la
+boucle interactive du compilateur (environnement de compilation
+charge').
+
+Il se peut que {\tt complice} de'ce`le de nouvelles erreurs lors de la
+compilation des modules. On devra alors corriger ces erreurs et sans
+doute recommencer les {\em e'tapes 4} a` {\em 6}.
+
+
+{\em Pour le de'tail, cf. Chapitre 3 du pre'sent manuel et le Manuel
+de Refe'rence de} \LeLisp, {\em Chapitre 13.}
+
+
+\bigskip
+
+\begin{Side}{Note}
+{\em L'annexe A pre'sente de manie`re comple`te l'ensemble des
+ope'rations d'analyse et de compilation sur un exemple tre`s simple,
+e'quivalent a` celui propose' dans cette section,
+en reproduisant l'inte'gralite' des messages obtenus pendant 
+les diverses sessions.}
+\end{Side}
+
+
+
+%---------------------------------------------------------------------------
+\Section{Installation de l'analyseur et configuration}
+%---------------------------------------------------------------------------
+
+L'installation de l'analyseur n'est pas obligatoire pour pouvoir
+l'utiliser. En effet la commande {\tt ll2lm} est livre'e 
+en standard avec le produit \LeLisp. 
+Elle se trouve dans le re'pertoire {\tt <machine>} au me^me
+titre que les autres commandes de \LeLisp\ et est directement
+utilisable. La configuration standard des tailles des zones de {\tt
+ll2lm} est normalement suffisante dans la majorite' des cas. 
+
+Toutefois, si durant une phase d'analyse vous obtenez des messages
+libelle's de la manie`re suivante\,:
+
+\begin{Code*}
+***** Fatal error : no room for symbols.
+***** Fatal error : no room for code.
+\end{Code*}
+
+il devient ne'cessaire de reconfigurer l'image me'moire 
+{\tt cll2lm}\footnote{Il ne s'agit pas
+d'une erreur de documentation\,: le nom de l'image me'moire est
+effectivement {\tt cll2lm} et non {\tt ll2lm}.}
+utilise'e par {\tt ll2lm} en augmentant la zone concerne'e -- celle 
+des symboles et du code pour le message pre'ce'dent.
+
+Voici la de'marche a` suivre\,:
+
+\begin{itemize}
+\item aller dans le re'pertoire machine de la distribution \LeLisp\,:
+\begin{Code*}
+% cd /usr/ilog/lelisp/<machine>
+\end{Code*}
+\item de'truire la commande {\tt cll2lm}\,:
+\begin{Code*}
+% /bin/rm cll2lm
+\end{Code*}
+\item reconfigurer une image me'moire {\tt cll2lm}. Dans
+l'exemple suivant, l'image est reconfigure'e avec une zone des
+symboles a` 25\,:
+\begin{Code*}
+% make cll2lm SYMBOL_A=25 CODE_A=2000
+\end{Code*}
+La commande {\tt make} ci-dessus fait appel a` la variable {\tt
+\|SYMBOL_A|} pour reconfigurer la zone des {\em symbol}, d'une
+manie`re  ge'ne'rale, on reconfigurera une zone {\em xxx} en utilisant
+la variable {\tt \|XXX_A|}.
+\end{itemize}
+
+\begin{Side}{\bf Remarque} 
+Pour connai^tre la taille des zones standard de la commande {\tt
+cll2lm}, consulter le fichier {\tt cll2lm}.
+\begin{Code*}
+% more /usr/ilog/lelisp/<machine>/cll2lm
+\end{Code*}
+\end{Side}

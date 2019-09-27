@@ -1,0 +1,29 @@
+;;; GELL 15.26: elaboration file for the module: div
+;;;             translation done: "Thu Mar  11 93 15:59:21 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: div.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'div)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZdiv" "Thu Mar  11 93 15:59:21 "
+
+'((check-div2iter . subr0) (meter-div2iter . subr0) (test-div2iter . subr1) (check-div2rec . subr0) (meter-div2rec . subr0) (test-div2rec . subr1) (create-n . subr1) (iterative-div2 . subr1) (recursive-div2 . subr1))
+
+#[makelist (iterative-div2 *ll*) check-value (count-calls-init) eval *ll* (count-calls-stop) t (recursive-div2 *ll*) (count-calls-init) (count-calls-stop) iterative-div2 recursive-div2 check-div2iter #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-div2iter test-div2iter #:gell-resetfn:function-1 check-div2rec meter-div2rec test-div2rec create-n]
+)
+
+(defcsetfn 'check-div2iter "GZdiv" 0)
+(defcsetfn 'meter-div2iter "GZdiv" 1)
+(defcsetfn 'test-div2iter "GZdiv" 2)
+(defcsetfn 'check-div2rec "GZdiv" 3)
+(defcsetfn 'meter-div2rec "GZdiv" 4)
+(defcsetfn 'test-div2rec "GZdiv" 5)
+(defcsetfn 'create-n "GZdiv" 6)
+(defvar *ll* (create-n 200))
+(defcsetfn 'iterative-div2 "GZdiv" 7)
+(defcsetfn 'recursive-div2 "GZdiv" 8)
+
+(defccheck '(recursive-div2 iterative-div2 eval check-value makelist))

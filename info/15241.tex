@@ -1,0 +1,641 @@
+\documentstyle{ilogmanuel}
+
+
+\Begin
+\Title {Diffusion Le-Lisp}
+\SuperTitle {Le-Lisp  de  l'INRIA  version 15.24}
+
+\Author {Janvier 1991}
+
+                 
+                            
+\chapter {Version "15.24"}
+Voici les corrections et les extensions de la nouvelle diffusion de
+\LeLisp\ version 15.24 dat\'{e}e du 2 janvier 1991.
+
+Une fois par an, l'INRIA et ILOG livrent aux porteurs une nouvelle
+version de Le-Lisp comprenant des am\'{e}liorations, extensions et
+corrections.  Seule cette diffusion annuelle contient des changements
+\`{a} la souche de Le-Lisp, \'{e}crite en LLM3.
+
+\Section {Contenu de cette diffusion}
+
+La bande de diffusion est explicit\'{e}e ci-dessous:
+
+\begin {itemize}
+\item   68k:            
+\item   benchmarks:
+\item   bignum:
+\item   common: 
+\item   info:
+\item   llib:           
+\item   llm3:
+\item   llmod:
+\item   llobj:
+\item   lltest:         
+\item   lltool:
+\item   llub:   
+\item   manl:
+\item   manuel: 
+\item   sun:
+\item   vaxunix:
+\item   virbitmap:
+\item   virtty: 
+\end {itemize}
+
+
+\Section {Survol de 15.24}
+
+La version 15.24 de Le-Lisp est une consolidation de la version
+15.23.2 dat\'{e}e du 30 septembre diffus\'{e}e aux porteurs le 25 septembre
+1990. Les travaux et nouveaut\'{e}s introduits lors de la 15.23.2 ont
+\'{e}t\'{e} continu\'{e}s, am\'{e}lior\'{e}s et renforc\'{e}s. \\
+On peut citer:
+
+\begin {itemize}
+
+\item les jeux de tests ont \'{e}t\'{e} renforc\'{e}s, en
+particulier autour du nouveau \|BV 1+|
+
+\item Adaptation des {\tt Makefiles} pour accueillir les futurs objets
+Motif et OpenWindow
+
+\item l'effort commenc\'{e} lors de la
+15.23.2 quant \`{a} l'homog\'{e}n\'{e}it\'{e} des portages et leur finition a
+\'{e}t\'{e} continu\'{e} et amplifi\'{e}: de plus en plus de fichiers de la
+distribution (commandes, makefiles, recettes, etc) sont engendr\'{e}s
+automatiquement \`{a} partir de squelettes communs \`{a} tous les portages,
+habill\'{e}s d'un minimun de fichiers de configuration (2) propres \`{a} chaque
+portage. 
+
+\item corrections du manuel de r\'{e}f\'{e}rence. Un travail consid\'{e}rable a
+encore \'{e}t\'{e} fait sur la qualit\'{e} du manuel en anglais, en particulier
+gr\^{a}ce \`{a} la v\'{e}rification automatique des exemples du manuel.\\
+Rappel: la r\'{e}f\'{e}rence reste le manuel en anglais; le manuel en
+francais n'est pas garanti d'\^{e}tre aussi parfait, mais reste
+compatible au niveau de la table des mati\`{e}res. seul le manuel en
+francais est fourni sur la bande, le manuel anglais \'{e}tant fourni
+s\'{e}par\'{e}ment. 
+
+\item le r\'{e}pertoire {\tt system} disparait de la distribution: il avait
+\'{e}t\'{e} introduit dans un but d'homog\'{e}n\'{e}it\'{e} entre portages, ceux-ci
+devant partager un maximun de choses dans ce repertoire. La
+g\'{e}n\'{e}ration automatique de fichiers aidant en cela, le r\'{e}pertoire
+{\tt system} devient obsol\`{e}te.
+
+\item Les syst\`{e}mes fournis en standard sont \|lelisp|, et \|cmplc++|.
+La commande \|complice| utilise toujours, depuis la 15.23.2 le
+syst\`{e}me \|cmplc++|.
+
+\item abandon du portage {\it ibmrt} comme r\'{e}f\'{e}rence aux porteurs
+
+\item les rats concernant le noyaux LLM3 ont \'{e}t\'{e} fix\'{e}s, ainsi que
+quelques nouveaux rats apparus depuis le mois de septembre.
+
+\Section {Les RATS}
+
+Les changements de \LeLisp\ sont g\'{e}r\'{e}s avec des \|RATs|
+(Requ\^{e}tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez avoir le texte complet
+d'un rat d'ILOG en nous en communiquant le num\'{e}ro.  (Notez s'il vous
+pla\^{\i}t que les num\'{e}ros des RATs sont partag\'{e}s par tous les produits
+ILOG et pas uniquement \LeLisp.  Ne soyez pas effray\'{e} par les
+num\'{e}ros \'{e}lev\'{e}s!). \\
+Nous fournissons ici la liste de tous les rats corrig\'{e}s depuis
+la derni\`{e}re version majeure de Le-Lisp (15.23).
+\newpage
+
+\frenchspacing
+\setlength{\parindent}{0in}
+\setlength{\parskip}{3ex}
+\raggedbottom
+\begin{tabbing}
+\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \= \kill
+\verb_Rats for lelisp selected by status-fixed-or-declined as of 7/1/1991._\\ \verb_ _\\
+\hspace{-5em}rat 13 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Alain Laville
+\ }\\ 
+\verb_EXPLODE ajoute tjrs un blanc qd il explose une chaine plus grande que RMARGIN>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 42 \> area: {\it i/o
+\ }\> aspect: {\it virbitmap
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it nuyens
+\ }\\ 
+\verb_les tests ne teste pas fill-rectangle, ni "character attributes"
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 346 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it P. Couronne [CISI]
+\ }\\ 
+\verb_lors d'un appel de C vers Lisp avec strings, pb de zone pleine.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 359 \> area: {\it ports
+\ }\> aspect: {\it tests
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Kuczynski[Ilog]
+\ }\\ 
+\verb_>Le breack nous ek nous ejecte en 2 coups sur HP9000!
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 366 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_le champ CPENV n'est pas reactualis\'{e} correctement>>>>t
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 387 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it A. Danan [Ilog]
+\ }\\ 
+\verb_Suppression des messages [REMOVE-LANGUAGE] encore difficile...
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 394 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Debiasy [Michelin]
+\ }\\ 
+\verb_EXPAND-PATHNAME ne fonctionne pas sur toutes les machines
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 399 \> area: {\it run-time
+\ }\> aspect: {\it o/s-interface
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_CLOAD sur sun4
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 406 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it  M.NANNI [Bull]
+\ }\\ 
+\verb_La variable #:LD:SHARED-STRINGS (page 12.4) n'est pas definie
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 417 \> area: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_Confusion dans la description des tailles de zones p1.9 de la Doc.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 418 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Francis.Montagnac@mirsa.inria.fr
+\ }\\ 
+\verb_pb d'ouverture de fichier (OPENO) sur SUN4 et IBMRT
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 432 \> area: {\it run-time
+\ }\> aspect: {\it o/s-interface
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it E. Chailloux
+\ }\\ 
+\verb_le terminal est mal reinitialis\'{e} apres un save-core
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 435 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Macro NANNI [BULL]
+\ }\\ 
+\verb_la macro C LL>C>FLOAT marche-t-elle vraiment?
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 436 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Macro NANNI [BULL]
+\ }\\ 
+\verb_La documentation de MAKE-CURSOR est trop imprecise
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 440 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi
+\ }\\ 
+\verb_Mauvais message d'erreur dans path.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 448 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_>>>LISPCALL avec plusieurs flottants plante sur Sun4
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 449 \> area: {\it language
+\ }\> aspect: {\it arithmetic
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi
+\ }\\ 
+\verb_Explosion en cas d'overflow numerique sur Sony.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 452 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_encore des problemes autour des calculs d'adresses!
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 453 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_comportement bizare du couple: LOCK/RETURN-FROM
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 460 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi
+\ }\\ 
+\verb_Bug dans renamefile sur macaux
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 461 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it B. Serpette [INRIA]
+\ }\\ 
+\verb_commentaires multilignes (suite et fin?)
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 467 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_incompatibilite 15.22/15.21
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 468 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_messages
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 469 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_bug dans les benchmarks (do-check)
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 474 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_paths virtuels
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 477 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it gallou@madeleine (Francoise Gallou)
+\ }\\ 
+\verb_option -v dans le lanceur
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 479 \> area: {\it language
+\ }\> aspect: {\it arithmetic
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it  kuczynsk@ilog
+\ }\\ 
+\verb_RANDOM engendre un 0 different de 0 sur machines 68K
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 480 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi
+\ }\\ 
+\verb_probepathf ne necessite plus l'extension .ll
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 481 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it davis
+\ }\\ 
+\verb_read macro H for hash tables returns bad result
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 485 \> area: {\it programming-environment
+\ }\> aspect: {\it step
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_trace du send
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 487 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_MACROEXPAND expanse trop (suite)...>
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 491 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi
+\ }\\ 
+\verb_PROBEPATHM  et ses s\oe urs ne supportent pas les num\'{e}ros de version
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 492 \> area: {\it memory-management
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi
+\ }\\ 
+\verb_Perte de place dans les cores.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 494 \> area: {\it ports
+\ }\> aspect: {\it loader
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it J. Grimm [INRIA]
+\ }\\ 
+\verb_confusion entre 0 et 0.0 par le loader du GOULD
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 495 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_Il manque un predicat du type DYRECTORYP sur les pathnames
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 496 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it weinberg@ilog
+\ }\\ 
+\verb_QUOTE ou pas QUOTE en reprise errudv en mode debug
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 497 \> area: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi@ilog
+\ }\\ 
+\verb_le nouveau MAKEMOD (15.23) n'est pas correct sur les path de llobj
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 498 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_DEFEXTERN avec des floatvectors n'est pas re-entrant
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 499 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_On a encore des limitations de buffer internes avec IMPLODE and Co
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 500 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it erhili@ilog
+\ }\\ 
+\verb_Doit-on tjrs mettre ">" devant les symboles de DEFEXTERN
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 505 \> area: {\it language
+\ }\> aspect: {\it extended-types
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it ducournau@semagroup
+\ }\\ 
+\verb_y a-t-il 2 SEND diff\'{e}rents selon que MICROCEYX soit charg\'{e} ou non
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 507 \> area: {\it ports
+\ }\> aspect: {\it loader
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_Pourquoi ne peut-on pas faire une image sans loader compil\'{e}?
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 509 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it chailloux@ilog
+\ }\\ 
+\verb_libell\'{e}s des dates en anglais
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 514 \> area: {\it i/o
+\ }\> aspect: {\it basic-i/o
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it davis
+\ }\\ 
+\verb_PRINT avec #:SYSTEM:PRINT-FOR-READ rate pour certains symboles.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 515 \> area: {\it run-time
+\ }\> aspect: {\it o/s-interface
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it ingenia
+\ }\\ 
+\verb_RENAMEFILE plante sur Sun4 OS4.1
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 517 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it chaillou@ilog
+\ }\\ 
+\verb_(getglobal ">Ederiv1") = (getglobal ">Ederiv11" sur M88KK
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 518 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it berizzi@ilog
+\ }\\ 
+\verb_compilation des variables homonymes de fonctions
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 520 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it davis
+\ }\\ 
+\verb_Spelling error in message "Module allready loaded" : "allready" -> "alre>>>>>a>>>>dy"
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 521 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it hubert
+\ }\\ 
+\verb_tri physique controle peu
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 532 \> area: {\it language
+\ }\> aspect: {\it arithmetic
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynski@ilog
+\ }\\ 
+\verb_l'affichage de rationnels avec positionnement de PRECISION est incorecte
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 561 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it zorio@margaux.inria.fr
+\ }\\ 
+\verb_mauvaide declaration LLM3
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 562 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_mauvais message d'erreur dans WILDCARD quand trop de fichiers
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 563 \\ 
+\> status: {\it fixed
+\ }\> origin: {\it choupeau
+\ }\\ 
+\verb_DEFEXTERN-CACHE ne fonctionne pas sur PC/Unix
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 566 \> area: {\it ports
+\ }\> aspect: {\it loader
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_l'erreur "MODULE TROP GROS" sur 68k n'est pas ecrite en clair.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 575 \> area: {\it run-time
+\ }\> aspect: {\it o/s-interface
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it C. JULIEN [ACT]
+\ }\\ 
+\verb_les #else FOO & #endif FOO  ne sont pas conformes avec AINSI C
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 576 \> area: {\it ports
+\ }\> aspect: {\it tests
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it C. Julien [ACT]
+\ }\\ 
+\verb_na pas utiliser de paths absolus dans >>>les fichiers de tests
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 580 \> area: {\it programming-environment
+\ }\> aspect: {\it step
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it B. Ing [Ilog]
+\ }\\ 
+\verb_STEP de SEND (suite)
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 581 \> area: {\it run-time
+\ }\> aspect: {\it error-handling
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it J. Chailloux [ILOG]
+\ }\\ 
+\verb_l'erreur pile pleine dans un CATCHERROR fait perdre la valeur de retour
+_\\ 
+\verb_ _\\ 
+\end{tabbing}
+\end{document}
+
+\newpage
+\bigskip
+
+\tableofcontents
+\listoftables
+
+\End

@@ -1,0 +1,76 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	zundef:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zvoid:dword
+	extrn	zllsystem:dword
+	extrn	ccode:dword
+	extrn	ecode:dword
+	extrn	mstack:dword
+pnmac850	db	'loc'
+	even
+pnmac851	db	'locint'
+	even
+pnmac852	db	'vag'
+	even
+pnmac853	db	'memory'
+	even
+pnmac854	db	'bltmemory'
+	even
+pnmac855	db	'addadr'
+	even
+pnmac856	db	'incradr'
+	even
+pnmac857	db	'subadr'
+	even
+pnmac858	db	'gtadr'
+	even
+pnmac859	db	'ccode'
+	even
+pnmac860	db	'ecode'
+	even
+pnmac861	db	'precompile'
+	even
+pnmac862	db	'call'
+	even
+pnmac863	db	'calln'
+	even
+zloc	dd	0
+zlocint	dd	0
+zvag	dd	0
+zaddadr	dd	0
+zincradr	dd	0
+zsubadr	dd	0
+zgtadr	dd	0
+zaccode	dd	0
+zaecode	dd	0
+zmemory	dd	0
+zbltmemory	dd	0
+zprecomp	dd	0
+zllcall	dd	0
+zllcaln	dd	0
+adrtmp	dd	0
+eimpur	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

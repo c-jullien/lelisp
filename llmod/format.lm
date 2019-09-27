@@ -1,0 +1,75 @@
+defmodule
+format
+files (
+format
+)
+export (
+format
+prinf
+printf
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(format nsubr ())
+(prinf nsubr ())
+(printf nsubr ())
+)
+cpfunctions (
+(#:format:format subr3 (#:format:args #:format:r) (#:format:f #:format:l))
+(#:format:format1 subr0 () () (#:format:par1 #:format:par2 #:format:par3 #:format:par4 #:format:par5 #:format:par6 #:format:par7 #:format:at-sign #:format:colon #:format:par-n))
+(#:format:tilde-decode subr0)
+(#:format:read-n subr1)
+(#:format:format-ascii subr1)
+(#:format:pad-4 nsubr (#:format:val #:format:wide #:format:side #:format:padchar #:format:colinc))
+(#:format:pad-4-loop subr1)
+(#:format:format-pad subr3)
+(#:format:pad nsubr)
+(#:format:format-sexpr subr1)
+(#:format:format-decimal subr1)
+(#:format:format-binary subr1)
+(#:format:format-octal subr1)
+(#:format:format-hexa subr1)
+(#:format:format-radix subr1)
+(#:format:format-plural subr0)
+(#:format:format-char subr1)
+(#:format:format-e-float subr1 () (#:format:par1 #:format:par2) (#:format:rr #:format:f) (#:format:exp #:format:par1 #:format:exp-r))
+(#:format:float-pad nsubr)
+(#:format:float-exp subr1)
+(#:format:float-e subr1 (#:format:r-length) (#:format:digits) (#:format:digits) (#:format:digits))
+(#:format:float-digits subr1)
+(#:format:next-digits subr1)
+(#:format:float-e-1 subr3)
+(#:format:format-f-float subr1 (#:format:arg) (#:format:par1 #:format:par2) (#:format:rr #:format:f) (#:format:exp) (#:format:par1) (#:format:par2) (#:format:digits))
+(#:format:float-f subr0)
+(#:format:format-g-float subr1 () (#:format:par1 #:format:par2) () () () () () () (#:format:par1 #:format:par2 #:format:par3 #:format:par4 #:format:par5))
+(#:format:format-nl subr0)
+(#:format:format-eol subr0)
+(#:format:format-tilde subr0)
+(#:format:format-tab subr0)
+(#:format:format-ignore subr0)
+(#:format:format-indirect subr0 () () (#:format:format))
+(#:format:format-ind-at subr0 () (#:format:f))
+(#:format:format-ind-at1 subr1 () (#:format:par1 #:format:par2 #:format:par3 #:format:par4 #:format:par5 #:format:par6 #:format:par7 #:format:at-sign #:format:colon #:format:par-n))
+(#:format:format-ind-list subr1 (#:format:args) (#:format:f #:format:l))
+(#:format:format-cond subr0 () () (#:format:f) () (#:format:f) () (#:format:f))
+(#:format:search-cond subr3)
+(#:format:format-iter subr1 (#:format:iter-colon) (#:format:iter-n #:format:iter-n-first #:format:format #:format:f) (#:format:args #:format:l))
+(#:format:search-iter subr3)
+(#:format:iter-colon subr1 (#:format:sub-args))
+(#:format:iter-colon-loop subr2 (#:format:args #:format:l) (#:format:f))
+(#:format:iter subr0)
+(#:format:iter-loop subr1 () (#:format:par1 #:format:par2 #:format:par3 #:format:par4 #:format:par5 #:format:par6 #:format:par7 #:format:at-sign #:format:colon #:format:par-n))
+(#:format:format-hat subr0)
+(#:format:string subr1)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:format:char-names 't '#:complice:globalvar)
+))

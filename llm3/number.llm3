@@ -1,0 +1,1138 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "14/19" "number.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 14 "Les fonctions nume'riques ge'ne'riques"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/number.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $
+
+          TITLE     NUMBER              ; LLM3 : les nombres
+
+          XREFI     LLINIT,.UNDEF       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,.SYSPKGC
+          XREFI     LLINIT,MSTACK
+          XREFP     LLINIT,REENTER
+          XREFP     LLINIT,THEEND
+          XREFP     TOPERR,ERRFS        ; 2 - TOPERR
+          XREFP     TOPERR,ERRGEN
+          XREFP     TOPERR,ERRNNA
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNFA
+          XREFP     TOPERR,ERRNSA
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRNVA
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRSTL
+          XREFP     TOPERR,ERR0DV
+          XREFP     GC,GETTYPE          ; 3 - GC
+          XREFP     GC,GCCONS
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFP     EVAL,EVALCAR        ; 8 - EVAL
+          XREFP     EVAL,EVALA1
+          XREFP     EVAL,APPLY
+          XREFP     EVAL,FFUNCALL
+          XREFI     CNTRL,.QUOTE        ; 10 - CNTRL
+          XREFP     SYMBS,GETFNS        ; 12 - SYMBS
+          XREFP     FNTSTD,NREVERSE     ; 13 - FNTSTD
+          XREFP     STRING,FFSYMBOL     ; 16 - STRING
+
+          XDEFP     INI_NBS
+          XDEFI     .EX
+          XDEFP     GAEQN
+          XDEFP     GAPLUS2I
+          XDEFP     GADIFF2I
+          XDEFP     GATIM2I
+          XDEFP     GADINV
+          XDEFP     GADIV
+          XDEFP     LLFIX
+          XDEFP     LLFLOAT
+          XDEFP     LLTRUNC
+          XDEFI     .LLTRUNC
+          XDEFP     LLSIN
+          XDEFP     LLCOS
+          XDEFP     LLASIN
+          XDEFP     LLACOS
+          XDEFP     LLATAN
+          XDEFP     LLEXP
+          XDEFP     LLLOG
+          XDEFP     LLPOWER
+          XDEFP     LLSQRT
+          XDEFP     GACOMP
+          XDEFP     GAEQEN
+          XDEFP     GALT
+          XDEFP     GAGT
+          XDEFP     GAADD1
+          XDEFP     GASUB1
+          XDEFP     GAQUOMOD
+          XDEFI     .GAQUOMOD
+          XDEFP     GAABS
+          XDEFP     GADREV
+          XDEFP     INTGERP
+          XDEFP     NUMBERP
+          XDEFP     GAMOD
+          XDEFP     BANGEN1
+          XDEFI     .EXMOD
+          
+          XDEFI     .LLFLOAT
+          XDEFI     .LLFIX
+
+          XDEFI     FZERO               ; [GC]
+          XDEFI     FLTUN               ; [GC]
+          XDEFI     FLTMUN              ; [GC]
+          XDEFI     FLTIMAX             ; [GC]
+          XDEFI     FLTIMIN             ; [GC]
+
+          IMPURE 
+
+MOINSUN   ADR       0                   ; le nombre -1
+FZERO     ADR       0                   ; le flottant 0.0 [GC]
+FLTUN     ADR       0                   ; le nombre 1.0   [GC]
+FLTMUN    ADR       0                   ; le nombre -1.0  [GC]
+FLTIMAX   ADR       0                   ; le nombre -32767  [GC]
+FLTIMIN   ADR       0                   ; le nombre +32767   [GC]
+CPFNT     ADR       0                   ; le symbole de comparaison courante
+
+          PURE
+
+; .Section "Cre'ation des symboles et Initialisation"
+
+INI_NBS   LABEL      
+
+          MAKCST    SYSGEN,#8,"genarith"
+          MOVNIL    CVAL(A1)
+          MOV       .SYSPKGC,PKGC(A1)   ; #:sys-package:genarith
+
+          MAKFNT    NUMBERP,#7,"numberp" 
+          MAKFNT    INTGERP,#8,"integerp"
+          MAKFNT    RATIONALP,#9,"rationalp"
+          MAKFNT    LLFLOAT,#5,"float" 
+          MAKFNT    LLFIX,#3,"fix" 
+          MAKFNT    LLTRUNC,#8,"truncate" 
+          MAKFNT    GAADD1,#2,"1+" 
+          MAKFNT    GASUB1,#2,"1-" 
+          MAKFNT    GAABS,#3,"abs" 
+          MAKFNT    GAPLUS,#1,"+" 
+          MAKFNT    GADINV,#2,"0-" 
+          MAKFNT    GADIFF,#1,"-" 
+          MAKFNT    GATIMES,#1,"*" 
+          MAKFNT    GADREV,#2,"1/" 
+          MAKFNT    GADIV,#2,"//" 
+          MAKFNT    GADIV,#1,"/" 
+          MAKFNT    GAQUOMOD,#3,"quo" 
+          MAKFNT    GAQUOMOD,#8,"quotient" 
+          MAKFNT    GAQUOMOD,#6,"quomod"
+          MAKCST    EX,#2,"ex" 
+          MAKCST    EXMOD,#3,"mod"
+          MOV       #0,CVAL(A1)
+          MOV       .EX,PKGC(A1)
+          MAKFNT    GAMOD,#6,"modulo"
+          MAKFNT    GACOMP,#3,"<?>"
+          MAKFNT    GAEQEN,#1,"=" 
+          MAKFNT    GANEQN,#2,"<>" 
+          MAKFNT    GANEQN,#2,"/=" 
+          MAKFNT    GAGE,#2,">=" 
+          MAKFNT    GAGT,#1,">" 
+          MAKFNT    GALE,#2,"<=" 
+          MAKFNT    GALT,#1,"<" 
+          MAKFNT    ZEROP,#5,"zerop" 
+          MAKFNT    PLUSP,#5,"plusp" 
+          MAKFNT    MINUSP,#6,"minusp" 
+          MAKFNT    MIN,#3,"min" 
+          MAKFNT    MAX,#3,"max" 
+
+          MAKFNT    LLSIN,#3,"sin" 
+          MAKFNT    LLCOS,#3,"cos" 
+          MAKFNT    LLASIN,#4,"asin" 
+          MAKFNT    LLACOS,#4,"acos" 
+          MAKFNT    LLATAN,#4,"atan" 
+          MAKFNT    LLEXP,#3,"exp" 
+          MAKFNT    LLLOG,#3,"log" 
+          MAKFNT    LLLOG10,#5,"log10" 
+          MAKFNT    LLPOWER,#5,"power" 
+          MAKFNT    LLSQRT,#4,"sqrt" 
+          
+          MAKFNT    LLFIXMAX,#20,"most-positive-fixnum"
+          MAKFNT    LLFIXMIN,#20,"most-negative-fixnum"
+          MAKFNT    LLMINUS0,#14,"minus-0-fixnum"
+
+          MOV       #-1,A1
+          MOV       A1,MOINSUN
+          MOV       #0,A1
+          FLOAT     A1
+          MOV       A1,FZERO
+          MOV       #1,A1
+          FLOAT     A1
+          MOV       A1,FLTUN
+          MOV       #-1,A1
+          FLOAT     A1
+          MOV       A1,FLTMUN
+          MOV       #MAXFIX,A1
+          FLOAT     A1
+          MOV       A1,FLTIMAX
+          MOV       #MINFIX,A1
+          FLOAT     A1
+          MOV       A1,FLTIMIN
+
+          RETURN
+
+; .Section "L'Arithme'tique Ge'ne'rique"
+
+; .SSection "Les interruptions des fonctions ge'ne'riques"
+
+; en pile (@retour arg1 arg2 .. argn n @retour-erreur)
+; A3 <- fonction ge'ne'rique, A1 <- l'argument defectueux
+; Attention un bout de code est duplique' pour <numberp>
+
+BANGEN    PUSH      A3                  ; le nom de la fonction
+          JCALL     GETTYPE             ; A1 le type de l'argument
+          PUSH      A1                  ; sauve le type
+          BFSYMB    A1,BANGERR          ; ex: #(1.2)
+          MOV       A3,A2               ; A2 <- <Fnt>
+          MOVNIL    A3                  ; sans la racine!
+          JCALL     GETFNS              ; #:<Type>:<Fnt>
+          BFNIL     A1,BANGENCAL        ; trouve!
+          TOPST     A2                  ; A2 <- <Type>
+          MOV       .SYSGEN,A1          ; le nom #:SYS-PACKAGE:GENARITH
+          MOV       CVAL(A1),A1         ; la valeur courante
+          BTNIL     A1,BANGERR          ; il faut un symbole
+          BFSYMB    A1,BANGERR          ; itou
+          JCALL     FFSYMBOL            ; A1 <- #:<Gen>:<Type>
+          XSPMOV    #1,A2               ; A2 <- <Fnt>
+          MOVNIL    A3                  ; sans la racine!
+          JCALL     GETFNS              ; #:<Gen>:<Type>:<Fnt>
+          BTNIL     A1,BANGERR          ; pas trouve
+BANGENCAL ADJSTK    #3                  ; vide <Type> <Fnt> <@retour-erreur>
+          POP       A4                  ; le nombre d'argument
+          JMP       FFUNCALL            ; Amen!
+
+BANGERR   POP       A4                  ; <Type>
+          POP       A2                  ; A2 <- la fonction ge'ne'rique
+          RETURN                        ; retour ge'ne'rique non trouve'
+
+;         Interruption ge'ne'rique a` 1 argument.
+;         A1 <- l'argument, A3 <- la fonction.
+
+BANGEN1   PUSH      A1                  ; argument defectueux
+          PUSH      #1                  ; le nombre d'argument
+          CALL      BANGEN              ; si on revient c'est pas trouve'
+          POP       A4                  ; le nombre d'argument
+          POP       A1                  ; argument deffectueux
+          JMP       ERRGEN              ; !nemA
+          
+;         Interruption ge'ne'rique a` 2 arguments.
+;         A1 <- 1er arg, A2 <- 2eme arg, A3 <- la fnt
+
+BANGEN2   PUSH      A1                  ; arg1
+          PUSH      A2                  ; arg2
+          PUSH      #2                  ; le nombre d'argument
+          CALL      BANGEN              ; si on revient c'est pas trouve'
+          POP       A4                  ; le nombre d'argument
+          POP       A1                  ; arg2
+          NCONS     A1                  ; (arg2)
+          POP       A3                  ; arg1
+          CONS      A3,A1               ; (arg1 arg2)
+          JMP       ERRGEN              ; !nemA
+
+; .SSection "Les pre'dicats ge'ne'riques."
+
+;  ----------------------------------------
+          FENTRY    NUMBERP,SUBR1
+;  ----------------------------------------
+          BTFIX     A1,NBPT             ; ca oui!
+          BTFLOAT   A1,NBPT             ; ca aussi!
+          MOV       .NUMBERP,A2         ; la fonction ge'ne'rique
+NBPGEN    PUSH      A1                  ; l'argument
+          JCALL     GETTYPE
+          BFSYMB    A1,NBPN             ; (numberp '#(1.2)) 
+          MOVNIL    A3
+          JCALL     GETFNS
+          BTNIL     A1,NBPN             ; pas de me'thode NUMBERP
+          MOV       #1,A4
+          JMP       FFUNCALL
+NBPN      ADJSTK    #1                  ; nettoie la pile
+NBPNIL    MOVNIL    A1                  ; c'est pas un nombre
+NBPT      RETURN                        ; Done!
+
+;  ----------------------------------------
+          FENTRY    INTGERP,SUBR1
+;  ----------------------------------------
+          BTFIX     A1,NBPT             ; ca oui!
+          BTFLOAT   A1,NBPNIL           ; ca non!
+          MOV       .INTGERP,A2         ; la fonction ge'nerique
+          BRA       NBPGEN              ; le ge'ne'rique le dira
+
+;  ----------------------------------------
+          FENTRY    RATIONALP,SUBR1
+;  ----------------------------------------
+          BTFIX     A1,NBPT             ; ca oui!
+          BTFLOAT   A1,NBPNIL           ; ca non!
+          MOV       .RATIONALP,A2       ; la fonction ge'nerique
+          BRA       NBPGEN              ; le ge'ne'rique le dira
+
+; .SSection "Les fonctions de conversion ge'ne'riques"
+
+;  ----------------------------------------
+          FENTRY    LLFLOAT,SUBR1
+;  ----------------------------------------
+          BFFIX     A1,LLFLOATF         ; pour foncer dans le cas des FIX
+          FLOAT     A1
+LLFLOATR  RETURN
+LLFLOATF  BTFLOAT   A1,LLFLOATR         ; c'est tout bon
+          MOV       .LLFLOAT,A3         ; pour l'appel generique
+          BRA       BANGEN1             
+
+;  ----------------------------------------
+          FENTRY    LLTRUNC,SUBR1
+;  ----------------------------------------
+LLTRUNC1  MOV       .LLTRUNC,A3         ; en cas d'erreur = FIX.
+          BTFIX     A1,LLTRCRET         ; c'est tout bon
+          BFFLOAT   A1,BANGEN1          ; il fallait un nombre
+          CFBLT     A1,FLTIMIN,BANGEN1  ; trop petit (< -32767.)
+          CFBGT     A1,FLTIMAX,BANGEN1  ; trop grand (> +32767.)
+          FIX       A1
+LLTRCRET  RETURN                  
+
+;  ----------------------------------------
+          FENTRY    LLFIX,SUBR1
+;  ----------------------------------------
+          BRA       LLTRUNC1
+
+; .SSection "Les fonctions de l'arithme'tique ge'ne'rique"
+
+;  ----------------------------------------
+          FENTRY    GAADD1,SUBR1
+;  ----------------------------------------
+          MOV       A1,A2               ; pour ne pas le perdre
+          BFFIX     A1,GAADD2           ; increment entier
+          PLUS      #1,A1,GAADD3        ; addition entie`re
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GAADD3
+     ENDC
+          RETURN                        ; Baste!
+GAADD2    BFFLOAT   A1,GAADD3           ; vers le traitement generique
+          FPLUS     FLTUN,A1            ; addition flottante A1+1.0 -> A1
+          RETURN                        ; Baste!
+GAADD3    MOV       A2,A1               ; le 1er arg (l'ordre est important)
+          MOV       #1,A2               ; le 2eme arg 1
+          MOV       .GAPLUS,A3          ; appel generique de  (+ A2 #1)
+          BRA       BANGEN2             ; traitement generique
+
+;  ----------------------------------------
+          FENTRY    GASUB1,SUBR1
+;  ----------------------------------------
+          MOV       A1,A2               ; pour ne pas le perdre en cas d'OVF
+          BFFIX     A1,GASUB2           ; increment entier
+          DIFF      #1,A1,GASUB3        ; soustraction entie`re
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GASUB3
+     ENDC
+          RETURN                        ; Baste!
+GASUB2    BFFLOAT   A1,GASUB3           ; vers le generique
+          FDIFF     FLTUN,A1            ; soustraction flottante A1-1.0 -> A1
+          RETURN                        ; Baste!
+GASUB3    MOV       A2,A1               ; le 1er arg (l'ordre est important)
+          MOV       #1,A2               ; le 2eme arg 1
+          MOV       .GADIFF,A3          ; generique (- A2 #1)
+          BRA       BANGEN2             ; traitement generique
+
+;  ----------------------------------------
+          FENTRY    GAABS,SUBR1
+;  ----------------------------------------
+          MOV       #0,A2               ; pour l'inverse
+          BFFIX     A1,GAABS2           ; argument entier
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GAABS3
+     ENDC
+          CNBGE     A1,A2,GAABSRET      ; A1 >= 0
+          DIFF      A1,A2,GAABS3        ; A1 <- (- A1)
+          MOV       A2,A1               ; A1 <- (- A1)
+GAABSRET  RETURN                        ; Baste!
+GAABS2    BFFLOAT   A1,GAABS3           ; argument generique
+          MOV       FZERO,A2            ; A2 = 0.0
+          CFBGE     A1,A2,GAABSRET      ; A1 >= 0
+          FDIFF     A1,A2               ; A2 <- (- A1)
+          MOV       A2,A1               ; A1 <- (- A1)
+          RETURN                        ; Baste!
+GAABS3    MOV       .GAABS,A3           ; A3 <- le nom de la fonction
+          BRA       BANGEN1             ; vers le traitement generique
+
+;  ----------------------------------------
+          FENTRY    GAPLUS,SUBRN
+;  ----------------------------------------
+          CNBNE     A4,#2,GAPPLUS       ; optimise le cas (+ n1 n2)
+          POP       A2                  ; A2 <- n2
+          POP       A1                  ; A1 <- n1
+;         Appel interne A1+A2 (A4=#2) cf: READ
+GAPLUS2I  LABEL
+          MOV       A1,A3               ; pour ne pas le predre
+          BFFIX     A1,GAPPLUS0         ; n2 est pas fix
+          BFFIX     A2,GAPPLUS1         ; alors il faut fix fix
+          PLUS      A2,A1,GAPPLUS1      ; A1 <- n1 + n2
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GAPPLUS1
+     ENDC
+          RETURN                        ; Baste!
+GAPPLUS0  BFFLOAT   A1,GAPPLUS1         ; il faut float float
+          BFFLOAT   A2,GAPPLUS1         ; idem
+          FPLUS     A2,A1               ; A1 <- n1 + n2
+          RETURN                        ; Baste!
+GAPPLUS1  PUSH      A3                  ; Des fois que A1 est perdu
+          PUSH      A2                  ; Le vieux A2
+GAPPLUS   CNBEQ     A4,#0,GAPRT0        ; (+) -> 0
+          CNBNE     A4,#1,GAPLUS0       ; vers le cas general
+          POP       A1                  ; (+ x) -> x
+          BTFIX     A1,GAPRRET          ;  x si fix
+          BTFLOAT   A1,GAPRRET          ;    ou float
+          MOV       #0,A2               ; pour un (+ x 0)
+          MOV       .GAPLUS,A3          ; le nom de la fonction
+          BRA       BANGEN2             ; addition generique
+GAPRT0    MOV       A4,A1               ; A1 <- le resultat
+GAPRRET   RETURN                        ; Baste!
+
+GAPLUS0   PUSH      A4                  ; sauve A4 pour le ADJSTK final
+          XSPMOV    A4,A1               ; A1 <- l'accu = 1er nombre
+GAPLUS1   BTFIX     A1,GAPLFX1          ; traitement accu entier
+          BTFLOAT   A1,GAPLFL3          ; traitement accu flottant
+          SOBGTZ    A4,GAPLGN0          ; traitement accu generique
+GAPLUS2   POP       A4                  ; retrouve le nombre d'argument
+          ADJSTK    A4                  ; nettoie la pile
+          RETURN                        ; Baste!
+
+GAPLFX0   XSPMOV    A4,A2               ; A2 <- element suivant
+          BTFLOAT   A2,GAPLFL0          ; traitement element flottant
+          BFFIX     A2,GAPLGN1          ; traitement element generique
+          PLUS      A1,A2,GAPLGN0       ; addition entiere
+     IFNE TRUEOVFL
+          CNBEQ     A2,#MINUS0,GAPLGN0
+     ENDC
+          MOV       A2,A1               ; mise a jour accu
+GAPLFX1   SOBGTZ    A4,GAPLFX0          ; traitement accu entier
+          BRA       GAPLUS2             ; on nettoie la pile
+
+GAPLFL0   FLOAT     A1                  ; convertit l'accu
+          BRA       GAPLFL2             ; vers l'addition flottante
+GAPLFL1   XSPMOV    A4,A2               ; A2 <- element suivant
+          BTFLOAT   A2,GAPLFL2          ; traitement element flottant
+          BFFIX     A2,GAPLGN1          ; traitement element generique
+          FLOAT     A2                  ; convertit l'entier
+GAPLFL2   FPLUS     A1,A2               ; addition flottante
+          MOV       A2,A1               ; mise a jour accu
+GAPLFL3   SOBGTZ    A4,GAPLFL1          ; traitement accu flottant
+          BRA       GAPLUS2             ; on nettoie la pile
+
+GAPLGN0   XSPMOV    A4,A2               ; on sait que (A4 > 0)
+GAPLGN1   PUSH      A4                  ; sauve le compteur
+          MOV       .GAPLUS,A3          ; le nom de la fonction
+          CALL      BANGEN2             ; addition generique
+          POP       A4                  ; retrouve le compteur
+          BRA       GAPLUS1             ; decodage de l'accu
+
+;  ----------------------------------------
+          FENTRY    GATIMES,SUBRN
+;  ----------------------------------------
+          CNBNE     A4,#2,GATTIMES      ; optimise le cas (* n1 n2)
+          POP       A2                  ; A2 <- n2
+          POP       A1                  ; A1 <- n1
+;         Appel interne A1*A2 (a4=#2) (cf READ)
+GATIM2I   LABEL
+          MOV       A1,A3               ; pour ne pas le predre
+          BFFIX     A1,GATTIMES0        ; n2 est pas fix
+          BFFIX     A2,GATTIMES1        ; alors il faut fix fix
+          TIMES     A2,A1,GATTIMES1     ; A1 <- n1 * n2
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GATTIMES1
+     ENDC
+          RETURN                        ; Baste!
+GATTIMES0 BFFLOAT   A1,GATTIMES1        ; il faut float float
+          BFFLOAT   A2,GATTIMES1        ; idem
+          FTIMES    A2,A1               ; A1 <- n1 * n2
+          RETURN                        ; Baste!
+GATTIMES1 PUSH      A3                  ; Des fois que A1 est perdu
+          PUSH      A2                  ; Le vieux A2
+GATTIMES  CNBEQ     A4,#0,GATRT0        ; (*) -> 1
+          CNBNE     A4,#1,GATIME0       ; vers le cas general
+          POP       A1                  ; (* x) -> x
+          BTFIX     A1,GATRRET          ;  x si fix
+          BTFLOAT   A1,GATRRET          ;    ou float
+          MOV       #1,A2               ; pour un (* x 1)
+          MOV       .GATIMES,A3         ; le nom de la fonction
+          BRA       BANGEN2             ; addition generique
+GATRRET   RETURN                        ; Bedone!
+GATRT0    MOV       #1,A1               ; A1 <- le resultat
+          RETURN                        ; Baste!
+
+GATIME0   PUSH      A4                  ; sauve A4 pour le ADJSTK final
+          XSPMOV    A4,A1               ; A1 <- l'accu = 1er nombre
+GATIME1   BTFIX     A1,GATIFX1          ; traitement accu entier
+          BTFLOAT   A1,GATIFL3          ; traitement accu flottant
+          SOBGTZ    A4,GATIGN0          ; traitement accu generique
+GATIME2   POP       A4                  ; retrouve le nombre d'argument
+          ADJSTK    A4                  ; nettoie la pile
+          RETURN                        ; Baste!
+
+GATIFX0   XSPMOV    A4,A2               ; A2 <- element suivant
+          BTFLOAT   A2,GATIFL0          ; traitement element flottant
+          BFFIX     A2,GATIGN1          ; traitement element generique
+          TIMES     A1,A2,GATIGN0       ; addition entiere
+     IFNE TRUEOVFL
+          CNBEQ     A2,#MINUS0,GATIGN0
+     ENDC
+          MOV       A2,A1               ; mise a jour accu
+GATIFX1   SOBGTZ    A4,GATIFX0          ; traitement accu entier
+          BRA       GATIME2             ; on nettoie la pile
+
+GATIFL0   FLOAT     A1                  ; convertit l'accu
+          BRA       GATIFL2             ; vers l'addition flottante
+GATIFL1   XSPMOV    A4,A2               ; A2 <- element suivant
+          BTFLOAT   A2,GATIFL2          ; traitement element flottant
+          BFFIX     A2,GATIGN1          ; traitement element generique
+          FLOAT     A2                  ; convertit l'entier
+GATIFL2   FTIMES    A1,A2               ; addition flottante
+          MOV       A2,A1               ; mise a jour accu
+GATIFL3   SOBGTZ    A4,GATIFL1          ; traitement accu flottant
+          BRA       GATIME2             ; on nettoie la pile
+
+GATIGN0   XSPMOV    A4,A2               ; on sait que (A4 > 0)
+GATIGN1   PUSH      A4                  ; sauve le compteur
+          MOV       .GATIMES,A3         ; le nom de la fonction
+          CALL      BANGEN2             ; addition generique
+          POP       A4                  ; retrouve le compteur
+          BRA       GATIME1             ; decodage de l'accu
+
+;  ----------------------------------------
+          FENTRY    GADINV,SUBR1
+;  ----------------------------------------
+          MOV       A1,A2               ; Pour GADNEG
+          BRA       GADNEG              ; (0- x) == (- x)
+
+;  ----------------------------------------
+          FENTRY    GADIFF,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#2,GADIFF2       ; (- x y)
+          CNBEQ     A4,#1,GADIFF1       ; (- x) == (0- x)
+          CNBNE     A4,#0,GADIFF3       ; (- x y z ..) = (- x (+ y z ..))
+          MOV       A4,A1               ; (-) = 0
+          RETURN
+
+GADIFF1   POP       A2                  ; A2 <- l'unique argument
+GADNEG    MOV       #0,A1               ; pour l'inversion entiere
+          BTFIX     A2,GADNEG2          ; inversion entiere
+          BTFLOAT   A2,GADNEG3          ; inversion flottante
+GADNEG1   MOV       .GADINV,A3          ; le nom de la fonction "0-"
+          MOV       A2,A1               ; A1 <- argument generique
+          BRA       BANGEN1             ; inversion generique
+GADNEG2   DIFF      A2,A1,GADNEG1       ; difference entiere
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GADNEG1
+     ENDC
+          RETURN
+GADNEG3   FLOAT     A1                  ; A1 <- 0.
+          FDIFF     A2,A1               ; difference flottante
+          RETURN
+
+GADIFF2   POP       A1                  ; le deuxieme argument
+GADIFFP   MOV       A1,A2               ; A2 <- (+ y z ...)
+          POP       A1                  ; A1 <- x
+GADIFF2I  LABEL                         ; entree rapide : A1 et A2 sont OK
+          MOV       A1,A3               ; pour les de'bordements
+          BTFIX     A1,GADIFFP1         ; x entier
+          BTFLOAT   A1,GADIFFP3         ; x flottant
+GADIFFP0  MOV       A3,A1               ; appel ge'ne'rique
+          MOV       .GADIFF,A3          ; se'mantique "-"
+          BRA       BANGEN2             ; zou!
+GADIFFP1  BFFIX     A2,GADIFFP2         ; x entier, y flottant?
+          DIFF      A2,A1,GADIFFP0      ; x entier, y entier
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GADIFFP0
+     ENDC
+          RETURN                        ; Baste!
+GADIFFP2  BFFLOAT   A2,GADIFFP0         ; x entier, y generique
+          FLOAT     A1                  ; x -> flottant
+          BRA       GADIFFP5            ; vers x flottant, y flottant
+GADIFFP3  BFFIX     A2,GADIFFP4         ; x flottant, y flottant?
+          FLOAT     A2                  ; x flottant, y entier -> flottant
+          BRA       GADIFFP5            ; vers x flottant, y flottant
+GADIFFP4  BFFLOAT   A2,GADIFFP0         ; x flottant, y generique
+GADIFFP5  FDIFF     A2,A1               ; x flottant, y flottant
+          RETURN                        ; Baste!
+
+GADIFF3   DECR      A4                  ; un element de moins
+          DECR      A4                  ; un autre
+          XSPMOV    A4,A1               ; A1 <- y
+          MOVXSP    @GADIFFP,A4         ; la continuation du +
+          PUSH      A4                  ; pour le ADJSTK de +
+          INCR      A4                  ; doit pointer sur y
+          BRA       GAPLUS1             ; vers l'addition generique
+
+;  ----------------------------------------
+          FENTRY    GADREV,SUBR1
+;  ----------------------------------------
+          MOV       A1,A2               ; Pour GAREV
+          BRA       GAREV               ; (0- x) == (- x)
+
+;  ----------------------------------------
+          FENTRY    GADIV,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#2,GADIV2        ; (/ x y)
+          CNBEQ     A4,#1,GADIV1        ; (/ x) = (1/ x)
+          CNBNE     A4,#0,GADIV3        ; (/ x y z ..) = (/ x (* y z ..))
+GAREVRET  MOV       #1,A1               ; (/) = 1
+          RETURN
+
+GADIV1    POP       A2                  ; A2 <- l'unique argument
+GAREV     CABEQ     A2,#1,GAREVRET      ; (/ 1) = 1
+          BTFIX     A2,GAREV1           ; vers le generique
+          BTFLOAT   A2,GAREV2           ; inversion flottante
+GAREV1    MOV       .GADREV,A3          ; le nom de la fonction "1/"
+          MOV       A2,A1               ; A1 <- le mauvais argument
+          BRA       BANGEN1             ; inversion generique
+GAREV2    MOV       #1,A1               ; pour l'inversion
+          FLOAT     A1                  ; A1 <- 1.0
+          FQUO      A2,A1               ; A1 <- 1/A2
+          RETURN                        ; Gotcha!
+
+GADIV2    POP       A1                  ; le deuxieme argument
+GADIVT    MOV       A1,A2               ; A2 <- (* y z ...)
+          POP       A1                  ; A1 <- x
+          MOV       A1,A3               ; pour les de'bordements
+          BTFIX     A1,GADIVT1          ; x entier
+          BTFLOAT   A1,GADIVT3          ; x flottant
+GADIVT0   MOV       A3,A1               ; appel ge'ne'rique
+          MOV       .GADIV,A3           ; se'mantique "/"
+          BRA       BANGEN2             ; zou!
+GADIVT1   BFFIX     A2,GADIVT2          ; x entier, y flottant?
+          CNBEQ     A2,#0,GADIVT0       ; division par 0
+     IFNE DIVOVFL
+          CNBNE     A1,#MINUS0,GADIVT11 ;  le seul cas d'OVFL est :
+          CNBEQ     A2,#-1,GADIVT0      ;    (/ #MINUS0 -1)
+     ENDC
+GADIVT11  REM       A2,A1
+          CNBNE     A1,#0,GADIVT0       ; le reste doit etre juste
+          MOV       A3,A1               ; recupere le diviseur
+          QUO       A2,A1,GADIVT0       ; division entiere
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GADIVT0
+     ENDC
+          RETURN                        ; Baste!
+GADIVT2   BFFLOAT   A2,GADIVT0          ; x entier, y generique
+          FLOAT     A1                  ; x -> flottant
+          BRA       GADIVT5             ; vers x flottant, y flottant
+GADIVT3   BFFIX     A2,GADIVT4          ; x flottant, y flottant?
+          FLOAT     A2                  ; x flottant, y entier -> flottant
+          BRA       GADIVT5             ; vers x flottant, y flottant
+GADIVT4   BFFLOAT   A2,GADIVT0          ; x flottant, y generique
+GADIVT5   FQUO      A2,A1               ; x flottant, y flottant
+          RETURN                        ; Baste!
+
+GADIV3    DECR      A4                  ; un element de moins
+          DECR      A4                  ; un autre
+          XSPMOV    A4,A1               ; A1 <- y
+          MOVXSP    @GADIVT,A4          ; la continuation du *
+          PUSH      A4                  ; pour le ADJSTK de *
+          INCR      A4                  ; doit pointer sur y
+          BRA       GATIME1             ; vers la multiplication generique
+
+;  ----------------------------------------
+          FENTRY    GAQUOMOD,SUBR2         ; a1 quo a2 -> a1
+;  ----------------------------------------
+;         N = D * Q + R    avec  0 <= R < |D|
+;         si N = D * Q' + R'  avec R du signe de N,
+;         si R' < 0 alors R = alors R' + |D| sinon R'
+          MOV       .GAQUOMOD,A3        ; le nom de la fonction ge'ne'rique
+          BTFLOAT   A1,BANGEN2
+          BTFLOAT   A2,BANGEN2
+          BFFIX     A1,BANGEN2
+          BFFIX     A2,BANGEN2
+          CNBEQ     A2,#0,BANGEN2       ; teste la division par 0
+     IFNE DIVOVFL
+          CNBNE     A1,#MINUS0,GAQUOMOD1;  le seul cas d'OVFL est :
+          CNBEQ     A2,#-1,BANGEN2      ;    (quomod #MINUS0 -1)
+     ENDC
+GAQUOMOD1 MOV       A1,A3               ; en cas dew debordement
+          QUO       A2,A1,GAQUOMODG     ; A1 <- quo
+     IFNE TRUEOVFL
+          CNBEQ     A1,#MINUS0,GAQUOMODG
+     ENDC
+          MOV       A3,A4               ; pour le reste
+          REM       A2,A4               ; A4 <- reste
+          CNBGE     A4,#0,GAMODRET      ; reste > 0, tout est ok
+          CNBGT     A1,#0,GAQUOMOD3     ; quo > 0
+          CNBLT     A1,#0,GAQUOMOD2     ; quo < 0
+          CNBLE     A2,#0,GAQUOMOD3
+GAQUOMOD2 DECR      A1,GAQUOMODG        ; correction si reste <0
+          BRA       GAQUORET
+GAQUOMOD3 INCR      A1,GAQUOMODG        ; correction si reste <0
+GAQUORET  CNBGE     A2,#0,GAMODR3       ;   si d > 0 ok
+          NEGATE    A2                  ;   d <- |d|
+GAMODR3   PLUS      A2,A4,GAQUOMODG     ;   r <-  |d| + r
+GAMODRET  MOV       .EXMOD,A2           ; #:ex:mod
+          MOV       A4,CVAL(A2)         ; beurk!
+          RETURN
+
+GAQUOMODG MOV       A3,A1               ; le premier argument
+          MOV       .GAQUOMOD,A3        ; la fonction ge'ne'rique
+          BRA       BANGEN2             ; On y va
+
+GAQUO2    BTFLOAT   A2,GAQUO4
+          BFFIX     A2,BANGEN2
+          FLOAT     A2
+          BRA       GAQUO4
+GAQUO3    BFFIX     A1,BANGEN2
+          FLOAT     A1
+GAQUO4    MOV       A1,A3
+          FQUO      A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    GAMOD,SUBR2
+;  ----------------------------------------
+          CALL      GAQUOMOD            ; e viva el CPU
+          MOV       .EXMOD,A1           ; #:ex:mod
+          MOV       CVAL(A1),A1         ; rebeurk
+          RETURN                        ; No comment!
+
+; .SSection "Les fonctions de comparaisons ge'ne'riques"
+
+; Fonction generale de comparaison. Dans A3 un masque a verifier
+
+GACOM     LABEL
+          CNBGE     A4,#2,GACOM0        ; vers le cas general
+          MOV       #2,A1               ; le bon nb
+          MOV       CPFNT,A2            ; le nom de la fonction
+          JMP       ERRWNA              ; Wrong Number of Argument
+
+GACOM0    PUSH      A4                  ; sauve A4 pour le ADJSTK final
+          XSPMOV    A4,A1               ; A1 <- l'accu = 1er nombre
+GACOM1    BTFIX     A1,GACOMFX1         ; traitement accu entier
+          BTFLOAT   A1,GACOMFL3         ; traitement accu flottant
+          SOBGTZ    A4,GACOMGN0         ; traitement accu generique
+GACOM2    POP       A4                  ; pour retrouver le 1er argument
+          DECR      A4                  ; sans le 1er arg (val ret)
+          ADJSTK    A4                  ; nettoie la pile
+          POP       A1                  ; 1er arg : val de retour
+          RETURN                        ; Bedone!
+GACOM3    MOVNIL    A1                  ; la comparaison echoue
+          POP       A4                  ; retrouve le nombre d'argument
+          ADJSTK    A4                  ; nettoie la pile
+          RETURN                        ; Bedone!
+
+GACOMFX0  XSPMOV    A4,A2               ; A2 <- element suivant
+          BTFLOAT   A2,GACOMFL0         ; traitement element flottant
+          BFFIX     A2,GACOMGN1         ; traitement element generique
+          CNBEQ     A1,A2,GACOMFX2      ; A1 = A2 ?
+          CNBGT     A1,A2,GACOMFX3      ; A1 > A2 ?
+          MOV       #4,A1               ; #%100 <-> "<"
+          BRA       GACOMFX4            ; vers le test
+GACOMFX2  MOV       #2,A1               ; #%010 <-> "="
+          BRA       GACOMFX4            ; vers le test
+GACOMFX3  MOV       #1,A1               ; #%001 <-> ">"
+GACOMFX4  LAND      A3,A1               ; effectue le masque
+          CNBEQ     A1,#0,GACOM3        ; si 0 la comparaison echoue
+          MOV       A2,A1               ; mise a jour accu
+GACOMFX1  SOBGTZ    A4,GACOMFX0         ; traitement accu entier
+          BRA       GACOM2              ; on nettoie la pile
+
+GACOMFL0  FLOAT     A1                  ; convertit l'accu
+          BRA       GACOMFL2            ; vers la comparaison flottante
+GACOMFL1  XSPMOV    A4,A2               ; A2 <- element suivant
+          BTFLOAT   A2,GACOMFL2         ; traitement element flottant
+          BFFIX     A2,GACOMGN1         ; traitement element generique
+          FLOAT     A2                  ; convertit l'entier
+GACOMFL2  CFBEQ     A1,A2,GACOMFL4      ; A1 = A2 ?
+          CFBGT     A1,A2,GACOMFL5      ; A1 > A2 ?
+          MOV       #4,A1               ; #%100 <-> "<"
+          BRA       GACOMFL6            ; vers le test
+GACOMFL4  MOV       #2,A1               ; #%010 <-> "="
+          BRA       GACOMFL6            ; vers le test
+GACOMFL5  MOV       #1,A1               ; #%001 <-> ">"
+GACOMFL6  LAND      A3,A1               ; effectue le masque
+          CNBEQ     A1,#0,GACOM3        ; si 0 la comparaison echoue
+          MOV       A2,A1               ; mise a jour accu
+GACOMFL3  SOBGTZ    A4,GACOMFL1         ; traitement accu flottant
+          BRA       GACOM2              ; on nettoie la pile
+
+GACOMGN0  XSPMOV    A4,A2               ; on sait que (A4 > 0)
+GACOMGN1  PUSH      A4                  ; sauve le compteur
+          PUSH      A3                  ; sauve le masque
+          PUSH      A2                  ; sauve le deuxieme argument
+          MOV       .GACOMP,A3          ; le nom de la fonction
+          CALL      BANGENSP2           ; comparaison generique
+          POP       A2                  ; retrouve le deuxieme argument
+          POP       A3                  ; retrouve le masque
+          POP       A4                  ; retrouve le compteur
+          BFFIX     A1,GACOM3           ; il faut un nombre
+          CNBEQ     A1,#0,GACOMGN2      ; 0 -> A1 = A2
+          CNBEQ     A1,#1,GACOMGN3      ; 1 -> A1 > A2
+          CNBNE     A1,MOINSUN,GACOM3   ; -1 -> A1 < A2
+          MOV       #4,A1               ; #%100 <-> "<"
+          BRA       GACOMGN4            ; vers le test
+GACOMGN2  MOV       #2,A1               ; #%010 <-> "="
+          BRA       GACOMGN4            ; vers le test
+GACOMGN3  MOV       #1,A1               ; #%001 <-> ">"
+GACOMGN4  LAND      A3,A1               ; effectue le masque
+          CNBEQ     A1,#0,GACOM3        ; si 0 la comparaison echoue
+          MOV       A2,A1               ; mise a jour accu
+          BRA       GACOM1              ; decodage de l'accu
+
+; comparaison generique specialise pour faire appelle a #:<G>:<Type>:<Comp>
+; si #:<G>:<Type>:<?> a fouarer. Tout ca est bien degeu!
+BANGENSP2 PUSH      @ONERET             ; retour bidon
+          PUSH      A1                  ; arg1
+          PUSH      A2                  ; arg2
+          PUSH      #2                  ; le nombre d'argument
+          CALL      BANGEN              ; si on revient c'est pas trouve'
+          XSPMOV    #2,A1               ; retrouve l'argument deffectueux
+          MOV       CPFNT,A3            ; le vrai nom de fonction
+          MOVXSP    @TWORET,#3          ; pour transcrire le retour
+          CALL      BANGEN              ; si on revient c'est pas trouve'
+          POP       A4                  ; le nombre d'argument
+          POP       A1                  ; arg2
+          NCONS     A1                  ; (arg2)
+          POP       A3                  ; arg1
+          CONS      A3,A1               ; (arg1 arg2)
+          JMP       ERRGEN              ; !nemA
+ONERET    RETURN                        ; bah!?
+; ici dans A1 le resultat d'un comparaison (i.e nil ou nombre Lisp)
+TWORET    POP       A4                  ; une adresse de retour bidon
+          POP       A2                  ; arg2
+          POP       A3                  ; masque
+          POP       A4                  ; compteur
+          BTNIL     A1,GACOM3           ; la comparaison a echoue
+          MOV       A2,A1               ; mise a jour accu
+          BRA       GACOM1              ; decodage de l'accu
+
+;  ----------------------------------------
+          FENTRY    GACOMP,SUBR2
+;  ----------------------------------------
+          MOV       .GACOMP,A3          ; Pour le ge'ne'rique.
+          BTFIX     A1,GACOMP5          ; A1 est entier.
+          BFFLOAT   A1,BANGEN2          ; A1 n'est entier ni flottant.
+          BTFLOAT   A2,GACOMP1          ; A1 et A2 sont flottants.
+          BFFIX     A2,BANGEN2          ; A2 n'est ni entier ni flottant.
+          FLOAT     A2                  ; Convertit l'entier en flottant.
+GACOMP1   CFBEQ     A1,A2,GACOMP3       ; Sont-ils egaux?
+          CFBGT     A1,A2,GACOMP4       ; A1 > A2 ?
+GACOMP2   MOV       MOINSUN,A1          ; A1 < A2 -> -1
+          RETURN
+GACOMP3   MOV       #0,A1               ; A1 = A2 -> 0
+          RETURN
+GACOMP4   MOV       #1,A1               ; A1 > A2 -> 1
+          RETURN
+GACOMP5   BTFIX     A2,GACOMP6          ; A1 et A2 sont entiers.
+          BFFLOAT   A2,BANGEN2          ; A2 n'est ni entier ni flottant.
+          FLOAT     A1                  ; Convertit l'entier en flottant.
+          BRA       GACOMP1             ; Vers le cas float/float.
+GACOMP6   CNBEQ     A1,A2,GACOMP3       ; Sont-ils egaux?
+          CNBGT     A1,A2,GACOMP4       ; A1 > A2 ?
+          BRA       GACOMP2             ; Alors c'est que A1 < A2.
+
+;  ----------------------------------------
+          FENTRY    ZEROP,SUBR1
+;  ----------------------------------------
+          MOV       .ZEROP,CPFNT        ; pour les erreurs
+          PUSH      A1                  ; l'objet de comparaison
+          PUSH      #0                  ; le sujet de la comparaison
+          MOV       #2,A4               ; le nombre d'argument
+          MOV       #2,A3               ; le masque
+          BRA       GACOM               ; vers la comparaison
+
+;  ----------------------------------------
+          FENTRY    MINUSP,SUBR1
+;  ----------------------------------------
+          MOV       .MINUSP,CPFNT       ; pour les erreurs
+          PUSH      A1                  ; l'objet de comparaison
+          PUSH      #0                  ; le sujet de la comparaison
+          MOV       #2,A4               ; le nombre d'argument
+          MOV       #4,A3               ; le masque
+          BRA       GACOM               ; vers la comparaison
+
+;  ----------------------------------------
+          FENTRY    PLUSP,SUBR1
+;  ----------------------------------------
+          MOV       .PLUSP,CPFNT        ; pour les erreurs
+          PUSH      A1                  ; l'objet de comparaison
+          PUSH      #0                  ; le sujet de la comparaison
+          MOV       #2,A4               ; le nombre d'argument
+          MOV       #3,A3               ; le masque
+          BRA       GACOM               ; vers la comparaison
+
+
+; COMPATIBILITE POUR LE GAEQN DANS FNTSTD.LLM3!!!!!!!!!!!
+
+GAEQN     PUSH      A3
+          PUSH      @GAEQNRET
+          PUSH      A1
+          PUSH      A2
+          MOV       .GAEQEN,CPFNT
+          MOV       #2,A4
+          MOV       #2,A3
+          BRA       GACOM
+GAEQNRET  POP       A3
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    GAEQEN,SUBRN
+;  ----------------------------------------
+          CABNE     A4,#2,GAEQEN2
+          POP       A2
+          POP       A1
+          BFFIX     A1,GAEQEN1
+          BFFIX     A2,GAEQEN1
+          CNBEQ     A1,A2,GAEQQN0
+          MOVNIL    A1
+GAEQQN0   RETURN
+GAEQEN1   PUSH      A1
+          PUSH      A2
+GAEQEN2   MOV       .GAEQEN,CPFNT
+          MOV       #2,A3
+          BRA       GACOM
+
+;  ----------------------------------------
+          FENTRY    GANEQN,SUBR2
+;  ----------------------------------------
+          BFFIX     A1,GANEN1
+          BFFIX     A2,GANEN1
+          CNBNE     A1,A2,GANEN0
+          MOVNIL    A1
+GANEN0    RETURN
+GANEN1    PUSH      A1
+          PUSH      A2
+          MOV       .GANEQN,CPFNT
+          MOV       #5,A3
+          MOV       #2,A4
+          BRA       GACOM
+
+;  ----------------------------------------
+          FENTRY    GAGT,SUBRN
+;  ----------------------------------------
+          MOV       .GAGT,CPFNT
+          MOV       #1,A3
+          BRA       GACOM
+
+;  ----------------------------------------
+          FENTRY    GAGE,SUBRN
+;  ----------------------------------------
+          MOV       .GAGE,CPFNT
+          MOV       #3,A3
+          BRA       GACOM
+
+;  ----------------------------------------
+          FENTRY    GALT,SUBRN
+;  ----------------------------------------
+          MOV       .GALT,CPFNT
+          MOV       #4,A3
+          BRA       GACOM
+
+;  ----------------------------------------
+          FENTRY    GALE,SUBRN
+;  ----------------------------------------
+          MOV       .GALE,CPFNT
+          MOV       #6,A3
+          BRA       GACOM
+
+;  ----------------------------------------
+          FENTRY    MIN,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#0,MINERR        ; (min) -> erreur
+          POP       A1                  ; le premier accu.
+          BRA       MIN3                ; Vers la boucle.
+MIN1      TOPST     A2                  ; Consulte le deuxie`me argument.
+          PUSH      A4                  ; Sauve le compteur.
+          CALL      MINTWO              ; Compare A1 et A2.
+          POP       A4                  ; Retrouve le compteur.
+          BFNIL     A1,MIN2             ; A1 reste l'accu.
+          POP       A1                  ; Le nouvel accu.
+          BRA       MIN3                ; Vers le suivant.
+MIN2      ADJSTK    #1                  ; Saute le deuxie`me argument.
+MIN3      SOBGTZ    A4,MIN1             ; Il en reste?
+          RETURN                        ; A1 est ok.
+MINERR    MOV       #1,A1               ; good nb of arg
+          MOV       .MIN,A2
+          JMP       ERRWNA
+MINTWO    PUSH      A1                  ; Pousse le premier.
+          PUSH      A2                  ; Pousse le deuxie`me.
+          MOV       #2,A4               ; Le nombre d'argument.
+          BRA       GALT                ; Vers la comparaison.
+
+;  ----------------------------------------
+          FENTRY    MAX,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#0,MAXERR        ; (max) -> erreur
+          POP       A1                  ; le premier accu.
+          BRA       MAX3                ; Vers la boucle.
+MAX1      TOPST     A2                  ; Consulte le deuxie`me argument.
+          PUSH      A4                  ; Sauve le compteur.
+          CALL      MAXTWO              ; Compare A1 et A2.
+          POP       A4                  ; Retrouve le compteur.
+          BFNIL     A1,MAX2             ; A1 reste l'accu.
+          POP       A1                  ; Le nouvel accu.
+          BRA       MAX3                ; Vers le suivant.
+MAX2      ADJSTK    #1                  ; Saute le deuxie`me argument.
+MAX3      SOBGTZ    A4,MAX1             ; Il en reste?
+          RETURN                        ; A1 est ok.
+MAXERR    MOV       #1,A1               ; good nb of arg
+          MOV       .MAX,A2             ; l'apellant
+          JMP       ERRWNA
+MAXTWO    PUSH      A1                  ; Pousse le premier.
+          PUSH      A2                  ; Pousse le deuxie`me.
+          MOV       #2,A4               ; Le nombre d'argument.
+          BRA       GAGT                ; Vers la comparaison.
+
+; .Section "Les fonctions circulaires et trigonome'triques"
+
+;  ----------------------------------------
+          FENTRY    LLSIN,SUBR1
+;  ----------------------------------------
+          MOV       .LLSIN,A3           ; en cas d'erreur
+          BTFLOAT   A1,SIN2             ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          FLOAT     A1                  ; conversion de l'entier
+SIN2      SIN       A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLCOS,SUBR1
+;  ----------------------------------------
+          MOV       .LLCOS,A3           ; en cas d'erreur
+          BTFLOAT   A1,COS2             ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          FLOAT     A1                  ; conversion de l'entier
+COS2      COS       A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLASIN,SUBR1
+;  ----------------------------------------
+          MOV       .LLASIN,A3          ; en cas d'erreur
+          BTFLOAT   A1,ASIN2            ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          CNBGT     A1,#1,BANGEN1       ; faut x <= 1
+          CNBLT     A1,MOINSUN,BANGEN1  ; et x >= -1
+          FLOAT     A1                  ; conversion de l'entier
+          BRA       ASIN3               ; go!
+ASIN2     CFBGT     A1,FLTUN,BANGEN1    ; faut x <= 1.0
+          CFBLT     A1,FLTMUN,BANGEN1   ;  et x >= -1
+ASIN3     ASIN      A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLACOS,SUBR1
+;  ----------------------------------------
+          MOV       .LLACOS,A3          ; en cas d'erreur
+          BTFLOAT   A1,ACOS2            ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          CNBGT     A1,#1,BANGEN1       ; faut x <= 1
+          CNBLT     A1,MOINSUN,BANGEN1  ; et x >= -1
+          FLOAT     A1                  ; conversion de l'entier
+          BRA       ACOS3               ; go!
+ACOS2     CFBGT     A1,FLTUN,BANGEN1    ; faut x <= 1.0
+          CFBLT     A1,FLTMUN,BANGEN1   ;  et x >= -1
+ACOS3     ACOS      A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLATAN,SUBR1
+;  ----------------------------------------
+          MOV       .LLATAN,A3          ; en cas d'erreur
+          BTFLOAT   A1,ATAN2            ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          FLOAT     A1                  ; conversion de l'entier
+ATAN2     ATAN      A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLEXP,SUBR1
+;  ----------------------------------------
+          MOV       .LLEXP,A3           ; en cas d'erreur
+          BTFLOAT   A1,EXP2             ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          FLOAT     A1                  ; conversion de l'entier
+EXP2      EXP       A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLLOG,SUBR1
+;  ----------------------------------------
+          MOV       .LLLOG,A3           ; en cas d'erreur
+          BTFLOAT   A1,LOG2             ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          CNBLE     A1,#0,BANGEN1       ; faut du > 0
+          FLOAT     A1                  ; conversion de l'entier
+          BRA       LOG3                ; go!
+LOG2      CFBLE     A1,FZERO,BANGEN1    ; faut de > 0.0
+LOG3      LOG       A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLLOG10,SUBR1
+;  ----------------------------------------
+          MOV       .LLLOG10,A3         ; en cas d'erreur
+          BTFLOAT   A1,LOG102           ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          CNBLE     A1,#0,BANGEN1       ; faut du > 0
+          FLOAT     A1                  ; conversion de l'entier
+          BRA       LOG103              ; go!
+LOG102    CFBLE     A1,FZERO,BANGEN1    ; faut du > 0.0
+LOG103    LOG10     A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLPOWER,SUBR2
+;  ----------------------------------------
+          MOV       .LLPOWER,A3         ; en cas d'erreur
+          BTFLOAT   A1,POWER2
+          BFFIX     A1,BANGEN2
+          FLOAT     A1
+POWER2    BTFLOAT   A2,POWER3
+          BFFIX     A2,BANGEN2
+          FLOAT     A2
+POWER3    POWER     A1,A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLSQRT,SUBR1
+;  ----------------------------------------
+          MOV       .LLSQRT,A3          ; en cas d'erreur
+          BTFLOAT   A1,SQRT2            ; argument flottant
+          BFFIX     A1,BANGEN1          ; argument generique
+          CNBLT     A1,#0,BANGEN1       ; faut >=0
+          FLOAT     A1                  ; conversion de l'entier
+          BRA       SQRT3               ; go!
+SQRT2     CFBLT     A1,FZERO,BANGEN1    ; faut du >= 0.0
+SQRT3     SQRT      A1,A1               ; fnt trigo
+          RETURN                        ; Baste!
+
+;  ----------------------------------------
+          FENTRY    LLFIXMAX,SUBR0
+;  ----------------------------------------
+          MOV       #MAXFIX,A1		; the most-positive-fixnum
+          PLUS      #0,A1		; force the conversion
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLFIXMIN,SUBR0
+;  ----------------------------------------
+          MOV       #MINFIX,A1		; the most-negative-fixnum
+          PLUS      #0,A1		; force the conversion
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLMINUS0,SUBR0
+;  ----------------------------------------
+          MOV       #MINUS0,A1		; the minus-0-fixnum
+          PLUS      #0,A1		; force the conversion
+          RETURN
+
+          END
+

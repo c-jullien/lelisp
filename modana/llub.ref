@@ -1,0 +1,281 @@
+
+projectname
+llub
+modulesimport
+((timetrace)
+ (rehash)
+ (mvalues)
+ (meme lledit lleditor)
+ (maceditor macedit)
+ (macedit lledit)
+ (loadfile messages)
+ (lleditor lledit)
+ (lledit)
+ (defun)
+ (croch)
+ (countcalls format))
+modulesexport
+((timetrace #:timetrace:stack timetrace #:timetrace:propa #:timetrace:propd)
+ (rehash #:rehash:probepathm
+         #:rehash:|rehash.lm|
+         #:rehash:stats
+         rehashend
+         rehashinit
+         #:rehash:pr)
+ (mvalues values
+          values-list
+          multiple-value-list
+          multiple-value-call
+          multiple-value-prog1
+          multiple-value-bind
+          multiple-value-setq)
+ (meme meme
+       #:edit:editor:meme:edit-drawcursor
+       trap-meme
+       #:edit:editor:meme:edit-query
+       #:edit:editor:meme:trap-query
+       #:edit:editor:meme:edit-redisplaystring
+       #:edit:editor:meme:edit-redisplaycleol
+       #:edit:editor:meme:query-drawcursor)
+ (maceditor
+     win-clear
+     win-right
+     win-left
+     win-down
+     win-up
+     win-next
+     win-previous
+     win-cur-top
+     win-ygoto
+     win-xgoto
+     cur-win-top
+     cur-win-buttom
+     cur-win-ygoto
+     cur-win-xgoto
+     query-readfile
+     query-writefile
+     query-insertfile
+     query-search
+     query-rsearch
+     savefile
+     query-goto-line
+     exp-eval
+     exp-eval-print)
+ (macedit buf-new
+          buf-link
+          buf-unlink
+          buf-readonly
+          buf-readwrite
+          cur-top
+          cur-buttom
+          cur-begline
+          cur-endline
+          cur-left
+          cur-right
+          cur-up
+          cur-down
+          cur-ygoto
+          cur-xgoto
+          char-insert
+          char-delete
+          char-delete-back
+          char-transpose
+          word-insert
+          word-delete
+          word-delete-back
+          word-first-char
+          word-last-char
+          word-left
+          word-search
+          word-reverse-search
+          word-get-symbol
+          line-insert
+          line-new
+          line-break
+          line-return
+          line-delete
+          line-get
+          line-bol
+          line-eol
+          mark-set
+          mark-exchange
+          mark-copy
+          mark-delete
+          file-read
+          file-insert
+          file-print
+          begin-expr
+          next-expr
+          previous-expr)
+ (loadfile
+     #:system:loadfile:bol
+     #:system:loadfile:eof
+     #:system:loadfile:syserror
+     loadfile)
+ (lleditor
+     trap-editor
+     edit-command-redisplay
+     edit-print-query
+     init-editor
+     bind-to-key
+     bind-to-ekey
+     bind-to-xkey
+     local-bind-to-key
+     local-bind-to-ekey
+     local-bind-to-xkey
+     #:edit:editor:edit-query
+     #:edit:editor:edit-redisplaystring
+     #:edit:editor:edit-redisplaycleol
+     #:edit:editor:edit-drawcursor
+     #:edit:editor:prin
+     #:edit:editor:make
+     #:edit:editor:bol
+     #:edit:editor:eol
+     #:edit:editor:syserror
+     #:edit-print-query:eol
+     edit-eval-redisplay)
+ (lledit trap-edit #:buffer:make)
+ (defun listify arg
+        setarg
+        lambda
+        defun
+        #:maclisp:defun:kwd-bind-key
+        #:maclisp:lexpr:aux)
+ (croch readbracket sequence)
+ (countcalls
+     count-calls-init
+     count-calls-start
+     count-calls-stop
+     count-calls-infos
+     count-calls-printn
+     count-calls-printa))
+modulesotherdef
+()
+modulesinternal
+((countcalls
+    #:count-calls:count-calls-init1
+    count-calls-clear
+    #:count-calls:get-count-calls-infos)
+ (defun vect-to-cons #:maclisp:lexpr
+        #:maclisp:lexpr:nil-in-bvl
+        #:maclisp:lexpr:subst-nil-to-gensym
+        pkg-gensym
+        #:maclisp:defun:dvl
+        #:maclisp:defun:kwd-input
+        #:maclisp:defun:kwd-key-aux
+        #:maclisp:defun:kwd-aux
+        #:maclisp:defun:kwd-key
+        #:maclisp:defun:kwd-optl
+        #:maclisp:lexpr:init-bvl-vector)
+ (lledit #:edit:buf-new
+         #:edit:buf-link
+         #:edit:buf-unlink
+         #:edit:cur-top
+         #:edit:cur-buttom
+         #:edit:cur-begline
+         #:edit:cur-endline
+         #:edit:cur-left
+         #:edit:cur-up
+         #:edit:cur-right
+         #:edit:cur-down
+         #:edit:cur-ygoto
+         #:edit:cur-xgoto
+         #:edit:char-insert
+         #:edit:char-new
+         #:edit:check-modif
+         #:edit:char-delete
+         #:edit:char-delete-back
+         #:edit:word-insert
+         #:edit:word-delete
+         #:edit:word-delete-back
+         #:edit:word-first-char
+         #:edit:word-last-char
+         #:edit:word-left
+         #:edit:word-search
+         #:edit:word-searchp
+         #:edit:word-search2
+         #:edit:word-reverse-search
+         #:edit:word-get-symbol
+         #:edit:line-insert
+         #:edit:line-break
+         #:edit:line-new2
+         #:edit:bltvector
+         #:edit:line-new
+         #:edit:copy-kill-buffer
+         #:edit:line-return
+         #:edit:line-delete
+         #:edit:line-delete2
+         #:edit:make
+         #:edit:line-get
+         #:edit:line-bol
+         #:edit:line-eol
+         #:edit:mark-set
+         #:edit:mark-exchange
+         #:edit:mark-copy
+         #:edit:mark-delete
+         #:edit:file-read
+         #:edit:file-in-list
+         #:edit:file-insert
+         #:edit:file-print
+         #:edit:dofile-print
+         #:edit:begin-expr
+         #:edit:char-transpose
+         #:edit:buf-readonly
+         #:edit:buf-readwrite
+         #:edit:matchnext
+         #:edit:match-next
+         #:edit:match-next-char
+         #:edit:skip
+         #:edit:match-next-push
+         #:edit:match-next-pop
+         #:edit:matchprevious
+         #:edit:match-prev
+         #:edit:match-prev-char
+         #:edit:match-prev-push
+         #:edit:undo)
+ (lleditor
+     #:edit:editor:win-clear
+     #:edit:editor:win-right
+     #:edit:editor:win-left
+     #:edit:editor:win-down
+     #:edit:editor:win-up
+     #:edit:editor:win-next
+     #:edit:editor:win-previous
+     #:edit:editor:win-cur-top
+     #:edit:editor:win-ygoto
+     #:edit:editor:win-xgoto
+     #:edit:editor:cur-win-top
+     #:edit:editor:cur-win-buttom
+     #:edit:editor:cur-win-ygoto
+     #:edit:editor:cur-win-xgoto
+     #:edit:editor:query-readfile
+     #:edit:editor:query-writefile
+     #:edit:editor:writefile2
+     #:edit:editor:query-insertfile
+     #:edit:editor:query-search
+     #:edit:editor:query-rsearch
+     #:edit:editor:savefile
+     #:edit:editor:query-goto-line-number
+     #:edit:editor:exp-eval
+     edit-command
+     #:edit:editor:edit-simple-command
+     #:edit:editor:edit-all-command
+     #:edit:editor:add-charp
+     #:edit:editor:edit-escape-command
+     #:edit:editor:edit-extend-command
+     #:edit:editor:win-check
+     edit-redisplay
+     #:edit:editor:edit-redisplayscreen
+     #:edit:editor:exp-eval-print)
+ (meme #:edit:editor:meme:make-meme-editor
+       #:edit:editor:meme:make
+       #:edit:editor:meme:rdpscreen
+       #:edit:editor:meme:unsplit-editor
+       #:edit:editor:meme:split-editor
+       #:edit:editor:meme:tycls
+       #:edit:editor:meme:next-editor
+       #:edit:editor:meme:previous-editor
+       #:edit:editor:meme:visit-file)
+ (mvalues #:multiple-value:values-aux)
+ (timetrace #:timetrace:off #:timetrace:on))
+

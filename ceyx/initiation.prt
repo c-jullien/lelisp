@@ -1,0 +1,1536 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+
+
+ INRIA
+ Domaine de Voluceau
+ Rocquencourt
+ 78153 Le Chesnay Cedex
+
+
+
+
+
+
+                      Ceyx: Une Initiation
+
+
+
+                        Ceyx - Version 15
+
+
+
+
+                        Jean-Marie Hullot
+
+                            Ete' 1984
+
+
+
+
+
+
+Re'sume': _C_e_y_x _e_s_t _u_n _e_n_s_e_m_b_l_e _d'_o_u_t_i_l_s _p_e_r_m_e_t_t_a_n_t _d_e _f_a_c_i_l_i_t_e_r  _l_a
+_t_a^_c_h_e  _d_e_s  _p_r_o_g_r_a_m_m_e_u_r_s  _L_i_s_p  _p_o_u_r  _d_e'_f_i_n_i_r  _e_t  _m_a_n_i_p_u_l_e_r  _d_e_s
+_s_t_r_u_c_t_u_r_e_s _a_r_b_i_t_r_a_i_r_e_s. _A_u_x  _s_t_r_u_c_t_u_r_e_s  _d_e'_f_i_n_i_e_s  _e_n  _C_e_y_x  _s_o_n_t
+_a_s_s_o_c_i_e'_e_s  _d_e_s  _e_s_p_a_c_e_s  _s_e'_m_a_n_t_i_q_u_e_s, _o_r_g_a_n_i_s_e'_s _h_i_e'_r_a_r_c_h_i_q_u_e_m_e_n_t,
+_d_a_n_s _l_e_s_q_u_e_l_s _s_o_n_t _r_a_n_g_e'_e_s _l_e_s _f_o_n_c_t_i_o_n_s _d_e _m_a_n_i_p_u_l_a_t_i_o_n  _p_r_o_p_r_e_s
+_a`  _c_e_s _s_t_r_u_c_t_u_r_e_s. _U_n _s_t_y_l_e _d_e _p_r_o_g_r_a_m_m_a_t_i_o_n _o_r_i_e_n_t_e'_e _o_b_j_e_t_s _a` _l_a
+_S_m_a_l_l_T_a_l_k _e_s_t _a_i_n_s_i _r_e_n_d_u _p_o_s_s_i_b_l_e.
+
+_N_o_u_s _p_r_e'_s_e_n_t_o_n_s _d_a_n_s _c_e _d_o_c_u_m_e_n_t, _l_e_s _c_o_n_s_t_r_u_c_t_i_o_n_s  _e'_l_e'_m_e_n_t_a_i_r_e_s
+_d_u _s_y_s_t_e`_m_e.
+
+
+
+
+                                2         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                3         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            _C_e_y_x _e'_t_a_i_t _f_i_l_s _d_e _L_u_c_i_f_e_r,
+             _l_e _c_o_n_d_u_c_t_e_u_r _d_e_s _A_s_t_r_e_s _e_t _d_e _l_a _L_u_m_i_e`_r_e,
+                      _l'_e'_t_o_i_l_e _q_u_i _f_a_i_t _n_a_i^_t_r_e _l_e _j_o_u_r,
+_e_t _l_a _j_o_i_e _b_r_i_l_l_a_n_t_e _d_e _s_o_n _p_e`_r_e _i_l_l_u_m_i_n_a_i_t _s_o_n _v_i_s_a_g_e.
+
+                                                  Ovide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                4         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                5         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+                          Avertissement
+
+Ce document constitue une introduction a` Ceyx.  Une  connaissance
+minimum  de  Lisp  est  requise.  Ceyx  est e'crit en Le_Lisp, qui
+posse`de un excellent manuel disponible aupre`s de l'INRIA:
+
+o+ _L_e__L_i_s_p _d_e _l'_I_N_R_I_A, _L_e _M_a_n_u_e_l _d_e _R_e'_f_e'_r_e_n_c_e (J. Chailloux).
+
+On trouvera une  description  comple`te  de  Ceyx  dans  un  autre
+rapport INRIA:
+
+o+ _P_r_o_g_r_a_m_m_e_r _e_n _C_e_y_x (J.-M. Hullot),
+
+et la documentation de processeurs spe'cialise's dans:
+
+o+ _V_p_r_i_n_t, _L_e _C_o_m_p_o_s_e_u_r _C_e_y_x (G. Berry, J.-M. Hullot),
+
+o+ _C_X_Y_A_C_C _e_t _L_E_X-_K_I_T (G. Berry, B. Serlet).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                6         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                7         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+
+
+                       C H A P I T R E  1
+
+
+                        Les Records Lisp
+
+
+
+
+
+Nous introduisons dans ce chapitre des  constructions  permettant
+de  de'finir de nouvelles structures de donne'es en Lisp. Il s'agit
+essentiellement  de  constructions  simples  qui  devraient  e^tre
+comprises  sans difficulte's par un lecteur un peu habitue' a` Lisp.
+Ce chapitre peut e^tre conside're' comme une initiation a` Ceyx  dans
+la  mesure  ou`  il  introduit a` un style de programmation et a` un
+ensemble de notations qui sont de mise en Ceyx.
+
+
+
+
+1.1  Introduction
+
+
+Nous proposons une construction permettant de manipuler  en  Lisp
+des structures de donne'es a` e'le'ments nomme's analogues aux records
+de Pascal. Cherchons par exemple a` mode'liser la notion  de  point
+mate'riel  en mouvement dans un plan carte'sien. Il s'agit d'objets
+posse'dant les deux champs x et y, qui  sont  les  coordonne'es  du
+point,  et  les  deux  champs  vx et vy qui sont les vitesses par
+rapport aux axes de coordonne'es. Pour manipuler de tels objets en
+Lisp,  on  commencera  par  de'finir  une fonction Point cre'ant un
+objet  Lisp  composite  me'morisant  ces  valeurs.  Une   solution
+minimale  en  utilisation  me'moire et en rapidite' moyenne d'acce`s
+aux champs est:
+
+
+? (de Point (x y vx vy)
+      (cons (cons x y) (cons vx vy)))
+= Point
+
+                                8         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+? (setq point1 (Point 0 0 0 0))
+= ((0 . 0) 0 . 0)
+
+Il nous  est  alors  possible  d'inspecter  et  de  modifier  les
+composantes x,y, vx et vy d'une instance de Point par les chaines
+de car, cdr, rplaca, rplacd idoines. Une bonne solution  consiste
+a`  de'finir  des  fonctions  d'acce`s  aux  champs en lecture et en
+e'criture et de ne plus acce'der aux instances de  Points  que  par
+ces fonctions.
+
+
+? (de get-Point-x (point) (caar point))
+= get-Point-x
+? (de put-Point-x (point val) (rplaca (car point) val)))
+= put-Point-x
+? (put-Point-x point1 1)
+= (1 . 0)
+? point1
+= ((1 . 0) . (0 . 0))
+? (get-Point-x point1)
+= 1
+
+et de la me^me fac,on des fonctions pour les champs y,  vx  et  vy.
+Le  proble`me  de  la  manipulation  des  Points semble ainsi bien
+re'solu au prix de l'e'criture d'un certain  nombre  de  fonctions.
+Ceci  nous  permet de faire nos premiers pas dans l'e'criture d'un
+programme sur les Points.  Malheureusement, nous nous  apercevons
+au bout d'un certain temps que nous voulons en fait manipuler des
+points nomme's et qu'ainsi un nouveau  champ  appele'  nom  devient
+ne'cessaire.  Il  nous  faut  alors  rede'finir  la  fonction Point
+prenant cette fois-ci cinq  arguments  et  toutes  les  fonctions
+d'acce`s puisque la structure de repre'sentation des Points en tant
+qu'arbre de cons a e'te' modifie'e. On notera que tous les appels  a`
+la  fonction  Point  dans le code devront e^tre e'galement modifie's
+puisque   cette   fonction   prend   maintenant    un    argument
+supple'mentaire.  Le but de la construction que nous proposons est
+de faciliter  ce  genre  de  manipulations,  en  introduisant  de
+nouvelles constructions dans Lisp.
+
+Pour de'finir la structure Point sous Ceyx, il suffit d'invoquer:
+
+
+                                9         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+
+? (defrecord Point x y vx vy)
+= Point
+
+Une instance de Point sera alors cre'e'e par:
+
+
+? (setq point1 (omakeq Point x 0 y 0 vx 0 vy 0))
+= ((0 . 0) 0 . 0)
+
+De plus a` l'invocation  de  la  forme  defrecord,  les  fonctions
+d'acce`s  {Point}:x,  {Point}:y,  {Point}:vx  et  {Point}:vy  sont
+automatiquement cre'e'es qui permettent  d'acce'der  aux  points  en
+lecture  et  en  e'criture  suivant  qu'on  leur  donne un ou deux
+arguments.
+
+
+? ({Point}:x point1)
+= 0
+? ({Point}:y point1 1)
+= (0 . 1)
+? ({Point}:y point1)
+= 1
+
+Cette fois-ci, l'effort  pour  rajouter  un  champ  nom  dans  la
+structure  sera  minime  puiqu'il suffira de remplacer l'appel de
+defrecord pre'ce'dent par:
+
+
+(defrecord Point nom x y vx vy)
+
+Aucune autre modification ne sera  ne'cessaire  dans  le  code  de
+l'utilisateur.
+
+
+
+
+
+
+
+
+
+                               10         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+1.2  De'finition d'un Record Lisp
+
+Un Record Lisp est de'fini a` l'aide de la forme defrecord:
+
+(defrecord <name> <field>1 ... <field>n)
+
+   <name> est un symbole qui devient le nom de la structure ainsi
+   de'finie  et  les  <field>i  sont  de  la  forme  <symbol>i  ou
+   (<symbol>i <init>i), ou` <symbol>i  est  le  nom  du  champ  et
+   <init>i,  qui  est  e'value'e  est la valeur d'initialisation du
+   champ (voir fonction omakeq).  Les  champs  pour  lesquels  la
+   valeur  d'initialisation  n'est  pas donne'e sont initialise's a`
+   nil.
+
+   Cette construction associe au symbole <name> la de'finition  de
+   Lrecord  a`  n champs de noms <symbol>i. De plus n fonctions de
+   nom   {<name>}:<symbol>i  sont   engendre'es   pour   permettre
+   d'acce'der  aux  instances  de cette structure en lecture et en
+   e'criture.
+
+
+? (defrecord Point nom (x 0) (y 0) (vx 0) (vy 0))
+= Point
+
+
+
+
+1.3  Fonctions de Manipulation des Instances de Record
+
+
+1.3.1  Cre'ation d'Instances
+
+(omakeq <name> <fieldname>1 <val>1 ... <fieldname>n <val>n)
+
+   <name> et les <fieldname>i ne sont pas e'value's, les <val>i  le
+   sont.   <name>  doit  avoir  une de'finition de record, c'est a`
+   dire  avoir  e'te'  de'fini  par  (defrecord  <name>  ...).   Les
+   <fieldname>i   sont  des  noms  de  champ  du  record  de  nom
+   <recordname>. Cette fonction renvoie en valeur une instance de
+   ce  record  dont  le champ de nom <fieldname> a pour valeur sa
+   valeur  initiale   si   <fieldname>   n'appartient   pas   aux
+
+                               11         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+   <fieldname>i, <val>i autrement.
+
+
+
+? (setq point1 (omakeq Point))
+= ((nil . 0) 0 0 . 0)
+? ({Point}:nom point1)
+= nil
+? ({Point}:nom point1 'Le_Point)
+= Le_Point
+? ({Point}:nom point1)
+= Le_Point
+? (setq point2 (omakeq Point nom 'Autre_Point x 10 y 10))))
+= ((Autre_Point . 10) 10 0 . 0)
+? ({Point}:nom point2)
+= Autre_Point
+? ({Point}:x point2)
+= 10
+? ({Point}:vx point2)
+= 0
+
+
+1.3.2  Discrimination
+
+(omatchq <name> <object>)
+
+   <name> n'est pas e'value', <object> l'est. <name> doit  posse'der
+   une  de'finition  de  Record.  Cette fonction rame`ne une valeur
+   diffe'rente de nil si et seulement si <object> a pu  e^tre  cre'e'
+   par (omakeq <name> ... ).
+
+
+
+? (omatchq Point point1)
+= t
+? (omatchq Point 1)
+= nil
+
+
+
+
+
+                               12         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+1.3.3  Acce`s aux Champs
+
+A co^te' des fonctions d'acce`s en lecture et en e'criture  engendre's
+automatiquement   lors   de   la  de'finition  d'un  record,  nous
+introduisons des constructions ge'ne'rales d'acce`s aux champs.  Ces
+constructions  seront  surtout utilise'es lors de la de'finition de
+macros.
+
+(ogetq <name> <fieldname> <object>
+
+   L'argument <name>, qui n'est pas e'value', doit e^tre un  symbole
+   posse'dant  une de'finition de record. Si <fieldname>, qui n'est
+   pas e'value', n'est pas un nom de champ pour le  record  de  nom
+   <name>,  une  erreur  est de'clenche'e. Sinon <object> doit e^tre
+   une instance de <name> et cette fonction rame`ne en  valeur  la
+   valeur de son champ <fieldname>.
+
+(oputq <name> <fieldname> <object> <object>1)
+
+   L'argument <name>, qui n'est pas e'value', doit e^tre un  symbole
+   posse'dant  une de'finition de record. Si <fieldname>, qui n'est
+   pas e'value', n'est pas un nom de champ pour le  record  de  nom
+   <name>,  une  erreur  est de'clenche'e. Sinon <object> doit e^tre
+   une instance de <name> et cette fonction remplace physiquement
+   la valeur du champ <fieldname> par <object>1.
+
+
+
+? (ogetq Point nom point1)
+= Le_Point
+? (oputq Point x point1 20)
+= (Le_Point . 20)
+? (ogetq Point x point1)
+= 20
+
+
+
+
+
+
+
+
+                               13         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+1.4  Les Records Extensibles ou Classes
+
+De'finissons maintenant une structure d'individu:
+
+
+(defrecord Individu nom prenom adresse telephone)
+= Individu
+
+et supposons que nous voulions cre'e'er deux  nouvelles  structures
+posse'dant  les  quatre  champs du record Individu plus un nouveau
+champ  "pointure"  pour  la  premie`re   et   un   nouveau   champ
+"condamnations"  pour la seconde.  Une premie`re solution consiste
+a` de'finir deux nouveaux records a` cinq  champs.  Pour  simplifier
+ces  ope'rations  Ceyx introduit la notion de record extensible ou
+classe. Pour notre exemple, il suffira d'e'crire:
+
+
+? (defclass Individu nom prenom adresse telephone)
+= #:Class:Individu
+? (defclass {Individu}:Client pointure)
+= #:Class:Individu:Client
+? (defclass {Individu}:Suspect condamnations)
+= #:Class:Individu:Suspect
+
+Une classe Lisp ou Classe est de'finie a` l'aide de la forme:
+
+(defclass <name>/{<superclass>}:name <field>1 ... <field>n)
+
+   Dans le premier cas, cette forme est e'quivalente au defrecord,
+   sinon  qu'on  de'finit cette fois-ci un record extensible. Dans
+   le second cas <superclass> doit avoir une de'finition de classe
+   et  <name>  devient  le  nom  d'une nouvelle classe ayant pour
+   champs tous ceux de <superclass> accessibles par les  fonction
+   {<superclass>}:<fieldname>  et  pour  nouveaux champs tous les
+   <field>i accessibles par {<name>}:<fieldname>i.   Nous  dirons
+   que   <name>  est  une  sous-classe  de  <superclass>  et  que
+   <superclass> est la  superclasse  de  <name>.   On  remarquera
+   eenfin que les instances de classes sont imple'mente'es avec des
+   _v_e_c_t_o_r_s Le_Lisp et non plus avec des cons.
+
+
+
+                               14         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+
+? (setq client (omakeq Client nom 'Jacquemart prenom 'Marcel pointure 48))
+= #[Jacquemart Marcel () () 48]
+? (setq suspect
+?       (omakeq Suspect nom 'Jacquemart
+?                       prenom 'Marcel
+?                       condamnations "Vol de chaussures"))
+= #[Jacquemart Marcel () () Vol de chaussures]
+? ({Individu}:nom client)
+= Jacquemart
+? ({Individu}:nom suspect)
+= Jacquemart
+? ({Client}:pointure client)
+= 48
+? ({Suspect}:condamnations suspect)
+= Vol de chaussures
+
+   On notera de plus que  si  <class>1  est  une  sous-classe  de
+   <class> on a (omatchq <class> (omakeq <class>1 ...)) = t
+
+   Exemple:
+
+   ? (omatchq Individu client)
+   = t
+
+
+
+
+
+1.5  Proprie'te's Se'mantiques des Records et des Classes
+
+Nous sommes maintenant capables  de  de'finir  des  structures  de
+donne'es,  nous  aimerions  de'finir  des ope'rations, ou proprie'te's
+se'mantiques,  s'appliquant  spe'cifiquement  aux  instances  d'une
+telle  structure. Reprenons l'exemple de la structure Point. Pour
+de'finir l'ope'ration v**2 qui calcule la vitesse de  ce  point  au
+carre', il suffit de faire sous Ceyx:
+
+
+? (de {Point}:v**2 (point)
+      (+ (* ({Point}:vx point) ({Point}:vx point))
+
+                               15         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+         (* ({Point}:vy point) ({Point}:vy point))))
+= Point:v**2
+? ({Point}:v**2 point2)
+= 100
+
+A ce point on peut conside'rer qu'on de'finit  juste  une  fonction
+Lisp  ordinaire de nom {Point}:v**2. Nous allons un peu plus loin
+en de'finissant la construction semcall:
+
+(semcall <structname> <sem> <arg>1 ... <arg>n)
+
+   Tous les arguments sont e'value's. <structname> est  un  nom  de
+   classe  ou  de  record,  <sem> est un symbole. Si la proprie'te'
+   se'mantique de nom <sem> a e'te' de'finie pour <structname>,  elle
+   est  applique'e aux arguments <arg>i. Sinon si <structname> n'a
+   pas une de'finition de classe une erreur est de'clenche'e.  Sinon
+   si  <structname>  a  une de'finition de classe et est extension
+   d'une autre classe  <superclass>  on  s'appelle  re'cursivement
+   avec   <structname>  =  <superclass>.  Sinon  une  erreur  est
+   de'clenche'e.
+
+
+
+? (de {Individu}:print (individu)
+?      (print "Nom: " ({Individu}:nom individu))
+?      (print "Prenom: " ({Individu}:prenom individu))
+?      t)
+= #:Class:Individu:print
+? ({Individu}:print client)
+Nom: Jacquemart
+Prenom: Marcel
+= t
+? (semcall 'Client 'print client)
+Nom: Jacquemart
+Prenom: Marcel
+= t
+
+Nous pouvons raffiner cette proprie'te' se'mantique sur la structure
+Client en de'finissant:
+
+
+
+                               16         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+? (de {Client}:print (client)
+?     ({Individu}:print client)
+?     (print "Pointure: " ({Client}:pointure client))
+?     t)
+= #:Class:Individu:Client:print
+? (semcall 'Client 'print client)
+Nom: Jacquemart
+Prenom: Marcel
+Pointure: 47
+= t
+? (semcall 'Suspect 'print suspect)
+Nom: Jacquemart
+Prenom: Marcel
+= t
+
+Cette  construction  permet   donc   d'e'tablir   une   hie'rarchie
+se'mantique calquant la hie'rarchie structurelle introduite avec la
+structure classe.  Si les objets e'taient a` me^me de reconnaitre de
+quelle structure ils sont instance, il n'y aurait me^me plus a` lui
+passer l'argument donnant cette information et elle prendrait  sa
+pleine  puissance. Nous reviendrons sur ce point dans le prochain
+chapitre.
+
+
+
+
+1.6  Un Exemple De'veloppe'
+
+Nous donnons un exemple de programmes manipulant des positions et
+des  re'gions rectangulaires dans un plan carte'sien dont l'axe des
+x est vertical dirige' vers le  bas  et  l'axe  des  y  horizontal
+dirige' vers la droite (syste`me de coordonne'es de style e'cran).
+
+Tout d'abord, nous de'finissons le record Position par:
+
+
+(defrecord Position (x 0) (y 0))
+
+Pour cre'er des instances de position, nous de'finissons:
+
+
+
+                               17         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+(de Position (xpos ypos) (omakeq Position x xpos y ypos))
+
+Pour effectuer une translation sur une position, nous de'finissons
+la proprie'te' se'mantique translate:
+
+
+(de {Position}:translate (pos dx dy)
+    ({Position}:x pos (+ dx ({Position}:x pos)))
+    ({Position}:y pos (+ dy ({Position}:y pos)))
+    pos)
+
+Ceci e'tant, nous introduisons la structure Region pour  mode'liser
+les  re'gions  rectangulaires.  Une  re'gion est de'termine'e par son
+coin supe'rieur gauche et son coin infe'rieur droit  qui  sont  des
+positions:
+
+
+(defrecord Region upper-left bottom-right)
+
+Et pour cre'er des instances de re'gion a` partir de deux positions:
+
+
+(de Region (pos1 pos2)
+    (let ((x1 ({Position}:x pos1))
+          (y1 ({Position}:y pos1))
+          (x2 ({Position}:x pos2))
+          (y2 ({Position}:y pos2)))
+         (omakeq Region
+                 upper-left (Position (min x1 x2) (min y1 y2))
+                 bottom-right (Position (max x1 x2) (max y1 y2)))))
+
+
+Nous de'finissons un  certain  nombre  de  proprie'te's  se'mantiques
+calculant des caracte'ristiques ge'ome'triques des re'gions:
+
+
+(de {Region}:xmin (region)
+    ({Position}:x ({Region}:upper-left region)))
+
+(de {Region}:ymin (region)
+    ({Position}:y ({Region}:upper-left region)))
+
+                               18         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+
+(de {Region}:xmax (region)
+    ({Position}:x ({Region}:bottom-right region)))
+
+(de {Region}:ymax (region)
+    ({Position}:y ({Region}:bottom-right region)))
+
+(de {Region}:width (region)
+    (1- (- ({Region}:xmax region) ({Region}:xmin region))))
+
+(de {Region}:height (region)
+    (1- (- ({Region}:ymax region) ({Region}:ymin region))))
+
+Nous de'finissons maintenant une proprie'te' se'mantique des  re'gions
+permattant de de'terminer si une position donne'e est a` l'inte'rieur
+d'une re'gion:
+
+
+(de {Region}:contains-position (region pos)
+    (not
+      (or (< ({Position}:x pos) ({Region}:xmin region))
+          (> ({Position}:x pos) ({Region}:xmax region))
+          (< ({Position}:y pos) ({Region}:xmin region))
+          (> ({Position}:y pos) ({Region}:ymin region)))))
+
+Etant donne'es deux re'gions, nous aimerions savoir  si  elles  ont
+une  intersection.  Pour  ce  faire nous de'finissons la proprie'te'
+se'mantique intersects pour les re'gions, qui renvoie nil en valeur
+s'il n'y a pas intersection, la re'gion d'intersection autrement.
+
+
+(de {Region}:intersects (region1 region2)
+    (let ((xmin1 ({Region}:xmin region1))
+          (ymin1 ({Region}:ymin region1))
+          (xmax1 ({Region}:xmax region1))
+          (ymax1 ({Region}:ymax region1))
+          (xmin2 ({Region}:xmin region2))
+          (ymin2 ({Region}:ymin region2))
+          (xmax2 ({Region}:xmax region2))
+          (ymax2 ({Region}:ymax region2)))
+         (setq xmin1 (max xmin1 xmin2)
+
+                               19         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+               ymin1 (max ymin1 ymin2))
+         (if (and (> (- (min xmax1 xmax2) xmin1) 0)
+                  (> (- (min ymax1 ymax2) ymin1) 0))
+             (Region (Position xmin1 ymin1)
+                     (Position (min xmax1 xmax2) (min ymax1 ymax2)))
+             nil)))
+
+Enfin, nous pouvons de'finir des transformations sur  les  re'gions
+comme la translation:
+
+
+(de {Region}:translate (region dx dy)
+    ({Position}:translate ({Region}:upper-left region) dx dy)
+    ({Position}:translate ({Region}:bottom-right region) dx dy)
+    region)
+
+et la transformation qui  met  le  coin  supe'rieur  gauche  d'une
+re'gion sur une position donne'e:
+
+
+(de {Region}:move-to (region pos)
+    ({Region}:translate region
+             (- ({Position}:x pos) ({Region}:xmin region))
+             (- ({Position}:y pos) ({Region}:ymin region))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                               20         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                          1: Les Records Lisp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                               21         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                     2: Les Records Autotype's
+
+
+
+                       C H A P I T R E  2
+
+
+                      Les Records Autotype's
+
+
+
+
+
+Ce chapitre suit un plan similaire a` celui du chapitre pre'ce'dent.
+Nous  y de'finissons de nouvelles notions de records et de classes
+qui diffe`rent des pre'ce'dentes en ce que leurs  instances  portent
+toujours  l'information  du  nom  du record ou de la classe qui a
+permis  de  les  engendrer.  La  seule  construction   re'ellement
+nouvelle de ce chapi^tre est la construction send qui joue un ro^le
+majeur dans Ceyx.
+
+
+
+
+2.1  Introduction
+
+
+Reprenons l'exemple du chapi^tre pre'ce'dent sur  les  individus  en
+de'finissant cette fois-ci la classe des individus par la nouvelle
+construction deftclass:
+
+
+? (deftclass Individu nom prenom adresse telephone)
+= #:Tclass:Individu
+
+et cre'ons maintenant une instance d'Individu par la  construction
+omakeq:
+
+
+? (setq individu (omakeq Individu nom 'Jacquemart prenom 'Marcel))
+= #(#:Tclass:Individu . #[Jacquemart Marcel () ()])
+
+
+
+                               22         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                     2: Les Records Autotype's
+
+Comme pre'ce'demment, nous avons acce`s  aux  divers  champs  de  la
+structure Individu:
+
+
+? ({Individu}:nom individu)
+= Jacquemart
+? ({Individu}:adresse individu)
+= ()
+
+La seule diffe'rence avec le chapi^tre pre'ce'dent est que maintenant
+les  instances  produites  par omakeq portent l'information de la
+classe qui  les  a  cre'e'es,  information  qui  est  accessible  a`
+l'utilisateur par la fonction model:
+
+
+? (model individu)
+= #:Tclass:Individu
+
+Nous pouvons rede'finir les sous-classes Client et Suspect par:
+
+
+? (deftclass {Individu}:Client pointure)
+= #:Tclass:Individu:Client
+? (deftclass {Individu}:Suspect condamnations)
+= #:Tclass:Individu:Suspect
+
+et cre'er des instances de ces classes:
+
+
+? (setq client (omakeq Client nom 'Jacquemart prenom 'Marcel pointure 48))
+= #(#:Tclass:Individu:Client . #[Jacquemart Marcel () () 48])
+? (setq suspect
+?       (omakeq Suspect
+?               nom 'Jacquemart
+?               prenom 'Marcel
+?               condamnations "Vol de chaussures"))
+= #(#:Tclass:Individu:Suspect . #[Jacquemart Marcel () () Vol de chaussures])
+
+
+et ve'rifier  que  ces  instances  portent  bien  leur  marque  de
+fabrique:
+
+                               23         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                     2: Les Records Autotype's
+
+
+? (model client)
+= #:Tclass:Individu:Client
+? (model suspect)
+= #:Tclass:Individu:Suspect
+
+et que client est bien un Individu:
+
+
+? (omatchq Individu client)
+= t
+
+Comme pre'ce'demment, nous  de'finissons  une  proprie'te'  se'mantique
+d'impression pour les Individus:
+
+
+? (de {Individu}:print (individu)
+?     (print "Nom: " ({Individu}:nom individu))
+?     (print "Prenom: " ({Individu}:prenom individu))
+?     t)
+= #:Tclass:Individu:print
+
+Nous  avons  vu  que  cette  proprie'te'   se'mantique   peut   e^tre
+de'clenche'e:
+
+- soit par appel de la  fonction  Lisp  {Individu}:print  sur  un
+individu ({Individu}:print client),
+
+-  soit  par  invocation  de  semcall,  (semcall  'Client  'print
+client),  auquel  cas  la  proprie'te'  se'mantique  sera recherche'e
+d'abord dans celles de Client puis,  en  cas  d'e'chec,  dans  les
+proprie'te's   se'mantiques   des   superclasses   de   Client,   en
+l'occurrence Individu.
+
+Compte tenu que les instances portent maintenant l'information du
+record  ou  de  la  classe  qui  a  permis de les engendrer, nous
+pouvons, dans le cas des proprie'te's se'mantiques qui prennent pour
+premier argument un objet qui est une instance du record ou de la
+classe   associe'e,   donner   une   nouvelle   construction    de
+de'clenchement   de  proprie'te's  se'mantiques  qui  ne  prend  plus
+l'argument nom  de  record  ou  de  classe.   Cette  construction
+
+                               24         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                     2: Les Records Autotype's
+
+appele'e  send  prend  en  argument un nom de proprie'te' se'mantique
+<sem> et un  nombre  arbitraire  d'autres  arguments  <arg>1  ...
+<arg>n et est e'quivalente a`:
+
+
+(semcall <sem> (model <arg>1) <arg>2 ... <arg>n)
+
+Nous aurons ainsi:
+
+
+? (send 'print client)
+Nom: Jacquemart
+Prenom: Marcel
+= t
+? (send 'print suspect)
+Nom: Jacquemart
+Prenom: Marcel
+= t
+
+On notera au passage que la proprie'te'  print  des  Individus  est
+ge'ne'rique  pour  tous  les Individus compte tenu de la de'pendance
+hie'rarchique  des  classes.  Comme  pre'ce'demment,  nous   pouvons
+raffiner la proprie'te' print pour les Clients:
+
+
+? (de {Client}:print (client)
+?     ({Individu}:print client)
+?     (print "Pointure: " ({Client}:pointure client))
+?     t)
+= #:Tclass:Individu:Client:print
+
+et cette fois-ci nous aurons:
+
+
+? (send 'print client)
+Nom: Jacquemart
+Prenom: Marcel
+Pointure: 48
+= t
+
+
+
+                               25         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                     2: Les Records Autotype's
+
+De'finissons maintenant une proprie'te' se'mantique d'impression pour
+les Suspects:
+
+
+? (de {Suspect}:print (suspect)
+?     (print "Le denomme " ({Individu}:nom suspect)
+?            " " ({Individu}:prenom suspect)
+?            " a ete condamne pour " ({Suspect}:condamnations suspect))
+?     t)
+= #:Tclass:Individu:Suspect:print
+? (send 'print suspect)
+Le denomme Jacquemart Marcel a ete condamne pour Vol de chaussures
+= t
+
+L'un des inte're^ts  majeurs  de  la  construction  send  est  donc
+qu'elle  se  substitue  e'le'gamment  a`  des  constructions de type
+selectq quand on veut effectuer des actions  diffe'rentes  suivant
+le type de l'objet qu'on manipule.
+
+
+
+
+
+2.2  De'finition d'un Record Autotype' ou Trecord
+
+
+Un record tagge' est de'fini a` l'aide de la forme deftrecord:
+
+(deftrecord <name> <field>1 ... <field>n)
+
+   <name> est un symbole qui devient le nom de la structure ainsi
+   de'finie  et  les  <field>i  sont  de  la  forme  <symbol>i  ou
+   (<symbol>i <init>i), ou` <symbol>i  est  le  nom  du  champ  et
+   <init>i,  qui  est  e'value'e  est la valeur d'initialisation du
+   champ.  Les champs pour lesquels  la  valeur  d'initialisation
+   n'est pas donne'e sont initialise's a` nil.
+
+   Cette construction associe au symbole <name> la de'finition  de
+   Trecord  a`  n champs de noms <symbol>i. De plus n fonctions de
+   nom   {<symbol>}:<symbol>i  sont  engendre'es  pour   permettre
+   d'acce'der  aux  instances  de cette structure en lecture et en
+
+                               26         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                     2: Les Records Autotype's
+
+   e'criture.
+
+   La seule diffe'rence  entre  Record  et  Trecord  est  que  les
+   instances  des  seconds  (obtenues par appel de (omakeq <name>
+   ...)) portent l'information du  Trecord  qui  a  servi  a  les
+   engendrer.  Les  fonctions  omakeq,  omatchq,  oputq  et ogetq
+   fonctionnent sur ces nouveaux objets,
+
+
+
+
+
+2.3  De'finition d'une Classe Autotype'e ou Tclasse
+
+
+Une classe tagge'e est de'finie a` l'aide de la forme deftclass:
+
+(deftclass <name>/{<superclass>}:<name> <field>1 ... <field>n)
+
+   Dans  le  premier  cas,  cette  forme   est   e'quivalente   au
+   deftrecord,  sinon  qu'on  de'finit  cette  fois-ci  un Trecord
+   extensible. Dans le second cas  <superclass>  doit  avoir  une
+   de'finition  de Tclasse et <name> devient le nom d'une nouvelle
+   classe ayant pour champs tous ceux de <superclass> accessibles
+   par  les  fonction {<superclass>}:<fieldname> et pour nouveaux
+   champs     tous     les     <field>i      accessibles      par
+   {<name>}:<fieldname>i.   Nous  dirons que <name> est une sous-
+   classe de <superclass> et que <superclass> est la  superclasse
+   de <name>.
+
+   De me^me que pour les Trecords la seule diffe'rence entre Classe
+   et  Tclasse  est  que  les instances des seconds (obtenues par
+   appel de (omakeq <name>  ...))  portent  l'information  de  la
+   Tclasse qui a servi a les engendrer.
+
+
+
+
+
+
+
+
+                               27         Mercredi 3 Octobre 1984
+
+
+
+Ceyx: Une Initiation                     2: Les Records Autotype's
+
+2.4  La Construction send
+
+
+Les proprie'te's se'mantiques des  Trecords  et  des  Tclasses  sont
+de'finies  de la me^me manie`re que pour les Records et les Classes.
+La construction semcall fonctionne e'galement sur les Trecords  et
+les Tclasses.
+
+
+(send <sem> <object> <arg>1 ... <arg>n)
+
+
+   Tous les  arguments  sont  e'value's,  <object>  doit  e^tre  une
+   instance  de  Trecord  ou  de  Tclasse.  Cette construction ne
+   fonctionne que pour les proprie'te's se'mantiques dont le premier
+   argument  est  une  instance  de la structure pour laquelle on
+   de'finit cette proprie'te' se'mantique. Elle est e'quivalente a`:
+
+
+   (semcall <sem> (model <object>) <object> <arg>1 ... <arg>n)
+
+
+
+On trouvera de nombreux exemples  d'application  dans  le  manuel
+programmeur Ceyx: "Programmer en Ceyx".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                               28         Mercredi 3 Octobre 1984
+
+
+
+                       Table des matie`res
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+                       Table des matie`res
+
+                       Table des matie`res
+
+
+
+1 Les Records Lisp
+1.1 Introduction.........................................8
+1.2 De'finition d'un Record Lisp.........................11
+1.3 Fonctions de Manipulation des Instances de Record...11
+1.3.1 Cre'ation d'Instances..............................11
+1.3.2 Discrimination....................................12
+1.3.3 Acce`s aux Champs..................................13
+1.4 Les Records Extensibles ou Classes..................14
+1.5 Proprie'te's Se'mantiques des Records et des Classes...15
+1.6 Un Exemple De'veloppe'................................17
+
+2 Les Records Autotype's
+2.1 Introduction........................................22
+2.2 De'finition d'un Record Autotype' ou Trecord..........26
+2.3 De'finition d'une Classe Autotype'e ou Tclasse........27
+2.4 La Construction send................................28
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                2         Mercredi 3 Octobre 1984
+
+
+
+                    Index des fonctions Lisp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+                    Index des fonctions Lisp
+
+
+                    Index des fonctions Lisp
+
+
+(defclass <name>/{<superclass>}:name <field>1 ... <field>n) 14
+(defrecord <name> <field>1 ... <field>n) ...............11
+(deftclass <name>/{<superclass>}:<name> <field>1 ... <field>n) 27
+(deftrecord <name> <field>1 ... <field>n) ..............26
+(ogetq <name> <fieldname> <object> .....................13
+(omakeq <name> <fieldname>1 <val>1 ... <fieldname>n <val>n) 11
+(omatchq <name> <object>) ..............................12
+(oputq <name> <fieldname> <object> <object>1) ..........13
+(semcall <structname> <sem> <arg>1 ... <arg>n) .........16
+(send <sem> <object> <arg>1 ... <arg>n) ................28
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                2         Mercredi 3 Octobre 1984
+
+

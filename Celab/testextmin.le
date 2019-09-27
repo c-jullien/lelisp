@@ -1,0 +1,26 @@
+;;; GELL 15.26: elaboration file for the module: testextmin
+;;;             translation done: "Fri June  4 93 19:21:16 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: testextmin.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'testextmin)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZtestextmin" "Fri June  4 93 19:21:16 "
+
+'((_cmoinsun . subr0) (ctest . nsubr))
+
+#[ctest #:llcp:errwna errnsa errnfa errnia errvec _cmoinsun #:gell-resetfn:function-name #:gell-resetfn:function-0 #:gell-resetfn:function-n]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'testext-)))
+(if (not (featurep 'testcomm)) (progn (libload testcomm)))
+(if (not (featurep 'pathname)) (progn (libload path)))
+(if (not (or (featurep '64bitfloats) (eq 0. 0.))) (progn (add-feature '64bitfloats)))
+(defcsetfn '_cmoinsun "GZtestextmin" 0)
+(defcsetfn 'ctest "GZtestextmin" 1)
+(testfn () (catenate #:system:lltest-directory "extmin.lt"))
+
+(defccheck '(#:llcp:errwna))

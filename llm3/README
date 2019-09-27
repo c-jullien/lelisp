@@ -1,0 +1,31 @@
+	Le-Lisp version 15.2: LLM3 directory
+	====================================
+
+This directory contains the source of the interpreter kernel written
+in LLM3.
+
+;         Liste des fichiers LLM3 du noyau Le_Lisp version 15.2
+; List of Le-Lisp v. 15.2 LLM3 files 
+; ----------------------------------
+; 
+;  0      testllm3.llm3       test of LLM3 macros
+; 
+;  1      llinit.llm3         initializer
+;  2      toperr.llm3         toplevel and error
+;  3      gc.llm3             garbage collector
+;  4      physio.llm3         physical input/output
+;  5      read.llm3           input functions
+;  6      macroch.llm3        macro characters
+;  7      print.llm3          output functions
+;  8      eval.llm3           the interpreter
+;  9      fspecs.llm3         special forms
+;  10     cntrl.llm3          control functions
+;  11     carcdr.llm3         accessors
+;  12     symbs.llm3          symbol functions
+;  13     fntstd.llm3         standard functions
+;  14     number.llm3         arithmetic functions
+;  15     specnb.llm3         specialized arithmetic functions
+;  16     string.llm3         string functions
+;  17     chars.llm3          character functions
+;  18     extend.llm3         LLM3 extensions
+;  19     bllsht.llm3         miscellaneous

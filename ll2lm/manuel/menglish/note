@@ -1,0 +1,6 @@
+\begin{Side}{\bf Note}
+The {\em Module Analyzer} verifies the existence of the directories specified by the \|directories| key.  If a directory does not exist, it prints a message of the type:
+\BeginLL
+** check-directory : directory doesn't exist: looks/simplelook/
+\EndLL
+\end{Side}

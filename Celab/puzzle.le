@@ -1,0 +1,33 @@
+;;; GELL 15.26: elaboration file for the module: puzzle
+;;;             translation done: "Thu Mar  11 93 15:59:40 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: puzzle.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'puzzle)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZpuzzle" "Thu Mar  11 93 15:59:40 "
+
+'((check-puzzle . subr0) (meter-puzzle . subr0) (test-puzzle . subr1))
+
+#[(test-puzzle 1) check-value (count-calls-init) eval (count-calls-stop) t piecemax puzzle-p puzzle piececount puzzle-class puzzle-size puzzle-typemax kount puzzle-d iii (kount) lambda "~%Error." format "Success in ~4D trials.~%" "~%Failure." check-puzzle #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-puzzle test-puzzle #:gell-resetfn:function-1]
+)
+
+(defcsetfn 'check-puzzle "GZpuzzle" 0)
+(defcsetfn 'meter-puzzle "GZpuzzle" 1)
+(defcsetfn 'test-puzzle "GZpuzzle" 2)
+(defvar puzzle-size 511)
+(defvar puzzle-classmax 3)
+(defvar puzzle-typemax 12)
+(defvar iii 0)
+(defvar kount 0)
+(defvar puzzle-d 8)
+(defvar piececount (makearray (add1 puzzle-classmax) 0))
+(defvar puzzle-class (makearray (add1 puzzle-typemax) 0))
+(defvar piecemax (makearray (add1 puzzle-typemax) 0))
+(defvar puzzle (makearray (add1 puzzle-size) 0))
+(defvar puzzle-p (makearray (add1 puzzle-typemax) (add1 puzzle-size) 0))
+
+(defccheck '(format eval check-value))

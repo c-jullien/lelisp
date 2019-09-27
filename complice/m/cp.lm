@@ -1,0 +1,48 @@
+defmodule complice
+  ; Fonctions utilisateurs du compilateur.
+  files  (cp)
+  import (files module cpcommon cp1 cp2 loader)
+  export (compile compiler dont-compile compile-all-in-core compilefiles
+          compilemodule
+         )
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(compile fsubr ())
+(compiler nsubr ())
+(dont-compile fsubr ())
+(compile-all-in-core nsubr () () (old f1 f2) (subr1) (()))
+(compilefiles nsubr ())
+(compilemodule nsubr ())
+)
+cpfunctions (
+(#:complice:dont-compile-one-fonction subr1)
+(#:complice:compiler-aux subr3)
+)
+cpimport (
+(cp2
+(#:complice:pass-two . subr3)
+)(loader
+(loader . nsubr)
+)(cpcommon
+(make-macro-open . subr2)
+(#:complice:warningf . subr3)
+(#:complice:get-all-def-in-files . subr2)
+(#:complice:complement . subr2)
+)(cp1
+(#:complice:pass-one . subr1)
+(makemodule . subr1)
+))
+cpenv (
+files
+module
+cpcommon
+cp1
+cpmod2
+cp2
+messages
+loader
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))
+real-export
+()

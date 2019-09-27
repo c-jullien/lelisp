@@ -1,0 +1,29 @@
+defmodule
+microceyx
+files (
+microceyx
+)
+export (
+deftclass
+defrecord
+tclass-namep
+record-namep
+field-list
+defmake
+omakeq
+ogetq
+oputq
+omatchq
+demethod
+send-error
+sendq
+sendf
+sendfq
+plink
+)
+import (
+abbrev
+defstruct
+)
+include
+()

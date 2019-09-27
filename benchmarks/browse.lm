@@ -1,0 +1,30 @@
+; The Le-Lisp Benchmarks (8) : browse
+
+defmodule     browse
+files        (browse)
+export       (check-browse meter-browse test-browse)
+import       (checkmet setf)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-browse subr0 ())
+(meter-browse subr0 ())
+(test-browse subr1 ())
+)
+cpfunctions (
+(browse subr0)
+(investigate subr2)
+(match subr3)
+(browse-randomize subr1)
+(browse-random subr0)
+(browse-init nsubr)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+setf
+((putprop 'browse-rand 't '#:complice:globalvar)
+))

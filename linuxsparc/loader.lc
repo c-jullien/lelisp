@@ -1,0 +1,16 @@
+defmodule
+ldsparc
+files (
+|loader.ll|
+)
+export (
+loader
+loaderesolve
+#:ldsparc:mem
+#:ldsparc:debug
+)
+import (
+files
+)
+include
+()

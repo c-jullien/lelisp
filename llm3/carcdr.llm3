@@ -1,0 +1,395 @@
+;; .EnTete "Le-Lisp (c) version 15.2" "11/19" "carcdr.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 11 "Les se'lecteurs CAR/CDR"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/carcdr.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $
+
+          TITLE     CARCDR              ; LLM3 : les selecteurs CAR/CDR
+
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+
+          XREFP     READ,INISYMB
+          XREFP     TOPERR,ERRNLA
+
+          XDEFP     INI_CAD
+
+          PURE
+
+;.Section "Cre'ation des symboles"
+
+INI_CAD   LABEL      
+          MAKFNT    FCAR,#3,"car" 
+          MAKFNT    FCDR,#3,"cdr" 
+          MAKFNT    CA2R,#4,"caar" 
+          MAKFNT    CADR,#4,"cadr" 
+          MAKFNT    CDAR,#4,"cdar" 
+          MAKFNT    CDDR,#4,"cddr" 
+          MAKFNT    CAAAR,#5,"caaar" 
+          MAKFNT    CAADR,#5,"caadr" 
+          MAKFNT    CADAR,#5,"cadar" 
+          MAKFNT    CADDR,#5,"caddr" 
+          MAKFNT    CDAAR,#5,"cdaar" 
+          MAKFNT    CDADR,#5,"cdadr" 
+          MAKFNT    CDDAR,#5,"cddar" 
+          MAKFNT    CDDDR,#5,"cdddr" 
+          MAKFNT    CAAAAR,#6,"caaaar" 
+          MAKFNT    CAAADR,#6,"caaadr" 
+          MAKFNT    CAADAR,#6,"caadar" 
+          MAKFNT    CAADDR,#6,"caaddr" 
+          MAKFNT    CADAAR,#6,"cadaar" 
+          MAKFNT    CADADR,#6,"cadadr" 
+          MAKFNT    CADDAR,#6,"caddar" 
+          MAKFNT    CADDDR,#6,"cadddr" 
+          MAKFNT    CDAAAR,#6,"cdaaar" 
+          MAKFNT    CDAADR,#6,"cdaadr" 
+          MAKFNT    CDADAR,#6,"cdadar" 
+          MAKFNT    CDADDR,#6,"cdaddr" 
+          MAKFNT    CDDAAR,#6,"cddaar" 
+          MAKFNT    CDDADR,#6,"cddadr" 
+          MAKFNT    CDDDAR,#6,"cdddar" 
+          MAKFNT    CDDDDR,#6,"cddddr" 
+
+          RETURN
+
+;.Section "Les fonctions d'acce`s aux listes."
+
+;         Elles ne sont de'finies que pour les listes
+;         (i.e. les CONS et NIL)
+
+
+CARERR    BTNIL     A1,CARERET          ; si arg = () alors ()
+          MOV       A3,A1               ; le ve'ritable argument.
+          JMP       ERRNLA              ; JMP car extern
+CARERET   RETURN                        ; si arg () alors ().
+
+;  ----------------------------------------
+          FENTRY    FCAR,SUBR1
+;  ----------------------------------------
+          MOV       .FCAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    FCDR,SUBR1
+;  ----------------------------------------
+          MOV       .FCDR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CA2R,SUBR1
+;  ----------------------------------------
+          MOV       .CA2R,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CADR,SUBR1
+;  ----------------------------------------
+          MOV       .CADR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CDAR,SUBR1
+;  ----------------------------------------
+          MOV       .CDAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CDDR,SUBR1
+;  ----------------------------------------
+          MOV       .CDDR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CAAAR,SUBR1
+;  ----------------------------------------
+          MOV       .CAAAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+CAAAR1    BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CAADR,SUBR1
+;  ----------------------------------------
+          MOV       .CAADR,A2
+          MOV       A1,A3               ; en cas d'erreur
+CAADR1    BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+
+;  ----------------------------------------
+          FENTRY    CADAR,SUBR1
+;  ----------------------------------------
+          MOV       .CADAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+CADAR1    BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CADDR,SUBR1
+;  ----------------------------------------
+          MOV       .CADDR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CDAAR,SUBR1
+;  ----------------------------------------
+          MOV       .CDAAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+CDAAR1    BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CDADR,SUBR1
+;  ----------------------------------------
+          MOV       .CDADR,A2
+          MOV       A1,A3               ; en cas d'erreur
+CDADR1    BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CDDAR,SUBR1
+;  ----------------------------------------
+          MOV       .CDDAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+CDDAR1    BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CDDDR,SUBR1
+;  ----------------------------------------
+          MOV       .CDDDR,A2
+          MOV       A1,A3               ; en cas d'erreur
+CDDDR1    BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CAAAAR,SUBR1
+;  ----------------------------------------
+          MOV       .CAAAAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BRA       CAAAR1
+
+;  ----------------------------------------
+          FENTRY    CAAADR,SUBR1
+;  ----------------------------------------
+          MOV       .CAAADR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BRA       CAAAR1
+
+;  ----------------------------------------
+          FENTRY    CAADAR,SUBR1
+;  ----------------------------------------
+          MOV       .CAADAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BRA       CAADR1
+
+;  ----------------------------------------
+          FENTRY    CAADDR,SUBR1
+;  ----------------------------------------
+          MOV       .CAADDR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BRA       CAADR1
+
+;  ----------------------------------------
+          FENTRY    CADAAR,SUBR1
+;  ----------------------------------------
+          MOV       .CADAAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BRA       CADAR1
+
+;  ----------------------------------------
+          FENTRY    CADADR,SUBR1
+;  ----------------------------------------
+          MOV       .CADADR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BRA       CADAR1
+
+;  ----------------------------------------
+          FENTRY    CADDAR,SUBR1
+;  ----------------------------------------
+          MOV       .CADDAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CADDDR,SUBR1
+;  ----------------------------------------
+          MOV       .CADDDR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    CDAAAR,SUBR1
+;  ----------------------------------------
+          MOV       .CDAAAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BRA       CDAAR1
+
+;  ----------------------------------------
+          FENTRY    CDAADR,SUBR1
+;  ----------------------------------------
+          MOV       .CDAADR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BRA       CDAAR1
+
+;  ----------------------------------------
+          FENTRY    CDADAR,SUBR1
+;  ----------------------------------------
+          MOV       .CDADAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BRA       CDADR1
+
+;  ----------------------------------------
+          FENTRY    CDADDR,SUBR1
+;  ----------------------------------------
+          MOV       .CDADDR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BRA       CDADR1
+
+;  ----------------------------------------
+          FENTRY    CDDAAR,SUBR1
+;  ----------------------------------------
+          MOV       .CDDAAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BRA       CDDAR1
+
+;  ----------------------------------------
+          FENTRY    CDDADR,SUBR1
+;  ----------------------------------------
+          MOV       .CDDADR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BRA       CDDAR1
+
+;  ----------------------------------------
+          FENTRY    CDDDAR,SUBR1
+;  ----------------------------------------
+          MOV       .CDDDAR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CAR(A1),A1
+          BRA       CDDDR1
+
+;  ----------------------------------------
+          FENTRY    CDDDDR,SUBR1
+;  ----------------------------------------
+          MOV       .CDDDDR,A2
+          MOV       A1,A3               ; en cas d'erreur
+          BFCONS    A1,CARERR
+          MOV       CDR(A1),A1
+          BRA       CDDDR1
+
+          END

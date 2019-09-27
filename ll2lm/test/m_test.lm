@@ -1,0 +1,122 @@
+
+defmodule m_test
+
+files ()
+
+import (
+fee
+goo
+gee
+bar
+zoo
+foo
+)
+
+export (
+(structure s-fee)
+#:s-fee:b
+#:s-fee:a
+#:s-fee:make
+defgoo1
+f-foo1
+m-bar3-f-gee11
+m-bar4-f-gee12
+f-gee22
+f-gee1
+f-gee32
+f-gee41
+m-gee42
+f-gee51
+f-gee53
+defbar1
+defbar2
+defbar5
+m-bar3-f-bar20
+m-bar4-f-bar20
+f-bar1
+#:bar:a-bar1:f-bar1
+f-bar11
+#:zoo:a-zoo1:f-bar12
+#:zoo:a-zoo2:f-bar13
+#:bar:a-bar1:f-bar2
+#:bar:a-bar2:f-bar2
+f-bar3
+f-bar41
+f-bar42
+f-bar43
+f-bar5
+defbar3
+defbar4
+f-bar2
+f-bar20
+f-bar21
+f-zoo3
+#:zoo:a-zoo1:f-zoo1
+m-zoo5
+f-bar5
+f-foo0
+f-foo1
+f-foo1-10
+f-foo2-11
+f-foo3-12
+f-foo4-13
+m-bar1-f-foo-14
+m-bar1-f-foo-15
+m-goo1-m-bar-2f-foo-16
+m-bar1-f-foo-17
+#:s-foo:make
+#:s-foo:a
+#:s-foo:b
+#:tclass:t-foo:make
+#:tclass:t-foo:a
+#:tclass:t-foo:b
+#:bar:a-bar3:s-foo3:make
+#:bar:a-bar3:s-foo3:z
+f-foo23
+f-foo24
+f-foo26
+f-foo27
+f-foo28
+f-foo3
+f-foo31
+#:foo1:f-foo4
+#:foo1:f-foo41
+#:foo1:f-foo42
+#:foo1:asd:f-foo43
+f-foo6
+f-foo61
+f-foo71
+f-foo72
+f-foo73
+f-foo74
+f-foo75
+f-foo76
+f-foo81
+f-foo82
+f-foo83
+f-foo91
+f-foo91
+f-fooa1
+f-fooa2
+#:s-fee:s-fooa3:make
+#:s-fee:s-fooa3:a
+#:s-fee:s-fooa3:b
+#:s-fee:s-fooa3:c
+#:s-fee:s-fooa4:make
+#:s-fee:s-fooa4:c
+(structure #:s-fee:s-fooa4)
+(structure #:s-fee:s-fooa3)
+(structure #:bar:a-bar3:s-foo3)
+(structure #:tclass:t-foo)
+(structure s-foo)
+(foostruct s-foo3-12)
+)
+
+cpenv (
+fee
+goo
+gee
+bar
+zoo
+foo
+)

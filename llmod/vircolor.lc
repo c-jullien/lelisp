@@ -1,0 +1,25 @@
+defmodule
+color
+files (
+|vircolor.ll|
+)
+export (
+#:color:prin
+make-color
+make-mutable-color
+make-named-color
+kill-color
+red-component
+blue-component
+green-component
+all-colors
+name-to-rgb
+get-rgb-values
+)
+import (
+virutil
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)

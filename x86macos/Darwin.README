@@ -1,0 +1,3 @@
+This version has been tested on Sierra and High Sierra.
+
+X11 requires XQuartz or similar X11 port (see: https://www.xquartz.org)

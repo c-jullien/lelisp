@@ -1,0 +1,153 @@
+defmodule defrtprj
+files (defrtprj)
+import (
+defvar
+kernellm
+ref
+)
+
+export (
+(structure rtproject)
+define-rt-project
+find-rt-project
+declare-rt-project
+remove-rt-project
+define-rt-group-project
+find-rt-group-project
+declare-rt-group-project
+remove-rt-group-project
+declared-rt-projects
+load-rt-project
+reload-rt-project
+activate-rt-project
+get-system-directory
+get-main-ll-object-directory
+get-main-ll-module-directory
+list-rt-directories
+list-complice-directories
+list-complice-flags
+;list-complice-options
+list-analyzer-options
+
+#:rtproject:defrtproject
+#:rtproject:initialise-structure
+#:rtproject:prin
+#:rtproject:pretty
+#:rtproject:gcalarm
+#:rtproject:gc-before-alarm
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:rtproject:rt-gell-p nsubr ())
+(#:rtproject:analyzer-options nsubr ())
+(#:rtproject:complice-options nsubr ())
+(#:rtproject:complice-flags nsubr ())
+(#:rtproject:meta-module nsubr ())
+(#:rtproject:meta-ref-file nsubr ())
+(#:rtproject:loadedp nsubr ())
+(#:rtproject:builtp nsubr ())
+(#:rtproject:modules-files nsubr ())
+(#:rtproject:extensions-list nsubr ())
+(#:rtproject:required-modules nsubr ())
+(#:rtproject:exclude-modules nsubr ())
+(#:rtproject:modules nsubr ())
+(#:rtproject:modules-lists nsubr ())
+(#:rtproject:initialize-function nsubr ())
+(#:rtproject:activate-function nsubr ())
+(#:rtproject:init-makefile nsubr ())
+(#:rtproject:make-file nsubr ())
+(#:rtproject:project-file nsubr ())
+(#:rtproject:ref-file nsubr ())
+(#:rtproject:module-extension nsubr ())
+(#:rtproject:ll-module-directories nsubr ())
+(#:rtproject:ll-module-directory nsubr ())
+(#:rtproject:ll-object-directories nsubr ())
+(#:rtproject:ll-object-directory nsubr ())
+(#:rtproject:modules-directories nsubr ())
+(#:rtproject:crunch-directory nsubr ())
+(#:rtproject:system-directory nsubr ())
+(#:rtproject:directories nsubr ())
+(#:rtproject:root-directory nsubr ())
+(#:rtproject:required-projects nsubr ())
+(#:rtproject:name nsubr ())
+(#:rtproject:make subr0 ())
+(define-rt-project dmsubr ())
+(find-rt-project subr1 ())
+(declare-rt-project subr1 ())
+(remove-rt-project subr1 ())
+(define-rt-group-project dmsubr ())
+(find-rt-group-project subr1 ())
+(declare-rt-group-project subr1 ())
+(remove-rt-group-project subr1 ())
+(declared-rt-projects subr0 ())
+(load-rt-project subr2 ())
+(reload-rt-project subr2 ())
+(activate-rt-project subr2 ())
+(get-system-directory subr1 ())
+(get-main-ll-object-directory subr1 ())
+(get-main-ll-module-directory subr1 ())
+(list-rt-directories subr1 ())
+(list-complice-directories subr1 ())
+(list-complice-flags subr1 () () (subr1) (()))
+(list-analyzer-options subr1 () () (subr1) (()))
+(#:rtproject:defrtproject nsubr ())
+(#:rtproject:initialise-structure subr1 ())
+(#:rtproject:prin subr1 ())
+(#:rtproject:pretty subr1 ())
+(#:rtproject:gcalarm subr0 ())
+(#:rtproject:gc-before-alarm subr0 ())
+)
+cpfunctions (
+(#:rtproject:load nsubr)
+(#:rtproject:check-directory subr2)
+(#:rtproject:activate subr1)
+(#:rtproject:simplify-equal subr1)
+(#:rtproject:transitive-closure subr3)
+(#:rtproject:transitive-closure-1 subr3)
+(#:rtproject:merge-directory-with-root subr3)
+(#:rtproject:make-ref-file subr2)
+(#:rtproject:make-meta-ref-file subr2)
+(#:rtproject:make-make-file subr2)
+(#:rtproject:make-init-file subr2)
+(#:rtproject:make-project-file subr2)
+(#:rtproject:merge-directories-with-root subr3)
+(#:rtproject:check-directories nsubr)
+)
+cpimport (
+(ref
+(current-mr . nsubr)
+(standardmodulereferences . nsubr)
+(#:llmodulereferences:merge-modules-references . subr2)
+(#:llmodulereferences:read-from-file . subr2)
+))
+cpenv (
+files
+module
+defvar
+sets
+sort
+callext
+defstruct
+path
+kernellm
+pretty
+format
+rtmsg
+rtprint
+readlm
+diagnostic
+ref
+((putprop 'rtdir 't '#:complice:globalvar)
+)((putprop 'crunch-dir 't '#:complice:globalvar)
+)((putprop 'rt-lelisp-directory 't '#:complice:globalvar)
+)((defabbrev rtproject rtproject)
+(defstruct rtproject name required-projects root-directory directories system-directory crunch-directory modules-directories ll-object-directory ll-object-directories ll-module-directory ll-module-directories module-extension ref-file project-file make-file init-makefile activate-function initialize-function modules-lists modules exclude-modules required-modules extensions-list modules-files builtp loadedp meta-ref-file meta-module complice-flags complice-options analyzer-options rt-gell-p)
+)((defmacro define-rt-project (name . args) (list 'declare-rt-project (mcons '#:rtproject:defrtproject '(new 'rtproject) (list 'quote name) (list 'quote args) '(t))))
+)((defmacro define-rt-group-project (name . args) (list 'declare-rt-group-project (mcons '#:rtproject:defrtproject '(new 'rtproject) (list 'quote name) (list 'quote args) '(()))))
+)((putprop '#:rtproject:all-rt-projects 't '#:complice:globalvar)
+)((putprop '#:rtproject:all-rt-group-projects 't '#:complice:globalvar)
+)((defvar #:rtproject:all-rt-projects (if (boundp '#:rtproject:all-rt-projects) #:rtproject:all-rt-projects))
+(defvar #:rtproject:all-rt-group-projects (if (boundp '#:rtproject:all-rt-group-projects) #:rtproject:all-rt-group-projects))
+)((defun declared-rt-projects () (nconc (mapcar '#:rtproject:name #:rtproject:all-rt-projects) (mapcar '#:rtproject:name #:rtproject:all-rt-group-projects)))
+))

@@ -1,0 +1,203 @@
+
+	        History of Le-Lisp v15 for Win32 releases
+	        -----------------------------------------
+
+	   Copyright (c) 1992-2017 Eligis, all rights reserved
+
+	       4, villa des Reinettes - F-95390 Saint-Prix
+		       Email:  lelisp@eligis.com
+
+
+Current release : Le-Lisp v15.26.12 by INRIA (18/Aug/2017)
+
+2017/09/23: Use 387 instructions for LLM3 math op-code.
+2017/09/15: Normalize LMM3->C external calls.
+2017/06/29: Use same names as on unix ports.
+2017/06/25: win32 is the default port name for Windows. It replaces win95.
+2017/06/19: Fix VC++ 2015 getglobal issue.
+----------:
+2017/06/19: 	R E L E A S E   v15.26.11
+----------------------------------------
+
+2014/12/29: Fix round redefinition to support VC++ 2013.
+----------:
+2010/12/28: 	R E L E A S E   v15.26.10
+----------------------------------------
+
+2010/12/28: Fix Windows warnings detected with -analyse VC++ 2010 flag.
+2010/12/28: Add -dynamicbase:no to keep C stack at the same address.
+2010/12/28: Use VC++ 2010 on Windows 7 - x86
+2010/12/27: Support -m32 compilation on Fedora 14 x64 system.
+----------:
+2009/07/01: 	R E L E A S E   v15.26.9
+----------------------------------------
+
+2009/07/01: Add private linuxsparc port.
+
+----------:
+2008/10/04: 	R E L E A S E   v15.26.8
+----------------------------------------
+
+2008/10/10: add missing -debug option from .cnf configuration file.
+2008/10/10: fix perror with GUI version.
+2008/10/04: x86macos support (not yet a valid port)
+---------:
+2007/02/11: 	R E L E A S E   v15.26.7
+----------------------------------------
+
+2007/02/11: Add date to recette log files.
+2007/02/11: Remove old LLSTACK hack.
+2007/02/11: Make llexec available only if LLSTACK is set.
+2007/02/03: Makeport world also compiles tools (complice.exe, config.exe...).
+2007/02/03: Don't remove defglobal in ll2lm for Windows.
+2007/02/03: Add a call to llexec to preserve same stack between x86 and x64.
+2007/02/02: Update complice.conf to include rehash module.
+2007/02/02: Fix buffer size of complice.exe driver.
+2006/12/12: Migrate source code to CVS.
+2005/11/26: Some changes to support VS2005.
+----------:
+2005/05/12: 	R E L E A S E   v15.26.6
+----------------------------------------
+
+2003/10/07: WINtys when there is an event but no char-event.
+2003/10/06: Fix ll2lm.bat to include LELISP variable.
+2003/05/25: Prepare Virtual Bitmap C files for the new WIN64 API.
+2003/05/23: Update tools to support win32 and win64 builds.
+2003/05/23: Change LLM3 llinit.llm3 to add win32 and win64 branch.
+2003/05/23: Change LLM3 llinit.llm3 and startup.ll for new 15.26.5
+----------:
+2003/05/23: 	R E L E A S E   v15.26.5
+----------------------------------------
+
+2003/01/11: Add WORK_AREA system-parameter.
+2002/05/11: Change menu layout.
+2002/05/05: Fix bug in directoryp with root as in "c:\".
+2002/05/02: Merged version with ILOG sources.
+2002/05/01: Check for 15.264 version.
+2002/04/30: Change RANDOM and SRANDOM internal assembler names (fix conficts).
+2002/04/28: Add hp11 as a new LLM3 supported port.
+2002/04/12: Add makellm3 that makes and assembles .asm files from .llm3.
+2002/04/11: Remove obsolete FPU init in ll386.llm3. Add makellm3.
+2002/03/21: Change ML (assembler) from 6.x to 7.0.
+2002/03/21: Change C compiler from VC++ 6.0 to VC++ 7.0 (aka .NET).
+2002/03/21: Check if DragFullWindows is set and force to 0 if so.
+2002/03/21: System font is set to Tahoma-8-TT on Windows 2000 and XP.
+2002/03/20: Default address starts at 0x20000000.
+2002/03/20: Change LLM3 llinit.llm3 and startup.ll for new 15.26.4.
+----------:
+2002/03/19: 	R E L E A S E   v15.26.4
+----------------------------------------
+
+2001/05/16: Add new LDBASE and LDSTACK parameters in Makefile.
+2001/05/06: Qualified port on Windows XP (Beta 2).
+2001/05/05: Add windows_valid_font to limit FaceName expansion (Windows XP).
+2001/05/04: Add optional LL_PROCESS_WM_COMMAND compilation flag.
+2001/05/04: Add windows_create_window_owner C function.
+2001/05/04: Fix BV compilation with long names.
+2000/01/24: Qualified port on Windows 2000 (Final version).
+2000/01/24: Fix wrong color computation in text mode (DOScolor function).
+1999/11/05: Show the reserve C stack when using -v option on command line.
+1999/05/07: Qualified port on Windows 2000 (Beta 3 - RC 1).
+1998/11/14: Qualified port for 15.26.3.
+1998/11/12: Merge latest modifications made for win32, cygwin and un*x ports.
+1998/11/12: Only use long names for NT/95 distribution.
+1998/11/12: Beta version of Le-Lisp v15.26.3
+----------:
+1998/11/12: 	R E L E A S E   v15.26.3
+----------------------------------------
+
+1998/10/01: Change code that test inodes to be compatible with Linux (sic !).
+1998/09/19: Change in wingraph.c to support new font scheme of NT 5.0.
+1998/08/26: Change C compiler from VC++ 5.0 to VC++ 6.0.
+1998/05/28: Fix a REM loader bug.
+1998/05/14: Add support for DOS scan code for function key.
+1998/05/05: Add -console (default 0) to create and external text mode console.
+1998/03/31: Add support for libraries named libcXXX in nlist.exe.
+1998/03/31: Change to 4096 the buffer size used in printf and fprintf functions.
+1998/03/27: Add support for Digital Visual FORTRAN link.
+1998/03/15: Add support for ATT f2c FORTRAN link.
+1998/03/06: Add support for Microsoft PowerStation FORTRAN link.
+1998/03/06: Add support for long filenames (./win95/longname.l*)
+1998/03/06: Add support for F10 key (generally used as system key).
+1998/02/04: Fix a bug in text mode on Windows 98 beta 3.
+1998/01/19: Force a repaint after bitblit when using the same device.
+1997/12/23: Windows can be created using 'transient in graphic-properties list.
+1997/12/11: Add support for transient-windows in BV.
+1997/09/07: Fix RFIX and FIXVECTOR defextern types.
+1997/03/07: Change defextern external 't' to 'external' in BV declaration.
+1997/01/07: Add support for complete virtual terminal on text mode (llXXbin.exe).
+1996/12/11: Fix error in expand-pathname.
+1996/08/19: Cast was needed in BV for functions waiting integer vectors.
+1996/07/15: Fix bug in callext. Fix return type for DLL extern functions.
+1996/05/10: Restore cursor in terminal when returning to Lisp.
+1996/05/01: Add options: -geometry WxH[+X+Y] and -fixed for Windows versions.
+1996/03/16: Start terminal window in 80x25 character mode.
+1995/11/24: Fix bug for graphic adapters using more than 256 colors.
+1995/06/16: Add set-optional-fontname function as a BV extension for Windows.
+1995/06/13: Add doubleclick-event as BV extension for Windows.
+1995/05/12: Add -cstack argument to set the reserved stack for C (default 8192).
+1995/04/04: Fix resource leaks in windows_system_font_size function.
+1995/03/24: Fix bug in kill-color.
+1995/03/19: Check for font installation in bitprologue.
+1995/03/03: New version of ILM.
+1995/02/10: Fix copyfile bug (MS-DOS has no valid ino field in stat structure).
+1994/12/16: Modify ILM to read in binary mode.
+1994/12/02: Modify loader.ll to prevent a BUG in LOC function.
+1994/11/30: Add myllbin and myllbinw entries in Makefile
+1994/10/20: Fix a bug in EDIVIDE LLM3 MACRO.
+1994/10/18: Add new path.* and hash.* from ILOG tape.
+1994/08/24: Change LL system number to 70 (internal change only)
+1994/07/28: Optimize windows_subst_colors.
+1994/07/12: Initial release. Direct port from NT386.
+1994/06/02: Check for LELISP variable in winterm.c
+1994/05/25: Compile C sources with prototypes added (ANSI/ISO C).
+1994/05/28: Change the background of icones to 3D (was transparent).
+1994/04/28: -callext, -g, -h and -hh flags added to complice.
+1994/03/31: Add:current-arc-mode function in BV.
+1994/03/06: Change code in:draw-*-nobackground functions.
+1994/01/24: Continue to read events when calling the sleep function.
+1994/01/16: Change the module's name to 8.3 in BV files (used by ll2lm).
+1994/01/14: Fix bug in CFLOAT_TO_LFLOAT (RWORK was not saved - BK).
+1994/01/08: #:llcp:nlist has been removed from loader.ll (it is now in LLM3).
+1994/01/08: TTYIN LLM3 macro now returns 0xFF.
+1994/01/07: Use ILM like other Le-Lisp versions from ILOG S.A.
+1993/12/23: path.ll path.lo and path.lm and now in nt386 directory.
+1993/12/22: Fix bugs in LLM3 macros CFLOAT_TO_LFLOAT and LFLOAT_TO_CFLOAT.
+1993/12/22: Final distribution of Le-Lisp v15.26.
+1993/11/15: Master candidate of Le-Lisp v15.26 (new floats macros, CONVTOK).
+1993/10/19: Correction of #:display:windows:get-rgb-values function.
+1993/10/19: Use LELISP environment variable to set #:system:directory.
+1993/10/17: #:display:windows:system-font-name function added.
+1993/10/13: Change the widgets lib to match AIDA needs.
+1993/09/26: Use the IT_LOOP expand flag (LLM3) as in the msdos version.
+1993/09/24: Correction of opendir (returns an error if dir is invalid).
+1993/09/20: Middle-button is simulated by the action (Alt-Key + left-button).
+1993/09/20: Call the lisp function (end) when closing with WM_QUIT.
+1993/09/19: Windows NT code added for get_byte_line and set_byte_line.
+1993/09/16: Unification of BV lisp files between Windows 3.1 and Windows NT.
+1993/09/15: Beta version of Le-Lisp v15.26 (new floats and correction of HPMOVM).
+----------:
+1994/08/18: 	R E L E A S E   v15.26.1
+----------------------------------------
+
+1993/08/31: BV extension: new function #:display:windows:activate-window added.
+1993/08/18: Correction of activation bar for toplevel windows.
+1993/06/04: Correction of display-get-font-info for ascent, maxlbearing fields.
+1993/06/02: Correction in make-window (llib), no needs to inherit parent cursor.
+1993/05/29: Standard stack set to 196 Ko in text mode.
+1993/05/14: Correction of a bug in GCMARK LLM3 macro.
+1993/05/03: Free all ressources on exit.
+1993/04/19: Small modification of standard colors values (no more palette flick)
+1993/04/19: Dramatically improve the bitmap loading
+1993/04/01: Vector of all fonts heigth added in winint.ll
+1993/03/29: Modification of font naming convention: Family-WxH-* -> Family-H-*
+1993/03/10: Modification of color allocation strategie
+1993/02/28: Modification of keyboard-focus functions
+1993/02/15: Correction of the probefile for a the root path such as "X:/".
+----------:
+1993/08/31: 	R E L E A S E   v15.25.3
+----------------------------------------
+
+----------:
+1993/02/15: 	R E L E A S E   v15.25.2
+----------------------------------------

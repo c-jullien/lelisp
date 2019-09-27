@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: cntrl
+;;;             translation done: "Sat Oct   7 17 20:53:31 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: cntrl.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'cntrl)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZcntrl" "Sat Oct   7 17 20:53:31 "
+
+'((defun . fsubr) (df . fsubr) (dm . fsubr) (dmd . fsubr) (ds . fsubr) (defvar . fsubr) (revert . subr1) (getdef . subr1) (makedef . subr3) (if . fsubr) (ifn . fsubr) (when . fsubr) (unless . fsubr) (cond . fsubr) (or . fsubr) (and . fsubr) (while . fsubr) (until . fsubr) (loop . fsubr) (repeat . fsubr) (selectq . fsubr) (map . nsubr) (mapc . nsubr) (maplist . nsubr) (mapcar . nsubr) (mapcon . nsubr) (mapcan . nsubr) (every . nsubr) (any . nsubr) (mapvector . subr2) (mapcoblist . subr1) (maploblist . subr1) (mapoblist . subr1) (quote . fsubr) (lambda . fsubr) (flambda . fsubr) (mlambda . fsubr) (comment . fsubr) (identity . subr1) (eprogn . subr1) (progn . fsubr) (exportable-definition . fsubr) (prog1 . fsubr) (prog2 . fsubr))
+
+#[defun #:gell-resetfn:function-name #:gell-resetfn:function-f df dm dmd ds defvar revert #:gell-resetfn:function-1 getdef makedef #:gell-resetfn:function-3 if ifn when unless cond or and while until loop repeat selectq map #:gell-resetfn:function-n mapc maplist mapcar mapcon mapcan every any mapvector #:gell-resetfn:function-2 mapcoblist maploblist mapoblist quote lambda flambda mlambda comment identity eprogn progn exportable-definition prog1 prog2]
+)
+
+
+(defccheck '())

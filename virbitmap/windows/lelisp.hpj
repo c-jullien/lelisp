@@ -1,0 +1,18 @@
+[OPTIONS]
+;;INDEX=MainIndex
+TITLE=Le-Lisp
+COMPRESS=TRUE
+COPYRIGHT=Copyright (c) 1992-93 Eligis
+;;OLDKEYPHRASE=0
+;;WARNING=3  ; If you set this line, then HC will report less error
+
+[FILES]
+lelisp.rtf	;; main topics
+;; keys.rtf	;; keyboard topics
+
+[BITMAPS]
+;;cj.bmp
+
+[MAP]
+;; #include <helpids.h>
+

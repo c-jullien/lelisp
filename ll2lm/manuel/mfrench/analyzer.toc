@@ -1,0 +1,70 @@
+\contentsline {chapter}{\numberline {1}Introduction {\accent 18 a} la gestion modulaire de l'application}{5}
+\contentsline {section}{\numberline {1.1}Application Le-Lisp et modules}{5}
+\contentsline {subsection}{\numberline {1.1.1}A propos de l'application}{5}
+\contentsline {subsubsection}{Inadaptation des fichiers interpr{\accent 19 e}t{\accent 19 e}s}{5}
+\contentsline {subsubsection}{Disponibilit{\accent 19 e} du compilateur modulaire}{5}
+\contentsline {subsubsection}{Principe de modularit{\accent 19 e}}{6}
+\contentsline {subsection}{\numberline {1.1.2}A propos des modules}{6}
+\contentsline {subsubsection}{Modules interpr{\accent 19 e}t{\accent 19 e}s}{6}
+\contentsline {subsubsection}{Imports}{7}
+\contentsline {subsubsection}{Modules compil{\accent 19 e}s}{8}
+\contentsline {section}{\numberline {1.2}Introduction {\accent 18 a} l'analyse de modules}{8}
+\contentsline {subsection}{\numberline {1.2.1}L'Analyseur de Modules\pcomma : premi{\accent 18 e}res notions}{9}
+\contentsline {subsubsection}{Usage concret de l'Analyseur de Modules}{9}
+\contentsline {subsubsection}{D{\accent 19 e}marrer avec l'analyseur}{10}
+\contentsline {subsection}{\numberline {1.2.2}Projets}{10}
+\contentsline {subsubsection}{Notion de projet}{10}
+\contentsline {subsubsection}{Projets et produits}{11}
+\contentsline {subsection}{\numberline {1.2.3}Organisation informatique de l'application}{12}
+\contentsline {subsubsection}{R{\accent 19 e}partition des sources et des modules}{12}
+\contentsline {subsubsection}{R{\accent 19 e}pertoire d'analyse}{12}
+\contentsline {subsubsection}{R{\accent 19 e}sum{\accent 19 e}}{13}
+\contentsline {section}{\numberline {1.3}M{\accent 19 e}thodologie\pcomma : de l'analyse {\accent 18 a} la compilation, en 6 {\accent 19 e}tapes}{13}
+\contentsline {subsection}{\numberline {1.3.1}1{\accent 18 e}re {\accent 19 e}tape: description du projet}{14}
+\contentsline {subsection}{\numberline {1.3.2}2{\accent 18 e}me {\accent 19 e}tape: analyse de d{\accent 19 e}marrage}{14}
+\contentsline {subsubsection}{Fabrication du Makefile d'analyse de d{\accent 19 e}marrage}{15}
+\contentsline {subsubsection}{Analyse de d{\accent 19 e}marrage}{15}
+\contentsline {subsection}{\numberline {1.3.3}3{\accent 18 e}me {\accent 19 e}tape: fabrication du script d'analyse courante}{16}
+\contentsline {subsection}{\numberline {1.3.4}4{\accent 18 e}me {\accent 19 e}tape: analyse courante}{16}
+\contentsline {subsection}{\numberline {1.3.5}5{\accent 18 e}me {\accent 19 e}tape: fabrication du script de compilation}{17}
+\contentsline {subsection}{\numberline {1.3.6}6{\accent 18 e}me {\accent 19 e}tape: compilation}{17}
+\contentsline {section}{\numberline {1.4}Installation de l'analyseur et configuration}{18}
+\contentsline {chapter}{\numberline {2}L'Analyseur de Modules}{21}
+\contentsline {section}{\numberline {2.1}Principe de fonctionnement}{21}
+\contentsline {section}{\numberline {2.2}D{\accent 19 e}finition d'un projet}{21}
+\contentsline {subsection}{\numberline {2.2.1}Les principales clefs d'une d{\accent 19 e}finition de projet}{22}
+\contentsline {subsection}{\numberline {2.2.2}Exemples}{25}
+\contentsline {section}{\numberline {2.3}La commande d'analyse}{28}
+\contentsline {subsection}{\numberline {2.3.1}Les principales options d'analyse}{29}
+\contentsline {section}{\numberline {2.4}D{\accent 19 e}roulement d'une analyse}{33}
+\contentsline {subsection}{\numberline {2.4.1}Contexte d'analyse}{33}
+\contentsline {subsection}{\numberline {2.4.2}Analyse d'un module}{34}
+\contentsline {subsection}{\numberline {2.4.3}Diagnostics}{34}
+\contentsline {subsubsection}{Importation des modules}{35}
+\contentsline {subsubsection}{Exportation des fonctions}{37}
+\contentsline {subsubsection}{Restrictions}{39}
+\contentsline {subsection}{\numberline {2.4.4}Mise {\accent 18 a} jour du fichier descripteur de module}{39}
+\contentsline {chapter}{\numberline {3}Le compilateur de modules}{41}
+\contentsline {section}{\numberline {3.1}Apr{\accent 18 e}s l'analyse, la compilation}{41}
+\contentsline {section}{\numberline {3.2}Sp{\accent 19 e}cificit{\accent 19 e}s de l'analyseur pour la compilation}{41}
+\contentsline {subsection}{\numberline {3.2.1}Option d'analyse d{\accent 19 e}di{\accent 19 e}e {\accent 18 a} la compilation}{41}
+\contentsline {subsection}{\numberline {3.2.2}Clefs de d{\accent 19 e}finition de projet d{\accent 19 e}di{\accent 19 e}es {\accent 18 a} la compilation}{42}
+\contentsline {section}{\numberline {3.3}Compilation d'un module}{43}
+\contentsline {chapter}{\numberline {4}Messages d'analyse}{45}
+\contentsline {chapter}{\numberline {5}Manuel de r{\accent 19 e}f{\accent 19 e}rence}{53}
+\contentsline {section}{\numberline {5.1}DEFINE-RT-PROJECT}{53}
+\contentsline {section}{\numberline {5.2}LL2LM}{60}
+\contentsline {chapter}{\numberline {6}Extensions et utilisation avanc{\accent 19 e}e}{65}
+\contentsline {section}{\numberline {6.1}Comment analyser directement dans une session Le-Lisp}{65}
+\contentsline {section}{\numberline {6.2}Gestion des projets}{66}
+\contentsline {section}{\numberline {6.3}Extensions de l'analyseur}{69}
+\contentsline {chapter}{\numberline {A}Exemple complet}{73}
+\contentsline {chapter}{\numberline {B}Limitations et difficult{\accent 19 e}s connues}{85}
+\contentsline {section}{\numberline {B.1}Restrictions}{85}
+\contentsline {section}{\numberline {B.2}Probl{\accent 18 e}mes connus}{85}
+\contentsline {subsection}{\numberline {B.2.1}Coupure des symboles trop longs}{85}
+\contentsline {subsection}{\numberline {B.2.2}H{\accent 19 e}ritage de structure}{86}
+\contentsline {subsection}{\numberline {B.2.3}Abr{\accent 19 e}viations}{87}
+\contentsline {subsection}{\numberline {B.2.4}Conflits de noms de modules}{87}
+\contentsline {subsection}{\numberline {B.2.5}G{\accent 19 e}n{\accent 19 e}ration du {\ptt Makefile} de compilation}{88}
+\contentsline {chapter}{\numberline {C}Table des fonctions}{89}

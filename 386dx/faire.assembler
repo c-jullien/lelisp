@@ -1,0 +1,17 @@
+$1 -stack 18 -code 2000 -heap 1024 -number 0 -vector 10 -string 18 -symbol 15 -cons 15 << EOI
+(loadfile "exp386.ll" t)
+(defun expand-all-x86 ()
+   (init-expand)
+   ;; 31 bit floats
+   (setq 31BITFLOATS t)
+   (expandn)
+   (translate-all)
+   ;; 64 bit floats
+   (setq 31BITFLOATS ())
+   (expandn)
+   (translate-all)
+)
+(expand-all-x86)
+(end ())
+EOI
+

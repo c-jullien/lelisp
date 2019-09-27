@@ -1,0 +1,31 @@
+defmodule ref
+files (ref)
+import (
+pretty
+format
+defvar
+rtmsg
+kernellm
+rtprint
+readlm
+diagnostic
+)
+
+export (
+(structure llmodulereferences)
+#:llmodulereferences:update-base
+current-mr
+standardmodulereferences
+#:llmodulereferences:read-from-file
+#:llmodulereferences:merge-modules-references
+func-from
+struct-from
+intern-from
+other-from
+abbrev-from
+#:llmodulereferences:pretty
+#:llmodulereferences:member-in-cdr
+#:llmodulereferences:write-to-file
+
+)
+

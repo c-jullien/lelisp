@@ -1,0 +1,135 @@
+#!/bin/sh
+#
+
+COMPLICE=/usr/local/bin/complice
+CORE=unix/llexpand.core
+
+if [ ! -f $CORE ]
+then
+	./faire.llexpand $COMPLICE
+fi
+
+LLDIR=`grep "^LLDIR=" $COMPLICE | sed s/LLDIR=//g`
+SYSTEM=`grep "^SYSTEM=" $COMPLICE | sed s/SYSTEM=//g`
+CMPLC=$LLDIR/$SYSTEM/cmplc++
+CMPLC=`sed s/"-r .*"// $CMPLC`
+
+case $# in
+        0)      $CMPLC -r $CORE;;
+esac
+
+EXPFILE="/tmp/cp$$"
+files="" 
+all="()"
+trap "rm -f $EXPFILE; exit" 0 1 2 3 15
+
+while test x$1 != x
+do
+	case $1 in
+	-as)	 echo "(setq unix-as-flag      t)" >> $EXPFILE ;;
+	-masm)	 echo "(setq unix-as-flag     ())" >> $EXPFILE ;;
+	-31)	 echo "(setq 31BITFLOATS       t)" >> $EXPFILE ;;
+	-64)	 echo "(setq 31BITFLOATS      ())" >> $EXPFILE ;;
+	-387)	 echo "(redefvalue use387      0)" >> $EXPFILE ;;
+	-no387)	 echo "(redefvalue use387      1)" >> $EXPFILE ;;
+	-ret)	 echo "(redefvalue RETN        0)" >> $EXPFILE ;;
+	-retn)	 echo "(redefvalue RETN        1)" >> $EXPFILE ;;
+	-flag)	 echo "(defvar " $2 " " $3     ")" >> $EXPFILE ; shift ; shift ;;
+	-all)	 all=t ;;
+	-msdos)	 echo "(setq syst         'msdos)" >> $EXPFILE
+		 echo "(setq expunix          ())" >> $EXPFILE
+		 echo "(setq unix-as-flag      t)" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      1)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-os2)	 echo "(setq syst           'os2)" >> $EXPFILE
+		 echo "(setq expunix          ())" >> $EXPFILE
+		 echo "(setq unix-as-flag      t)" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  1)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      1)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-aix386) echo "(setq syst          'unix)" >> $EXPFILE
+		 echo "(setq expunix           t)" >> $EXPFILE
+		 echo "(setq unix-as-flag     ())" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      0)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-ix386)	 echo "(setq syst          'unix)" >> $EXPFILE
+		 echo "(setq expunix           t)" >> $EXPFILE
+		 echo "(setq unix-as-flag     ())" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      0)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-sco386) echo "(setq syst          'unix)" >> $EXPFILE
+		 echo "(setq expunix           t)" >> $EXPFILE
+		 echo "(setq unix-as-flag     ())" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      0)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-solaris386)
+		 echo "(setq syst          'unix)" >> $EXPFILE
+		 echo "(setq expunix           t)" >> $EXPFILE
+		 echo "(setq unix-as-flag     ())" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      0)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-svr4i386)
+		 echo "(setq syst          'unix)" >> $EXPFILE
+		 echo "(setq expunix           t)" >> $EXPFILE
+		 echo "(setq unix-as-flag     ())" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      0)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-unixware386)
+		 echo "(setq syst          'unix)" >> $EXPFILE
+		 echo "(setq expunix           t)" >> $EXPFILE
+		 echo "(setq unix-as-flag     ())" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      0)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-linux)
+		 echo "(setq syst          'unix)" >> $EXPFILE
+		 echo "(setq expunix           t)" >> $EXPFILE
+		 echo "(setq unix-as-flag      t)" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      0)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-x86macos)
+		 echo "(setq syst          'unix)" >> $EXPFILE
+		 echo "(setq expunix           t)" >> $EXPFILE
+		 echo "(setq unix-as-flag      t)" >> $EXPFILE
+		 echo "(redefvalue UNDERSCORED 1)" >> $EXPFILE
+		 echo "(redefvalue SAVEDSTACK  0)" >> $EXPFILE
+		 echo "(redefvalue ITLOOP      0)" >> $EXPFILE
+		 echo "(redefvalue MATH387     1)" >> $EXPFILE ;;
+	-end)	 exit 0;;
+	*)	 files="$files `basename $1`" ;;
+	esac
+	shift
+done
+
+echo "(de user-interrupt () (end -2))" >> $EXPFILE
+
+echo "(de syserror (f m b)" >> $EXPFILE
+echo "    (print \" ** \" f \" : \" m \" : \" b) (end -1))" >> $EXPFILE
+
+echo "(defvar expand-all $all)" >> $EXPFILE
+
+echo "(setq expand-file-list (quote (" >> $EXPFILE
+for i in $files
+        do
+        echo "      $i" >> $EXPFILE
+        done
+echo ")))" >> $EXPFILE
+
+export EXPFILE
+$CMPLC -r $CORE

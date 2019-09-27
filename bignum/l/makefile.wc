@@ -1,0 +1,20 @@
+#  Makefile for les bignums (version dos WATCOM C)
+
+.BEFORE
+	@set	INCLUDE=c:\watcom\h
+	@set	WATCOM=c:\watcom\.
+	@set	PATH=c:\watcom\bin;c:\watcom\binb;c:\watcom\binw;$(%PATH)
+
+.AFTER
+	@if exist *.err del *.err
+
+
+CC=wcc386p
+CFLAGS=-zq -zW -3s -oaxt -w4
+
+kern.lib: ..\o\kern.obj llkern.obj
+	-@del kern.lib
+	@wlib kern.lib + llkern.obj ..\o\kern.obj
+
+llkern.obj: common\llkern.c
+	$(CC) $(CFLAGS) -DNOMEM -DDIGITon32BITS -I..\h common\llkern.c

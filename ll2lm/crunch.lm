@@ -1,0 +1,118 @@
+defmodule crunch
+files (crunch)
+import (
+sets
+defvar
+rtprint
+rtmsg
+syserror
+ref
+defrtprj
+codewalker
+diagnostic
+printlm
+make
+meta
+delete
+create
+build
+)
+
+export (
+sh-analyze
+analyze
+#:llmodule:display-usage
+#:llmodule:step1
+#:llmodule:makefile:step2
+#:llmodule:meta:step2
+#:llmodule:init:step2
+#:llmodule:lisp-dir
+; #:llmodule:aida-dir
+all-ll-dirs
+; all-aida-dirs
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(sh-analyze dmsubr () () (#:llmodule:option-encountered))
+(#:llmodule:display-usage subr1 ())
+(analyze nsubr ())
+(#:llmodule:step1 subr3 ())
+(#:llmodule:makefile:step2 subr2 ())
+(#:llmodule:meta:step2 subr2 ())
+(#:llmodule:init:step2 subr2 ())
+(#:llmodule:lisp-dir subr0 ())
+(all-ll-dirs nsubr ())
+)
+cpfunctions (
+(#:llmodule:verif-option subr1)
+(#:llmodule:printerror subr2)
+(#:llmodule:source-file-p subr1)
+(#:llmodule:directory subr1)
+(#:llmodule:step1-bis nsubr)
+(#:llmodule:analyze:step2 subr3)
+(#:llmodule:step3 subr1)
+(#:llmodule:step4 nsubr)
+)
+cpimport (
+(defrtprj
+(find-rt-project . subr1)
+(find-rt-group-project . subr1)
+(reload-rt-project . subr2)
+(activate-rt-project . subr2)
+(get-main-ll-module-directory . subr1)
+)(sets
+(intersection . nsubr)
+(union . nsubr)
+(set-difference . nsubr)
+)(syserror
+(#:crunch:files-of-module-p . subr1)
+(#:crunch:load-include . nsubr)
+)(codewalker
+(#:llmodule:agree-mod . subr3)
+)(diagnostic
+(#:diagnostic:explain-diagnostic . subr1)
+)(printlm
+(#:diagnostic:update-desc . subr2)
+)(ref
+(#:llmodulereferences:update-base . subr3)
+)(make
+(#:rtproject:build-make . subr2)
+)(meta
+(#:rtproject:build-meta . subr2)
+)(create
+(#:rtproject:build-module . subr3)
+(#:rtproject:build-init . subr2)
+))
+cpenv (
+sets
+files
+module
+defvar
+format
+rtmsg
+rtprint
+pretty
+sort
+callext
+defstruct
+path
+kernellm
+readlm
+diagnostic
+ref
+syserror
+defrtprj
+parse
+printlm
+codewalker
+make
+meta
+delete
+create
+build
+((putprop '#:llmodule:default-ll-dir 't '#:complice:globalvar)
+)((putprop '#:llmodule:default-aida-dir 't '#:complice:globalvar)
+)((putprop '#:llmodule:excluded-options 't '#:complice:globalvar)
+)((defun #:llmodule:display-usage (opts) (when (ge #:crunch:verbose 1) (print "usage : sh-analyze               ;;") (print "           ;; to fabricate .lm from scratch") (print "            [-defmodule mod]     ;; name of module") (print "           ;; to keep former modules :") (print "            [-update target.lm]  ;; update given module target.lm") (print "           ;; influence analyze :") (print "            [-files file.ll]     ;; files composing module") (print "            [-include file]      ;; include file") (print "            [-import mod]        ;; import module") (print "            [-export fct]        ;; export function") (print "            [-allexport]         ;; export all functions defined") (print "            [-includeflag]       ;; to use module's field INCLUDE") (print "            [-output target.lm]  ;; force path & name of result module") (print "            [-project project]   ;; current project") (print "            [-load file]         ;; load file") (print "            [-r]                 ;; do recursive analyze on imports") (print "            [-verbose 0,1,2]     ;; verbose level.") (print "            [-nowrite]           ;; just to see!") (print "            [-dynamic/-nodynamic];; considere or not, dynamic calls") (print "           ;; to work directly on reference file :") (print "            [-delete module]     ;; delete module from references file") (print "           ;; to fabricate meta module :") (print "            [-meta]              ;; generate metamodule") (print "           ;; to fabricate makefiles :") (print "            [-dependency 0,1,2]  ;; dependency level in Makefiles") (print "            [-makefile]          ;; generate compiler Makefile") (print "            [-init]              ;; generate analyzer Makefile") (print "           ;; help") (print "            [-usage]             ;; this usage") (terpri)) (end))
+))

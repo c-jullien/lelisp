@@ -1,0 +1,23 @@
+defmodule
+#:edit:editor:meme
+files (
+meme
+)
+export (
+meme
+#:edit:editor:meme:edit-drawcursor
+trap-meme
+#:edit:editor:meme:edit-query
+#:edit:editor:meme:trap-query
+#:edit:editor:meme:edit-redisplaystring
+#:edit:editor:meme:edit-redisplaycleol
+#:edit:editor:meme:query-drawcursor
+)
+import (
+lledit
+lleditor
+)
+include (
+macedit
+maceditor
+)

@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: macroch
+;;;             translation done: "Wed June 30 93 17:34:05 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: macroch.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'macroch)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZmacroch" "Wed June 30 93 17:34:05 "
+
+'((dmc . fsubr) (dms . fsubr) (defsharp . fsubr) (|'| . subr0) (|,| . subr0) (|`| . subr0) (|#| . subr0) (|.| . subr0) (|+| . subr0) (|-| . subr0) (#:gell:|'| . subr0) (/ . subr0) (|\| . subr0) (#:gell:|^| . subr0) (#:gell:|:| . subr0) ($ . subr0) (% . subr0) (r . subr1) (|"| . subr0) (|||| . subr0) (|(| . subr0) (#:gell:|[| . subr0) (|:| . subr0) (|^| . subr0) (|[| . subr0) (|]| . subr0) (typech . nsubr) (typecn . nsubr))
+
+#[dmc #:gell-resetfn:function-name #:gell-resetfn:function-f dms defsharp |'| #:gell-resetfn:function-0 |,| |`| |#| |.| |+| |-| #:gell:|'| / |\| #:gell:|^| #:gell:|:| $ % r #:gell-resetfn:function-1 |"| |||| |(| #:gell:|[| |:| |^| |[| |]| typech #:gell-resetfn:function-n typecn]
+)
+
+
+(defccheck '())

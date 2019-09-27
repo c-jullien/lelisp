@@ -1,0 +1,37 @@
+defmodule
+llpboot
+files (
+llpboot
+)
+export (
+setfn
+#:llpatch:new-rmargin
+lmnumb
+llnumb
+lmsymb
+lmaccess
+)
+import
+(callext)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(setfn subr3 ())
+(#:llpatch:new-rmargin nsubr ())
+(lmnumb subr1 ())
+(lmaccess subr2 ())
+(llnumb subr1 ())
+(lmsymb subr1 ())
+)
+cpfunctions (
+(lmalive subr1)
+)
+cpimport
+()
+cpenv (
+sort
+callext
+((putprop '#:system:23-compatibility-flag 't '#:complice:globalvar)
+))

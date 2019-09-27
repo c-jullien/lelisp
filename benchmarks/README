@@ -1,0 +1,32 @@
+	Le-Lisp 15.2: The benchmark directory
+	=====================================
+
+
+This directory contains the source files and modules for the Le-Lisp
+15.2 benchmarks.
+
+To start the benchmarks:
+------------------------
+
+
+% cmplc -cons 24
+...
+?
+? !cd ../benchmarks
+= t
+?
+? ^Lbenchmarks
+ (do-test)   to run the tests.
+ (do-check)  to check the tests.
+ (do-meter)  to meter the tests.
+= benchmarks
+?
+? (do-test)
+
+See also lelisp/<system>/recette/dobench
+----------------------------------------
+
+The directory benchmarks/Results contains the results for a certain
+number of machines already measured for the current Le-Lisp version.
+The file "makeresults.ll" lets you make the file "results.txt" which
+contains a summary of the benchmarks.

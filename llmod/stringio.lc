@@ -1,0 +1,21 @@
+defmodule
+stringio
+files (
+stringio
+)
+export (
+read-from-string
+with-input-from-string
+print-to-string
+with-output-to-string
+#:stringio:bol
+#:stringio:in:bol
+#:stringio:in:syserror
+#:stringio:out:eol
+#:stringio:out:flush
+#:stringio:out:syserror
+)
+import
+()
+include
+()

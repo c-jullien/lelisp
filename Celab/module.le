@@ -1,0 +1,50 @@
+;;; GELL 15.26: elaboration file for the module: module
+;;;             translation done: "Wed June 16 93 18:00:35 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: module.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'module)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZmodule" "Wed June 16 93 18:00:35 "
+
+'((readdefmodule . subr1) (#:module:bol . subr0) (getdefmodule . subr2) (setdefmodule . subr3) (printdefmodule . subr2) (loadmodule . nsubr) (autoloadmodule . fsubr) (#:module:std-autoload . subr1) (autoloadp . subr1))
+
+#[probepathm #:module:errnmd readdefmodule inchan openi #:sys-package:colon #:sys-package:itsoft module #:module:header (#:sys-package:itsoft #:sys-package:colon) lambda #:module:in-user-part t eof #:system:read-case-flag (#:system:read-case-flag) read (#:system:read-case-flag) defmodule #:module:list-of-user-key append #:module:deadheader acons bol super-itsoft inbuf inmax substring nconc1 getdefmodule equal outchan printdefmodule #:system:debug #:system:print-msgs #:system:error-flag (#:system:debug #:system:print-msgs #:system:error-flag) #:system:error-tag openo #:module:errfpr rmargin printlevel printlength outbuf |1+| #:system:print-for-read (#:system:print-for-read) print #:module:endofheader (#:system:print-for-read) "; " close (#:system:print-for-read) prin princn terpri cpimport cpenv loadmodule #:llcp:errwna concat #:module:compiled-list delq #:module:interpreted-list import loader featurep #:system:ccode funcall #:module:limit putprop #:module:warinm printerror files libloadfile #:system:object-file-formats probepathf errfile filegetdef de defun df defmacro dm dmd #:llcp:exit export #:module:errnodef autoload #:module:args #:module:std-autoload quote list apply (#:module:args) mcons expr (#:module:args) fexpr cons (#:module:args) dmacro (#:module:args) macro errbdf setfn valfn getprop #:gell-resetfn:function-name #:gell-resetfn:function-1 #:module:bol #:gell-resetfn:function-0 #:gell-resetfn:function-2 setdefmodule #:gell-resetfn:function-3 #:gell-resetfn:function-n autoloadmodule #:gell-resetfn:function-f autoloadp]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'module)))
+(defvar #:sys-package:colon 'module)
+(add-feature 'module)
+(defvar #:module:compiled-list (if (boundp '#:module:compiled-list) #:module:compiled-list ()))
+(defvar #:module:interpreted-list (if (boundp '#:module:interpreted-list) #:module:interpreted-list ()))
+(#:messages:put-message '#:module:errnmd 'french '"module inexistant" 'defmessage)
+(#:messages:put-message '#:module:errnmd 'english '"module not found" 'defmessage)
+'#:module:errnmd
+(#:messages:put-message '#:module:errfpr 'french '"fichier prote'ge'" 'defmessage)
+(#:messages:put-message '#:module:errfpr 'english '"protected file" 'defmessage)
+'#:module:errfpr
+(#:messages:put-message '#:module:warinm 'french '"chargement du module interpre'te'" 'defmessage)
+(#:messages:put-message '#:module:warinm 'english '"load interpreted module" 'defmessage)
+'#:module:warinm
+(#:messages:put-message '#:module:errnodef 'french '"Je ne trouve pas la de'finition de" 'defmessage)
+(#:messages:put-message '#:module:errnodef 'english '"can't find definition of" 'defmessage)
+'#:module:errnodef
+(defvar #:module:list-of-user-key '(defmodule files import export include))
+(defvar #:module:endofheader ";;; Added automatically, don't type beyond this line.")
+(defvar #:module:header ())
+(defvar #:module:in-user-part ())
+(defcsetfn 'readdefmodule "GZmodule" 0)
+(defcsetfn '#:module:bol "GZmodule" 1)
+(defcsetfn 'getdefmodule "GZmodule" 2)
+(defcsetfn 'setdefmodule "GZmodule" 3)
+(defcsetfn 'printdefmodule "GZmodule" 4)
+(defcsetfn 'loadmodule "GZmodule" 5)
+(defvar #:system:object-file-formats '((probepatho loadfile)))
+(defcsetfn 'autoloadmodule "GZmodule" 6)
+(defcsetfn '#:module:std-autoload "GZmodule" 7)
+(defcsetfn 'autoloadp "GZmodule" 8)
+
+(defccheck '(loadmodule getprop valfn setfn mcons list #:llcp:exit probepathf libloadfile printerror putprop funcall #:system:ccode featurep delq concat #:llcp:errwna terpri princn prin close print |1+| outbuf printlength printlevel rmargin openo outchan equal getdefmodule readdefmodule nconc1 substring inmax inbuf super-itsoft acons append read openi inchan probepathm))

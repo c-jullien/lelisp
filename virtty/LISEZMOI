@@ -1,0 +1,4 @@
+Ce directory contient les fichiers de de'finitions des terminaux virtuels.
+
+Pour certains terminaux ces fichiers sont automatiquement construits avec
+le fichier termcap.ll

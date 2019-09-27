@@ -1,0 +1,16 @@
+defmodule
+compiler
+files (
+cpmac
+)
+export (
+defmacro-open
+make-macro-open
+macro-openp
+remove-macro-open
+#:compiler:macroexpand
+)
+import
+()
+include
+()

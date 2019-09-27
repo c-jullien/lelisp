@@ -1,0 +1,53 @@
+defmodule #:display:x11
+files (x11init.ll)
+include (
+virmacros.ll
+virstruct.ll
+)
+import (
+virutil
+virbit ; pour le #* et #B
+x11_def x11struct x11color x11graph x11bitmap x11window virwindow
+x11event ; compute-event-mask
+)
+export (
+:get-xdisplay
+:bitprologue
+:bitepilogue 
+:bitmap-save 
+:bitmap-restore 
+:bitmap-refresh
+:bitmap-flush 
+:bitmap-sync 
+:standard-roman-font 
+:standard-bold-font 
+:large-roman-font 
+:small-roman-font
+:standard-background-pattern 
+:standard-foreground-pattern 
+:standard-medium-gray-pattern 
+:standard-light-gray-pattern
+:standard-dark-gray-pattern 
+:standard-lelisp-cursor 
+:standard-gc-cursor 
+:standard-busy-cursor 
+:synchronize
+:xerror 
+:xioerror
+:store-selection
+:get-selection
+:display-depth
+;; to be patched :
+:init-pattern
+:add-a-pattern
+:init-cursor
+:init-font
+:add-a-font
+:init-line-style
+;; for lispcall
+current-application-name
+current-application-class
+#:display:x11:get-app-name
+#:display:x11:get-app-class
+)
+

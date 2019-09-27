@@ -1,0 +1,118 @@
+defmodule
+draw
+files (
+|virdraw.ll|
+)
+export (
+draw-cursor
+draw-substring
+draw-cn
+draw-substring-nobackground
+draw-cn-nobackground
+#:display:draw-substring-nobackground
+#:display:draw-cn-nobackground
+draw-point
+draw-polymarker
+draw-line
+draw-polyline
+draw-rectangle
+fill-rectangle
+fill-area
+draw-ellipse
+fill-ellipse
+draw-circle
+fill-circle
+#:display:draw-cursor
+#:display:draw-cn
+#:display:draw-substring
+#:display:draw-point
+#:display:draw-polymarker
+#:display:draw-line
+#:display:draw-polyline
+#:display:draw-rectangle
+#:display:fill-area
+#:display:fill-rectangle
+#:display:draw-ellipse
+#:display:fill-ellipse
+#:display:fill-circle
+#:display:draw-circle
+draw-string
+fill-arc
+draw-arc
+draw-segments
+#:display:draw-arc
+#:display:draw-segments
+#:display:fill-arc
+highlight-rectangle
+#:display:highlight-rectangle
+draw-rectangles
+#:display:draw-rectangles
+fill-rectangles
+#:display:fill-rectangles
+)
+import (
+virutil
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(draw-cursor subr3 ())
+(draw-substring nsubr ())
+(draw-cn subr3 ())
+(draw-substring-nobackground nsubr ())
+(draw-cn-nobackground subr3 ())
+(#:display:draw-substring-nobackground nsubr ())
+(#:display:draw-cn-nobackground subr3 ())
+(draw-point subr2 ())
+(draw-polymarker subr3 ())
+(draw-line nsubr ())
+(draw-polyline subr3 ())
+(draw-rectangle nsubr ())
+(fill-rectangle nsubr ())
+(fill-area subr3 ())
+(draw-ellipse nsubr ())
+(fill-ellipse nsubr ())
+(draw-circle subr3 ())
+(fill-circle subr3 ())
+(#:display:draw-cursor nsubr ())
+(#:display:draw-cn nsubr ())
+(#:display:draw-substring nsubr ())
+(#:display:draw-point nsubr ())
+(#:display:draw-polymarker nsubr ())
+(#:display:draw-line nsubr ())
+(#:display:draw-polyline nsubr ())
+(#:display:draw-rectangle nsubr ())
+(#:display:fill-area nsubr ())
+(#:display:fill-rectangle nsubr ())
+(#:display:draw-ellipse nsubr ())
+(#:display:fill-ellipse nsubr ())
+(#:display:fill-circle nsubr ())
+(#:display:draw-circle nsubr ())
+(draw-string dmsubr ())
+(fill-arc nsubr ())
+(draw-arc nsubr ())
+(draw-segments nsubr ())
+(#:display:draw-arc nsubr ())
+(#:display:draw-segments nsubr ())
+(#:display:fill-arc nsubr ())
+(highlight-rectangle nsubr ())
+(#:display:highlight-rectangle nsubr ())
+(draw-rectangles nsubr ())
+(#:display:draw-rectangles nsubr ())
+(fill-rectangles nsubr ())
+(#:display:fill-rectangles nsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+virutil
+((putprop '#:display:dumpdevice 't '#:complice:globalvar)
+)((putprop '#:display:dumpsilent 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

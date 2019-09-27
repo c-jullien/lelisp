@@ -1,0 +1,111 @@
+defmodule
+hash
+files (
+hash
+)
+export (
+hash-table-p
+make-hash-table
+make-hash-table-eq
+make-hash-table-equal
+#:sharp:|H|
+sxhash
+gethash
+puthash
+inchash
+dechash
+remhash
+maphash
+clrhash
+hash-table-count
+hash-table-values
+#:hash-table:vect
+#:hash-table:prin
+#:hash-table:eval
+#:hash-table:print-stat
+)
+import (
+setf
+cpmac
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(hash-table-p subr1 ())
+(make-hash-table nsubr ())
+(make-hash-table-eq nsubr ())
+(make-hash-table-equal nsubr ())
+(#:sharp:H subr1 ())
+(puthash subr3 ())
+(sxhash subr1 ())
+(#:hash-table:print-stat subr2 ())
+(gethash nsubr ())
+(inchash nsubr ())
+(dechash nsubr ())
+(remhash subr2 ())
+(maphash subr2 ())
+(clrhash subr1 ())
+(hash-table-count subr1 ())
+(hash-table-values subr1 ())
+(#:hash-table:vect nsubr ())
+(#:hash-table:prin subr1 ())
+(#:hash-table:eval subr1 ())
+)
+cpfunctions (
+(#:hash-table:create-internal subr2)
+(#:hash-table:make subr0)
+(#:hash-table:default-size subr2)
+(#:hash-table:compute-good-size subr1)
+(#:hash-table:get-slot subr3)
+(#:hash-table:get-slot-index subr3)
+(#:hash-table:sxhash subr1)
+(#:hash-table:hash-sequence subr1)
+(#:hash-table:hash-sequence-list subr1)
+(#:hash-table:hash-sequence-vector subr1)
+(#:hash-table:hash-symbol subr1)
+(#:hash-table:hash-string subr1)
+(#:hash-table:hash-float subr1)
+(#:hash-table:set-new-slot nsubr)
+(#:hash-table:growing-rehash subr1)
+(#:hash-table:internal-rehash subr2)
+(#:hash-table:rem-slot subr3)
+(#:hash-table:shrinking-rehash subr1)
+)
+cpimport
+()
+cpenv (
+setf
+cpmac
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:hash-table:debug 't '#:complice:globalvar)
+)((putprop '#:hash-table:default-lowest-size 't '#:complice:globalvar)
+)((putprop '#:hash-table:default-biggest-size 't '#:complice:globalvar)
+)((putprop '#:hash-table:default-max-number-of-entries 't '#:complice:globalvar)
+)((putprop '#:hash-table:default-max-bucket-length 't '#:complice:globalvar)
+)((putprop '#:hash-table:default-growing-threshold 't '#:complice:globalvar)
+)((putprop '#:hash-table:default-growing-factor 't '#:complice:globalvar)
+)((putprop '#:hash-table:default-shrinking-threshold 't '#:complice:globalvar)
+)((putprop '#:hash-table:default-shrinking-factor 't '#:complice:globalvar)
+)((putprop '#:hash-table:max-significative-element 't '#:complice:globalvar)
+)((defvar #:hash-table:default-lowest-size 17)
+(defvar #:hash-table:default-biggest-size 9239)
+(defvar #:hash-table:default-max-number-of-entries 32767)
+(defvar #:hash-table:default-max-bucket-length 12)
+(defvar #:hash-table:default-growing-threshold (scale #:hash-table:default-max-bucket-length 1 2))
+(defvar #:hash-table:default-growing-factor 1.6)
+(defvar #:hash-table:default-shrinking-threshold 2)
+(defvar #:hash-table:default-shrinking-factor 2.)
+(defvar #:hash-table:max-significative-element 10)
+)((defstruct hash-table (type 'eq) (vect #[]) (entries 0) (size (dynamic #:hash-table:default-lowest-size)) (max-bucket-length (dynamic #:hash-table:default-max-bucket-length)) (growing-threshold (dynamic #:hash-table:default-growing-threshold)) (growing-factor (dynamic #:hash-table:default-growing-factor)) (shrinking-threshold (dynamic #:hash-table:default-shrinking-threshold)) (shrinking-factor (dynamic #:hash-table:default-shrinking-factor)))
+)((defsharp H (size) (#:hash-table:|H| size))
+(defmacro #:hash-table:|H| (sz) (list 'let '((lst (read))) (list 'if '(atom lst) '(error '|#H| 'errsxt "not printed properly") (mcons 'let (ncons (list 'hash-table (mcons 'make-hash-table sz '((car lst))))) '((mapc (lambda ((key value)) (setf (gethash key hash-table) value)) (cdr lst)) (list hash-table))))))
+)((defun make-hash-table-eq &nobind (selectq (arg) (0 (#:hash-table:create-internal (dynamic #:hash-table:default-lowest-size) 'eq)) (1 (#:hash-table:create-internal (#:hash-table:default-size 'make-hash-table-eq (arg 0)) 'eq)) (t (error 'make-hash-table-equ 'errwna 1))))
+(defun make-hash-table-equal &nobind (selectq (arg) (0 (#:hash-table:create-internal (dynamic #:hash-table:default-lowest-size) 'equal)) (1 (#:hash-table:create-internal (#:hash-table:default-size 'make-hash-table-equal (arg 0)) 'equal)) (t (error 'make-hash-table-equal 'errwna 1))))
+(defun make-hash-table &nobind (selectq (arg) (0 (#:hash-table:create-internal (dynamic #:hash-table:default-lowest-size) 'eq)) (1 (#:hash-table:create-internal (#:hash-table:default-size 'make-hash-table (arg 0)) 'eq)) (2 (#:hash-table:create-internal (#:hash-table:default-size 'make-hash-table (arg 0)) (let ((type (arg 1))) (if (memq type '(eq equal)) type (#:hash-table:error-bht 'make-hash-table type))))) (t (error 'make-hash-table 'errwna 2))))
+)((defun #:hash-table:default-size (function-name size) (cond ((null size) (dynamic #:hash-table:default-lowest-size)) ((fixp size) (#:hash-table:compute-good-size size)) (t (error function-name 'errnia size))))
+(defun #:hash-table:create-internal (size type) (let ((newtable (#:hash-table:make))) (#:hash-table:type newtable type) (#:hash-table:size newtable size) (#:hash-table:entries newtable 0) (#:hash-table:vect newtable (makevector size ())) newtable))
+)((defun #:hash-table:compute-good-size (size) (cond ((le size (dynamic #:hash-table:default-lowest-size)) (dynamic #:hash-table:default-lowest-size)) ((ge size (dynamic #:hash-table:default-biggest-size)) (dynamic #:hash-table:default-biggest-size)) (t (when (evenp size) (setq size (add1 size))) (while (any (lambda (n) (eq (rem size n) 0)) '(3 5 7 11 13)) (setq size (add size 2))) size)))
+)((defmacro-open maphash (fnt h-t) (list 'mapvector (list 'lambda '(x) (list 'when '(consp x) (mcons 'mapc (list 'lambda '(slot) (#:compiler:map-funcall '((car slot) (cdr slot)) fnt)) '(x)))) (list '#:hash-table:vect h-t)))
+))

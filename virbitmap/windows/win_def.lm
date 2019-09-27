@@ -1,0 +1,251 @@
+defmodule #:display:windows
+files   (
+	win_def.ll
+)
+include (
+)
+import  (
+)
+export  (
+
+;;	winwindo
+
+	windows_bitprologue
+	windows_bitepilogue
+	windows_root_window
+	windows_create_window
+	windows_create_subwindow
+	windows_create_transwindow
+	windows_move_window
+	windows_resize_window
+	windows_moveresize_window
+	windows_topmove_window
+	windows_topresize_window
+	windows_topmoveresize_window
+	windows_window_map
+	windows_window_unmap
+	windows_set_foreground_window
+	windows_window_transient
+	windows_change_title
+	windows_set_window_state
+	windows_topchangewindow_border
+	windows_move_behind_window
+	windows_pop_window
+	windows_push_window
+	windows_kill_window
+	windows_keyboard_focus
+	windows_find_window
+	windows_map_window
+	windows_current_window
+	winversion
+
+;;	graph
+
+	windows_new_create_graph_env
+	windows_clear_window
+	windows_set_clip
+	windows_set_clips
+	windows_set_background
+	windows_set_window_background
+	windows_set_foreground
+	windows_set_line_style
+	windows_set_mode
+;	windows_set_pattern
+	windows_create_cursor
+	windows_named_cursor
+	windows_set_cursor
+	windows_free_cursor
+	windows_set_font
+	windows_width_string
+	windows_height_string
+	windows_font_ascent
+	windows_font_height
+	windows_free_graph_env
+	windows_get_fonts
+	windows_font_info
+	windows_system_font_size
+	windows_load_font
+	windows_create_stipple
+	windows_set_fill_mode
+	windows_hilight
+	windows_mutable
+	windows_system_parameters
+	windows_system_work_area
+	windows_system_color
+	windows_palette_color
+	windows_set_optional_fontname
+
+;;	draw
+
+	windows_draw_cn
+	windows_draw_string
+	windows_draw_cn_noback
+	windows_draw_string_noback
+	windows_draw_point
+	windows_draw_points
+	windows_draw_line
+	windows_draw_lines
+	windows_draw_segments
+	windows_draw_rectangle
+	windows_draw_rectangles
+	windows_draw_arc
+	windows_draw_arcs
+	windows_fill_arc
+	windows_fill_arcs
+	windows_fill_chord
+	windows_fill_chords
+	windows_fill_rectangle
+	windows_fill_rectangles
+	windows_fill_area
+
+;;	color
+
+	windows_init_table_color
+	windows_make_color
+	windows_select_palette
+	windows_color_component
+	windows_kill_color
+	windows_subst_colors
+
+;;	bitmap
+
+	windows_create_bitmap
+	windows_kill_bitmap
+	windows_bmref
+	windows_bmset
+	windows_set_bit_line
+	windows_get_bit_line
+	windows_byteref
+	windows_byteset
+	windows_set_byte_line
+	windows_get_byte_line
+	windows_bitblit
+
+;;	event                       	
+
+	windows_flush_event
+	windows_eventp
+	windows_read_event
+	windows_peek_event
+	windows_read_mouse
+	windows_grab_event
+	windows_ungrab_event
+	windows_move_cursor
+	windows_dblclks_flag
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(windows_bitprologue subr3 ())
+(windows_bitepilogue subr1 ())
+(windows_root_window subr1 ())
+(windows_create_window nsubr ())
+(windows_create_subwindow nsubr ())
+(windows_create_transwindow nsubr ())
+(windows_move_window subr3 ())
+(windows_resize_window subr3 ())
+(windows_moveresize_window nsubr ())
+(windows_topmove_window nsubr ())
+(windows_topresize_window subr3 ())
+(windows_topmoveresize_window nsubr ())
+(windows_window_map subr1 ())
+(windows_window_unmap subr1 ())
+(windows_set_foreground_window subr1 ())
+(windows_window_transient subr2 ())
+(windows_change_title subr2 ())
+(windows_set_window_state subr2 ())
+(windows_topchangewindow_border subr2 ())
+(windows_move_behind_window subr2 ())
+(windows_pop_window subr1 ())
+(windows_push_window subr1 ())
+(windows_kill_window subr2 ())
+(windows_keyboard_focus subr2 ())
+(windows_find_window subr2 ())
+(windows_map_window nsubr ())
+(windows_current_window subr3 ())
+(winversion subr0 ())
+(windows_new_create_graph_env nsubr ())
+(windows_clear_window nsubr ())
+(windows_set_clip nsubr ())
+(windows_set_clips nsubr ())
+(windows_set_background subr2 ())
+(windows_set_window_background subr2 ())
+(windows_set_foreground nsubr ())
+(windows_set_line_style nsubr ())
+(windows_set_mode subr2 ())
+(windows_create_cursor subr3 ())
+(windows_named_cursor subr1 ())
+(windows_set_cursor subr2 ())
+(windows_free_cursor subr2 ())
+(windows_set_font subr2 ())
+(windows_width_string nsubr ())
+(windows_height_string nsubr ())
+(windows_font_ascent subr1 ())
+(windows_font_height subr1 ())
+(windows_free_graph_env subr1 ())
+(windows_get_fonts subr2 ())
+(windows_font_info subr2 ())
+(windows_system_font_size subr0 ())
+(windows_load_font subr1 ())
+(windows_create_stipple subr3 ())
+(windows_set_fill_mode nsubr ())
+(windows_hilight subr1 ())
+(windows_mutable subr1 ())
+(windows_system_parameters subr2 ())
+(windows_system_work_area subr1 ())
+(windows_system_color subr2 ())
+(windows_palette_color subr2 ())
+(windows_set_optional_fontname subr1 ())
+(windows_draw_cn nsubr ())
+(windows_draw_string nsubr ())
+(windows_draw_cn_noback nsubr ())
+(windows_draw_string_noback nsubr ())
+(windows_draw_point nsubr ())
+(windows_draw_points nsubr ())
+(windows_draw_line nsubr ())
+(windows_draw_lines nsubr ())
+(windows_draw_segments nsubr ())
+(windows_draw_rectangle nsubr ())
+(windows_draw_rectangles nsubr ())
+(windows_draw_arc nsubr ())
+(windows_draw_arcs nsubr ())
+(windows_fill_arc nsubr ())
+(windows_fill_arcs nsubr ())
+(windows_fill_chord nsubr ())
+(windows_fill_chords nsubr ())
+(windows_fill_rectangle nsubr ())
+(windows_fill_rectangles nsubr ())
+(windows_fill_area nsubr ())
+(windows_init_table_color subr0 ())
+(windows_make_color nsubr ())
+(windows_select_palette subr1 ())
+(windows_color_component nsubr ())
+(windows_kill_color subr1 ())
+(windows_subst_colors nsubr ())
+(windows_create_bitmap subr2 ())
+(windows_kill_bitmap subr1 ())
+(windows_bmref nsubr ())
+(windows_bmset nsubr ())
+(windows_set_bit_line nsubr ())
+(windows_get_bit_line nsubr ())
+(windows_byteref nsubr ())
+(windows_byteset nsubr ())
+(windows_set_byte_line nsubr ())
+(windows_get_byte_line nsubr ())
+(windows_bitblit nsubr ())
+(windows_flush_event subr0 ())
+(windows_eventp subr0 ())
+(windows_read_event subr1 ())
+(windows_peek_event subr1 ())
+(windows_read_mouse subr1 ())
+(windows_grab_event subr1 ())
+(windows_ungrab_event subr0 ())
+(windows_move_cursor subr2 ())
+(windows_dblclks_flag subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv
+()

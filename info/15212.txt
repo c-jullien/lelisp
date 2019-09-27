@@ -1,0 +1,233 @@
+
+ 	      Le_Lisp  de  l'INRIA  version 15.2
+	      ----------------------------------
+
+                        Greg Nuyens
+	                 Avril 88
+
+Voici les corrections  et les extensions de la nouvelle diffusion 
+   de Le-Lisp version 15.21 sous-version 2 date'e du 5 avril 1988.
+
+Cette diffusion est la premie`re diffusion de maintenance.  C'est a`
+dire une diffusion qui comprend uniquement des contournements et
+corrections faits en Lisp.  Comme de'cide' au Club des Porteurs,
+aucune expansion LLM3 n'est ne'cessaire.  Il y a un nouveau module
+LLPATCH qui contient les contournements en Lisp pour des proble`mes
+LLM3.  On a aussi ajoute' la fonction SUBVERSION (qui retourne 2 dans
+cette sous-version.)  On a e'galement rede'fini HERALD qui affiche la
+date de la diffusion de maintenance (5 avril 88), mais ou` le nume'ro
+reste tel qu'il e'tait.  Ceci permet d'e'viter toute confusion aupre`s
+de nos utilisateurs qui ne doivent pas voir une profusion de versions de
+Le-Lisp.  Veuillez ne pas changer la de'finition de HERALD dans vos
+portages pour garantir cet homoge'ne'ite'.
+
+Le contenu de cette diffusion est :
+
+Les catalogues avec tous les fichiers (pour cohe'rence):
+
+	llib:		
+	llmod:
+	llobj:
+	llub:	
+	virbitmap:
+	virtty:
+	common:	
+	gabriel:
+	info:
+	lltest:		
+
+Les catalogues avec seulement les fichiers ne'ce'ssaires pour construire
+des configurations :
+
+	sun:		
+	vax:
+	ibmrt:
+
+Les catalogues non inclus:
+
+	llm3:	aucun fichier
+	lltool:
+	68k:
+	manuel:
+
+Survol de 15.21 sous-version 2
+==============================
+
+Les diffe'rences majeures dans cette diffusion sont:
+
+Des corrections aux erreurs signale'es. (cf RATs)
+
+Le module LLPATCH de'crit ci-dessus.
+
+Le module LLMENU qui contient le support pour les menus du bitmap virtuel
+e'crit en Lisp, pour les gestionnaires e'cran qui manquent des menus ca^ble's.
+
+Les tests du bitmap virtuel ont e'te' largement e'tendus (cf
+lltest/A_LIRE_testbv).
+
+Les RATS
+========
+
+Les changements de Le-Lisp sont maintenant ge're's avec des RATs
+(Reque^tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez avoir le texte complet
+d'un rat d'ILOG en nous en communiquant le nume'ro.  (Notez s'il vous
+plai^t que les nume'ros des RATs sont partage's par tous les produits
+ILOG et pas uniquement Le-Lisp.  Ne soyez pas effraye' par les
+nume'ros e'leve's!)
+
+rat 3 area: compiler aspect: compiler-macros 
+origin: Mr. P. Parquier de Bull-Cediag 
+Effets de bord dans l'e'valuation du 2eme argument de NEWR 
+
+rat 31 area: language aspect: other 
+origin: kuczynsk 
+quel est le type de (DATE). Comment l'imprimer de facon relisible? 
+
+rat 44 area: i/o aspect: virbitmap 
+origin: chaillou 
+virbitmap avec virtty 
+
+rat 45 area: i/o aspect: basic-i/o 
+origin: L. Colson (projet Formel) 
+Quand canal 0 est ferme' ttys boucle. 
+
+rat 54 area: language aspect: interpreter 
+origin: B. Serpette 
+(version) <> 15.21 
+
+rat 56 area: language aspect: other 
+origin: B. Serpette 
+vax/extend.llm3 a un entete bizare du a RCS. 
+
+rat 57 area: other 
+origin: B. Serpette 
+extend.llm3 dans lelisp/vax ?!? 
+
+rat 58 area: language aspect: other 
+origin: B. Serpette 
+laodmodule a la place de libload quand c'est possible. 
+
+rat 59 area: language aspect: other 
+origin: Bull Cediag 
+#:system:read-case-flag doit etre ecrit en minuscules 
+
+rat 60 area: programming-environment aspect: trace 
+origin: Jose Grimm 
+la sequence trace/untrace modifie le ftype d'un symbole. 
+
+rat 62 area: memory-management 
+origin: F. Dupont [INRIA] 
+L'erreur est trop violente en cas de core non compatible. 
+
+rat 74 area: language aspect: interpreter 
+origin: B. Serpette [INRIA] 
+FREECONS n'efface pas le type d'un cons type'. 
+
+rat 75 area: programming-environment aspect: step 
+origin: J. Duthen [IRCAM] 
+(STEP (UNSTEP ...)) ne fonctionne pas tjrs. 
+
+rat 78 area: language aspect: arithmetic 
+origin: A. Beges 
+pour les complexes: #C ne fonctionnait pas. 
+
+rat 79 area: programming-environment aspect: editors 
+origin: Alejendro Bassi [ILOG] 
+^F a des difficultes avec une fct compile'e puis rechargee interpretee 
+
+rat 80 area: memory-management 
+origin: Cyril CAMBIEN [ACT] 
+FREECONS doit verifier que son argument est un CONS. 
+
+rat 83 area: ports aspect: tools 
+origin: Julien Basch [ACT] 
+mac68k: HLADR s'expanserait mal! 
+
+rat 85 area: ports aspect: tools 
+origin: Julien Basch [ACT] 
+mac68k: mauvaise expansion de CVFTOA 
+
+rat 87 area: ports aspect: tools 
+origin: Julien Bash [ACT] 
+mac68k: mauvaise expansion de declaration dans INTEST 
+
+rat 88 area: ports aspect: tests 
+origin: julien basch [ACT] 
+1 DELETEFILE mal place dans "fcts i/o binaires" 
+
+rat 89 area: language aspect: interpreter 
+origin: Julien Basch [ACT] 
+les addresses negatives sont mal interprete'es par ADDADR, etc. 
+
+rat 94 area: ports aspect: loader 
+origin: kuczynsk 
+testlap ne marche pas tjrs avec lefpu64bin 
+
+rat 95 area: memory-management 
+origin: F. Dupont [INRIA] 
+On alloue trop de place pour la table de bits du GC M&S 
+
+rat 129 area: language aspect: interpreter 
+origin: Parquier [BULL] 
+#:SYSTEM:FEATURES-LIST est e'crase' au cas ou` files.ll est recharge'. 
+
+rat 184 area: language aspect: other 
+origin: kuczynsk 
+Toutes les machines UNIX n'ont pas un chargeur dynamique. 
+
+rat 192 area: language aspect: interpreter 
+origin: Remi Houdaille [Sema Metra] 
+WITH devrait restituer ses variables-fcts dans l'ordre inverse de leur declar
+ation 
+
+rat 196 area: i/o aspect: virbitmap 
+origin: devin 
+inibitmap si loader pas charge 
+
+rat 197 area: i/o aspect: virbitmap 
+origin: devin 
+event-mode retourne () 
+
+rat 198 area: i/o aspect: virbitmap 
+origin: devin 
+current-line-style sans argument retourne toujours la meme valeur 
+
+COMPLICE:
+=========
+
+[05/01/88]
+	Les impressions des messages d'erreur se font sur le canal de sortie
+	qui est positionne' avant la compilation.
+	L'itsoft "complice" est 'conse'.
+	(identity <exp>) est equivalent a`
+	(prog1 <exp> (precompile () '(jcall identity)))
+	pour tester les interruptions a` la main..
+
+[02/02/88]
+	Bug signale par Eugen Neidl [ILOG]
+	Non compilation de letv. Reperable par l'exemple donnne dans la doc.
+	Patch dans complice.lo:
+...
+(loader'((entry #:complice:cpfnt:letv subr1)
+(mov (cdr a1) a4)
+(mov (car a1) a1)
+(mov (cdr a4) a3)
+(mov (car a4) a4)
+(push a4)
+(push a3)
+(bfcons a1 6789)		; remplace (bfcons a1 101)
+(cabeq (car a1) 'quote 101)	; remplace (cabne (car a1) 'quote 101)
+6789				; nouvelle etiquette
+(adjstk '2)
+(jmp #:complice:set-error)
+101
+
+[31/03/88]
+	Mauvaise compilation de (repeat) et (setq (car l) ..) signale'e
+	par Parquier (Cediag) et Duthen (Ircam).
+	Le cas (repeat) est pris en compte et ramene simplement 't
+	Setq provoque une erreur si largument n'est pas une variable.
+	Modification de cpfnt.ll et cperror.ll
+
+

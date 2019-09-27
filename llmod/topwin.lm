@@ -1,0 +1,40 @@
+defmodule
+topwin
+files (
+topwin
+)
+export (
+topwindow
+)
+import (
+pepe
+virbitmap
+files
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(topwindow nsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+files
+pepe
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop 'topwindow 't '#:complice:globalvar)
+))

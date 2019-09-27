@@ -1,0 +1,2083 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "8/19" "eval.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 8 "L'e'valuateur Le-Lisp"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/eval.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $ 
+          TITLE     EVAL                ; LLM3 : l'evaluateur.
+
+; .Section "Les De'claraziones"
+
+          XDEFP     INI_EVAL
+          XDEFP     UNBIND0
+          XDEFP     UNBIND1
+          XDEFP     UNBINP1
+          XDEFP     UNBIND2
+          XDEFP     UNBIND3
+          XDEFP     UNBIND4
+          XDEFP     UNBIND5
+          XDEFP     UNBIND6
+          XDEFP     UNBIND7
+          XDEFP     UNBIND8
+          XDEFP     UNBIND9
+          XDEFP     UNBIND10
+          XDEFP     EVALCAR
+          XDEFP     EVALA1
+          XDEFP     EVALAN
+          XDEFP     EVALT
+          XDEFP     LLITSOFT
+          XDEFP     LLSUPIT
+          XDEFP     SYSPROT
+          XDEFP     FINDTAG
+          XDEFI     DLINK               ; lien dynamique
+          XDEFI     LLINK               ; [lex] lien des blocs lexicaux
+          XDEFI     EVALST
+          XDEFI     FORME
+          XDEFI     FUNCT
+          XDEFI     SAVEA1
+          XDEFI     SAVEA2
+          XDEFI     SAVEA3
+          XDEFI     SAVEA4
+          XDEFI     INTRET
+          XDEFI     INTLLINK
+          XDEFI     ERRNAME
+          XDEFP     EVAL
+          XDEFP     EVALC
+          XDEFP     APPLY
+          XDEFP     FFUNCALL
+          XDEFP     FUNCALL
+          XDEFP     EVEXPG
+          XDEFP     UNBINP
+          XDEFP     EVPROGN
+          XDEFP     EVPROGNR            ; POUR CSTACK
+          XDEFP     EVBNDEXT
+          XDEFP     EVBSER
+          XDEFP     UNBISE
+          XDEFP     BNDTRBEX
+          XDEFP     EVBALE
+          XDEFI     .FUNCTION
+          XDEFI     .EVAL
+
+          XREFI     LLINIT,.UNDEF       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,.ITSOFT
+          XREFI     LLINIT,.SYSPKGC
+          XREFI     LLINIT,MSTACK
+          XREFP     TOPERR,ERRFS        ; 2 - TOPERR
+          XREFP     TOPERR,ERRES
+          XREFP     TOPERR,ERRSYM
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRNVA
+          XREFP     TOPERR,ERRUDV
+          XREFP     TOPERR,ERRUDF
+          XREFP     TOPERR,ERRUDT
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRBPA
+          XREFP     TOPERR,ERRBAL
+          XREFP     TOPERR,ERRILB
+          XREFP     TOPERR,ERRNAB
+          XREFP     TOPERR,ERRXIA
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFI     READ,CPKGC
+          XREFP     PRINT,PROBJ         ; 7 - PRINT
+          XREFP     PRINT,PROBJT
+          XREFI     CNTRL,.LAMBDA       ; 10 - CNTRL
+          XREFI     CNTRL,.FLAMBDA
+          XREFI     CNTRL,.MLAMBDA
+          XREFP     SYMBS,GETFN1        ; 12 - SYMBS
+          XREFP     SYMBS,GETFNS
+          XREFP     SYMBS,FINDFN
+          XREFP     FNTSTD,NREVERSE     ; 13 - FNTSTD
+          XREFP     FNTSTD,EVLIS
+          XREFP     FNTSTD,DISPLACE
+          XREFP     FNTSTD,LLLENGTH     ; bk
+          XREFP     GC,GETTYPE          ; GC
+
+; .Section "Donne'es vives de l'interpre`te"
+
+          IMPURE
+
+; .SSection "Me'moires nettoye'es par le GC"
+
+LLINK     ADR       0                   ; [GC] pointeur des blocs lexicaux
+EVALST    ADR       0                   ; [GC] indicateur de TRACE : () si non
+FORME     ADR       0                   ; [GC] la forme a` e'valuer
+FUNCT     ADR       0               ; [GC] la fonction a` e'valuer (si erreur)
+SAVEA1    ADR       0                   ; [GC] temp
+SAVEA2    ADR       0                   ; [GC] temp
+SAVEA3    ADR       0                   ; [GC] temp
+SAVEA4    ADR       0                   ; [GC] temp
+ERRNAME   ADR       0                   ; [GC] nom en cas d'erreur
+INTRET    ADR       0                   ; [GC] retour apre`s liaison.
+INTLLINK  ADR       0                   ; [GC] env lex a` utiliser
+
+; .SSection "Me'moires non nettoye'es par le GC"
+
+DLINK     ADR       0              ; pointeur sur le bloc d'activation courant
+RVBSER    ADR       0              ; pile si erreur de detructuration
+
+; .Section "Initialisation de l'e'valuateur"
+
+          PURE
+
+INI_EVAL  LABEL      
+          MOV       .SYSPKGC,CPKGC      ; cre'ation de #:sys-package:itsoft
+          MAKCST    SYSITS,#6,"itsoft"
+
+          MOVNIL    CPKGC               ; on retourne dans le package ||
+          MAKFNT    EVAL,#4,"eval" 
+          MAKFNT    EVALWHEN,#9,"eval-when" 
+          MAKFNT    SYMEVAL,#7,"symeval" 
+          MAKFNT    LLARG,#3,"arg"
+          MAKCST    NOBIND,#7,"&nobind"
+          MAKFNT    TRACEVAL,#8,"traceval" 
+          MAKFNT    STEPEVAL,#8,"stepeval" 
+          MAKFNT    UAPPLY,#5,"apply" 
+          MAKFNT    FUNCALL,#7,"funcall" 
+          MAKFNT    TAG,#3,"tag" 
+          MAKFNT    EVTAG,#5,"evtag" 
+          MAKFNT    UNTLXIT,#9,"untilexit"
+          MAKFNT    FFEXIT,#4,"exit" 
+          MAKFNT    EVEXIT,#6,"evexit" 
+          MAKFNT    UNWIND,#6,"unwind" 
+          MAKFNT    UNEXIT,#6,"unexit" 
+
+          MAKFNT    LLOCK,#4,"lock" 
+          MAKFNT    PROTECT,#7,"protect" 
+          MAKFNT    LET,#3,"let" 
+          MAKFNT    LETSEQ,#4,"lets" 
+          MAKFNT    LETV,#4,"letv" 
+          MAKFNT    LETVQ,#5,"letvq" 
+          MAKFNT    FLET,#4,"flet" 
+          MAKFNT    FUNCTION,#8,"function"
+          MAKCST    CLOSURE,#9,"_closure_"
+
+          MAKCST    RARROW,#3,"-> " 
+          MAKCST    LARROW,#3,"<- " 
+
+          MOVNIL    EVALST              ; status NIL
+          MOVNIL    LLINK               ; [lex] pas de blocs actifs.
+          RETURN
+
+; .Section "Les fonctions de lancement d'EVAL"
+
+ ;         EVAL : SUBR1/2   (eval forme) ou (eval forme llink)
+ ;         A1 <- la forme a` e'valuer
+ ;         A2 <- LLINK (optionnel)
+ ;
+;  ----------------------------------------
+          FENTRY    EVAL,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#1,EVALU2        ; 1 arg : seul arg
+          CNBEQ     A4,#2,EVALU1        ; 2 args : exp + llink
+          MOV       #1,A1               ; le bon nombre
+          MOV       .EVAL,A2            ; l'appelant
+          JMP       ERRWNA
+EVALU1    POP       A2                  ; new LLINK
+          POP       A1                  ; la forme
+          PUSH      LLINK               ; le temps du SYS-PROTECT
+          MOV       A2,LLINK            ; nouveau LLINK
+          BRA       EVALU3              ; apre`s c'est pareil.
+EVALU2    POP       A1                  ; la forme
+          PUSH      LLINK               ; le temps du SYS-PROTECT
+          MOVNIL    LLINK               ; plus rien de lexical
+EVALU3    MOV       @EVALA1,A3          ; la continuation
+          CALL      SYSPROT             ; protect & GO
+          POP       A1                  ; valeur de retour.
+          POP       LLINK               ; restaure l'env lexical
+          BRI       A3                  ; retour d'un SYSPROT toujours via A3
+
+EVALC     LABEL                         ;;; EVALCAR avec LLINK = ()
+          MOV       CAR(A1),A1
+          PUSH      A1
+          MOV       #1,A4
+          BRA       EVAL
+
+;  ----------------------------------------
+          FENTRY    EVALWHEN,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,EVWHEN3          ; (eval-when)
+          MOV       CDR(A1),A4          ; sauve le corps
+          MOV       CAR(A1),A1          ; recupere la liste
+          MOV       .EVAL,A3            ; le mot-cle recherche'
+          BRA       EVWHEN2
+EVWHEN1   MOV       CAR(A1),A2          ; mot-cle
+          CABEQ     A2,A3,EVWHEN4       ; mot-cle=eval : on va faire PROGN
+          MOV       CDR(A1),A1          ; le suivant
+EVWHEN2   BTCONS    A1,EVWHEN1          ; c'est une liste
+EVWHEN3   MOVNIL    A1                  ; le resultat par defaut
+          RETURN
+EVWHEN4   MOV       A4,A1               ; recupere le corps
+          MOV       .EVALWHEN,ERRNAME   ; en cas d'erreur
+          INTEST                        ; protege toutes les boucles
+          BRA       EVPROGN             ; la suite comme un PROGN
+
+;  ----------------------------------------
+          FENTRY    SYMEVAL,SUBR1
+;  ----------------------------------------
+          BFSYMB    A1,SYMEVAL1         ; il faut vraiment un symbole.
+          MOV       A1,A2               ; on sauve le nom si erreur
+          MOV       CVAL(A1),A1         ; charge la valeur du symbole
+          CABEQ     A1,.UNDEF,SYMEVAL2  ; c'est inde'fini : erreur.
+          RETURN                        ; tout est donc ok!
+SYMEVAL1  MOV       .SYMEVAL,A2
+          JMP       ERRSYM              ; il fallait un symbole.
+SYMEVAL2  MOV       A2,A1               ; le nom de la variable
+          MOV       .SYMEVAL,A2          
+          JMP       ERRUDV              ; provoque l'erreur
+
+; ----------------------------------------
+          FENTRY    LLARG,SUBRN
+; ----------------------------------------
+;         Version purement lexicale.
+          CABEQ     A4,#0,LLARGET       ; vers le GET number of ARG
+          CABEQ     A4,#1,LLARG1        ; vers le GET nieme ARG
+          MOV       #1,A1               ; le bon nombre d'arguments
+          MOV       .LLARG,A2
+          JMP       ERRWNA
+
+LLARG1    CALL      LLARGET             ; narg A1, A4-->larg/argN/argN-1/..
+          POP       A2                  ; l'index
+          DIFF      A2,A1               ; --> le nieme arg
+          ADJSTKR   A4,A1               ; de'pile
+          TOPSTR    A4,A1               ; le re'sultat
+          RETURN          
+
+LLARGET   LABEL                         ; charge dans A1 le #narg
+          MOV       DLINK,A4            ; tete de bloc d'activation
+          POPR      A4,A1               ; A1 <- le type du bloc
+          CABNE     A1,@UNBIND1,LLARGER ; pas bon!
+          ADJSTKR   A4,#3               ; pointe sur la liste des param
+          POPR      A4,A1               ; la liste des param
+          CABNE     A1,.NOBIND,LLARGER  ; il faut &nobind!
+          TOPSTR    A4,A1               ; recup le #narg
+          RETURN                        ; that it!
+
+LLARGER   MOV       .LLARG,A2           ; la fonction
+          MOVNIL    A1                  ; l'argument
+          JMP       ERRNAB              ; pas de portee lexicale.
+
+
+ ;
+ ;         Trace de EVAL : (TRACEVAL e env)
+ ;
+;  ----------------------------------------
+          FENTRY    TRACEVAL,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#1,TRACEV1       ; juste une forme
+          CNBEQ     A4,#2,TRACEV2       ; forme + env
+          MOV       #1,A1               ; le vrai bon nb
+          MOV       .TRACEVAL,A2        ; l'appelant
+          JMP       ERRWNA
+TRACEV1   POP       A1                  ; la forme
+          MOVNIL    A2                  ; l'env lex
+          BRA       TRACEV3
+TRACEV2   POP       A2                  ; l'env lex
+          POP       A1                  ; la forme
+TRACEV3   PUSH      NIL                 ; la liste d'arguments
+          PUSH      SAVEA4
+          PUSH      SAVEA3
+          PUSH      SAVEA2
+          PUSH      SAVEA1
+          PUSH      FUNCT
+          PUSH      FORME
+          PUSH      EVALST              ; sauve le STEP
+          MOV       .T,EVALST           ; T = trace active
+          PUSH      .STEPEVAL           ; type du bloc ITSOFT
+          PUSH      LLINK
+          MOV       A2,LLINK            ; new env lex
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND4            ;; type du bloc ITSOFT
+          STACK     DLINK               ;; sauve le pointeur de pile courant
+          BRA       EVALAN              ; et on e'value A1 SANS trace!
+
+; .Section "Les interruptions de EVAL : EVALT STEPEVAL"
+
+ ;         La fonction STEPEVAL standard
+ ;         re'alise une trace de tous les appels internes de EVAL
+ ;         l'argument est la forme qui devait e^tre e'valuee
+ ;
+;  ----------------------------------------
+          FENTRY    STEPEVAL,SUBRN
+;  ----------------------------------------
+          CABEQ     A4,#1,STEPEV1       ; juste une forme
+          CABEQ     A4,#2,STEPEV2       ; forme + env
+          MOV       #1,A1               ; le bon nb
+          MOV       .STEPEVAL,A2        ; l'appelant
+          JMP       ERRWNA
+STEPEV1   POP       A1
+          PUSH      @STEPEVR            ; retour de stepeval
+          PUSH      A1
+          PUSH      NIL                 ; faux env lex
+          BRA       STEPEV3
+STEPEV2   POP       A2
+          POP       A1
+          PUSH      @STEPEVR
+          PUSH      A1
+          PUSH      A2
+STEPEV3   MOV       .RARROW,A1          ; charge le symbole ->
+          JCALL     PROBJ               ; on l'imprime
+          MOV       &1,A1               ; re'cupe`re la forme
+          JCALL     PROBJT              ;   qui est aussi imprime'e.
+          MOV       #2,A4               ; simule une NSUBR
+          BRA       TRACEVAL            ; et on appelle EVAL avec trace
+STEPEVR   PUSH      A1                  ; sauve la valeur de l'e'valuation
+          MOV       .LARROW,A1          ; charge la fle`che gauche
+          JCALL     PROBJ               ; qui est imprime'e
+          TOPST     A1                  ; consulte le sommet de pile
+          JCALL     PROBJT              ; imprime avec terpri
+          POP       A1                  ; il faut bien ramener qcq
+          RETURN                        ; et voila
+
+EVALT     LABEL                         ; si TRACEVAL non NIL
+          MOV       LLINK,A2            ; LLINK
+          NCONS     A2                  ; (LLINK)
+          CONS      A1,A2               ; A2 <- (forme LLINK)
+          MOV       .STEPEVAL,A1        ; nom de la fonction
+          CALL      LLITSOFT            ; donc (APPLY STEPEVAL (forme))
+          MOV       .T,EVALST           ; repositionne la trace
+          RETURN                        ; et on retourne la valeur
+
+; .Section "EVAL interne"
+                                         
+POPJ      LABEL                         ;;; le point de retour ge'ne'ral
+          RETURN
+
+EVALCAR   LABEL                         ;;; (EVAL (CAR A1)) interne 
+          MOV       CAR(A1),A1          ; A1 <- (CAR A1)
+          BFNIL     EVALST,EVALT        ; il y a une trace active
+          BRA       EVALAN              ; sinon c'est normal
+
+EVALA1    LABEL                         ;;; (EVAL A1) avec test interrupt
+          BFNIL     EVALST,EVALT        ; il y a une trace active
+          BRA       EVALAN              ; sinon c'est normal
+
+EVALAN    LABEL                         ;;; (EVAL A1) sans test interrupt
+          BTCONS    A1,EVALIS           ; si c'est une liste
+          BFFIX     A1,EVALAT           ;   sinon c'est un atome non fix.
+          RETURN
+
+; .SSection "Evaluation des listes"
+
+EVALIS    LABEL                         ; elle est dans A1
+          INTEST
+          CHKSTK    MSTACK,ERRFS
+          MOV       A1,FORME            ; pour les macros et les erreurs
+          MOV       CAR(A1),A2          ; A2 <- la fonction
+          MOV       CDR(A1),A1          ; A1 <- la liste des arguments
+                                        ; e'value fnt=A2, larg=A1
+          BFSYMB    A2,EVALFV           ; la fonction est bizarre.
+                                        ; la fonction est donc un symbole
+          MOV       FVAL(A2),A3         ; A3 <- la FVAL du symbole fonction
+          GFTYPE    A2,A4               ; A4 <- le FTYPE code'
+          BRX       @TEVAL,A4           ; re'alise l'aiguillage sur le type
+
+ ;         Table du branchement indirect indexe'  sur le F-TYPE de la fonction
+ ;         On effectue une rupture de se'quence avec :
+ ;         - A1 <- la liste des arguments
+ ;         - A2 <- le nom de la fonction
+ ;         - A3 <- la F-VAL de la fonction
+ ;         - A4 <- le F-TYPE code' de la fonction
+ ;
+
+TEVAL     ADR       UDFER               ; code 0  : pas de de'finition
+          ADR       EVAL0               ; code 1  : SUBR a` 0 argument
+          ADR       EVAL1               ; code 2  : SUBR a` 1 argument
+          ADR       EVAL2               ; code 3  : SUBR a` 2 arguments
+          ADR       EVAL3               ; code 4  : SUBR a` 3 arguments
+          ADR       EVALN               ; code 5  : SUBR a` N argumemnts
+          ADR       EVALF               ; code 6  : SUBRF
+          ADR       EVEXP               ; code 7  : EXPR
+          ADR       EVFEXP              ; code 8  : FEXPR
+          ADR       EVMAC               ; code 9  : MACRO
+          ADR       EVDMAC              ; code 10 : DMACRO
+          ADR       EVALM               ; code 11 : SUBRM
+          ADR       EVALDM              ; code 12 : SUBRDM
+
+; .SSection "Evaluation des atomes (sans les fix)"
+
+EVALAT    LABEL
+          BFSYMB    A1,EVOTHAT          ; cas des autres atomes(nbs,strg,vect)
+                                        ;;; e'valuation des symboles 
+          MOV       A1,A2               ; on sauve le nom si erreur
+          MOV       CVAL(A1),A1         ; charge la valeur du symbole
+          CABEQ     A1,.UNDEF,EVALERA8  ; c'est inde'fini : erreur.
+          RETURN                        ; sinon je rentre de suite
+EVALERA8  LABEL                         ;;; ERRUDV (erreur A8 de Lisp 1.5!!!)
+          MOV       A2,A1               ; le mauvais argument
+          MOV       .EVAL,A2            ; nom de la fonction
+          JMP       ERRUDV              ; erreur standard
+EVOTHAT   LABEL                         ;;; e'valuation des autres atomes.
+          BTSTRG    A1,EVEXTYP          ; type e'tendu de type chai^ne
+          BTVECT    A1,EVEXTYP          ; type e'tendu de type vecteur.
+          RETURN                        ; les nombres sont des constantes.
+EVEXTYP   PUSH      A1                  ; sauve l'objet
+          MOV       TYP(A1),A1          ; le type en question (la classe)
+          BFSYMB    A1,EVEXTYPR         ; pas possible
+          MOV       .EVAL,A2            ; le nom de la me'thode
+          MOVNIL    A3                  ; jusqu'a` || exclu
+          JCALL     GETFNS              ; essaie de trouver #:---:eval
+          BTNIL     A1,EVEXTYPR         ; rate' => POPJ
+          MOV       #1,A4               ; Narg de FUNCALL
+          BRA       FFUNCALL            ; et c'est parti
+EVEXTYPR  POP       A1
+          RETURN
+
+
+; .SSSection "Evaluation rapide de type SUBR"
+
+EVAL0     LABEL                         ; *** traitement des SUBR0
+          BFNIL     A1,WNAER0           ; il y a des arguments!
+          BRI       A3                  ; vers le code.
+
+EVAL1     LABEL                         ; *** traitement des SUBR1
+          PUSH      A3                  ; cela permet le BRA a` EVALCAR!
+          BFCONS    A1,WNAER1           ; il faut une liste
+          BFNIL     CDR(A1),WNAER1D     ; il ne faut qu'un argument
+          BRA       EVALCAR             ; ok on y va.
+
+EVAL2     LABEL                         ; *** traitement des SUBR2
+          PUSH      A3                  ; empile la FVAL
+          BFCONS    A1,WNAER2           ; il faut 2 args
+          MOV       CDR(A1),A3          ;  (2eme)
+          BFCONS    A3,WNAER23          ; pas assez d'args
+          PUSH      CAR(A3)             ; 2e`me non evalue
+          BFNIL     CDR(A3),WNAER23D    ; trop d'args
+          CALL      EVALCAR             ; e'value le 1er
+          XTOPST    A1                  ; sauve la 1e`re valeur re'cup le (2)
+          CALL      EVALA1              ; on e'value le 2e`me
+          MOV       A1,A2               ; positionne le 2e`me arg
+          POP       A1                  ; re'cupe`re le 1er
+          RETURN                        ; et on tombe sur la FVAL empile'e
+
+EVAL3     LABEL                         ; *** traitement des SUBR3
+          PUSH      A3                  ; empile la FVAL
+          BFCONS    A1,WNAER3           ; qu'est-ce que ca veut dire !
+          PUSH      CDR(A1)             ; sauve le reste des arguments
+          PUSH      A2                  ; le nom de la fonction
+          CALL      EVALCAR             ; e'value le 1er arg
+          POP       A2                  ; re'cupe`re le nom de la fonction.
+          XTOPST    A1                  ; ech le reste <-> val du 1er
+          BFCONS    A1,WNAER3           ; bizarre
+          PUSH      CDR(A1)             ; resauve le reste
+          PUSH      A2                  ; le nom de la fonction
+          CALL      EVALCAR             ; e'value le 2e`me
+          POP       A2                  ; re'cupe`re le nom de la fonction.
+          XTOPST    A1                  ; ech lereste <-> val du 2e`me
+          BFCONS    A1,WNAER3           ; bizarre
+          BFNIL     CDR(A1),WNAER3D     ; plus de 3 args ?!
+          CALL      EVALCAR             ; e'value le 3e`me
+          MOV       A1,A3               ; positionne le 3e`me arg
+          POP       A2                  ; positionne le 2e`me arg
+          POP       A1                  ; positionne le 1er arg
+          RETURN                        ; et on tombe sur la FVAL empile'e!
+
+EVALN     LABEL                         ; *** traitement des NSUBR
+          BTCONS    A1,EVALNS0          ; au moins 1 arg
+          BFNIL     A1,EVBAL            ; cas particulier : 0 arg
+          MOV       #0,A4               ; narg
+          BRI       A3                  ; et c'est direct
+EVALNS0   LABEL
+          MOV       CDR(A1),A2          ; histoire de relucquer avant ...
+          BTCONS    A2,EVALNS1          ; au moins 2 args
+          BFNIL     A2,EVBAL2           ; ERRBAL sur A2
+          PUSH      A3                  ; adr de lancement
+          CALL      EVALCAR             ; evalue l'arguemnt unique
+          XTOPST    A1                  ; A1 <- adr de lancement
+          MOV       #1,A4               ; narg
+          BRI       A1                  ; et c'est direct.
+EVALNS1   LABEL                         ; au moins 2 args.
+          PUSH      A2                  ; sauve le reste
+          PUSH      A3                  ; sauve l'adr de lancement
+          CALL      EVALCAR             ; evaluation du 1er
+          POP       A3                  ; recup l'adresse de lancement
+          XTOPST    A1                  ; A1 <- le reste
+          MOV       CDR(A1),A2          ; histoire de mater encore
+          BTCONS    A2,EVALNSN          ; too bad : au - 3 args ...
+          BFNIL     A2,EVBAL2
+          PUSH      A3                  ; adr de lancement
+          CALL      EVALCAR             ; evaluation du 2eme
+          XTOPST    A1                  ; A1 adr de lancement
+          MOV       #2,A4               ; narg
+          BRI       A1                  ; et c'est parti a fond la caisse.
+
+EVALNSN   MOV       #1,A4               ; le compteur d'arg NARG
+EVALN1    PUSH      CDR(A1)             ; sauve le reste des arguments
+          PUSH      A4                  ; sauve le compteur
+          PUSH      A3                  ; sauve la FVAL
+          CALL      EVALCAR             ; e'value l'argument suivant
+          POP       A3                  ; recup l'adresse de retour
+          POP       A4                  ; re'cupe`re le compteur NARG
+          XTOPST    A1                  ; empile le re'sultat et re'cup args
+          INCR      A4                  ; actualise NARG
+          BTCONS    A1,EVALN1           ; il reste des arguments
+          BFNIL     A1,EVBAL            ; belle fin
+          BRI       A3                  ; vers la FVAL
+
+EVBAL2    PUSH      A2
+          BRA       EVBAL1
+EVBAL     LABEL                         ;;; A1 <- bad end, A3 une FVAL
+          PUSH      A1                  ; sauve la mauvaise fin
+EVBAL1    MOV       A3,A1               ; pour le FINDFN
+EVBALE    LABEL
+          JCALL     FINDFN              ; recup le nom
+          MOV       A1,A2               ; nom de la fonction
+          POP       A1                  ; badarg
+          JMP       ERRBAL
+
+EVALF     LABEL                         ; *** traitement des FSUBR
+          BRI       A3                  ; vers la FVAL
+
+EVALM     LABEL                         ; *** traitement des MSUBR
+          PUSH      @EVALA1             ; pour la 2e`me e'valuation
+          MOV       FORME,A1            ; la valeur de l'argument est la forme
+          BRI       A3                  ; vers la FVAL
+
+EVALDM    LABEL                         ; *** traitement des DMSUBR
+          MOV       FORME,A1            ; la valeur de l'argument est la forme
+          PUSH      A1                  ; pour le DISPLACE final
+          PUSH      @EVALDMR            ; retour apre`s l'expansion
+          MOV       CDR(A1),A1          ; le CDR ici (vs MACRO)
+          BRI       A3                  ; vers la FVAL
+EVALDMR   LABEL                         ; A1 <- l'expansion
+          MOV       A1,A2               ; pour DISPLACE
+          POP       A1                  ; la forme a` modifier
+          JCALL     DISPLACE            ; Action!
+          BRA       EVALA1              ; vers la re e'valuation.
+
+; .SSSection "Evaluation des EXPR"
+
+; .DebLL
+;  ----------------------------------------------------------------------
+;         Fabrique dans la pile un bloc d'activation de type 1 : LAMBDA
+;
+;              DLINK  ->       [       @UNBIND1        ]
+;                              [     ancien DLINK      ]
+;                              [     ancien LLINK      ]
+;                              [  FVAL de la fonction  ]
+;                              [ lparam de la fonction ]
+;                              [          #N           ]
+;                              [   ancienne valeur N   ]
+;                              [   ancienne valeur N-1 ]
+;                                    ..........
+;                                    ..........
+;                              [   ancienne valeur 2   ]
+;                              [   ancienne valeur 1   ]
+;                              -------------------------
+;  ----------------------------------------------------------------------
+; .FinLL
+
+ ;   EVEXP : fabrication des emplacements en pile et e'valuation du corps
+ ;         A1 <- la liste des arguments
+ ;         A2 <- le nom de la fonction
+ ;         A3 <- la F-VAL de la fonction
+ ;         A4 <- le F-TYPE code' de la fonction
+
+EVEXP     LABEL
+          MOV       #0,A4               ; nb de valeurs
+          BTCONS    A1,EVEXP1           ; au moins 1 argument.
+          BRA       EVEXP2              ; pas d'arguments.
+EVEXP1    PUSH      CDR(A1)             ; sauve le reste des arguments
+          PUSH      A4                  ; sauve le compteur
+          PUSH      A3                  ; sauve la FVAL
+          PUSH      A2                  ; le nom en cas d'erreur
+          CALL      EVALCAR             ; e'value l'argument suivant
+          POP       A2                  ; le nom en cas d'erreur
+          POP       A3                  ; recup la FVAL
+          POP       A4                  ; re'cupe`re le compteur NARG
+          XTOPST    A1                  ; empile le re'sultat et re'cup largs
+          INCR      A4                  ; actualise NARG
+          BTCONS    A1,EVEXP1           ; il reste des arguments
+EVEXP2    BFNIL     A1,EVERRBAL         ; c'est pas propre
+          MOV       A2,ERRNAME          ; le nom de la fonction
+          MOVNIL    INTLLINK            ; pas d'env lex pour e'valuer 
+                                        ;;; EVBND doit suivre ...
+          
+ ;   EVBND : re'alise la liaision superficielle et lance un corps
+ ;         les valeurs ...|val1|val2|..|valN|| sont empile'es
+ ;         A3       <- la FVAL
+ ;         A4       <- #N le nb d'arguments empile's
+ ;         ERRNAME  <- le nom de l'appelant de la liaison (si erreur)
+ ;         INTLLINK <- l'env lex d'exe'cution du corps
+
+EVBND     LABEL
+          MOV       @EVEXPG,INTRET      ; adresse de continuation d'execution
+          MOV       A4,SAVEA4           ; le temps de travailler
+          MOV       A3,SAVEA1           ; la FVAL prete
+          MOV       CAR(A3),A3          ; la liste des parametres,
+          MOV       A3,SAVEA2           ; sauvetage de <lparam>
+          BFCONS    A3,EVBND6           ; au travail
+
+EVBND2    CABEQ     A4,#0,EVBNR32        ; pas assez d'arguments
+          DECR      A4                  ; bonne position pour XSPMOV
+          MOV       CAR(A3),A2          ; le nom de la variable
+          BTCONS    A2,EVBDST           ; vers une destructuration
+          MOV       CVAL(A2),A1         ; old value
+          XSPMOV    A4,CVAL(A2)         ; force new value
+          MOVXSP    A1,A4               ; save old value
+          MOV       CDR(A3),A3          ; le reste des variables
+          BTCONS    A3,EVBND2           ; il en reste.
+          BRA       EVBND6              ; fait la fin du bloc.
+
+ ;   EVBNDEXT : idem a` EVBND mais appel par le compilo
+ ;         les valeurs ...|val1|val2|..|valN|| sont empile'es
+ ;         A3       <- la liste des parame`tres
+ ;         SAVEA2   <- idem a` A3
+ ;         A4       <- #N
+ ;         SAVEA4   <- idem a` A4
+ ;         SAVEA1   <- le nom de la fonction (idem a` ERRNAME)
+ ;         ERRNAME  <- le nom de l'appelant de la liaison (si erreur)
+ ;         INTLLINK <- l'env lex d'execution du corps
+
+
+EVBNDEXT  LABEL                         ; entre'e pour le compilo
+          NOP                           ; EVBNDEXT est exporte'!
+          BTCONS    A3,EVBND2           ; liste normale
+EVBND6    BTNIL     A3,EVBND9           ; vraie fin
+          CABEQ     A3,.NOBIND,EVBND91  ; si &nobind
+          DECR      A4
+          DIFF      A4,SAVEA4           ; le vrai nb empile
+          INCR      A4                  ; compense le DECR
+          INCR      A4                  ; pour pouvoir terminer avec A4=0
+          MOVNIL    A1                  ; la vraie valeur
+          BRA       EVBND8
+EVBND7    POP       A2
+          CONS      A2,A1               ; c'est le SEUL vrai CONS de EVAL!
+EVBND8    SOBGTZ    A4,EVBND7           ; il en reste
+          PUSH      CVAL(A3)            ; old cval de &REST
+          MOV       A1,CVAL(A3)         ; new CVAL
+EVBND9    CABNE     A4,#0,EVBNR1        ; cochonneries dans la pile.
+;         test de tail-rec
+EVBND91   MOV       SAVEA4,A4           ; le nb d'arguments empiles
+EVBND92   MOV       SAVEA1,A1           ; Point d'entre'e pour BNDTRB!!
+          XSPMOV    A4,A2               ; si tail = UNBIND1
+          CABNE     A2,@UNBIND1,EVBND94 ; pas tail
+          MOV       A4,A3               ; a` cause du calcul
+          PLUS      #3,A3               ; saute UNBIND1+DLINK+LLINK
+          XSPMOV    A3,A2               ;  une FVAL
+          CABNE     A2,A1,EVBND94       ; pas recursif
+          PLUS      #1,A3               ; pointe sur lparam
+          XSPMOV    A3,A2               ; A2 <- lparam
+          CABEQ     A2,.NOBIND,EVBND94  ; pas de tail rec pour &NOBIND.
+          ADJSTK    A4
+          BRI       INTRET
+
+EVBND94   PUSH      A4                  ; prepare #N
+          PUSH      SAVEA2              ; prepare la <liste des param>
+          PUSH      A1                  ; prepare la FVAL
+
+ ;        Termine la fabrication du bloc d'activation
+
+EVEXPN    LABEL                         ;;; c'est donc un corps normal
+          PUSH      LLINK          
+          PUSH      DLINK               ;; sauve l'adresse du bloc pre'ce'dent
+          PUSH      @UNBIND1            ;; empile le type du bloc
+          STACK     DLINK               ;; sauve l'adresse du bloc.
+          MOV       INTLLINK,LLINK      ; env lex d'exec du corps
+          BRI       INTRET
+
+
+
+
+;         Les erreurs durant les liaisons : elles doivent
+;         restaurer les anciennes valeurs. Comme cette 
+;         de'liaison est assez couteuse, l'ide'e est d'appeler
+;         un point d'entre'e de la routine UNBIND1 (UNBISE) avec
+;         les arguments et la pile idoines.
+
+EVBNR1    LABEL                         ;;; Il y a trop d'arguments d'appel
+          MOVNIL    A1                  ; construire la liste des args en trop
+          DIFF      A4,SAVEA4           ; le nb actuel d'arguments dans la pile
+	  MOV       SAVEA4,A1
+EVBNR2    POP       A3                  ; il reste des trucs dans la pile
+          SOBGTZ    A4,EVBNR2           ; de'gage A4 e'le'ments
+          MOV       SAVEA4,A4           ; le # d'args empile's
+EVBNR31	  MOV       A1,SAVEA1
+          MOV       SAVEA2,A3
+          MOV       @ERRBNER,SAVEA3     ; la continuation de la de'liaison.
+          BRA       UNBISE              ; et simule une de'liaison normale.
+EVBNR32   LABEL
+          MOV       SAVEA4,A4           ; le # d'args empile's
+EVBNR33   LABEL                         ;;; pas assez d'arguments d'appel
+          MOV       SAVEA2,A1           ; la liste d'arguments
+	  JCALL     LLLENGTH            ; sa taille dans A1
+          BRA       EVBNR31
+
+ERRBNER   MOV       SAVEA1,A1
+          CALL      FERRNAM             ; le nom de l'appelant dans A2
+          JMP       ERRWNA
+
+;         L'erreur liaison ille'gale :
+;         A1 = la liste inverse de la destructurartion en cours
+;         A2 = var, A3 = val
+;         A4 = le nb d'objets dans la pile avant la valeur qui
+;              ne se destructure pas.
+;         SAVEA2 = la liste comple`te des parame`tres
+;         SAVEA4 = le nb reel d'objets empile's
+
+EVBSER    LABEL                         ;;; liaison illegale itou A2=var A3=val
+          SSTACK    RVBSER              ; pile avant la liaison.
+          NCONS     A3                  ; 1 - fabrique l'argument de'fectueux :
+          CONS      A2,A3               ;     (lval lvar)
+          MOV       A3,SAVEA1           ; badarg pre^t.
+          DIFF      A4,SAVEA4           ; 2 - enle`ve les args en trop
+          ADJSTK    A4
+          MOVNIL    A2                  ; 3 - renverse physiquement A1
+          BFCONS    A1,EVBSER5          ; qui contient les valeurs sauve'es
+EVBSER4   MOV       CDR(A1),A3          ; cf: EVBDST
+          MOV       A2,CDR(A1)
+          MOV       A1,A2
+          MOV       A3,A1
+          BTCONS    A1,EVBSER4
+EVBSER5   XTOPST    A2                  ; 4 - force la liste renverse'e
+          MOV       SAVEA4,A4           ; 5 - pre'pare l'appel de UNBISE
+          MOV       SAVEA2,A3           ; la liste des parame`tres
+          MOV       @EVBSER9,SAVEA3     ; la continuation de la de'liaison.
+          BRA       UNBISE              ; et simule une de'liaison normale.
+EVBSER9   MOV       SAVEA1,A1
+          CALL      FERRNAM             ; le nom de l'appelant dans A2
+          JMP       ERRILB
+
+;         Liaison destructurante :
+;         elle se fait avec des CONS aujourd'hui ...
+;         doit fabriquer dans A1 la liste des anciennes valeurs.
+;         A2 <- l'arbre des noms.
+
+EVBDST    LABEL                         ;;; liaison destructurante
+          MOV       A3,SAVEA3           ; le temps de travailler
+          XSPMOV    A4,A3               ; l'arbre des nouvelles valeurs
+          MOVNIL    A1                  ; l'arbre des anciennes valeurs,
+          STACK     RVBSER              ; en cas de retour en erreur
+          CALL      EVBDST1             ; Action!
+          MOVNIL    A2                  ; renverse physiquement A1
+          BFCONS    A1,EVBDST6          ; reverse phys. (A1=NIL parfois ?!?!?)
+EVBDST4   MOV       CDR(A1),A3          ; avance dans la liste
+          MOV       A2,CDR(A1)          ; change le CDR
+          MOV       A1,A2               ; new back
+          MOV       A3,A1               ; elem suivant
+          BTCONS    A1,EVBDST4          ; la liste n'est pas terminee
+          MOV       A2,A1
+EVBDST6   MOV       SAVEA3,A3           ; l'ancienne liste des noms
+          MOVXSP    A1,A4               ; save old value
+          MOV       CDR(A3),A3          ; le reste des variables
+          BTCONS    A3,EVBND2           ; il en reste.
+          BRA       EVBND6              ; test la fin du bloc.
+
+EVBDST1   LABEL                         ; A3 < -les valeurs, A2 <- les noms
+          BTNIL     A3,EVBDST11         ; laxisme, laxisme ...
+          BFCONS    A3,EVBSER           ; liaison illegale.
+EVBDST11  PUSH      CDR(A2)
+          MOV       CAR(A2),A2
+          BTCONS    A2,EVBDST8          ; re desctruct in destruct
+          CONS      CVAL(A2),A1
+          MOV       CAR(A3),CVAL(A2)    ; force old val
+EVBDST2   MOV       CDR(A3),A3          ; avance dans les vals
+          POP       A2                  ; reste des noms
+          BTCONS    A2,EVBDST1
+          BTNIL     A2,EVBDST3
+          CONS      CVAL(A2),A1
+          MOV       A3,CVAL(A2)         ; &REST dans &DEST
+EVBDST3   RETURN                        ; A1 est ok.
+
+EVBDST8   PUSH      A3
+          MOV       CAR(A3),A3
+          CALL      EVBDST1
+          POP       A3
+          BRA       EVBDST2
+
+ ;        Exe'cution du corps d'une FVAL symbolique (dans A1)
+ ;        le corps a` exe'cuter est le CDR de A1. 
+ ;        ERRNAME doit e^tre charge' (si erreur)
+ ;
+ ;        Durant l'e'valuation d'un e'le'ment de ce corps, se trouvent
+ ;        empile's : le corps lui-me^me et l'adresse de la continuation
+ ;        de ce progn l'adresse EVPROGNR. CSTACK tient compte de ce fait.
+
+EVEXPG    LABEL                         ;;; lance une FVAL
+          MOV       CDR(A1),A1          ; A1 <- le corps
+          BFCONS    A1,EVPROGN7         ; bizarre
+          MOV       CDR(A1),A2          ; A2 <- 1er element
+          BTCONS    A2,EVPROGN2         ; il y en a plusieurs
+          BFNIL     A2,EVPROGN5         ; ya un malaise
+          BRA       EVALCAR             ; direct sur le CAR de A1
+
+EVPROGN   LABEL                         ;;; le PROGN de EVAL
+          BFCONS    A1,EVPROGN7         ; bizarre
+          MOV       CDR(A1),A2          ; A2 <- 1er element
+          BTCONS    A2,EVPROGN2         ; il y en a plusieurs
+          BFNIL     A2,EVPROGN5         ; ya un malaise
+          BRA       EVALCAR             ; direct sur le CAR de A1
+EVPROGN2  PUSH      A1                  ; sauve le reste (avec l'e'le'ment)
+          PUSH      @EVPROGNR           ; pour e^tre su^r du CALL!
+          BRA       EVALCAR             ; e'value l'e'le'ment
+EVPROGNR  LABEL                         ;;; SYMBOL utilise' par CSTACK
+          POP       A1                  ; le reste avec l'ancien
+          MOV       CDR(A1),A1          ; le vrai reste.
+          MOV       CDR(A1),A2          ; pour etre tail rec
+          BTCONS    A2,EVPROGN2         ; pas le dernier
+          BFNIL     A2,EVPROGN5         ; direct sur le CAR de A1
+          BRA       EVALCAR             ; direct sur le CAR de A1
+EVPROGN5  MOV       A2,A1               ; bad arg
+EVPROGN6  CALL      FERRNAM             ; le nom de l'appelant dans A2
+EVERRBAL  JMP       ERRBAL
+EVPROGN7  BTNIL     A1,POPJ             ; (progn)
+          BRA       EVPROGN6            ; (progn . x) !
+          
+; .SSSection "Evaluation des FEXPR, MACRO et DMACRO"
+
+EVMAC     LABEL                         ;;; e'value une MACRO
+          PUSH      @EVALA1             ; pre'pare la re-e'valuation
+          MOV       FORME,A1            ; l'argument est la forme elle-me^me
+          BRA       EVFEXP              ; puis comme les FEXPRs
+
+EVDMAC    LABEL                         ;;; e'value une DMACRO
+          MOV       FORME,A1            ; la forme elle-me^me
+          PUSH      A1                  ; pour le DISPLACE final
+          PUSH      @EVALDMR            ; la continuation des DMACRO
+          MOV       CDR(A1),A1          ; le CDR ici (vs MACRO)
+                                        ; puis comme les FEXPRs
+
+EVFEXP    LABEL                         ;;; e'value une FEXPR
+          MOV       A2,ERRNAME          ; pour les erreurs
+                                        ;;; BNDTRB  doit suivre ....
+ ;  ----------------------------------------------------------------------
+ ;
+ ;         Liaison des FEXPR/MACRO en arbre
+ ;
+ ;         A1 <- la liste d'args pre^te
+ ;         A3 <- est une FVAL,
+ ;         ERRNAME est charge'
+ ;
+ ;  ----------------------------------------------------------------------
+BNDTRB    LABEL
+          MOV       @EVEXPG,INTRET      ; La continuation.
+          MOV       A3,SAVEA1           ; On met de cote' la fval.
+          MOV       CAR(A3),A3          ; A3 <- le(s) parametre(s).
+          MOV       A3,SAVEA2           ; On le(s) mets de cote'.
+BNDTRBEX  LABEL                         ; Point d'entre'e pour le compilo.
+          MOV       #0,A4               ; Le compteur d'objets empile's.
+          BRA       BNDTRB2             ; Et on y va.
+BNDTRB1   BFCONS    A1,EVBNR33          ; Plus assez de valeurs?
+          INCR      A4                  ; Et un de mieux.
+          MOV       CAR(A3),A2          ; A2 <- parame'tre suivant.
+          BTCONS    A2,BNDTRB7          ; Une destructuration?
+          PUSH      CVAL(A2)            ; Empile l'ancienne valeur.
+          MOV       CAR(A1),CVAL(A2)    ; Force la valeur dans le parame'tre.
+          MOV       CDR(A1),A1          ; Les valeurs suivantes
+          MOV       CDR(A3),A3          ; Les parame'tres suivants
+BNDTRB2   BTCONS    A3,BNDTRB1          ; Ya encore des parame'tres?
+          BTNIL     A3,BNDTRB3          ; Est une belle fin?
+          CABEQ     A3,.NOBIND,BNDTRB5  ; Le cas &nobind.
+          INCR      A4                  ; Et un de mieux.
+          PUSH      CVAL(A3)            ; Empile l'ancienne valeur.
+          MOV       A1,CVAL(A3)         ; Force la valeur dans le parame'tre.
+          BRA       BNDTRB6             ; Et on est compatible.
+
+BNDTRB3   BTNIL     A1,BNDTRB6          ; Une belle fin pour les valeurs.
+          BRA       EVBNR33             ; Mauvais nombre d'argument.
+
+                                        ; Le cas &nobind
+BNDTRB4   PUSH      CAR(A1)             ; Pousse la valeur suivante.
+          MOV       CDR(A1),A1          ; Les valeurs suivantes.
+          CHKSTK    MSTACK,ERRFS        ; Des fois que!
+          INCR      A4                  ; Un de mieux.
+BNDTRB5   BTCONS    A1,BNDTRB4          ; Yen a encore?
+          BTNIL     A1,BNDTRB6          ; Une belle fin de liste?
+          CALL      FERRNAM             ; Quid?
+          JMP       ERRBAL              ; Bad Argument List
+
+BNDTRB6   LABEL                         ; recopie de EVBND92!
+          MOV       SAVEA1,A1           ; Point d'entre'e pour BNDTRB!!
+          XSPMOV    A4,A2               ; si tail = UNBIND1
+          CABNE     A2,@UNBIND1,EVBND94 ; pas tail
+          MOV       A4,A3               ; a` cause du calcul
+          PLUS      #3,A3               ; saute UNBIND1+DLINK+LLINK
+          XSPMOV    A3,A2               ;  une FVAL
+          CABNE     A2,A1,EVBND94       ; pas recursif
+          PLUS      #1,A3               ; pointe sur lparam
+          XSPMOV    A3,A2               ; A2 <- lparam
+          CABEQ     A2,.NOBIND,EVBND94  ; pas de tail rec pour &NOBIND.
+          ADJSTK    A4
+          BRI       INTRET
+
+
+; A2 <- arbre de noms, A1 <- (<arbre de val> . rest) A3 <- (A2 . rest)
+                                        ; Le cas &destruct
+BNDTRB7   LABEL
+          PUSH      NIL                 ; comme pour les EXPR
+          STACK     RVBSER              ; pour un retour rapide.
+          PUSH      CDR(A1)             ; Sauve le reste des valeurs.
+          PUSH      CDR(A3)             ; Sauve le reste des variables.
+          MOV       CAR(A1),A3          ; A3 <- les valeurs, A2 <- les noms.
+          MOVNIL    A1                  ; Ici sera l'arbre des anciennes vals.
+          MOV       A4,SAVEA4           ; en cas d'erreur.
+          MOV       #0,A4               ; simule le sommet de pile.
+          CALL      EVBDST1             ; On est compatible.
+          MOV       SAVEA4,A4           ; ni vu ni connu.
+; On renverse une seule fois toute la liste des anciennes valeurs.
+          MOVNIL    A2                  ; le pointeur arrie`re
+          BFCONS    A1,BNDTRB9          ; reverse phys. (A1=NIL parfois ?!?!?)
+BNDTRB8   MOV       CDR(A1),A3          ; avance dans la liste
+          MOV       A2,CDR(A1)          ; change le CDR
+          MOV       A1,A2               ; new back
+          MOV       A3,A1               ; elem suivant
+          BTCONS    A1,BNDTRB8          ; la liste n'est pas terminee
+BNDTRBZ   POP       A3                  ; Retrouve les variables.
+          POP       A1                  ; Retrouve les valeurs.
+          ADJSTK    #1                  ; le PUSH NIL
+          PUSH      A2                  ; L'arbre des anciennes valeurs.
+          BRA       BNDTRB2             ; On retourne dans le cas ge'ne'ral.
+BNDTRB9   MOVNIL    A2
+          BRA       BNDTRBZ
+
+; .SSSection "Evaluation des fonctions spe'ciales"
+
+EVALFV    LABEL                         ; A1 <- larg, A2 <- fnt, 
+          BFCONS    A2,UDFER            ; la fonction est nb ou strg
+                                        ; la fonction est une liste
+          MOV       CAR(A2),A3          ; A3 <- fonction de la fonction
+          CABEQ     A3,.LAMBDA,EVALLL   ; c'est une lambda explicite
+          CABEQ     A3,.FLAMBDA,EVALLF  ; c'est une flambda explicite
+          CABEQ     A3,.MLAMBDA,EVALLM  ; c'est une mlambda explicite
+          CABEQ     A3,.CLOSURE,EVALLC  ; c'est une fermeture
+          BRA       UDFER               ; utilisez FUNCALL!
+
+EVALLL    LABEL                         ; la fonction est une LAMBDA explicite
+          MOV       CDR(A2),A3          ; la FVAL
+          MOV       .LAMBDA,ERRNAME     ; en cas d'erreur
+          CALL      VERLPAR             ; test des param car LAMBDA
+                                        ;;; se'quence idem a` EVEXP
+          MOV       .LAMBDA,A2          ; erreur dans l'e'valuation des args
+          MOV       #0,A4               ; nb de valeurs
+          BRA       EVALLL2             ; au travail
+EVALLL1   PUSH      CDR(A1)             ; sauve le reste des arguments
+          PUSH      A4                  ; sauve le compteur
+          PUSH      A3                  ; sauve la FVAL
+          PUSH      A2                  ; le nom en cas d'erreur
+          CALL      EVALCAR             ; e'value l'argument suivant
+          POP       A2                  ; le nom en cas d'erreur
+          POP       A3                  ; recup la FVAL
+          POP       A4                  ; re'cupe`re le compteur NARG
+          XTOPST    A1                  ; empile le re'sultat et re'cup largs
+          INCR      A4                  ; actualise NARG
+EVALLL2   BTCONS    A1,EVALLL1          ; il reste des arguments
+          BFNIL     A1,EVERRBAL         ; c'est pas propre
+          MOV       A2,ERRNAME          ; le nom de la fonction
+          MOV       LLINK,INTLLINK      ; avec le meme env lex.
+                                        ;;; fin de se'q idem a` EVEXP
+          BRA       EVBND               ; et on est compatible.
+
+EVALLF    LABEL                         ; la fonction est une FLAMBDA
+          MOV       CDR(A2),A3          ; une vraie FVAL ((larg) . corps)
+          MOV       .FLAMBDA,ERRNAME    ; celui qui appelle la liaison d'arbre
+          MOV       LLINK,INTLLINK      ; avec le meme env lex.
+          CALL      VERLPAR             ; test des param car FLAMBDA
+          BRA       BNDTRB              ; et on est compatible.
+
+EVALLM    LABEL                         ; la fonction est une MLAMBDA
+          MOV       FORME,A1            ; l'argument est la forme elle-me^me
+          MOV       CDR(A2),A3          ; une vraie FVAL ((larg) . corps)
+          PUSH      @EVALA1             ; pre'pare la ree'valuation
+          MOV       .MLAMBDA,ERRNAME    ; celui qui appelle la liaison d'arbre
+          MOV       LLINK,INTLLINK      ; avec le meme env lex.
+          CALL      VERLPAR             ; test des param car MLAMBDA
+          BRA       BNDTRB              ; et on est compatible.
+
+EVALLC    LABEL                         ; la fonction est une fermeture
+          MOV       CDR(A2),A2          ; saute CLOSURE
+          MOV       CDR(A2),A3          ; la FVAL
+          MOV       .CLOSURE,ERRNAME    ; celui qui appelle la liaison d'arbre
+          MOV       CAR(A2),INTLLINK    ; le bel env lexical
+          BRA       EVEXP               ; et on est compatible
+
+; .SSSection "Les erreurs de l'e'valuateur"
+
+ ;         Erreurs dans les formes / Essai d'e'valuation d'un type externe
+ ;         sous la forme d'un TCONS.
+
+UDFER     LABEL                         ; 'undefined function'
+          MOV       FORME,A4            ; pour tester un TCONS
+          BFINVSBL  A4,UDFER8           ; c'est vraiment une erreur
+          MOV       A4,A1               ; pour le GETTYPE
+          JCALL     GETTYPE             ; le type du TCONS
+          BFSYMB    A1,UDFER8           ; caramba encore rate'
+          BTNIL     A1,UDFER8           ; () n'est pas un type e'tendu.
+          PUSH      A2                  ; le nom de la fonction
+          MOV       .EVAL,A2            ; le nom de la fonction a` chercher
+          MOVNIL    A3                  ; a` rechercher jusqu'a` || exclu!
+          JCALL     GETFNS              ; essaie de trouver  #:---:eval
+          POP       A2                  ; l'ancien nom
+          BTNIL     A1,UDFER8           ; pas de fonction de'finie
+          PUSH      FORME               ; l'argument de la fonction
+          MOV       #1,A4               ; le nombre d'arguments de FFUNCALL
+          BRA       FFUNCALL
+UDFER8    PUSH      A1                  ; la liste des arguments non e'values
+          MOV       A2,A1               ; A1 le nom de la fonction de'fectueuse
+          MOV       .EVAL,A2            ; A2 le nom de l'endroit ou` erreur
+          JCALL     ERRUDF              ; 'fonction inde'finie'
+          MOV       A1,A2               ; la nouvelle fonction
+          POP       A1                  ; les anciens arguments
+          CONS      A2,A1               ; refabrique la forme
+          BRA       EVALAN              ; et on y va.
+
+                                        ; *** 'wrong number of arguments'
+XWNAER0   MOV       A1,A2               ; le nom de la fonction
+          BRA       WNAER00
+WNAER0    BTNIL     A1,WNAER00
+          BFCONS    A1,BALR1            ; en fait "bad argument list"
+WNAER00   MOV       #0,A1
+          BRA       WNAER
+
+XWNAER1   MOV       A1,A2               ; le nom de la fonction
+          BRA       WNAER10
+WNAER1D   MOV       CDR(A1),A1
+WNAER1    BTNIL     A1,WNAER10
+          BFCONS    A1,BALR1            ; en fait "bad argument list"
+WNAER10   MOV       #1,A1
+          BRA       WNAER
+
+XWNAER2   MOV       A1,A2               ; le nom de la fonction
+          BRA       WNAER20
+WNAER23D  MOV       CDR(A3),A3
+WNAER23   MOV       A3,A1
+WNAER2    BTNIL     A1,WNAER20
+          BFCONS    A1,BALR1            ; en fait "bad argument list"
+WNAER20   MOV       #2,A1
+          BRA       WNAER
+
+XWNAER3   MOV       A1,A2               ; le nom de la fonction
+          BRA       WNAER30
+WNAER3D   MOV       CDR(A1),A1
+WNAER3    BTNIL     A1,WNAER30
+          BFCONS    A1,BALR1            ; en fait "bad argument list"
+WNAER30   MOV       #3,A1
+WNAER     LABEL                         ; A2 <- la fnt, A1 <- le nb
+          JMP       ERRWNA
+
+BALR1     LABEL                         ; A1 badlist A2 est pre^t
+          JMP       ERRBAL
+
+; .Section "APPLY/FUNCALL"
+
+;         (FUNCALL fn a1 ... aN)   NSUBR
+;         (APPLY fn a1 ... sN larg)   NSUBR
+
+;  ----------------------------------------
+          FENTRY    FUNCALL,SUBRN
+;  ----------------------------------------
+          MOV       .FUNCALL,ERRNAME    ; le nom du raleur
+          CNBEQ     A4,#0,FUNCERWN      ; il faut au moins 1 argument
+FUNCALL0  DECR      A4                  ; index du nom de la fonction
+          XSPMOV    A4,A1               ; A1 <- la fnt
+
+ ;        On simule une arrive'e par FFUNCALL :
+ ;        On met POPJ dans la pile a` la place de la fonction
+          MOVXSP    @POPJ,A4            ; le faux RETURN
+                                        ;;; FFUNCALL doit suivre.
+
+; .SSection "FFUNCALL : le FUNCALL interne"
+
+ ;        La pile ne contient que les arguments, pas la fonction
+ ;        A4 <- nombre d'arguments empile's (fonction exclue)
+ ;        A1 <- fonction
+
+FFUNCALL  LABEL                         ;;; FUNCALL interne sans
+;         INTEST
+          MOVNIL    INTLLINK            ; toujours sans env lex.
+          BFSYMB    A1,APPLYS           ; c'est rate', pas un symbole
+          GFTYPE    A1,A3               ; pour le BRX
+          BRX       @TFUNCALL,A3        ;  et c'est parti
+
+ ;        Table des branchements indirects indexe's pour FUNCALL
+ ;        On se branche avec :
+ ;        A1 <- le nom de la fonction
+ ;        A4 <- le nb d'arguments empile's
+
+TFUNCALL  ADR       FNCLUDF             ; code 0 : pas de de'finition
+          ADR       FNCAL0              ; code 1 : SUBR a` 0 argument
+          ADR       FNCAL1              ; code 2 : SUBR a` 1 argument
+          ADR       FNCAL2              ; code 3 : SUBR a` 2 arguments
+          ADR       FNCAL3              ; code 4 : SUBR a` 3 arguments
+          ADR       FNCALN              ; code 5 : SUBR a` N arguments
+          ADR       FNCALF              ; code 6 : SUBRF
+          ADR       FNCALEX             ; code 7 : EXPR
+          ADR       FNCALEX             ; code 8 : FEXPR
+          ADR       FNCALMC             ; code 9 : MACRO
+          ADR       FNCALMD             ; code 10: DMACRO
+          ADR       FNCALM              ; code 11: SUBRM
+          ADR       FNCALDM             ; code 12: SUBRDM
+
+; .SSection "Les erreurs de APPLY/FUNCALL"
+
+FUNCERWN  MOV       A4,A1               ; le mauvais nombre d'argument
+          CALL      FERRNAM             ; le nom de l'appelant dans A2
+          JMP       ERRWNA              ; pas le bon nombre d'arguments.
+
+FNCLUDF   LABEL                         ;;; fonction inde'finie.
+          PUSH      A4                  ; sauve le nb d'args
+          CALL      FERRNAM             ; le nom de l'appelant dans A2
+          JCALL     ERRUDF              ; 'fonction inde'finie'
+                                        ; des fois que je rentre ...
+          POP       A4                  ; l'ancien narg.
+          BRA       FFUNCALL            ; A1 contient la nouvelle fonction.
+
+; .SSection "Application rapide de type SUBR"
+
+FNCAL0    LABEL                         ;;; application des SUBR0
+          CNBNE     A4,#0,XWNAER0       ; cas des SUBR0
+          BRI       FVAL(A1)            ; on y va !
+
+FNCAL1    LABEL                         ;;; application des SUBR1
+          CNBNE     A4,#1,XWNAER1       ; 1 seul argument ne'cessaire
+          MOV       FVAL(A1),A4         ; A4 <- adresse de lancement
+          POP       A1                  ; on re'cupe`re le premier argument
+          BRI       A4                  ; direct sur la FVAL
+
+FNCAL2    LABEL                         ;;; application des SUBR2
+          CNBNE     A4,#2,XWNAER2       ; 2 arguments ne'cessaires
+          POP       A2                  ; le 2e`me argument
+          MOV       FVAL(A1),A4         ; A4 <- adresse de lancement
+          POP       A1                  ; on re'cupe`re le premier argument
+          BRI       A4                  ; direct sur la FVAL
+
+FNCAL3    LABEL                         ;;; application des SUBR3
+          CNBNE     A4,#3,XWNAER3       ; 3 arguments ne'cessaires.
+          POP       A3                  ; le 3e`me argument
+          POP       A2                  ; le 2e`me argument
+          MOV       FVAL(A1),A4         ; A4 <- adresse de lancement
+          POP       A1                  ; on re'cupe`re le premier argument
+          BRI       A4                  ; direct sur la FVAL
+
+FNCALN    LABEL                         ;;; application des SUBRN
+          BRI       FVAL(A1)            ; on y va direct!
+
+; ?!?!? tre`s louche l'application des SUBRF/SUBRM/SUBRDM ?!?!?
+; ?!?!? Matt dit (funcall 'trace x y z) est utile ?!??!
+
+FNCALF    LABEL                         ;;; application des SUBRF
+          MOV       FVAL(A1),A2         ; l'adresse de lancement
+          MOVNIL    A1                  ; liste des arguments dans A1
+          BRA       FNCALF2             ; on s'y rend
+FNCALF1   POP       A3                  ; on pop
+          CONS      A3,A1               ; pre'pare la liste des arguments
+FNCALF2   SOBGEZ    A4,FNCALF1          ; A4 fois
+          BRI       A2                  ; on s'y rend
+
+FNCALM    LABEL                         ;;; application des SUBRM
+          MOV       FVAL(A1),A2         ; l'adresse de lancement
+          MOVNIL    A1                  ; liste des arguments dans A1
+          BRA       FNCALM2             ; on s'y rend
+FNCALM1   POP       A3                  ; on pop
+          CONS      A3,A1               ; pre'pare la liste des arguments
+FNCALM2   SOBGEZ    A4,FNCALM1          ; A4 fois
+          CONS      A3,A1               ; Dummy : fausse tete du DISPLACE.
+          PUSH      @EVALA1             ; retour apre`s expansion
+          BRI       A2                  ; on s'y rend
+
+FNCALDM   LABEL                         ;;; application des SUBRDM
+          MOV       FVAL(A1),A2         ; l'adresse de lancement
+          MOVNIL    A1                  ; liste des arguments dans A1
+          BRA       FNCALDM2            ; on s'y rend
+FNCALDM1  POP       A3                  ; on pop
+          CONS      A3,A1               ; pre'pare la liste des arguments
+FNCALDM2  SOBGEZ    A4,FNCALDM1         ; A4 fois
+          PUSH      A1                  ; pour le DISPLACE final
+          PUSH      @EVALDMR            ; retour apre`s expansion
+          BRI       A2                  ; on s'y rend
+
+; .SSection "Application des EXPR/FEXPR/MACRO/DMACRO"
+
+FNCALEX   LABEL                         ;;; application des EXPRs
+          MOV       FVAL(A1),A3         ; la FVAL
+          MOV       A1,ERRNAME          ; en cas d'erreur
+          BRA       EVBND
+
+FNCALMC   LABEL                         ;;; application des MACROs
+          MOV       FVAL(A1),A3         ; le corps
+          MOV       A1,ERRNAME          ; le nom de  la MACRO
+          MOVNIL    A1                  ; liste des arguments dans A1
+          BRA       FNCALMC2            ; on s'y rend
+FNCALMC1  POP       A2                  ; on pop
+          CONS      A2,A1               ; pre'pare la liste des arguments
+FNCALMC2  SOBGEZ    A4,FNCALMC1         ; A4 fois
+          CONS      ERRNAME,A1          ; (call . larg) == une vraie forme
+          PUSH      @EVALA1             ; retour apre`s expansion
+          BRA       BNDTRB              ; A1 <- larg, A3 <- FVAL, ERRNAME
+
+FNCALMD   LABEL                         ;;; application des DMACROs
+          MOV       FVAL(A1),A3         ; le corps
+          MOV       A1,ERRNAME          ; le nom de la DMACRO
+          MOVNIL    A1                  ; liste des arguments dans A1
+          BRA       FNCALMD2            ; on s'y rend
+FNCALMD1  POP       A2                  ; on pop
+          CONS      A2,A1               ; pre'pare la liste des arguments
+FNCALMD2  SOBGEZ    A4,FNCALMD1         ; A4 fois
+          PUSH      A1                  ; pour le DISPLACE final
+          PUSH      @EVALDMR            ; retour apre`s expansion
+          BRA       BNDTRB              ; A1 <- larg, A3 <- FVAL, ERRNAME
+
+
+; .SSection "Application des fonctions spe'ciales"
+
+ ;         Evaluation des fonctions spe'ciales
+
+APPLYS    LABEL                         ; A1 <- la fnt, A4 args dans la pile
+          BFCONS    A1,FNCLUDF          ; erreur si nombre ou chaine
+          MOV       CAR(A1),A3          ; A2 <- fonction de la fonction
+          CABEQ     A3,.LAMBDA,APPLYLL  ; c'est une lambda implicite
+          CABEQ     A3,.FLAMBDA,APPLYLF ; c'est une flambda implicite
+;          CABEQ     A3,.MLAMBDA,APPLYLM ; c'est une mlambda implicite
+          CABEQ     A3,.CLOSURE,APPLYLC ; c'est une fermeture
+          BRA       FNCLUDF 
+
+APPLYLL   LABEL                         ; *** c'est une lambda explicite
+          MOV       .LAMBDA,ERRNAME     ; en cas d'erreur
+          BRA       APPLYLF1
+APPLYLF   LABEL                         ; *** c'est une flambda explicite
+          MOV       .FLAMBDA,ERRNAME    ; en cas d'erreur
+APPLYLF1  MOV       CDR(A1),A3          ; la FVAL
+          CALL      VERLPAR             ; test des param car LAMBDA
+          BRA       EVBND               ; et c'est compatbile
+
+APPLYLC   LABEL                         ; *** c'est une CLOSURE explicite
+          MOV       .CLOSURE,ERRNAME    ; en cas d'erreur
+          MOV       CDR(A1),A1          ; saute _CLOSURE_
+          MOV       CAR(A1),INTLLINK    ; env lex des BLOCKS
+          MOV       CDR(A1),A3          ; la FVAL
+          BRA       EVBND               ; ?!?! achtung LLINK
+
+;  ----------------------------------------
+          FENTRY    UAPPLY,SUBRN
+;  ----------------------------------------
+          MOV       .UAPPLY,ERRNAME     ; le nom du raleur
+          CNBLT     A4,#2,UAPPLYER
+          POP       A2                  ; larg
+          DECR      A4                  ; un de moins (la fnt)
+          BRA       UAPPLY3             ; boucle de CONS
+UAPPLY2   PUSH      CAR(A2)             ; next argument
+          CHKSTK    MSTACK,ERRFS        ; timeo danaes et dona ferantes ...
+          MOV       CDR(A2),A2          ; avance dans larg
+          INCR      A4                  ; 1 arg de plus
+UAPPLY3   BTCONS    A2,UAPPLY2          ; c'est une vraie liste
+          BTNIL     A2,FUNCALL0         ; apre`s c'est comme FUNCALL!
+          MOV       A2,A1               ; bad arg
+          DECR      A4
+          XSPMOV    A4,A2               ; le nom de la fonction
+          JMP       ERRBAL              ; "bad arg list"
+UAPPLYER  MOV       #2,A1
+          MOV       .UAPPLY,A2
+          JMP       ERRWNA
+
+ ;        compatibilite pour APPLY a 2 args
+
+APPLY     LABEL                      
+          PUSH      A1
+          PUSH      A2
+          MOV       #2,A4
+          BRA       UAPPLY              ; ?!?!? pas tre`s jouasse ?!?!?
+
+; .Section "De'liaison d'un bloc"
+
+ ;         UNBINP : De'lie un bloc d'activation
+ ;         A3 <- adresse de retour
+ ;         ne doit de'truire ni A1 ni A2!
+
+UNBINP    LABEL                         ;;; avec retour dans A3
+          POP       A4                  ; le type de UNBIND du bloc
+          CABEQ     A4,@UNBIND1,UNBINP1 ; type 1 : bloc LAMBDA
+          CABEQ     A4,@UNBIND2,UNBINP2 ; type 2 : bloc FLET
+          CABEQ     A4,@UNBIND3,UNBINP3 ; type 3 : bloc TAG
+          CABEQ     A4,@UNBIND4,UNBINP4 ; type 4 : bloc ITSOFT
+          CABEQ     A4,@UNBIND5,UNBINP5 ; type 5 : bloc LOCK
+          CABEQ     A4,@UNBIND6,UNBINP6 ; type 6 : bloc PROTECT
+          CABEQ     A4,@UNBIND7,UNBINP7 ; type 7 : bloc SYS-PROTECT
+          CABEQ     A4,@UNBIND8,UNBINP8 ; type 8 : bloc SCHEDULE
+          CABEQ     A4,@UNBIND9,UNBINP9 ; type 9 : bloc TAGBODY
+          CABEQ     A4,@UNBIND10,UNBINP10; type 10 : bloc BLOCK
+
+; .SSection "de'lie un bloc terminal : fin de la pile!"
+
+          TTYMSG    #14," error UNBINP "
+UNBIND0   LABEL
+          NOP                           ; attention 2 labels exporte's!
+UNBINP0   LABEL
+          JMP       ERRES               ; attention avec UNWIND!
+
+; .SSection "de'lie un bloc LAMBDA : type 1"
+
+; Ne doit pas toucher a` A1 et A2 ...
+
+UNBIND1   LABEL                         ;;; avec RETURN
+          MOV       @POPJ,A3            
+UNBINP1   LABEL                         ;;; retour dans A3
+          MOV       A3,SAVEA3           ; adr de retour
+          POP       DLINK               ; le lien dynamique
+          POP       LLINK               ; le lien lexical
+          ADJSTK    #1                  ; saute la FVAL
+          POP       A3                  ; la liste des parame`tres.
+          POP       A4                  ; #N nb de valeurs empile'es.
+
+; Routine de de'liaison des arguments dans la pile :
+;         (ce point d'entre'e est invoque' en cas d'erreur de liaison)
+;         .../arg1/arg2/.../argN//
+;         A3 <- l'arbre des parame`tres
+;         A4 <- le nombre de valeurs empile'es
+
+UNBISE    LABEL
+; +OPT : ce code ne sert qu'a optimiser les EXPR a 1 argument
+          CABNE     A4,#1,UNBIS19       ; pas un cas spe'cial
+          BFCONS    A3,UNBIS14          ; cas LEXPR ou &NOBIND
+          BTCONS    CAR(A3),UNBIS19     ; merde c'est ((var)) 
+          MOV       CAR(A3),A3          ; le nom de la variable
+          POP       CVAL(A3)            ; restaure sa valeur
+          BRI       SAVEA3              ; et retour direct.
+;         ne pas tester le CDR car si A4 = 1, CDR(A3) vaut toujours ()
+UNBIS14   LABEL
+          CABEQ     A3,.NOBIND,UNBIS15  ; le cas &nobind simple.
+          POP       CVAL(A3)            ; restaure la valeur
+          BRI       SAVEA3              ; tout est dit.
+UNBIS15   ADJSTK    #1                  ; enleve l'argument
+          BRI       SAVEA3
+UNBIS19   LABEL
+; +OPT : fin du code d'optimisation (on peut l'enlever si pb de place)
+          MOV       A4,SAVEA4           ; pour le ADJSTK final
+          MOV       A2,SAVEA2           ; un autre reg de travail
+          BRA       UNBID15
+UNBID12   CNBEQ     A4,#0,UNBID18       ; arrive en cas d'appel apre`s erreur
+          MOV       CAR(A3),A2          ; A2 <- le nom suivant
+          MOV       CDR(A3),A3          ; A3 <- le reste des noms
+          BTCONS    A2,UNBID19          ; une destructuration
+
+          DECR      A4                  ; A4 index de la valeur.
+          XSPMOV    A4,CVAL(A2)         ; restaure une valeur
+UNBID15   BTCONS    A3,UNBID12          ; liste normale de noms
+          BTNIL     A3,UNBID18
+          CABEQ     A3,.NOBIND,UNBID18  ; si &nobind
+          CNBEQ     A4,#0,UNBID18       ; arrive en cas d'appel apre`s erreur
+          DECR      A4                  ; la valeur suivante
+          XSPMOV    A4,CVAL(A3)         ; un &REST
+UNBID18   MOV       SAVEA2,A2
+          ADJSTK    SAVEA4              ; depile de la taille des val
+          BRI       SAVEA3    
+
+UNBID19   PUSH      A3                  ; sauve la liste des noms
+          XSPMOV    A4,A3               ; l'arbre des valeurs
+          CALL      UNBIDES1            ; effectue la destructuration
+          POP       A3                  ; recup la liste des noms.
+          DECR      A4                  ; val suivante.
+          BRA       UNBID15
+
+; UNBIDES1 : de'liaison d'une liaison destructurante,
+;         A3 <- est une liste plate de valeurs
+;         A2 <- l'arbre des parame`tres
+;
+; Re'alise (en e'vitant de re'curser pour chaque feuille) :
+; (de unbides1 (tvar lval)
+;     (cond ((null tvar) lval)
+;           ((symbolp tvar) (set tvar (car lval)) (cdr lval))
+;           (t (unbides1 (cdr tvar) (unbindes1 (car tvar) lval)))))
+
+UNBIDES0  PUSH      @UNBIDES2           ; A3 est toujours une liste plate.
+UNBIDES1  LABEL                         ; A3 <- les valeurs, A2 <- les noms
+          BTNIL     A3,UNBIDES3         ; si appel en cas d'erreur ...
+          PUSH      CDR(A2)
+          MOV       CAR(A2),A2
+          BTCONS    A2,UNBIDES0         ; re desctruct
+          MOV       CAR(A3),CVAL(A2)    ; force old val
+          MOV       CDR(A3),A3          ; avance dans les vals
+UNBIDES2  POP       A2                  ; reste des noms
+          BTCONS    A2,UNBIDES1
+          BTNIL     A2,UNBIDES3
+          MOV       CAR(A3),CVAL(A2)    ; &REST dans &DEST
+          MOV       CDR(A3),A3          ; avance dans les vals
+UNBIDES3  RETURN
+
+; .SSection "de'lie un bloc LABEL : type 2"
+
+UNBIND2   LABEL                         ;;; avec RETURN
+          MOV       @POPJ,A3
+UNBINP2   LABEL                         ;;; avec retour dans A3
+          POP       DLINK               ; repositionne DLINK
+          MOV       A3,SAVEA3           ; libe`re A3 (adr ret)
+          BRA       UNBDW7              ; au travail
+UNBDW6    POP       A3                  ; ancien FTYPE
+          SFTYPE    A3,A4               ; on le restaure aussi
+          POP       FVAL(A4)            ; ancienne FVAL restauree
+UNBDW7    POP       A4                  ; enle`ve le nom de la fonction
+          CABNE     A4,#0,UNBDW6        ; il en reste.
+          BRI       SAVEA3              ; on rentre dans A3
+
+; .SSection "de'lie un bloc TAG/EVTAG : type 3"
+
+ ; retourne dans A4 le nom de l'e'chappement
+
+UNBIND3   LABEL                         ;;; avec RETURN
+          POP       DLINK               ; repositionne DLINK
+          POP       A4                  ; le nom de l'e'chappement
+          RETURN
+
+UNBINP3   LABEL                         ;;; avec retour dans A3
+          POP       DLINK               ; repositionne DLINK
+          POP       A4                  ; le nom de l'e'chappement
+          BRI       A3                  ; retour via A3
+
+; .SSection "de'lie un bloc ITSOFT : type 4"
+
+UNBIND4   LABEL                         ;;; avec RETURN
+          MOV       @POPJ,A3
+UNBINP4   LABEL                         ;;; avec retour dans A3
+          POP       DLINK               ; restaure l'ancien DLINK
+          POP       LLINK               ; restaure l'ancien LLINK
+          ADJSTK    #1                  ; saute le nom de l'IT
+          POP       EVALST              ; restaure l'ancien e'tat du STEP
+          POP       FORME
+          POP       FUNCT
+          POP       SAVEA1
+          POP       SAVEA2
+          POP       SAVEA3
+          POP       SAVEA4
+          ADJSTK    #1                  ; vire la liste d'arguments
+          BRI       A3                  ; on rentre dans A3
+
+; .SSection "de'lie un bloc LOCK : type 5"
+
+UNBIND5   LABEL                         ;;; avec RETURN
+          MOV       @POPJ,A3
+UNBINP5   LABEL                         ;;; avec retour dans A3
+          POP       DLINK               ; repositionne DLINK
+          POP       A4                  ; la fonction a` exe'cuter
+          PUSH      A3                  ; l'adresse de retour
+          PUSH      A2                  ; ne doit pas toucher a` A2 
+          NCONS     A1                  ; (val)
+          MOVNIL    A2                  ; le nom du TAG (nil = de'faut)
+          CONS      A2,A1               ; (nil val)
+          MOV       A1,A2               ; pour APPLY
+          MOV       A4,A1               ; idem la fonction
+          CALL      APPLY               ; et voila le LOCK est re'alise
+          POP       A2                  ; le registre de travail de UNBIND
+          RETURN                        ; tombe sur A3 empile.
+
+; .SSection "de'lie un bloc PROTECT : type 6"
+
+UNBIND6   LABEL                         ;;; avec RETURN
+          MOV       @POPJ,A3
+UNBINP6   LABEL                         ;;; avec retour dans A3
+          POP       DLINK               ; ce bloc n'existe plus
+          XTOPST    A3                  ; adr de retour <-> corps du progn
+          PUSH      A2                  ; le registre de UNBIND a` prote'ger
+          PUSH      A1                  ; sauve la valeur de retour
+          MOV       A3,A1               ; la valeur prote'geante
+          CALL      EVPROGN             ; execution,
+          POP       A1                  ; re'cupe`re la val de retour
+          POP       A2                  ; recup le reg. de UNBIND a` prote'ger
+          RETURN                        ; A3 est reste empile.
+
+; .SSection "de'lie un bloc SYS-PROTECT : type 7"
+
+ ;         on appelle la routine de protection avec :
+ ;            - la valeur de retour empile'e
+ ;            - la continuation dans A3
+ ;         Attention : la routine de protection doit pre'server
+ ;         tous ses registres de travail.
+
+UNBIND7   LABEL                         ;;; avec RETURN
+          MOV       @POPJ,A3
+UNBINP7   LABEL                         ;;; avec retour dans A3
+          POP       DLINK               ; pre^t pour le bloc suivant.
+          XTOPST    A1                  ; val de retour <-> corps du progn
+          BRI       A1                  ; vers le code prote'ge'
+
+; .SSection "de'lie un bloc SCHEDULE : type 8"
+
+UNBIND8   LABEL                         ;;; avec RETURN
+          TOPST     DLINK               ; repositionne DLINK
+          ADJSTK    #2                  ; saute DLINK et la fonction
+          RETURN
+
+UNBINP8   LABEL                         ;;; avec retour dans A3
+          TOPST     DLINK               ; repositionne DLINK
+          ADJSTK    #2                  ; saute DLINK et la fonction
+          BRI       A3                  ; retour via A3
+
+; .SSection "de'lie un bloc TAGBODY : type 9"
+
+UNBIND9   LABEL                         ;;; avec RETURN
+          MOV       @POPJ,A3
+UNBINP9   LABEL                         ;;; avec retour dans A3
+          TOPST     DLINK
+          MOV       LLINK,A4            ; maj LLINK
+          MOV       CDR(A4),LLINK       ; 
+          MOV       CAR(A4),A4          ; (#0 . slot)
+          MOVNIL    CDR(A4)             ; (#0) = bloc TAGBODY illegal
+          ADJSTK    #2                  ; saute DLINK et le slot (illegal now)
+          POP       A4                  ; le nb de couples
+          PLUS      A4,A4               ; le nb de mots en pile
+          ADJSTK    A4                  ; saute tous les couple.
+          BRI       A3                  ; retour via A3
+
+; .SSection "de'lie un bloc BLOCK : type 10"
+
+UNBIND10  LABEL                         ;;; avec RETURN
+          MOV       @POPJ,A3
+UNBINP10  LABEL                         ;;; avec retour dans A3
+          TOPST     DLINK
+          MOV       LLINK,A4            ; maj LLINK
+          MOV       CDR(A4),LLINK       ; 
+          MOV       CAR(A4),A4          ; (#1 nom . slot)
+          MOV       CDR(A4),A4          ; (nom . slot)
+          MOVNIL    CDR(A4)             ; (nom) = bloc BLOCK illegal
+          ADJSTK    #2                  ; saute DLINK et le slot (illegal now)
+          BRI       A3                  ; retour via A3
+
+; .Section "Les liaisons de type LET, LET*, LETV et LETVQ"
+
+ ;         LET autre forme d'une lambda. Macro-ge'ne`re la MACRO
+ ;                   (LET () e1 ... eN)  ou
+ ;                   (LET ((var val) ... (var val)) e1 ... eN)
+ ;                   si val=(), on peut ecrire (LET (var1 var2 ...)
+
+;  ----------------------------------------
+          FENTRY    LET,SUBRDM
+;  ----------------------------------------
+          PUSH      CDR(A1)             ; sauve le corps
+          MOV       CAR(A1),A1          ; A1 <- (var val) ou l'autre forme
+          MOVNIL    A2
+          NCONS     A2                  ; A2 <- (NIL . NIL)
+          PUSH      A2                  ; sauve la liste des variables
+          MOVNIL    A3
+          NCONS     A3                  ; A3 <- (NIL . NIL)
+          PUSH      A3                  ; sauve la liste des valeurs
+LET2      BFCONS    A1,LET8             ; il n'y a plus de variables
+          MOV       CAR(A1),A4          ; A4 <- le couple suivant
+          PUSH      CDR(A1)             ; sauve le reste des couples
+          BTCONS    A4,LET3             ; il y a une valeur
+          MOV       A4,A1               ; le nom de la variable
+          MOVNIL    A4                  ; la valeur par de'faut ()
+          BRA       LET4                ;  vers la se'quence commune.
+LET3      MOV       CAR(A4),A1          ; A1 <- var
+          MOV       CDR(A4),A4          ; A4 <- (val)
+LET4      NCONS     A1                  ; A1 <- (var)
+          MOV       A1,CDR(A2)          ; fabrique la lite des variables
+          MOV       A1,A2               ; nouvelle fin de liste
+          BTNIL     A4,LET5             ; A4 = () A1 = (var)
+          BFCONS    A4,LETWLA1          ; A4 = val mais pas (val) louche ...
+          BFNIL     CDR(A4),LETWLA1     ; A4 = (val . ??) louche ...
+LET5      MOV       CAR(A4),A1          ; A1 <- val
+          NCONS     A1                  ; A1 <- (val) un nouveau cons!
+          MOV       A1,CDR(A3)          ; fabrique la liste des valeurs
+          MOV       A1,A3               ; nouvelle fin de liste
+          POP       A1                  ; le reste des couples
+          BRA       LET2
+LET8      POP       A1                  ; A1 <- (NIL . lval)
+          MOV       CDR(A1),A1          ; A1 <- (lval)
+          POP       A2                  ; A2 <- (NIL . lvar)
+          MOV       CDR(A2),A2          ; A2 <- (lvar)
+          POP       A4                  ; A4 <- (corps)
+          XCONS     A4,A2               ; A2 <- ((lvar) . corps)
+          CONS      .LAMBDA,A2          ; A2 <- (LAMBDA (lvar) . corps
+          CONS      A2,A1               ; A1 <- ((LAMBDA (lvar) . crp) . lval)
+          RETURN
+LETWLA1   MOV       A4,A1               ; l'argument de'fectueux
+LETWLA2   MOV       .LET,A2             ; le nom de la fonction
+          JMP       ERRWNA              ; "pas le bon nombre d'args"
+
+ ;         (SLET ((var1 val1) ...   FSUBR
+ ;         idem a` LET mais liaison sequentielle!
+ ;         il est donc possible de fabriquer le bloc tout de suite
+ ;         ?!?!?!?!?! a` faire ?!?!?!?!
+
+;  ----------------------------------------
+          FENTRY    LETSEQ,SUBRF
+;  ----------------------------------------
+          MOV       .LETSEQ,A1
+          MOV       .EVAL,A2
+          JMP       ERRUDF              ; ?!?!?!?
+
+ ;         (LETV lvar lval . corps)   FSUBR
+ ;         (APPLY `(LAMBDA ,lvar . corps) lval)
+
+;  ----------------------------------------
+          FENTRY    LETV,SUBRF
+;  ----------------------------------------
+          PUSH      CDR(A1)             ; sauve (lval . corps)
+          CALL      EVALCAR             ; A1 <- la valeur de lvar
+          XTOPST    A1                  ; A1 <- (lval . corps)
+          PUSH      CDR(A1)             ; sauve (corps)
+          CALL      EVALCAR             ; A1 <- la valeur de lval
+          MOV       .LETV,ERRNAME       ; nom de l'appelant
+LETVQ2    POP       A3                  ; A3 <- corps
+          POP       A2                  ; A2 <- lvar
+          CONS      A2,A3               ; A3 <- (lvar . corps) == fval
+          MOV       LLINK,INTLLINK      ; meme env lex
+          CALL      VERLPAR             ; test des param car calcule's!
+          BRA       BNDTRB              ; vers la liaison d'arbre
+
+ ;         (LETVQ lvar lval . corps)   FSUBR
+ ;         identique a` LETV mais le 1er argument n'est pas e'value'
+
+;  ----------------------------------------
+          FENTRY    LETVQ,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; sauve lvar non e'value
+          MOV       CDR(A1),A1          ; A1 <- (lval . corps)
+          PUSH      CDR(A1)             ; sauve (corps)
+          CALL      EVALCAR             ; A1 <- la valeur de lval
+          MOV       .LETVQ,ERRNAME      ; nom de la'ppelant
+          BRA       LETVQ2              ; partie commune.
+
+; .Section "Fonction de de'finition dynamique LABEL/FLET"
+
+; .DebLL
+;  ----------------------------------------------------------------------
+;
+;         Fabrique un bloc d'activation de type 2 : LABEL
+;
+;              DLINK  ->       [      @UNBIND2       ]
+;                              [    ancien DLINK     ]
+;                              [ nom de la fonctionN ]
+;                              [    ancien F-TYP     ]
+;                              [   ancienne F-VAL    ]
+;                                       .....
+;                              [ nom de la fonction1 ]
+;                              [    ancien F-TYP     ]
+;                              [   ancienne F-VAL    ]
+;                              [         #0          ]
+;                              -----------------------
+;
+;  ----------------------------------------------------------------------
+; .FinLL
+
+;  ----------------------------------------
+          FENTRY    FLET,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,FLETERR1         ; me^me dans les FSUBR ca craint
+          MOV       CAR(A1),A2          ; A2 <- ((var fval ... (var fval))
+          MOV       CDR(A1),SAVEA1      ; SAVEA1 <- le corps
+          PUSH      #0                  ; fin des sauvegardes
+          BRA       FLET3               ; au travail
+FLET2     MOV       CAR(A2),A1          ; de'finition suivante
+          BFCONS    A1,FLETERR1         ; drole de de'finition
+          MOV       CAR(A1),A3          ; A3 <- le nom
+          BFVAR     A3,FLETERR2         ; une fonction est une variable
+          PUSH      FVAL(A3)            ; sauve l'ancienne FVAL
+          MOV       CDR(A1),FVAL(A3)    ; range la nouvelle FVAL
+          GFTYPE    A3,A4               ; l'ancien FTYPE
+          PUSH      A4          
+          SFTYPE    #EXPR,A3            ; le nouveau FTYPE
+          PUSH      A3                  ; sauve le nom.
+          MOV       CDR(A2),A2          ; liste des nouvelles fonctions
+FLET3     BTCONS    A2,FLET2
+          PUSH      DLINK               ;; sauve l'adresse du bloc pre'ce'dent
+          PUSH      @UNBIND2            ;; type du bloc
+          STACK     DLINK               ;; sauve l'adresse du bloc
+          MOV       SAVEA1,A1           ; le corps!
+          MOV       .FLET,ERRNAME       ; si erreur
+          BRA       EVPROGN             ; et e'value le corps
+FLETERR1  MOV       .FLET,A2
+          JMP       ERRNLA              ; il fallait bien raler
+FLETERR2  MOV       A3,A1               ; le mauvais nom
+          MOV       .FLET,A2
+          JMP       ERRNVA
+
+; .Section "Les e'chappements : TAG/EVTAG/EXIT/EVEXIT/UNEXIT/UNTILEXIT"
+
+; .DebLL
+;  ----------------------------------------------------------------------
+;
+;         Utilisent un bloc d'activation de type 3 : TAG
+;
+;              DLINK ->       [        @UNBIND3      ]
+;                             [     ancien DLINK     ]
+;                             [ nom de l'e'chappement ]
+;                             ------------------------
+;  ----------------------------------------------------------------------
+; .FinLL
+
+;  ----------------------------------------
+          FENTRY    TAG,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; sauve le nom de l'e'chappement
+TAG3      PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND3            ;; type du bloc = TAG
+          STACK     DLINK               ;; actualise le pointeur bloc
+          MOV       .TAG,ERRNAME        ; si erreur
+          BRA       EVEXPG              ; vers l'exe'cution du corps.
+
+;  ----------------------------------------
+          FENTRY    EVTAG,SUBRF
+;  ----------------------------------------
+          PUSH      A1                  ; sauve le tout
+          CALL      EVALCAR             ; e'value le nom du TAG
+          BFSYMB    A1,EVTAGERR         ; il faut absolument un symbole
+          XTOPST    A1                  ; empile le nom et re'cupe`re le corps
+          BRA       TAG3                ; apres c'est pareil
+EVTAGERR  POP       A2                  ; nettoie la pile
+          MOV       .EVTAG,A2           ; nom de la fonction
+          JMP       ERRSYM              ; il fallait un symbole.
+
+;  ----------------------------------------
+          FENTRY    EVEXIT,SUBRF
+;  ----------------------------------------
+          PUSH      CDR(A1)             ; sauve le corps valeur,
+          CALL      EVALCAR             ; e'value le nom de l'e'chappement
+          XTOPST    A1                  ; A1 <- la valeur
+          MOV       .EVEXIT,ERRNAME     ; si erreur
+          BRA       EXIT1               ; apre`s c'est comme EXIT.
+
+;  ----------------------------------------
+          FENTRY    UNTLXIT,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; sauve le nom de l'e'chappement
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND3            ;; type du bloc = TAG
+          STACK     DLINK               ;; actualise le pointeur bloc
+          PUSH      CDR(A1)             ; le corps a` re'pe'ter inde'finiment
+UNTLXIT1  TOPST     A1                  ; le corps
+          MOV       .UNTLXIT,ERRNAME    ; si erreur
+          CALL      EVPROGN               
+          BRA       UNTLXIT1            ; (while t ..
+
+;  ----------------------------------------
+          FENTRY    FFEXIT,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; sauve le nom de l'e'chappement
+          MOV       CDR(A1),A1          ; le corps a` exe'cuter
+          MOV       .FFEXIT,ERRNAME     ; si erreur
+EXIT1     CALL      EVPROGN             ; e'value le corps du TAG
+          POP       A2                  ; re'cupe`re le nom du TAG
+                                        ;;; FINDTAG doit suivre ...
+
+ ;         FINDTAG   retourne la valeur A1 pour l'e'chappement A2
+ ;                   (utilise' aussi par les fonctions compile'es)
+
+FINDTAG   LABEL      
+          SSTACK    DLINK               ; pile en de'but de bloc.
+          TOPST     A3                  ; re'cupe`re le sommet de pile
+          CABEQ     A3,@UNBIND3,EVESC3  ; c'est un bloc TAG
+          CABEQ     A3,@UNBIND5,EVESC4  ; c'est un bloc LOCK
+          MOV       @FINDTAG,A3          ; adresse de retour de UNBINP
+          BRA       UNBINP
+EVESC3    LABEL                         ; bloc 3 = TAG
+          ADJSTK    #1                  ; saute le type du bloc
+          POP       DLINK               ; adresse du bloc suivant
+          POP       A3                  ; nom de l'e'chappement
+          CABNE     A2,A3,FINDTAG       ; ce n'est pas le bon
+          RETURN                        ; c'est le bon.
+EVESC4    LABEL                         ; bloc 5 = LOCK
+          ADJSTK    #1                  ; saute le type du bloc
+          POP       DLINK               ; tout le block est de'gage'
+          PUSH      A2                  ; tag
+          PUSH      A1                  ; val
+          MOV       #3,A4               ; fnt/tag/val empile's
+          BRA       FUNCALL
+
+;  ----------------------------------------
+          FENTRY    UNEXIT,SUBRF
+;  ----------------------------------------
+
+          MOV       CAR(A1),A2          ; le nom du TAG
+          MOV       CDR(A1),A1          ; le corps (en attente)
+UVESC1    SSTACK    DLINK               ; pile en de'but de bloc
+          TOPST     A3                  ; re'cupe`re le sommet de pile
+          CABEQ     A3,@UNBIND3,UVESC3  ; c'est un bloc TAG
+          CABEQ     A3,@UNBIND5,UVESC4  ; c'est un bloc LOCK
+          MOV       @UVESC1,A3          ; adresse de retour de UNBIND
+          BRA       UNBINP
+UVESC3    ADJSTK    #1                  ; saute le type du bloc
+          POP       DLINK               ; adresse du bloc suivant
+          POP       A3                  ; nom de l'e'chappement
+          CABNE     A2,A3,UVESC1        ; ce n'est pas le bon
+          MOV       .UNEXIT,ERRNAME     ; si erreur
+          BRA       EVPROGN             ; dans le bon environnement.
+UVESC4    ADJSTK    #1                  ; saute le type du bloc
+          NCONS     A1                  ; (val)
+          CONS      A2,A1               ; (tag val) dans A1
+          MOV       A1,A2               ; (tag val) pre^t dans A2 pour APPLY
+          POP       DLINK               ; tout le bloc est de'gage'
+          POP       A1                  ; le nom de la fonction
+          BRA       APPLY               ; et c'est parti!
+
+; .Section "De'liaison sauvage : UNWIND"
+
+;  ----------------------------------------
+          FENTRY    UNWIND,SUBRF
+;  ----------------------------------------
+          PUSH      CDR(A1)             ; sauve le corps
+          CALL      EVALCAR             ; e'value le compte
+          POP       A2                  ; le progn a` exe'cuter au retour
+          BTFIX     A1,UNWIND4
+          MOV       .UNWIND,A2
+          JMP       ERRNIA
+UNWIND3   SSTACK    DLINK               ; en te^te de bloc
+          MOV       @UNWIND4,A3         ; la continuation
+          BRA       UNBINP
+UNWIND4   SOBGEZ    A1,UNWIND3          ; le compte
+          MOV       A2,A1               ; le corps
+          MOV       .UNWIND,ERRNAME     ; si erreur
+          BRA       EVPROGN
+
+; .Section "Lancement d'une ITSOFT : ITSOFT"
+
+; .DebLL
+;  ----------------------------------------------------------------------
+;
+;         Fabrique un bloc d'activation de type 4 : ITSOFT
+;
+;             DLINK  ->       [     @UNBIND4      ]
+;                             [   ancien DLINK    ]
+;                             [   ancien LLINK    ]
+;                             [  nom de l'ITSOFT  ]
+;                             [       EVALST      ]
+;                             [       FORME       ]
+;                             [       FUNCT       ]
+;                             [       SAVEA1      ]
+;                             [       SAVEA2      ]
+;                             [       SAVEA3      ]
+;                             [       SAVEA4      ]
+;                             [       ARGUMENTS   ]
+;
+; .FinLL
+;         A1 <- la fonction
+;         A2 <- la liste d'arguments (a la APPLY)
+;
+
+LLITSOFT  LABEL
+          MOV       .SYSITS,A3          ; #:sys-package:itsoft
+          MOV       CVAL(A3),A3         ; le nom du package
+          BRA       LLITSOFI            ; it interne
+
+; Relancement d'une IT a partir du nom A1
+;    A1 <- le package (#:MORE par exemple)
+;    A2 <- la fonction (EOL)
+;    A3 <- la liste d'arguments (a la APPLY)
+;    
+LLSUPIT   LABEL
+          MOV       .SYSITS,A4          ; #:sys-package:itsoft
+          MOV       CVAL(A4),A4         ; le nom du package
+          BRA       LLSUPIT1            ; vers la recherche
+
+LLSUPIT0  BFSYMB    CAR(A4),LLITSTER    ; pas un symbole!
+          CABEQ     A1,CAR(A4),LLSUPIT3 ; on a trouve
+          MOV       CDR(A4),A4
+LLSUPIT1  BTCONS    A4,LLSUPIT0
+          BFSYMB    A4,LLITSTER         ; pas un symbole!
+LLSUPIT2  CABEQ     A1,A4,LLSUPIT4      ; on a trouve
+          BTNIL     A4,LLITSTER         ; au bout, l'it n'existait pas!
+          MOV       PKGC(A4),A4         ; avance dans la chai^ne
+          BRA       LLSUPIT2
+
+LLSUPIT3  MOV       A2,A1               ; le nom de l'it
+          MOV       A3,A2               ; les arguments
+          MOV       CDR(A4),A3          ; le sys-package:itsoft local
+          BRA       LLITSOFI
+
+LLSUPIT4  MOV       A2,A1               ; le nom de l'it
+          MOV       A3,A2               ; les arguments
+          MOV       PKGC(A4),A3         ; le sys-package:itsoft local
+          BRA       LLITSOFI
+
+
+; itsoft interne
+;    A1 <- la fonction
+;    A2 <- la liste d'arguments (a la APPLY)
+;    A3 <- le path d'itsofts
+; 
+LLITSOFI  PUSH      A2
+          PUSH      SAVEA4
+          PUSH      SAVEA3
+          PUSH      SAVEA2
+          PUSH      SAVEA1
+          PUSH      FUNCT
+          PUSH      FORME
+          PUSH      EVALST              ; sauve l'e'tat de la trace courante
+          PUSH      A1                  ; le nom de l'IT
+          PUSH      LLINK               ; env lexical
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND4            ;; type du bloc = 4
+          STACK     DLINK               ;; nouveau DLINK
+          MOVNIL    LLINK               ; plus rien de lexical
+          MOVNIL    EVALST              ; passe en mode non-trace
+          PUSH      A2                  ; sauve la liste des arguments
+          MOV       A1,A2               ; le nom de l'IT
+          MOV       A3,A1               ; le PATH d'IT
+          CALL      FINDITS             
+          BTNIL     A1,LLITSTER         ; pas de fnction a APPLYer
+          POP       A2                  ; la liste des arguments
+          BRA       APPLY               ; on y va!
+
+LLITSTER  MOV       A2,A1               ; badarg
+          MOV       .ITSOFT,A2          ; le provocateur
+          MOV       .SYSITS,A3          ; #:sys-package:itsoft
+          MOVNIL    CVAL(A3)            ; pour eviter de boucler.
+          JMP       ERRUDF              ; fonction indefinie
+
+; FINDITS:
+; Cherche une fonction de nom A2 dans le PATH d'IT A1
+; Rend dans A1 la fonction, ne modifie pas A2
+
+FINDITS0  POP       A1                  ; le reste du PATH
+FINDITS   BTCONS    A1,FINDITS1         ; un PATH qui roule
+          BFSYMB    A1,LLITSTER         ; surement une erreur ?!?
+          MOV       #0,A3               ; recherche y compris ||
+          PUSH      A2                  ; le nom de l'IT
+          JCALL     GETFNS              ; avec recherche hierarchique.
+          POP       A2                  ; le nom de l'IT
+          RETURN
+
+FINDITS1  PUSH      CDR(A1)             ; le reste du PATH
+          MOV       CAR(A1),A1          ; le nom d'un PATH
+          BFSYMB    A1,LLITSTER         ; erreur no restartable!
+          PUSH      A2                  ; le nom de l'IT
+          JCALL     GETFN1              ; pas de hierarchie en cas de PATH
+          POP       A2                  ; le nom de l'IT
+          BTNIL     A1,FINDITS0         ; pas de resultat
+          ADJSTK    #1
+          RETURN
+
+
+; .Section "Le verouillage des e'chappements : LOCK"
+
+; .DebLL
+;  ----------------------------------------------------------------------
+;
+;         Utilisent un bloc d'activation de type 5 : LOCK
+;
+;              DLINK ->       [       @UNBIND5       ]
+;                             [     ancien DLINK     ]
+;                             [  fnt de verouillage  ]
+;                             ------------------------
+;  ----------------------------------------------------------------------
+; .FinLL
+
+;  ----------------------------------------
+          FENTRY    LLOCK,SUBRF
+;  ----------------------------------------
+          PUSH      A1                  ; le temps d'e'valuer la fonction
+          CALL      EVALCAR             ; le calcul de la fonction.
+          XTOPST    A1                  ; fnt en pile, A1 la forme.
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND5            ;; type du bloc = LOCK
+          STACK     DLINK               ;; actualise le pointeur bloc
+          MOV       .LLOCK,ERRNAME      ; si erreur
+          BRA       EVEXPG              ; vers l'exe'cution du corps.
+
+; .Section "Protection des EXIT dans du code Lisp : PROTECT"
+
+; .DebLL
+;  ----------------------------------------------------------------------
+;
+;         Utilisent un bloc d'activation de type 6 : PROTECT
+;
+;              DLINK ->       [        @UNBIND6       ]
+;                             [     ancien DLINK      ]
+;                             [ progn de la de'liaison ]
+;                             -------------------------
+;  ----------------------------------------------------------------------
+; .FinLL
+
+;  ----------------------------------------
+          FENTRY    PROTECT,SUBRF
+;  ----------------------------------------
+          PUSH      CDR(A1)             ; sauve le progn de la de'liaison
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND6            ;; type du bloc = PROTECT
+          STACK     DLINK               ;; actualise le pointeur bloc
+          BRA       EVALCAR             ; puis comme un prog1
+
+; .Section "Protection des EXIT dans du code LLM3 : SYSPROTECT"
+
+; .DebLL
+;  ----------------------------------------------------------------------
+;
+;         Fabrique un bloc d'activation de type 7 : SYS-PROTECT
+;
+;             DLINK  ->       [     @UNBIND7     ]
+;                             [   ancien DLINK   ]
+;                             [ adr code prote'ge' ]
+;
+;         sommet de pile, adr du code a` prote'ger
+;         A3 <- adresse de la continuation
+;
+;  ----------------------------------------------------------------------
+; .FinLL
+
+SYSPROT   LABEL                         ; pre'pare un bloc 7
+          PUSH      DLINK               ;; sauve l'ancien DLINK
+          PUSH      @UNBIND7            ;; type du bloc = 7
+          STACK     DLINK               ;; nouveau DLINK
+          BRI       A3                  ; et vers la continuation.
+
+; .Section "Fabrication d'une fermeture"
+
+;  ----------------------------------------
+          FENTRY    FUNCTION,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,FUNCRET          ; (function) ?!?
+          MOV       CAR(A1),A1          ; en the'orie (lambda ....
+          BFCONS    A1,FUNCRET          ; #'foo == 'foo
+          BTNIL     LLINK,FUNCRET       ; pas d'env lexical
+          CABNE     CAR(A1),.LAMBDA,FUNCRET; ne marche qie pour LAMBDA
+          MOV       CDR(A1),A1          ; saute le LAMBDA
+          CONS      LLINK,A1            ; (llink . fnt)
+          CONS      .CLOSURE,A1         ; (CLOSURE llink fnt)
+FUNCRET   RETURN
+
+
+ ;        Ve'rification d'un liste de parame`tres.
+ ;         ERRNAME <- le nom de l'appelant
+ ;         A3 <- une FVAL dont on veut ve'rifier la liste des param
+ ;        Ne de'truit rien!
+
+VERLPAR   LABEL
+          BFCONS    A3,VERERR           ; Pour les obj_faults!
+          PUSH      A3                  ; la FVAL pour bosser
+          MOV       CAR(A3),A3          ; la liste des parame`tres
+          CALL      VERLPAR4
+          POP       A3                  ; re'cup la FVAL
+          RETURN
+VERLPAR3  PUSH      CDR(A3)             ; le resteu
+          MOV       CAR(A3),A3          ; l'e'le'ment 
+          CALL      VERLPAR5            ; re'curse sur les CARs
+          POP       A3
+VERLPAR4  BTNIL     A3,VERLPAR9         ; fin normale d'une liste
+VERLPAR5  BTCONS    A3,VERLPAR3         ; ite`re sur les CDRs
+          BTVAR     A3,VERLPAR9         ; ok
+VERERR    MOV       A3,A1               ; le nom fautif
+          CALL      FERRNAM             ; le nom de l'appelant dans A2
+          JMP       ERRBPA              ; "bad parameter"
+VERLPAR9  RETURN                        ; tout est dit
+
+;         Charge dans A2 le nom de la fonction d'erreur qui se
+;         trouve dans ERRNAME.
+
+FERRNAM   LABEL
+          MOV       ERRNAME,A2          ; d'abord
+          BFFIX     A2,FERRNAME         ; ca a l'air du Lisp
+          PUSH      A1                  ; pour travailler
+          PUSH      A2                  ; la FVAL
+          MOV       A2,A1               ; pour appeler FINDFN
+          JCALL     FINDFN
+          BTNIL     A1,FERRNAM1         ; rate
+          POP       A2                  ; dummy now
+          MOV       A1,A2               ; le vrai nom
+          POP       A1                  ; clean now
+          RETURN
+FERRNAM1  POP       A2                  ; fix is fix
+          POP       A1                  ; clean now
+FERRNAME  RETURN
+
+          END

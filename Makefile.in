@@ -1,0 +1,30 @@
+# Gobal Makefile for Le-Lisp
+
+TARGET	= @TARGET@
+CFLAGS	= @CFLAGS@
+
+all: base
+
+PHONY += all
+
+base:
+	@@MAKE@ -C $(TARGET) @BUILDARGS@
+	@@MAKE@ -C $(TARGET)
+	@echo Le-Lisp is ready to use on $(TARGET)
+
+PHONY += base
+
+tests:
+	@(cd $(TARGET)/recette; ./Suites)
+
+PHONY += tests
+
+clean:
+	@find . -name '*\~'    -exec rm -f {} \;
+	@find . -name '*.BAK'  -exec rm -f {} \;
+	@find . -name '\#*'    -exec rm -f {} \;
+	@find . -name '*.core' -exec rm -f {} \;
+	@rm -r -f common/config.h config.status configure.log
+	@(cd $(TARGET); rm -f lelisp cmplc++ cll2lm *\.o */*.\o *bin)
+
+PHONY += clean

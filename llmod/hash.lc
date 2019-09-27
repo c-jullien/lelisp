@@ -1,0 +1,32 @@
+defmodule
+hash
+files (
+hash
+)
+export (
+hash-table-p
+make-hash-table
+make-hash-table-eq
+make-hash-table-equal
+#:sharp:|H|
+sxhash
+gethash
+puthash
+inchash
+dechash
+remhash
+maphash
+clrhash
+hash-table-count
+hash-table-values
+#:hash-table:vect
+#:hash-table:prin
+#:hash-table:eval
+#:hash-table:print-stat
+)
+import (
+setf
+cpmac
+)
+include
+()

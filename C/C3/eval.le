@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: eval
+;;;             translation done: "Sat Oct   7 17 20:53:23 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: eval.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'eval)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZeval" "Sat Oct   7 17 20:53:23 "
+
+'((eval . nsubr) (eval-when . fsubr) (symeval . subr1) (arg . nsubr) (traceval . nsubr) (stepeval . nsubr) (funcall . nsubr) (apply . nsubr) (let . dmsubr) (lets . fsubr) (letv . fsubr) (letvq . fsubr) (flet . fsubr) (tag . fsubr) (evtag . fsubr) (evexit . fsubr) (untilexit . fsubr) (exit . fsubr) (unexit . fsubr) (unwind . fsubr) (lock . fsubr) (protect . fsubr) (function . fsubr))
+
+#[eval #:gell-resetfn:function-name #:gell-resetfn:function-n eval-when #:gell-resetfn:function-f symeval #:gell-resetfn:function-1 arg traceval stepeval funcall apply let lets letv letvq flet tag evtag evexit untilexit exit unexit unwind lock protect function]
+)
+
+
+(defccheck '())

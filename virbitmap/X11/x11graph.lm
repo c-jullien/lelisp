@@ -1,0 +1,144 @@
+defmodule #:display:x11
+files (x11graph.ll)
+include (
+virmacros.ll
+virstruct.ll
+)
+import (
+virutil ; ..make
+x11_def x11struct
+virgraph ; #:display:space
+)
+export (
+:graph-env-subwindow-mode
+:font-max 
+:load-font 
+:current-font 
+:width-substring
+:height-substring 
+:x-base-substring 
+:y-base-substring 
+:x-inc-substring 
+:y-inc-substring 
+:line-style-max 
+:current-line-style 
+:pattern-max 
+:make-pattern 
+:current-pattern
+:current-mode  
+:current-arc-mode  
+:cursor-name
+:cursor-max
+:make-cursor 
+:make-named-cursor 
+:current-cursor 
+:move-cursor 
+:current-foreground 
+:current-background
+
+:graph-env-set-clip
+:make-graph-env
+:kill-graph-env
+
+:make-line-style
+:font-ascent
+:font-height
+:graph-env-set-clips
+:graph-env-change-values
+
+:get-font-names
+:get-font-info
+:graph-env-planemask
+
+:current-stipple
+:current-fill-mode
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:x11:graph-env-subwindow-mode subr3 ())
+(#:display:x11:font-max subr1 ())
+(#:display:x11:load-font subr2 ())
+(#:display:x11:current-font subr3 ())
+(#:display:x11:width-substring nsubr ())
+(#:display:x11:height-substring nsubr ())
+(#:display:x11:x-base-substring nsubr ())
+(#:display:x11:y-base-substring nsubr ())
+(#:display:x11:x-inc-substring nsubr ())
+(#:display:x11:y-inc-substring nsubr ())
+(#:display:x11:line-style-max subr1 ())
+(#:display:x11:current-line-style subr3 ())
+(#:display:x11:pattern-max subr1 ())
+(#:display:x11:make-pattern subr2 ())
+(#:display:x11:current-pattern subr3 ())
+(#:display:x11:current-mode subr3 ())
+(#:display:x11:current-arc-mode subr3 ())
+(#:display:x11:cursor-name subr2 ())
+(#:display:x11:cursor-max subr1 ())
+(#:display:x11:make-cursor nsubr ())
+(#:display:x11:make-named-cursor subr2 ())
+(#:display:x11:current-cursor subr2 ())
+(#:display:x11:move-cursor subr3 ())
+(#:display:x11:current-foreground subr3 ())
+(#:display:x11:current-background subr3 ())
+(#:display:x11:graph-env-set-clip nsubr ())
+(#:display:x11:make-graph-env nsubr ())
+(#:display:x11:kill-graph-env subr2 ())
+(#:display:x11:make-line-style subr3 ())
+(#:display:x11:font-ascent subr2 ())
+(#:display:x11:font-height subr2 ())
+(#:display:x11:graph-env-set-clips nsubr ())
+(#:display:x11:graph-env-change-values nsubr ())
+(#:display:x11:get-font-names subr3 ())
+(#:display:x11:get-font-info subr3 ())
+(#:display:x11:graph-env-planemask subr3 ())
+(#:display:x11:current-stipple subr3 ())
+(#:display:x11:current-fill-mode subr3 ())
+)
+cpfunctions (
+(#:display:x11:add-xcursor subr2)
+)
+cpimport (
+(x11struct
+(#:tclass:x11window:make . subr0)
+)(x11_def
+(x11_graph_subwindow_mode . subr3)
+(x11_load_font . subr2)
+(x11_set_font . subr3)
+(x11_font_ascent . subr1)
+(x11_font_height . subr1)
+(x11_width_string . nsubr)
+(x11_height_string . nsubr)
+(x11_x_base_string . nsubr)
+(x11_y_base_string . nsubr)
+(x11_set_line_style . nsubr)
+(x11_set_pattern . subr3)
+(x11_set_fill_mode . subr3)
+(x11_set_mode . subr3)
+(x11_set_arc_mode . subr3)
+(x11_pixmap_to_bitmap . nsubr)
+(x11_make_cursor . nsubr)
+(x11_create_cursor . subr2)
+(x11_set_cursor . subr3)
+(x11_move_cursor . subr3)
+(x11_set_foreground . subr3)
+(x11_set_background . subr3)
+(x11_setwindow_background . subr3)
+(x11_set_clip . nsubr)
+(x11_new_create_graph_env . nsubr)
+(x11_free_graph_env . subr2)
+(x11_set_clips . nsubr)
+(x11_change_gc_values . nsubr)
+(x11_list_fonts . nsubr)
+(x11_font_info . nsubr)
+(x11_set_planemask . subr3)
+(x11_set_stipple . subr3)
+))
+cpenv (
+virutil
+x11_def
+x11struct
+virgraph
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:x11:xnumbers 't '#:complice:globalvar)
+))

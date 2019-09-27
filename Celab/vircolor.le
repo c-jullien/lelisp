@@ -1,0 +1,31 @@
+;;; GELL 15.26: elaboration file for the module: vircolor
+;;;             translation done: "Tue Aug  24 93 10:48:48 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: vircolor.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'vircolor)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZvircolor" "Tue Aug  24 93 10:48:48 "
+
+'((#:color:prin . subr1) (make-color . subr3) (make-mutable-color . subr3) (make-named-color . subr1) (kill-color . subr1) (red-component . nsubr) (blue-component . nsubr) (green-component . nsubr) (all-colors . nsubr) (name-to-rgb . subr1) (get-rgb-values . subr1))
+
+#[princn type-of prin errnia make-color #:display:current-display #:display:no-current-display #:color:make send nconc1 make-mutable-color t errnsa make-named-color color typep #:display:errnotacolor kill-color delq errwna red-component #:display:errnotmutable blue-component green-component all-colors display #:display:errnotadisplay name-to-rgb makevector get-rgb-values #:color:prin #:gell-resetfn:function-name #:gell-resetfn:function-1 #:gell-resetfn:function-3 #:gell-resetfn:function-n]
+)
+
+(defvar #:sys-package:colon 'color)
+(defcsetfn '#:color:prin "GZvircolor" 0)
+(defcsetfn 'make-color "GZvircolor" 1)
+(defcsetfn 'make-mutable-color "GZvircolor" 2)
+(defcsetfn 'make-named-color "GZvircolor" 3)
+(defcsetfn 'kill-color "GZvircolor" 4)
+(defcsetfn 'red-component "GZvircolor" 5)
+(defcsetfn 'blue-component "GZvircolor" 6)
+(defcsetfn 'green-component "GZvircolor" 7)
+(defcsetfn 'all-colors "GZvircolor" 8)
+(defcsetfn 'name-to-rgb "GZvircolor" 9)
+(defcsetfn 'get-rgb-values "GZvircolor" 10)
+
+(defccheck '(makevector delq typep nconc1 send #:color:make prin type-of princn))

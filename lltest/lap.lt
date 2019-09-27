@@ -1,0 +1,3474 @@
+;;;
+;;; lap.lt:  tests for loaders
+;;;
+;;; $Source: /usr/cvs/lelisp/lltest/lap.lt,v $
+;;; $Date: 2016/05/22 05:38:14 $
+;;; $Revision: 1.2 $
+;;;
+;;; ------------------------------------------------------------
+;;; This file is part of Le-Lisp version 15, developped by INRIA
+;;;
+;;;
+;;; (c) 1987-1993  Le-Lisp is a trademark of INRIA.
+;;; ------------------------------------------------------------
+
+
+; .Section "Tests for loaders"
+
+; ******************************************
+
+(test   "I.     test for: RETURN MOV                                   " ()
+
+        (loader ((fentry foo-1-1 subr1)
+                (return)))
+        (typefn 'foo-1-1)       subr1
+        (foo-1-1 100)           100
+        (foo-1-1 '(a))          (a)
+
+        (loader ((fentry foo-1-2 subr2)
+                (mov a2 a3)
+                (mov a3 a4)
+                (mov a4 a1)
+                (return)))
+        (typefn 'foo-1-2)       subr2
+        (foo-1-2 100 200)       200
+        (foo-1-2 '(b) '(a))     (a)
+
+        (loader ((fentry foo-1-3 subr0)
+                (mov '#[0 0 7] a1)
+                (return)))
+        (typefn 'foo-1-3)       subr0
+        (foo-1-3)               #[0 0 7]
+
+        (loader ((fentry foo-1-4 subr0)
+                (mov '0.07 a1)
+                (return)))
+        (foo-1-4)               0.07
+
+        (loader ((fentry foo-1-5 subr0)
+                (mov '"0.07" a1)
+                (return)))
+        (foo-1-5)               "0.07"
+
+        (loader ((fentry foo-1-6 subr0)
+                (mov 'foo-1-6 a1)
+                (return)))
+        (foo-1-6)               foo-1-6
+
+        (loader ((fentry foo-1-7 subr0)
+                (mov '(0 0 7) a1)
+                (return)))
+        (foo-1-7)               (0 0 7)
+
+        (loader ((fentry foo-1-8 subr1)
+                (mov (car a1) a1)
+                (return)))
+        (foo-1-8 '(0 0 7))      0
+        (foo-1-8 '(7 0 0))      7
+
+        (loader ((fentry foo-1-9 subr2)
+                (mov a2 (car a1))
+                (return)))
+        (foo-1-9 '(0 0 7) 7)    (7 0 7)
+        (foo-1-9 '(7 0 0) 0)    (0 0 0)
+
+        (loader ((fentry foo-1-10 subr1)
+                (mov (cdr a1) a1)
+                (return)))
+        (foo-1-10 '(0 0 7))     (0 7)
+        (foo-1-10 ())           ()
+
+        (loader ((fentry foo-1-11 subr2)
+                (mov a2 (cdr a1))
+                (return)))
+        (foo-1-11 '(0 0 7) 7)   (0 . 7)
+        (foo-1-11 '(0 0 7) ())  (0)
+
+        (loader ((fentry foo-1-12 subr1)
+                (mov (plist a1) a1)
+                (return)))
+        (plist 'x '(0 0 7))     (0 0 7)
+        (foo-1-12 'x)           (0 0 7)
+
+        (loader ((fentry foo-1-13 subr2)
+                (mov a2 (plist a1))
+                (return)))
+        (foo-1-13 'x '(7 0 0))  x
+        (plist 'x)              (7 0 0)
+
+        (loader ((fentry foo-1-14 subr1)
+                (mov (fval a1) a1)
+                (return)))
+        (setfn 'x 'expr '(x y)) x
+        (foo-1-14 'x)           (x y)
+
+        (loader ((fentry foo-1-15 subr2)
+                (mov a2 (fval a1))
+                (return)))
+        (foo-1-15 'x '(y x))    x
+        (valfn 'x)              (y x)
+
+        (loader ((fentry foo-1-16 subr1)
+                (mov (pkgc a1) a1)
+                (return)))
+        (foo-1-16 '#:z:y:x)     #:z:y
+
+;       (loader ((fentry foo-1-17 subr2)
+;               (mov a2 (pkgc a1))
+;               (return)))
+;       (foo-1-17 '#:z:y:x 'foo)        #:foo:x
+
+        (loader ((fentry foo-1-18 subr1)
+                (mov (oval a1) a1)
+                (return)))
+        (objval 'x '(0 0 7))    (0 0 7)
+        (foo-1-18 'x)           (0 0 7)
+
+        (loader ((fentry foo-1-19 subr2)
+                (mov a2 (oval a1))
+                (return)))
+        (foo-1-19 'x '(7 0 0))  x
+        (objval 'x)             (7 0 0)
+
+	(loader ((fentry foo-1-20 subr0)
+	         (mov '() a1)
+		 (bra 11)
+	22	 (mov 't a1)
+		 (return)
+	11	 (mov (@ 22) a2)
+		 (bri a2)
+		 (end)))
+	(foo-1-20)              t
+
+;  With 3D OBLIST, result of (PNAME x) is inpredictible.
+;       (loader ((fentry foo-1-20 subr1)
+;               (mov (pname a1) a1)
+;               (return)))
+;       (foo-1-20 'foo)         "foo"
+
+;       (loader ((fentry foo-1-21 subr2)
+;               (mov a2 (pname a1))
+;               (return)))
+;       (foo-1-21 'foo "bar")   bar
+
+        (loader ((fentry foo-1-22 subr1)
+                (mov (cvalq x) a1)
+                (return)))
+        (setq x '(0 0 7))       (0 0 7)
+        (foo-1-22 'x)           (0 0 7)
+
+        (loader ((fentry foo-1-23 subr2)
+                (mov a2 (cvalq x))
+                (return)))
+        (foo-1-23 'x '(7 0 0))  x
+        x                       (7 0 0)
+
+        (loader ((fentry foo-1-24 subr1)
+                (mov (cvalq x) a1)
+                (mov (cdr a1) (cvalq x))
+                (return)))
+)
+
+; ******************************************
+
+(test   "II.    test for: PUSH POP ADJSTK                              " ()
+
+        (loader ((fentry foo-2-1 subr1)
+                (push a1)
+                (mov nil a1)
+                (pop a1)
+                (return)))
+        (foo-2-1 '(0 0 7))      (0 0 7)
+        (foo-2-1 -2)            -2
+
+        (loader ((fentry foo-2-2 subr0)
+                (adjstk '-4)
+                (pop a1)
+                (adjstk '3)
+                (mov nil a1)
+                (return)))
+        (foo-2-2)               ()
+
+        (loader ((fentry foo-2-3 subr0)
+                (adjstk '-100)
+                (pop a1)
+                (adjstk '99)
+                (mov nil a1)
+                (return)))
+        (foo-2-3)               ()
+
+        (loader ((fentry foo-2-4 subr0)
+                (mov nil a1)
+                (mov '2 a4)
+                (push a4)
+                (push a4)
+                (adjstk a4)
+                (return)))
+        (foo-2-4)               ()
+
+        (loader ((fentry foo-2-5 subr0)
+                (mov nil a1)
+                (push '2)
+                (push '9)
+                (adjstk (& 1))
+                (return)))
+        (foo-2-5)               ()
+
+        (loader ((fentry foo-2-6 subr0)
+                (push '1)
+                (push '2)
+                (mov (& 0) a1)
+                (adjstk '2)
+                (return)))
+        (foo-2-6)               2
+
+        (loader ((fentry foo-2-7 subr0)
+                (push '1)
+                (mov (& 0) a1)
+                (adjstk '1)
+                (return)))
+        (foo-2-7)               1
+
+        (loader ((fentry foo-2-8 subr0)
+                (push '1)
+                (push (& 0))
+                (pop a1)
+                (adjstk '1)
+                (return)))
+        (foo-2-8)               1
+
+        (loader ((fentry foo-2-9 subr0)
+                (push '1)
+                (push '2)
+                (push (& 1))
+                (pop a1)
+                (adjstk '2)
+                (return)))
+        (foo-2-9)               1
+
+        (loader ((fentry foo-2-9b subr0)
+                (push '0)
+                (push '1)
+                (push '2)
+                (pop (& 1))
+                (pop a1)
+                (pop (cvalq x))
+                (return)))
+        (foo-2-9b)              1
+        x                       2
+
+        (loader ((fentry foo-2-10 subr1)
+                (push (cvalq x))
+                (push a1)
+                (pop (cvalq x))
+                (pop a1)
+                (return)))
+        (setq x '(0 0 7))       (0 0 7)
+        (foo-2-10 '(7 0 0))     (0 0 7)
+        x                       (7 0 0)
+
+        (loader ((fentry foo-2-11 subr0)
+                (push 'joy)
+                (pop a1)
+                (return)))
+        (foo-2-11)              joy
+
+        (loader ((fentry foo-2-12 subr0)
+                (push (@ 20))
+                (mov nil a1)
+                (return)
+        20      (mov 'joy a1)
+                (return)))
+        (foo-2-12)              joy
+
+        (loader ((fentry foo-2-13 subr0)
+                (mov (@ 20) a2)
+                (push a2)
+                (mov nil a1)
+                (return)
+        20      (mov 'joy a1)
+                (return)))
+        (foo-2-13)              joy
+
+        (loader ((fentry foo-2-14 subr0)
+                (bra 25)
+        15      (mov 'joy a1)
+                (return)
+        25      (push (@ 15))
+                (mov nil a1)
+                (return)))
+        (foo-2-14)              joy
+
+        (loader ((fentry foo-2-15 subr0)
+                (bra 25)
+        15      (mov 'joy a1)
+                (return)
+        25      (mov (@ 15) a2)
+                (push a2)
+                (mov nil a1)
+                (return)))
+        (foo-2-15)              joy
+
+        (loader ((fentry foo-2-18 subr1)
+                (push nil)
+                (pop a1)
+                (return)))
+        (foo-2-18 1)            ()
+        (foo-2-18 ())           ()
+
+        (loader ((fentry foo-2-19 subr1)
+                 (push (fvalq ncons))
+                 (return)
+                 (end)))
+        (foo-2-19 1)            (1)
+)
+
+; ******************************************
+
+(test   "III.   test for: BFNIL BTNIL BTCONS BFCONS BRA                " ()
+
+        (loader ((fentry foo-3-2 subr1) 
+                  (bfnil a1 1000) 
+                  (mov '"it's NIL" a1)
+                  (bra 1009)
+          1000    (btcons a1 1001)
+                  (mov '"it's an atom" a1)
+                  (bra 1002)
+          1001    (mov '"it's a cons" a1)
+          1002    (return)
+        
+                  (fentry foo-3-3 subr1)
+                  (btnil a1 1003)
+                  (bfcons a1 1004)
+                  (mov '"it's a cons" a1)
+                  (bra 1002)
+          1003    (mov '"it's NIL" a1)
+                  (bra 1002)
+          1004    (mov '"it's an atom" a1)
+                  (bra 1002)
+
+                  (fentry foo-3-4 subr1)
+                  (mov a1 (cvalq x))
+                  (bfnil (cvalq x) 1005)
+                  (bra 1003)
+          1005    (bfcons (cvalq x) 1004)
+                  (bra 1001)
+
+                  (fentry foo-3-5 subr1)
+                  (mov a1 (cvalq x))
+                  (btnil (cvalq x) 1003)
+                  (btcons (cvalq x) 1001)
+                  (bra 1004)
+          1009    (bra 1002)
+                  (end)))
+
+        (setq x ())         ()
+        (foo-3-2 ())       "it's NIL"
+        (foo-3-2 1)        "it's an atom"
+        (foo-3-2 1.4)      "it's an atom"
+        (foo-3-2 'foo-3-)     "it's an atom"
+        (foo-3-2 "foo-3-")    "it's an atom"
+        (foo-3-2 #[4])     "it's an atom"
+        (foo-3-2 '(a))     "it's a cons"
+        (foo-3-3 ())       "it's NIL"
+        (foo-3-3 1)        "it's an atom"
+        (foo-3-3 '(a))     "it's a cons"
+        (foo-3-3 1.4)      "it's an atom"
+        (foo-3-3 'foo-3-)     "it's an atom"
+        (foo-3-3 "foo-3-")    "it's an atom"
+        (foo-3-3 #[4])     "it's an atom"
+        (foo-3-4 ())       "it's NIL"
+        (foo-3-4 1)        "it's an atom"
+        (foo-3-4 1.4)      "it's an atom"
+        (foo-3-4 'foo-3-)     "it's an atom"
+        (foo-3-4 "foo-3-")    "it's an atom"
+        (foo-3-4 #[4])     "it's an atom"
+        (foo-3-4 '(a))     "it's a cons"
+        (foo-3-5 ())       "it's NIL"
+        (foo-3-5 1)        "it's an atom"
+        (foo-3-5 1.4)      "it's an atom"
+        (foo-3-5 'foo-3-)     "it's an atom"
+        (foo-3-5 "foo-3-")    "it's an atom"
+        (foo-3-5 #[4])     "it's an atom"
+        (foo-3-5 '(a))     "it's a cons"
+
+        (loader ((fentry foo-3-6 subr2)
+                (push a2)
+                (push a1)
+                (btnil (& 0) 10)
+                (btnil (& 1) 20)
+                (mov '0 a1)
+        30      (adjstk '2)
+                (return)
+        20      (mov '1 a1)
+                (bra 30)
+        10      (mov '2 a1)
+                (bra 30)))
+        (foo-3-6 () ())         2
+        (foo-3-6 () 4)          2
+        (foo-3-6 9 ())          1
+        (foo-3-6 9 8)           0
+
+        (loader ((fentry foo-3-7 subr2)
+                (push a2)
+                (push a1)
+                (bfnil (& 0) 10)
+                (bfnil (& 1) 20)
+                (mov '0 a1)
+        30      (adjstk '2)
+                (return)
+        20      (mov '1 a1)
+                (bra 30)
+        10      (mov '2 a1)
+                (bra 30)))
+        (foo-3-7 () ())         0
+        (foo-3-7 () 4)          1
+        (foo-3-7 9 ())          2
+        (foo-3-7 9 8)           2
+
+        (loader ((fentry foo-3-8 subr2)
+                (push a2)
+                (push a1)
+                (btcons (& 0) 10)
+                (btcons (& 1) 20)
+                (mov '0 a1)
+        30      (adjstk '2)
+                (return)
+        20      (mov '1 a1)
+                (bra 30)
+        10      (mov '2 a1)
+                (bra 30)))
+        (foo-3-8 '(a) '(b))     2
+        (foo-3-8 '(a) 4)        2
+        (foo-3-8 9 '(b))        1
+        (foo-3-8 9 8)           0
+
+        (loader ((fentry foo-3-9 subr2)
+                (push a2)
+                (push a1)
+                (bfcons (& 0) 10)
+                (bfcons (& 1) 20)
+                (mov '0 a1)
+        30      (adjstk '2)
+                (return)
+        20      (mov '1 a1)
+                (bra 30)
+        10      (mov '2 a1)
+                (bra 30)))
+        (foo-3-9 '(a) '(b))     0
+        (foo-3-9 '(a) 4)        1
+        (foo-3-9 9 '(b))        2
+        (foo-3-9 9 8)           2
+
+        (loader ((fentry foo-3-10 subr0)
+                (mov nil a1)
+                (bra 10)
+        10      (return)
+                (mov '1 a1)
+                (return)))
+        (foo-3-10)              ()
+
+	(loader ((fentry foo-3-11 subr0)
+		(mov '0 a1)
+		(bra 10)
+	10	(bra 20)
+		(mov nil a1)
+	20	(bra 30)
+		(mov nil a1)
+		(mov nil a1)
+	30	(bra 50)
+		(mov nil a1)
+	40	(bra 70)
+	50	(bra 40)
+	60	(bra 80)
+		(mov a1 a1)
+	70	(bra 60)
+	80	(return)
+	90	(bra 90)))
+	(foo-3-11)		0
+
+)
+
+; ******************************************
+
+(setq x (list 1 2 3) y "foo-3-" z #[1 2 3])
+
+(test   "IV.    test for: CABEQ/NE BT/F[FIX FLOAT SYMB STRG VECT VAR]  " ()
+
+        (loader ((fentry foo-4-1 subr2)
+                  (cabeq a1 't 1001)
+                  (cabeq a2 't 1002)
+                  (cabne a1 a2 1003)
+                  (mov nil a1)
+                  (bra 1004)
+          1001    (mov '1 a1) (bra 1004)
+          1002    (mov '2 a1) (bra 1004)
+          1003    (mov '3 a1)
+          1004    (return)
+        
+                  (fentry foo-4-2 subr1)
+                  (btfix a1 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-3 subr1)
+                  (bffix a1 1006)
+          1005    (mov 't a1)
+                  (return)
+          1006    (mov '() a1)
+                  (return)
+        
+                  (fentry foo-4-4 subr1)
+                  (cabeq a1 (cvalq x) 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-5 subr1)
+                  (cabeq a1 'foo-4- 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-6 subr1)
+                  (mov a1 (cvalq x))
+                  (mov a1 (cvalq y))
+                  (cabeq (cvalq x) (cvalq y) 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-7 subr2)
+                  (mov a1 (cvalq x))
+                  (mov a2 (cvalq y))
+                  (cabeq (cvalq x) (cvalq y) 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-8 subr2)
+                  (mov a1 (cvalq x))
+                  (mov a2 (cvalq y))
+                  (cabne (cvalq x) (cvalq y) 1006)
+                  (bra 1005)
+        
+                  (fentry foo-4-9 subr1)
+                  (mov a1 (cvalq x))
+                  (mov a1 (cvalq y))
+                  (cabne (cvalq x) (cvalq y) 1006)
+                  (bra 1005)
+        
+                  (fentry foo-4-10 subr2)
+                  (mov a1 (cvalq x))
+                  (cabeq a2 (cvalq x) 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-11 subr2)
+                  (mov a1 (cvalq x))
+                  (cabeq (cvalq x) a2 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-12 subr2)
+                  (mov a1 (cvalq x))
+                  (cabne a2 (cvalq x) 1006)
+                  (bra 1005)
+        
+                  (fentry foo-4-13 subr2)
+                  (mov a1 (cvalq x))
+                  (cabne (cvalq x) a2 1006)
+                  (bra 1005)
+        
+                  (fentry foo-4-14 subr1)
+                  (btfloat a1 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-15 subr1)
+                  (bffloat a1 1006)
+                  (bra 1005)
+        
+                  (fentry foo-4-16 subr1)
+                  (btstrg a1 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-17 subr1)
+                  (bfstrg a1 1006)
+                  (bra 1005)
+        
+                  (fentry foo-4-18 subr1)
+                  (btsymb a1 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-19 subr1)
+                  (bfsymb a1 1006)
+                  (bra 1005)
+        
+                  (fentry foo-4-20 subr1)
+                  (btvect a1 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-21 subr1)
+                  (bfvect a1 1006)
+                  (bra 1005)
+        
+                  (fentry foo-4-22 subr1)
+                  (btvar a1 1005)
+                  (bra 1006)
+        
+                  (fentry foo-4-23 subr1)
+                  (bfvar a1 1006)
+                  (bra 1005)
+
+		  (fentry foo-4-24 subr0)
+		  (cabeq 'foo-4-24 'foo-4-24 1005)
+		  (bra 1006)
+
+		  (end)))
+
+         (foo-4-1 t 1)           1
+         (foo-4-1 0 t)           2
+         (foo-4-1 0 0)           ()
+         (foo-4-1 0 1)           3
+         (foo-4-1 '(1) '(1))     3
+         (foo-4-1 "foo-4-" "foo-4-")   3
+         (foo-4-1 #[1] #[1])     3
+         (foo-4-1 x x)           ()
+         (foo-4-1 y y)           ()
+         (foo-4-1 z z)           ()
+         (foo-4-2 ())            ()
+         (foo-4-2 'foo-4-)          ()
+         (foo-4-2 x)             ()
+         (foo-4-2 y)             ()
+         (foo-4-2 z)             ()
+         (foo-4-2 1.4)           ()
+         (foo-4-2 -1)            t
+         (foo-4-2 1)             t
+         (foo-4-3 ())            ()
+         (foo-4-3 'foo-4-)          ()
+         (foo-4-3 x)             ()
+         (foo-4-3 y)             ()
+         (foo-4-3 z)             ()
+         (foo-4-3 1.4)           ()
+         (foo-4-3 -1)            t
+         (foo-4-3 1)             t
+         (foo-4-4 'x)            ()
+         (foo-4-4 x)             t
+         (foo-4-5 'x)            ()
+         (foo-4-5 "foo-4-")         ()
+         (foo-4-5 'foo-4-)          t
+         (foo-4-6 1)             t
+         (foo-4-6 1.2)           t
+         (foo-4-7 1 2)           ()
+         (foo-4-7 'x 'foo-4-)       ()
+         (foo-4-7  1 1)          t
+         (foo-4-8 1 1)           t
+         (foo-4-8 1 2)           ()
+         (foo-4-8 "foo-4-" "foo-4-")   ()
+         (foo-4-9 "foo-4-")         t
+         (foo-4-9 ())            t
+         (setq a '(1 2 3))    (1 2 3)
+         (setq y "FootheBar")   "FootheBar"
+         (foo-4-10 1 1)          t
+         (foo-4-10 () ())        t
+         (foo-4-10 "foo-4-" "foo-4-")  ()
+         (foo-4-10 'foo-4- 'foo-4-)    t
+         (foo-4-10 a a)          t
+         (foo-4-11 1 1)          t
+         (foo-4-11 () ())        t
+         (foo-4-11 "foo-4-" "foo-4-")  ()
+         (foo-4-11 'foo-4- 'foo-4-)    t
+         (foo-4-11 a a)          t
+         (foo-4-12 1 1)          t
+         (foo-4-12 () ())        t
+         (foo-4-12 "foo-4-" "foo-4-")  ()
+         (foo-4-12 'foo-4- 'foo-4-)    t
+         (foo-4-12 a a)          t
+         (foo-4-13 1 1)          t
+         (foo-4-13 () ())        t
+         (foo-4-13 "foo-4-" "foo-4-")  ()
+         (foo-4-13 'foo-4- 'foo-4-)    t
+         (foo-4-13 a a)          t
+
+         (foo-4-14 ())            ()
+         (foo-4-14 'foo-4-)          ()
+         (foo-4-14 x)             ()
+         (foo-4-14 y)             ()
+         (foo-4-14 z)             ()
+         (foo-4-14 1.4)           t
+         (foo-4-14 -1)            ()
+         (foo-4-14 1)             ()
+         (foo-4-15 ())            ()
+         (foo-4-15 'foo-4-)          ()
+         (foo-4-15 x)             ()
+         (foo-4-15 y)             ()
+         (foo-4-15 z)             ()
+         (foo-4-15 1.4)           t
+         (foo-4-15 -1)            ()
+         (foo-4-15 1)             ()
+
+         (foo-4-16 ())            ()
+         (foo-4-16 'foo-4-)          ()
+         (foo-4-16 x)             ()
+         (foo-4-16 y)             t
+         (foo-4-16 z)             ()
+         (foo-4-16 1.4)           ()
+         (foo-4-16 -1)            ()
+         (foo-4-16 1)             ()
+         (foo-4-17 ())            ()
+         (foo-4-17 'foo-4-)          ()
+         (foo-4-17 x)             ()
+         (foo-4-17 y)             t
+         (foo-4-17 z)             ()
+         (foo-4-17 1.4)           ()
+         (foo-4-17 -1)            ()
+         (foo-4-17 1)             ()
+
+         (foo-4-18 ())            t
+         (foo-4-18 t)             t
+         (foo-4-18 'foo-4-)       t
+         (foo-4-18 x)             ()
+         (foo-4-18 y)             ()
+         (foo-4-18 z)             ()
+         (foo-4-18 1.4)           ()
+         (foo-4-18 -1)            ()
+         (foo-4-18 1)             ()
+
+         (foo-4-19 ())            t
+         (foo-4-19 t)             t
+         (foo-4-19 'foo-4-)       t
+         (foo-4-19 x)             ()
+         (foo-4-19 y)             ()
+         (foo-4-19 z)             ()
+         (foo-4-19 1.4)           ()
+         (foo-4-19 -1)            ()
+         (foo-4-19 1)             ()
+
+         (foo-4-20 ())            ()
+         (foo-4-20 t)             ()
+         (foo-4-20 'foo-4-)       ()
+         (foo-4-20 x)             ()
+         (foo-4-20 y)             ()
+         (foo-4-20 z)             t
+         (foo-4-20 1.4)           ()
+         (foo-4-20 -1)            ()
+         (foo-4-20 1)             ()
+
+         (foo-4-21 ())            ()
+         (foo-4-21 t)             ()
+         (foo-4-21 'foo-4-)       ()
+         (foo-4-21 x)             ()
+         (foo-4-21 y)             ()
+         (foo-4-21 z)             t
+         (foo-4-21 1.4)           ()
+         (foo-4-21 -1)            ()
+         (foo-4-21 1)             ()
+
+         (foo-4-22 ())            ()
+         (foo-4-22 t)             ()
+         (foo-4-22 'foo-4-)       t
+         (foo-4-22 x)             ()
+         (foo-4-22 y)             ()
+         (foo-4-22 z)             ()
+         (foo-4-22 1.4)           ()
+         (foo-4-22 -1)            ()
+         (foo-4-22 1)             ()
+
+         (foo-4-23 ())            ()
+         (foo-4-23 t)             ()
+         (foo-4-23 'foo-4-)       t
+         (foo-4-23 x)             ()
+         (foo-4-23 y)             ()
+         (foo-4-23 z)             ()
+         (foo-4-23 1.4)           ()
+         (foo-4-23 -1)            ()
+         (foo-4-23 1)             ()
+	 (foo-4-24)               t
+
+        (loader ((fentry foo-4-24-1 subr2)
+                (push a2)
+                (push a1)
+                (cabeq (& 0) (& 1) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (mov '1 a1)
+                (bra 10)))
+        (foo-4-24-1 8 8)          1
+        (foo-4-24-1 8 -1)         0
+
+        (loader ((fentry foo-4-25 subr2)
+                (push a2)
+                (push a1)
+                (cabne (& 0) (& 1) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (mov '1 a1)
+                (bra 10)))
+        (foo-4-25 8 8)          0
+        (foo-4-25 8 -1)         1
+
+        (loader ((fentry foo-4-26 subr1)
+                (cabeq '12 (cdr a1) 10)
+                (cabeq (cdr a1) '-12 20)
+                (mov '0 a1)
+                (return)
+        10      (mov '1 a1)
+                (return)
+        20      (mov '-1 a1)
+                (return)))
+        (foo-4-26 '(a . 12))    1
+        (foo-4-26 '(a . -12))   -1
+        (foo-4-26 '(a . -20))   0
+
+        (loader ((fentry foo-4-26-2 subr0)
+                (mov '1 a1)
+                (cabeq '1 '-1 10)
+                (mov nil a1)
+        10      (return)))
+        (foo-4-26-2)            ()
+
+        (loader ((fentry foo-4-26-3 subr0)
+                (mov '1 a1)
+                (cabeq '-1 '-1 10)
+                (mov nil a1)
+        10      (return)))
+        (foo-4-26-3)            1
+
+        (loader ((fentry foo-4-27 subr1)
+                (cabne '12 (cdr a1) 10)
+                (mov '0 a1)
+                (return)
+        10      (cabne (cdr a1) '-12 20)
+                (mov '1 a1)
+                (return)
+        20      (mov '-1 a1)
+                (return)))
+        (foo-4-27 '(a . 12))    0
+        (foo-4-27 '(a . -12))   1
+        (foo-4-27 '(a . -20))   -1
+
+        (loader ((fentry foo-4-27-2 subr0)
+                (mov '1 a1)
+                (cabne '1 '-1 10)
+                (mov nil a1)
+        10      (return)))
+        (foo-4-27-2)            1
+
+        (loader ((fentry foo-4-27-3 subr0)
+                (mov '1 a1)
+                (cabne '-1 '-1 10)
+                (mov nil a1)
+        10      (return)))
+        (foo-4-27-3)            ()
+
+        (loader ((fentry foo-4-28 subr2)
+                (push a2)
+                (push a1)
+                (btfix (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (btfix (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-28 () ())        0
+        (foo-4-28 1 ())         1
+        (foo-4-28 () -1)        0
+        (foo-4-28 -1 2)         2
+
+        (loader ((fentry foo-4-29 subr2)
+                (push a2)
+                (push a1)
+                (bffix (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (bffix (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-29 () ())        2
+        (foo-4-29 1 ())         0
+        (foo-4-29 () -1)        1
+        (foo-4-29 -1 2)         0
+
+        (loader ((fentry foo-4-30 subr2)
+                (push a2)
+                (push a1)
+                (btfloat (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (btfloat (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-30 () ())        0
+        (foo-4-30 1.1 ())       1
+        (foo-4-30 () -1.1)      0
+        (foo-4-30 -1.1 2.2)     2
+
+        (loader ((fentry foo-4-31 subr2)
+                (push a2)
+                (push a1)
+                (bffloat (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (bffloat (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-31 () ())        2
+        (foo-4-31 1.1 ())       0
+        (foo-4-31 () -1.1)      1
+        (foo-4-31 -1.1 2.2)     0
+
+        (loader ((fentry foo-4-32 subr2)
+                (push a2)
+                (push a1)
+                (btsymb (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (btsymb (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-32 '(n) '(n))    0
+        (foo-4-32 'a '(n))      1
+        (foo-4-32 '(n) 'b)      0
+        (foo-4-32 'a 'b)        2
+
+        (loader ((fentry foo-4-33 subr2)
+                (push a2)
+                (push a1)
+                (bfsymb (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (bfsymb (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-33 '(n) '(n))    2
+        (foo-4-33 'a '(n))      0
+        (foo-4-33 '(n) 'b)      1
+        (foo-4-33 'a 'b)        0
+
+        (loader ((fentry foo-4-34 subr2)
+                (push a2)
+                (push a1)
+                (btstrg (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (btstrg (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-34 () ())        0
+        (foo-4-34 "a" ())       1
+        (foo-4-34 () "b")       0
+        (foo-4-34 "a" "b")      2
+
+        (loader ((fentry foo-4-35 subr2)
+                (push a2)
+                (push a1)
+                (bfstrg (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (bfstrg (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-35 () ())        2
+        (foo-4-35 "a" ())       0
+        (foo-4-35 () "b")       1
+        (foo-4-35 "a" "b")      0
+
+        (loader ((fentry foo-4-36 subr2)
+                (push a2)
+                (push a1)
+                (btvect (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (btvect (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-36 () ())        0
+        (foo-4-36 #[] ())       1
+        (foo-4-36 () #[b])      0
+        (foo-4-36 #[] #[b])     2
+
+        (loader ((fentry foo-4-37 subr2)
+                (push a2)
+                (push a1)
+                (bfvect (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (bfvect (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-37 () ())        2
+        (foo-4-37 #[] ())       0
+        (foo-4-37 () #[b])      1
+        (foo-4-37 #[] #[b])     0
+
+        (loader ((fentry foo-4-38 subr2)
+                (push a2)
+                (push a1)
+                (btvar (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (btvar (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-38 () ())        0
+        (foo-4-38 'a ())        1
+        (foo-4-38 () 'b)        0
+        (foo-4-38 'a 'b)        2
+
+        (loader ((fentry foo-4-39 subr2)
+                (push a2)
+                (push a1)
+                (bfvar (& 0) 20)
+                (mov '0 a1)
+        10      (adjstk '2)
+                (return)
+        20      (bfvar (& 1) 30)
+                (mov '1 a1)
+                (bra 10)
+        30      (mov '2 a1)
+                (bra 10)))
+        (foo-4-39 () ())        2
+        (foo-4-39 'a ())        0
+        (foo-4-39 () 'b)        1
+        (foo-4-39 'a 'b)        0
+
+;; special for ix386/sco386/svr4i386/dos/os2 ports ... 
+;; bug btfloat/bffloat when the argument is not in a1.
+
+	(loader ((fentry foo-4-40 subr2)
+		(bffloat a2 10)
+		(mov a2 a1)
+		(return)
+	10	(mov nil a1)
+		(return)))
+
+	(loader ((fentry foo-4-41 subr3)
+		(bffloat a3 10)
+		(mov a3 a1)
+		(return)
+	10	(mov nil a1)
+		(return)))
+
+	(foo-4-40 "a" 5.)	    5.
+	(foo-4-40 5. "a")           ()
+	(foo-4-41 "a" "b" 6.)       6.
+	(foo-4-41 "a" "b" "6.")     ()
+
+
+	(loader ((fentry foo-4-42 subr2)
+		(btfloat a2 10)
+		(mov a2 a1)
+		(return)
+	10	(mov nil a1)
+		(return)))
+
+	(loader ((fentry foo-4-43 subr3)
+		(btfloat a3 10)
+		(mov a3 a1)
+		(return)
+	10	(mov nil a1)
+		(return)))
+
+	(foo-4-42 "chaine" 5.)	    ()
+	(foo-4-42 "chaine" "a")     "a"
+	(foo-4-43 "a" "b" 6.)       ()
+	(foo-4-43 "a" "b" "c")      "c"
+)
+
+; ******************************************
+
+(test   "V.     test for: JCALL JMP                                    " ()
+
+        (loader ((fentry foo-5-1 subr1)
+                  (push a1)
+                  (pop a2)
+                  (cabeq a1 a2 10)
+                  (mov nil a1)
+          10      (return)
+                (end)))
+       (foo-5-1 t)         t
+       (foo-5-1 1)         1
+       (foo-5-1 '(1 2 3 4))        (1 2 3 4)
+              
+        (loader ((fentry foo-5-2 subr2)
+                  (jcall cons)
+                  (return)
+                (end)))
+       (foo-5-2 1 4)               (1 . 4)
+       (foo-5-2 '(1 2 3) ())     ((1 2 3))
+
+        (loader ((fentry foo-5-3 subr1)
+                  (cabne a1 '() 2001)
+                  (mov 't a1)
+          2001    (return)
+                  (fentry foo-5-4 subr1)
+                  (push (@ foo-5-3))
+                  (mov (car a1) a1)
+                  (mov (cdr a1) a1)
+                  (car a1)
+                  (cdr a1)
+                  (return)
+                (end)))
+       (foo-5-3 1)               1
+       (foo-5-3 ())              t
+       (foo-5-4 '((1 . ((foo . bar) . 3)) . 4))  bar
+       (foo-5-4 '((1 . ((foo . ()) . 3)) . 4))  t
+
+        (loader ((fentry foo-5-5 subr2)
+                  (push a2)
+                  (push (@ 1002))
+                  (push a1)
+                  (push a2)
+                  (push (@ 1001))
+                  (push a1)
+                  (mov '1 a4)
+                  (jmp list)
+          1001    (push a1)
+                  (mov '3 a4)
+                  (jmp list)
+          1002    (jcall ncons)
+                  (pop a2)
+                  (jcall cons)
+                  (return)
+                  (fentry foo-5-6 subr2)
+                  (push a2)
+                  (push (@ 1002))
+                  (push a1)
+                  (push a2)
+                  (push (@ 1001))
+                  (push a1)
+                  (mov '1 a4)
+                  (jmp list)
+                (end)))
+       (foo-5-5 1 2)                (((1 2 (1))) . 2)
+       (foo-5-5 () ())              (((() () (()))))
+       (foo-5-5 'x 'y)              (((x y (x))) . y)
+       (foo-5-6 1 2)                (((1 2 (1))) . 2)
+       (foo-5-6 () ())              (((() () (()))))
+       (foo-5-6 'x 'y)              (((x y (x))) . y)
+         
+        (loader ((fentry dlq2 subr2)         ; test short CALL
+                  (bfnil a2 1010)
+                  (mov nil a1)
+                  (return)
+          1010    (mov (car a2) a3)
+                  (cabne a3 a1 1011)
+                  (mov (cdr a2) a2)
+                  (jmp dlq2)
+          1011    (push a3)
+                  (mov (cdr a2) a2)
+                  (jcall dlq2)
+                  (mov a1 a2)
+                  (pop a1)
+                  (jmp cons)
+                  (end)))
+       (dlq2 'a '(l a b a d a))  (l b d)
+)
+       
+; ******************************************
+
+(test   "VI.    test for: HPMOVX HPXMOV                                " ()
+
+        (loader ((fentry foo-6-1 subr3)
+                (hpmovx a1 a2 a3)
+                (mov a2 a1)
+                (return)
+                (fentry foo-6-2 subr2)
+                (hpxmov a1 a2 a3)
+                (mov a3 a1)
+                (return)))
+        (setq x #[0 a b c d e]) #[0 a b c d e]
+        (foo-6-2 x 1)           a
+        (foo-6-1 2 x 1)         #[0 2 b c d e]
+        (foo-6-2 x 1)           2
+        (foo-6-2 x 2)           b
+        (foo-6-1 3 x 2)         #[0 2 3 c d e]
+        (foo-6-2 x 2)           3
+        (foo-6-2 x 3)           c
+        (foo-6-1 4 x 3)         #[0 2 3 4 d e]
+        (foo-6-2 x 3)           4
+
+        (loader ((fentry foo-6-3 subr2)
+                (hpmovx a1 a2 '1)
+                (mov a2 a1)
+                (return)
+                (fentry foo-6-4 subr1)
+                (hpxmov a1 '1 a3)
+                (mov a3 a1)
+                (return)
+                (end)))
+        (setq x #[0 a b c d e]) #[0 a b c d e]
+        (foo-6-4 x)             a
+        (foo-6-3 1 x)           #[0 1 b c d e]
+
+        (loader ((fentry foo-6-5 subr3)
+                (push a1)
+                (push a2)
+                (push a3)
+                (hpmovx (& 2) (& 1) (& 0))
+                (mov (& 1) a1)
+                (adjstk '3)
+                (return)
+                (fentry foo-6-6 subr2)
+                (push a1)
+                (push a2)
+                (push a3)
+                (hpxmov (& 2) (& 1) (& 0))
+                (mov (& 0) a1)
+                (adjstk '3)
+                (return)))
+        (setq x #[0 a b c d e]) #[0 a b c d e]
+        (foo-6-6 x 1)           a
+        (foo-6-5 2 x 1)         #[0 2 b c d e]
+        (foo-6-6 x 1)           2
+        (foo-6-6 x 2)           b
+        (foo-6-5 3 x 2)         #[0 2 3 c d e]
+        (foo-6-6 x 2)           3
+        (foo-6-6 x 3)           c
+        (foo-6-5 4 x 3)         #[0 2 3 4 d e]
+        (foo-6-6 x 3)           4
+
+        (loader ((fentry foo-6-7 subr2)
+                (push a1)
+                (push a2)
+                (hpmovx (& 1) (& 0) '1)
+                (mov (& 0) a1)
+                (adjstk '2)
+                (return)
+                (fentry foo-6-8 subr1)
+                (push a1)
+                (push a2)
+                (hpxmov (& 1) '1 (& 0))
+                (mov (& 0) a1)
+                (adjstk '2)
+                (return)
+                (end)))
+        (setq x #[0 a b c d e]) #[0 a b c d e]
+        (foo-6-8 x)             a
+        (foo-6-7 1 x)           #[0 1 b c d e]
+
+        (loader ((fentry foo-6-9 subr2)
+                (hpmovx a1 a2 '52)
+                (mov a2 a1)
+                (return)
+                (fentry foo-6-10 subr1)
+                (hpxmov a1 '52 a3)
+                (mov a3 a1)
+                (return)
+                (end)))
+        (setq x #[0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6
+            7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5])
+                #[0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6
+            7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5]
+        (foo-6-10 x)            2
+        (foo-6-9 100 x)
+                #[0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6
+            7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 100 3 4 5]
+
+        (loader ((fentry foo-6-11 subr2)
+                (hpmovx a1 a2 '16377)
+                (mov a2 a1)
+                (return)
+                (fentry foo-6-12 subr1)
+                (hpxmov a1 '16377 a3)
+                (mov a3 a1)
+                (return)
+		(fentry foo-6-13 subr1)
+		(mov '16377 a2)
+		(hpxmov a1 a2 a3)
+		(mov a3 a1)
+		(return)
+                (end)))
+        (let ((x (makevector 16400 ())))
+               (foo-6-11 t x)           
+               (and (eq t (foo-6-12 x))
+		    (eq t (foo-6-13 x))))            t
+
+	;; pour tester un bug from SEMA de ce HPMOVX sur alpha
+	(setq toto #[1 2]
+	      foo-6-14 11  ;; un symbole loin de nil
+	      car      22  ;; un symbole pres de nil
+	      )                          22
+	(loader ((fentry foo-6-14 subr1)
+		 (push a1)
+		 (hpmovx (cvalq foo-6-14) (& 0) '0)
+		 (pop a1)
+		 (return)
+		 (end)))
+	(foo-6-14 toto)                              #[11 2]
+	(loader ((fentry foo-6-15 subr1)
+		 (push a1)
+		 (hpmovx (cvalq car) (& 0) '0)
+		 (pop a1)
+		 (return)
+		 (end)))
+	(foo-6-15 toto)                              #[22 2]
+)
+
+; ******************************************
+
+(test   "VII.   test for: MOVXSP XSPMOV and (& n)                      " ()
+
+        (loader ((fentry foo-7-1 subr1)
+                  (push '3)
+                  (push '2)
+                  (push '1)
+                  (push '0)
+                  (movxsp a1 '2)
+                  (pop a3)
+                  (pop a3)
+                  (pop a1)
+                  (pop a3)
+                  (return)))
+      (foo-7-1 '(1 2 3))         (1 2 3)
+      (foo-7-1 'x)               x
+        
+        (loader  ((fentry foo-7-2 subr1)
+                  (push '"too much")
+                  (push a1)
+                  (push '"not enough")
+                  (push '"loser")    
+                  (push '"last push")
+                  (mov '"nothing pope" a2)
+                  (xspmov '3 a2)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (mov a2 a1)
+                  (return)
+                  (end)))
+      (foo-7-2 '(1 2 3))         (1 2 3)
+      (foo-7-2 'y)               y
+
+        (loader ((fentry foo-7-3 subr1)
+                  (push '3)
+                  (push '2)
+                  (push '1)
+                  (push '0)
+                  (movxsp a1 (& 2))
+                  (pop a3)
+                  (pop a3)
+                  (pop a1)
+                  (pop a3)
+                  (return)))
+      (foo-7-3 '(1 2 3))         (1 2 3)
+      (foo-7-3 'x)               x
+        
+        (loader   ((fentry foo-7-4 subr1)
+                  (push '"too much")
+                  (push a1)
+                  (push '"not enough")
+                  (push '3)
+                  (push '"last push")
+                  (mov '"nothing pope" a2)
+                  (xspmov (& 1) a2)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (mov a2 a1)
+                  (return)
+                  (end)))
+      (foo-7-4 '(1 2 3))         (1 2 3)
+      (foo-7-4 'y)               y
+
+
+        (loader ((fentry foo-7-5 subr1)
+                  (push '3)
+                  (push '2)
+                  (push '1)
+                  (push '0)
+		  (mov '2 a4)
+                  (movxsp a1 a4)
+                  (pop a3)
+                  (pop a3)
+                  (pop a1)
+                  (pop a3)
+                  (return)))
+      (foo-7-5 '(1 2 3))         (1 2 3)
+      (foo-7-5 'x)               x
+        
+        (loader  ((fentry foo-7-6 subr1)
+                  (push '"too much")
+                  (push a1)
+                  (push '"not enough")
+                  (push '"loser")    
+                  (push '"last push")
+                  (mov '"nothing pope" a2)
+		  (mov '3 a3)
+                  (xspmov a3 a2)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (pop a3)
+                  (mov a2 a1)
+                  (return)
+                  (end)))
+      (foo-7-6 '(1 2 3))         (1 2 3)
+      (foo-7-6 'y)               y
+
+)
+
+; ******************************************
+
+(test   "VIII.  test for: INCR PLUS FPLUS                              " ()
+
+        (loader ((fentry foo-8-2 subr1)
+                (incr a1)
+                (return)))
+        (foo-8-2 -1)            0
+        (foo-8-2 0)             1
+        (foo-8-2 -10)           -9
+        (foo-8-2 10)            11
+
+        (loader ((fentry foo-8-3 subr2)
+                (plus a2 a1)
+                (return)))
+        (foo-8-3 10 11)         21
+        (foo-8-3 -10 -11)       -21
+        (foo-8-3 1 -11)         -10
+        (foo-8-3 -1 11)         10
+
+        (loader ((fentry foo-8-4 subr1)
+                (plus '6 a1)
+                (return)))
+        (foo-8-4 0)             6
+        (foo-8-4 -6)            0
+        (foo-8-4 6)             12
+        (foo-8-4 -2)            4
+        (foo-8-4 -16)           -10
+
+        (loader ((fentry foo-8-5 subr1)
+                (plus '-1006 a1)
+                (return)))
+        (foo-8-5 0)             -1006
+        (foo-8-5 -6)            -1012
+        (foo-8-5 6)             -1000
+        (foo-8-5 -2)            -1008
+        (foo-8-5 -16)           -1022
+
+        (loader ((fentry foo-8-6 subr1)
+                (plus '8 a1)
+                (return)))
+        (foo-8-6 0)             8
+        (foo-8-6 -6)            2
+        (foo-8-6 6)             14
+        (foo-8-6 -2)            6
+        (foo-8-6 -16)           -8
+
+        (loader ((fentry foo-8-7 subr2)
+                (push a2)
+                (push a1)
+                (plus (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-8-7 10 11)         21
+        (foo-8-7 -10 -11)       -21
+        (foo-8-7 1 -11)         -10
+        (foo-8-7 -1 11)         10
+
+        (loader ((fentry foo-8-8 subr1)
+                (push a1)
+                (plus '6 (& 0))
+                (pop a1)
+                (return)))
+        (foo-8-8 0)             6
+        (foo-8-8 -6)            0
+        (foo-8-8 6)             12
+        (foo-8-8 -2)            4
+        (foo-8-8 -16)           -10
+
+        (loader ((fentry foo-8-9 subr1)
+                (push a1)
+                (plus '-1006 (& 0))
+                (pop a1)
+                (return)))
+        (foo-8-9 0)             -1006
+        (foo-8-9 -6)            -1012
+        (foo-8-9 6)             -1000
+        (foo-8-9 -2)            -1008
+        (foo-8-9 -16)           -1022
+        
+        (loader ((fentry foo-8-10 subr1)
+                (plus (cvalq x) a1)
+                (return)))
+        (setq x 10)             10
+        (foo-8-10 0)            10
+        (foo-8-10 5)            15
+        (foo-8-10 -5)           5
+        (foo-8-10 -15)          -5
+
+        (loader ((fentry foo-8-11 subr0)
+                (plus '8 (cvalq x))
+                (mov (cvalq x) a1)
+                (return)))
+        (setq x -2)             -2
+        (foo-8-11)              6
+        x                       6
+        (foo-8-11)              14
+        x                       14
+
+        (loader ((fentry foo-8-12 subr2)
+                (fplus a2 a1)
+                (return)))
+        (foo-8-12 10. 11.)              21.
+        (foo-8-12 -10. -11.)            -21.
+        (foo-8-12 1. -11.)              -10.
+        (foo-8-12 -1. 11.)              10.
+
+        (loader ((fentry foo-8-13 subr1)
+                (fplus '6. a1)
+                (return)))
+        (foo-8-13 0.)           6.
+        (foo-8-13 -6.)          0.
+        (foo-8-13 6.)           12.
+        (foo-8-13 -2.)          4.
+        (foo-8-13 -16.)         -10.
+
+        (loader ((fentry foo-8-14 subr1)
+                (fplus '-1006. a1)
+                (return)))
+        (foo-8-14 0.)           -1006.
+        (foo-8-14 -6.)          -1012.
+        (foo-8-14 6.)           -1000.
+        (foo-8-14 -2.)          -1008.
+        (foo-8-14 -16.)         -1022.
+
+        (loader ((fentry foo-8-15 subr2)
+                (push a2)
+                (push a1)
+                (fplus (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-8-15 10. 11.)              21.
+        (foo-8-15 -10. -11.)            -21.
+        (foo-8-15 1. -11.)              -10.
+        (foo-8-15 -1. 11.)              10.
+
+        (loader ((fentry foo-8-16 subr1)
+                (push a1)
+                (fplus '6. (& 0))
+                (pop a1)
+                (return)))
+        (foo-8-16 0.)           6.
+        (foo-8-16 -6.)          0.
+        (foo-8-16 6.)           12.
+        (foo-8-16 -2.)          4.
+        (foo-8-16 -16.)         -10.
+
+        (loader ((fentry foo-8-17 subr1)
+                (push a1)
+                (fplus '-1006. (& 0))
+                (pop a1)
+                (return)))
+        (foo-8-17 0.)           -1006.
+        (foo-8-17 -6.)          -1012.
+        (foo-8-17 6.)           -1000.
+        (foo-8-17 -2.)          -1008.
+        (foo-8-17 -16.)         -1022.
+        
+        (loader ((fentry foo-8-18 subr1)
+                (fplus (cvalq x) a1)
+                (return)))
+        (setq x 10.)            10.
+        (foo-8-18 0.)           10.
+        (foo-8-18 5.)           15.
+        (foo-8-18 -5.)          5.
+        (foo-8-18 -15.)         -5.
+
+        (loader ((fentry foo-8-19 subr0)
+                (fplus '8. (cvalq x))
+                (mov (cvalq x) a1)
+                (return)))
+        (setq x -2.)            -2.
+        (foo-8-19)              6.
+        x                       6.
+        (foo-8-19)              14.
+        x                       14.
+
+        (loader ((fentry foo-8-20 subr2)
+                (fplus a1 a2)
+                (fplus a1 a2)
+                (mov a2 a1)
+                (return)))
+        (foo-8-20 10. 11.)              31.
+        (foo-8-20 -10. -11.)            -31.
+        (foo-8-20 1. -11.)              -9.
+        (foo-8-20 -1. 11.)              9.
+
+
+        (loader ((fentry foo-8-21 subr1)
+                (mov a1 a2)
+                (fplus (cvalq x) a2)
+                (fplus a1 a2)
+                (mov a2 a1)
+                (return)))
+        (setq x 10.)            10.
+        (foo-8-21 0.)           10.
+        (foo-8-21 5.)           20.
+        (foo-8-21 -5.)          0.
+        (foo-8-21 -15.)         -20.
+
+)
+
+; ******************************************
+
+(test   "IX.    test for: DECR DIFF FDIFF                              " ()
+
+        (loader ((fentry foo-9-2 subr1)
+                (decr a1)
+                (return)))
+        (foo-9-2 1)             0
+        (foo-9-2 0)             -1
+        (foo-9-2 -10)           -11
+        (foo-9-2 10)            9
+
+        (loader ((fentry foo-9-3 subr2)
+                (diff a2 a1)
+                (return)))
+        (foo-9-3 10 11)         -1
+        (foo-9-3 -10 -11)       1
+        (foo-9-3 1 -11)         12
+        (foo-9-3 -1 11)         -12
+
+        (loader ((fentry foo-9-4 subr1)
+                (diff '6 a1)
+                (return)))
+        (foo-9-4 0)             -6
+        (foo-9-4 -6)            -12
+        (foo-9-4 6)             0
+        (foo-9-4 2)             -4
+        (foo-9-4 16)            10
+
+        (loader ((fentry foo-9-5 subr1)
+                (diff '-1006 a1)
+                (return)))
+        (foo-9-5 0)             1006
+        (foo-9-5 -6)            1000
+        (foo-9-5 6)             1012
+        (foo-9-5 -2)            1004
+        (foo-9-5 -16)           990
+
+        (loader ((fentry foo-9-7 subr2)
+                (push a2)
+                (push a1)
+                (diff (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-9-7 10 11)         -1
+        (foo-9-7 -10 -11)       1
+        (foo-9-7 1 -11)         12
+        (foo-9-7 -1 11)         -12
+
+        (loader ((fentry foo-9-8 subr1)
+                (push a1)
+                (diff '6 (& 0))
+                (pop a1)
+                (return)))
+        (foo-9-8 0)             -6
+        (foo-9-8 -6)            -12
+        (foo-9-8 6)             0
+        (foo-9-8 2)             -4
+        (foo-9-8 16)            10
+
+        (loader ((fentry foo-9-9 subr1)
+                (push a1)
+                (diff '-1006 (& 0))
+                (pop a1)
+                (return)))
+        (foo-9-9 0)             1006
+        (foo-9-9 -6)            1000
+        (foo-9-9 6)             1012
+        (foo-9-9 -2)            1004
+        (foo-9-9 -16)           990
+        
+        (loader ((fentry foo-9-10 subr1)
+                (diff (cvalq x) a1)
+                (return)))
+        (setq x 10)             10
+        (foo-9-10 0)            -10
+        (foo-9-10 5)            -5
+        (foo-9-10 -5)           -15
+        (foo-9-10 -15)          -25
+
+        (loader ((fentry foo-9-11 subr0)
+                (diff '8 (cvalq x))
+                (mov (cvalq x) a1)
+                (return)))
+        (setq x 14)             14
+        (foo-9-11)              6
+        x                       6
+        (foo-9-11)              -2
+        x                       -2
+
+        (loader ((fentry foo-9-12 subr2)
+                (fdiff a2 a1)
+                (return)))
+        (foo-9-12 10. 11.)              -1.
+        (foo-9-12 -10. -11.)            1.
+        (foo-9-12 1. -11.)              12.
+        (foo-9-12 -1. 11.)              -12.
+
+        (loader ((fentry foo-9-13 subr1)
+                (fdiff '6. a1)
+                (return)))
+        (foo-9-13 0.)           -6.
+        (foo-9-13 -6.)          -12.
+        (foo-9-13 6.)           0.
+        (foo-9-13 2.)           -4.
+        (foo-9-13 16.)          10.
+
+        (loader ((fentry foo-9-14 subr1)
+                (fdiff '-1006. a1)
+                (return)))
+        (foo-9-14 0.)           1006.
+        (foo-9-14 -6.)          1000.
+        (foo-9-14 6.)           1012.
+        (foo-9-14 -2.)          1004.
+        (foo-9-14 -16.)         990.
+
+        (loader ((fentry foo-9-15 subr2)
+                (push a2)
+                (push a1)
+                (fdiff (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-9-15 10. 11.)              -1.
+        (foo-9-15 -10. -11.)            1.
+        (foo-9-15 1. -11.)              12.
+        (foo-9-15 -1. 11.)              -12.
+
+        (loader ((fentry foo-9-16 subr1)
+                (push a1)
+                (fdiff '6. (& 0))
+                (pop a1)
+                (return)))
+        (foo-9-16 0.)           -6.
+        (foo-9-16 -6.)          -12.
+        (foo-9-16 6.)           0.
+        (foo-9-16 2.)           -4.
+        (foo-9-16 16.)          10.
+
+        (loader ((fentry foo-9-17 subr1)
+                (push a1)
+                (fdiff '-1006. (& 0))
+                (pop a1)
+                (return)))
+        (foo-9-17 0.)           1006.
+        (foo-9-17 -6.)          1000.
+        (foo-9-17 6.)           1012.
+        (foo-9-17 -2.)          1004.
+        (foo-9-17 -16.)         990.
+        
+        (loader ((fentry foo-9-18 subr1)
+                (fdiff (cvalq x) a1)
+                (return)))
+        (setq x 10.)            10.
+        (foo-9-18 0.)           -10.
+        (foo-9-18 5.)           -5.
+        (foo-9-18 -5.)          -15.
+        (foo-9-18 -15.)         -25.
+
+        (loader ((fentry foo-9-19 subr0)
+                (fdiff '8. (cvalq x))
+                (mov (cvalq x) a1)
+                (return)))
+        (setq x 14.)            14.
+        (foo-9-19)              6.
+        x                       6.
+        (foo-9-19)              -2.
+        x                       -2.
+
+        (loader ((fentry foo-9-20 subr2)
+                (fdiff a1 a2)
+                (fdiff a1 a2)
+                (mov a2 a1)
+                (return)))
+        (foo-9-20 10. 11.)              -9.
+        (foo-9-20 -10. -11.)            9.
+        (foo-9-20 1. -11.)              -13.
+        (foo-9-20 -1. 11.)              13.
+
+        (loader ((fentry foo-9-21 subr1)
+                (mov a1 a2)
+                (fdiff (cvalq x) a2)
+                (fdiff a1 a2)
+                (mov a2 a1)
+                (return)))
+        (setq x 10.)            10.
+        (foo-9-21 0.)           -10.
+        (foo-9-21 5.)           -10.
+        (foo-9-21 -5.)          -10.
+        (foo-9-21 -15.)         -10.
+
+)
+
+; ******************************************
+
+(test   "X.     test for: NEGATE TIMES QUO REM FTIMES FQUO             " ()
+
+        (loader ((fentry foo-10-1 subr1)
+                (negate a1)
+                (return)))
+        (foo-10-1 0)            0
+        (foo-10-1 -10)          10
+        (foo-10-1 10)           -10
+
+        (loader ((fentry foo-10-2 subr2)
+                (push a1)
+                (push a2)
+                (negate (& 0))
+                (negate (& 1))
+                (pop a1)
+                (pop a2)
+                (plus a2 a1)
+                (return)))
+        (foo-10-2 0 0)          0
+        (foo-10-2 -2 8)         -6
+        (foo-10-2 12 -18)       6
+
+        (loader ((fentry foo-10-3 subr0)
+                (negate (cvalq x))
+                (mov (cvalq x) a1)
+                (return)))
+        (setq x 9)              9
+        (foo-10-3)              -9
+        x                       -9
+        (foo-10-3)              9
+        x                       9
+
+        (loader ((fentry foo-10-4 subr2)
+                (times a2 a1)
+                (return)))
+        (foo-10-4 10 11)        110
+        (foo-10-4 10 -2)        -20
+
+        (loader ((fentry foo-10-5 subr1)
+                (times '10 a1)
+                (return)))
+        (foo-10-5 11)           110
+        (foo-10-5 -2)           -20
+
+        (loader ((fentry foo-10-6 subr2)
+                (push a2)
+                (push a1)
+                (times (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-10-6 10 11)        110
+        (foo-10-6 10 -2)        -20
+
+        (loader ((fentry foo-10-7 subr1)
+                (push a1)
+                (times '-10 (& 0))
+                (pop a1)
+                (return)))
+        (foo-10-7 11)           -110
+        (foo-10-7 -2)           20
+
+        (loader ((fentry foo-10-7-b subr1) 
+                (push a1)
+                (times '8 (& 0)) ; check powers of two which may be optimized
+                (pop a1)
+                (return)
+		(fentry foo-10-7-c subr1) 
+                (push a1)
+                (times '-16 (& 0))	; check negative powers of two which
+                (pop a1)		; shouldn't be optimized.
+                (return)))
+        (foo-10-7-b 11)           88
+        (foo-10-7-b -2)           -16
+        (foo-10-7-c 3)           -48
+        (foo-10-7-c -2)           32
+
+        (loader ((fentry foo-10-8 subr2)
+                (quo a2 a1)
+                (return)))
+        (foo-10-8 120 12)       10
+        (foo-10-8 -120 12)      -10
+
+        (loader ((fentry foo-10-9 subr1)
+                (quo '12 a1)
+                (return)))
+        (foo-10-9 120)          10
+        (foo-10-9 -120)         -10
+
+        (loader ((fentry foo-10-9-b subr1)
+                (quo '32 a1)
+                (return)
+		(fentry foo-10-9-c subr1)
+                (quo '-32 a1)
+		(return)
+;; for sparc, problems in loader (see :log-base-2).
+		(fentry foo-10-9-d subr1)
+		(quo '128 a1)
+		(return)
+;;
+		(fentry foo-10-9-e subr1)
+		(quo '-128 a1)
+		(return)
+		(fentry foo-10-9-f subr1)
+		(quo '1 a1)
+		(return)
+		(fentry foo-10-9-g subr1)
+		(quo '-1 a1)
+                (return)))
+        (foo-10-9-b 64)          2
+        (foo-10-9-b -128)        -4
+        (foo-10-9-c 64)          -2
+        (foo-10-9-c -128)        4
+	(foo-10-9-d 12800)       100
+	(foo-10-9-d -12800)      -100
+	(foo-10-9-e 12800)       -100
+	(foo-10-9-e -12800)      100
+	(foo-10-9-f 12800)       12800
+	(foo-10-9-f -12800)      -12800
+	(foo-10-9-g 12800)       -12800
+	(foo-10-9-g -12800)      12800
+
+        (loader ((fentry foo-10-10 subr2)
+                (push a2)
+                (push a1)
+                (quo (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-10-10 120 12)      10
+        (foo-10-10 -120 12)     -10
+
+        (loader ((fentry foo-10-11 subr1)
+                (push a1)
+                (quo '-12 (& 0))
+                (pop a1)
+                (return)))
+        (foo-10-11 120)         -10
+        (foo-10-11 -120)        10
+
+        (loader ((fentry foo-10-12 subr2)
+                (rem a2 a1)
+                (return)))
+        (foo-10-12 14 4)        2
+        (foo-10-12 -8 2)        0
+        (foo-10-12 30001 3)     1
+
+        (loader ((fentry foo-10-13 subr1)
+                (rem '12 a1)
+                (return)))
+        (foo-10-13 14)          2
+        (foo-10-13 12)          0
+        (foo-10-13 30)          6
+
+        (loader ((fentry foo-10-14 subr2)
+                (push a2)
+                (push a1)
+                (rem (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-10-14 14 4)        2
+        (foo-10-14 -8 2)        0
+
+        (loader ((fentry foo-10-15 subr1)
+                (push a1)
+                (rem '-12 (& 0))
+                (pop a1)
+                (return)))
+        (foo-10-15 14)          2
+        (foo-10-15 -14)         -2
+        (foo-10-15 -24)         0
+
+        (loader ((fentry foo-10-16 subr2)
+                (ftimes a2 a1)
+                (return)))
+        (foo-10-16 10. 11.)     110.
+        (foo-10-16 10. -2.)     -20.
+
+        (loader ((fentry foo-10-17 subr1)
+                (ftimes '10. a1)
+                (return)))
+        (foo-10-17 11.)         110.
+        (foo-10-17 -2.)         -20.
+
+        (loader ((fentry foo-10-18 subr2)
+                (push a2)
+                (push a1)
+                (ftimes (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-10-18 10. 11.)     110.
+        (foo-10-18 10. -2.)     -20.
+
+        (loader ((fentry foo-10-19 subr1)
+                (push a1)
+                (ftimes '-10. (& 0))
+                (pop a1)
+                (return)))
+        (foo-10-19 11.)         -110.
+        (foo-10-19 -2.)         20.
+
+        (loader ((fentry foo-10-20 subr2)
+                (fquo a2 a1)
+                (return)))
+        (foo-10-20 120. 12.)    10.
+        (foo-10-20 -120. 12.)   -10.
+
+        (loader ((fentry foo-10-21 subr1)
+                (fquo '12. a1)
+                (return)))
+        (foo-10-21 120.)                10.
+        (foo-10-21 -120.)               -10.
+
+        (loader ((fentry foo-10-22 subr2)
+                (push a2)
+                (push a1)
+                (fquo (& 1) (& 0))
+                (pop a1)
+                (pop a2)
+                (return)))
+        (foo-10-22 120. 12.)    10.
+        (foo-10-22 -120. 12.)   -10.
+
+        (loader ((fentry foo-10-23 subr1)
+                (push a1)
+                (fquo '-12. (& 0))
+                (pop a1)
+                (return)))
+        (foo-10-23 120.)      -10.
+        (foo-10-23 -120.)      10.
+
+	(loader ((fentry foo-10-24 subr0)
+		 (entry foo subr0)
+		 (mov '128. a4)
+		 (mov '17 a2)
+		 (rem '3 a2)
+		 (mov a2 a1)
+		 (return)))
+	(foo-10-24)		2
+)
+
+(test   "XI.    test for: NOP SOBGEZ                                   " ()
+
+        (loader ((fentry foo-11-1 subr0)
+                (nop)
+                (mov '1 a1)
+                (nop)
+                (push a1)
+                (nop)
+                (pop a1)
+                (return)))
+        (foo-11-1)              1
+
+        (loader ((fentry foo-11-2 subr1)
+                (mov '1 a2)
+                (bra 20)
+        10      (incr a1)
+                (times a1 a2)
+                (decr a1)
+        20      (sobgez a1 10)
+                (mov a2 a1)
+                (return)))
+        (foo-11-2 0)            1
+        (foo-11-2 -10)          1
+        (foo-11-2 3)            6
+        (foo-11-2 5)            120
+
+        (loader ((fentry foo-11-3 subr1)
+                (push a1)
+                (mov '1 a2)
+                (bra 20)
+        10      (times a1 a2)
+                (decr a1)
+        20      (sobgez (& 0) 10)
+                (mov a2 a1)
+                (adjstk '1)
+                (return)))
+        (foo-11-3 0)            1
+        (foo-11-3 -10)          1
+        (foo-11-3 3)            6
+        (foo-11-3 5)            120
+
+        (loader ((fentry foo-11-4 subr1)
+                (mov a1 (cvalq x))
+                (mov '1 a2)
+                (bra 20)
+        10      (times a1 a2)
+                (decr a1)
+        20      (sobgez (cvalq x) 10)
+                (mov a2 a1)
+                (return)))
+        (foo-11-4 0)            1
+        (foo-11-4 -10)          1
+        (foo-11-4 3)            6
+        (foo-11-4 5)            120
+        x                       -1
+
+)
+
+; ******************************************
+
+(test   "XII.   test for: CALL BRA ENTRY                               " ()
+        (loader ((fentry foo-12 subr2)
+                  (call foo-12-1)
+                  (return)
+        
+                  (entry foo-12-1 subr2)
+                  (bra foo-12-2)
+
+                  (entry foo-12-4 subr1)
+                  (return)
+
+                  (entry foo-12-3 subr1)
+                  (bfcons a1 1001)
+                  (mov (cdr a1) a1)
+          1001    (return)
+        
+                  (entry foo-12-2 subr2)
+                  (push a2)
+                  (call foo-12-3)
+                  (pop a2)
+                  (jcall cons)
+                  (bra foo-12-4)
+
+                  (end)))
+
+      (foo-12 1 2)                (1 . 2)
+      (foo-12 () ())              (())
+      (foo-12 '(1 2 3) '(4 5))  ((2 3) 4 5)
+      (foo-12 'toto '(4 5))       (toto 4 5)
+
+         (loader ((fentry foo-12-6 subr1)
+                  (push (@ foo-12-88))
+                  (push (@ foo-12-7))
+                  (mov (@ foo-12-7) a2)
+                  (push a2)
+                  (call foo-12-7)
+                  (bra foo-12-7)
+                  (return)
+                  (entry foo-12-7 subr1)
+                  (plus '1 a1)
+                  (return)
+                  (entry foo-12-88 subr1)
+                  (push (@ foo-12-7))
+                  (mov (@ foo-12-7) a2)
+                  (push a2)
+                  (call foo-12-7)
+                  (bra foo-12-7)
+                  (end)))
+
+      (foo-12-6 0)    8
+
+        (loader ((fentry foo-12-8 subr2)
+                  (call foo-12-9)
+                  (return)))
+        
+        (loader  ((entry foo-12-9 subr2)
+                  (bra foo-12-10)))
+        
+        (loader  ((entry foo-12-12 subr1)
+                  (return)))
+
+        (loader  ((entry foo-12-11 subr1)
+                  (bfcons a1 1001)
+                  (mov (cdr a1) a1)
+          1001    (return)))
+        
+        (loader  ((entry foo-12-10 subr2)
+                  (push a2)
+                  (call foo-12-11)
+                  (pop a2)
+                  (jcall cons)
+                  (bra foo-12-12)
+
+                  (end)))
+
+      (foo-12-8 1 2)                (1 . 2)
+      (foo-12-8 () ())              (())
+      (foo-12-8 '(1 2 3) '(4 5))  ((2 3) 4 5)
+      (foo-12-8 'toto '(4 5))       (toto 4 5)
+
+         (loader ((fentry foo-12-13 subr1)
+                  (push (@ foo-12-14-1))
+                  (push (fvalq add1))
+                  (mov (fvalq add1) a2)
+                  (push a2)
+                  (jcall add1)
+                  (jmp add1)
+                  (return)
+                  (entry foo-12-14-1 subr1)
+                  (push (fvalq add1))
+                  (mov (fvalq add1) a2)
+                  (push a2)
+                  (jcall add1)
+                  (jmp add1)
+                  (end)))
+
+      (foo-12-13 0)    8
+
+	(loader ((end)))
+	(loader ((entry toto1 subr0)
+		 (mov '1 a1)
+		 (return)
+		 (fentry foo-12-14 subr0)
+		 (mov '0 a1)
+		 (bra toto1)))
+	(foo-12-14)                           1
+
+	(loader ((entry toto subr0)
+		 (mov '1 a1)
+		 (return)
+		 (fentry foo-12-15 subr0)
+		 (entry foo-12-15 subr0)
+		 (mov '0 a1)
+		 (bra toto)))
+	(foo-12-15)                           1
+)
+
+
+; ******************************************
+
+(test   "XIII.  test for: BRI BRX                                      " ()
+
+        (loader ((fentry foo-13-1 subr0)
+                (mov '1 a1)
+                (mov (@ 20) a2)
+                (bri a2)
+                (mov '0 a1)
+        20      (return)))
+        (foo-13-1)              1
+
+        (loader ((fentry foo-13-2 subr0)
+                (push a1)
+                (mov '1 a1)
+                (mov (@ 20) (& 0))
+                (bri (& 0))
+                (mov '0 a1)
+        20      (adjstk '1)
+                (return)))
+        (foo-13-2)              1
+
+        (loader ((fentry foo-13-3 subr1)
+                (bra 20)
+        10      (mov 'zero a1)
+                (return)
+        11      (mov 'one a1)
+                (return)
+        20      (brx ((@ 10)(@ 11)(@ 12)(@ 13)) a1)
+                (mov 'lost a1)
+        12      (return)
+        13      (mov 'three a1)
+                (return)
+                (end)))
+        (foo-13-3 0)            zero
+        (foo-13-3 1)            one
+        (foo-13-3 2)            2
+        (foo-13-3 3)            three
+;        (foo-13-3 4)            lost  ; on VAX only?!?
+
+        (loader ((fentry foo-13-4 subr1)
+                (bra 20)
+        10      (mov '123 a1)
+                (return)
+        20      (brx ((@ 10)(@ 30)(@ 40)) (cdr a1))
+                (mov '456 a1)
+        40      (return)
+        30      (mov '789 a1)
+                (return)
+                (end)))
+        (foo-13-4 '(0 . 0))     123
+        (foo-13-4 '(0 . 1))     789
+        (foo-13-4 '(0 . 2))     (0 . 2)
+
+        (loader ((fentry foo-13-5 subr1)
+                (mov '-1 a2)
+          (brx ((@ 0) (@ 1) (@ 2) (@ 3) (@ 4) (@ 5) (@ 6) (@ 7) (@ 8) 
+          (@ 9) (@ 10) (@ 11) (@ 12) (@ 13) (@ 14) (@ 15) (@ 16) (@ 17
+          ) (@ 18) (@ 19) (@ 20) (@ 21) (@ 22) (@ 23) (@ 24) (@ 25) (@
+          26) (@ 27) (@ 28) (@ 29) (@ 30) (@ 31) (@ 32) (@ 33) (@ 34) 
+          (@ 35) (@ 36) (@ 37) (@ 38) (@ 39) (@ 40) (@ 41) (@ 42) (@ 
+          43) (@ 44) (@ 45) (@ 46) (@ 47) (@ 48) (@ 49) (@ 50) (@ 51) 
+          (@ 52) (@ 53) (@ 54) (@ 55) (@ 56) (@ 57) (@ 58) (@ 59) (@ 
+          60) (@ 61) (@ 62) (@ 63) (@ 64) (@ 65) (@ 66) (@ 67) (@ 68) 
+          (@ 69) (@ 70) (@ 71) (@ 72) (@ 73) (@ 74) (@ 75) (@ 76) (@ 
+          77) (@ 78) (@ 79) (@ 80) (@ 81) (@ 82) (@ 83) (@ 84) (@ 85) 
+          (@ 86) (@ 87) (@ 88) (@ 89) (@ 90) (@ 91) (@ 92) (@ 93) (@ 
+          94) (@ 95) (@ 96) (@ 97) (@ 98) (@ 99) (@ 100) (@ 101) (@ 
+          102) (@ 103) (@ 104) (@ 105) (@ 106) (@ 107) (@ 108) (@ 109)
+          (@ 110) (@ 111) (@ 112) (@ 113) (@ 114) (@ 115) (@ 116) (@ 
+          117) (@ 118) (@ 119) (@ 120) (@ 121) (@ 122) (@ 123) (@ 124)
+          (@ 125) (@ 126) (@ 127) (@ 128) (@ 129) (@ 130)) a1)
+       0   (plus '1 a2)
+       1   (plus '1 a2)
+       2   (plus '1 a2)
+       3   (plus '1 a2)
+       4   (plus '1 a2)
+       5   (plus '1 a2)
+       6   (plus '1 a2)
+       7   (plus '1 a2)
+       8   (plus '1 a2)
+       9   (plus '1 a2)
+       10   (plus '1 a2)
+       11   (plus '1 a2)
+       12   (plus '1 a2)
+       13   (plus '1 a2)
+       14   (plus '1 a2)
+       15   (plus '1 a2)
+       16   (plus '1 a2)
+       17   (plus '1 a2)
+       18   (plus '1 a2)
+       19   (plus '1 a2)
+       20   (plus '1 a2)
+       21   (plus '1 a2)
+       22   (plus '1 a2)
+       23   (plus '1 a2)
+       24   (plus '1 a2)
+       25   (plus '1 a2)
+       26   (plus '1 a2)
+       27   (plus '1 a2)
+       28   (plus '1 a2)
+       29   (plus '1 a2)
+       30   (plus '1 a2)
+       31   (plus '1 a2)
+       32   (plus '1 a2)
+       33   (plus '1 a2)
+       34   (plus '1 a2)
+       35   (plus '1 a2)
+       36   (plus '1 a2)
+       37   (plus '1 a2)
+       38   (plus '1 a2)
+       39   (plus '1 a2)
+       40   (plus '1 a2)
+       41   (plus '1 a2)
+       42   (plus '1 a2)
+       43   (plus '1 a2)
+       44   (plus '1 a2)
+       45   (plus '1 a2)
+       46   (plus '1 a2)
+       47   (plus '1 a2)
+       48   (plus '1 a2)
+       49   (plus '1 a2)
+       50   (plus '1 a2)
+       51   (plus '1 a2)
+       52   (plus '1 a2)
+       53   (plus '1 a2)
+       54   (plus '1 a2)
+       55   (plus '1 a2)
+       56   (plus '1 a2)
+       57   (plus '1 a2)
+       58   (plus '1 a2)
+       59   (plus '1 a2)
+       60   (plus '1 a2)
+       61   (plus '1 a2)
+       62   (plus '1 a2)
+       63   (plus '1 a2)
+       64   (plus '1 a2)
+       65   (plus '1 a2)
+       66   (plus '1 a2)
+       67   (plus '1 a2)
+       68   (plus '1 a2)
+       69   (plus '1 a2)
+       70   (plus '1 a2)
+       71   (plus '1 a2)
+       72   (plus '1 a2)
+       73   (plus '1 a2)
+       74   (plus '1 a2)
+       75   (plus '1 a2)
+       76   (plus '1 a2)
+       77   (plus '1 a2)
+       78   (plus '1 a2)
+       79   (plus '1 a2)
+       80   (plus '1 a2)
+       81   (plus '1 a2)
+       82   (plus '1 a2)
+       83   (plus '1 a2)
+       84   (plus '1 a2)
+       85   (plus '1 a2)
+       86   (plus '1 a2)
+       87   (plus '1 a2)
+       88   (plus '1 a2)
+       89   (plus '1 a2)
+       90   (plus '1 a2)
+       91   (plus '1 a2)
+       92   (plus '1 a2)
+       93   (plus '1 a2)
+       94   (plus '1 a2)
+       95   (plus '1 a2)
+       96   (plus '1 a2)
+       97   (plus '1 a2)
+       98   (plus '1 a2)
+       99   (plus '1 a2)
+       100   (plus '1 a2)
+       101   (plus '1 a2)
+       102   (plus '1 a2)
+       103   (plus '1 a2)
+       104   (plus '1 a2)
+       105   (plus '1 a2)
+       106   (plus '1 a2)
+       107   (plus '1 a2)
+       108   (plus '1 a2)
+       109   (plus '1 a2)
+       110   (plus '1 a2)
+       111   (plus '1 a2)
+       112   (plus '1 a2)
+       113   (plus '1 a2)
+       114   (plus '1 a2)
+       115   (plus '1 a2)
+       116   (plus '1 a2)
+       117   (plus '1 a2)
+       118   (plus '1 a2)
+       119   (plus '1 a2)
+       120   (plus '1 a2)
+       121   (plus '1 a2)
+       122   (plus '1 a2)
+       123   (plus '1 a2)
+       124   (plus '1 a2)
+       125   (plus '1 a2)
+       126   (plus '1 a2)
+       127   (plus '1 a2)
+       128   (plus '1 a2)
+       129   (plus '1 a2)
+       130   (plus '1 a2)
+                (mov a2 a1)
+                (return)
+                (end)))
+
+       (foo-13-5 0)           130
+       (foo-13-5 10)          120
+       (foo-13-5 100)         30
+       (foo-13-5 130)         0
+)
+
+; ******************************************
+
+(test   "XIV.   test for: STACK SSTACK                                 " ()
+
+        (loader ((fentry foo-14-1 subr0)
+                (mov nil a1)
+                (stack a4)
+                (push a1)
+                (push a1)
+                (adjstk '-100)
+                (pop a2)
+                (sstack a4)
+                (return)))
+        (foo-14-1)              ()
+
+        (loader ((fentry foo-14-2 subr0)
+                (push a1)
+                (stack (& 0))
+                (push a1)
+                (push a1)
+                (mov nil a1)
+                (sstack (& 2))
+                (pop a2)
+                (return)))
+        (foo-14-2)              ()
+)
+
+; ******************************************
+
+(test   "XV.    test for: CNB[EQ/NE/LT/LE/GT/GE]                       " ()
+
+        (loader ((fentry foo-15-1 subr2)
+                (cnbeq a1 a2 10)
+                (mov '0 a1)
+                (return)
+        10      (mov '1 a1)
+                (return)))
+        (foo-15-1 0 0)          1
+        (foo-15-1 0 8)          0
+        (foo-15-1 8 0)          0
+        (foo-15-1 8 8)          1
+        (foo-15-1 8 16)         0
+        (foo-15-1 16 8)         0
+        (foo-15-1 0 -8)         0
+        (foo-15-1 -8 0)         0
+        (foo-15-1 -8 -8)        1
+        (foo-15-1 -8 -16)       0
+        (foo-15-1 -16 -8)       0
+        (foo-15-1 8 -8)         0
+        (foo-15-1 -8 8)         0
+
+        (loader ((fentry foo-15-2 subr2)
+                (push a1)
+                (push a2)
+                (cnbeq (& 1) (& 0) 10)
+                (mov '0 a1)
+                (adjstk '2)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '2)
+                (return)))
+        (foo-15-2 0 0)          1
+        (foo-15-2 0 8)          0
+        (foo-15-2 8 0)          0
+        (foo-15-2 8 8)          1
+        (foo-15-2 8 16)         0
+        (foo-15-2 16 8)         0
+        (foo-15-2 0 -8)         0
+        (foo-15-2 -8 0)         0
+        (foo-15-2 -8 -8)        1
+        (foo-15-2 -8 -16)       0
+        (foo-15-2 -16 -8)       0
+        (foo-15-2 8 -8)         0
+        (foo-15-2 -8 8)         0
+
+        (loader ((fentry foo-15-3 subr1)
+                (mov a1 (cvalq x))
+                (cnbeq '0 (cvalq x) 10)
+                (mov '0 a1)
+                (return)
+        10      (mov '1 a1)
+                (return)))
+        (foo-15-3 0)            1
+        (foo-15-3 8)            0
+        (foo-15-3 -8)           0
+
+        (loader ((fentry foo-15-4 subr1)
+                (cnbeq a1 '-8 10)
+                (mov '0 a1)
+                (return)
+        10      (mov '1 a1)
+                (return)))
+        (foo-15-4 0)            0
+        (foo-15-4 -8)           1
+        (foo-15-4 -16)          0
+        (foo-15-4 8)            0
+
+        (loader ((fentry foo-15-5 subr2)
+                (push a1)
+                (cnbne a2 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-15-5 0 0)          0
+        (foo-15-5 0 8)          1
+        (foo-15-5 8 0)          1
+        (foo-15-5 8 8)          0
+        (foo-15-5 8 16)         1
+        (foo-15-5 16 8)         1
+        (foo-15-5 0 -8)         1
+        (foo-15-5 -8 0)         1
+        (foo-15-5 -8 -8)        0
+        (foo-15-5 -8 -16)       1
+        (foo-15-5 -16 -8)       1
+        (foo-15-5 8 -8)         1
+        (foo-15-5 -8 8)         1
+
+        (loader ((fentry foo-15-6 subr2)
+                (push a2)
+                (cnblt a1 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-15-6 0 0)          0
+        (foo-15-6 0 8)          1
+        (foo-15-6 8 0)          0
+        (foo-15-6 8 8)          0
+        (foo-15-6 8 16)         1
+        (foo-15-6 16 8)         0
+        (foo-15-6 0 -8)         0
+        (foo-15-6 -8 0)         1
+        (foo-15-6 -8 -8)        0
+        (foo-15-6 -8 -16)       0
+        (foo-15-6 -16 -8)       1
+        (foo-15-6 8 -8)         0
+        (foo-15-6 -8 8)         1
+
+        (loader ((fentry foo-15-7 subr2)
+                (push a2)
+                (cnble a1 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-15-7 0 0)          1
+        (foo-15-7 0 8)          1
+        (foo-15-7 8 0)          0
+        (foo-15-7 8 8)          1
+        (foo-15-7 8 16)         1
+        (foo-15-7 16 8)         0
+        (foo-15-7 0 -8)         0
+        (foo-15-7 -8 0)         1
+        (foo-15-7 -8 -8)        1
+        (foo-15-7 -8 -16)       0
+        (foo-15-7 -16 -8)       1
+        (foo-15-7 8 -8)         0
+        (foo-15-7 -8 8)         1
+
+        (loader ((fentry foo-15-8 subr2)
+                (push a2)
+                (cnbgt a1 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-15-8 0 0)          0
+        (foo-15-8 0 8)          0
+        (foo-15-8 8 0)          1
+        (foo-15-8 8 8)          0
+        (foo-15-8 8 16)         0
+        (foo-15-8 16 8)         1
+        (foo-15-8 0 -8)         1
+        (foo-15-8 -8 0)         0
+        (foo-15-8 -8 -8)        0
+        (foo-15-8 -8 -16)       1
+        (foo-15-8 -16 -8)       0
+        (foo-15-8 8 -8)         1
+        (foo-15-8 -8 8)         0
+
+        (loader ((fentry foo-15-9 subr2)
+                (push a2)
+                (cnbge a1 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-15-9 0 0)          1
+        (foo-15-9 0 8)          0
+        (foo-15-9 8 0)          1
+        (foo-15-9 8 8)          1
+        (foo-15-9 8 16)         0
+        (foo-15-9 16 8)         1
+        (foo-15-9 0 -8)         1
+        (foo-15-9 -8 0)         0
+        (foo-15-9 -8 -8)        1
+        (foo-15-9 -8 -16)       1
+        (foo-15-9 -16 -8)       0
+        (foo-15-9 8 -8)         1
+        (foo-15-9 -8 8)         0
+
+        (loader ((fentry foo-15-10 subr1)
+                (mov a1 (cvalq x))
+                (cnbge (cvalq x) '0 10)
+                (mov '0 a1)
+                (return)
+        10      (mov '1 a1)
+                (return)))
+        (foo-15-10 0)           1
+        (foo-15-10 8)           1
+        (foo-15-10 -8)          0
+
+        (loader ((fentry foo-15-11 subr1)
+		 (cnbgt a1 '0 10)
+		 (mov '0 a1)
+		 (return)
+	10	 (mov '1 a1)
+		 (return)))
+	(foo-15-11 -1)          0
+	(foo-15-11 1)           1
+	(foo-15-11 0)           0
+	(foo-15-11 -12)         0
+	(foo-15-11 +12)         1
+
+        (loader ((fentry foo-15-12 subr1)
+		 (cnblt a1 '0 10)
+		 (mov '0 a1)
+		 (return)
+	10	 (mov '1 a1)
+		 (return)))
+	(foo-15-12 -1)          1
+	(foo-15-12 -16)         1
+	(foo-15-12 1)           0
+	(foo-15-12 +16)         0
+	(foo-15-12 0)           0
+
+        (loader ((fentry foo-15-13 subr1)
+		 (cnbge a1 '0 10)
+		 (mov '0 a1)
+		 (return)
+	10	 (mov '1 a1)
+		 (return)))
+	(foo-15-13 -1)          0
+	(foo-15-13 -8)          0
+	(foo-15-13 1)           1
+	(foo-15-13 8)           1
+	(foo-15-13 0)           1
+
+        (loader ((fentry foo-15-14 subr1)
+		 (cnble a1 '0 10)
+		 (mov '0 a1)
+		 (return)
+	10	 (mov '1 a1)
+		 (return)))
+	(foo-15-14 -1)          1
+	(foo-15-14 -256)        1
+	(foo-15-14 1)           0
+	(foo-15-14 +256)        0
+	(foo-15-14 0)           1
+)
+
+; ******************************************
+
+(test   "XVI.   test for: LAND LOR LXOR                                " ()
+
+        (loader ((fentry foo-16-1 subr2)
+                (land a2 a1)
+                (return)))
+        (foo-16-1 1285 262)             260
+
+        (loader ((fentry foo-16-2 subr1)
+                (land '1285 a1)
+                (return)))
+        (foo-16-2 262)                  260
+
+        (loader ((fentry foo-16-3 subr1)
+                (push a1)
+                (land '1285 (& 0))
+                (pop a1)
+                (return)))
+        (foo-16-3 262)                  260
+
+        (loader ((fentry foo-16-4 subr2)
+                (push a1)
+                (land a2 (& 0))
+                (pop a1)
+                (return)))
+        (foo-16-4 1285 262)             260
+
+        (loader ((fentry foo-16-5 subr2)
+                (push a2)
+                (land (& 0) a1)
+                (adjstk '1)
+                (return)))
+        (foo-16-5 1285 262)             260
+
+        (loader ((fentry foo-16-6 subr2)
+                (lor a2 a1)
+                (return)))
+        (foo-16-6 1285 262)             1287
+
+        (loader ((fentry foo-16-7 subr1)
+                (lor '1285 a1)
+                (return)))
+        (foo-16-7 262)                  1287
+
+        (loader ((fentry foo-16-8 subr1)
+                (push a1)
+                (lor '1285 (& 0))
+                (pop a1)
+                (return)))
+        (foo-16-8 262)                  1287
+
+        (loader ((fentry foo-16-9 subr2)
+                (push a1)
+                (lor a2 (& 0))
+                (pop a1)
+                (return)))
+        (foo-16-9 1285 262)             1287
+
+        (loader ((fentry foo-16-10 subr2)
+                (push a2)
+                (lor (& 0) a1)
+                (adjstk '1)
+                (return)))
+        (foo-16-10 1285 262)            1287
+
+        (loader ((fentry foo-16-11 subr2)
+                (lxor a2 a1)
+                (return)))
+        (foo-16-11 1285 262)            1027
+
+        (loader ((fentry foo-16-12 subr1)
+                (lxor '1285 a1)
+                (return)))
+        (foo-16-12 262)                 1027
+
+        (loader ((fentry foo-16-13 subr1)
+                (push a1)
+                (lxor '1285 (& 0))
+                (pop a1)
+                (return)))
+        (foo-16-13 262)         1027
+
+        (loader ((fentry foo-16-14 subr2)
+                (push a1)
+                (lxor a2 (& 0))
+                (pop a1)
+                (return)))
+        (foo-16-14 1285 262)            1027
+
+        (loader ((fentry foo-16-15 subr2)
+                (push a2)
+                (lxor (& 0) a1)
+                (adjstk '1)
+                (return)))
+        (foo-16-15 1285 262)            1027
+
+)
+
+; ******************************************
+
+(test   "XVII.  test for: LSHIFT                                       " ()
+
+        (loader ((fentry foo-17-1 subr2)
+                (lshift a2 a1)
+                (return)))
+        (foo-17-1 1024 -2)              256
+        (foo-17-1 256   2)              1024
+        (foo-17-1 256 0)                256
+
+        (loader ((fentry foo-17-2 subr2)
+                (mov a1 a4)
+                (mov a2 a3)
+                (lshift a3 a4)
+                (mov a4 a1)
+                (return)))
+        (foo-17-2 1024 -2)              256
+        (foo-17-2 256   2)              1024
+        (foo-17-2 256 0)                256
+
+        (loader ((fentry foo-17-3 subr2)
+                (lshift a1 a2)
+                (mov a2 a1)
+                (return)))
+        (foo-17-3 -2 1024)              256
+        (foo-17-3 2 256)                1024
+        (foo-17-3 0 256)                256
+
+        (loader ((fentry foo-17-4 subr1)
+                (lshift '2 a1)
+                (return)))
+        (foo-17-4 256)                  1024
+        (foo-17-4 1024)                 4096
+
+        (loader ((fentry foo-17-5 subr1)
+                (lshift '-2 a1)
+                (return)))
+        (foo-17-5 4098)                 1024
+        (foo-17-5 1026)                 256
+
+	(loader ((fentry foo-17-6 subr0)
+		(mov '32767 a1)
+		(mov a1 a2) (lshift '-16 a2) (push a2)
+		(mov a1 a2) (lshift '-15 a2) (push a2)
+		(mov a1 a2) (lshift '-14 a2) (push a2)
+		(mov a1 a2) (lshift '-13 a2) (push a2)
+		(mov a1 a2) (lshift '-12 a2) (push a2)
+		(mov a1 a2) (lshift '-11 a2) (push a2)
+		(mov a1 a2) (lshift '-10 a2) (push a2)
+		(mov a1 a2) (lshift '-9  a2) (push a2)
+		(mov a1 a2) (lshift '-8  a2) (push a2)
+		(mov a1 a2) (lshift '-7  a2) (push a2)
+		(mov a1 a2) (lshift '-6  a2) (push a2)
+		(mov a1 a2) (lshift '-5  a2) (push a2)
+		(mov a1 a2) (lshift '-4  a2) (push a2)
+		(mov a1 a2) (lshift '-3  a2) (push a2)
+		(mov a1 a2) (lshift '-2  a2) (push a2)
+		(mov a1 a2) (lshift '-1  a2) (push a2)
+		(mov a1 a2) (lshift '0   a2) (push a2)
+		(mov '2 a1)
+		(mov a1 a2) (lshift '0  a2) (push a2)
+		(mov a1 a2) (lshift '1  a2) (push a2)
+		(mov a1 a2) (lshift '2  a2) (push a2)
+		(mov a1 a2) (lshift '3  a2) (push a2)
+		(mov a1 a2) (lshift '4  a2) (push a2)
+		(mov a1 a2) (lshift '5  a2) (push a2)
+		(mov a1 a2) (lshift '6  a2) (push a2)
+		(mov a1 a2) (lshift '7  a2) (push a2)
+		(mov a1 a2) (lshift '8  a2) (push a2)
+		(mov a1 a2) (lshift '9  a2) (push a2)
+		(mov a1 a2) (lshift '10 a2) (push a2)
+		(mov a1 a2) (lshift '11 a2) (push a2)
+		(mov a1 a2) (lshift '12 a2) (push a2)
+		(mov a1 a2) (lshift '13 a2) (push a2)
+		(mov a1 a2) (lshift '14 a2) (push a2)
+		(mov a1 a2) (lshift '15 a2) (push a2)
+		(mov a1 a2) (lshift '16 a2) (push a2)
+		(mov '34 a4)
+		(jmp list)))
+
+	(foo-17-6)	(0 0 1 3 7 15 31 63 127 255 511 1023
+			 2047 4095 8191 16383 32767
+			 2 4 8 16 32 64 128 256 512 1024
+			 2048 4096 8192 16384 #$8000 0 0)
+
+		(loader ((fentry foo-17-7 subr0)
+			(mov '15 a4)
+			(land '0 a4)
+			(mov '1 a3)
+			(lshift a4 a3)
+			(mov a3 a1)
+			(return)))
+
+		(foo-17-7)           1
+
+)
+
+; ******************************************
+
+(test   "XVIII. test for: HBXMOV HBMOVX HGSIZE                         " ()
+
+        (loader ((fentry foo-18-1 subr3)
+                (hbmovx a3 a1 a2)
+                (return)
+                (fentry foo-18-2 subr2)
+                (hbxmov a1 a2 a1)
+                (return)))
+        (setq s "abcdef")               "abcdef"
+        (foo-18-2 s 0)                  #/a
+        (foo-18-2 s 1)                  #/b
+        (foo-18-2 s 2)                  #/c
+        (foo-18-2 s 3)                  #/d
+        (foo-18-1 s 0 #/x)              "xbcdef"
+        (foo-18-1 s 1 #/y)              "xycdef"
+        (foo-18-1 s 2 #/z)              "xyzdef"
+        (foo-18-1 s 3 #/?)              "xyz?ef"
+        s                               "xyz?ef"
+
+        (loader ((fentry foo-18-3 subr1)
+                (hbmovx '#/h a1 '3)
+                (return)
+                (fentry foo-18-4 subr1)
+                (push a1)
+                (hbxmov a1 '3 (& 0))
+                (pop a1)
+                (return)))
+        (setq s "qwerty")               "qwerty"
+        (foo-18-4 s)                    #/r
+        (foo-18-3 s)                    "qwehty"
+        (foo-18-4 s)                    #/h
+
+        (loader ((fentry foo-18-5 subr3)
+                (push a1)
+                (push a2)
+                (push a3)
+                (hbmovx (& 0) (& 2) (& 1))
+                (adjstk '3)
+                (return)
+                (fentry foo-18-6 subr2)
+                (push a1)
+                (push a2)
+                (hbxmov (& 1) (& 0) (& 1))
+                (adjstk '1)
+                (pop a1)
+                (return)))
+        (setq s "abcdef")               "abcdef"
+        (foo-18-6 s 0)                  #/a
+        (foo-18-6 s 1)                  #/b
+        (foo-18-6 s 2)                  #/c
+        (foo-18-6 s 3)                  #/d
+        (foo-18-5 s 0 #/x)              "xbcdef"
+        (foo-18-5 s 1 #/y)              "xycdef"
+        (foo-18-5 s 2 #/z)              "xyzdef"
+        (foo-18-5 s 3 #/?)              "xyz?ef"
+        s                               "xyz?ef"
+
+        (loader ((fentry foo-18-7 subr1)
+                (hgsize a1 a1)
+                (return)))
+        (foo-18-7 #[])          0
+        (foo-18-7 #[x])         1
+        (foo-18-7 (makevector 55 ()))   55
+        (foo-18-7 "")           0
+        (foo-18-7 "x")          1
+        (foo-18-7 (makestring 56 #\SP)) 56
+
+        (loader ((fentry foo-18-8 subr1)
+                (push a1)
+                (push a1)
+                (hgsize (& 0) (& 0))
+                (hgsize (& 1) (& 1))
+                (pop a2)
+                (pop a1)
+                (cabeq a1 a2 9)
+                (mov nil a1)
+        9       (return)))
+        (foo-18-8 #[])          0
+        (foo-18-8 #[x])         1
+        (foo-18-8 (makevector 55 ()))   55
+        (foo-18-8 "")           0
+        (foo-18-8 "x")          1
+        (foo-18-8 (makestring 56 #\SP)) 56
+
+        (loader ((fentry foo-18-9 subr0)
+                (hgsize '"xcv" a1)
+                (return)
+                (fentry foo-18-10 subr0)
+                (hgsize '#[x c v] a1)
+                (return)))
+        (foo-18-9)              3
+        (foo-18-10)             3
+
+)
+
+; ******************************************
+
+(test   "XIX.   test for: CFB[EQ/NE/LT/LE/GT/GE]                       " ()
+
+        (loader ((fentry foo-19-1 subr2)
+                (cfbeq a1 a2 10)
+                (mov '0 a1)
+                (return)
+        10      (mov '1 a1)
+                (return)))
+        (foo-19-1 0. 0.)                1
+        (foo-19-1 0. 8.)                0
+        (foo-19-1 8. 0.)                0
+        (foo-19-1 8. 8.)                1
+        (foo-19-1 8. 16.)               0
+        (foo-19-1 16. 8.)               0
+        (foo-19-1 0. -8.)               0
+        (foo-19-1 -8. 0.)               0
+        (foo-19-1 -8. -8.)              1
+        (foo-19-1 -8. -16.)             0
+        (foo-19-1 -16. -8.)             0
+        (foo-19-1 8. -8.)               0
+        (foo-19-1 -8. 8.)               0
+
+        (loader ((fentry foo-19-2 subr2)
+                (push a1)
+                (push a2)
+                (cfbeq (& 1) (& 0) 10)
+                (mov '0 a1)
+                (adjstk '2)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '2)
+                (return)))
+        (foo-19-2 0. 0.)                1
+        (foo-19-2 0. 8.)                0
+        (foo-19-2 8. 0.)                0
+        (foo-19-2 8. 8.)                1
+        (foo-19-2 8. 16.)               0
+        (foo-19-2 16. 8.)               0
+        (foo-19-2 0. -8.)               0
+        (foo-19-2 -8. 0.)               0
+        (foo-19-2 -8. -8.)              1
+        (foo-19-2 -8. -16.)             0
+        (foo-19-2 -16. -8.)             0
+        (foo-19-2 8. -8.)               0
+        (foo-19-2 -8. 8.)               0
+
+        (loader ((fentry foo-19-3 subr1)
+                (mov a1 (cvalq x))
+                (cfbeq '0. (cvalq x) 10)
+                (mov '0 a1)
+                (return)
+        10      (mov '1 a1)
+                (return)))
+        (foo-19-3 0.)           1
+        (foo-19-3 8.)           0
+        (foo-19-3 -8.)          0
+
+        (loader ((fentry foo-19-4 subr1)
+                (cfbeq a1 '-8. 10)
+                (mov '0 a1)
+                (return)
+        10      (mov '1 a1)
+                (return)))
+        (foo-19-4 0.)           0
+        (foo-19-4 -8.)          1
+        (foo-19-4 -16.)         0
+        (foo-19-4 8.)           0
+
+        (loader ((fentry foo-19-5 subr2)
+                (push a1)
+                (cfbne a2 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-19-5 0. 0.)                0
+        (foo-19-5 0. 8.)                1
+        (foo-19-5 8. 0.)                1
+        (foo-19-5 8. 8.)                0
+        (foo-19-5 8. 16.)               1
+        (foo-19-5 16. 8.)               1
+        (foo-19-5 0. -8.)               1
+        (foo-19-5 -8. 0.)               1
+        (foo-19-5 -8. -8.)              0
+        (foo-19-5 -8. -16.)             1
+        (foo-19-5 -16. -8.)             1
+        (foo-19-5 8. -8.)               1
+        (foo-19-5 -8. 8.)               1
+
+        (loader ((fentry foo-19-6 subr2)
+                (push a2)
+                (cfblt a1 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-19-6 0. 0.)                0
+        (foo-19-6 0. 8.)                1
+        (foo-19-6 8. 0.)                0
+        (foo-19-6 8. 8.)                0
+        (foo-19-6 8. 16.)               1
+        (foo-19-6 16. 8.)               0
+        (foo-19-6 0. -8.)               0
+        (foo-19-6 -8. 0.)               1
+        (foo-19-6 -8. -8.)              0
+        (foo-19-6 -8. -16.)             0
+        (foo-19-6 -16. -8.)             1
+        (foo-19-6 8. -8.)               0
+        (foo-19-6 -8. 8.)               1
+
+        (loader ((fentry foo-19-7 subr2)
+                (push a2)
+                (cfble a1 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-19-7 0. 0.)                1
+        (foo-19-7 0. 8.)                1
+        (foo-19-7 8. 0.)                0
+        (foo-19-7 8. 8.)                1
+        (foo-19-7 8. 16.)               1
+        (foo-19-7 16. 8.)               0
+        (foo-19-7 0. -8.)               0
+        (foo-19-7 -8. 0.)               1
+        (foo-19-7 -8. -8.)              1
+        (foo-19-7 -8. -16.)             0
+        (foo-19-7 -16. -8.)             1
+        (foo-19-7 8. -8.)               0
+        (foo-19-7 -8. 8.)               1
+
+        (loader ((fentry foo-19-8 subr2)
+                (push a2)
+                (cfbgt a1 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-19-8 0. 0.)                0
+        (foo-19-8 0. 8.)                0
+        (foo-19-8 8. 0.)                1
+        (foo-19-8 8. 8.)                0
+        (foo-19-8 8. 16.)               0
+        (foo-19-8 16. 8.)               1
+        (foo-19-8 0. -8.)               1
+        (foo-19-8 -8. 0.)               0
+        (foo-19-8 -8. -8.)              0
+        (foo-19-8 -8. -16.)             1
+        (foo-19-8 -16. -8.)             0
+        (foo-19-8 8. -8.)               1
+        (foo-19-8 -8. 8.)               0
+
+        (loader ((fentry foo-19-9 subr2)
+                (push a2)
+                (cfbge a1 (& 0) 10)
+                (mov '0 a1)
+                (adjstk '1)
+                (return)
+        10      (mov '1 a1)
+                (adjstk '1)
+                (return)))
+        (foo-19-9 0. 0.)                1
+        (foo-19-9 0. 8.)                0
+        (foo-19-9 8. 0.)                1
+        (foo-19-9 8. 8.)                1
+        (foo-19-9 8. 16.)               0
+        (foo-19-9 16. 8.)               1
+        (foo-19-9 0. -8.)               1
+        (foo-19-9 -8. 0.)               0
+        (foo-19-9 -8. -8.)              1
+        (foo-19-9 -8. -16.)             1
+        (foo-19-9 -16. -8.)             0
+        (foo-19-9 8. -8.)               1
+        (foo-19-9 -8. 8.)               0
+
+;; test special loader SUN4 ou la combinaison suivante plantait
+;; en 64bitfloats dans le cas ou on se branche sur l'etiquette
+;; (clause ELSE du IF)
+        (loader ((fentry foo-19-20 subr2)
+                (cfblt a1 a2 11)
+                (fdiff a2 a1)
+                (return)
+        11      (mov nil a1)
+                (return)))
+        (foo-19-20 1. 2.)               ()
+        (foo-19-20 2. 1.)               1.
+
+)
+
+(test   "XX.    test for: NLIST, LLINK, DLINK, TAG, EXIT, CBINDN, PROT " ()
+; nlist is used by Complice. Do not redefine it.
+; with : jmp #:llcp:nlist
+(loader (
+         (fentry foo-20-1 nsubr)
+         (entry foo-20-1 nsubr)
+         (jcall #:llcp:nlist)
+         (return)
+        )
+)
+
+(foo-20-1 1 2 3)   (1 2 3)
+(foo-20-1)         ()
+    
+(loader (
+         (fentry foo-20-2 subr0)
+         (entry foo-20-2 subr0)
+         (push (@ 101))
+         (push 'foo)
+         (push dlink)
+         (push tag)
+         (stack dlink)
+         (mov '12 a1)
+         (mov (& 1) dlink)
+         (adjstk '4)
+101      (return)
+        )
+)
+
+(foo-20-2)         12
+
+(loader (
+         (fentry foo-20-3 subr0)
+         (entry foo-20-3 subr0)
+         (push (@ 101))
+         (push 'foo)
+         (push dlink)
+         (push tag)
+         (stack dlink)
+         (mov '12 a1)
+         (mov 'foo a2)
+         (jmp #:llcp:exit)
+         (mov (& 1) dlink)
+         (adjstk '4)
+101      (return))
+)
+
+(foo-20-3)         12
+
+(loader (
+         (fentry foo-20-4 subr0)
+         (entry foo-20-4 subr0)
+         (push '10)
+         (push (cvalq x))
+         (mov (& 1) (cvalq x))
+         (push '1)
+         (push '(x))
+         (push 'foo-20-4)
+         (push llink)
+         (push dlink)
+         (push cbindn)
+         (stack dlink)
+         (mov (cvalq x) a1)
+         (mov (& 1) dlink)
+         (mov (& 6) (cvalq x))
+         (adjstk '7)
+         (adjstk '1)
+         (return)))
+
+(setq x 12)        12
+(foo-20-4)         10
+x                  12
+)
+
+
+; ******************************************
+
+(test   "XXI.   test for: EVAL                                         " ()
+
+        (loader ((fentry foo-21-1 subr0)
+                (eval (catcherror () stroumphf))
+                (mov '0 a1)
+                (eval (setq x (catcherror () stroumphf2)))
+                (return)))
+        (foo-21-1)			0
+	x				()
+
+        (loader ((fentry foo-21-2 subr0)
+                (mov (eval ''0) a1)
+                (return)))
+        (foo-21-2)			0
+
+        (loader ((fentry foo-21-2-1 subr0)
+                (mov '0 (eval 'a1))
+                (return)))
+        (foo-21-2-1)			0
+
+)
+; ******************************************
+; LAP examples from documentation
+
+(test   "XXII.  test for: LAP examples from documentation              " () 
+
+(loader  ((fentry fiblap subr1)
+          (cnbgt a1 '2 100)
+          (mov '1 a1)
+          (return)
+ 100
+          (diff '1 a1)
+          (push a1)
+          (call fiblap)
+          (mov a1 a2)
+          (pop a1)
+          (push a2)
+          (diff '1 a1)
+          (call fiblap)
+          (pop a2)
+          (plus a2 a1)
+          (return)
+        (end)))
+
+
+(loader  ((fentry dlq subr2)
+          (btcons a2 1001)
+          (mov nil a1)
+          (return)
+ 1001
+          (cabne a1 (car a2) 1003)
+          (mov (cdr a2) a2)
+          (bra dlq)
+ 1003
+          (push (car a2))
+          (mov (cdr a2) a2)
+          (call dlq)
+          (mov a1 a2)
+          (pop a1)
+          (jmp cons)
+        (end)))
+
+
+(loader  ((fentry screat subr2)
+          (push a1)
+          (push a2)
+          (mov '6 a1)
+          (mov '#/X a2)
+          (jcall makestring)
+          (hbmovx '#/a a1 (& 1))
+          (hbmovx '#/b a1 (& 0))
+          (adjstk '2)
+          (return)
+        (end)))
+
+
+(loader  ((fentry invector nsubr)
+          (push a4)
+          (mov a4 a1)
+          (mov nil a2)
+          (jcall makevector)
+          (pop a4)
+          (mov '0 a3)
+          (bra 1005)
+ 1002
+          (pop a2)
+          (hpmovx a2 a1 a3)
+          (plus '1 a3)
+ 1005
+          (sobgez a4 1002)
+          (return)
+        (end)))
+
+
+(fiblap 20)              6765
+(dlq 'a '(b a c a b))    (b c b)
+(screat 2 4)             "XXaXbX"
+(invector 1 2 3 4 5)     #[5 4 3 2 1]
+
+)
+
+; ******************************************
+
+(test   "XXIII. test for: SPECIAL-CASE-LOADER flag                     " ()
+
+(progn (remob 'scl-nil)
+       (remob 'scl-t)
+       (setq #:testlap:special-case-loader #:ld:special-case-loader)
+       0)                          0
+
+(setq #:ld:special-case-loader ()) ()
+
+(consp (valfn 'scl-nil)) ()
+
+(loader ((fentry scl-nil subr1)
+	 (plus a1 a1)
+	 (return)))
+
+(not (consp (valfn 'scl-nil))) ()
+(scl-nil 2)                    4
+
+(setq #:ld:special-case-loader t)  t
+
+(consp (valfn 'scl-t)) ()
+
+(loader ((fentry scl-t subr1)
+	 (plus a1 a1)
+	 (return)))
+
+(consp (valfn 'scl-t)) ()
+
+(loader ((end)))
+
+(not (consp (valfn 'scl-t))) ()
+(progn
+  (setq #:ld:special-case-loader #:testlap:special-case-loader)
+  (scl-t 3))                 6
+)
+
+; ******************************************
+
+(test   "XXIV.  End of Test Lap                                        " ())
+
+(let ((size (subadr (#:system:ccode) deb-code)))
+   (setq timetest (string timetest))
+   (print "       Total time:                                            "
+	(catenate (makestring (- 4 (slen timetest)) #\sp) timetest) " ms")
+   (print "       Size of code used by this test:                       "
+	 (cond ((fixp size)
+		(if (ge size 0)
+		    size
+		  (+ (power 2 15) (logand #$7FFF size))))
+	       ((consp size)
+		(+ (* (car size) (power 2 16))
+		   (if (ge (cdr size) 0)
+		       (cdr size)
+		     (+ (power 2 15) (logand #$7FFF (cdr size))))))
+	       (t ())) " bytes")
+  ())   ()

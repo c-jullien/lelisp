@@ -1,0 +1,68 @@
+defmodule
+float
+files (
+bngen
+)
+export (
+floor
+ceiling
+round
+precision
+#:r:error
+#:r:|-|
+#:r:/
+#:r:quomod
+#:r:eval
+#:r:numberp
+#:r:integerp
+#:r:rationalp
+#:r:truncate
+#:float:*
+#:float:|+|
+#:float:<?>
+#:float:quomod
+#:float:floor
+#:float:truncate
+#:fix:<?>
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(floor subr1 ())
+(#:r:error subr3 ())
+(ceiling subr1 ())
+(round subr2 ())
+(precision nsubr ())
+(#:r:|-| subr2 ())
+(#:r:/ subr2 ())
+(#:r:quomod subr2 ())
+(#:r:eval subr1 ())
+(#:r:numberp subr1 ())
+(#:r:integerp subr1 ())
+(#:r:rationalp subr1 ())
+(#:r:truncate subr1 ())
+(#:float:* subr2 ())
+(#:float:|+| subr2 ())
+(#:float:<?> subr2 ())
+(#:float:quomod subr2 ())
+(#:float:floor subr1 ())
+(#:float:truncate subr1 ())
+(#:fix:<?> subr2 ())
+)
+cpfunctions (
+(ftrunc subr1)
+)
+cpimport
+()
+cpenv (
+((putprop '#:ex:mod 't '#:complice:globalvar)
+)((putprop '#:r:prec 't '#:complice:globalvar)
+)((putprop '#:float:b 't '#:complice:globalvar)
+)((putprop '#:float:fb 't '#:complice:globalvar)
+)((putprop '#:float:-fb 't '#:complice:globalvar)
+)((putprop '#:sys-package:genarith 't '#:complice:globalvar)
+))

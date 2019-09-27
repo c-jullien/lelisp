@@ -1,0 +1,89 @@
+;;;
+;;; lelisp project definitions
+;;;
+
+(setq MODANA #.(catenate #:system:directory "modana/"))
+(setq LLIB   #:system:llib-directory)
+(setq LLUB   #:system:llub-directory)
+(setq SYSTEM #:system:system-directory)
+(setq LLMOD  #:system:llmod-directory)
+(setq LLOBJ  #:system:llobj-directory)
+(setq X11    #.(catenate #:system:virbitmap-directory "X11/"))
+(setq WINDOWS #.(if #:system:dosp
+                    (catenate #:system:virbitmap-directory "windows\")
+                  (catenate #:system:virbitmap-directory "windows/")) )
+(setq DECW   #.(if #:system:vmsp
+                   "lelisp$disk:[virbitmap.decw]"
+                  (catenate #:system:virbitmap-directory "decw/")) )
+
+(setq x11.prj
+(define-rt-project x11
+  root-directory #.MODANA
+  directories (
+               #.X11
+               #.LLMOD
+               )
+  required-projects (lisp)
+  project-file #p"lisp.prj"
+  modules-lists (#p"virx11.lst")
+))
+
+(setq windows.prj
+(define-rt-project windows
+  root-directory #.MODANA
+  directories (
+               #.WINDOWS
+               #.(catenate WINDOWS (if #:system:dosp "wlook\" "wlook/"))
+               )
+  required-projects (lisp)
+  project-file #p"lisp.prj"
+  modules-lists (win_def wincolor winevent wininit winstruc
+		 win winbitma windraw wingraph winmenu winwindo
+                 extrnlib)
+))
+
+(setq decw.prj
+(define-rt-project decw
+  root-directory #.MODANA
+  directories (
+               #.DECW
+               )
+  required-projects (lisp)
+  project-file #p"lisp.prj"
+))
+
+(setq llub.prj
+(define-rt-project llub
+  root-directory #.MODANA
+  directories (
+               #.LLUB
+               )
+  required-projects (lisp)
+  modules-lists (llub.lst llmod.lst)
+  ll-module-directory #.LLMOD
+  ll-object-directory #.LLOBJ
+))
+
+(setq lisp.prj
+(define-rt-project lisp
+  root-directory #.MODANA
+  directories (
+               #.SYSTEM
+               #.LLIB
+               #.LLOBJ
+               #.LLMOD
+               )
+  required-projects ()
+  modules-lists (llib.lst system.lst llmod.lst)
+;  ll-module-directory #.LLMOD
+;  ll-object-directory #.LLOBJ
+))
+
+;;; defined new definers for ANALYZER
+;; macro-character
+(defdefiner dmc)
+
+;; splice-macro
+(defdefiner dms)
+
+;; DEFABBREV, DEFSHARP are already defined in analyzer

@@ -1,0 +1,57 @@
+;;; GELL 15.26: elaboration file for the module: virevent
+;;;             translation done: "Tue Aug  24 93 10:48:56 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: virevent.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'virevent)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZvirevent" "Tue Aug  24 93 10:48:56 "
+
+'((which-window . subr0) (event-mode . nsubr) (eventp . subr0) (read-event . nsubr) (peek-event . nsubr) (local-read-event . subr0) (flush-event . subr0) (add-event . nsubr) (grab-event . subr1) (ungrab-event . subr0) (itsoft-event . subr0) (read-mouse . nsubr) (allow-event . subr2) (disallow-event . subr2) (allowed-event-p . subr2) (#:display:event-mode . nsubr) (#:display:eventp . nsubr) (#:display:read-event . nsubr) (#:display:peek-event . nsubr) (#:display:flush-event . nsubr) (#:display:add-event . nsubr) (#:display:grab-event . nsubr) (#:display:ungrab-event . nsubr) (#:display:isoft-event . nsubr) (#:display:allow-event . nsubr) (#:display:disallow-event . nsubr) (#:display:allowed-event-p . nsubr) (#:display:read-mouse . nsubr))
+
+#[#:display:current-display #:display:no-current-display which-window read-mouse #:event:x #:event:y ascii-event move-event up-event down-event drag-event #:event:code #:mouse:x #:mouse:y #:mouse:state event-mode send #:mouse:event-mode eventp #:mouse:event read-event peek-event current-window map-window flush-event add-event windowp #:image:rectangle:window typep #:display:errnotawindow grab-event ungrab-event itsoft-event allow-event display #:display:errnotadisplay errsym disallow-event allowed-event-p #:display:not-yet-inplemented isoft-event #:gell-resetfn:function-name #:gell-resetfn:function-0 #:gell-resetfn:function-n local-read-event #:gell-resetfn:function-1 #:gell-resetfn:function-2 #:display:event-mode #:display:eventp #:display:read-event #:display:peek-event #:display:flush-event #:display:add-event #:display:grab-event #:display:ungrab-event #:display:isoft-event #:display:allow-event #:display:disallow-event #:display:allowed-event-p #:display:read-mouse]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'virbitmap)))
+(setq #:sys-package:colon 'mouse)
+(defvar #:mouse:event (if (boundp '#:mouse:event) #:mouse:event (#:event:make)))
+(defvar #:mouse:event-mode (if (boundp '#:mouse:event-mode) #:mouse:event-mode 0))
+(defvar #:mouse:x (when (boundp '#:mouse:x) #:mouse:x))
+(defvar #:mouse:y (when (boundp '#:mouse:y) #:mouse:y))
+(defvar #:mouse:state (when (boundp '#:mouse:state) #:mouse:state))
+(defvar #:event:code (when (boundp '#:event:code) #:event:code))
+(defvar #:event:x)
+(defvar #:event:y)
+(defcsetfn 'which-window "GZvirevent" 0)
+(defcsetfn 'event-mode "GZvirevent" 1)
+(defcsetfn 'eventp "GZvirevent" 2)
+(defcsetfn 'read-event "GZvirevent" 3)
+(defcsetfn 'peek-event "GZvirevent" 4)
+(defcsetfn 'local-read-event "GZvirevent" 5)
+(defcsetfn 'flush-event "GZvirevent" 6)
+(defcsetfn 'add-event "GZvirevent" 7)
+(defcsetfn 'grab-event "GZvirevent" 8)
+(defcsetfn 'ungrab-event "GZvirevent" 9)
+(defcsetfn 'itsoft-event "GZvirevent" 10)
+(defcsetfn 'read-mouse "GZvirevent" 11)
+(defcsetfn 'allow-event "GZvirevent" 12)
+(defcsetfn 'disallow-event "GZvirevent" 13)
+(defcsetfn 'allowed-event-p "GZvirevent" 14)
+(defcsetfn '#:display:event-mode "GZvirevent" 15)
+(defcsetfn '#:display:eventp "GZvirevent" 16)
+(defcsetfn '#:display:read-event "GZvirevent" 17)
+(defcsetfn '#:display:peek-event "GZvirevent" 18)
+(defcsetfn '#:display:flush-event "GZvirevent" 19)
+(defcsetfn '#:display:add-event "GZvirevent" 20)
+(defcsetfn '#:display:grab-event "GZvirevent" 21)
+(defcsetfn '#:display:ungrab-event "GZvirevent" 22)
+(defcsetfn '#:display:isoft-event "GZvirevent" 23)
+(defcsetfn '#:display:allow-event "GZvirevent" 24)
+(defcsetfn '#:display:disallow-event "GZvirevent" 25)
+(defcsetfn '#:display:allowed-event-p "GZvirevent" 26)
+(defcsetfn '#:display:read-mouse "GZvirevent" 27)
+
+(defccheck '(typep windowp map-window current-window read-event send read-mouse))

@@ -1,0 +1,532 @@
+(loader '((title |rtmsg.lo|)))
+(setq #:sys-package:colon 'crunch)
+(defvar #:crunch:no-warning ())
+(loader'((entry #:crunch:getmsg subr1)
+(push a1)
+(bfsymb a1 101)
+(jcall get-message-p)
+(btnil a1 101)
+(push (@ 103))
+(push 'get-message)
+(push (@ 104))
+(push 'quote)
+(push (& 4))
+(mov '2 a4)
+(jmp list)
+104
+(eval ())
+(push a1)
+(mov '2 a4)
+(jmp list)
+103
+(eval ())
+(adjstk '1)
+(return)
+101
+(push (@ 105))
+(push 'quote)
+(push (& 2))
+(mov '2 a4)
+(jmp list)
+105
+(eval ())
+(adjstk '1)
+(return)
+))
+(defvar #:crunch:w-flag ())
+(defvar #:crunch:e-flag ())
+(loader'((fentry #:crunch:warning dmsubr)
+(entry #:crunch:warning dmsubr)
+(mov (cdr a1) a4)
+(mov (car a1) a1)
+(push a1)
+(mov (cdr a4) a3)
+(mov (car a4) a4)
+(push a4)
+(push a3)
+(jcall numberp)
+(btnil a1 101)
+(mov (& 2) a2)
+(bra 102)
+101
+(push (@ 103))
+(push (& 3))
+(mov '1 a4)
+(jmp eval)
+103
+(eval ())
+(mov a1 a2)
+102
+(mov '100 a4)
+(plus a2 a4)
+(mov a4 (& 2))
+(push (@ 104))
+(diff '100 a4)
+(push a4)
+(mov '1 a4)
+(jmp concat)
+104
+(eval ())
+(push a1)
+(push (@ 105))
+(push 'progn)
+(push (@ 106))
+(push 'unless)
+(push (@ 107))
+(push 'memq)
+(push (& 9))
+(push '(#:crunch:w-flag))
+(mov '3 a4)
+(jmp mcons)
+107
+(eval ())
+(push a1)
+(push (@ 108))
+(push 'newl)
+(push '#:crunch:w-flag)
+(push (& 11))
+(mov '3 a4)
+(jmp list)
+108
+(eval ())
+(push a1)
+(mov '3 a4)
+(jmp list)
+106
+(eval ())
+(push a1)
+(push (@ 109))
+(push 'unless)
+(push (@ 110))
+(push 'and)
+(push '(le #:crunch:verbose 0))
+(push (@ 111))
+(push 'memq)
+(push (& 13))
+(push '(#:crunch:no-warning))
+(mov '3 a4)
+(jmp mcons)
+111
+(eval ())
+(push a1)
+(mov '3 a4)
+(jmp list)
+110
+(eval ())
+(push a1)
+(push (@ 112))
+(push 'printerror)
+(push (@ 113))
+(push '"W.")
+(push (& 13))
+(mov '2 a4)
+(jmp catenate)
+113
+(eval ())
+(push a1)
+(btnil (& 10) 114)
+(push (@ 116))
+(push 'format)
+(push nil)
+(mov (& 12) a1)
+(call #:crunch:getmsg)
+(push a1)
+(push (& 14))
+(mov '4 a4)
+(jmp mcons)
+116
+(eval ())
+(mov a1 a4)
+(bra 115)
+114
+(push (@ 117))
+(push 'quote)
+(push (& 11))
+(mov '2 a4)
+(jmp list)
+117
+(eval ())
+(mov a1 a4)
+115
+(push a4)
+(push (& 12))
+(mov '4 a4)
+(jmp list)
+112
+(eval ())
+(push a1)
+(mov '3 a4)
+(jmp list)
+109
+(eval ())
+(push a1)
+(mov '3 a4)
+(jmp list)
+105
+(eval ())
+(adjstk '4)
+(return)
+))
+(loader'((fentry #:crunch:error dmsubr)
+(entry #:crunch:error dmsubr)
+(mov (cdr a1) a4)
+(mov (car a1) a1)
+(push a1)
+(mov (cdr a4) a3)
+(mov (car a4) a4)
+(push a4)
+(push a3)
+(jcall numberp)
+(btnil a1 101)
+(mov (& 2) a2)
+(bra 102)
+101
+(push (@ 103))
+(push (& 3))
+(mov '1 a4)
+(jmp eval)
+103
+(eval ())
+(mov a1 a2)
+102
+(mov '100 a4)
+(plus a2 a4)
+(mov a4 (& 2))
+(push (@ 104))
+(diff '100 a4)
+(push a4)
+(mov '1 a4)
+(jmp concat)
+104
+(eval ())
+(push a1)
+(push (@ 105))
+(push 'progn)
+(push (@ 106))
+(push 'unless)
+(push (@ 107))
+(push 'memq)
+(push (& 9))
+(push '(#:crunch:e-flag))
+(mov '3 a4)
+(jmp mcons)
+107
+(eval ())
+(push a1)
+(push (@ 108))
+(push 'newl)
+(push '#:crunch:e-flag)
+(push (& 11))
+(mov '3 a4)
+(jmp list)
+108
+(eval ())
+(push a1)
+(mov '3 a4)
+(jmp list)
+106
+(eval ())
+(push a1)
+(push (@ 109))
+(push 'syserror)
+(push (@ 110))
+(push '"E.")
+(push (& 10))
+(mov '2 a4)
+(jmp catenate)
+110
+(eval ())
+(push a1)
+(btnil (& 7) 111)
+(push (@ 113))
+(push 'format)
+(push nil)
+(mov (& 9) a1)
+(call #:crunch:getmsg)
+(push a1)
+(push (& 11))
+(mov '4 a4)
+(jmp mcons)
+113
+(eval ())
+(mov a1 a4)
+(bra 112)
+111
+(push (@ 114))
+(push 'quote)
+(push (& 8))
+(mov '2 a4)
+(jmp list)
+114
+(eval ())
+(mov a1 a4)
+112
+(push a4)
+(push (& 9))
+(mov '4 a4)
+(jmp list)
+109
+(eval ())
+(push a1)
+(mov '3 a4)
+(jmp list)
+105
+(eval ())
+(adjstk '4)
+(return)
+))
+(loader'((fentry #:crunch:advise dmsubr)
+(entry #:crunch:advise dmsubr)
+(mov (cdr a1) a4)
+(mov (car a1) a1)
+(push a1)
+(mov (cdr a4) a3)
+(mov (car a4) a4)
+(push a4)
+(push a3)
+(jcall numberp)
+(btnil a1 102)
+(push (@ 103))
+(push (& 3))
+(mov '1 a4)
+(jmp concat)
+103
+(eval ())
+(mov a1 (& 2))
+102
+(mov (& 2) a1)
+(call #:crunch:getmsg)
+(mov a1 (& 2))
+(push (@ 104))
+(push 'when)
+(push '(ge #:crunch:verbose 1))
+(push (@ 105))
+(push 'print)
+(push (@ 106))
+(push 'catenate)
+(push '".. ")
+(btnil (& 8) 107)
+(push (@ 109))
+(push 'format)
+(push nil)
+(push a1)
+(push (& 12))
+(mov '4 a4)
+(jmp mcons)
+109
+(eval ())
+(mov a1 a4)
+(bra 108)
+107
+(mov a1 a4)
+108
+(push a4)
+(push '(" : "))
+(mov '4 a4)
+(jmp mcons)
+106
+(eval ())
+(push a1)
+(push (& 7))
+(mov '3 a4)
+(jmp list)
+105
+(eval ())
+(push a1)
+(mov '3 a4)
+(jmp list)
+104
+(eval ())
+(adjstk '3)
+(return)
+))
+(#:messages:put-message '|0| 'french '"plusieurs analyses dans une me^me session peuvent engendrer des re'sultats faux" 'defmessage)
+(#:messages:put-message '|0| 'english '"more than one analysis in a session may give incorrect results" 'defmessage)
+'|0|
+(#:messages:put-message '|1| 'french '"fonction inconnue : je ne la trouve nulle part" 'defmessage)
+(#:messages:put-message '|1| 'english '"unknown function: I can't find it anywhere" 'defmessage)
+'|1|
+(#:messages:put-message '|2| 'french '"abbre'viation inconnue : je ne la trouve nulle part" 'defmessage)
+(#:messages:put-message '|2| 'english '"unknown abbrev: I can't find it anywhere" 'defmessage)
+'|2|
+(#:messages:put-message '|3| 'french '"sharp-macro inconnue : je ne la trouve nulle part" 'defmessage)
+(#:messages:put-message '|3| 'english '"unknown sharp macro: I can't find it anywhere" 'defmessage)
+'|3|
+(#:messages:put-message '|4| 'french '"je ne trouve pas la structure parent ~A pour" 'defmessage)
+(#:messages:put-message '|4| 'english '"parent structure package ~A not found for" 'defmessage)
+'|4|
+(#:messages:put-message '|5| 'french '"fonction(s) inconnue(s) et exporte'e(s) par l'utilisateur" 'defmessage)
+(#:messages:put-message '|5| 'english '"unknown exported user function(s)" 'defmessage)
+'|5|
+(#:messages:put-message '|6| 'french '"je ne trouve pas la structure ~A, pendant l'exe'cution de" 'defmessage)
+(#:messages:put-message '|6| 'english '"structure ~A not found when running" 'defmessage)
+'|6|
+(#:messages:put-message '|9| 'french '"le me^me nom de module : ~A, apparai^t dans plusieurs re'pertoires du projet" 'defmessage)
+(#:messages:put-message '|9| 'english '"the module ~A appears in several project directories" 'defmessage)
+'|9|
+(#:messages:put-message '|10| 'french '"les projets ~A et ~A utilisent le me^me nom de module" 'defmessage)
+(#:messages:put-message '|10| 'english '"the projects ~A and ~A share a module name" 'defmessage)
+'|10|
+(#:messages:put-message '|11| 'french '"la fonction ~A doit e^tre de'finie dans un EVAL-WHEN(COMPILE) dans le module" 'defmessage)
+(#:messages:put-message '|11| 'english '"function ~A must be defined inside an EVAL-WHEN(COMPILE) in module" 'defmessage)
+'|11|
+(#:messages:put-message '|12| 'french '"l'abbre'viation ~A doit e^tre de'finie dans un EVAL-WHEN(COMPILE) dans le module" 'defmessage)
+(#:messages:put-message '|12| 'english '"abbreviation ~A must be defined inside an EVAL-WHEN(COMPILE) in module" 'defmessage)
+'|12|
+(#:messages:put-message '|13| 'french '"sharp-macro ~A doit e^tre de'finie dans un EVAL-WHEN(COMPILE) dans le module" 'defmessage)
+(#:messages:put-message '|13| 'english '"sharp macro ~A must be defined inside an EVAL-WHEN(COMPILE) in module" 'defmessage)
+'|13|
+(#:messages:put-message '|14| 'french '"la structure ~A doit e^tre de'finie dans un EVAL-WHEN(COMPILE) dans le module" 'defmessage)
+(#:messages:put-message '|14| 'english '"structure ~A must be defined inside an EVAL-WHEN(COMPILE) in module" 'defmessage)
+'|14|
+(#:messages:put-message '|15| 'french '"oupps! ce module semble avoir e'te' modifie'. Vous devez l'analyser <from scratch>" 'defmessage)
+(#:messages:put-message '|15| 'english '"this module seems have been modified; you must analyze it from scratch" 'defmessage)
+'|15|
+(#:messages:put-message '|16| 'french '"la fonction  ~A n'est pas dans un EVAL-WHEN(COMPILE), je mets ce module dans la clef INCLUDE" 'defmessage)
+(#:messages:put-message '|16| 'english '"function ~A is not in an EVAL-WHEN(COMPILE); putting module in INCLUDE key" 'defmessage)
+'|16|
+(#:messages:put-message '|17| 'french '"l'abre'viation ~A n'est pas dans un EVAL-WHEN(COMPILE), je mets ce module dans la clef INCLUDE" 'defmessage)
+(#:messages:put-message '|17| 'english '"abbrev ~A is not in an EVAL-WHEN(COMPILE); putting module in INCLUDE key" 'defmessage)
+'|17|
+(#:messages:put-message '|18| 'french '"sharp-macro ~A n'est pas dans un EVAL-WHEN(COMPILE), je mets ce module dans la clef INCLUDE" 'defmessage)
+(#:messages:put-message '|18| 'english '"sharp macro ~A is not in an EVAL-WHEN(COMPILE); putting module in INCLUDE key" 'defmessage)
+'|18|
+(#:messages:put-message '|19| 'french '"la structure ~A n'est pas dans un EVAL-WHEN(COMPILE), je mets ce module dans la clef INCLUDE" 'defmessage)
+(#:messages:put-message '|19| 'english '"structure ~A is not in an EVAL-WHEN(COMPILE); putting module in INCLUDE key" 'defmessage)
+'|19|
+(#:messages:put-message '|20| 'french '"erreur durant l'analyse re'cursive. Vous devez relancer l'analyse de ce module" 'defmessage)
+(#:messages:put-message '|20| 'english '"Error during recursive analysis. You must reanalyze this module" 'defmessage)
+'|20|
+(#:messages:put-message '|21| 'french '"de'pendance circulaire entre plusieurs modules. Vous devez empe^cher cela" 'defmessage)
+(#:messages:put-message '|21| 'english '"Circular dependancy between modules. Please redesign." 'defmessage)
+'|21|
+(#:messages:put-message '|22| 'french '"erreur dans ""~a"", pendant une erreur de lecture rattrape'e; analyse partielle du module" 'defmessage)
+(#:messages:put-message '|22| 'english '"error in ""~A"" during recoverable read error - only partial analysis of module" 'defmessage)
+'|22|
+(#:messages:put-message '|23| 'french '"fonction ~A : type de fonction inconnu" 'defmessage)
+(#:messages:put-message '|23| 'english '"function ~A : unknown function type" 'defmessage)
+'|23|
+(#:messages:put-message '|24| 'french '"mauvaise construction dans ~A" 'defmessage)
+(#:messages:put-message '|24| 'english '"bad construction in ~A" 'defmessage)
+'|24|
+(#:messages:put-message '|25| 'french '"plusieurs modules ~A de'finissent" 'defmessage)
+(#:messages:put-message '|25| 'english '"several modules ~A define" 'defmessage)
+'|25|
+(#:messages:put-message '|26| 'french '"module introuvable; ve'rifier l'environnement d'analyze" 'defmessage)
+(#:messages:put-message '|26| 'english '"module not found; check the analysis environment" 'defmessage)
+'|26|
+(#:messages:put-message '|27| 'french '"fichier introuvable; ve'rifier l'environnement d'analyse et la de'finition du projet" 'defmessage)
+(#:messages:put-message '|27| 'english '"file not found; check analysis environment and project definition" 'defmessage)
+'|27|
+(#:messages:put-message '|28| 'french '"le module ""~A"" utilise des de'finitions de ""~A"" non exporte'es" 'defmessage)
+(#:messages:put-message '|28| 'english '"module ""~A"" uses unexported definitions from ""~A""" 'defmessage)
+'|28|
+(#:messages:put-message '|29| 'french '"forme inconnue : je ne la trouve nulle part" 'defmessage)
+(#:messages:put-message '|29| 'english '"unknown form: I can't find it anywhere" 'defmessage)
+'|29|
+(#:messages:put-message '|31| 'french '"plusieurs modules ~A de'finissent la fonction" 'defmessage)
+(#:messages:put-message '|31| 'english '"several modules ~A define function" 'defmessage)
+'|31|
+(#:messages:put-message '|32| 'french '"plusieurs modules ~A de'finissent l'abbre'viation" 'defmessage)
+(#:messages:put-message '|32| 'english '"several modules ~A define abbrev" 'defmessage)
+'|32|
+(#:messages:put-message '|33| 'french '"plusieurs modules ~A de'finissent la sharp-macro" 'defmessage)
+(#:messages:put-message '|33| 'english '"several modules ~A define sharp macro" 'defmessage)
+'|33|
+(#:messages:put-message '|34| 'french '"plusieurs modules ~A de'finissent la structure" 'defmessage)
+(#:messages:put-message '|34| 'english '"several modules ~A define structure" 'defmessage)
+'|34|
+(#:messages:put-message '|35| 'french '"~A sont des fichiers de module qui ne sont pas charge's (via INCLUDE) dans l'environnement (voir doc.) ; module concerne'" 'defmessage)
+(#:messages:put-message '|35| 'english '"~A are module files and are not INCLUDed in environment (see doc.); module" 'defmessage)
+'|35|
+(#:messages:put-message '|36| 'french '"champs FILES vide pour le module" 'defmessage)
+(#:messages:put-message '|36| 'english '"empty FILES field inside module" 'defmessage)
+'|36|
+(#:messages:put-message 'unrecoverable 'french '"erreur irrattrapable; on saute l'expression" 'defmessage)
+(#:messages:put-message 'unrecoverable 'english '"unrecoverable error; skipping expression" 'defmessage)
+'unrecoverable
+(#:messages:put-message 'requiredmodules 'french '"le(s) module(s) ~A de'ja` importe' est pris pour de'finir" 'defmessage)
+(#:messages:put-message 'requiredmodules 'english '"already imported modules ~A are taken to define" 'defmessage)
+'requiredmodules
+(#:messages:put-message 'includedfile 'french '"le(s) fichier(s) impose's sous la clef INCLUDE ~A, sont charge's pour de'finir" 'defmessage)
+(#:messages:put-message 'includedfile 'english '"user INCLUDED file(s) ~A, are loaded to define" 'defmessage)
+'includedfile
+(#:messages:put-message 'foundinternalfunction 'french '"la fonction ~A est de'finie (mais pas exporte'e) dans le module (qui est donc importe')" 'defmessage)
+(#:messages:put-message 'foundinternalfunction 'english '"function ~A is defined but not exported in the imported module" 'defmessage)
+'foundinternalfunction
+(#:messages:put-message 'foundfunction 'french '"la fonction ~A est exporte'e par le module (qui est donc importe')" 'defmessage)
+(#:messages:put-message 'foundfunction 'english '"function ~A is exported by the imported module" 'defmessage)
+'foundfunction
+(#:messages:put-message 'foundstruct 'french '"la structure ~A, est exporte'e par le module (qui est donc importe')" 'defmessage)
+(#:messages:put-message 'foundstruct 'english '"structure ~A is exported by imported module" 'defmessage)
+'foundstruct
+(#:messages:put-message 'foundparentstruct 'french '"la structure ~A, parent de ~A, est exporte'e par le module (qui est donc importe')" 'defmessage)
+(#:messages:put-message 'foundparentstruct 'english '"structure package ~A, the superclass of ~A, is exported by imported module" 'defmessage)
+'foundparentstruct
+(#:messages:put-message 'foundabbrev 'french '"l'abre'viation ~A est de'finie dans le module (qui est donc importe')" 'defmessage)
+(#:messages:put-message 'foundabbrev 'english '"abbreviation ~A is defined in imported module" 'defmessage)
+'foundabbrev
+(#:messages:put-message 'foundsharp 'french '"la sharp-macro ~A est de'finie dans le module (qui est donc importe')" 'defmessage)
+(#:messages:put-message 'foundsharp 'english '"sharp macro ~A is defined in imported module" 'defmessage)
+'foundsharp
+(#:messages:put-message 'updateanalyze 'french '"mise a` jour de l'analyse du module ~A, en exportant en plus" 'defmessage)
+(#:messages:put-message 'updateanalyze 'english '"updating module analysis for ~A adding exports" 'defmessage)
+'updateanalyze
+(#:messages:put-message 'updatemodule 'french '"mise a` jour du fichier descripteur de module" 'defmessage)
+(#:messages:put-message 'updatemodule 'english '"updating module description file" 'defmessage)
+'updatemodule
+(#:messages:put-message 'updateref 'french '"mise a` jour du fichier des re'fe'rences" 'defmessage)
+(#:messages:put-message 'updateref 'english '"updating reference file" 'defmessage)
+'updateref
+(#:messages:put-message 'readfile 'french '"lecture de(s) fichier(s)" 'defmessage)
+(#:messages:put-message 'readfile 'english '"reading file(s)" 'defmessage)
+'readfile
+(#:messages:put-message 'readfilefailed 'french '"lecture du fichier echoue'e" 'defmessage)
+(#:messages:put-message 'readfilefailed 'english '"file read failed" 'defmessage)
+'readfilefailed
+(#:messages:put-message 'scanning 'french '"exploration des functions" 'defmessage)
+(#:messages:put-message 'scanning 'english '"scanning functions" 'defmessage)
+'scanning
+(#:messages:put-message 'scan-1 'french '"analyse de" 'defmessage)
+(#:messages:put-message 'scan-1 'english '"analysis of" 'defmessage)
+'scan-1
+(#:messages:put-message 'no-ooption 'french '"pas d'option -o pre'cise'e, l'e'criture se fera sur" 'defmessage)
+(#:messages:put-message 'no-ooption 'english '"no -o option specified; output will be" 'defmessage)
+'no-ooption
+(#:messages:put-message 'noneedwrite 'french '"inutile de re'e'crire le fichier" 'defmessage)
+(#:messages:put-message 'noneedwrite 'english '"no need to rewrite file" 'defmessage)
+'noneedwrite
+(#:messages:put-message 'loadmodule 'french '"chargement du module" 'defmessage)
+(#:messages:put-message 'loadmodule 'english '"loading module" 'defmessage)
+'loadmodule
+(#:messages:put-message 'loadfile 'french '"chargement de(s) fichier(s)" 'defmessage)
+(#:messages:put-message 'loadfile 'english '"loading file(s)" 'defmessage)
+'loadfile
+(#:messages:put-message 'done 'french '"c'est fait." 'defmessage)
+(#:messages:put-message 'done 'english '"done." 'defmessage)
+'done
+(#:messages:put-message 'loadfilefailed 'french '"chargement des fichiers echoue'" 'defmessage)
+(#:messages:put-message 'loadfilefailed 'english '"loading files failed" 'defmessage)
+'loadfilefailed
+(#:messages:put-message 'cpenv 'french '"e'valuation du champ CPENV du module" 'defmessage)
+(#:messages:put-message 'cpenv 'english '"evaluating CPENV field of module" 'defmessage)
+'cpenv
+(#:messages:put-message 'cpenvfailed 'french '"e'valuation de CPENV echoue'e" 'defmessage)
+(#:messages:put-message 'cpenvfailed 'english '"evaluating CPENV failed" 'defmessage)
+'cpenvfailed
+(#:messages:put-message 'wflag 'french '"**! Il y a eu des warnings lors de l'analyse" 'defmessage)
+(#:messages:put-message 'wflag 'english '"**! There were warnings during the analysis" 'defmessage)
+'wflag
+(#:messages:put-message 'eflag 'french '"**! Il y a eu des erreurs lors de l'analyse" 'defmessage)
+(#:messages:put-message 'eflag 'english '"**! There were errors during the analysis" 'defmessage)
+'eflag
+(#:messages:put-message 'seems 'french '"Vos ~A semblent" 'defmessage)
+(#:messages:put-message 'seems 'english '"Your ~A seems" 'defmessage)
+'seems
+(#:messages:put-message 'unknownprj 'french '"projet inconnu" 'defmessage)
+(#:messages:put-message 'unknownprj 'english '"unknown project" 'defmessage)
+'unknownprj
+(#:messages:put-message 'nolst 'french '"pas de fichier de liste de fichiers: ~A, dans le re'pertoire" 'defmessage)
+(#:messages:put-message 'nolst 'english '"No list file : ~A, in directory" 'defmessage)
+'nolst
+(loader '((end)))

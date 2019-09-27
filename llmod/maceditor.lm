@@ -1,0 +1,71 @@
+defmodule
+#:edit:editor
+files (
+maceditor
+)
+export (
+win-clear
+win-right
+win-left
+win-down
+win-up
+win-next
+win-previous
+win-cur-top
+win-ygoto
+win-xgoto
+cur-win-top
+cur-win-buttom
+cur-win-ygoto
+cur-win-xgoto
+query-readfile
+query-writefile
+query-insertfile
+query-search
+query-rsearch
+savefile
+query-goto-line
+exp-eval
+exp-eval-print
+)
+import (
+macedit
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(win-clear dmsubr ())
+(win-right dmsubr ())
+(win-left dmsubr ())
+(win-down dmsubr ())
+(win-up dmsubr ())
+(win-next dmsubr ())
+(win-previous dmsubr ())
+(win-cur-top dmsubr ())
+(win-ygoto dmsubr ())
+(win-xgoto dmsubr ())
+(cur-win-top dmsubr ())
+(cur-win-buttom dmsubr ())
+(cur-win-ygoto dmsubr ())
+(cur-win-xgoto dmsubr ())
+(query-readfile dmsubr ())
+(query-writefile dmsubr ())
+(query-insertfile dmsubr ())
+(query-search dmsubr ())
+(query-rsearch dmsubr ())
+(savefile dmsubr ())
+(query-goto-line dmsubr ())
+(exp-eval dmsubr ())
+(exp-eval-print dmsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+lledit
+macedit
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

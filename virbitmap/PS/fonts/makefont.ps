@@ -1,0 +1,132 @@
+%!PS-Adobe-2.0 epsf1.2
+%%Creator: samarcq
+%%Title: psdump.ps
+%%CreationDate: mer 20 fevr 91 18:29:25 
+%%Pages: (atend)
+%%DocumentFonts:  Helvetica-Bold Helvetica Courier Courier-Bold
+%%BoundingBox: 0 0 0 0
+%%EndComments
+
+
+/extcode [/space /exclamdown /cent /sterling /currency /yen /bar /section
+          /dieresis /copyright /ordfeminine /guillemotleft 
+          /logicalnot /minus /registered /macron /ring /plusminus
+          /ring /ring /acute /mu /paragraph /periodcentered
+          /cedilla /ring /ordmasculine /guillemotright /fraction /fraction
+          /fraction /questiondown 
+          /Agrave /Aacute /Acircumflex
+          /Atilde /Adieresis /Aring /AE /Ccedilla /Egrave 
+          /Eacute /Ecircumflex /Edieresis /Igrave /Iacute
+          /Icircumflex /Idieresis /D /Ntilde /Ograve /Oacute
+          /Ocircumflex /Otilde /Odieresis /multiply /Oslash
+          /Ugrave /Uacute /Ucircumflex /Udieresis /Y /p
+          /germandbls
+          /agrave /aacute /acircumflex
+          /atilde /adieresis /aring /ae /ccedilla /egrave 
+          /eacute /ecircumflex /edieresis /igrave /iacute
+          /icircumflex /idieresis /d /ntilde /ograve /oacute
+          /ocircumflex /otilde /odieresis /divide /oslash
+          /ugrave /uacute /ucircumflex /udieresis /y /p
+          /ydieresis
+         ] def
+
+/resetextend 
+    {dup findfont dup length dict /newdict exch def
+        {1 index /FID ne
+        {newdict 3 1 roll put}
+        {pop pop}
+       ifelse
+     } forall
+     newdict /Encoding newdict /Encoding get 
+     dup length array copy put
+     newdict /Encoding get 160 extcode putinterval
+     newdict definefont pop}
+def
+
+/buf ( ) def
+
+/writefile {output exch (                 ) cvs writestring} def
+/delta 0 def
+/fact 1000 def
+/tcaf 1000 fact div def
+/makelfm
+  {/delta exch def /output exch (w) file def
+   dup resetextend
+   findfont fact scalefont setfont   
+
+   newpath 0 0 moveto 
+   (j) true charpath flattenpath pathbbox pop pop exch pop 
+   tcaf mul neg ceiling cvi delta sub writefile
+   (\n) writefile
+
+   newpath
+   0 0 moveto
+   (\() writefile
+   buf stringwidth pop tcaf mul round cvi writefile
+   ( . 0\)\n) writefile
+
+   33 1 255
+   {buf 0 3 2 roll put
+   newpath
+   0 0 moveto
+   buf true charpath flattenpath pathbbox 
+   tcaf mul round cvi /n4 exch def 
+   tcaf mul round cvi /n3 exch def 
+   tcaf mul round cvi /n2 exch def 
+   tcaf mul round cvi /n1 exch def
+   (\() writefile
+   buf stringwidth pop tcaf mul round cvi writefile
+   ( . ) writefile
+   n1 delta add writefile (\) ) writefile
+   (\n) writefile}
+   for
+
+   output closefile
+  } def
+
+
+%/Helvetica (helv.lfm) 0 makelfm
+%/Helvetica-Bold (helvbold.lfm) 0 makelfm
+%/Helvetica-Oblique (helvobli.lfm) 0 makelfm
+%/Helvetica-BoldOblique (helvboob.lfm) 0 makelfm
+
+%/Courier (cour.lfm) -20 makelfm
+%/Courier-Bold (courbold.lfm) -50 makelfm
+%/Courier-Oblique (courobli.lfm) -20 makelfm
+%/Courier-BoldOblique (courboob.lfm) -50 makelfm
+
+%/Times-Roman (timeroma.lfm) 0 makelfm
+%/Times-Bold (timebold.lfm) 0 makelfm
+%/Times-Italic (timeital.lfm) 0 makelfm
+%/Times-BoldItalic (timeboit.lfm) 0 makelfm
+
+%/AvantGarde-Book (avanbook.lfm) 0 makelfm
+%/AvantGarde-Demi (avandemi.lfm) 0 makelfm
+%/AvantGarde-BookOblique (avanboob.lfm) 0 makelfm
+%/AvantGarde-DemiOblique (avandeob.lfm) 0 makelfm
+
+%/Bookman-Light (booklight.lfm) 0 makelfm
+%/Bookman-Demi (bookdemi.lfm) 0 makelfm
+%/Bookman-LightItalic (bookliit.lfm) 0 makelfm
+%/Bookman-DemiItalic (bookdeit.lfm) 0 makelfm
+
+%/Helvetica-Narrow (hena.lfm) 0 makelfm
+%/Helvetica-Narrow-Bold (henabold.lfm) 0 makelfm
+%/Helvetica-Narrow-Oblique (henaobli.lfm) 0 makelfm
+%/Helvetica-Narrow-BoldOblique (henaboob.lfm) 0 makelfm
+
+%/Palatino-Roman (palaroma.lfm) 0 makelfm
+%/Palatino-Bold (palabold.lfm) 0 makelfm
+%/Palatino-Italic (palaital.lfm) 0 makelfm
+%/Palatino-BoldItalic (palaboit.lfm) 0 makelfm
+
+%/extcode [] def
+%/Symbol (symb.lfm) 0 makelfm
+
+%%Trailer
+initgraphics
+%%Pages: 1
+
+
+
+

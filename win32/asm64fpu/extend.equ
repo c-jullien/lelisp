@@ -1,0 +1,16 @@
+	extrn	inisymb:near
+	extrn	inicst:near
+	extrn	errfs:near
+	extrn	gccons:near
+	extrn	gcfloat:near
+	extrn	gcnumb:near
+	extrn	probj:near
+	extrn	probjt:near
+	extrn	errnia:near
+	extrn	errnla:near
+	extrn	errnva:near
+	extrn	errwna:near
+	extrn	evalcar:near
+	extrn	apply:near
+	extrn	loc:near
+	public	ini_ext

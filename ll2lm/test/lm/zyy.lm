@@ -1,0 +1,19 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule zyy
+
+files (
+|zyy.ll|
+)
+
+import ()
+
+export (
+
+; ;;; Exports required by other modules
+mydef
+)
+
+cpenv (
+((setq u-zyy1 33)
+))

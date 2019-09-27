@@ -1,0 +1,1659 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "16/19" "string.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 16 "Les fonctions sur les chai^nes de caracte`res"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/string.llm3,v 1.2 2016/05/21 09:16:58 jullien Exp $
+
+          TITLE     STRING              ; LLM3 : les  chaines.
+
+          XREFI     LLINIT,.UNDEF       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,EHEAP
+          XREFI     LLINIT,CHEAP
+          XREFI     LLINIT,FVECT
+          XREFI     LLINIT,FSTRG
+          XREFI     LLINIT,.LLSYSTEM
+          XREFP     TOPERR,ERRFS        ; 2 - TOPERR
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNAA
+          XREFP     TOPERR,ERRSYM
+          XREFP     TOPERR,ERRVEC
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRFH
+          XREFP     TOPERR,ERRNSA
+          XREFP     TOPERR,ERRSTL
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     GC,GCSTRG
+          XREFP     GC,GCVECT
+          XREFP     GC,HGC
+          XREFP     PHYSIO,TYO          ; 4 - PHYSIO
+          XREFP     PHYSIO,TYCURSOR
+          XREFI     PHYSIO,.TYRDSPL
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFP     READ,TRYSYMP
+          XREFP     READ,TRYSYMPK
+          XREFP     READ,HASHINT
+          XREFI     READ,CPKGC
+
+          XREFI     PRINT,BUFPN         ; 7 - PRINT
+          XREFI     PRINT,OBASE
+          XREFP     EVAL,FFUNCALL       ; 8 - EVAL
+          XREFI     EVAL,SAVEA1
+          XREFI     EVAL,SAVEA2
+          XREFI     EVAL,SAVEA3
+          XREFI     EVAL,SAVEA4
+          XREFP     FNTSTD,NREVERSE     ; 13 - FNTSTD
+          XREFP     FNTSTD,EQUAL
+
+          XDEFP     INI_STR
+          XDEFI     .STRING
+          XDEFI     .FFSYMBOL
+          XDEFI     .VECTOR
+          XDEFP     FFSYMBOL
+          XDEFP     STRGALLC
+          XDEFP     GETNUMI
+          XDEFP     STRGSYMB
+          XDEFP     STRINGA1
+          XDEFP     STRINGA2
+          XDEFP     EQSTRGI
+          XDEFP     MAKESTRG
+          XDEFP     MAKEVECT
+          XDEFP     EQVECTRI
+          XDEFP     RDPSCRN
+          XDEFP     FFINDEX
+          XDEFI     BUFSTRG
+;
+;         Les buffers pour manipuler les chaines
+;         ======================================
+
+          IMPURE
+
+OCHEAP    ADR       0                   ; pour l'allocateur de HEAP
+BUFSTRG   ADR       0                   ; tampon du p-name d'une string
+          PURE
+
+;
+;         Creation des symboles
+;         =====================
+;
+
+INI_STR   LABEL      
+
+          MAKFNT    STRING,#6,"string" 
+          MAKFNT    PLENGTH,#7,"plength" 
+          MAKFNT    SLENGTH,#7,"slength"
+          MAKFNT    SLEN,#4,"slen"
+          MAKFNT    SREF,#4,"sref"
+          MAKFNT    SSET,#4,"sset"
+          MAKFNT    TYPESTRG,#10,"typestring"
+          MAKFNT    EXCHSTRG,#10,"exchstring"
+          MAKFNT    CATEN,#8,"catenate" 
+          MAKFNT    EQSTRING,#8,"eqstring" 
+          MAKFNT    SUBSEQUAL,#15,"substring-equal"
+          MAKFNT    SUBSTRING,#9,"substring" 
+          MAKFNT    MAKESTRG,#10,"makestring" 
+          MAKFNT    DUPLSTRG,#10,"duplstring" 
+          MAKFNT    BLTSTRG,#9,"bltstring" 
+          MAKFNT    FILLSTRG,#10,"fillstring" 
+          MAKFNT    SCANSTRG,#10,"scanstring" 
+          MAKFNT    SPANSTRG,#10,"spanstring" 
+
+          MAKFNT    CHRPOS,#6,"chrpos" 
+          MAKFNT    CHRNTH,#6,"chrnth" 
+          MAKFNT    CHRSET,#6,"chrset" 
+          MAKFNT    FFINDEX,#5,"index" 
+
+          MAKFNT    HASH,#4,"hash" 
+          MAKFNT    FFSYMBOL,#6,"symbol" 
+          MAKFNT    FPNAM,#5,"pname" 
+          MAKFNT    CONCAT,#6,"concat" 
+          MAKFNT    GENSYM,#6,"gensym" 
+          MAKFNT    ALPHALES,#10,"alphalessp" 
+
+          MAKFNT    BLTSCRN,#9,"bltscreen"
+
+          MAKFNT    TYPEVECT,#10,"typevector"
+          MAKFNT    EXCHVECT,#10,"exchvector"
+          MAKFNT    MAKEVECT,#10,"makevector" 
+          MAKFNT    VLENGTH,#7,"vlength" 
+          MAKFNT    EQVECTOR,#8,"eqvector"
+          MAKFNT    VREF,#4,"vref" 
+          MAKFNT    VSET,#4,"vset" 
+          MAKFNT    BLTVECT,#9,"bltvector" 
+          MAKFNT    VECTOR,#6,"vector" 
+          MAKFNT    FILLVECT,#10,"fillvector" 
+
+          MAKCST    GENSTRG,#13,"gensym-string"
+          MOV       .LLSYSTEM,PKGC(A1)  ; en fait #:system:gensym-string
+          PUSH      A1                  ; on sauve ce symbole
+          MOV       #1,A1               ; une fois
+          MOV       #/g,A2              ; "g"
+          CALL      MAKESTRG            ; on fabrique une chaine
+          POP       A3                  ; le symbole
+          MOV       A1,CVAL(A3)         ; on le met dans la CVAL
+          MAKCST    GENSCPT,#14,"gensym-counter"
+          MOV       .LLSYSTEM,PKGC(A1)  ; en fait #:system:gensym-counter
+          MOV       #100,CVAL(A1)       ; compteur de GENSYM
+          MOV       #1024,A1
+          MOV       #0,A2
+          JCALL     MAKESTRG
+          MOV       A1,BUFSTRG
+
+          RETURN
+
+;
+;         STRGALLC : alloue une chaine de n caracteres
+;         ============================================
+;
+;         A2 <- la taille (non modifie'e)
+;         retourne dans A1 l'adresse de la chaine.
+;
+STRGALLC  LABEL      
+          CNBGE     A2,#0,STRGALL0      ; "" ?
+          MOV       #0,A2               ;  <0 => =0
+STRGALL0  MOV       FSTRG,A1            ; la free liste des chai^nes
+          BTNIL     A1,STRGALL3         ; vide?
+          MOV       CHEAP,OCHEAP        ; on sauvegarde
+          NXHB      A2,CHEAP            ; CHEAP est mis a` jour!
+          CHBLT     EHEAP,CHEAP,STRGALL4; plus de place
+STRGALL2  MOV       VAL(A1),FSTRG       ; mise a jour du prochain FSTRG
+          MOV       OCHEAP,VAL(A1)      ; le pointeur a` jour
+          HSSIZE    A2,%OCHEAP          ; on enregistre la taille
+          HSOBJ     A1,%OCHEAP          ; et le pointeur arrie`re
+          HBMOVX    #0,A1,A2            ; pour ce perdant d'U*NIX! ?!?!
+          MOV       .STRING,TYP(A1)     ; par de'faut.
+          RETURN
+STRGALL3  JCALL     GCSTRG              ; plus de place en STRING.
+          BRA       STRGALLC
+STRGALL4  LABEL                         ; plus de place en HEAP.
+          MOVNIL    A1
+          MOV       OCHEAP,CHEAP
+          JCALL     HGC
+          MOV       FSTRG,A1
+          MOV       CHEAP,OCHEAP
+          NXHB      A2,CHEAP
+          CHBLT     CHEAP,EHEAP,STRGALL2; tout est OK
+          MOV       OCHEAP,CHEAP
+          MOVNIL    A1                  ; pour etre propre
+          JMP       ERRFH               ; erreur fatale HEAP plein!
+
+;
+;         routine interne qui recupere le PNAME d'un entier
+;         entree : A1 <- l'entier
+;                  A2 <- indice du 1er caractere a charger
+;                  A3 <- l'adresse de la chaine de rangement
+;         sortie : A2 <- le nombre de caracteres charges + indice initial
+;         A4 est utilise
+
+GETNUMI   LABEL
+          CNBEQ      A1,#MINUS0,GETMIN  ; c'est pas 32768, par hasard ???
+          CNBGE      A1,#0,GETPOS       ; C'est positif
+          MOV        #/-,A4             ; signe -
+          CALL       GETNUMCH
+          NEGATE     A1                 ; rend le nombre positif
+GETPOS    MOV        A1,A4
+          REM        OBASE,A4           ; A4 <- le chiffre suivant
+          PLUS       #/0,A4             ; en fait un caracte`re
+          CNBLE      A4,#/9,GETPOS2     ; le chiffre est > "9"
+          PLUS       #7,A4              ; en fait une lettre
+GETPOS2   QUO        OBASE,A1           ; met A1 a` jour
+          CNBEQ      A1,#0,GETNUMCH     ; on stoppe la recursion
+          PUSH       A4                 ; sauve le caractere.
+          CALL       GETPOS             ; et oui c'est re'cursif!
+          POP        A4                 ; pop le caracte`re
+          BRA        GETNUMCH           ; un call terminal!
+GETMIN    LABEL                         ; Tout ca pour aficher #$8000
+          MOV        #/#,A4             ; signe #
+          CALL       GETNUMCH           ; #
+          MOV        #/$,A4             ; signe $
+          CALL       GETNUMCH           ; #$
+          MOV        #/8,A4             ; signe 8
+          CALL       GETNUMCH           ; #$8
+          MOV        #/0,A4             ; signe 0
+          CALL       GETNUMCH           ; #$80
+          CALL       GETNUMCH           ; #$800 et un call terminal!
+GETNUMCH  LABEL
+          HBMOVX     A4,A3,A2           ; force le caractere
+          INCR       A2
+          RETURN
+
+;
+BADSTR2   MOV        A2,A1
+BADSTR1   MOV        SAVEA4,A2
+          JMP        ERRNSA             ; il fallait une chaine
+;
+BADVEC2   MOV        A2,A1
+BADVEC1   MOV        SAVEA4,A2
+          JMP        ERRVEC             ; il fallait un vecteur
+
+; Pas le bon nombre d'arguments
+BADNBAR5  LABEL
+          MOV       #5,A1
+          BRA       BADNBA31
+BADNBAR3  LABEL
+          MOV       #3,A1               ; le bon nb
+BADNBA31  MOV       SAVEA4,A2
+          JMP       ERRWNA
+BADNBAR4  LABEL
+          MOV       #4,A1
+          BRA       BADNBA31
+
+;         hors valeur
+BADOOB1   LABEL
+          MOV       SAVEA4,A2
+          JMP       ERROOB
+
+;  ----------------------------------------
+; utilitaires pour les messages d'erreur 
+; sur arguments index.
+;  ----------------------------------------
+;
+; pour afficher l'erreur et son origine
+;
+BADFIX2   MOV       A2,A1               ; l'argument qui n'est pas un nombre
+BADFIX1   MOV       SAVEA4,A2           ; le nom de la fonction
+          JMP       ERRNIA              ; il faut un nb entier.
+BADFIX3   MOV       A3,A1               ; l'argument qui n'est pas un nombre
+          BRA       BADFIX1          
+BADFIX4   MOV       A4,A1               ; l'argument qui n'est pas un nombre
+          BRA       BADFIX1          
+
+BADIND2   MOV       A2,A1               ; l'argument qui est hors limites
+BADIND1   MOV       SAVEA4,A2           ; le nom de la fonction
+          JMP       ERROOB              ; il faut un nb. positif
+BADIND3   MOV       A3,A1               ; l'argument qui est hors limites
+          BRA       BADIND1          
+BADIND4   MOV       A4,A1               ; l'argument qui est hors limites
+          BRA       BADIND1          
+
+
+;         Utilitaires permettant de calculer des MIN pour une plus
+;         grande concision et lisibilite du code
+;         Le jour ou on aura des macros LLM3, il faudra passer ca en MACRO.
+
+;         A2 <- min (A1, A2)
+MINA1A2   CNBGT     A2,A1,MINA1A2X
+          RETURN
+MINA1A2X  MOV       A1,A2
+          RETURN
+;         A3 <- min (A1, A3)
+MINA1A3   CNBGT     A3,A1,MINA1A3X
+          RETURN
+MINA1A3X  MOV       A1,A3
+          RETURN
+
+;         A4 <- min (A1, A4)
+MINA1A4   CNBGT     A4,A1,MINA1A4X
+          RETURN
+MINA1A4X  MOV       A1,A4
+          RETURN
+
+;         A1 <- min (A3, A1)
+MINA3A1   CNBGT     A1,A3,MINA3A1X
+          RETURN
+MINA3A1X  MOV       A3,A1
+          RETURN
+
+;         A4 <- min (A3, A4)
+MINA3A4   CNBGT     A4,A3,MINA3A4X
+          RETURN
+MINA3A4X  MOV       A3,A4
+          RETURN
+
+;         A1 <- min (A4, A1)
+MINA4A1   CNBGT     A1,A4,MINA4A1X
+          RETURN
+MINA4A1X  MOV       A4,A1
+          RETURN
+
+;         A3 <- min (A4, A3)
+MINA4A3   CNBGT     A3,A4,MINA4A3X
+          RETURN
+MINA4A3X  MOV       A4,A3
+          RETURN
+
+
+;         retourne toujours ()
+STRFALSE  MOVNIL    A1
+          RETURN
+
+;============================================================
+;
+;         Les fonctions sur chaine de caracteres
+;
+;============================================================
+;
+;         Toutes les fonctions chaines utilisent la fonction de coercition
+;                 STRING .
+;
+;         En fait, on utilise STRINGA1 (resp STRINGA2,STRINGA3) qui coerce A1
+;         (resp A2,A3) sans modifier d'autre registre.
+;         Le registre SAVEA4 contient le nom de la fonction appelante
+;         pour le cas ou une erreur se produirait.
+
+;         STRING n'alloue une chai^ne que dans les cas flottant, entier,
+;         et liste de caracte`res ascii. Dans ces trois cas, elle fait appel
+;         a la fonction GETNUMI, un lui donnant provisoirement le buffer
+;         BUFSTRG, et en recopiant dans une chaine fraichement allouee
+;         la chaine obtenue.
+
+;         (STRING s)   [SUBR 1]   fonction de coertion
+;
+;         Provoque l'erreur ERRNSA si la conversion n'est pas possible
+;         Provile'gie les symboles.
+;  ----------------------------------------
+          FENTRY    STRING,SUBR1
+;  ----------------------------------------
+          BTSTRG    A1,STRINGR          ; le cas trivial.
+          BFSYMB    A1,STRINGC          ; les cas les - fre'quents
+          MOV       ALINK(A1),A2
+          BTSTRG    A2,STRINGR2         ; c'est bien une chaine
+          MOV       PNAME(A1),A2        ; le PNAME du symbole
+          BTSTRG    A2,STRINGR2         ; pas de lien 3D
+          MOV       ALINK(A2),A2        ; le vrai PNAME
+STRINGR2  MOV       A2,A1
+STRINGR   RETURN
+STRINGC   MOV       .STRING,SAVEA4      ; l'appelant
+          BRA       STRGREST		; vers les cas complexes.
+
+STRINGA1  LABEL      
+          BFSTRG    A1,STRGREST         ; chaine ?
+          RETURN
+STRGSYMB  PUSH      A2
+          MOV       ALINK(A1),A2
+          BTSTRG    A2,STRGSYRE         ; c'est bien une chaine
+          MOV       PNAME(A1),A2        ; le PNAME du symbole
+          BTSTRG    A2,STRGSYRE         ; pas de lien 3D
+          MOV       ALINK(A2),A2        ; le vrai PNAME
+STRGSYRE  MOV       A2,A1
+          POP       A2
+          RETURN                        ; c'est fini
+
+STRGREST  LABEL  
+          BTSYMB    A1,STRGSYMB         ; symbole ?
+          BTVECT    A1,BADSTR1          ; pas un vecteur!
+;         A partir d'ici, on a besoin d'un buffer pour proceder en 2 temps
+          PUSH      A2                  ; sauvegarde des registres
+          PUSH      A3                  ; idem
+          MOV       BUFSTRG,A3            ; la chaine de travail
+;         c'est un flottant
+          BFFLOAT   A1,STRGNF           ; flottant ?
+          CVFTOA    A1,A3,A2            ; A2 <- le nb de caracteres
+          BRA       STRGFOL             ; la suite
+STRGNF    MOV       #0,A2               ; la taille a incrementer
+          PUSH      A4                  ; variable de travail
+          BFFIX     A1,STRGNN           ; pas nombre ?
+          CALL      GETNUMI             ; A2 <- le nb de caracteres
+          BRA       STRGFOL4            ; la suite
+STRGNN    BTNIL     A1,STRGFOL4         ; fin de la liste
+          BFCONS    A1,BADSTR1          ; pas un vrai pname
+          MOV       CAR(A1),A4          ; le caractere suivant
+          BFFIX     A4,BADSTR1          ; il faut vraiment un nb.
+          CALL      GETNUMCH            ; on le copie dans BUFSTRG
+          CNBGE     A2,#1024,BADSTR1     ; pas plus de 1024 caracteres.
+          MOV       CDR(A1),A1          ; suite de la liste
+          BRA       STRGNN
+STRGFOL4  POP       A4                  ; on restaure A4
+STRGFOL   LABEL
+          CALL      STRGALLC            ; A1 <- une nouvelle chaine
+          HBMOVM    A2,A3,#0,A1,#0      ; recopie du nombre
+          POP       A3                  ; on restaure les registres
+          POP       A2
+          RETURN
+
+
+;         L'autre fameuse STRINGA2. Il y a une legere duplication de code
+;         avec STRINGA1 pour etre efficace.
+;
+STRINGA2  LABEL      
+          BFSTRG    A2,STRA2C           ; chaine ?
+          RETURN
+STRA2C    PUSH      A1                  ; sauvegarde de A1 en plus
+          MOV       A2,A1               ; pour STRGREST
+          CALL      STRGREST            ; on y va
+          MOV       A1,A2               ; resultat dans A2
+          POP       A1                  ; on restaure
+          RETURN                        ; c'est fini
+;
+STRINGA3  LABEL      
+          BFSTRG    A3,STRA3C           ; chaine ?
+          RETURN
+STRA3C    PUSH      A1                  ; sauvegarde de A1 en plus
+          MOV       A3,A1               ; pour STRGREST
+          CALL      STRGREST            ; on y va
+          MOV       A1,A3               ; resultat dans A3
+          POP       A1                  ; on restaure
+          RETURN                        ; c'est fini
+
+;         (PLENGTH str) ramene le nombre de caracteres
+;         du P-NAME de l'atome at qui peut etre :
+;         un symbole, un nombre, une chaine ou une liste de codes ascii.
+;         On ne compte ni les guillemets, ni les barres
+;         de valeur absolue.
+;         On effectue toujours la coercition en chai^ne.
+;
+;  ----------------------------------------
+          FENTRY    PLENGTH,SUBR1
+;  ----------------------------------------
+          MOV       .PLENGTH,SAVEA4     ; le nom de l'appelant
+          CALL      STRINGA1            ; on coerce
+          HGSIZE    A1,A1               ; valeur de retour
+          RETURN
+
+; ----------------------------------------
+          FENTRY    SLENGTH,SUBR1
+; ----------------------------------------
+          MOV       .SLENGTH,SAVEA4     ; le nom de l'appelant
+          CALL      STRINGA1            ; on coerce
+          HGSIZE    A1,A1               ; valeur de retour
+          RETURN
+
+; ----------------------------------------
+          FENTRY    SLEN,SUBR1
+; ----------------------------------------
+          MOV       .SLEN,SAVEA4        ; le nom de l'appelant
+          BFSTRG    A1,BADSTR1          ; tuant ici.
+          HGSIZE    A1,A1               ; valeur de retour
+          RETURN
+
+;
+;         (CATENATE str1 ... strN)   [SUBR N]
+;
+;         on coerce systematiquement les arguments en chai^ne
+;
+;  ----------------------------------------
+          FENTRY    CATEN,SUBRN
+;  ----------------------------------------
+          MOV       .CATEN,SAVEA4
+;
+;         On peut arriver a CATEN0 en venant de CATEN ou de CONCAT.
+;         On stocke donc dans SAVEA4 l'adresse de depart, c'est a dire
+;         .CATEN ou .CONCAT
+;         CONCAT utilise le fait que CATEN0 n'utilise pas SAVEA2
+;
+CATEN0    LABEL                         ; le point d'entree de CONCAT 
+;         il y a au moins un argument
+          MOV       A4,A3               ; on sauve le nombre d'arguments
+          MOV       #0,A2               ; on s'appre`te a` ajouter les length
+          BRA       CATEN2              ; la boucle generale
+;         boucle de calcul des longueurs et coercition
+CATEN1    XSPMOV    A4,A1               ; A1 <- A4 e`me argument
+          CALL      STRINGA1            ; on la coerce
+          MOVXSP    A1,A4               ; on la remet
+          HGSIZE    A1,A1               ; A1 <- longueur
+          PLUS      A1,A2,CATENSTL      ; on ajoute
+CATEN2    LABEL
+          SOBGEZ    A4,CATEN1           ; il y en a encore ?
+          PUSH      A3                  ; on sauve le nb d'arguments
+;         fin de la premie`re passe: on alloue
+          CALL      STRGALLC            ; A1 <- chai^ne cre'e'e
+          POP       A4                  ; A4 <- nb d'arguments
+          BRA       CATEN4              ; l'entree de la boucle
+;         boucle de recopie
+CATEN3    POP       A3                  ; A3 <- objet a` recopier
+          HGSIZE    A3,SAVEA1           ; SAVEA1 <- la taille de la chai^ne
+          DIFF      SAVEA1,A2           ; A2 <- position de recopie
+          HBMOVM    SAVEA1,A3,#0,A1,A2  ; on recopie
+CATEN4    SOBGEZ    A4,CATEN3           ; on boucle
+          RETURN
+
+CATENSTL  MOV       #MAXFIX,A1          ; la taille max
+          MOV       .CATEN,A2
+          JMP       ERRSTL
+
+;
+;        (SUBSTRING-EQUAL size string1 pos1 string2 pos2)
+;
+;  ----------------------------------------
+          FENTRY    SUBSEQUAL,SUBRN
+;  ----------------------------------------
+          MOV       .SUBSEQUAL,SAVEA4   ; la fonction appelante.
+          CNBNE     A4,#5,BADNBAR5      ; il faut 5 args.
+          MOV       &3,A1               ; strg1
+          BFSTRG    A1,BADSTR1
+          MOV       &1,A2               ; strg2
+          BFSTRG    A2,BADSTR2
+          MOV       &2,A3               ; pos1
+          BFFIX     A3,BADFIX3
+          CNBLT     A3,#0,BADIND3
+          MOV       &0,A4               ; pos2
+          BFFIX     A4,BADFIX4
+          CNBLT     A4,#0,BADIND4
+          MOV       A1,SAVEA1           ; he'las je n'ai plus de regitres
+          MOV       A2,SAVEA2
+          MOV       &4,A1               ; size
+          BFFIX     A1,BADFIX1
+          CNBLT     A1,#0,BADIND1
+          MOV       A1,A2
+          PLUS      A3,A2
+          HGSIZE    SAVEA1,SAVEA3
+          CNBGT     A2,SAVEA3,BADIND1
+          MOV       A1,A2
+          PLUS      A4,A2
+          HGSIZE    SAVEA2,SAVEA3
+          CNBGT     A2,SAVEA3,BADIND1
+          ADJSTK    #5
+          HBTEQ     A1,SAVEA1,A3,SAVEA2,A4,SUBSEQR
+          MOVNIL    A1
+SUBSEQR   RETURN
+
+;
+;         (EQSTRING str1 str2)   SUBR2
+;
+;
+;  ----------------------------------------
+          FENTRY    EQSTRING,SUBR2
+;  ----------------------------------------
+          MOV       .EQSTRING,SAVEA4    ; l'argument d'appel
+          CALL      STRINGA1            ; coerce le 1e arg
+          CALL      STRINGA2            ; coerce le 2eme arg
+EQSTRGI   LABEL                         ; entre'e rapide.
+          CABEQ     A1,A2,SRET          ; la meme ?
+          HGSIZE    A1,A3               ; A3 <- longueur du 1er
+          HGSIZE    A2,A4               ; A4 <- longueur du 2eme
+          CNBNE     A3,A4,SFALSE        ; me^me longueur?
+          MOV       TYP(A1),A4          ; type de la premie`re chai^ne
+          BFSYMB    A4,EQSTRG2          ; cas complexe
+          CABNE     A4,TYP(A2),SFALSE   ;  le me^me type ?
+;         2 chai^nes de me^me longueur et de me^me type.
+          HBTEQ     A3,A1,#0,A2,#0,SRET ; me^me chai^ne?
+SFALSE    MOVNIL    A1                  ; les chai^nes sont diffe'rentes.
+SRET      RETURN
+EQSTRG2   PUSH      A1                  ; cas complexe : il faut appeler
+          PUSH      A2                  ; EQUAL pour tester les types
+          PUSH      A3                  ; de ces foutues chai^nes.
+          MOV       A4,A1
+          MOV       TYP(A2),A2
+          JCALL     EQUAL
+          MOV       A1,A4
+          POP       A3
+          POP       A2
+          POP       A1
+          BTNIL     A4,SFALSE2
+          HBTEQ     A3,A1,#0,A2,#0,SRET2 ; me^me chai^ne?
+SFALSE2   MOVNIL    A1                  ; les chi^nes sont diffe'rentes.
+SRET2     RETURN
+
+;
+;         (SUBSTRING str n1 [taille])
+;
+;         on coerce toujours en chaine
+;
+;  ----------------------------------------
+          FENTRY    SUBSTRING,SUBRN
+;  ----------------------------------------
+          MOV       .SUBSTRING,SAVEA4   ; l'appelant
+          MOV       #MAXFIX,A1          ; MAXINT par defaut
+          CNBEQ     A4,#2,SUBSTR1       ; 2 arguments ?
+          CNBNE     A4,#3,BADNBAR3      ; c'est tout faux
+          POP       A1                  ; le dernier arg
+          BFFIX     A1,BADFIX1          ; il faut un nb entier
+SUBSTR1   LABEL
+          POP       A4
+          BFFIX     A4,BADFIX4          ; il faut un nb pour l'indice depart
+          CNBLT     A4,#0,BADIND4       ; positif ?
+          POP       A3
+          CALL      STRINGA3            ; A3 est une chai^ne maintenant
+          HGSIZE    A3,A2               ; A2 <- longueur de la chai^ne
+          DIFF      A4,A2,SUBSTR2       ; A2 <- taille max autorisee
+SUBSTR2   CALL      MINA1A2             ; A2 <- min (A2 , A1)
+          CALL      STRGALLC            ; on alloue la chai^ne -> A1
+          HBMOVM    A2,A3,A4,A1,#0      ; on recopie
+          RETURN
+
+;
+;         (MAKESTRING times codeascii)
+;
+;         Cree une chaine de taille times initialisee avec le codeascii
+;
+;  ----------------------------------------
+          FENTRY    MAKESTRG,SUBR2
+;  ----------------------------------------
+          MOV       .MAKESTRG,SAVEA4    ; l'appelant
+          BFFIX     A1,BADFIX1          ; times est un nombre entier ?
+          CNBGE     A1,#0,MAKSTRG0      ; positif ?
+          MOV       #0,A1               ; si < 0 : = 0.          
+MAKSTRG0  BFFIX     A2,BADFIX2          ; codeascii doit etre un nb entier
+          PUSH      A2                  ; pour la boucle finale d'init
+          MOV       A1,A2               ; pour STRGALLC
+          CALL      STRGALLC            ; allocation de la chaine
+          POP       A3                  ; la valeur initiale
+          BRA       MAKSTRG2            ; et c'est parti pour l'init.
+MAKSTRG1  HBMOVX    A3,A1,A2            ; init la chaine.
+MAKSTRG2  SOBGEZ    A2,MAKSTRG1         ; pour chaque caracte`re
+          RETURN
+
+;
+;         (DUPLSTRING times string)
+;
+;         Cree une chaine de taille times*taille(string) initialisee
+;         a times fois la chaine string.
+;
+;  ----------------------------------------
+          FENTRY    DUPLSTRG,SUBR2
+;  ----------------------------------------
+          MOV       .DUPLSTRG,SAVEA4    ; l'appelant
+          BFFIX     A1,BADFIX1          ; times est un nombre ?
+          CNBLT     A1,#0,DUPSERR       ; un nombre positif de fois
+          CALL      STRINGA2            ; on coerce
+          MOV       A2,A3               ; A3 <- chaine source
+          HGSIZE    A2,A4               ; A4 <- taille source
+          MOV       A4,A2               ; A2 va valoir la nouvelle taille
+          TIMES     A1,A2,DUPSSTL       ; Test de'bordement : string too long
+          MOV       A1,SAVEA1           ; times
+          CALL      STRGALLC            ; allocation de la chaine
+          MOV       #0,A2               ; index
+          BRA       DUPSTRG2            ; en cas de compterur = 0.
+DUPSTRG1  HBMOVM    A4,A3,#0,A1,A2      ; on recopie
+          PLUS      A4,A2               ; on incremente l'index
+DUPSTRG2  SOBGEZ    SAVEA1,DUPSTRG1     ; le nb de fois.
+          RETURN
+
+DUPSERR   MOV       .DUPLSTRG,A2
+          JMP       ERROOB
+DUPSSTL   MOV       .DUPLSTRG,A2
+          JMP       ERRSTL
+
+;
+;         (BLTSTRING string1 index1 string2 [index2 [taille]])
+;         Modifie PHYSIQUEMENT la chaine1 a partir de l'index1
+;         en y substituant les caracteres de string2 (a partir de index2)
+;         et ce, sur au plus taille caracteres.
+;         La seconde chaine est coercee s'il y a lieu.
+;         On retourne la 1ere chaine.
+;
+;  ----------------------------------------
+          FENTRY    BLTSTRG,SUBRN
+;  ----------------------------------------
+          MOV       .BLTSTRG,SAVEA4     ; l'appelant
+          CNBEQ     A4,#5,BLTSTRG0      ; 5 arguments ?
+          MOV       #MAXFIX,A3          ; MAXINT par defaut
+          CNBEQ     A4,#4,BLTSTRG1      ; 4 arguments ?
+          MOV       #0,A2               ; 0 par defaut
+          CNBNE     A4,#3,BADNBAR3      ; 5 arguments maintenant?
+          BRA       BLTSTRG2
+BLTSTRG0  LABEL      
+          POP       A3                  ; la taille
+          BFFIX     A3,BADFIX3          ; on verifie que c'est un entier
+BLTSTRG1  LABEL
+          POP       A2                  ; index2
+          BFFIX     A2,BADFIX2          ; on verifie que c'est un entier
+          CNBLT     A2,#0,BADIND2       ; positif ?
+BLTSTRG2  LABEL
+          MOV       A2,SAVEA2           ; SAVEA2 <- index2
+          POP       A2                  ; chaine2
+          CALL      STRINGA2            ; on coerce
+          POP       A1                  ; A1 <- index1
+          BFFIX     A1,BADFIX1          ; on verifie que c'est un entier
+          CNBLT     A1,#0,BADIND1       ; positif
+          MOV       A1,SAVEA1           ; SAVEA1 <- index1
+          TOPST     A1                  ; A1 <- chaine1
+          BFSTRG    A1,BADSTR1          ; pas une chaine
+          HGSIZE    A1,A1               ; taille dans A1
+          DIFF      SAVEA1,A1,BLTSTR3   ; taille de recopie
+BLTSTR3   CALL      MINA1A3             ; A3 <- min (A3,A1)
+          HGSIZE    A2,A4               ; A4 <- taille(chaine2)
+          DIFF      SAVEA2,A4,BLTSTR4   ; taille de recopie
+BLTSTR4   CALL      MINA4A3             ; A3 <- min (A4,A3)
+          POP       A1                  ; A1 <- chaine1
+          CNBLE     A3,#0,BLTSTRG6      ; recopie de longueur <= 0 ?
+          HBMOVM    A3,A2,SAVEA2,A1,SAVEA1; la recopie
+BLTSTRG6  RETURN
+
+
+;
+;         (FILLSTRING string1 index1 charn [taille])
+;         Modifie PHYSIQUEMENT la chaine1 a partir de l'index1
+;         en y substituant charn et ce, sur au plus taille caracteres.
+;         On retourne la chaine.
+;
+;  ----------------------------------------
+          FENTRY    FILLSTRG,SUBRN
+;  ----------------------------------------
+          MOV       .FILLSTRG,SAVEA4    ; l'appelant
+          MOV       #MAXFIX,A1          ; MAXINT
+          CNBEQ     A4,#3,FILLSTR0      ; 4 arguments
+          CNBNE     A4,#4,BADNBAR4      ; pas 4 arguments maintenant
+          POP       A1                  ; A1 <- taille
+          BFFIX     A1,BADFIX1          ; on verifie que c'est un entier
+FILLSTR0  LABEL      
+          POP       A3                  ; A3 <- charn
+          BFFIX     A3,BADFIX3          ; on verifie que c'est un entier
+          POP       A2                  ; A2 <- index1
+          BFFIX     A2,BADFIX2          ; on verifie que c'est un entier
+          CNBLT     A2,#0,BADIND2       ; positif ?
+          MOV       A1,A4               ; A4 <- taille souhaitee
+          TOPST     A1                  ; A1 <- chaine1
+          BFSTRG    A1,BADSTR1          ; pas une chaine
+          HGSIZE    A1,A1               ; taille dans A1
+          DIFF      A2,A1,FILLSTR6      ; taille maximale possible
+FILLSTR6  CALL      MINA1A4             ; A4 <- min (A1,A4)
+          POP       A1                  ; A1 <- chaine1
+          BRA       FILLSTR8
+FILLSTR7  HBMOVX    A3,A1,A2            ; on copie
+          INCR      A2                  ; on incremente l'index
+FILLSTR8  SOBGEZ    A4,FILLSTR7         ; il en reste
+          RETURN
+
+
+;          (SCANSTRING <string1> <string2> [<index>])
+;
+;         Scanne la chaine string1 a partir de index (defaut 0)
+;         tant que l'on n'a pas trouve un caractere appartenant a string2.
+;         Retourne l'indice du premier caractere appartenent a string2
+;         ou NIL s'il n'y en a pas.
+;
+;  ----------------------------------------
+          FENTRY    SCANSTRG,SUBRN
+;  ----------------------------------------
+          MOV       .SCANSTRG,SAVEA4    ; l'appelant
+SANSTRG1  LABEL                         ; le point d'entree de SPANSTRG
+          MOV       #0,A3               ; 0 par defaut
+          CNBEQ     A4,#2,SANSTRG2      ; ils sont tous la!
+          CNBNE     A4,#3,BADNBAR3      ; n'importe quoi
+          POP       A3
+          BFFIX     A3,BADFIX3          ; doit etre entier
+          CNBLT     A3,#0,BADIND3       ; doit etre positif
+SANSTRG2  LABEL
+          POP       A2
+          CALL      STRINGA2            ; on coerce la seconde
+          POP       A1
+          CALL      STRINGA1            ; on coerce la premiere
+          HGSIZE    A1,A4               ; A4 <- taille de A1
+          DIFF      A3,A4,SANSTRG4      ; A4 <- nbre de char a scanner
+          BRA       SANSTRG4
+SANSTRG3  LABEL                         ; debut de la boucle
+          PUSH      A1                  ; string1
+          PUSH      A3                  ; index
+          PUSH      A4
+          HBXMOV    A1,A3,A4            ; A4 <- charactere a chercher
+          HGSIZE    A2,A3               ; A3 <- taille de string2
+          BRA       SANPOS6
+SANPOS5   LABEL      
+          HBXMOV    A2,A3,A1            ; le char suivant
+          CABEQ     A4,A1,SANPOS9       ; et voila c'est celui-la
+SANPOS6   SOBGEZ    A3,SANPOS5          ; il en reste.
+          CABNE     .SCANSTRG,SAVEA4,SANSTRG6; il n'y etait pas
+          BRA       SANPOSF
+SANPOS9   LABEL      
+          CABNE     .SPANSTRG,SAVEA4,SANSTRG6; ok il y etait
+SANPOSF   LABEL
+          POP       A4
+          POP       A3
+          POP       A1
+          INCR      A3                  ; on augmente l'index
+SANSTRG4  SOBGEZ    A4,SANSTRG3         ; il en reste
+          BRA       STRFALSE            ; il n'y en avait pas
+SANSTRG6  LABEL
+          POP       A4
+          POP       A1                  ; le resultat
+          POP       A4
+          RETURN
+
+;          (SPANSTRING <string1> <string2> [<index>])
+;
+;         Scanne la chaine string1 a partir de index (defaut 0)
+;         tant que l'on trouve un caractere appartenant a string2.
+;         Retourne l'indice du premier caractere n'appartenent pas a string2
+;         ou NIL s'il n'y en a pas.
+;
+;  ----------------------------------------
+          FENTRY    SPANSTRG,SUBRN
+;  ----------------------------------------
+          MOV       .SPANSTRG,SAVEA4    ; l'appelant
+          BRA       SANSTRG1            ; comme pour SCANSTRG maintenant!
+
+;
+;         (CHRPOS <cn> <pname> [<index>])
+;
+;         Cette fonction a maintenant un autre parametre eventuel,
+;         le caractere a` partir duquel commence la recherche.
+;         On coerce systematiquement.
+;
+;  ----------------------------------------
+          FENTRY    CHRPOS,SUBRN
+;  ----------------------------------------
+          MOV       .CHRPOS,SAVEA4      ; l'appelant
+          MOV       #0,A3               ; in dex par defaut
+          CNBEQ     A4,#2,CHRPOS1       ; les 3 sont la
+          CNBNE     A4,#3,BADNBAR3      ; c'est pas ca
+          POP       A3
+          BFFIX     A3,BADFIX3
+          CNBLT     A3,#0,BADIND3       ; negatif ?
+CHRPOS1   LABEL
+          POP       A2
+          CALL      STRINGA2            ; A2 <- chaine coerce'e
+          POP       A1
+          BFFIX     A1,BADFIX1          ; on verifie que c'est un entier
+	  LAND	    #$FF,A1		; sur 8 bits please.
+	  HGSIZE    A2,A4               ; A4 <- taille
+          DIFF      A3,A4,CHRPOS3       ; nombre de char a scanner
+          BRA       CHRPOS3             ; on entre dans la boucle
+CHRPOS2   LABEL      
+          HBXMOV    A2,A3,SAVEA1        ; le char suivant
+          CABEQ     SAVEA1,A1,CHRPOS5   ; et voila c'est celui-la
+          INCR      A3                  ; index suivant.
+CHRPOS3   SOBGEZ    A4,CHRPOS2          ; c,a roule
+          MOVNIL    A1                  ; il n'y etait pas
+          RETURN
+CHRPOS5   LABEL      
+          MOV       A3,A1               ; ok : retourne le caractere.
+          RETURN                        ; dans tous les cas A1 est pret
+
+
+; ----------------------------------------
+          FENTRY    SREF,SUBR2          ; (sref string index)
+; ----------------------------------------
+          MOV       .SREF,SAVEA4        ; l'appellant en cas d'erreur.
+          BFSTRG    A1,BADSTR1          ; mauvaise chai^ne dans A1
+          BFFIX     A2,BADFIX2          ; on ve'rifie l'index
+          CNBLT     A2,#0,BADIND2       ; ne'gatif ?
+          HGSIZE    A1,A3               ; A3 <- longueur courante
+          CNBGE     A2,A3,BADIND2       ; c'est trop grand
+          HBXMOV    A1,A2,A1            ; le caracte`re en question
+          RETURN                        ; A1 est pre^t
+
+
+;  ----------------------------------------
+          FENTRY    CHRNTH,SUBR2
+;  ----------------------------------------
+          MOV       .CHRNTH,SAVEA4      ; l'appellant        
+          CALL      STRINGA2            ; A2 <- devient une chai^ne
+          BFFIX     A1,BADFIX1          ; on ve'rifie que c'est un entier
+          CNBLT     A1,#0,STRFALSE      ; ne'gatif ? retourne ()
+          HGSIZE    A2,A3               ; A3 <- longueur courante.
+          CNBGE     A1,A3,STRFALSE      ; c'est trop grand, retourne ().
+          HBXMOV    A2,A1,A1            ; le caracte`re en question
+          RETURN                        ; A1 est pre^t
+
+; ----------------------------------------
+          FENTRY    SSET,SUBR3
+; ----------------------------------------
+          MOV       .SSET,SAVEA4
+          MOV       A1,A4               ;  EXCH A1 <-> A2
+          MOV       A2,A1
+          MOV       A4,A2
+          BFSTRG    A2,BADSTR2
+          PUSH      A3                  ; sauve la valeur
+          CALL      CHRSET5             ; fait la modif
+          POP       A1                  ; retorune la valeur
+          RETURN
+
+;         Cette fonction permet de modifier physiquement
+;         la chaine. On retourne la position ou nil si ca se passe mal.
+;         (CHRSET pos string charn)
+;  ----------------------------------------
+          FENTRY    CHRSET,SUBR3
+;  ----------------------------------------
+          MOV       .CHRSET,SAVEA4      ; l'appelant        
+          CALL      STRINGA2            ; A2 <- est une chaine
+CHRSET5   BFFIX     A1,BADFIX1          ; on verifie que c'est un entier
+          CNBLT     A1,#0,BADIND1       ; negatif ?
+          BFFIX     A3,BADFIX3          ; on verifie que c'est un entier
+          HGSIZE    A2,A4               ; A4 <- longueur
+          CNBGE     A1,A4,BADIND1       ; c'est trop grand
+          HBMOVX    A3,A2,A1            ; on le range
+          MOV       A3,A1               ; retourne la valeur.
+          RETURN
+
+;         GET/SET du type d'une chaine
+;----------------------------------------
+          FENTRY    TYPESTRG,SUBRN
+;----------------------------------------
+          MOV       .TYPESTRG,A2
+          CNBEQ     A4,#1,TYPESG        ; vers le GET
+          CNBEQ     A4,#2,TYPESS        ; vers le SET
+          MOV       #1,A1               ; le bon nb
+          JMP       ERRWNA
+TYPESG    POP       A1
+          BFSTRG    A1,TYPESER3
+TYPESG2   MOV       TYP(A1),A1          ; enfin
+          RETURN
+TYPESS    POP       A1                  ; le type
+          BTSYMB    A1,TYPES2           ; le type doit etre un symbole!
+          BFCONS    A1,TYPESER2         ; laxisme : les CONS sont ok.
+TYPES2    BTNIL     A1,TYPESER2         ; () fout la merde aussi!
+          POP       A3
+          BFSTRG    A3,TYPESER1
+          MOV       A1,TYP(A3)
+          RETURN
+TYPESER1  MOV       A3,A1               ; le mauvais vecteur
+TYPESER3  JMP       ERRNSA
+TYPESER2  JMP       ERRSYM
+
+
+; ----------------------------------------
+          FENTRY    EXCHSTRG,SUBR2
+; ----------------------------------------
+          MOV       .EXCHSTRG,SAVEA4    ; l'appelant        
+          BFSTRG    A1,BADSTR1          ; il faut une chaine
+          BFSTRG    A2,BADSTR2          ;  ici aussi
+          PUSH      TYP(A1)             ; pour les changer
+          PUSH      TYP(A2)             ;   ditto
+          MOV       VAL(A1),OCHEAP      ; NE PAS METTRE DES
+          MOV       VAL(A2),VAL(A1)     ; POINTEURS DE HEAP
+          MOV       OCHEAP,VAL(A2)      ; DANS DES REGISTRES.
+          HSOBJ     A1,A1               ; echange des back-pointers
+          HSOBJ     A2,A2               ; Ce code est bon!!
+          POP       TYP(A1)             ; forcage du nouveau type.
+          POP       TYP(A2)             ;    ittou.
+          RETURN
+          
+
+;
+;         (INDEX <pnam1> <pnam2> [<n>])
+;         retourne l'index de <pnam1> dans <pnam2> a partir de <n>
+;         (0 par defaut).
+;
+;  ----------------------------------------
+          FENTRY    FFINDEX,SUBRN
+;  ----------------------------------------
+          MOV       .FFINDEX,SAVEA4     ; l'appelant
+          MOV       #0,A3               ; index par defaut
+          CNBEQ     A4,#2,FFINDG3       ; il y en a 3
+          CNBNE     A4,#3,BADNBAR3      ; 2 au minimum
+          POP       A3
+          BFFIX     A3,BADFIX3          ; on verifie que c'est un entier
+          CNBLT     A3,#0,BADIND3       ; negatif ?
+FFINDG3   LABEL
+          POP       A2
+          CALL      STRINGA2            ; A2 <- pnam2 coerce'
+          POP       A1
+          CALL      STRINGA1            ; A1 <- pnam1 coerce'
+          HGSIZE    A2,A4               ; longueur pnam2
+          HGSIZE    A1,SAVEA1           ; longueur pnam1
+          DIFF      SAVEA1,A4           ; on soustrait size(pnam1)
+          DIFF      A3,A4               ; on retire l'indice de depart
+          INCR      A4                  ; size(pnam2)-size(pnam1)-index+1
+          BRA       FFINDEX4            ; on boucle
+FFINDEX3  LABEL      
+          HBTEQ     SAVEA1,A2,A3,A1,#0,FFINDEX6; me^me chaine ?
+          INCR      A3                  ; non, on progresse
+FFINDEX4  SOBGEZ    A4,FFINDEX3         ; on boucle
+          MOVNIL    A1
+          RETURN
+FFINDEX6  MOV       A3,A1               ; resultat = A3
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    ALPHALES,SUBR2
+;  ----------------------------------------
+          MOV       .ALPHALES,SAVEA4    ; l'appelant
+          CALL      STRINGA1            ; A1 <- 1ere chaine
+          CALL      STRINGA2            ; A2 <- 2eme chaine
+          HGSIZE    A1,A3               ; A3 <- size(string1)
+          HGSIZE    A2,A4               ; A4 <- size(string2)
+          CALL      MINA3A4             ; A4 <- min (A3 , A4)
+          MOV       #0,A3               ; l'indice
+          BRA       ALPHA2              ; vers la boucle
+ALPHA1    LABEL              
+          HBXMOV    A1,A3,SAVEA1        ; SAVEA1 <- char suiv chaine 1
+          HBXMOV    A2,A3,SAVEA2        ; SAVEA2 <- char suiv chaine 2
+          CNBLT     SAVEA1,SAVEA2,STRUE ; SAVEA1 < SAVEA2 ?
+          CNBNE     SAVEA1,SAVEA2,STRFALSE; SAVEA1 > SAVEA2 ?
+          INCR      A3                  ; on boucle
+ALPHA2    SOBGEZ    A4,ALPHA1           ; tant qu'il y a des char.
+          HGSIZE    A1,A4               ; A4 <- size(A1)
+          CNBNE     A4,A3,STRFALSE      ; fin de la chaine 2 : FALSE
+STRUE     MOV       .T,A1               ; TRUE
+          RETURN
+;
+;         Les fonctions speciales sur les symboles
+;         (symbol pkgc pnam)
+;  ----------------------------------------
+          FENTRY    FFSYMBOL,SUBR2
+;  ----------------------------------------
+          BFSYMB    A2,FFSYMB1          ; il faut coercer, c'est cher !
+          JMP       TRYSYMPK            ; super rapide !
+FFSYMB1   MOV       .FFSYMBOL,SAVEA4    ; l'appelant
+          CALL      STRINGA2            ; on coerce en chaine
+          BFSYMB    A1,FFSYMBR2         ; un package est toujours un symbole!
+          JMP       TRYSYMP             ; vers la creation avec package.
+FFSYMBR2  MOV       .FFSYMBOL,A2
+          JMP       ERRSYM              ; pas un symbole.
+
+;         coercion systematique en symbole!
+;  ----------------------------------------
+          FENTRY    CONCAT,SUBRN
+;  ----------------------------------------
+          XSPMOV    A4,SAVEA2           ; SAVEA2 <- l'adresse de retour
+          MOVXSP    @CONCAT9,A4         ; on trafique la pile 
+          MOV       .CONCAT,SAVEA4      ; l'appelant
+          BRA       CATEN0              ; on se rend a la concatenation!
+CONCAT9   MOV       A1,A2               ; A2 <- la chaine
+          MOVNIL    A1                  ; A1 <- le package
+          PUSH      SAVEA2              ; l'adresse de retour
+          JMP       TRYSYMP             ; symbole avec PACKAGE
+
+;  ----------------------------------------
+          FENTRY    HASH,SUBR1
+;  ----------------------------------------
+          MOV       .HASH,SAVEA4        ; l'appelant
+          CALL      STRINGA1            ; on coerce
+          JMP       HASHINT             ; CALL terminal
+
+;  ----------------------------------------
+          FENTRY    FPNAM,SUBR1
+;  ----------------------------------------
+          MOV       .FPNAM,SAVEA4       ; l'appelant
+          CALL      STRINGA1            ; on coerce
+          HGSIZE    A1,A2               ; 2 <- le plength
+          MOV       A1,A3               ; la chaine
+          MOVNIL    A1                  ; la derniere queue
+          BRA       FPNAM2              ; saute le 0!
+FPNAM1    HBXMOV    A3,A2,A4
+          CONS      A4,A1               ; le CONS est dans le bon sens!
+FPNAM2    SOBGEZ    A2,FPNAM1           ; pour tous les plen
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    GENSYM,SUBR0
+;  ----------------------------------------
+          MOV       .GENSTRG,A1         ; la chaine contenant "g"
+          PUSH      CVAL(A1)            ; on l'empile
+          MOV       .GENSCPT,A2         ; le compteur
+          MOV       CVAL(A2),A1         ; la valeur
+          INCR      A1,GENNERR          ; pour le coup suivant
+GENNERR   MOV       A1,CVAL(A2)         ; on le remet en place
+          PUSH      A1                  ; on l'empile
+          MOV       #2,A4               ; 2 arguments
+          BRA       CONCAT              ; on fabrique un symbole
+
+;         Routines permettant le BLT et le REDISPLAY entre deux chaines
+;         conside're'es comme matrices bidimensionnelles
+;         de caracteres.
+;
+;         (BLTSCREEN dest source wd hd [8 autres args])
+;
+;         L'ecran destination (resp. origine) dest (resp. source)
+;         a (0,0) pour origine et possede wd (resp. ws) lignes
+;         et hd (resp. hs) colonnes.
+
+;         Tous les CLIPS sont faits dans cette routine!
+;         Ce sont de super Video-clips.
+;
+;
+;         (REDISPLAYSCREEN new old wd hd [8 args optionnels])
+;
+;         L'ecran old est modifie pour matcher l'ecran new.
+;         Ces 2 ecrans font une taille wd,hd. 
+
+;         Et pour le REDISPLAY:
+;         - On repete DLY fois:
+;                si new[LLID] <> old[LLID] sur DLX alors
+;                   PUSH LLID,DLX
+;                   OLDID := LLID + DLX ; OLDX := XDR + DLX
+;                   repete DLX fois
+;                        A1 := new[LLID] ; A2 := old[LLID] ; old[LLID] := A2
+;                        si A1 <> A2 affiche(A1)
+;                        LLID := LLID + 1
+;                   POP DLX,LLID
+;                LLID := LLID + wd
+;                YDR := YDR + 1
+;         avec affiche(A1) qui fait:
+;              incr := LLID - OLDID ; 
+;              OLDID := incr + OLDID ; OLDX := incr + OLDX 
+;                    si incr = 1 alors TYO(A1) 
+;                    si incr = 2 alors TYO( old[LLID-1] , A1)
+;                    sinon TYCURSOR (incr + OLDX , YDR) ; TYO(A1)
+;
+;         ATTENTION: lorsque l'on emploie les 12 arguments, 
+;         la taille des 2 ecrans doit etre la meme, sinon
+;         les arguments passes a TYCURSOR peuvent etre meaningless ...
+;         Verification des arguments et stockage dans des variables
+
+; Point d'entre'e de la SUBRN #:tty:redisplayscreen
+; appele'e par (to-tty 'redisplayscreen ...)
+
+RDPSCRN   LABEL
+          MOV       .TYRDSPL,SAVEA4     ; on vient de RDPSCRN
+          BRA       BLTSCRN0
+
+;         On arrive ici lorsque l'on vient du COPY, apres toute la phase
+;         preparatoire.
+;         Contenu des registres:
+;         A3     = LLID
+;         A4     = DLY
+;         SAVEA1 = new
+;         SAVEA2 = old
+;
+
+RDPSCRN1  LABEL      
+          HBTEQ     DLX,SAVEA1,A3,SAVEA2,A3,RDPSCRN5; rien a faire ?
+          PUSH      A3                  ; on sauve LLID
+          PUSH      A4                  ; on sauve DLY
+          MOV       DLX,A4              ; A4 <- DLX
+          MOV       A3,OLDID            ; pour l'affichage
+          PLUS      A4,OLDID            ; OLDID <- LLID + DLX
+          MOV       XR,OLDX             ; idem
+          PLUS      A4,OLDX             ; OLDX <- XR + DLX
+;         la boucle la plus petite!
+RDPSCRN3  LABEL      
+          HBXMOV    SAVEA1,A3,A1        ; A1 <- le car new
+          HBXMOV    SAVEA2,A3,A2        ; A2 <- le car old
+          HBMOVX    A1,SAVEA2,A3        ; old <- new evite le swap!
+          CNBNE     A1,A2,SCRNAFF       ; rate, l'ecran a change
+RDPSCRN4  LABEL      
+          INCR      A3                  ; pret en new
+          SOBGTZ    A4,RDPSCRN3         ; ca boucle sur les colonnes
+          POP       A4                  ; on restaure DLY
+          POP       A3                  ; on restaure LLID
+RDPSCRN5  LABEL      
+          PLUS      WD,A3               ; LLID <- LLID + wd
+          INCR      YR                  ; YDR <- YDR + 1
+          SOBGTZ    A4,RDPSCRN1         ; ca boucle sur les lignes
+
+;         le retour des heros fatigues
+          RETURN
+
+;         A1 = caractere a afficher; A3 = index (a sauver)
+;         A4 est aussi a sauver 
+SCRNAFF   LABEL      
+          PUSH      SAVEA1
+          PUSH      SAVEA2
+          PUSH      A4
+          PUSH      A3
+;         Si A1 est un caractere de controle (<32) on  affiche un point.
+          CNBGE     A1,#/ ,SCRNAFF0
+          MOV       #/.,A1
+SCRNAFF0  LABEL
+          DIFF      OLDID,A3            ; incr := LLID - OLDID
+          PLUS      A3,OLDID            ; OLDID := OLDID + incr
+          PLUS      A3,OLDX             ; OLDX := OLDX + incr
+          MOV       A3,A4               ; le nb de differences.
+          PUSH      @SCRNAFF3           ; la continuation
+          CNBNE     A3,#1,SCRNAFF4      ; bien positionne ?
+SCRNAFF1  LABEL                         ; appel de TYO avec A1. A4 est ok.
+          PUSH      A1                  ; le caractere
+SCRNAFF2  JMP       TYO                 ; CALL terminal!
+SCRNAFF3  LABEL                         ; au retour du FUNCALL.
+          POP       A3
+          POP       A4
+          POP       SAVEA2
+          POP       SAVEA1
+          BRA       RDPSCRN4
+
+SCRNAFF4  MOV       &1,A2               ; A2 <- LLID
+          DECR      A2                  ; A2 <- LLID - 1
+          CNBNE     A3,#3,SCRNAFF7      ; si delta <> de #3
+          DECR      A2
+          HBXMOV    SAVEA1,A2,A3        ; caractere - 2
+          PUSH      A3                  ; le 1er a envoyer
+          INCR      A2
+SCRNAFF6  HBXMOV    SAVEA1,A2,A3        ; caractere - 1
+          PUSH      A3                  ; le 2eme a envoyer
+          BRA       SCRNAFF1
+
+SCRNAFF7  CNBEQ     A3,#2,SCRNAFF6      ; si delta <> de #1, #2, #3
+          PUSH      A1                  ; le caractere
+          MOV       OLDX,A1             ; qui contient XDR
+          MOV       YR,A2               ; YDR
+          JCALL     TYCURSOR            ; (tycursor XDR YDR)
+          MOV       #1,A4               ; le compte (qui etait perdu)
+          BRA       SCRNAFF2            ; pret pour le TYO de A1.
+
+          IMPURE
+
+WD        ADR       0                   ; nb colonnes dest
+WS        ADR       0                   ; nb colonnes source
+DLX       ADR       0                   ; nb de colonnes du COPY
+DLY       ADR       0                   ; nb de lignes du COPY
+OLDID     ADR       0                   ; dernier position curseur
+OLDX      ADR       0                   ; dernier X curseur
+LLID      ADR       0                   ; 
+LLIS      ADR       0                   ; 
+XR        ADR       0                   ; XDR au de'but du BLT
+YR        ADR       0                   ; YDR au de'but du BLT
+YS        ADR       0
+
+          PURE
+;
+
+
+          PURE
+
+;         BLT de deux e'crans, dans toutes sa ge'ne'ralite'
+;         (BLTSCREEN dest source wd hd ws hs xd yd xs ys dlx dly)
+;
+;         Copie un rectangle de taille au plus dlx,dly pris
+;         dans l'e'cran source de taille ws,hs a partir du point
+;         de coordonne'es xs,ys (relativement a` l'origine de la source).
+;         Le re'sultat de la copie modifie l'e'cran dest
+;         a` partir du point de coordonne'es xd yd.
+
+;         On a donc (COPYSCREEN dest source wd hd ws hs xd yd)
+;         <=> (BLTSCREEN dest wd hd xd yd source ws hs 0 0 ws hs)
+
+;         - XD  := max (0 , xd)   |
+;         - XS  := max (0 , xs)   |   CLIPSCRN (xd , xs)
+;         - XDR := XD + XS - xs   |
+;         - XSR := XS + XD - xd   |
+;         - DLX := min (wd - XDR , ws - XSR , dlx)    >0
+
+;         - YD  := max (0 , yd)   |
+;         - YS  := max (0 , ys)   |   CLIPSCRN (yd , ys)
+;         - YDR := YD + YS - ys   |
+;         - YSR := YS + YD - yd   |
+;         - DLY := min (hd - YDR , hs - YSR , dly)    >0
+
+;         - LLID:= XDR + YDR * wd
+;         - LLIS:= XSR + YSR * ws
+
+;         Ensuite, pour le COPY:
+;         - On repete DLY fois:
+;                copie de source[LLIS] a dest[LLID] sur DLX
+;                LLID:= LLID + wd
+;                LLIS:= LLIS + ws
+
+
+;         Calcule un petit bout des clips a` faire:
+;         les 4 premieres equations, typiquement.
+
+CLIPSCRN  BFFIX     A1,BADFIX1          ; xd doit e^tre un entier
+          MOV       #0,A4               ; XSR <- 0  (ok si xd > 0) 
+          CNBLT     A1,#0,CLIPSCR3      ; xd < 0 !
+          MOV       A1,A3               ; XDR <- xd (ok si xd > 0)
+CLIPSCR1  BFFIX     A2,BADFIX2          ; xs doit e^tre un entier
+          CNBLT     A2,#0,CLIPSCR4      ; xs < 0 !
+          PLUS      A2,A4               ; XDR <- XDR + xs
+          RETURN
+CLIPSCR3  MOV       #0,A3               ; XDR <- 0
+          DIFF      A1,A4               ; XSR <- -xd
+          BRA       CLIPSCR1            ; on continue !
+CLIPSCR4  DIFF      A2,A3               ; XDR <- XDR - xs
+          RETURN
+
+          
+
+;         Calcule dans DLX le MIN de DLX et A1
+MINA1DLX  CNBGT     DLX,A1,MINX1
+          RETURN
+MINX1     MOV       A1,DLX
+          RETURN
+
+;         Calcule dans DLY le MIN de DLY et A1
+MINA1DLY  CNBGT     DLY,A1,MINY1
+          RETURN
+MINY1     MOV       A1,DLY
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    BLTSCRN,SUBRN
+;  ----------------------------------------
+          MOV       .BLTSCRN,SAVEA4     ; pour le cas d'erreur
+BLTSCRN0  LABEL                         ; point d'entree de RDPSCRN
+          POP       A1
+          CNBEQ     A4,#12,BLTSCRNA     ; 12 arguments ?
+          CNBNE     A4,#4,BADNBAR4      ; 4 arguments ?
+          BFFIX     A1,BADFIX1          ; hd doit etre entier
+          POP       A2                  ; wd
+          BFFIX     A2,BADFIX2          ; wd doit etre entier
+          MOV       A2,DLX
+          MOV       A1,DLY
+          MOV       A2,WS
+          MOV       A2,WD
+          MOV       #0,LLID
+          MOV       #0,XR
+          MOV       #0,YR
+          MOV       #0,LLIS
+          MOV       #0,A3
+          MOV       #0,A4
+          BRA       BLTSCRNB
+BLTSCRNA  LABEL
+          BFFIX     A1,BADFIX1
+          MOV       A1,DLY              ; on range DLY
+          POP       A1                  ; DLX
+          BFFIX     A1,BADFIX1
+          MOV       A1,DLX              ; on range DLX
+          POP       YS                  ; ys
+          POP       A2                  ; A2 <- xs
+          POP       YR                  ; yd
+          POP       A1                  ; A1 <- xd
+          CALL      CLIPSCRN            ; A3 <- XDR ; A4 <- XSR
+          MOV       A3,XR
+          MOV       A3,LLID             ; on range provisoirement XDR
+          MOV       A4,LLIS             ; et aussi XSR
+          MOV       YS,A2               ; A2 <- ys
+          MOV       YR,A1               ; A1 <- yd
+          CALL      CLIPSCRN            ; A3 <- YDR ; A4 <- YSR
+          MOV       A3,YR
+          POP       A1                  ; hs
+          BFFIX     A1,BADFIX1
+          DIFF      A4,A1               ; A1 <- hs - YSR
+          CALL      MINA1DLY            ; DLY <- min (DLY , hs - YSR)
+          POP       A1                  ; ws
+          BFFIX     A1,BADFIX1
+          MOV       A1,WS
+          DIFF      LLIS,A1             ; A1 <- ws - XSR
+          CALL      MINA1DLX            ; DLX <- min (DLX , ws - XSR)
+          POP       A1                  ; hd
+          BFFIX     A1,BADFIX1
+          DIFF      A3,A1               ; A1 <- hd - YDR
+          CALL      MINA1DLY            ; DLY <- min (DLY , hd - YDR)
+          POP       A1                  ; wd
+          BFFIX     A1,BADFIX1
+          MOV       A1,WD
+          DIFF      LLID,A1             ; A1 <- wd - XDR
+          CALL      MINA1DLX            ; DLX <- min (DLX , wd - XDR)
+BLTSCRNB  LABEL
+          POP       SAVEA2              ; source
+          BFSTRG    SAVEA2,BLTSCRN8     ; chaine ?
+          POP       SAVEA1              ; dest
+          BFSTRG    SAVEA1,BLTSCRN9     ; chaine
+          CNBLE     DLX,#0,BLTSCRN7     ; rien a faire   
+          CNBLE     DLY,#0,BLTSCRN7     ; rien a faire   
+          TIMES     WS,A4               ; A4 <- YSR * ws
+          PLUS      A4,LLIS             ; LLIS <- LLIS definitif
+          MOV       DLY,A4              ; dly
+          TIMES     WD,A3               ; A3 <- wd * YDR
+          PLUS      LLID,A3             ; A3 <- LLID de'finitif
+
+;         D'ou venait on ???
+          CABEQ     .TYRDSPL,SAVEA4,RDPSCRN1  
+          MOV       DLX,A1              ; dlx
+          MOV       LLIS,A2             ; A2 <- LLIS
+
+;         COPIE (LDIR) de la zone
+;         A1 = DLX
+;         A2 = LLIS
+;         A3 = LLID
+;         A4 = DLY
+;         SAVEA1 = dest
+;         SAVEA2 = source
+;         WD,WS utilises
+
+BLTSCRN6  LABEL                         ; debut de la boucle
+          HBMOVM    A1,SAVEA2,A2,SAVEA1,A3; on copie
+          PLUS      WD,A3               ; LLID <- LLID + wd
+          PLUS      WS,A2               ; LLIS <- LLIS + ws
+          SOBGTZ    A4,BLTSCRN6
+;         le retour des heros fatigues
+BLTSCRN7  RETURN          
+
+BLTSCRN8  MOV       SAVEA2,A1
+          BRA       BADSTR1             ; il fallait une chaine
+BLTSCRN9  MOV       SAVEA1,A1
+          BRA       BADSTR1             ; il fallait une chaine
+
+
+;============================================================
+;
+;         Les fonctions sur vecteurs de S-expressions
+;
+;============================================================
+
+;         GET/SET du type d'un vecteur
+;----------------------------------------
+          FENTRY    TYPEVECT,SUBRN
+;----------------------------------------
+          MOV       .TYPEVECT,A2
+          CNBEQ     A4,#1,TYPEVG        ; vers le GET
+          CNBEQ     A4,#2,TYPEVS        ; vers le SET
+          MOV       #1,A1               ; le bon nb
+          JMP       ERRWNA
+TYPEVG    POP       A1
+          BFVECT    A1,TYPEVER3
+          MOV       TYP(A1),A1          ; enfin
+          RETURN
+TYPEVS    POP       A1                  ; le type
+          BTSYMB    A1,TYPEVS2          ; le type peut etre un symbole!
+          BFCONS    A1,TYPEVER2         ; laxisme : les CONS sont ok.
+TYPEVS2   BTNIL     A1,TYPEVER2         ; () fout la merde aussi!
+          POP       A3
+          BFVECT    A3,TYPEVER1
+          MOV       A1,TYP(A3)
+          RETURN
+TYPEVER1  MOV       A3,A1               ; le mauvais vecteur
+TYPEVER3  JMP       ERRVEC
+TYPEVER2  JMP       ERRSYM
+
+;         MAKEVECT : alloue un vecteur de n pointeurs initialise
+;         ======================================================
+;
+;         (MAKEVECTOR taille valeur)
+;
+;  ----------------------------------------
+          FENTRY    MAKEVECT,SUBR2
+;  ----------------------------------------
+          MOV       .MAKEVECT,SAVEA4    ; pour le cas d'erreur
+          BFFIX     A1,BADFIX1          ; on doit avoir un nombre
+          CNBLT     A1,#0,BADIND1       ; positif
+          MOV       A1,A3               ; A3 <- taille
+MAKVECT0  MOV       FVECT,A1            ; la free liste des vecteurs
+          BTNIL     A1,MAKVECT3         ; vide?
+          MOV       CHEAP,OCHEAP        ; on sauvegarde
+          NXHP      A3,CHEAP            ; CHEAP est mis a` jour!
+          CHBLT     EHEAP,CHEAP,MAKVECT4; va faire de la place
+MAKVECT2  MOV       VAL(A1),FVECT       ; mise a jour du prochain FVECT
+          MOV       OCHEAP,VAL(A1)      ; le pointeur a` jour
+          HSSIZE    A3,%OCHEAP          ; on enregistre la taille
+          HSOBJ     A1,%OCHEAP          ; et le pointeur arrie`re
+          BRA       VECTFIL4            ; on boucle pour le remplissage
+VECTFIL1  HPMOVX    A2,A1,A3            ; fill it fast
+VECTFIL4  SOBGEZ    A3,VECTFIL1
+          MOV       .VECTOR,TYP(A1)     ; de type VECTOR!
+          RETURN
+
+;         plus de place en VECT ?
+MAKVECT3  JCALL     GCVECT
+          BRA       MAKVECT0
+;         plus de place en HEAP ?
+MAKVECT4  LABEL                         ; even paranoid people have enemies!
+          MOVNIL    A1
+          MOV       OCHEAP,CHEAP
+          JCALL     HGC
+          MOV       FVECT,A1
+          MOV       CHEAP,OCHEAP
+          NXHP      A3,CHEAP
+          CHBLT     CHEAP,EHEAP,MAKVECT2; OK!
+          MOVNIL    A1                  ; restons propres
+          MOV       OCHEAP,CHEAP        ; pour eviter les HEAP-OVNI
+          JMP       ERRFH               ; erreur fatale HEAP plein!
+
+;  ----------------------------------------
+          FENTRY    VLENGTH,SUBR1
+;  ----------------------------------------
+          MOV       .VLENGTH,SAVEA4
+          BFVECT    A1,BADVEC1
+          HGSIZE    A1,A1
+          RETURN
+
+;         teste les elements de 2 vecteurs
+;  ----------------------------------------
+          FENTRY    EQVECTOR,SUBR2
+;  ----------------------------------------
+          MOV       .EQVECTOR,SAVEA4
+          BFVECT    A1,BADVEC1          ; il faut un vecteur
+          BFVECT    A2,BADVEC2          ;    la aussi.
+EQVECTRI  LABEL                         ; entre'e rapide.
+          HGSIZE    A1,A3               ; la taille du 1er
+          HGSIZE    A2,A4               ; la taille du 2eme
+          CNBNE     A3,A4,STRFALSE      ; vers le test des elements
+          MOV       TYP(A1),A4
+          BFSYMB    A4,EQVECT6          ; cas complexe
+          CABNE     A4,TYP(A2),STRFALSE ; pas le bon type.
+          BRA       EQVECT5             ; vers le SOBGEZ
+EQVECT4   PUSH      A1    
+          PUSH      A2
+          HPXMOV    A1,A3,A1            ; elem du 1er vect
+          HPXMOV    A2,A3,A2            ; elem du 2eme vect
+          PUSH      A3                  ; A4 est sauvegarde
+          JCALL     EQUAL
+          MOV       A1,A4               ; la valeur de EQUAL
+          POP       A3
+          POP       A2
+          POP       A1
+          BTNIL     A4,STRFALSE         ; retourne faux
+EQVECT5   SOBGEZ    A3,EQVECT4          ; il reste des elements
+          RETURN                        ; retourne le VECTOR 1
+EQVECT6   PUSH      A1                  ; cas complexe : il faut appeler
+          PUSH      A2                  ; EQUAL pour tester les types
+          PUSH      A3                  ; de ces foutus vecteurs.
+          MOV       A4,A1
+          MOV       TYP(A2),A2
+          JCALL     EQUAL
+          MOV       A1,A4
+          POP       A3
+          POP       A2
+          POP       A1
+          BFNIL     A4,EQVECT5
+          MOVNIL    A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    VREF,SUBR2
+;  ----------------------------------------
+          MOV       .VREF,SAVEA4        ; l'appelant        
+          BFFIX     A2,BADFIX2          ; on verifie que c'est un entier
+          CNBLT     A2,#0,BADIND2       ; negatif ?
+          BFVECT    A1,BADVEC1          ; un vecteur
+          HGSIZE    A1,A3               ; A3 <- longueur
+          CNBGE     A2,A3,BADIND2       ; c'est trop grand
+          HPXMOV    A1,A2,A1            ; le pointeur en question
+          RETURN                        ; A1 est pret
+
+;         Cette fonction permet de modifier physiquement
+;         le vecteur. On retourne la valeur
+;         (VSET vector index pointeur)
+;  ----------------------------------------
+          FENTRY    VSET,SUBR3
+;  ----------------------------------------
+          MOV       .VSET,SAVEA4        ; l'appelant        
+          BFFIX     A2,BADFIX2          ; on verifie que c'est un entier
+          CNBLT     A2,#0,BADIND2       ; negatif ?
+          BFVECT    A1,BADVEC1          ; il faut un vecteur
+          HGSIZE    A1,A4               ; A4 <- longueur
+          CNBGE     A2,A4,BADIND2       ; c'est trop grand
+          HPMOVX    A3,A1,A2            ; on le range
+          MOV       A3,A1               ; retourne la valeur.
+          RETURN
+
+;
+;         (BLTVECTOR vect1 index1 vect2 [index2 [taille]])
+;         Modifie PHYSIQUEMENT le vect1 a partir de l'index1
+;         en y substituant les elements de vect2 (a partir de index2)
+;         et ce, sur au plus taille elements.
+;         On retourne le 1er vect.
+;
+;  ----------------------------------------
+          FENTRY    BLTVECT,SUBRN
+;  ----------------------------------------
+          MOV       .BLTVECT,SAVEA4     ; l'appelant
+          CNBEQ     A4,#5,BLTVECT0      ; 5 arguments ?
+          MOV       #MAXFIX,A3          ; MAXINT par defaut
+          CNBEQ     A4,#4,BLTVECT1      ; 4 arguments ?
+          MOV       #0,A2               ; 0 par defaut
+          CNBNE     A4,#3,BADNBAR3      ; 5 arguments maintenant?
+          BRA       BLTVECT2
+BLTVECT0  LABEL      
+          POP       A3                  ; la taille
+          BFFIX     A3,BADFIX3          ; on verifie que c'est un entier
+BLTVECT1  LABEL
+          POP       A2                  ; index2
+          BFFIX     A2,BADFIX2          ; on verifie que c'est un entier
+          CNBLT     A2,#0,BADIND2       ; positif ?
+BLTVECT2  LABEL
+          MOV       A2,SAVEA2           ; SAVEA2 <- index2
+          POP       A2                  ; vect2
+          BFVECT    A2,BADVEC2          ; vecteur ?
+          POP       A1                  ; A1 <- index1
+          BFFIX     A1,BADFIX1          ; on verifie que c'est un entier
+          CNBLT     A1,#0,BADIND1       ; positif
+          MOV       A1,SAVEA1           ; SAVEA1 <- index1
+          TOPST     A1                  ; A1 <- vect1
+          BFVECT    A1,BADVEC1          ; pas un vecteur
+          HGSIZE    A1,A1               ; taille dans A1
+          DIFF      SAVEA1,A1           ; taille de recopie
+          CALL      MINA1A3             ; A3 <- min (A3,A1)
+          HGSIZE    A2,A4               ; A4 <- taille(vect2)
+          DIFF      SAVEA2,A4           ; taille de recopie
+          CALL      MINA4A3             ; A3 <- min (A4,A3)
+          POP       A1                  ; A1 <- vect1
+          CNBLE     A3,#0,BLTVECT6      ; recopie de longueur <= 0 ?
+          HPMOVM    A3,A2,SAVEA2,A1,SAVEA1; la recopie
+BLTVECT6  RETURN
+
+;         (VECTOR s1 ... sn)
+;         Cree un vecteur de taille n (equivalent de LIST)
+;
+;  ----------------------------------------
+          FENTRY    VECTOR,SUBRN
+;  ----------------------------------------
+          MOV       A4,A1               ; on calcule la dimension
+          PUSH      A1                  ; on sauvegarde
+          MOVNIL    A2                  ; on demande un tableau a ()
+          CALL      MAKEVECT            ; A1 <- un tableau tout neuf
+          POP       A4                  ; A4 <- dimension
+          BRA       VECTOR2             ; on se rend a la boucle
+VECTOR1   POP       A2                  ; on depile le suivant
+          HPMOVX    A2,A1,A4            ; on charge le suivant
+VECTOR2   SOBGEZ    A4,VECTOR1          ; tant qu'il y en a
+          RETURN
+
+
+; ----------------------------------------
+          FENTRY    EXCHVECT,SUBR2
+; ----------------------------------------
+          MOV       .EXCHVECT,SAVEA4    ; l'appelant        
+          BFVECT    A1,BADVEC1          ; il faut un vecteur
+          BFVECT    A2,BADVEC2          ;  ici aussi
+          PUSH      TYP(A1)             ; pour le forcage
+          PUSH      TYP(A2)             ;    final
+          MOV       VAL(A1),OCHEAP      ; NE PAS METTRE DES
+          MOV       VAL(A2),VAL(A1)     ; POINTEURS DE HEAP
+          MOV       OCHEAP,VAL(A2)      ; DANS DES REGISTRES.
+          HSOBJ     A1,A1               ; echange des back-pointers
+          HSOBJ     A2,A2               ; Ce code est bon!!
+          POP       TYP(A1)             ; changer les
+          POP       TYP(A2)             ;   types.
+          RETURN
+          
+
+;
+;         (FILLVECTOR vector1 index1 e [taille])
+;         Modifie PHYSIQUEMENT le vecteur a partir de l'index1
+;         en y substituant e et ce, sur au plus taille caracteres.
+;         On retourne le vecteur.
+;
+;  ----------------------------------------
+          FENTRY    FILLVECT,SUBRN
+;  ----------------------------------------
+          MOV       .FILLVECT,SAVEA4    ; l'appelant
+          MOV       #MAXFIX,A1          ; MAXINT
+          CNBEQ     A4,#3,FILLVEC0      ; 4 arguments
+          CNBNE     A4,#4,BADNBAR4      ; pas 4 arguments maintenant
+          POP       A1                  ; A1 <- taille
+          BFFIX     A1,BADFIX1          ; on verifie que c'est un entier
+FILLVEC0  LABEL      
+          POP       A3                  ; A3 <- e
+          POP       A2                  ; A2 <- index1
+          BFFIX     A2,BADFIX2          ; on verifie que c'est un entier
+          CNBLT     A2,#0,BADIND2       ; positif ?
+          MOV       A1,A4               ; A4 <- taille souhaitee
+          TOPST     A1                  ; A1 <- vecteur
+          BFVECT    A1,BADVEC1          ; pas un vecteur
+          HGSIZE    A1,A1               ; taille dans A1
+          DIFF      A2,A1,FILLVEC6      ; taille maximale possible
+FILLVEC6  CALL      MINA1A4             ; A4 <- min (A1,A4)
+          POP       A1                  ; A1 <- chaine1
+          BRA       FILLVEC8
+FILLVEC7  HPMOVX    A3,A1,A2            ; on copie
+          INCR      A2                  ; on incremente l'index
+FILLVEC8  SOBGEZ    A4,FILLVEC7         ; il en reste
+          RETURN
+
+
+          END

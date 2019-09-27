@@ -1,0 +1,114 @@
+\documentstyle[11pt,fr]{iarticle}
+
+\Begin
+\Title {Diffusion Le-Lisp}
+\SuperTitle {Le-Lisp version 15.25.3
+\footnote {Cette note tient lieu de compte rendu de la r\'{e}union du
+25/8/93 en ce qui concerne la 15.25.3, en pr\'{e}sence de Alain R.,
+Bernard, Bounty, Pom., Jean, Fran\c{c}ois, J\'{e}r\^{o}me, Pascal, Patrick,
+Pierre P.,Vincent}
+}
+
+\Author {ao\^{u}t 1993}
+\bigskip
+
+Voici les corrections de la nouvelle diffusion de
+\LeLisp\ version 15.25.3.
+Cette version contient les modifications du {\bf BV} destin\'{e}es \`{a}
+fixer le bug du {\bf HEAP-OVNI} 
+d\^{u} \`{a} une mauvaise gestion des {\tt EVENTS}, ainsi
+que les interventions n\'{e}cessaires au {\it builder}.
+Elle fournit \'{e}galement les {\bf 64bitsfloats} sur la
+nouvelle souche de portage 
+GELL pour {\it Chp9700} et {\it Calphaosf}. On consid\'{e}rera \'{e}galement
+que la version 15.25.3 sur DOS est 
+debuggu\'{e}e et op\'{e}rationnelle.
+
+La version 15.25.3 n'est pas destin\'{e}e \`{a} \^{e}tre diffus\'{e}e massivement.
+Seuls les clients g\'{e}n\'{e}s par les points ci-dessus la recevrons.
+Il s'agit principalement de {\it IPAC} (LL,aida,smeci en 64bitfloats sur
+Chp9700), {\it STNA} (LL,aida,smeci,maida2d sur Calphaosf), {\it Sema} (LL sur
+Calphaosf), ... \\
+De plus, la version 15.25.3 est la version \LeLisp\ incluse
+dans le {\bf builder}. Seuls les portages
+{\it sun4, solaris, Chp9700, rs6000, iris4d} sont concern\'{e}s \`{a} ce jour
+(livraison des .tar.Z).
+
+\Section {Interventions sur le code Le-Lisp }
+
+\begin {itemize}
+\item Interventions sur LLIB :\\
+\begin {enumerate}
+\item {\it startup.ll} \\
+- red\'{e}finition de la fonction {\tt subversion} (on est en subversion 3).\\
+- red\'{e}finition de la fonction {\tt herald}     (on date au 07/Jul/93).
+
+\item {\it llpatch.ll} \\
+Le fichier {\it llpatch} est renomm\'{e} {\it llpboot} par simple soucis de
+ne pas faire apparaitre le mot {\it patch} qui froisse certains clients.
+
+\item {\it hash.ll} \\
+intervention sur la fonction de hashage des flottants 64bitfloats,
+afin que \c{c}a marche!
+\end{enumerate}
+
+\item Interventions sur le code C de common :\\
+Aucune intervention sur le code C.\\
+Un {\it diff} fera cependant apparaitre la pr\'{e}sence de deux fonctions
+suppl\'{e}mentaires dans {\it llstdio.c} (llmkdir et llrmdir)
+et d'une fonction suppl\'{e}mentaire dans {\it lelisp.c} (llovni)
+Ces fonctions sont connect\'{e}es sur les portages GELL issus de {\it work}.
+et ne sont pas connect\'{e}es sur les portages natifs.
+Elles seront utilis\'{e}es dans la version 15.26.
+
+\item Interventions sur le code assembleur :\\
+Auncune.
+
+\item Interventions sur le code LLM3 :\\
+Aucune.
+
+\item Interventions sur le code du BV :\\
+\begin{enumerate}
+\item
+Correction du bug g\'{e}n\'{e}rateur de {\bf HEAP-OVNI} sur la gestion
+des {\it events} dans les fichiers {\it x11lib.c, x11xt.c,
+x11\_def.ll .lm .lo} .
+\item
+Correction du bug sur la gestion des ressources par d\'{e}faut dans les
+fichiers {\it x11share.c, x11init.ll .lm .lo , x11color.ll .lm .lo}.
+\item
+Correction d'un bug sur {\tt read-mouse} dans {\it x11share.c}.
+\end{enumerate}
+
+\item Interventions sur les Makefiles :\\
+Les {\it Makefiles} lisp subissent de l\'{e}g\`{e}res modifications
+profitant aux compilations C d\'{e}port\'{e}es.
+Conjointement, le {\it makefile} du BV s'adapte.
+\end {itemize}
+
+\Section {GELL}
+Le g\'{e}n\'{e}rateur de code GELL a \'{e}t\'{e} profond\'{e}ment remani\'{e} afin
+d'engendrer du C au format {\it ANSI}, et de permettre les {\bf 64bitfloats}.
+Cela concerne les portages sur {\it Chp9700} et {\it Calphaosf}.
+LL15.25.3 est install\'{e} en {\tt /nfs/current}, et en {\tt /usr/ilog}
+en local sur ces machines.
+Les {\it .tar.Z} sont faits.
+
+\Section {PC/msdos}
+La version 15.25.3 sur {\it MSDOS} inclut toutes les corrections de
+bugs cunnus \`{a} ce jour. Une harmonisation des instances de \LeLisp\
+sur les disques du PC Ilog, ainsi qu'une rationnalisation des
+interventions de CJ nous permettront de garantir la stabilit\'{e} de
+\LeLisp\ 15.25.3 vis \`{a} vis des utilisateurs (internes \& externes).
+Une r\'{e}vision de la gestion de LL sur PC est organis\'{e}e par l'\'{e}quipe
+LL, avec l'aide de CJ, avant la mi-septembre 15 jours.
+
+\Section {Builder}
+La version 15.25.3 est la version \LeLisp\ fournie au {\it builder},
+notamment \`{a} cause des modifications du BV qui lui sont n\'{e}cessaires.
+Les {\it .tar.Z} des portages {\it sun4, solaris, Chp9700, rs6000,
+iris4d} ont \'{e}t\'{e} livr\'{e}s et sont disponibles en {\tt
+/nfs/current/lelisp}. LL15.25.3 est disponible \'{e}galement en {\tt
+current} pour les machines {\it Calphaosf, decstation, sun, apollo,
+sony, sonyr3000, sco386, hp9400, ix386, m88k}.
+\End

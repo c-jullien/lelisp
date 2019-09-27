@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: llinit
+;;;             translation done: "Wed June 30 93 17:33:38 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: llinit.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'llinit)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZllinit" "Wed June 30 93 17:33:38 "
+
+'((itsoft . subr2) (super-itsoft . subr3) (version . subr0) (system . subr0) (end . nsubr) (herald . subr0))
+
+#[itsoft #:gell-resetfn:function-name #:gell-resetfn:function-2 super-itsoft #:gell-resetfn:function-3 version #:gell-resetfn:function-0 system end #:gell-resetfn:function-n herald]
+)
+
+
+(defccheck '())

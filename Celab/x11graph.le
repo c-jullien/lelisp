@@ -1,0 +1,58 @@
+;;; GELL 15.26: elaboration file for the module: x11graph
+;;;             translation done: "Tue Aug  24 93 10:48:26 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: x11graph.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'x11graph)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZx11graph" "Tue Aug  24 93 10:48:26 "
+
+'((#:display:x11:current-font . subr3) (#:display:x11:current-line-style . subr3) (#:display:x11:current-pattern . subr3) (#:display:x11:current-mode . subr3) (#:display:x11:current-foreground . subr3) (#:display:x11:current-background . subr3) (#:display:x11:line-style-max . subr1) (#:display:x11:pattern-max . subr1) (#:display:x11:make-pattern . subr2) (#:display:x11:make-line-style . subr3) (#:display:x11:font-max . subr1) (#:display:x11:load-font . subr2) (#:display:x11:width-substring . nsubr) (#:display:x11:height-substring . nsubr) (#:display:x11:x-base-substring . nsubr) (#:display:x11:y-base-substring . nsubr) (#:display:x11:x-inc-substring . nsubr) (#:display:x11:y-inc-substring . nsubr) (#:display:x11:cursor-max . subr1) (#:display:x11:make-cursor . nsubr) (#:display:x11:make-named-cursor . subr2) (#:display:x11:cursor-name . subr2) (#:display:x11:current-cursor . subr2) (#:display:x11:move-cursor . subr3) (#:display:x11:font-ascent . subr2) (#:display:x11:font-height . subr2) (#:display:x11:current-stipple . subr3) (#:display:x11:current-fill-mode . subr3) (#:display:x11:make-graph-env . nsubr) (#:display:x11:kill-graph-env . subr2) (#:display:x11:graph-env-set-clip . nsubr) (#:display:x11:graph-env-set-clips . nsubr) (#:display:x11:graph-env-change-values . nsubr) (#:display:x11:graph-env-subwindow-mode . subr3) (#:display:x11:get-font-names . subr3) (#:display:x11:get-font-info . subr3) (#:display:x11:graph-env-planemask . subr3))
+
+#[x11_set_font x11_font_ascent x11_font_height x11_set_line_style x11_set_pattern pattern x11_set_fill_mode x11_set_mode x11_set_foreground x11_set_background opaque x11_setwindow_background makevector bltvector eqvector |1+| x11_load_font #:display:err-not-a-font-name load-font #:display:x11:width-substring #:llcp:errwna x11_width_string #:display:x11:height-substring #:display:space x11_height_string #:display:x11:x-base-substring x11_x_base_string #:display:x11:y-base-substring x11_y_base_string #:display:x11:x-inc-substring #:display:x11:y-inc-substring #:display:x11:make-cursor x11_pixmap_to_bitmap x11_make_cursor cassoc #:display:x11:xnumbers x11_create_cursor acons #:display:cursor-names x11_set_cursor x11_move_cursor foreground x11_set_stipple transparentstipple opaquestipple "invalid mode" #:display:x11:current-fill-mode "no existent stipple for this graph-env" #:display:x11:make-graph-env #:tclass:x11window:make x11_new_create_graph_env x11_free_graph_env #:display:x11:graph-env-set-clip x11_set_clip #:display:x11:graph-env-set-clips x11_set_clips #:display:x11:graph-env-change-values x11_change_gc_values x11_graph_subwindow_mode list x11_list_fonts "*?" scanstring x11_font_info x11_set_planemask #:display:x11:current-font #:gell-resetfn:function-name #:gell-resetfn:function-3 #:display:x11:current-line-style #:display:x11:current-pattern #:display:x11:current-mode #:display:x11:current-foreground #:display:x11:current-background #:display:x11:line-style-max #:gell-resetfn:function-1 #:display:x11:pattern-max #:display:x11:make-pattern #:gell-resetfn:function-2 #:display:x11:make-line-style #:display:x11:font-max #:display:x11:load-font #:gell-resetfn:function-n #:display:x11:cursor-max #:display:x11:make-named-cursor #:display:x11:cursor-name #:display:x11:current-cursor #:display:x11:move-cursor #:display:x11:font-ascent #:display:x11:font-height #:display:x11:current-stipple #:display:x11:kill-graph-env #:display:x11:graph-env-subwindow-mode #:display:x11:get-font-names #:display:x11:get-font-info #:display:x11:graph-env-planemask]
+)
+
+(defvar #:sys-package:colon '#:display:x11)
+(defcsetfn '#:display:x11:current-font "GZx11graph" 0)
+(defcsetfn '#:display:x11:current-line-style "GZx11graph" 1)
+(defcsetfn '#:display:x11:current-pattern "GZx11graph" 2)
+(defcsetfn '#:display:x11:current-mode "GZx11graph" 3)
+(defcsetfn '#:display:x11:current-foreground "GZx11graph" 4)
+(defcsetfn '#:display:x11:current-background "GZx11graph" 5)
+(defcsetfn '#:display:x11:line-style-max "GZx11graph" 6)
+(defcsetfn '#:display:x11:pattern-max "GZx11graph" 7)
+(defcsetfn '#:display:x11:make-pattern "GZx11graph" 8)
+(defcsetfn '#:display:x11:make-line-style "GZx11graph" 9)
+(defcsetfn '#:display:x11:font-max "GZx11graph" 10)
+(defcsetfn '#:display:x11:load-font "GZx11graph" 11)
+(defcsetfn '#:display:x11:width-substring "GZx11graph" 12)
+(defcsetfn '#:display:x11:height-substring "GZx11graph" 13)
+(defcsetfn '#:display:x11:x-base-substring "GZx11graph" 14)
+(defcsetfn '#:display:x11:y-base-substring "GZx11graph" 15)
+(defcsetfn '#:display:x11:x-inc-substring "GZx11graph" 16)
+(defcsetfn '#:display:x11:y-inc-substring "GZx11graph" 17)
+(defcsetfn '#:display:x11:cursor-max "GZx11graph" 18)
+(defcsetfn '#:display:x11:make-cursor "GZx11graph" 19)
+(defcsetfn '#:display:x11:make-named-cursor "GZx11graph" 20)
+(defvar #:display:x11:xnumbers #[24 30 34 36 38 50 52 60 62 66 68 84 86 88 90 92 120 124 150 152])
+(defcsetfn '#:display:x11:cursor-name "GZx11graph" 21)
+(defcsetfn '#:display:x11:current-cursor "GZx11graph" 22)
+(defcsetfn '#:display:x11:move-cursor "GZx11graph" 23)
+(defcsetfn '#:display:x11:font-ascent "GZx11graph" 24)
+(defcsetfn '#:display:x11:font-height "GZx11graph" 25)
+(defcsetfn '#:display:x11:current-stipple "GZx11graph" 26)
+(defcsetfn '#:display:x11:current-fill-mode "GZx11graph" 27)
+(defcsetfn '#:display:x11:make-graph-env "GZx11graph" 28)
+(defcsetfn '#:display:x11:kill-graph-env "GZx11graph" 29)
+(defcsetfn '#:display:x11:graph-env-set-clip "GZx11graph" 30)
+(defcsetfn '#:display:x11:graph-env-set-clips "GZx11graph" 31)
+(defcsetfn '#:display:x11:graph-env-change-values "GZx11graph" 32)
+(defcsetfn '#:display:x11:graph-env-subwindow-mode "GZx11graph" 33)
+(defcsetfn '#:display:x11:get-font-names "GZx11graph" 34)
+(defcsetfn '#:display:x11:get-font-info "GZx11graph" 35)
+(defcsetfn '#:display:x11:graph-env-planemask "GZx11graph" 36)
+
+(defccheck '(x11_set_planemask x11_font_info list scanstring x11_list_fonts x11_graph_subwindow_mode x11_change_gc_values x11_set_clips x11_set_clip x11_free_graph_env x11_new_create_graph_env #:tclass:x11window:make x11_set_stipple x11_move_cursor x11_set_cursor acons x11_create_cursor cassoc x11_make_cursor x11_pixmap_to_bitmap #:display:x11:width-substring x11_y_base_string x11_x_base_string x11_height_string x11_width_string #:llcp:errwna x11_load_font |1+| eqvector bltvector makevector x11_setwindow_background x11_set_background x11_set_foreground x11_set_mode x11_set_fill_mode x11_set_pattern x11_set_line_style x11_font_height x11_font_ascent x11_set_font))

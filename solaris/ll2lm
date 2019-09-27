@@ -1,0 +1,20 @@
+
+#!/bin/sh
+# check usage
+usage="ll2lm [options...][-help]"
+
+LLDIR=/usr/ilog/lelisp
+SYSTEM=solaris
+
+cll2lm=$LLDIR/$SYSTEM/cll2lm
+
+trap "echo $usage;exit 1" 1 2 3 15
+
+if [ $# -gt 0 ]
+then
+  LL2LMARGS=$*; export LL2LMARGS
+  exec $cll2lm
+else
+  exec $cll2lm
+fi
+

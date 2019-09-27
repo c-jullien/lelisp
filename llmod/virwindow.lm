@@ -1,0 +1,146 @@
+defmodule
+window
+files (
+|virwindow.ll|
+)
+export (
+#:window:create
+#:window:prin
+create-window
+create-subwindow
+make-window
+current-window
+modify-window
+update-window
+kill-window
+pop-window
+move-behind-window
+current-keyboard-focus-window
+find-window
+map-window
+windowp
+subwindowp
+check-window-position
+define-window-property-accessor
+#:image:rectangle:window:set-property
+#:image:rectangle:window:create
+#:image:rectangle:window:prin
+#:image:rectangle:window:make-window
+#:image:rectangle:window:current-window
+#:image:rectangle:window:uncurrent-window
+#:image:rectangle:window:modify-window
+#:image:rectangle:window:update-window
+#:image:rectangle:window:kill-window
+#:image:rectangle:window:pop-window
+#:image:rectangle:window:move-behind-window
+#:image:rectangle:window:current-keyboard-focus-window
+#:image:rectangle:window:uncurrent-keyboard-focus-window
+#:image:rectangle:window:map-window
+move-window
+resize-window
+move-resize-window
+window-events-list
+window-title
+window-state
+window-background
+window-border
+#:image:rectangle:window:move-window
+#:image:rectangle:window:resize-window
+#:image:rectangle:window:move-resize-window
+#:image:rectangle:window:window-events-list
+#:image:rectangle:window:window-title
+#:image:rectangle:window:window-state
+#:image:rectangle:window:window-background
+#:image:rectangle:window:window-border
+window-clear-region
+#:image:rectangle:window:window-clear-region
+window-graph-env
+#:image:rectangle:window:window-graph-env
+window-change-attributes
+#:image:rectangle:window:window-change-attributes
+)
+import (
+virutil
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:window:create nsubr ())
+(#:window:prin subr1 ())
+(#:image:rectangle:window:prin subr1 ())
+(create-window nsubr ())
+(create-subwindow nsubr ())
+(make-window subr1 ())
+(current-window nsubr ())
+(modify-window nsubr ())
+(update-window nsubr ())
+(kill-window subr1 ())
+(current-keyboard-focus-window nsubr ())
+(pop-window subr1 ())
+(move-behind-window subr2 ())
+(find-window subr2 ())
+(map-window nsubr ())
+(windowp subr1 ())
+(subwindowp subr2 ())
+(check-window-position subr1 ())
+(define-window-property-accessor dmsubr ())
+(#:image:rectangle:window:set-property subr3 ())
+(#:image:rectangle:window:create nsubr ())
+(#:image:rectangle:window:make-window subr1 ())
+(#:image:rectangle:window:current-window subr1 ())
+(#:image:rectangle:window:uncurrent-window subr1 ())
+(#:image:rectangle:window:modify-window nsubr ())
+(#:image:rectangle:window:update-window nsubr ())
+(#:image:rectangle:window:kill-window subr1 ())
+(#:image:rectangle:window:pop-window subr1 ())
+(#:image:rectangle:window:move-behind-window subr2 ())
+(#:image:rectangle:window:current-keyboard-focus-window subr1 ())
+(#:image:rectangle:window:uncurrent-keyboard-focus-window subr1 ())
+(#:image:rectangle:window:map-window nsubr ())
+(move-window subr3 ())
+(resize-window subr3 ())
+(move-resize-window nsubr ())
+(window-events-list nsubr ())
+(window-title nsubr ())
+(window-state nsubr ())
+(window-background nsubr ())
+(window-border nsubr ())
+(#:image:rectangle:window:move-window subr3 ())
+(#:image:rectangle:window:resize-window subr3 ())
+(#:image:rectangle:window:move-resize-window nsubr ())
+(#:image:rectangle:window:window-events-list subr2 ())
+(#:image:rectangle:window:window-title subr2 ())
+(#:image:rectangle:window:window-state subr2 ())
+(#:image:rectangle:window:window-background subr2 ())
+(#:image:rectangle:window:window-border subr2 ())
+(window-clear-region nsubr ())
+(#:image:rectangle:window:window-clear-region nsubr ())
+(window-graph-env subr1 ())
+(#:image:rectangle:window:window-graph-env subr1 ())
+(window-change-attributes subr3 ())
+(#:image:rectangle:window:window-change-attributes subr3 ())
+)
+cpfunctions (
+(compat-type subr1)
+(subwindowp1 subr2)
+(#:window:test-window-state subr2)
+)
+cpimport (
+(virutil
+(current-display . nsubr)
+(#:image:rectangle:window:make . subr0)
+))
+cpenv (
+virutil
+((putprop '#:window:current-window 't '#:complice:globalvar)
+)((putprop '#:window:current-keyboard-focus-window 't '#:complice:globalvar)
+)((unless (boundp '#:window:all-windows) (defvar #:window:all-windows))
+(defvar #:window:current-window)
+(defvar #:window:current-keyboard-focus-window)
+)((putprop '#:check-window:x 't '#:complice:globalvar)
+)((putprop '#:check-window:y 't '#:complice:globalvar)
+))

@@ -1,0 +1,74 @@
+;;; GELL 15.26: elaboration file for the module: traverse
+;;;             translation done: "Thu Mar  11 93 15:58:48 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: traverse.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'traverse)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZtraverse" "Thu Mar  11 93 15:58:48 "
+
+'((check-travinit . subr0) (meter-travinit . subr0) (test-travinit . subr1) (check-travrun . subr0) (meter-travrun . subr0) (test-travrun . subr1) (traverse-seed . subr0))
+
+#[(test-travinit 1) check-value (count-calls-init) eval (count-calls-stop) t (test-travrun 1) (count-calls-init) (count-calls-stop) vector node traverse-sn traverse-rand list *count-call* traverse-count (traverse-count) lambda traverse-marker traverse-root check-travinit #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-travinit test-travinit #:gell-resetfn:function-1 check-travrun meter-travrun test-travrun traverse-seed]
+)
+
+(defcsetfn 'check-travinit "GZtraverse" 0)
+(defcsetfn 'meter-travinit "GZtraverse" 1)
+(defcsetfn 'test-travinit "GZtraverse" 2)
+(defcsetfn 'check-travrun "GZtraverse" 3)
+(defcsetfn 'meter-travrun "GZtraverse" 4)
+(defcsetfn 'test-travrun "GZtraverse" 5)
+(putprop 'node '((() () (snb) () () () () () () ()) parents sons sn entry1 entry2 entry3 entry4 entry5 entry6 mark) 'defstruct)
+(if (featurep 'setf) (progn (progn (putprop '#:node:parents '#:node:parents 'setf-inverse) '#:node:parents)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:parents (struct . valeur) (ifn valeur (list 'vref struct 0) (list 'vset struct 0 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:sons '#:node:sons 'setf-inverse) '#:node:sons)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:sons (struct . valeur) (ifn valeur (list 'vref struct 1) (list 'vset struct 1 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:sn '#:node:sn 'setf-inverse) '#:node:sn)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:sn (struct . valeur) (ifn valeur (list 'vref struct 2) (list 'vset struct 2 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:entry1 '#:node:entry1 'setf-inverse) '#:node:entry1)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:entry1 (struct . valeur) (ifn valeur (list 'vref struct 3) (list 'vset struct 3 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:entry2 '#:node:entry2 'setf-inverse) '#:node:entry2)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:entry2 (struct . valeur) (ifn valeur (list 'vref struct 4) (list 'vset struct 4 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:entry3 '#:node:entry3 'setf-inverse) '#:node:entry3)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:entry3 (struct . valeur) (ifn valeur (list 'vref struct 5) (list 'vset struct 5 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:entry4 '#:node:entry4 'setf-inverse) '#:node:entry4)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:entry4 (struct . valeur) (ifn valeur (list 'vref struct 6) (list 'vset struct 6 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:entry5 '#:node:entry5 'setf-inverse) '#:node:entry5)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:entry5 (struct . valeur) (ifn valeur (list 'vref struct 7) (list 'vset struct 7 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:entry6 '#:node:entry6 'setf-inverse) '#:node:entry6)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:entry6 (struct . valeur) (ifn valeur (list 'vref struct 8) (list 'vset struct 8 (car valeur))))))
+(if (featurep 'setf) (progn (progn (putprop '#:node:mark '#:node:mark 'setf-inverse) '#:node:mark)))
+(if (featurep 'compiler) (progn (defmacro-open #:node:mark (struct . valeur) (ifn valeur (list 'vref struct 9) (list 'vset struct 9 (car valeur))))))
+(putprop '#:node:parents (lambda (y x) (list '#:node:parents x y)) 'setf-expander)
+'#:node:parents
+(putprop '#:node:sons (lambda (y x) (list '#:node:sons x y)) 'setf-expander)
+'#:node:sons
+(putprop '#:node:sn (lambda (y x) (list '#:node:sn x y)) 'setf-expander)
+'#:node:sn
+(putprop '#:node:entry1 (lambda (y x) (list '#:node:entry1 x y)) 'setf-expander)
+'#:node:entry1
+(putprop '#:node:entry2 (lambda (y x) (list '#:node:entry2 x y)) 'setf-expander)
+'#:node:entry2
+(putprop '#:node:entry3 (lambda (y x) (list '#:node:entry3 x y)) 'setf-expander)
+'#:node:entry3
+(putprop '#:node:entry4 (lambda (y x) (list '#:node:entry4 x y)) 'setf-expander)
+'#:node:entry4
+(putprop '#:node:entry5 (lambda (y x) (list '#:node:entry5 x y)) 'setf-expander)
+'#:node:entry5
+(putprop '#:node:entry6 (lambda (y x) (list '#:node:entry6 x y)) 'setf-expander)
+'#:node:entry6
+(putprop '#:node:mark (lambda (y x) (list '#:node:mark x y)) 'setf-expander)
+'#:node:mark
+(defvar traverse-sn 0)
+(defvar *count-call* 0)
+(defvar traverse-rand 21)
+(defvar traverse-count 0)
+(defvar traverse-marker ())
+(defvar traverse-root)
+(setq traverse-sn 0 traverse-rand 21 traverse-count 0 traverse-marker ())
+(defcsetfn 'traverse-seed "GZtraverse" 6)
+
+(defccheck '(list vector eval check-value))

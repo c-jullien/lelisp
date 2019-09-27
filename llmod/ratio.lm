@@ -1,0 +1,174 @@
+defmodule
+r
+files (
+ratio
+)
+export (
+pgcd
+gcd
+fib
+fact
+numerator
+denominator
+even?
+#:r:q:rationalp
+#:r:q:n:integerp
+#:r:q:z:integerp
+#:r:q:/:integerp
+#:r:q:n:abs
+#:r:q:z:abs
+#:r:q:/:abs
+#:r:q:truncate
+#:r:q:/:truncate
+#:r:q:n:float
+#:r:q:z:float
+#:r:q:/:float
+#:r:q:n:|0-|
+#:r:q:z:|0-|
+#:r:q:/:|0-|
+#:r:q:n:1/
+#:r:q:z:1/
+#:r:q:/:1/
+#:r:q:n:<?>
+#:r:q:z:<?>
+#:r:q:/:<?>
+#:r:q:n:|+|
+#:r:q:z:|+|
+#:r:q:/:|+|
+#:r:q:n:*
+#:r:q:z:*
+#:r:q:/:*
+#:r:q:n:quomod
+#:r:q:z:quomod
+#:r:q:n:prin
+#:r:q:z:prin
+#:r:q:/:prin
+#:fix:|+|
+#:fix:|-|
+#:fix:/
+#:fix:1/
+#:fix:*
+#:fix:quomod
+#:float:truncate
+#:float:quomod
+)
+import (
+genr
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(pgcd subr2 ())
+(gcd nsubr ())
+(fib subr1 () () (fn fn+1))
+(fact subr1 ())
+(numerator subr1 ())
+(denominator subr1 ())
+(even? subr1 ())
+(#:r:q:rationalp subr1 ())
+(#:r:q:n:integerp subr1 ())
+(#:r:q:z:integerp subr1 ())
+(#:r:q:/:integerp subr1 ())
+(#:r:q:n:abs subr1 ())
+(#:r:q:z:abs subr1 ())
+(#:r:q:/:abs subr1 ())
+(#:r:q:truncate subr1 ())
+(#:r:q:/:truncate subr1 ())
+(#:r:q:n:float subr1 ())
+(#:r:q:z:float subr1 ())
+(#:r:q:/:float subr1 ())
+(#:r:q:n:|0-| subr1 ())
+(#:r:q:z:|0-| subr1 ())
+(#:r:q:/:|0-| subr1 ())
+(#:r:q:n:1/ subr1 ())
+(#:r:q:z:1/ subr1 ())
+(#:r:q:/:1/ subr1 ())
+(#:r:q:n:<?> subr2 ())
+(#:r:q:z:<?> subr2 ())
+(#:r:q:/:<?> subr2 ())
+(#:r:q:n:|+| subr2 ())
+(#:r:q:z:|+| subr2 ())
+(#:r:q:/:|+| subr2 ())
+(#:r:q:n:* subr2 ())
+(#:r:q:z:* subr2 ())
+(#:r:q:/:* subr2 ())
+(#:r:q:n:quomod subr2 ())
+(#:r:q:z:quomod subr2 ())
+(#:r:q:n:prin subr1 ())
+(#:r:q:z:prin subr1 ())
+(#:r:q:/:prin subr1 () (q))
+(#:fix:|+| subr2 ())
+(#:fix:|-| subr2 ())
+(#:fix:/ subr2 ())
+(#:fix:1/ subr1 ())
+(#:fix:* subr2 ())
+(#:fix:quomod subr2 ())
+(#:float:truncate subr1 ())
+(#:float:quomod subr2 ())
+)
+cpfunctions (
+(#:n:fib subr1)
+(#:n:|+| subr2)
+(#:n:prof subr2)
+(#:n:overflow subr2)
+(#:n:c->c subr3)
+(#:n:cc+c nsubr)
+(#:n:c+c subr2)
+(#:n:c+rr subr1)
+(#:n:* subr2)
+(#:n:c*b subr2)
+(#:n:cc*c+c nsubr)
+(#:n:c*c+c+c nsubr)
+(#:n:=0 subr1)
+(#:n:underflow subr1)
+(#:n:|-| subr2)
+(#:n:cc-c nsubr)
+(#:n:c-c subr2)
+(#:n:c-rr subr1)
+(nx subr1)
+(#:n:fact subr3)
+(qx subr2)
+(#:n:float subr1)
+(#:n:b subr1)
+(#:n:<?> subr2)
+(#:r:q:q?z subr2)
+(#:r:q:c-c subr2)
+(zx subr1)
+(#:r:q:q+z subr2)
+(#:r:q:q*z subr2)
+(cquoc subr2)
+(#:n:quomod subr2)
+(#:n:cquob subr2)
+(#:n:cdivb subr2)
+(#:n:normalise subr2)
+(#:n:**b subr1)
+(#:n:ccdivc nsubr)
+(#:n:cccdivcc nsubr)
+(cquo-c subr2)
+(-cquoc subr2)
+(-cquo-c subr2)
+(#:n:prin subr1)
+(#:n:prin10 subr2)
+(#:n:prinb subr3)
+(ecrit-fc nsubr)
+(division- subr2)
+(ecrit-10 nsubr)
+(ftrunc subr1)
+)
+cpimport (
+(genr
+(precision . nsubr)
+(#:r:quomod . subr2)
+))
+cpenv (
+genr
+((putprop '#:ex:regret 't '#:complice:globalvar)
+)((putprop '#:ex:mod 't '#:complice:globalvar)
+)((putprop '#:n:b0 't '#:complice:globalvar)
+)((putprop '#:n:b0/2 't '#:complice:globalvar)
+)((putprop '#:float:b 't '#:complice:globalvar)
+)((putprop '#:float:fb 't '#:complice:globalvar)
+)((putprop '#:float:-fb 't '#:complice:globalvar)
+))

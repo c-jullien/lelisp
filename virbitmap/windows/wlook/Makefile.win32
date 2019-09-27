@@ -1,0 +1,56 @@
+#
+#	Makefile for 'extrnlib.dll'	2003/05/23
+#
+
+#	-D_ISO			For ISO/IEC 9899:1990 C Compilers
+#	-D_WINDOWS		For Windows 3.x, Windows 95, Windows NT, ..
+
+#	Directories :
+
+SYSDIR	= ..\..\..\win32
+OBJDIR	= $(SYSDIR)\o
+
+#	Tools:
+
+CC	= cl
+LD	= link
+RC	= rc
+
+#	Flags:
+
+MFLAGS	= -D_ISO -D_WINDOWS -D_DLL -D_NT -DWIN32 -DSTRICT
+CFLAGS	= -nologo -c -Gs -W3 $(MFLAGS)
+LIBS	= kernel32.lib user32.lib comdlg32.lib oldnames.lib 
+DEBUG	= # /CodeView
+LDFLAGS	= -dll -nologo -machine:i386 -def:extrn32.def
+
+#	External definition with DLL
+
+all:	$(SYSDIR)\extrnlib.dll \
+	$(SYSDIR)\extrnlib.ll  \
+	$(SYSDIR)\extrnlib.lo  \
+	$(SYSDIR)\extrnlib.lm
+
+$(SYSDIR)\extrnlib.dll: $(OBJDIR)\extrnlib.obj $(OBJDIR)\extrnlib.res extrn32.def
+	@$(LD) $(LDFLAGS) $(OBJDIR)\extrnlib.obj $(OBJDIR)\extrnlib.res $(LIBS) \
+	       -out:extrnlib.dll
+	@copy extrnlib.dll $(SYSDIR)\extrnlib.dll > nul
+	@copy extrnlib.exp $(SYSDIR)\extrnlib.exp > nul
+
+$(OBJDIR)\extrnlib.obj: extrnlib.c
+	@$(CC) $(CFLAGS) -Fo$@ extrnlib.c
+
+$(OBJDIR)\extrnlib.res: extrnlib.rc
+	@$(RC) -r -d_NT -fo $(OBJDIR)\extrnlib.res extrnlib.rc
+
+extrnlib.lo:	extrnlib.ll extrnlib.lm
+	@echo "extrnlib.lo is not up to date. Please use compilwl"
+
+$(SYSDIR)\extrnlib.ll:	extrnlib.ll
+	@copy extrnlib.ll $(SYSDIR)
+
+$(SYSDIR)\extrnlib.lm:	extrnlib.lm
+	@copy extrnlib.lm $(SYSDIR)
+
+$(SYSDIR)\extrnlib.lo:	extrnlib.lo
+	@copy extrnlib.lo $(SYSDIR)

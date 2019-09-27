@@ -1,0 +1,22 @@
+defmodule
+()
+files (
+cstruct
+)
+export (
+defcstruct
+sizeof
+_malloc
+_free
+_charref
+_shortref
+_longref
+_charset
+_shortset
+_longset
+_cstring
+)
+import
+()
+include
+()

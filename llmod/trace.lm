@@ -1,0 +1,104 @@
+defmodule
+step
+files (
+trace
+)
+export (
+trace
+untrace
+step
+unstep
+cstep
+#:step:stepeval
+tracend
+stepend
+debugend
+#:trace:output
+#:trace:trace-one
+#:trace:untrace-one
+)
+import (
+toplevel
+defs
+virbitmap
+files
+messages
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(trace fsubr ())
+(#:trace:trace-one subr1 ())
+(#:trace:untrace-one subr1 ())
+(untrace fsubr ())
+(step fsubr ())
+(unstep fsubr ())
+(cstep fsubr ())
+(#:step:stepeval subr2 () (#:step:forme #:step:env))
+(tracend subr0 ())
+(stepend subr0 ())
+(debugend subr0 ())
+(#:trace:output dmsubr ())
+)
+cpfunctions (
+(build-tracing-fval subr1)
+(parse-specif subr1)
+(default-specif subr1)
+(#:trace:flat subr1 () (r))
+(#:trace:flat-aux subr1)
+(#:step:steploop subr1)
+(#:step:stepmargin subr1)
+(#:step:nobind? subr1)
+)
+cpimport (
+(toplevel
+(printerror . subr3)
+)(defs
+(resetfn . subr3)
+)(messages
+(get-message . subr1)
+)(files
+(featurep . subr1)
+(libautoload . fsubr)
+(rem-feature . subr1)
+))
+cpenv (
+messages
+toplevel
+cpmac
+defs
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:system:debug 't '#:complice:globalvar)
+)((putprop '*trace-input* 't '#:complice:globalvar)
+)((putprop '*trace-output* 't '#:complice:globalvar)
+)((putprop '#:step:auto-step 't '#:complice:globalvar)
+)((putprop '#:trace:trace 't '#:complice:globalvar)
+)((putprop '#:trace:last-untraced 't '#:complice:globalvar)
+)((putprop '#:trace:untracable 't '#:complice:globalvar)
+)((putprop 'tracewindow 't '#:complice:globalvar)
+)((putprop '#:trace:windowp 't '#:complice:globalvar)
+)((putprop '#:trace:not-in-trace-flag 't '#:complice:globalvar)
+)((putprop '#:trace:step-in-trace-flag 't '#:complice:globalvar)
+)((putprop '#:trace:fct 't '#:complice:globalvar)
+)((putprop '#:trace:ftype 't '#:complice:globalvar)
+)((putprop '#:trace:larg 't '#:complice:globalvar)
+)((putprop '#:trace:call 't '#:complice:globalvar)
+)((putprop '#:step:depth 't '#:complice:globalvar)
+)((putprop '#:step:value 't '#:complice:globalvar)
+)((putprop '#:step:speak 't '#:complice:globalvar)
+)((putprop '#:step:history 't '#:complice:globalvar)
+)((putprop '#:step:exp 't '#:complice:globalvar)
+))

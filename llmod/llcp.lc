@@ -1,0 +1,30 @@
+defmodule
+llcp
+files (
+cpmac
+llcp
+peephole
+)
+export (
+dont-compile
+compile
+compiler
+compilefiles
+compile-all-in-core
+defmacro-open
+make-macro-open
+macro-openp
+remove-macro-open
+#:compiler:peephole
+#:compiler:macroexpand
+#:compiler:macro-expand-error
+)
+import (
+files
+loader
+pretty
+messages
+toplevel
+)
+include
+()

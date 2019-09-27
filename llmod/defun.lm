@@ -1,0 +1,50 @@
+defmodule
+defun
+files (
+defun
+)
+export (
+listify
+arg
+setarg
+lambda
+defun
+#:maclisp:defun:kwd-bind-key
+#:maclisp:lexpr:aux
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(listify subr1 ())
+(arg subr1 ())
+(setarg subr2 ())
+(lambda fsubr ())
+(defun dmsubr ())
+(#:maclisp:defun:kwd-bind-key subr2 ())
+(#:maclisp:lexpr:aux subr1 ())
+)
+cpfunctions (
+(vect-to-cons subr3)
+(#:maclisp:lexpr subr2)
+(#:maclisp:lexpr:nil-in-bvl subr2)
+(#:maclisp:lexpr:subst-nil-to-gensym subr1)
+(pkg-gensym subr1)
+(#:maclisp:defun:dvl subr2)
+(#:maclisp:defun:kwd-input subr2)
+(#:maclisp:defun:kwd-key-aux subr1)
+(#:maclisp:defun:kwd-aux subr1)
+(#:maclisp:defun:kwd-key subr1)
+(#:maclisp:defun:kwd-optl subr2)
+(#:maclisp:lexpr:init-bvl-vector subr1)
+)
+cpimport
+()
+cpenv (
+((putprop '#:maclisp:lexpr:len 't '#:complice:globalvar)
+)((putprop '#:maclisp:lexpr:bvl-vector 't '#:complice:globalvar)
+)((putprop '#:maclisp:&keywords 't '#:complice:globalvar)
+))

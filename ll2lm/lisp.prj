@@ -1,0 +1,59 @@
+;;;
+;;; lelisp project definitions
+;;;
+
+(setq MODANA #.(catenate #:system:directory "modana/"))
+(setq LLIB   #:system:llib-directory)
+(setq LLUB   #:system:llub-directory)
+(setq SYSTEM #:system:system-directory)
+(setq LLMOD  #:system:llmod-directory)
+(setq LLOBJ  #:system:llobj-directory)
+(setq X11    #.(catenate #:system:virbitmap-directory "X11/"))
+(setq WINDOWS #.(catenate #:system:virbitmap-directory "windows/"))
+
+(setq windows.prj
+(define-rt-project windows
+  root-directory #.MODANA
+  directories (
+               #.WINDOWS
+               )
+  required-projects (lisp)
+  project-file #p"lisp.prj"
+  modules-lists (win_def wincolor winevent wininit winstruc
+		 win winbitma windraw wingraph winmenu winwindo)
+))
+
+(setq x11.prj
+(define-rt-project x11
+  root-directory #.MODANA
+  directories (
+               #.X11
+               #.LLMOD
+               )
+  required-projects (lisp)
+  project-file #p"lisp.prj"
+  modules-lists (#p"virx11.lst")
+))
+
+(setq lisp.prj
+(define-rt-project lisp
+  root-directory #.MODANA
+  directories (
+               #.SYSTEM
+               #.LLIB
+               #.LLOBJ
+               #.LLMOD
+               #.LLUB
+               )
+  required-projects ()
+  modules-lists (llib.lst llub.lst system.lst)
+))
+
+;;; defined new definers for ANALYZER
+;; macro-character
+(defdefiner dmc)
+
+;; splice-macro
+(defdefiner dms)
+
+;; DEFABBREV, DEFSHARP are already defined in analyzer

@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: physio
+;;;             translation done: "Wed June 30 93 17:33:51 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: physio.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'physio)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZphysio" "Wed June 30 93 17:33:51 "
+
+'((tyi . subr0) (tys . subr0) (tyinstring . subr1) (tyflush . subr0) (tyo . nsubr) (tyback . subr1) (tynewline . subr0) (tycn . subr1) (tystring . subr2) (tycursor . subr2) (tycls . subr0) (redisplayscreen . nsubr) (#:gell:tyi . subr0) (#:gell:tys . subr0) (#:gell:tyinstring . subr1) (#:gell:tyo . nsubr) (#:gell:tyflush . subr0) (#:gell:tyback . subr1) (#:gell:tynewline . subr0) (#:gell:tycn . subr1) (#:gell:tystring . subr2) (#:gell:tycursor . subr2) (#:gell:tycls . subr0) (#:gell:redisplayscreen . nsubr) (bol . subr0) (inmax . nsubr) (inpos . nsubr) (inbuf . nsubr) (eof . subr1) (prompt . nsubr) (coerce-namestring . subr1) (openi . subr1) (openo . subr1) (opena . subr1) (openib . subr1) (openob . subr1) (openab . subr1) (input . subr1) (output . subr1) (inchan . nsubr) (outchan . nsubr) (channel . nsubr) (close . nsubr) (deletefile . subr1) (renamefile . subr2) (copyfile . subr2) (create-directory . subr1) (delete-directory . subr1) (probefile . subr1) (save-core . subr1) (restore-core . subr1))
+
+#[tyi #:gell-resetfn:function-name #:gell-resetfn:function-0 tys tyinstring #:gell-resetfn:function-1 tyflush tyo #:gell-resetfn:function-n tyback tynewline tycn tystring #:gell-resetfn:function-2 tycursor tycls redisplayscreen #:gell:tyi #:gell:tys #:gell:tyinstring #:gell:tyo #:gell:tyflush #:gell:tyback #:gell:tynewline #:gell:tycn #:gell:tystring #:gell:tycursor #:gell:tycls #:gell:redisplayscreen bol inmax inpos inbuf eof prompt coerce-namestring openi openo opena openib openob openab input output inchan outchan channel close deletefile renamefile copyfile create-directory delete-directory probefile save-core restore-core]
+)
+
+
+(defccheck '())

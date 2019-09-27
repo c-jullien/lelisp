@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: string
+;;;             translation done: "Wed June 30 93 17:34:58 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: string.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'string)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZstring" "Wed June 30 93 17:34:58 "
+
+'((string . subr1) (plength . subr1) (slength . subr1) (slen . subr1) (catenate . nsubr) (substring-equal . nsubr) (eqstring . subr2) (substring . nsubr) (makestring . subr2) (duplstring . subr2) (bltstring . nsubr) (fillstring . nsubr) (scanstring . nsubr) (spanstring . nsubr) (chrpos . nsubr) (sref . subr2) (chrnth . subr2) (sset . subr3) (chrset . subr3) (typestring . nsubr) (exchstring . subr2) (index . nsubr) (alphalessp . subr2) (symbol . subr2) (concat . nsubr) (hash . subr1) (pname . subr1) (gensym . subr0) (bltscreen . nsubr) (typevector . nsubr) (makevector . subr2) (vlength . subr1) (eqvector . subr2) (vref . subr2) (vset . subr3) (bltvector . nsubr) (vector . nsubr) (exchvector . subr2) (fillvector . nsubr))
+
+#[string #:gell-resetfn:function-name #:gell-resetfn:function-1 plength slength slen catenate #:gell-resetfn:function-n substring-equal eqstring #:gell-resetfn:function-2 substring makestring duplstring bltstring fillstring scanstring spanstring chrpos sref chrnth sset #:gell-resetfn:function-3 chrset typestring exchstring index alphalessp symbol concat hash pname gensym #:gell-resetfn:function-0 bltscreen typevector makevector vlength eqvector vref vset bltvector vector exchvector fillvector]
+)
+
+
+(defccheck '())

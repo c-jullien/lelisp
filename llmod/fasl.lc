@@ -1,0 +1,17 @@
+defmodule
+fasl
+files (
+fasl
+)
+export (
+#:fasl:fasl-write-block
+#:fasl:fasl-memo-eval-block
+#:fasl:fasl-record-fentry
+#:fasl:fasl-record-literal-reference
+#:fasl:fasl-record-symbol-reference
+#:fasl:fasl-emit-title-block
+)
+import
+()
+include
+()

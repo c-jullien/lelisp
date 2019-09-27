@@ -1,0 +1,538 @@
+%==========================================================================
+\Chapter {1} {Introduction to the modular management of the application}
+%==========================================================================
+
+
+This manual presents how to use \LeLisp\  module generation tools.
+This chapter introduces the basic functions of the \LeLisp\ module
+generation tools.
+
+The following section is designed to introduce users to notions of 
+{\em modular programming} and {\em modules}.
+
+%---------------------------------------------------------------------------
+\Section {Le-Lisp Application and modules}
+%---------------------------------------------------------------------------
+
+\SSection{About the application}
+
+\SSSection{Adapting interpreted files}
+
+You want to guarantee the best conditions for the management
+(i.e., the development, maintenance, and delivery to the final user)
+of your \LeLisp\ application source code.  If you are accustomed to working
+directly off of source files, you'll soon find that working directly off of source files:
+
+\begin{itemize}
+\item requires you to make file regroupings for which the language does not offer completely apparent support\,;
+\item creates interpreted code that is not executed in an optimal manner.  (This is especially apparent when loaded by a form such as {\tt loadfile} and incorporated in a memory image.)\,;
+\end{itemize}
+
+You should also remember that to deliver an application in its "source" form actually weakens that application in as much as the smallest internal function is left open to modification or even to deletion.  In addition, delivering an application in its "source" form defeats any notion of confidentiality that you might have wanted to associate with your application.
+
+\SSSection{Availability of the modular compiler}
+
+\LeLisp\ offers you the possibility to regroup your source files in the form of {\em modules} and then to {\bf compile these modules}.
+The \LeLisp\ modular compiler produces object files containing an intermediary code that, once loaded,\footnote{The loading of the intermediary code is done by what we will call, in the following pages, the {\em charger} or {\em loader}.}
+executes from 3 to 30 times faster than the same interpreted code.  This compilation, while assuring the compatibility with the interpreter, introduces a certain number of restraints (e.g., no dynamic variable link) and creates an ensemble of static verifications \footnote{In interpreted mode, you can't guarantee that the code evaluation will be exhaustively tested (as is the case when you compile the code).} that lead to stronger code overall.   
+
+\SSSection{Principles of modular compilation}
+
+Modular compilation attempts, essentially, to define for each module the {\tt interface} with other modules (i.e., the ensemble of functions that could be called from the exterior of the module).
+
+If you think of a module as an ensemble of functions of the applications logically regrouped (described further on), to define or describe the interface of the module consists of specifying to the compiler a sub-grouping of functions defined in the module.  These functions will be {\em exported}.
+A module using one of the exported functions by another module should {\em import} the module furnishing it to be able to execute.
+
+Establishing these modules and their client-server relations is the principal goal of this manual\footnote{ You should also see Chapter 13 of the Le-Lisp {\em Reference Manual} for an exhaustive definition of the modules.}.
+
+The \LeLisp\
+{\em Module Analyzer} automates nearly all phases of this activity.
+
+Before we study how to use this feature, we'll need a little bit of 
+basic background information on the modules that will allow us to continue the reading of this manual. 
+
+\SSection{Modules}
+
+We've already given you an "intuitive" definition of modules:  the regrouping of \LeLisp\ code with an eye on compiling it modularly.
+This "regrouping" might also be applied to the definition of the interface of the module. 
+
+To specify the module files (the interface in question and other information useful to the compiler such as imported modules), you need to use a {\em modular description}.  You do this through the {\tt .lm} extension file that contains a certain number of conventional keys.  
+
+\SSSection {Interpreted Modules}
+
+Let's start by considering the module as a simple regrouping of
+\LeLisp\  source files.
+
+For example, a developer has written a substantial \LeLisp\ program divided into three files {\tt a.ll}, {\tt b.ll}, and {\tt c.ll}.  To use this application, the developer must explicitly load these three files by {\tt loadfile} or {\tt libloadfile}).
+
+The developer can structure this application in a single module to simplify its loading.
+
+Let's call the module {\tt mymod}. It's sufficient, then, to create the {\tt
+mymod.lm} in the following manner:
+
+\begin{Code*}
+defmodule mymod
+files (a.ll b.ll c.ll)
+\end{Code*}
+
+This file {\tt mymod.lm} is the descriptor of the module {\tt
+mymod}.
+
+You then only need to evalute {\tt (loadmodule 'mymod)} to load, at the same time, the three files mentioned in {\tt files}:  {\tt a.ll}, {\tt b.ll}, and {\tt c.ll}.
+
+The files that are loaded (as described above) in the environment constitute an interpreted version of the application. 
+
+\SSSection{Imports}
+
+The application described above creates a very minimal interface containing one \Aida button.
+
+The loading described above only makes sense if 
+
+\begin{itemize}
+\item it is performed after having started \Aida\
+\item the developer is sure that the ensemble of \Aida\ functionalities required by the {\tt mymod} module is present in the used memory image.
+\end{itemize}
+
+In contrast, the application loaded as described above could not function without \Aida.
+
+To avoid these kinds of pitfalls, you need to hone the {\tt mymod} module definition by adding imports to the module descriptor. 
+
+\begin{Code*}
+defmodule mymod
+files (a.ll b.ll c.ll)
+import (application button)
+\end{Code*}
+
+If you then evaluate (under \Aida) the form {\tt (loadmodule \|'|mymod)}, 
+the charger is going to first insure that the modules mentioned in the
+{\tt import}\footnote{In a recursive way.}
+list are present in memory 
+(Note:  in our example this would be the modules {\tt application}
+ and {\tt button} of \Aida). 
+
+If one of these two modules is not present in memory, the module (and its sub-modules if they are not present either) will be loaded (by a {\tt loadmodule}.
+
+The {\tt import} list -- that is a simple security measure in this example -- becomes mandatory if no module is present which is usually the case when one creates an executive.
+
+\SSSection {Compiled modules}
+
+The benefits of modular organization of files is perhaps most apparent
+when compiling files with the modular compiler\footnote{Called {\tt complice}.}.
+
+
+This compilation (see Chapter 13 of the \LeLisp\ {\em Reference Manual} and the \Aida {\em Programmer's Manual}) generates a {\tt mymod.lo} file containing a list of \|LAP| instructions (see Chapter 12 of the \LeLisp\ {\em Reference Manual}).
+
+We saw in our example that, when a module is interpreted, the {\tt
+loadmodule} function loads the files indicated in the {\tt
+files} list.
+
+When the module is compiled, it is no longer the source files ({\tt a.ll}, {\tt b.ll}, and {\tt c.ll}) that are loaded, but only the {\tt mymod.lo} file resulting from their compilation.
+
+This {\tt mymod.lo} file contains all the module functions in compiled form.  These functions are no longer loaded in memory in the form of lists (in the {\tt cons} zone) but in the form of instruction lists in machine language (in the zone {\tt code}).
+
+Their execution is thus faster and it is possible to hide in the other modules functions that are strictly internal to this module by not mentioning them in the external interface of the module.
+For example, if in the {\tt mymod} module you only want to "make visible" (i.e., export) two functions {\tt f} and {\tt g}, it is only necessary to add the following line to the module descriptor\,:
+
+\begin{Code*}
+defmodule mymod
+files (a.ll b.ll c.ll)
+import (application button)
+export (f g)
+\end{Code*}
+
+%---------------------------------------------------------------------------
+\Section {Introduction to module analysis}
+%---------------------------------------------------------------------------
+
+\LeLisp\ offers a set of tools that allow you to:
+\begin{itemize}
+\item automate the "fine tuning" of the modular descriptions
+\item prepare a compilation of an "incremental" nature
+\item effectively compile (this is the phase that, when finished, creates the object files.)
+\end{itemize}
+
+Rather than manually creating the complete specification of diverse keys of modular descriptions the use of the {\em Module Analyzer} is going to allow you to: 
+\begin{itemize}
+\item assemble modular descriptions from "decoupled" source provided by the user
+\item prepare scripts of the {\tt Makefile} command type (to create the analysis on the ensemble of the files that compose the application)
+\item create an analysis of source code at the time of "fine tuning" of the modular descriptions.  This allows you to detect errors in the "decoupling" in modules (e.g., the existance of cycles in the inter-module dependencies) or gaps given in the information provided on the application that do not allow it to be modularly compiled (e.g., lack of system information on the access to the products used by the application; lack of information on the environment that should be present during the compilations, etc.)
+\item prepare the modular compilation by producing a compilation script of the type {\tt Makefile} that offers the possibility to compile the ensemble of the application incrementally (i.e., you will be able to correct compilation errors generated by specific modules one by one and then continue with the compilation).
+\end{itemize}
+
+
+\SSection{The Module Analyzer:  Beginning notions}
+
+The {\em Module Analyzer} is the tool that allows you to produce modular descriptions and the compilation {\tt Makefile} from certain basic information on the application. 
+The analyzer functions by taking several passes on the source files and the modular descriptions of the application.  The analyzer does this until the programmer eliminates error messages and warning messages that need to be corrected.
+
+\SSSection{Using the Module Analyzer}
+
+The {\em Module Analyzer} exists in the form of a system command, {\tt ll2lm}, equipped with an ensemble of calling keys that allow you to 
+detail parameters of the current analysis.
+
+Calling {\tt ll2lm} allows you to either directly analyze a module or to produce scripts of {\tt Makefile} command type that use, themselves, the command {\tt ll2lm}.  
+These scripts of {\tt Makefile} command type also allow the analysis to be started on the entire project.
+
+Using the analyzer, most often, revolves around this notion of generating command scripts and starting them.
+
+\begin{Side}{Note}
+The last section of this chapter specifies where to find the {\em Module Analyzer}, how to install it, and how to configure it.
+\end{Side}
+
+\SSSection{Starting with the analyzer}
+
+In this section we broach the subject of using the analyzer by studying what information is the "minimal" information that must be furnished to be able to generate the application modules.
+
+The application in its non-modular form is made up of an ensemble of source files that are organized in the development directories.  Your first step when starting out with the analyzer is first to specifiy to the analyzer which are the files that make up the application and where they are found.
+
+We have already shown that the ensemble of source files do not necessarily make up a logical separation of the application that is appropriate to its compilation or to its distribution.
+A coherent separation of modules will allow you, in effect, to limit the external interface of the modules to the functions that are strictly necessary to external usage.
+That which is valuable for each module is, in effect, valuable for each application:  it is in separating the application into modules that one rationalizes the external interface of the application. 
+
+If the analyzer can work, by default, with, as its base, the source files of the application, 
+the analyzer will generate a modular description file by source file. It is much more reasonable to consider that the work base must be given in the form of an ensemble of modular descriptions regrouping the source files.  These "start-up" modular descriptions need only to contain the keys {\tt defmodule} and {\tt files}.  (Note:  The other lists - most notably {\tt import} and {\tt export} - will be filled by the analyzer.
+
+\SSection{Projects}
+
+
+\SSSection{Project Notions}
+
+Once the application is separated -- either into source files or  into "start-up" modular descriptions that specify the application components -- you will need to indicate to the analyzer:
+\begin{itemize}
+\item the separation itself\,;
+\item the directories where the source files and the modular descriptions are found\,;
+\item  the directories where the modules, the analysis scripts, etc. must be produced.
+\end{itemize}
+
+The ensemble of these specifications that describe the analysis context is grouped in something we call a {\em project}.
+
+A {\em project} is file with a {\tt .prj} extension in which will be written a form of a project definition where will be specified useful information to analyze the application.  The following is a particularly simple example of defining a {\em project}:
+\BeginLL
+(define-rt-project myappli
+   root-directory #u"/udd/local/myappli/" 
+   directories (#u"sources/")
+   modules-lists ("myappli.lst") 
+\EndLL
+
+The simple example above defines the project {\tt myappli} associated with the application.  The project is defined in the {\tt myappli.prj} file.  The ensemble of directories linked to the application are found in the root directory \|/udd/local/myappli|.  The source files are in the {\tt sources} directory (under the root directory).  The separation into modules of the application is given in the {\tt myappli.lst} file that is found in the directory mentioned in the key {\tt directories}\footnote{If several source directories exist and are mentioned in the key, it's necessary to verify that in each directory a file of type {\tt myappli.lst} is found.}. 
+
+The project brings together in a single place all information having bearing on 
+\begin{itemize}
+\item the application itself, that might be an ensemble of modules (or of files, by default).  The option concerned here is {\tt modules-lists}
+\item the localization of the resources that make up the application -- a system of directories relative to a root directory --.  The principal options concerned here are {\tt root-directory}
+and {\tt directories}.
+\end{itemize}
+
+Of course, a certain number of other information useful to the analyzer can or must be specified via the project (e.g., where the modules and their descriptions are generated, what are the names that one might like to give to the script files generated, etc.).
+
+The objective here is not to detail all the options:  the most frequently used of the options are presented in Chapter 2 and the ensemble of options is documented in Chapter 5.
+
+\SSSection{Projects and Products}
+
+In this initial contact with the notion of a project, we have not mentioned the fashion which the analyzer could manage imports in the case where external modules to the application {\tt myappli} were necessary to execute the application. 
+Let's suppose that the application {\tt myappli} contains the module {\tt mymod}(already presented in the example on modules) that uses functions that belong to \Aida\ (these imports must be {\tt application} and {\tt button}. 
+With the project {\tt myappli} defined in the preceding paragraph, the analyzer will not have the means to create a list of imports necessary to compile and load the {\tt mymod} module.
+
+In other terms, if the application that you want to analyze uses another application (or a product such as \Aida), it is necessary to specify this other application to the analyzer.
+
+To do this, it is necessary to use the key {\tt required-projects} in the following fashion:
+\BeginLL
+(define-rt-project myappli
+   required-projects (aida)
+   root-directory #u"/udd/local/myappli/" 
+   directories (#u"sources/")
+   modules-lists ("myappli.lst") 
+\EndLL
+
+The example indicated here specifies that the project {\tt myappli} requires the presence of the {\tt aida} project at the time of the analysis.
+Declaring that an application is a client of another application becomes, in itself, particularly easy.
+
+
+The ensemble of the \Ilog\ products based on \LeLisp\ are equipped with
+a project description and a corresponding file:
+{\tt lelisp.prj},
+{\tt aida.prj},
+{\tt smeci.prj},
+etc.,
+(Note:  Each of these, of course, can be directly referenced in the projects of the applications)
+
+\SSection{Preparing your application environment }
+
+Before we conclude this introductory chapter with a look at analysis operations and the complete compilation process, we'd like to indicate a means of organizing your application environment that will assist you in successfully completing the closing exercises of this chapter.
+
+\SSSection{Separating source and modules}
+
+It's a good idea to separate the application modules from their source (this includes modular descriptions updated by the {\em Module Analyzer}):
+\begin{itemize}
+\item your delivery of the application to its users will be eased:  only the modules must be delivered unless you are only delivering an executive
+\item the separation between source files controled by the programmer and work files modified by the analyzer is also good practice.  You should also note that there is a means of maintaining the module extension descriptions that are different from {\tt .lm} ({\tt .lc} is frequently used).
+\end{itemize}
+
+\SSSection{Analysis Directory}
+
+The project files and the scripts generated by the analyzer are in general grouped in a specific directory, distinct from source and modules. 
+This directory is called
+{\tt modana} in the \Ilog  products distribution.
+It will be referenced in the project definition by using the key {\tt system-directory} (See Chapter 5).
+
+You should note that for its own needs the analyzer produces files that correspond to an internal {\em reference table} whose usage and updating do not, initially, concern the user.
+
+On the other hand, the location of the files can be "parameterized" (see the {\tt crunch-directory} option of the project definition) and is found, normally, in the {\tt modana} directory. 
+
+\begin{Side}{\bf Note}
+
+The {\tt .lst} extension files 
+that are associated with a project and that give a list of modules of the application (see {\tt myappli.lst} in the example of the preceding pages) are required to be located with the source files that are made accessible via the {\tt directories} key. 
+\end{Side}
+
+
+
+\SSSection{Summary}
+
+The conventional organization that we propose for the development and the compilation of applications is \|<root-dir>| that corresponds to the root directory of the application:
+\begin{itemize}
+\item \|<root-dir>/sources|\,: source files (with occasionally the "source" or {\tt .lc} modular descriptions) of the application
+\item \|<root-dir>/modules|\,: {\tt .lm} modular descriptions produced by the analyzer and {\tt .lo} object files produced by the compiler
+\item \|<root-dir>/modana|\,: directory where projects and scripts of type {\tt Makefile} that are produced for the analysis or the compilation are located.
+\end{itemize}
+
+%---------------------------------------------------------------------------
+\Section {Methodology\,: Analysis to Compilation in Six Steps}
+%---------------------------------------------------------------------------
+
+This section presents the module generation process of the {\tt myappli} application.
+
+In summary, the compilation cycle of the ensemble of modules of a project passes through three principal phases:
+\begin{enumerate}
+\item project preparation
+\item the analysis
+\item the compilation
+\end{enumerate}
+
+Each of these phases consists, normally, of several steps.
+
+The project preparation itself consists of at least two or three steps:
+\begin{itemize}
+\item {\em project description} (done by using the form
+{\tt define-rt-project} already introduced)\,;
+\item creation of a "start-up" analysis (done, if needed, when there is a lack of or an absence of modular descriptions) 
+\begin{itemize}
+\item creation of the {\tt Makefile} of the "start-up" analysis 
+\item two analysis runs that correspond to the 
+{\em start-up analysis}\,;
+\end{itemize}
+\item creation of the {\tt Makefile} of the current analysis
+\end{itemize}
+
+The next step concerns the analysis that corresponds with the incremental use of the current analysis script (with correction of the contents of the modules where errors have been detected). 
+
+Finally, the compilation phase is done in two steps:
+\begin{itemize}
+\item creation of the {\tt Makefile} of {\em compilation}\,;
+\item effective {\em compilation} of the modules. 
+\end{itemize}
+
+The complete step-by-step process of a module generation session contains at least 6 significant steps.  (Note:  Step 2:  Creation of a start-up analysis is optional and depends on requirements placed on module management for a given application).  
+
+%---------------------------------------------------------------------------
+\SSection{Step 1: Project Description}
+%---------------------------------------------------------------------------
+
+To describe the project (or projects) associated with the application, it's necessary to use one (or occasionally several) form(s) of the project definition {\tt define-rt-project}.
+
+The definition of a project will be stored in a description file with a conventional name such as  \|<projectname>.prj|.  This file, in fact, brings together all the information necessary to the project and, most notably, loading instructions of other projects when they are required.  You will write a loading form as in the example below where the {\tt aida} project is required and must be loaded initially:   
+
+\begin{Code*}
+(loadfile "/usr/ilog/aida/modana/aida.prj")
+
+(define-rt-project myappli
+   required-projects (aida)
+   root-directory #u"/udd/local/myappli/" 
+   directories (#u"sources/")
+   modules-lists ("myappli.lst")
+   system-directory #u"modana/"
+   crunch-directory #u"modana/")
+\end{Code*}
+
+
+
+By default (i.e., if the {\tt modules-lists} option is not used), each source file (in the form {\tt <file>.ll}) of each directory in the \|directories| key is going to produce a modular description file (in the form {\tt <file>.lm}).
+
+In the example above, we prefer to explicitly reference a module list already specified by modular descriptions indicating the source files that correspond to each module (See the reference to the \|myappli.lst| file). 
+
+\medskip 
+
+{\em For further details see Chapter 2 for starter information and Chapter 5 for reference material}.
+
+%------------------------------------------------------------------
+\SSection{Step 2: Start-up analysis}
+%------------------------------------------------------------------
+
+In the case where modular descriptions are missing or absent (i.e., when you want to create them from source files), the analysis cannot truly begin before these descriptions are assembled.  It's necessary, then, to run a first pass at an analysis (called a "start-up" analysis) that, as all analyses, can be run from a file of command type {\tt Makefile}.
+
+\SSSection{Creation of the Analysis Makefile for Start-up}
+
+To create the command script of the start-up analysis, you'll need to use the {\tt ll2lm} command with
+\begin{itemize}
+\item
+the generation option of the analysis makefile (this option is \|-init|).
+\item
+the default value of the management option of the dependency level of the makefile (Here we are speaking of the \|-dependency| option whose value must stay at 1). 
+Once located in the root directory, you start the command in the following fashion:
+\begin{Code*}
+% cd /udd/local/myappli
+% ll2lm -load modana/myappli.prj -p myappli -init
+\end{Code*}
+The option \|-load| indicates which project file to load.  The option \|-project| (that can be shortened to \|-p|) indicates which project must be analyzed. 
+
+You should find as well an analysis script named {\tt myappli.mki} in the analysis directory (mentioned in the project via the {\tt system-directory} key).
+\end{itemize}
+
+\SSSection{Start-up analysis}
+
+The start-up analysis is done by starting the {\tt myappli.mki} script generated in the preceding step.  This start-up is done twice:
+
+\begin{itemize}
+
+\item the first with the entry {\tt init1}:
+\begin{Code*}
+% make -f modana/myappli.mki init1
+\end{Code*}
+This first run allows you to create the internal reference tables of the analyzer (See \|modana/*.ref|) from an incomplete first version of the modular descriptions. 
+
+
+Most of the messages and warnings of this step are only due to the fact that the {\em Module Analyzer} does not yet know all the modules.  Numerous functions and other definitions are also unknown and, at the moment, unable to be located.  This is why you should pay no attention to warnings and error messages in this step.
+
+If "blocking" errors show themselves, you should review the order of the file analysis to be able to continue.
+
+\item the second time with the entry {\tt init2}
+\begin{Code*}
+% make -f modana/myappli.mki init2
+\end{Code*}
+
+This second run undertakes to recreate all the modules as if they don't exist.  In this run, however, the second run takes into account the complete analysis environment. 
+The messages (of type {\tt warning} or {\tt error}) that are displayed in this run are completely significant and should be put to use to correct the module contents or to modify the separation of the application.  This  
+"fine-tuning" work corresponds to the following phases of the 
+{\em current analysis}.
+\end{itemize}
+
+
+%------------------------------------------------------------------
+\SSection{Third step: Creation of the current analysis script}
+%------------------------------------------------------------------
+
+Once the start-up analysis has been completed (or in the case where the ensemble of modular descriptions of the application have been appropriately defined by hand), you create a current analysis script that will be used when undertaking future analyses.
+
+To create a current analysis script, you start the {\tt ll2lm} command with the \|-init| analysis option and with the {\tt -dep 2} dependency level option to establish a dependence on imported modules. 
+
+\begin{Code*}
+% ll2lm -load myappli.prj -p myappli -init -dep 2
+\end{Code*}
+
+%-------------------------------------------------------------------
+\SSection{Fourth Step: Current analysis}
+%-------------------------------------------------------------------
+
+The current analysis starts when using the {\tt Makefile} generated in the preceding step without an {\tt init1} or {\tt init2} entry:
+\begin{Code*}
+% make -f modana/myappli.mki
+\end{Code*}
+
+The above command line starts a series of analyses/corrections until no more warning messages (preceded by the mark {\tt **}) are indicated by the analyzer.
+
+If certain corrections require you to modify the project definition, you must redo steps 1 to 4.  It is sufficient, on the other hand, to restart step 4 when the {\tt import} lists are modified, each time that a circular dependance is signaled or that an {\tt import} redundance is mentioned.
+
+In the case where you use {\tt .lc} files as modular source descriptions, you should directly edit the files to correct the causes of the error messages.
+
+\medskip 
+
+{\em For further details see Chapter 2 for starter information and Chapter 5 for
+ reference material.  Chapter 4 documents the ensemble of analysis messages}.
+
+%----------------------------------------------------------------
+\SSection{Fifth step: Creation of the compilation script}
+%----------------------------------------------------------------
+
+When the module analyzer no longer offers warning messages that merit correcting, the preparation phase of the compilation can be finalized in generating a compilation {\tt Makefile}.
+
+The \|-makefile| option of the analysis allows you to create the {\tt Makefile} from the reference table of the project:  
+
+\begin{Code*}
+% ll2lm -load modana/myappli.prj -p myappli -makefile -dep 2
+\end{Code*}
+
+The file generate is named, by default, {\tt myappli.mk} and can be found in the analysis directory (mentioned in the project via the {\tt system-directory} key).
+
+This {\tt Makefile} should be regenerated if new modules are added to the project or if the project definition has been modified.  A certain number of keys in the form of project definitions such as \|directories|, \|ll-object-directory| (as well as \|complice-options| that is concerned directly with the compiler -- see Chapter 3) influence the contents of the compilation {\tt Makefile}.
+This can also be said for the \|-dependency| key of the analysis command that specifies the dependence level used to operate the {\tt make}.
+
+\medskip 
+
+{\em For further details see Chapters 3 et 5.}
+
+
+%-----------------------------------------------------------------
+\SSection{Sixth step: Compilation}
+%-----------------------------------------------------------------
+
+The sixth (and final) step consists of compiling the ensemble of the modules of the application, then, updating the compiled modules.
+
+In general, it's sufficient to start the compilation {\tt Makefile} without specifying particular entries:
+\begin{Code*}
+% make -f modana/myappli.mk
+\end{Code*}
+
+You will use the predefined entry {\tt clean} to erase all the ({\tt .lo}) object files and the entry {\tt i} to be in the interactive loop of the compiler (i.e., the loaded compilation environment).
+
+It's possible that {\tt complice} will detect new errors at the time of the module compilation.  If this is the case, you should correct these errors and redo steps 4 to 6.
+
+{\em For further details see Chapter 3 of this manual and the \LeLisp\  Reference Manual, Chapter 13.}
+
+\bigskip
+
+\begin{Side}{Note}
+{\em Appendix A presents a comprehensive version of the ensemble of analysis and compilation operations on a simple example, similar to the example presented in this chapter.  The example in Appendix A reproduces all the messages obtained during diverse sessions.}
+\end{Side}
+
+%---------------------------------------------------------------------------
+\Section{Installation and configuration of the analyzer}
+%---------------------------------------------------------------------------
+
+The installation of the analyzer is not mandatory to be able to use the analyzer.  In fact, the {\tt ll2lm} command is shipped with the \LeLisp\  product.  The
+{\tt ll2lm} command is located in the {\tt <machine>} directory with the same title as other \LeLisp\ commands and is directly usable.  The standard configuration of the zone sizes of {\tt ll2lm} is usually sufficient in the majority of the cases.
+
+If, during an analysis phase, you receive messages labeled in the following manner:
+
+\begin{Code*}
+***** Fatal error : no room for symbols.
+***** Fatal error : no room for code.
+\end{Code*}
+
+it will become necessary to reconfigure the memory image {\tt cll2lm}\footnote{This is not a documentation error!: the name of the memory image is, in fact, {\tt cll2lm} and not {\tt ll2lm}.}
+used by {\tt ll2lm} by increasing the concerned zone -- that of the symbols and code for the preceding message.
+
+Use the following steps:
+
+\begin{itemize}
+\item change to the machine directory of the \LeLisp\ distribution
+\begin{Code*}
+% cd /usr/ilog/lelisp/<machine>
+\end{Code*}
+\item delete the {\tt cll2lm} command
+\begin{Code*}
+% /bin/rm cll2lm
+\end{Code*}
+\item reconfigure an {\tt cll2lm} memory image.  In the following example, the image is reconfigured with a zone of symbols at 25:  
+\begin{Code*}
+% make cll2lm SYMBOL_A=25 CODE_A=2000
+\end{Code*}
+The {\tt make} command shown here calls the \|SYMBOL_A| variable to reconfigure the zone {\em symbol}, in a general manner, you will reconfigure an {\em xxx} zone by using the variable {\tt \|XXX_A|}. 
+\end{itemize}
+
+\begin{Side}{\bf Remark} 
+To know the standard zone sizes of the {\tt
+cll2lm} command, consult the {\tt cll2lm} file.
+\begin{Code*}
+% more /usr/ilog/lelisp/<machine>/cll2lm
+\end{Code*}
+\end{Side}

@@ -1,0 +1,55 @@
+defmodule
+pathname
+files (path)
+export (
+pathnamep
+namestring
+pathname
+equal-pathname
+copy-pathname
+user-homedir-pathname
+control-file-pathname
+temporary-file-pathname
+portable-pathname-p
+pathname-host
+pathname-device
+pathname-directory
+pathname-name
+pathname-type
+pathname-version
+set-pathname-host
+set-pathname-device
+set-pathname-directory
+set-pathname-name
+set-pathname-type
+set-pathname-version
+#:pathname:make
+make-pathname
+file-namestring
+directory-namestring
+host-namestring
+merge-pathnames
+combine-pathnames
+enough-namestring
+device-namestring
+#:pathname:prin
+true-pathname
+current-directory
+directoryp
+expand-pathname
+map-expand-pathname
+wildcard
+coerce-namestring
+;(pathname path)
+;#:pathname:assert
+#:unix:pathname       ; obligatoire pour #u
+;#:unix:namestring
+;#:vaxvms:pathname
+;#:vaxvms:namestring
+)
+import (
+callext
+defstruct
+)
+include
+(files)

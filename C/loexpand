@@ -1,0 +1,16 @@
+#!/bin/sh
+
+NAME=`basename $1 .llm3`
+
+if test -z "$BOOTLISP"
+then
+    BOOTLISP=lelisp
+fi
+
+$BOOTLISP <<EOF
+(loadfile "../C/llm3tolo.ll" t)
+(setq #:expand:s-dir "./")
+(setq #:expand:lo-dir "./C3/")
+(llm3tolo '($NAME))
+(end)
+EOF

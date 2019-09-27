@@ -1,0 +1,25 @@
+  % Extended codes Encoding vector.
+  /extcode[
+   /grave/circumflex/tilde/dotlessi/space/space/space/space/space/space
+   /space/exclamdown/cent/sterling/currency/yen/bar/section/dieresis/copyright
+   /ordfeminine/guillemotleft/logicalnot/minus/registered/macron/ring/plusminus
+   /ring/ring/acute/mu/paragraph/periodcentered/cedilla/ring/ordmasculine
+   /guillemotright/fraction/fraction/fraction/questiondown/Agrave/Aacute
+   /Acircumflex/Atilde/Adieresis/Aring/AE/Ccedilla/Egrave/Eacute/Ecircumflex
+   /Edieresis/Igrave/Iacute/Icircumflex/Idieresis/D/Ntilde/Ograve/Oacute
+   /Ocircumflex/Otilde/Odieresis/multiply/Oslash/Ugrave/Uacute/Ucircumflex
+   /Udieresis/Y/p/germandbls/agrave/aacute/acircumflex/atilde/adieresis/aring
+   /ae/ccedilla/egrave/eacute/ecircumflex/edieresis/igrave/iacute/icircumflex
+   /idieresis/d/ntilde/ograve/oacute/ocircumflex/otilde/odieresis/divide/oslash
+   /ugrave/uacute/ucircumflex/udieresis/y/p/ydieresis] def
+  
+  % fontname RESETEXTEND -  % creates LLfontname entry.
+  /makeLLfont
+  {
+    dup findfont dup length dict
+   /newdict x def {1 index/FID ne{newdict 3 1 roll put}{pop pop}ifelse} forall
+    newdict/Encoding 2 copy get dup length array copy dup
+    150 extcode putinterval put dup length 2 add string dup 3 -1 roll
+    2 x putinterval dup 0(LL)putinterval cvn newdict definefont pop
+  }BD
+

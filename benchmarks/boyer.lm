@@ -1,0 +1,40 @@
+; The Le-Lisp Benchmarks (7) : boyer
+
+defmodule     boyer
+files        (boyer)
+export       (boyer-setup check-boyer meter-boyer test-boyer)
+import       (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(boyer-setup subr0 ())
+(check-boyer subr0 ())
+(meter-boyer subr0 ())
+(test-boyer subr1 ())
+)
+cpfunctions (
+(add-lemma-lst subr1)
+(add-lemma subr1)
+(boyer subr0)
+(tautp subr1)
+(tautologyp subr3)
+(truep subr2)
+(falsep subr2)
+(rewrite subr1)
+(rewrite-with-lemmas subr2)
+(one-way-unify subr2)
+(one-way-unify1 subr2)
+(one-way-unify1-lst subr2)
+(apply-subst subr2)
+(apply-subst-lst subr2)
+(rewrite-args subr1)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+((putprop 'unify-subst 't '#:complice:globalvar)
+)((putprop 'temp-temp 't '#:complice:globalvar)
+))

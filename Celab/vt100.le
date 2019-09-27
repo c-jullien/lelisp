@@ -1,0 +1,38 @@
+;;; GELL 15.26: elaboration file for the module: vt100
+;;;             translation done: "Wed June 16 93 18:02:58 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: vt100.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'vt100)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZvt100" "Wed June 16 93 18:02:58 "
+
+'((#:tty:vt100:tycursor . subr2) (#:tty:vt100:tycls . subr0) (#:tty:vt100:tycleol . subr0) (#:tty:vt100:tycleos . subr0) (#:tty:vt100:tyattrib . subr1) (#:tty:vt100:typrologue . subr0) (#:tty:vt100:tyepilogue . subr0))
+
+#[tyo tyod #:tty:vt100:tycls #:tty:vt100:ymax tycursor #:tty:vt100:tycursor #:gell-resetfn:function-name #:gell-resetfn:function-2 #:gell-resetfn:function-0 #:tty:vt100:tycleol #:tty:vt100:tycleos #:tty:vt100:tyattrib #:gell-resetfn:function-1 #:tty:vt100:typrologue #:tty:vt100:tyepilogue]
+)
+
+(setq #:sys-package:tty '#:tty:vt100)
+(defvar #:tty:vt100:xmax 79)
+(defvar #:tty:xmax 79)
+(defvar #:tty:vt100:ymax 23)
+(defvar #:tty:ymax 23)
+(defcsetfn '#:tty:vt100:tycursor "GZvt100" 0)
+(defcsetfn '#:tty:vt100:tycls "GZvt100" 1)
+(defcsetfn '#:tty:vt100:tycleol "GZvt100" 2)
+(defcsetfn '#:tty:vt100:tycleos "GZvt100" 3)
+'(de #:tty:vt100:tyattrib (x) (if x (tyo 27 91 55 109) (tyo 27 91 109)))
+(defvar #:tty:vt100:tyattrib ())
+(defvar #:tty:tyattrib ())
+(defcsetfn '#:tty:vt100:tyattrib "GZvt100" 4)
+(defvar #:tty:vt100:tyattrib ())
+(defvar #:tty:tyattrib ())
+(defcsetfn '#:tty:vt100:typrologue "GZvt100" 5)
+(defcsetfn '#:tty:vt100:tyepilogue "GZvt100" 6)
+(defvar #:tty:vt100:tyshowcursor t)
+(defvar #:tty:tyshowcursor t)
+
+(defccheck '(tycursor #:tty:vt100:tycls tyod tyo))

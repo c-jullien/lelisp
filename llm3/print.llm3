@@ -1,0 +1,1275 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "7/19" "print.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 7 "L'imprimeur Le-Lisp"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/print.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $
+
+          TITLE     PRINT               ; LLM3 : les impressions standard
+
+          XREFI     LLINIT,.UNDEF       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,.LLSYSTEM
+          XREFI     LLINIT,.ITSOFT
+          XREFP     LLINIT,ITSOFT
+          XREFI     LLINIT,MSTACK
+          XREFI     LLINIT,MAXCHAN
+          XREFP     TOPERR,ERRFSP       ; 2 - TOPERR
+          XREFP     TOPERR,ERRSYM
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRNVA
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRVEC
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,GETSETN
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     GC,GETTYPE
+          XREFI     PHYSIO,OSTREAM      ; 4 - PHYSIO
+          XREFP     PHYSIO,TYSTRG
+          XREFP     PHYSIO,TYNEWLN
+          XREFI     PHYSIO,CUROUTCH
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFP     READ,FASCII
+          XREFI     READ,CPKGC
+          XREFI     READ,TABCH
+          XREFI     MACROCH,.SYSCOL     ; 6 - MACROCH
+          XREFP     EVAL,FFUNCALL       ; 8 - EVAL
+          XREFP     EVAL,SYSPROT
+          XREFP     EVAL,FINDTAG
+          XREFP     EVAL,UNBIND3
+          XREFI     EVAL,DLINK
+          XREFI     EVAL,SAVEA4
+          XREFI     EVAL,SAVEA1
+          XREFI     CNTRL,.QUOTE        ; 10 - CNTRL
+          XREFP     SYMBS,GETFNS        ; 12 - FNTSTD
+          XREFP     FNTSTD,LIST         ; 13 - FNTSTD
+          XREFP     STRING,GETNUMI      ; 16 - STRING
+          XREFP     STRING,STRINGA1
+          XREFP     STRING,MAKESTRG
+          XREFP     STRING,STRGSYMB
+          XREFI     STRING,.VECTOR
+          XREFI     STRING,.STRING
+
+          XDEFP     INI_PRINT
+          XDEFP     OUTCH
+          XDEFP     FLULIN
+          XDEFI     BUFOUT
+          XDEFI     POCOUR
+          XDEFI     MAXPOCOU
+          XDEFI     BUFPN
+          XDEFP     PROBJ
+          XDEFP     PROBJT
+          XDEFI     NBLEFT
+          XDEFI     NBRIG
+          XDEFI     OBASE
+          XDEFI     IEXPLD
+          XDEFI     LEXPLD
+
+          XDEFP     U_PRINT
+
+;
+;         Donnees des fonctions de sortie
+;         ===============================
+;
+
+          IMPURE
+
+BUFOUT    ADR       0                   ; tampon de sortie d'une ligne
+BUFPN     ADR       0                   ; tampon d'un p-name
+;
+OBASE     ADR       0                   ; base de conversion en sortie
+;
+PRMDP     ADR       0                  ; profondeur maximum d'impression (100)
+PRCDP     ADR       0                   ; profondeur courante d'impression
+;
+PRMLP     ADR       0                ; nb de ligne maximum d'impression (2000)
+PRCLP     ADR       0                   ; nb courant de lignes imprimees
+;
+PRMLN     ADR       0                   ; longueur maximum d'impression (2000)
+PRCLN     ADR       0                   ; longueur courante d'impression
+;
+PRMPK     ADR       0                   ; profondeur maximum de package (50)
+PRCPK     ADR       0                   ; profondeur courante de package
+;
+POCOUR    ADR       0                   ; index courant sur BUFOUT
+NBLEFT    ADR       0                   ; longueur de la marge gauche (0)
+NBRIG     ADR       0                   ; longueur de la ligne (78)
+MAXPOCOU  ADR       0                   ; la valeur max de POCOUR
+
+;          Donnees de la fonction EXPLODE
+
+IEXPLD    ADR         0                 ; indicateur EXPLODE
+LEXPLD    ADR         0                 ; liste en formation [GC]
+
+
+          PURE
+
+;
+;         Initialise l'imprimeur
+;         ======================
+;
+
+INI_PRINT LABEL      
+          MOVNIL    IEXPLD              ; raz indicateur EXPLODE
+          MOV       #10,OBASE           ; base en sortie
+          MOV       #100,PRMDP          ; init profondeur max du PRINT
+          MOV       #2000,PRMLP         ; init max line du PRINT
+          MOV       #2000,PRMLN         ; init longueur max du PRINT
+          MOV       #50,PRMPK           ; init prof max de package PRINT
+          MOV       #0,NBLEFT           ; init marge gauche
+          MOV       #78,NBRIG           ; init marge droite
+          MOV       NBRIG,MAXPOCOU      ; init maxpocou
+
+          MOV       #256,A1             ; une taille
+          MOV       #0,A2               ; le fill
+          JCALL     MAKESTRG            ; fabrique une chaine
+          MOV       A1,BUFPN
+;                                       ; Cre'ation des symboles
+          MAKFNT    EOL,#3,"eol" 
+          MAKFNT    LLFFLUSH,#5,"flush" 
+          MAKFNT    UPRATOM,#6,"pratom"
+          MAKFNT    PRIN,#4,"prin" 
+          MAKFNT    PRINT,#5,"print" 
+          MAKFNT    PRINFLUSH,#9,"prinflush" 
+          MAKFNT    TERPRI,#6,"terpri" 
+          MAKFNT    PRINCH,#6,"princh" 
+          MAKFNT    PRINCOD,#6,"princn" 
+          MAKFNT    FPTYPE,#5,"ptype" 
+          MAKFNT    PRLINE,#9,"printline" 
+          MAKFNT    PRLEVEL,#10,"printlevel" 
+          MAKFNT    PRLENGTH,#11,"printlength" 
+          MAKFNT    FOBASE,#5,"obase" 
+          MAKFNT    LMARGIN,#7,"lmargin" 
+          MAKFNT    RMARGIN,#7,"rmargin" 
+          MAKFNT    OUTPOS,#6,"outpos" 
+          MAKFNT    OUTBUF,#6,"outbuf" 
+          MAKFNT    EXPLODE,#7,"explode"
+          MAKFNT    EXPLODECH,#9,"explodech"
+
+          MOV       .LLSYSTEM,CPKGC     ; le package system
+          MAKCST    STATPR,#14,"print-for-read" 
+          MOVNIL    CVAL(A1)
+          MAKCST    STATPC,#15,"print-case-flag" 
+          MOVNIL    CVAL(A1)
+          MAKCST    STATPK,#18,"print-package-flag" 
+          MOV       .T,CVAL(A1)
+          MOVNIL    CPKGC	        ; revient au package ||
+
+          MAKCST    UDPRS,#3,"#<>"       ; objet non lisp!
+          RETURN
+
+PRPOPJ    RETURN
+
+PRTRUE    MOV       .T,A1
+          RETURN
+
+;
+;         Les points d'entree normaux de l'imprimeur
+;         U_PRINT : impression du registre A1
+;
+
+U_PRINT   LABEL      
+          CALL      PROBJ               ; actuellement
+          CALL      FULLIN
+          RETURN
+
+; 
+;         FLULIN : appelle l'IT soft FLUSH
+; 
+
+FLULIN    LABEL      
+          PUSH      A1                  ; sauve tous les registres
+          PUSH      A2                  ; encore
+          PUSH      A3                  ; encore
+          PUSH      A4                  ; et encore
+          MOV       .LLFFLUSH,A1        ; nom de l'IT Soft
+          MOVNIL    A2                  ; sans argument
+          JCALL     ITSOFT              ; appel IT
+          POP       A4                  ; restaure les registres
+          POP       A3                  ; encore
+          POP       A2                  ; encore
+          POP       A1                  ; et encore.
+          RETURN
+;
+;         FULLIN : appelle l'IT Soft : EOL si la ligne deborde
+;         toujours appelee en interne! jamais de OUTLIN direct.
+;
+
+FULLIN    LABEL      
+          PUSH      A1                  ; sauve tous les registres
+          PUSH      A2                  ; encore
+          PUSH      A3                  ; encore
+          PUSH      A4                  ; et encore
+          MOV       .EOL,A1             ; nom de l'IT Soft
+          MOVNIL    A2                  ; sans argument
+          JCALL     ITSOFT              ; appel IT
+          POP       A4                  ; restaure les registres
+          POP       A3                  ; encore
+          POP       A2                  ; encore
+          POP       A1                  ; et encore.
+          RETURN
+
+;
+;          (ITSOFT:EOL) SUBR0  equivalent a (TERPRI)
+;          mais est appelee par IT Soft
+;
+;  ----------------------------------------
+          FENTRY    EOL,SUBR0
+;  ----------------------------------------
+          CALL      OUTLIN              ; vide la ligne
+          MOVNIL    A1                  ; retourne toujours NIL
+          RETURN
+
+;
+;         (ITSOFT FLUSH) : fonction qui vide le buffer
+;         mais est appele'e par IT soft
+; 
+;  ----------------------------------------
+          FENTRY    LLFFLUSH,SUBR0
+;  ----------------------------------------
+          BFNIL     IEXPLD,PRTRUE       ; rien a` faire dans EXPLODE
+          MOV       POCOUR,A2           ; le pointeur sur le buffer.
+          CNBEQ     A2,#0,PRTRUE        ; rien a` faire c'est vide
+          CNBLT     OSTREAM,MAXCHAN,FFLUSH1; si fichier
+FFLUSH0   MOV       BUFOUT,A1           ; le tampon, A2 est OK
+          PUSH      A2                  ; le temps du tystring
+          MOV       #0,POCOUR           ; rien dans le tampon
+          JCALL     TYSTRG
+          POP       POCOUR
+          BRA       FFLUSH3             ; la fin commune
+FFLUSH1   MOV       POCOUR,A1           ; la taille
+          HPXMOV    CUROUTCH,#1,A3      ; le type de canal
+          CNBEQ     A3,#2,FFLUSH2       ; type ?
+          OUTFLB    OSTREAM,BUFOUT,A1,A2; binaire!
+          BRA       FFLUSH3             ; fin commune
+FFLUSH2   OUTFL     OSTREAM,BUFOUT,A1,A2; texte!
+FFLUSH3   CALL      OUTLI2              ; nettoie la ligne
+          MOV       #0,POCOUR           ; position 0!
+          RETURN
+;
+;         Routines de base
+;         ================
+;
+;
+;          OUTLIN : vide le tampon de sortie
+;          et change de ligne
+;
+
+OUTLIN    LABEL      
+          BFNIL     IEXPLD,EXPLS        ; je suis dans un EXPLODE
+          CNBLT     OSTREAM,MAXCHAN,OUTLI1; c'est un fichier
+          MOV       BUFOUT,A1           ; le tampon
+          MOV       POCOUR,A2           ; index de sortie (taille du tampon)
+          PUSH      A2                  ; empile la positionm courante
+          MOV       #0,POCOUR           ; plus rien pour le moment
+          JCALL     TYSTRG              ; (tystring (bufout) (pocour))
+          JCALL     TYNEWLN             ; (tynewline)
+          POP       POCOUR              ; re'cupe`re la position courante
+          BRA       OUTLI2              ; nettoie le tampon
+
+OUTLI1    HPXMOV    CUROUTCH,#1,A3      ; le type
+          CNBEQ     A3,#2,OUTLI11       ; texte
+          OUTFLB    OSTREAM,BUFOUT,POCOUR,A2; le binaire
+          BRA       OUTLI2
+OUTLI11   OUTF      OSTREAM,BUFOUT,POCOUR,A2; tester A2 ???
+OUTLI2    MOV       POCOUR,A2           ; index pour la remise a espace
+          MOV       BUFOUT,A1
+          BRA       OUTLI4
+OUTLI3    HBMOVX    #/ ,A1,A2           ; raz le tampon
+OUTLI4    SOBGEZ    A2,OUTLI3           ; A2 fois.
+          MOV       NBLEFT,POCOUR       ; init pointeur courant
+OUTLRET   RETURN
+
+;
+;    CHKLP  appelle FULLIN si on ne depasse pas le nombre maximum de lignes
+;    a imprimer
+
+; traitement spe'cial si on a pas de'passe' la marge mais le tampon
+CHKLP     LABEL
+          CNBNE     MAXPOCOU,NBRIG,FLULIN; c'est un FLUSH!
+          CNBNE     PRCLP,#1,CHKLP1     ; il y a encore la place
+          MOV       POCOUR,A1           ; on va mettre des  ...  au bout
+          DIFF      #3,A1               ; reculez de trois cases
+          MOV       #/.,A2              ; le caractere .
+          HBMOVX    A2,BUFOUT,A1        ; une fois
+          INCR      A1
+          HBMOVX    A2,BUFOUT,A1        ;    deux fois
+          INCR      A1
+          HBMOVX    A2,BUFOUT,A1        ;        trois fois
+          BRA       PROBJEND            ; vers le (EXIT 'PRIN) interne.
+CHKLP1    DECR      PRCLP               ; on decompte la ligne
+          BRA       FULLIN              ; EOL!
+
+;
+;          OUTCH : suppose dans A4 un caractere, le depose dans
+;          le tampon de sortie  et actualise le pointeur courant
+;          ne touche pas a A2 et A3
+;
+
+OUTCH     LABEL      
+          BFNIL     IEXPLD,EXPLCH       ; on est dans EXPLODE
+          PUSH      A1                  ; clean clean
+          MOV       POCOUR,A1           ; pour realiser la comparaison
+          CNBLT     A1,MAXPOCOU,OUTCH1  ; la ligne est pleine ?
+          CALL      CHKLP               ; oui : on vide en testant
+          MOV       POCOUR,A1           ; recharge le nouvel index.
+OUTCH1    HBMOVX    A4,BUFOUT,A1        ; charge le caractere
+          INCR      POCOUR              ; actualise l'index
+          POP       A1                  ; tout est propre
+          RETURN
+
+;
+;          OUTSP : edite un espace si c'est possible
+;          sinon change de ligne
+;
+
+OUTSP     LABEL      
+          BFNIL     IEXPLD,EXPLS        ; je suis dans EXPLODE
+          PUSH      A1                  ; clean clean
+          MOV       POCOUR,A1           ; pour realiser la comparaison
+          CNBGE     A1,MAXPOCOU,OUTSP1  ; la ligne est pleine.
+OUTSP0    HBMOVX    #/ ,BUFOUT,A1       ; charge un espace
+          INCR      POCOUR              ; actualise le pointeur courant
+          POP       A1                  ; tout est propre.
+          RETURN                        ; et c'est tout
+OUTSP1    CNBNE     MAXPOCOU,NBRIG,OUTSP2; c'est un FLUSH
+          CALL      CHKLP               ; vide la ligne simplement
+          POP       A1                  ; comme avant
+          RETURN     
+OUTSP2    CALL      CHKLP               ; vide la ligne
+          MOV       POCOUR,A1           ; le nouvel index
+          BRA       OUTSP0              ; et sort quand meme le blanc!
+
+;          OUTSHRP : edite un dieze et le caractere dans A4 colle's
+;          sinon change de ligne
+;          ne modifie pas A1 A2 A3.
+;
+
+OUTSHRP   LABEL      
+          BFNIL     IEXPLD,EXPLSH       ; on est dans EXPLODE
+          PUSH      A1                  ; clean clean
+          MOV       POCOUR,A1           ; pour realiser la comparaison
+          INCR      A1
+          CNBLT     A1,MAXPOCOU,OUTSHRP1; la ligne est pleine ?
+          CALL      CHKLP               ; oui : on vide.
+          MOV       POCOUR,A1           ; recharge le nouvel index.
+          INCR      A1
+OUTSHRP1  HBMOVX    A4,BUFOUT,A1        ; charge le caractere
+          DECR      A1
+          HBMOVX    #/#,BUFOUT,A1       ; charge le dieze devant
+          PLUS      #2,POCOUR           ; actualise l'index
+          POP       A1                  ; tout est propre
+          RETURN
+
+; 
+;    Sort un & si l'on ne depasse pas le nombre d'objets maximum
+;
+
+OUTET     MOV       PRCLN,A2            ; pour realiser la comparaison
+          CNBLT     A2,#0,OUTET1        ; l'infini
+          CNBEQ     A2,#1,OUTDDD        ; rate met trois points
+OUTET1    DECR      PRCLN               ; un objet de plus !
+          MOV       #/&,A4              ; un &
+          BRA       OUTCH               ; on y va
+
+;
+;   Sort trois points et termine brutalement l'impression en cours
+;
+
+OUTDDD    MOV       #/.,A4              ; un point
+          CALL      OUTCH               ; on l'e'crit trois fois
+          CALL      OUTCH
+          CALL      OUTCH
+          BRA       PROBJEND            ; vers le (EXIT 'PRIN) rapide.
+
+;
+;          PRATOM : edite l'atome dans A1
+;          change de ligne si l'atome ne rentre pas dans la ligne
+;          ne pre'serve pas A1!
+;
+
+PRATOM    LABEL      
+
+          MOV       PRCLN,A2            ; pour realiser la comparaison
+          CNBLT     A2,#0,PRATOM1       ; l'infini
+          CNBEQ     A2,#1,OUTDDD        ; ca rate on sort avec ...
+          DECR      PRCLN
+
+PRATOM1   PUSH      A1                  ; sauve l'atome a` imprimer
+          JCALL     GETTYPE             ; re'cupe`re le type de l'atome.
+          BFSYMB    A1,PRATOM2          ; GETFN pas GETFN2!
+          MOV       .PRIN,A2            ; pour le GETFNS
+          MOVNIL    A3                  ; recherche jusqu'a || EXCLU!
+          JCALL     GETFNS              ; essaie de trouver #:car:prin
+          BTNIL     A1,PRATOM2          ; pas de fonction!
+          CABEQ     A1,.PRIN,PRATOM2    ; pour e'viter de boucler.
+          MOV       #1,A4               ; Narg de FUNCALL
+          JMP       FFUNCALL            ; funcall rapide.
+          
+PRATOM2   POP       A1                  ; re'cupe`re l'atome.
+          BRA       UPRATOM             ; vers l'impression standard
+
+; ----------------------------------------
+          FENTRY    UPRATOM,SUBR1
+;----------------------------------------
+          BTSYMB    A1,PRSYMPK          ; c'est un symbole
+          BTFIX     A1,PRFIX            ; simple pour les nombres ...
+          BTFLOAT   A1,PRFLOAT          ; les flottants
+          BTSTRG    A1,PRSTRG           ; pour le cas des chaines.
+          BRA       PRVECT              ; c'est un vecteur.
+PRSYMPK   LABEL                         ; impression d'un symbole avec pkg
+          BTNIL     A1,PRATNIL          ; cas special du nil=()
+          MOV       #0,PRCPK            ; remise a` 0 de la profondeur
+          MOV       .STATPK,A3          ; le symbole  :PRINT-PACKAGE-FLAG
+          BTNIL     CVAL(A3),PRSYMB     ; pas de package a imprimer!
+PRSYMPK0  MOV       PKGC(A1),A3         ; la package du symbole a imprimer
+          BTNIL     A3,PRSYMB           ; c'est le package racine ||
+PRSYMPK1  PUSH      A1
+          MOV       PKGC(A1),A1         ; imprime le package
+          CALL      PRPKG
+          POP       A1                  ; re'cupere le symbole
+          BRA       PRSYMB              ; et l'imprime
+
+PRPKG     LABEL                         ; impression d'un package
+          PUSH      PRCPK               ; la valeur sauvee
+          MOV       @PRPKG0,A3          ; la routine protegee
+          JCALL     SYSPROT             ; sysprote'ge'e
+          POP       A1                  ; le re'sultat
+          POP       PRCPK               ; restaure'e
+          BRI       A3                  ; continue
+PRPKG0    MOV       .STATPK,A4          ; :print-package-flag (0 avec colon)
+          CABNE     CVAL(A4),#0,PRPKG1  ; il faut tout le package
+          MOV       .SYSCOL,A4          ; #:sys-package:colon
+          CABNE     A1,CVAL(A4),PRPKG1  ; pas dans sys-package:colon
+          MOV       #/:,A4              ; :
+          BRA       OUTCH               ; imprime le : puis le symbole nu
+PRPKG1    INCR      PRCPK               ; la profondeur de package courant
+          CNBEQ     PRMPK,#0,PRPKG2     ; l'infini
+          CNBLE     PRCPK,PRMPK,PRPKG2  ; ne de'passe pas
+          BRA       OUTDDD              ; ...
+PRPKG2    BTSYMB    A1,PRPKGSYM         ; c'est un symbole
+          MOV       #/:,A4              ; imprime #: colle's
+          CALL      OUTSHRP
+          CALL      PROBJ0
+          MOV       #/:,A4              ; le : qui suit
+	  BRA       OUTCH
+PRPKGSYM  BFNIL     PKGC(A1),PRSYMPK1   ; ce n'est pas le dernier
+          MOV       #/:,A4              ; imprime #: colle's
+          PUSH      @PRSYMB             ; la suite
+          BRA       OUTSHRP
+
+;         Edite un symbole sans package
+
+PRSYMB    LABEL                         ; cas d'un symbole sans package
+          MOV       .STATPR,A2          ; test de STATUS-PRINT
+          MOV       CVAL(A2),A2         ; la valeur de STATUS-PRINT
+          BTNIL     A2,PRAT2            ; on ne fait rien de plus.
+          CALL      CHKSYMB             ; Symbole spe'cial ?
+          BTNIL     A2,PRAT2            ; non, rien a faire
+          PLUS      #2,A2               ; pour compter les ||
+          CNBEQ     PRCPK,#0,PRAT0      ; pour le cas ou il faut prevoir
+          INCR      A2                  ; la place pour le : 
+PRAT0     PLUS      POCOUR,A2           ; calcul la nouvelle taille
+          CNBLE     A2,MAXPOCOU,PRAT1   ; ca rentre pas
+          CALL      CHKLP               ; alors on vide la ligne.
+PRAT1     MOV       #/|,A4              ; imprime une barre
+          CALL      OUTCH
+          JCALL     STRGSYMB            ; pname dans A1
+          MOV       A1,SAVEA1           ; pour la boucle
+          HGSIZE    A1,A2               ; longueur du pname
+          MOV       #0,A3               ; index caractere courant
+          BRA       PRAT12
+PRAT10    HBXMOV    SAVEA1,A3,A4        ; le caractere
+          HBXMOV    TABCH,A4,A1         ; son type
+          CNBNE     A1,#TCSYMB,PRAT11   ; pas une barre
+          CALL      OUTCH               ; double les barres
+PRAT11    CALL      OUTCH               ; sort le caracteren
+          INCR      A3                  ; avance dans le pname
+PRAT12    CNBNE     A3,A2,PRAT10        ; il y en a encore!
+          MOV       #/|,A4              ; la barre finale
+          CNBEQ     PRCPK,#0,OUTCH      ; pas de pkg: jsrt hack
+          CALL      OUTCH               ; sort la barre
+          MOV       #/:,A4              ; le se'parateur de packages
+          BRA       OUTCH
+
+PRAT2     LABEL                         ; cas d'un symbole sans ||
+          JCALL     STRGSYMB            ; Le PNAME (avec liens 3D)
+          HGSIZE    A1,A3               ; le plength
+          MOV       A3,A2               ; le temps du calcul
+          CNBEQ     PRCPK,#0,PRAT21     ; pour la place du :
+          INCR      A2                  ; si on est dans un package
+PRAT21    PLUS      POCOUR,A2           ; calcul la nouvelle taille
+          CNBLE     A2,MAXPOCOU,PRAT3   ; ca rentre pas
+          CALL      CHKLP               ; alors on vide la ligne.
+PRAT3     MOV       #0,A2               ; raz index
+          MOV       .STATPC,A4          ; le symbole  STATUS-PRINT-CASE
+          MOV       CVAL(A4),A4
+          BFNIL     A4,PRAT8            ; ca roule sans conversion!
+          BRA       PRATHB              ; edite les caracteres
+PRAT5     HBXMOV    A1,A2,A4            ; edite 1 caractere
+          CNBLT     A4,#/a,PRAT6        ; "a" minuscule
+          CNBGT     A4,#/z,PRAT6        ; "z" minuscule
+          UPPERC    A4                  ; conversion min -> MAJ 
+PRAT6     CALL      OUTCH               ; 
+          INCR      A2                  ; actualise l'index
+PRAT8     SOBGEZ    A3,PRAT5            ; il reste des caracteres.
+          CNBEQ     PRCPK,#0,PRPOPJ     ; plus rien
+          MOV       #/:,A4              ; le se'parateur de packages
+          BRA       OUTCH               ; c'est fini
+
+;         Edition du symbole NIL
+
+PRATNIL   MOV       #/(,A4              ; la "("
+          CALL      OUTCH               ; envoye!
+          MOV       #/),A4              ; la ")"
+          BRA       OUTCH               ; c'est parti
+
+
+;  Test si le symbole A1 a un pname spe'cial
+; 
+;      rend dans A2:
+;          () si le symbole est normal
+;          la longueur a` imprimer sinon (sans les ||)
+; 
+;  Ne touche pas a` A1
+
+CHKSYMB   LABEL
+          PUSH      A1
+          JCALL     STRGSYMB            ; le pname du symbole
+          HGSIZE    A1,A2               ; la taille du symbole
+          CNBEQ     A2,#0,CHKSYMB9      ; pas de pname!
+          PUSH      A2                  ; la taille courante.
+          MOVNIL    A3                  ; indicateur "pas que des chiffres"
+          BRA       CHKSYMB3            ; vers le de'but de boucle
+CHKSYMB0  HBXMOV    A1,A2,A4            ; le prochain caracte`re
+	  CNBEQ	    A4,#/+,CHKSYMB2     ; pour quelquechose
+	  CNBEQ	    A4,#/-,CHKSYMB2     ; de la forme
+	  CNBEQ	    A4,#/e,CHKSYMB2     ; 3E-5
+	  CNBEQ	    A4,#/E,CHKSYMB2
+          CNBLT     A4,#/0,CHKSYMB1     ; pas un  chiffre
+          CNBLE     A4,#/9,CHKSYMB2
+CHKSYMB1  INCR      A3                  ; je ne suis pas un chiffre!
+CHKSYMB2  HBXMOV    TABCH,A4,A4         ; le CTYPE
+          CNBNE     A4,#TCPNAME,CHKSYMB5; il est pas normal
+CHKSYMB3  SOBGEZ    A2,CHKSYMB0         ; il y en a encore
+          BTNIL     A3,CHKSYMB4         ; je n'ai que des chiffres
+          ADJSTK    #1                  ; la taille qui ne sert plus.
+          MOVNIL    A2                  ; le symbole est normal
+          POP       A1                  ; re'cupe`re le symbole
+          RETURN
+CHKSYMB4  POP       A2                  ; pname spe'cial de taille A2
+          POP       A1       
+          RETURN
+CHKSYMB5  MOV       A2,A3               ; l'index sur le pname
+          POP       A2                  ; la taille courante.
+          BRA       CHKSYMB7            ; compte le nb de |
+CHKSYMB6  HBXMOV    A1,A3,A4            ; le prochain caracte`re
+          HBXMOV    TABCH,A4,A4         ; son type
+CHKSYMB7  CNBNE     A4,#TCSYMB,CHKSYMB8 ; pas une barre
+          INCR      A2                  ; une de plus
+CHKSYMB8  SOBGEZ    A3,CHKSYMB6         ; encore?
+CHKSYMB9  POP       A1                  ; recupe`re le symbole
+          RETURN                        ; A2 est bon
+
+
+;         Compte le nombre de caracte`res a` imprimer compte tenu
+;         des " double's pour l'impression de la chai^ne A1
+
+CHKSTRG   LABEL
+          HGSIZE    A1,A3               ; la taille
+          MOV       A3,A2               ; le re'sultat
+          CNBEQ     A3,#0,CHKSTRG3      ; la chai^ne ""
+          BRA       CHKSTRG2            ; en de'but de boucle
+CHKSTRG1  HBXMOV    A1,A3,A4            ; le caractere
+          HBXMOV    TABCH,A4,A4         ; son type
+          CNBNE     A4,#TCSTRING,CHKSTRG2; pas un guillemet
+          INCR      A2                  ; un de plus!
+CHKSTRG2  SOBGEZ    A3,CHKSTRG1         ; next!
+CHKSTRG3  RETURN
+
+;         Impression du type du vecteur/chaine A1
+;         Si la fonction e'tendue existe ne retourne pas a` l'appelant.
+
+PRTYPVEC  LABEL
+          CABEQ     TYP(A1),.VECTOR,PRPOPJ; un vrai vector
+          CABEQ     TYP(A1),.STRING,PRPOPJ; une vraie chaine
+          PUSH      A1                  ; empile le vecteur/la chaine
+          MOV       TYP(A1),A1          ; imprime le type
+          CALL      PRPKG               ; re'cursivement
+          POP       A1                  ; imprime ensuite normalement
+          RETURN
+
+;         Edition d'une chaine de caracteres
+;         STATUS-PRINT indique s'il faut mettre des ""
+;         il faut aussi alors quoter les ""
+
+PRSTRG    LABEL      
+          CALL      PRTYPVEC            ; imprime le type e'ventuel
+          MOV       .STATPR,A2          ; test de STATUS-PRINT
+          MOV       CVAL(A2),A2         ; la valeur de STATUS-PRINT
+          BFNIL     A2,PRSTR5           ; une vraie chaine avec des ""
+          HGSIZE    A1,A3               ; la taille
+          MOV       A3,A2               ; le temps de faire le calcul!
+          PLUS      POCOUR,A2           ; calcul la nouvelle taille
+          CNBLE     A2,MAXPOCOU,PRATHB  ; ca rentre
+          BFNIL	    IEXPLD,PRATHB       ; on est dans un explode
+          CALL      CHKLP               ; ca ne rentre pas.
+;         edite la suite de caracteres de la chaine A1 de A3 caracteres.
+PRATHB    LABEL                         
+          MOV       #0,A2               ; index sur la suite des caracteres
+          BRA       PRATHB4
+PRATHB2   HBXMOV    A1,A2,A4            ; edite 1 caractere
+          CALL      OUTCH               ; 
+          INCR      A2                  ; actualise l'index
+PRATHB4   SOBGEZ    A3,PRATHB2          ; il reste des caracteres.
+          CNBEQ     PRCPK,#0,PRPOPJ     ; plus rien a` faire
+          MOV       #/:,A4              ; le se'parateur de packages
+          BRA       OUTCH
+PRSTR5    LABEL                         ; edite avec des ""!
+          CALL      CHKSTRG             ; calcule la vraie taille
+          PLUS      #2,A2               ; pour les "" autour
+          PLUS      POCOUR,A2           ; calcul la nouvelle taille
+          PLUS      #2,A2               ; pour les ""
+          CNBLE     A2,MAXPOCOU,PRSTR6  ; ca rentre
+	  BFNIL	    IEXPLD,PRSTRG       ; on est dans un explode
+          CALL      CHKLP               ; ca ne rentre pas.
+PRSTR6    LABEL      
+          MOV       #/",A4              ; le code ASCII de "
+          CALL      OUTCH               ; le premier guillemet
+          MOV       A1,SAVEA1           ; pour la boucle
+          HGSIZE    A1,A1               ; la taille
+          MOV       #0,A3               ; premier caractere
+PRSTR60   CNBEQ     A3,A1,PRSTR63
+          HBXMOV    SAVEA1,A3,A4        ; le caractere
+          HBXMOV    TABCH,A4,A2         ; son type
+          CNBNE     A2,#TCSTRING,PRSTR61; pas un guillemet
+          CALL      OUTCH               ; double le guillemet
+PRSTR61   CALL      OUTCH               ; imprime le caractere
+          INCR      A3
+          BRA       PRSTR60
+PRSTR63   MOV       #/",A4              ; le code ASCII de "
+          BRA       OUTCH               ; le 2eme ""
+
+;         Edition d'un vecteur
+
+PRVECT    LABEL      
+          MOV       PRCDP,A2            ; pour realiser la comparaison
+          CNBLE     A2,#0,PRVECT11      ; 0 c'est l'infini
+          CNBNE     A2,#1,PRVECT1       ; ca tient
+          BRA       OUTET               ; sort un &
+
+PRVECT1   DECR      PRCDP               ; mets a jour la profondeur
+PRVECT11  CALL      PRTYPVEC            ; imprime le type du vecteur
+PRVECTV   MOV       #/[,A4              ; une [
+          CALL      OUTSHRP             ; envoi un #[ colles
+          CALL      PRVECTIN            ; imprime le contenu du vecteur
+          MOV       #/],A4              ; l'acollade fermante
+          BRA       OUTCH
+
+PRVECTIN  HGSIZE    A1,A2               ; le nb max d'args
+          MOV       #0,A3               ; l'index
+          BRA       PRVECT6
+PRVECT2   PUSH      A1                  ; le vecteur
+          PUSH      A3                  ; l'index
+          PUSH      A2                  ; le compteur
+          HPXMOV    A1,A3,A1            ; l'element suivant du vecteur
+          CALL      PROBJ0              ; PROBJ sans remise a 0 des compteurs
+          TOPST     A4                  ; test du dernier element
+          CNBEQ     A4,#0,PRVECT4       ; ce n'est pas le dernier
+          CALL      OUTSP               ; sort un espace ou RC
+PRVECT4   POP       A2                  ; le compteur
+          POP       A3                  ; l'index
+          INCR      A3
+          POP       A1                  ; le vecteur
+PRVECT6   SOBGEZ    A2,PRVECT2
+PRVECT9   CNBLE     PRCDP,#0,PRVECT91   ; ne touchons pas a l'infini
+          INCR      PRCDP               ; de'compte la profondeur courante
+PRVECT91  RETURN                        ; fin!
+
+PRFLOAT   LABEL                         ; pour les flottants
+          PUSH      A1                  ; la valeur de retour
+          MOV       BUFPN,A3            ; adresse de rangement
+          CVFTOA    A1,A3,A2            ; retourne le nb de caracteres
+          BRA       PRNUM0              ; et rentre
+
+PRFIX     LABEL                         ; pour les entiers
+          PUSH      A1                  ; la valeur de retour
+          MOV       BUFPN,A3            ; adresse de rangement
+          MOV       #0,A2               ; indice 1er caractere
+          PUSH      A4                  ; est bien necessaire ?
+          JCALL     GETNUMI             ; A2 <- la taille
+          POP       A4                  ; on restaure tout
+PRNUM0    LABEL
+          MOV       A2,A3               ; le temps de faire le calcul!
+          PLUS      POCOUR,A3           ; calcul la nouvelle taille
+          CNBLE     A3,MAXPOCOU,PRNUM1  ; ca rentre
+          CALL      CHKLP               ; ca ne rentre pas.
+PRNUM1    LABEL
+          MOV       #0,A1               ; raz index
+          BRA       PRNUM4              ; ca roule
+PRNUM3    HBXMOV    BUFPN,A1,A4         ; edite 1 caractere
+          CALL      OUTCH
+          INCR      A1                  ; actualise l'index
+PRNUM4    SOBGEZ    A2,PRNUM3           ; il reste des caracteres.
+          POP       A1                  ; la valeur de retour
+          RETURN
+
+;
+;         Impression standard
+;         ===================
+;
+
+;
+;         PROBJ : fonction  d'impression interne
+;         de l'objet Lisp contenu dans A1
+;
+
+PROBJ     LABEL      
+          PUSH      A1                  ; sauve la valeur a` e'diter
+          PUSH      @PROBJE             ; retour de PROBJ01 ou (EXIT PRIN
+          PUSH      .PRIN               ; nom du TAG
+          PUSH      DLINK               ;; fabrique un bloc d'activation
+          PUSH      @UNBIND3            ;;    de type 3 = (TAG PRIN ...
+          STACK     DLINK               ;; nouveau DLINK
+          BRA       PROBJ01             ; la continuation du TAG.
+PROBJE    POP       A1                  ; restaure la valeur a` e'diter.
+          RETURN
+
+
+;         retour rapide (simule un (EXIT PRIN ())
+
+PROBJEND  LABEL                         ; en cas de retour subit!
+          MOV       .PRIN,A2            ; le nom du TAG
+          JMP       FINDTAG
+
+;         impression d'un objet, en dehors du (TAG PRIN ...
+;         reinitialise tous les compteurs d'impression.
+
+PROBJ01   LABEL
+          MOV       PRMLP,PRCLP         ; init nb de lignes
+          MOV       PRMLN,A2            ; init la longueur courante
+          CNBEQ     A2,#0,PROBJ02       ; calcul de l'infini
+          INCR      A2
+PROBJ02   MOV       A2,PRCLN
+          MOV       PRMDP,A2            ; init la profondeur courante
+          CNBEQ     A2,#0,PROBJ03       ; calcul de l'infini
+          INCR      A2
+PROBJ03   MOV       A2,PRCDP            ;;; PROBJ0 doit suivre ...
+
+
+;         PROBJ0 : e'dite l'objet A1 avec tous les compteurs actifs
+
+PROBJ0    INTEST
+          BTFIX     A1,PRATOM           ; le cas merdique!
+          BTFLOAT   A1,PRATOM           ; itou (si 32 bits!)
+          BTLISP    A1,PROBJ0T          ; c'est du bon Le-Lisp.
+          MOV       .UDPRS,A1           ; alors c'est #<>
+          BRA       PRSYMB
+PROBJ0T   BFCONS    A1,PRATOM           ; c'est tout pour les atomes
+          MOV       PRCDP,A2            ; pour realiser la comparaison
+          CNBLE     A2,#0,PROBJ11       ; l'infini
+          CNBNE     A2,#1,PROBJ1        ; ca tient
+          BRA       OUTET               ; un &
+;
+PROBJ1    DECR      PRCDP
+PROBJ11   BFINVSBL  A1,PROBJ3           ; c'est un CONS normal
+          PUSH      A1                  ; le temps de rechercher une fonction
+          JCALL     GETTYPE             ; le type du TCONS
+          BFSYMB    A1,PROBJ12          ; ne peut pas e^tre un type e'tendu
+          MOV       .PRIN,A2            ; pour le GETFNS
+          MOVNIL    A3                  ; recherche jusqu'a || EXCLU!
+          JCALL     GETFNS              ; essaie de trouver #:car:prin
+          CABEQ     A1,.PRIN,PROBJ12    ; Pour ne pas boucler.
+          BTNIL     A1,PROBJ12          ; ce n'est pas un type etendu.
+          MOV       #1,A4               ; Narg de FUNCALL
+          JMP       FFUNCALL
+PROBJ12   POP       A1                  ; rate!
+PROBJ2    MOV       #/(,A4              ; pour avoir #( colle's
+          CALL      OUTSHRP
+          BRA       PROBJ7              ; pour le reste du tcons
+
+PROBJ3    MOV       CAR(A1),A2          ; recupere le 1er element de la liste
+          CABNE     A2,.QUOTE,PROBJ5    ; c'est pas '
+          MOV       CDR(A1),A2          ; (larg)
+          BFCONS    A2,PROBJ5           ; Ce n'est pas la fonction QUOTE
+          BFNIL     CDR(A2),PROBJ5      ; Ce n'est pas la fonction QUOTE
+          MOV       #/',A4              ; imprime le caractere '
+          CALL      OUTCH
+          MOV       CAR(A2),A1          ; A1 <- l'argument de la fonction '
+          CNBLE     PRCDP,#0,PROBJ4     ; touche pas a l'infini
+          INCR      PRCDP               ; actualise la profondeur courante
+PROBJ4    BRA       PROBJ0              ; vers son impression
+;
+PROBJ5    MOV       #/(,A4              ; debut de liste
+          CALL      OUTCH               ; on l'envoie
+          BRA       PROBJ7              ; vers la suite des elements
+
+PROBJD    MOV       #/.,A4              ; sort 1 .
+          BRA       OUTCH
+
+PROBJ6    CALL      OUTSP               ; separateur d'element de liste
+PROBJ7    LABEL                         ; tombe dans PROBJ8
+;
+PROBJ8    CHKSTK    MSTACK,ERRFSP       ; des fois que ca boucle ...
+          PUSH      CDR(A1)             ; sauve le reste de la liste
+          MOV       CAR(A1),A1          ; element suivant
+          CALL      PROBJ0              ; on l'edite
+          POP       A1                  ; recupere le reste des elements
+          BTNIL     A1,PROBJ9           ; c'est une belle fin
+          BFCONS    A1,PROBJK           ; paire pointee.
+          BFINVSBL  A1,PROBJ6           ; la liste normale continue
+PROBJK    CALL      OUTSP               ; espace devant .
+          CALL      PROBJD              ; sort un .
+          CALL      OUTSP               ; encore un espace
+          CALL      PROBJ0              ; sort le dernier CDR ou . #( ...
+PROBJ9    MOV       #/),A4              ; sort une )
+          CNBLE     PRCDP,#0,PROBJ91    ; touche pas a l'infini
+          INCR      PRCDP               ; actualise la profondeur courante
+PROBJ91   BRA       OUTCH
+
+
+;
+;          PROBJT : imprime A1 et change de ligne
+;
+
+PROBJT    LABEL      
+          PUSH      @CHKLP              ; vide la ligne ensuite
+          BRA       PROBJ               ; et imprime l'objet
+
+;
+;         Fonctions de sortie standards
+;         =============================
+;
+;
+;         (PRIN e1 ... eN)   NSUBR
+;
+;  ----------------------------------------
+          FENTRY    PRIN,SUBRN
+;  ----------------------------------------
+          CALL      PRINN               ; imprime les N objets
+          RETURN                        ; PAS DE JSRT HACK!!!
+
+;         PRINN : empile's /retour/argN/.../arg1/  A4=nombre d'arguments
+;         Imprime arg1...argn, de'pile les arguments et va en retour
+;         Doit prote'ger l'impression de l'espace au moyen d'un (TAG PRIN
+;         car il se fait en dehors d'un PROBJ.
+
+PRINN     LABEL
+          CNBEQ     A4,#0,PRINNR        ; rien a` faire
+          INCR      A4                  ; pointera sur le premier argument
+          PUSH      A4                  ; Nombre d'objets a` de'piler
+          BRA       PRINN1
+PRINN0    MOV       .STATPR,A1          ; le print-for-read
+          MOV       CVAL(A1),A1         ; sa valeur
+          BTNIL     A1,PRINN1           ; rien a faire
+          PUSH      A4                  ; sauve le compteur(+)
+          PUSH      @PRINN2             ; au retour du TAG
+          PUSH      .PRIN               ;; le nom du TAG
+          PUSH      DLINK               ;; fabrique un bloc d'activation
+          PUSH      @UNBIND3            ;;    de type 3 = (TAG PRIN ...
+          STACK     DLINK               ;; nouveau DLINK
+          BRA       OUTSP               ; mettre un blanc
+PRINN2    POP       A4                  ; restaure le compteur(+)
+PRINN1    XSPMOV    A4,A1               ; argument suivant
+          PUSH      A4                  ; sauve le compteur(++)
+          CALL      PROBJ               ; on edite
+          POP       A4                  ; restaure le compteur(++)
+          DECR      A4                  ; un de moins
+          CNBGT     A4,#1,PRINN0        ; vers la suite
+          XSPMOV    A4,A3               ; la continuation
+          POP       A4                  ; le nombre d'objets empile's
+          ADJSTK    A4                  ; de'pile les ArgN...Arg1
+          BRI       A3                  ; vers la continuation
+PRINNR    MOVNIL    A1                  ; il faut retourner qch de coherent
+          RETURN
+
+;
+;          (PRINT e1 ... eN)   NSUBR
+;
+;  ----------------------------------------
+          FENTRY    PRINT,SUBRN
+;  ----------------------------------------
+          CALL      PRINN               ; imprime les N arguments
+          BRA       FULLIN              ; et vide la ligne
+
+;
+;         (PRINFLUSH e1 ... eN)   NSUBR
+;
+;  ----------------------------------------
+          FENTRY    PRINFLUSH,SUBRN
+;  ----------------------------------------
+          CALL      PRINN               ; imprime N objets
+          BRA       FLULIN              ; flushe la ligne
+
+;
+;          (TERPRI n)   SUBR1
+;
+;  ----------------------------------------
+          FENTRY    TERPRI,SUBRN
+;  ----------------------------------------
+          MOV       .TERPRI,A2          ; en cas d'erreur
+          CNBEQ     A4,#1,TERPR2
+          MOV       #1,A1               ; valeur par defaut
+          CNBEQ     A4,#0,TERPR6
+          JMP       ERRWNA
+TERPR2    POP       A1
+          BTFIX     A1,TERPR6           ; il y a un argument numerique
+          JMP       ERRNIA
+TERPR5    CALL      FULLIN              ; vide la ligne
+TERPR6    SOBGEZ    A1,TERPR5           ; il en faut encore.
+          BRA       PRTRUE              ; et retourne toujours T (pas -1!!)
+
+;
+;          (PRINCH c [n])   NSUBR
+;
+;  ----------------------------------------
+          FENTRY    PRINCH,SUBRN
+;  ----------------------------------------
+          MOV       #1,A2               ; le [n] par de'faut.
+          CNBEQ     A4,#1,PRINCH1       ; vers 1 arg.
+          CNBEQ     A4,#2,PRINCH2       ; vers 2 args.
+          MOV       #2,A1               ; le bon nb d'arguments.
+          MOV       .PRINCH,A2
+          JMP       ERRWNA
+PRINCH2   LABEL
+          POP       A2                  ; le compte
+PRINCH1   LABEL
+          BTFIX     A2,PRINCH3
+          MOV       A2,A1
+          MOV       .PRINCH,A2
+          JMP       ERRNIA
+PRINCH3   TOPST     A1                  ; on le laisse pour le retour
+          MOV       .PRINCH,SAVEA4      ; si erreur dans STRING
+          JCALL     STRINGA1            ; conversion en PNAME.
+          HBXMOV    A1,#0,A4            ; le 1er caracte`re du PNAME.
+          CALL      PRINCR1             ; imprime A2 fois ce caracte`re.
+          POP       A1                  ; retourne le PNAME.
+          RETURN
+
+;         Cette routine doit re'aliser un (TAG 'PRIN ...
+;         car elle ne passe pas par PROBJ.
+
+PRINCR1   LABEL                         ; imprime A2 fois le caracte`re A4
+          MOV       PRMLP,PRCLP         ; nb max de lignes.
+          PUSH      .PRIN               ;; le nom du TAG
+          PUSH      DLINK               ;; fabrique un bloc d'activation
+          PUSH      @UNBIND3            ;;    de type 3 = (TAG PRIN ...
+          STACK     DLINK               ;; nouveau DLINK
+          BRA       PRINCR3
+PRINCR2   PUSH      A2                  ; sauve le compteur
+          CALL      OUTCH               ; envoyer le caractere
+          POP       A2                  ; restaure le compteur
+PRINCR3   SOBGEZ    A2,PRINCR2          ; pour n
+          RETURN                        ; et de'pile le (TAG PRIN ...
+
+;
+;         (PRINCN cn [n])   NSUBR   sort un code ASCII
+;
+;  ----------------------------------------
+          FENTRY    PRINCOD,SUBRN
+;  ----------------------------------------
+          MOV       #1,A2               ; le compte [n] par de'faut.
+          CNBEQ     A4,#1,PRINCD1       ; vers 1 argument.
+          CNBEQ     A4,#2,PRINCD0       ; vers 2 arguments.
+          MOV       #2,A1               ; le bon nb d'arguments.
+          MOV       .PRINCOD,A2
+          JMP       ERRWNA
+PRINCD0   LABEL
+          POP       A2
+          BTFIX     A2,PRINCD1          ; le compte.
+          MOV       A2,A1
+          MOV       .PRINCOD,A2         ; nom de la fonction
+          JMP       ERRNIA              ; ce devait etre un nb entier.
+PRINCD1   LABEL
+          TOPST     A4                  ; on le laiss dans la pile 
+          BTFIX     A4,PRINCD2          ; un ASCII c'est un nb fix non ?
+          MOV       A4,A1
+          MOV       .PRINCOD,A2         ; nom de la fonction
+          JMP       ERRNIA              ; ce devait etre un nb entier.
+PRINCD2   CALL      PRINCR1
+          POP       A1
+          RETURN
+
+;
+;         Fonction EXPLODE
+;         ================
+;
+;
+;          Utilise les memes routines que les
+;          fonctions standards de sortie
+;
+;  ----------------------------------------
+          FENTRY    EXPLODE,SUBR1
+;  ----------------------------------------
+          PUSH      LEXPLD              ; sauve l'ancien explode
+          PUSH      IEXPLD              ; sauve l'ancien indic
+          MOV       @EXPLODE1,A3        ; pour le sysprot
+          JCALL     SYSPROT             ; eh oui, merci Jose
+          POP       A1                  ; le re'sultat
+          POP       IEXPLD              ; l'indic
+          POP       LEXPLD              ; la liste
+          BRI       A3                  ; back home baby
+
+EXPLODE1  MOVNIL    A2                  ; prepare la liste resultat
+          NCONS     A2                  ; fabrique le 1er doublet
+          PUSH      A2                  ; sauve pour le GC et le retour
+          MOV       A2,LEXPLD           ; liste courante en formation
+          MOV       .T,IEXPLD           ; indicateur EXPLODE = vrai
+          CALL      PROBJ               ; explosion de l'objet
+          POP       A1                  ; recup la liste
+          MOV       CDR(A1),A1          ; enleve le crochet
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    EXPLODECH,SUBR1
+;  ----------------------------------------
+          JCALL     EXPLODE             ; explode la liste
+          MOV       A1,A2               ; A2 pour travailler
+          PUSH      A1                  ; sauve le pointeur
+          PUSH      A1                  ; un coin de pile
+EXPLDECH1 BFCONS    A2,EXPLDECH2        ; un cons ???
+          MOV       CAR(A2),A1          ; si oui, le CAR dans A1
+          MOV       A2,&0               ; sauve A2
+          JCALL     FASCII              ; l'ascii de A1 dans A1 
+          MOV       &0,A2               ; restaure A2
+          MOV       A1,CAR(A2)          ; remplace le CAR par l'ascii
+          MOV       CDR(A2),A2          ; continue sur le CDR
+          BRA       EXPLDECH1           ; car c'est pas finit
+EXPLDECH2 ADJSTK    #1                  ; c'est finit, on recupere le coin de pile
+          POP       A1                  ; le pointeur sur la liste modifie'e
+          RETURN
+
+;
+;          Rajoute un espace a la liste des caracteres
+;
+
+EXPLS     PUSH      A4                  ; on protege A4
+          MOV       #/ ,A4              ; un espace
+          BRA       EXPLCH1             ; On y va
+
+;
+;          Rajoute # et A4 dans la liste EXPLODE
+;
+
+EXPLSH    PUSH      A4                  ; cf ci-dessus
+          MOV       #/#,A4              ; un dieze
+          CALL      EXPLCH              ; un caractere
+          TOPST     A4                  ; le caractere est recupere
+          BRA       EXPLCH1             ; c'est pas loin
+
+;
+;          Rajoute le caractere A4 dans la liste EXPLODE
+;
+
+EXPLCH    PUSH      A4                  ; sauve le caractere
+EXPLCH1   PUSH      A2                  ; pour travailler
+          NCONS     A4                  ; transforme en espace
+          MOV       LEXPLD,A2           ; recupere la liste courante
+          MOV       A4,CDR(A2)          ; rajoute l'element en queue
+          MOV       A4,LEXPLD           ; nouvelle queue
+          POP       A2                  ; restaure les registres de travail
+          POP       A4
+          RETURN                        ; et rentre
+
+;
+;         Autres fonctions standards de sortie
+;         ====================================
+;
+
+;
+;         (PTYPE at [n])   NSUBR
+;         SET/GET le print-type de at
+;
+;  ----------------------------------------
+          FENTRY    FPTYPE,SUBRN
+;  ----------------------------------------
+          MOV       .FPTYPE,A2          ; en cas d'erreur
+          CNBEQ     A4,#1,PTYP1         ; vers le GET
+          CNBEQ     A4,#2,PTYP2         ; vers le SET
+          MOV       #2,A1               ; le bon nb
+          JMP       ERRWNA
+PTYP1     POP       A1
+          BFSYMB    A1,PTYPER1
+          GPTYPE    A1,A1               ; retourne le p-type courant
+          RETURN
+PTYP2     POP       A1
+          POP       A3
+          BFSYMB    A3,PTYPER1
+          SPTYPE    A1,A3               ; retourne le p-type courant
+          RETURN
+PTYPER1   JMP       ERRSYM              ; il faut un symbole.
+PTYPER2   MOV       A3,A1               ; l'argument erronne
+          JMP       ERRNIA              ; il faut un nb.
+
+;
+;         Les variables-fonctions de l'impression
+;         =======================================
+;
+
+;
+;         (OBASE n)           regle la base en sortie
+;
+;  ----------------------------------------
+          FENTRY    FOBASE,SUBRN
+;  ----------------------------------------
+          MOV       .FOBASE,A2          ; en cas d'erreur
+          MOV       OBASE,A3            ; l'ancienne valeur
+          PUSH      #2                  ; le min
+          PUSH      #36                 ; le max
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,OBASE
+          RETURN  
+
+;
+;          (PRINTLINE [n])   regle le nb de lignes maximum d'impression
+;
+;  ----------------------------------------
+          FENTRY    PRLINE,SUBRN
+;  ----------------------------------------
+          MOV       .PRLINE,A2          ; le nom de l'appelant
+          MOV       PRMLP,A3            ; l'ancienne valeur
+          PUSH      #0                  ; le min
+          PUSH      #MAXFIX             ; le max
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,PRMLP
+          RETURN  
+
+;
+;          (PRINTLEVEL n)   regle la profondeur maximum d'impression
+;
+;  ----------------------------------------
+          FENTRY    PRLEVEL,SUBRN
+;  ----------------------------------------
+          MOV       .PRLEVEL,A2         ; le nom de l'appelant
+          MOV       PRMDP,A3            ; l'ancienne valeur
+          PUSH      #0                  ; le min
+          PUSH      #MAXFIX             ; le max
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,PRMDP
+          RETURN  
+
+;
+;          (PRINTLENGTH n)   regle la longueur maximum d'impression
+;
+;  ----------------------------------------
+          FENTRY    PRLENGTH,SUBRN
+;  ----------------------------------------
+          MOV       .PRLENGTH,A2        ; le nom de l'appelant
+          MOV       PRMLN,A3            ; l'ancienne valeur
+          PUSH      #0                  ; le min
+          PUSH      #MAXFIX             ; le max
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,PRMLN
+          RETURN  
+
+;
+;         Fonctions sur le tampon de sortie
+;         =================================
+;
+;
+;         S.P. TESPOS : teste si la position A1 reste bien
+;               a l'interieur de la ligne
+;         A4 <- le nom de la fonction qui appelle
+;
+
+TESPOS    BFFIX     A1,POSER2           ; ce doit etre un nombre entier
+          CNBLT     A1,#0,POSER         ; qui plus est positif
+          CNBLE     A1,MAXPOCOU,PRPOPJ  ; et plus petit que MAXPOCOU
+POSER     MOV       A4,A2               ; nom dans A2 si erreur
+          JMP       ERROOB              ; vers les erreurs standards
+POSER2    MOV       A4,A2               ; le nom de la fonction en erreur
+          JMP       ERRNIA              ; il fallait un nb entier.
+
+;
+;          (LMARGIN n) regle la marge gauche
+;
+;  ----------------------------------------
+          FENTRY    LMARGIN,SUBRN
+;  ----------------------------------------
+          MOV       .LMARGIN,A2         ; le nom de l'appelant
+          MOV       NBLEFT,A3           ; l'ancienne valeur
+          PUSH      #0                  ; le min
+          PUSH      NBRIG               ; le max
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,NBLEFT
+          RETURN  
+
+;
+;          (RMARGIN n) regle la marge droite
+;
+;  ----------------------------------------
+          FENTRY    RMARGIN,SUBRN
+;  ----------------------------------------
+          PUSH      #1                  ; le min
+	  HGSIZE    BUFOUT,A2           ; taille du tampon
+          INCR      A2                  ; plus 1! car 257 est valide!
+          PUSH      A2                  ; le max
+          MOV       .RMARGIN,A2         ; le nom de l'appelant
+          MOV       NBRIG,A3            ; l'ancienne valeur
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,NBRIG            ; stocke la marge
+          HGSIZE    BUFOUT,A2           ; si RMARGIN > slen(outbuf)
+          CNBLE     A1,A2,RMARGIN1      ;   alors MAXPOCOU ne peut pas
+          MOV       A2,A1               ;   valoir RMARGIN mais slen(outbuf)
+RMARGIN1  MOV       A1,MAXPOCOU         ; c'est la marge la plus courte
+          MOV       NBRIG,A1            ; retourne RMARGIN courant.
+RMARGIN2  RETURN                        ; on rentre
+
+;
+;          (OUTPOS n) regle la position courante
+;
+;  ----------------------------------------
+          FENTRY    OUTPOS,SUBRN
+;  ----------------------------------------
+          MOV       .OUTPOS,A2          ; le nom de l'appelant
+          MOV       POCOUR,A3           ; l'ancienne valeur
+          PUSH      #0                  ; le min
+          PUSH      MAXPOCOU            ; le max
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,POCOUR
+          RETURN  
+
+;
+;         (OUTBUF ni [nc])   accede/charge directement le tampon
+;         ni = index, nc = code (optionnel)
+;
+;  ----------------------------------------
+          FENTRY    OUTBUF,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#0,OUTBU1        ; pas d'arg
+          MOVNIL    A2                  ; si 1 arg
+          CNBEQ     A4,#1,OUTBU5        ; 1 arg
+          CNBEQ     A4,#2,OUTBU4        ; 2 args
+          MOV       #1,A1               ; le bon nb
+          MOV       .OUTBUF,A2
+          JMP       ERRWNA
+OUTBU1    MOV       BUFOUT,A1           ; retourne la chaine elle-meme.
+          RETURN
+OUTBU4    POP       A2
+OUTBU5    LABEL
+          POP       A1                  ;   vers SUBR2
+          MOV       .OUTBUF,A4          ; nom de la fonction si err de TESPOS
+          CALL      TESPOS              ; on sort du buffer ?
+          BTNIL     A2,OUTBU6           ; pas de 2eme argument
+          BFFIX     A2,OUTBUER          ; il faut un CARACTERE
+          HBMOVX    A2,BUFOUT,A1        ; force ce caractere
+OUTBU6    HBXMOV    BUFOUT,A1,A1        ; recup ce caractere
+          RETURN
+OUTBUER   MOV       A2,A1               ; l'argument erronne
+          MOV       A4,A2               ; le nom de la fonction
+          JMP       ERRNIA              ; il fallait un nombre comme 2eme arg.
+
+          END
+

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+LLVERSION=15.25
+
+LL=/nfs/lelisp15/work
+SYSTEM=$LL/IMAKE/system
+CONFIG=$LL/info/Config
+BIN=/nfs/home/kuczynski/bin
+
+for i in `cat $LL/llilog/system/systems`
+do
+rm -f Config-$i.ftex
+
+$BIN/imake -n -c -I$LL/$i -T$SYSTEM/common.tmpl -U$i -DI$i -s $CONFIG/Config-$i.ftex -f $SYSTEM/Config.ftex.skl
+chmod +w Config-$i.ftex
+done
+
+rm -f ../Config.ftex
+cat Config1.ftex Config-*.ftex Config2.ftex > ../Config.ftex
+chmod 444 ../Config.ftex
+rm -f Config-*.ftex

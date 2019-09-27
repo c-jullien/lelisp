@@ -1,0 +1,103 @@
+
+OK- ou` fabriquer le .lm qd on crunch sans -o ? 
+-> dans le repertoire du .ll
+
+
+OK- il faut ajouter un champ : internal-definitions dans PRJ.ref
+afin que les modules qui en ont besoin sachent qd meme trouver une fct
+non exporte'e. En emem temps il faut savoir lancer recursivement
+l'analyseur sur le module importe' afin de mettre ses exports a` jour.
+
+OK- deceler les dependances circulaires
+
+OK- lors d'une analyse recursive, il faut prendre soin de ne pas importer
+les fcts pour le module qui declenche cette analyze recursive 
+(cf zoo qui ne devrait pas etre importe' dans foo )
+
+OK- en cas d'analyse recusrsive: doit-on effacer le .lm deja existant?
+-> sauf cas particulier, c'est inutile. voir point suivant...
+
+OK- verifier l'update d'un module deja analyse'(qd on ajoute une fct, qd on 
+retire une fct et surtout qd on MODIFIE ine fct)
+-> tout baigne fonctionnellemnemt parlant. le seule pb est qu'on ne met
+pas a jour les commentaires de .lm lorsqu'on se contente de modifier
+le code de facon a ne modifier que le statut des fct(le pourquoi
+on l'exporte!), mais en les exportant
+tjrs: la liste des export est OK , par forcement les commentaires!
+OK- verifier le diagnostic en cas de -update:
+OKmodif des sources?
+OKmodif du champ FILES?
+OKmodif du champ EXPORT? 
+OKmodif du champ IMPORT?
+
+OK- revoir les commentaires ds les .lm
+
+OK- verifier que plusieurs fichiers dans FILES marche
+
+OK- verifier que les messages du type "unknow truc..." n'apparaissent
+qu'une fois par analyse
+-> revu : les erreur de toplevelform apparaissent a chaque fois
+
+- une erreur toplevelform declenche le chargement de CPENV. si
+ca ne suffit pas on emet un warning 111 la 1ere fois seluement,
+ensuite on emet warning 101 ! est-ce normal?
+
+OK- engendre les makefiles
+
+- pour engendrer le makefile il faut eviter de lire les modules. seul
+le .ref doit suffir: pour cela il faut ajouter le champs FILES pour
+chaque module dans prj.ref
+
+OK- verifier les mesages d'erreurs (en particulier en analyzant foo...)
+il semblerait qu'il y ai encore qq pb, et qq manques surtout
+en cas d'update de module
+
+OK- mettre a jour les options de analyze and co
+
+OK- integrer la notion de meta-module
+
+OK- ajouter les clefs INCLUDE dans les .lm engendre' (cf -include)
+
+- ajouter la valeur de #:complice:parano-flag dans le makefile
+
+OK- ajouter le champ ll-module-directory dans DEFINE-RT-PROJECT
+c'est la qu'on range les .lm si ca n'est pas specifie avec l'option -o
+
+OK- ajouter l'option -nodynamic qui debranche l'import des modules
+via des fcts appelees dynamiquement (cf (funcall 'toto ...))
+
+OK- ajouter IF en toplevel form (attention lors de la recursion sur
+les branches, il ne faut surtout pas evaluer! cf (unless ... (error ...)) )
+
+OK- revoir la mecanique de "plusieurs modules definissent ..." afin
+de privilegier les imports impose's 
+soit par la clef import lors d'un -update,
+soit par -import <mod>.
+
+OK- ajouter l'option -create  pour fabriquer un makefile 
+(script shell portable)
+qui lance l'analyze sur tous les modules du projets, lesquels sont
+specifies dans DEFINE-RT-PROJECT aumoyen des clef MODULES et EXCLUDE-MODULES
+
+OK- verifier + systematiquement les syntaxes et les presences des directories
+specifies dans DEFINE-RT-PROJECT -> utilisation de DIRECTORYP
+
+- betonner et reecrire readdefmodule fin qu'il utilise :openi
+(sinon ca merde en cas d'erreru)
+
+- verifier l'option -allexport
+
+OK- les synonymq ne doivent etre exporte's que s'il ne sont pas des SUBR.
+en fait il faut les faire passer a la moulinette du parsing comme
+n'importe quel DEFUN
+
+OK- les SETFN doivent passer au parsing comme n'importe quel DEFUN
+
+OK- rassembler TOUS les messgas dans rtmsg.ll
+
+- attention!: il semblerait que les noms de fichiers ou de directory
+avec des majuscules poseraient des proble`mes! A VERIFIER...
+
+- lors d'un W125 (plusieurs modules definissent la meme fct), il 
+faudrait pouvoir privilegier le module qui est deja importe' pour une autre
+definition + tot dans le fichier. A VERIFIER

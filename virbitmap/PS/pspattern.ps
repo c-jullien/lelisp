@@ -1,0 +1,60 @@
+% file : pspattern.ps                 (ILOG 1991)
+% -------------------
+%   width (byte-padded) height   read-pattern    -
+/read-pattern
+{
+  2 copy mul string x 0 x{3 copy read-bitmap putinterval add}repeat
+  pop/pattern x def pop
+}BD
+% width height    read-[inv-]color-pattern    -
+systemdict/colorimage known
+{
+  /read-color-pattern
+  {
+    x 3 mul x 2 copy mul string x 0 x
+    {3 copy read-color-bitmap putinterval add}repeat pop/pattern x def pop
+  }BD
+  /read-inv-color-pattern
+  {
+    x 3 mul x 2 copy mul string x 0 x
+    {3 copy read-inv-color-bitmap putinterval add}repeat pop/pattern x def pop
+  }BD
+}
+{
+  /read-color-pattern
+  {
+    2 copy mul string x 0 x
+    {3 copy read-color-bitmap putinterval add}repeat pop/pattern x def pop
+  }BD
+  /read-inv-color-pattern
+  {
+    2 copy mul string x 0 x
+    {3 copy read-inv-color-bitmap putinterval add}repeat pop/pattern x def pop
+  }BD
+}ifelse
+%%    fillpattern-function pattern-width pattern-height FILLPAT -
+%%
+%%   Fill current path with a pattern defined by a bitmap.
+%%   fillpattern-function is repeatedly called to fill the rectangle
+%% (0,0) to (pathbbox-width, pathbbox-height).
+%% 
+%%  function typically has the form:
+%%     {w h b [w 0 0 h 0 0]image[mask]}
+%%
+%% function modulo (a true one)  x y modulo -  x-mod-y
+/modulo
+{ 2 copy div floor mul sub }BD
+% function width height    fillpat -
+/fillpat
+{
+  pathbbox G
+  6 copy pop pop 3 -1 roll modulo neg 3 1 roll x modulo neg x translate
+  clip 3 -1 roll dup 0 x translate sub 3 1 roll x 
+  dup 4 index translate
+  sub 4 -1 roll dup dup 1 sub 4 -1 roll add x div cvi 1 add	%%-> repeat-x
+  4 2 roll 1 index add 1 sub 1 index  div cvi 1 add		%%-> repeat-y
+%% Now, we have in the stack: function width repeat-x height repeat-y
+  {3 copy pop G{4 index exec dup 0 translate}repeat g pop dup 0 x translate
+  }repeat g pop pop pop pop
+}BD
+/patmatrix [1 0 0 -1 0 0] BD

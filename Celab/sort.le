@@ -1,0 +1,26 @@
+;;; GELL 15.26: elaboration file for the module: sort
+;;;             translation done: "Wed June 16 93 18:01:48 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: sort.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'sort)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZsort" "Wed June 16 93 18:01:48 "
+
+'((sort . subr2) (sortl . subr1) (sortn . subr1) (sortp . subr1) (pkgcmp . subr2))
+
+#[fn (fn) listp |1-| nthcdr sort errnla funcall alphalessp < pkgcmp symbolp t #:gell-resetfn:function-name #:gell-resetfn:function-2 sortl #:gell-resetfn:function-1 sortn sortp]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'sort)))
+(defvar #:sys-package:colon 'sort)
+(defcsetfn 'sort "GZsort" 0)
+(defcsetfn 'sortl "GZsort" 1)
+(defcsetfn 'sortn "GZsort" 2)
+(defcsetfn 'sortp "GZsort" 3)
+(defcsetfn 'pkgcmp "GZsort" 4)
+
+(defccheck '(pkgcmp symbolp alphalessp funcall sort nthcdr |1-| listp))

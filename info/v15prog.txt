@@ -1,0 +1,169 @@
+
+		     Programming in Le-Lisp v. 15
+			  For Le-Lisp v. 16
+
+This note describes the recommended techniques for programming in
+Le-Lisp version 15 which will help a smooth transition to Le-Lisp
+version 16.  While most differences between the two versions will be
+handled automatically by the converter program XVXVI, some constructs
+no longer exist or have changed form in Le-Lisp version 16.
+Additionally, the language implementation has been changed at the
+level of object representation and datatypes, requiring forethought in
+the use of some objects.
+
+	* Think modularly.  Le-Lisp version 16 is based on
+	  applications composed of modules. Begin right away to divide
+	  your application into modules with specified imports and
+	  exports.  This will avoid the necessity to do so during the
+	  translation phase, giving your application a good structure
+	  right from the beginning.
+
+	* Compile your Le-Lisp version 15 programs with Complice.
+	  This will ensure a reasonable module structure and will
+	  catch many common errors which rely on interpreted behavior.
+	  XVXVI, while able to translate interpreted code, works best
+	  on modules compiled with Complice.
+
+	* Consider evaluation moments.  In Le-Lisp version 15, all
+	  forms in a module are evaluated sequentially during both
+	  compilation and loading.  In Le-Lisp version 16, forms are
+	  not evaluated during compilation, but only during loading.
+	  There is a clean separation between the compilation and
+	  execution environments of module which is reflected in the
+	  module structure of an application.  In Le-Lisp version 15,
+	  much the same effect can be achieved through judicious,
+	  limited use of the EVAL-WHEN special form, which does not
+	  exist in Le-Lisp version 16.  You should understand which
+	  components of your modules are required to compile it, and
+	  which are necessary only to run it --- this will help in
+	  creating the proper separation in Le-Lisp version 16.
+
+	* Know the status of variables.  In Le-Lisp version 15,
+	  variables are either lexical or dynamic; in the interpreter,
+	  they are all dynamic.  In Le-Lisp version 16, several types
+	  of variables exist: lexical variables for normal
+	  intra-function use; dynamic variables for inter-function
+	  communication of changing state; static variables for global
+	  information; and constants for unchanging information.  You
+	  should know each of your variables behaves according to this
+	  division.  This information can be given to XVXVI to produce
+	  the best translation.
+
+	* Emphasize lexical variables. In Le-Lisp version 15, the
+	  distinction between lexical and dynamic variables was not
+	  crystal-clear.  In Le-Lisp version 16, there is a clear
+	  separation, and lexical variables are preferred. XVXVI can
+	  handle the separation, but the resulting code may be less
+	  maintainable and efficient. Therefore, limit references of
+	  variables to the lexical scope of their definition.
+
+	* Separate variables from their names. In Le-Lisp version 16,
+	  it is impossible to refer to the value of a lexical variable
+	  from its name as a symbol --- this is only possible for
+	  dynamic variables.  Therefore, use functions such as SET
+	  which take symbols as variable names only for explicitly
+	  dynamic variables created with DEFVAR.
+
+	* Understand the evaluation pattern of macros. Arguments to
+	  macros generally act either as syntactic markers or Lisp
+	  code which will exist in the expansion as well.  To simplify
+	  the translation with XVXVI of your macros, you should
+	  understand and note the purpose of each of your macro
+	  arguments.  This information can be given to XVXVI to
+	  automatically produce correct macro call translations.
+
+	* Write macros instead of FSUBRs. Syntactic extension is a
+	  major advantage of Lisp over other languages, and is to be
+	  encouraged.  However, syntactic extension style is a major
+	  point of departure between Le-Lisp version 15 and Le-Lisp
+	  version 16.  In Le-Lisp version 15, this could be handled by
+	  either macros or FSUBRs, defined with DF.  While neither
+	  macros nor FSUBRs are handled well by XVXVI, macros exist in
+	  Le-Lisp version 16 and FSUBRs do not.  Macros are therefore
+	  easier to convert by hand.
+
+	* Use portable macro expansions. In other words, the
+	  expansions of the macros should respect all the rules in
+	  this document.  Macro expansions should use ternary IFs.
+
+	* Limit uses of EVAL. The semantics of EVAL differ between the
+	  two versions of Lisp. Additionally, it suffers certain
+	  performance penalties compared to compiled code in both
+	  languages.  Most uses of EVAL outside of FSUBRs and
+	  environment tools can be adequately handled using macros ---
+	  this style is encouraged.
+
+	* Distinguish vectors and objects. The use of structures is
+	  encouraged, but operating on typed vectors qua vectors
+	  is discouraged.  In Le-Lisp version 16, vectors are a unique
+	  datatype, and structures are not represented as vectors.
+	  Vector operations such as VREF, VSET, and MAKEVECTOR will
+	  not work on structures.  Also, strings are a single datatype
+	  in Le-Lisp version 16.
+
+	* Think of functions as objects. In Le-Lisp version 16,
+	  functions are a distinct set of datatypes.  In particular,
+	  symbols which name functions and lists whose CAR is LAMBDA
+	  are not acceptable in places where functional objects are
+	  expected, such as the first argument to MAPCAR.  To
+	  facilitate the translation of Le-Lisp version 15 code, you
+	  should consider carefully at every point where you use
+	  functions how this will impact you.
+
+	* Use only symbols as packages. Because they were rarely used
+	  and they are inefficient, list packages have been eliminated
+	  from Le-Lisp version 16.  You should use double dispatching
+	  techniques for MicroCeyx methods which previously relied on
+	  such packages.
+
+	* TCONSes. Because they have no clear function, and were thus
+	  used for many contradictory purposes, TCONSes have been
+	  eliminated from Le-Lisp version 16.
+
+	* 30 bit integers. Fixnums in Le-Lisp version 16 are 30 bits
+	  long; in Le-Lisp version 15, 16 bits.  Therefore, don't rely
+	  on the 16 bit maximum.  This means you should not have
+	  constants with the value 32767 or -32767.
+
+	* Use only documented features. Many forms in the system which
+	  were previously FSUBRs have been implemented in Le-Lisp
+	  version 16 as macros, and many old macro definitions have
+	  been changed.  Additionally, due to the introduction of
+	  Telos, the implementation of DEFSTRUCT and DEFTCLASS has
+	  changed between the two versions.
+
+	* Dear departed functions. These functions do not exist in
+	  Le-Lisp version 16, and no good equivalent for them exists:
+		BACKTRACK, CALL, CALLN, CATCH-ALL-BUT, CLOSURE,
+		COMPILE-ALL-IN-CORE, EVLIS, EXCHSTRING, EXCHVECTOR,
+		FLAMBDA, FREECONS, FREETREE, GETFN2, LIBAUTOLOAD,
+		LLCPSTD, LOC, LOCK, MEMORY, MLAMBDA, OBJVAL,
+		PRECOMPILE, PTYPE, RESETFN, SEND2, SETFN, TCONS,
+		TCONSCL, TCONSMK, TCONSP, TYPESTRING, TYPEVECTOR,
+		UNWIND, VAG.
+
+	* Call APPLY with less than 60 arguments. Due to C
+	  implementation constraints, calls to APPLY are limited to a
+	  certain fixed length for the last argument.
+
+	* Low-level changes. For example, the memory management has
+	  been entirely changed in Le-Lisp version 16. Basic object
+	  representations have been changed.  Also, LLM3 has been
+	  eliminated; Le-Lisp version 16 compiles into C.  Therefore,
+	  don't write any LLM3.  The implementation of addresses have
+	  also been changed: In Le-Lisp version 15, they are
+	  represented as either integers or cons cells, while in
+	  Le-Lisp version 16, they have their own datatype.
+
+	* Keep evaluated forms outside of macro characters. Macro
+	  characters which evaluate their arguments at read time, such
+	  as #., #+, and #-, are difficult to understand, use, and
+	  translate successfully.  They should be avoided in almost
+	  all cases.
+
+	* Name external functions with an underscore before the name.
+	  Functions defined with DEFEXTERN have a slightly special
+	  status.  This convention helps note external function calls
+	  in the code and may play a part in a future extension of the
+	  external function facilities of Le-Lisp.
+

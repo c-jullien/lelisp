@@ -1,0 +1,320 @@
+\documentstyle[11pt,fr]{iarticle}
+
+\begin{document}
+\frenchspacing
+\setlength{\parindent}{0in}
+\setlength{\parskip}{3ex}
+\raggedbottom
+
+\Title {Diffusion Le-Lisp}
+\SuperTitle {Le-Lisp de l'INRIA version 15.26}
+
+\Author {d\'{e}cembre 1993}
+\bigskip
+
+\Section {Version "15.26"}
+Voici les corrections et les extensions de la nouvelle diffusion de
+\LeLisp\ version 15.26 dat\'{e}e du 1 d\'{e}cembre 1993.
+
+Une fois par an, l'INRIA et ILOG livrent aux porteurs une nouvelle
+version de Le-Lisp comprenant des am\'{e}liorations, extensions et
+corrections.  Seule cette diffusion annuelle contient des changements
+\`{a} la souche de Le-Lisp \'{e}crite en LLM3, et au manuel de l'utilisateur.
+
+\Section {Contenu de cette diffusion}
+
+La bande de diffusion contient les 4 fichiers suivant au format {\tt tar}
+compress\'{e} :
+\begin{itemize}
+\item \|ll_port.tar.Z| : l'ensemble des fichiers communs \`{a} tous
+les portages, uniquement destin\'{e}s aux porteurs,
+\item \|ll_user.tar.Z| : l'ensemble des fichiers communs \`{a} tous
+les portages, distribu\'{e}s aux utilisateurs,
+\item \|sun_port.tar.Z| : l'ensemble des fichiers sp\'{e}cifiques au
+portage {\tt SUN 3}, uniquement destin\'{e}s aux porteurs,
+\item \|sun_user.tar.Z| : l'ensemble des fichiers sp\'{e}cifiques au
+portage {\tt SUN 3}, distribu\'{e}s aux utilisateurs.
+\end{itemize}
+
+La bande de diffusion se d\'{e}compose selon les r\'{e}pertoires suivants:
+
+\begin {itemize}
+\item   68k : l'expanseur commun \`{a} tous les 680x0;
+\item   benchmarks : pour r\'{e}aliser des mesures de performances des syst\`{e}mes Le-Lisp;
+\item   benchmarks/Results : les r\'{e}sultats de ces mesures de performances;
+\item   bignum : le module BIGNUM de DEC/INRIA;
+\item   bignum/l : l'interface des bignum avec Le-Lisp;
+\item   common : les fichiers C communs \`{a} tous les portages utilisant C;
+\item   info : ce fichier;
+\item   ll2lm : l'analyseur de modules;
+\item   llib : la librairie Le-Lisp;
+\item   llm3 : le noyau de l'interpr\`{e}te Le-Lisp;
+\item   llmod : la description modulaire de tous les fichiers des
+librairies Le-Lisp;
+\item   llobj : le r\'{e}sultat de la compilation modulaire de tous les
+fichiers des librairies Le-Lisp;
+\item   lltest : les jeux de tests pour tester, verifier, recetter Le-Lisp;
+\item   lltool : quelques outils utiles aux porteurs;
+\item   llub : une librairie suppl\'{e}mentaire, remplie par les
+utilisateurs, non maintenue;
+\item   manl : un manuel UNIX des principales commandes pour Le-Lisp;
+\item   manuel : le manuel de r\'{e}f\'{e}rence en francais, au format {\tt
+tcomp};
+\item   modana : les fichiers engendr\'{e}s par l'analyseur de modules;
+\item   sun : le syst\`{e}me Sun3;
+\item   sun/C : les fichiers C sp\'{e}cifiques \`{a} Sun3;
+\item   sun/conf : les configurateurs d'images Le-Lisp sp\'{e}cifiques \`{a} Sun3;
+\item   sun/recette : les commandes permettant de lancer les recettes
+sur Sun3;
+\item   virbitmap : les incarnations de BV et leurs chargeurs;
+\item   virbitmap/bvtty : l'incarnation du BV sur un {\tt tty}
+alphanum\'{e}rique simple;
+\item   virbitmap/X11 : l'incarnation du BV sur X11;
+\item   virtty : les descriptions de {\tt tty} d\'{e}j\`{a} rencontr\'{e}s par
+le-Lisp. 
+\end {itemize}
+
+Le contenu exact de la bande de diffusion est explicit\'{e}e dans les
+fichiers {\tt LLUSERFILES}, {\tt LLPORTFILES} et {\tt LLPORTMJFILES}
+ainsi que dans les fichiers {\tt UserFILES} et {\tt PortFILES} dans
+les r\'{e}pertoires des machines.
+
+\Section{Features \`{a} prendre en compte pour la 15.26}
+Nous allons \'{e}num\'{e}rer les points int\'{e}gr\'{e}s en 15.26 :
+
+\SSection{Portages natifs: suppression de GELL}
+Il est g\'{e}n\'{e}ralement admis qu'un portage natif est plus performant
+dans tous les sens du terme qu'un portage GELL. Il est donc d\'{e}cid\'{e}
+d'abandonner les portages GELL.
+
+Les probl\`{e}mes soulev\'{e}s par cette d\'{e}cision sont\ : 
+
+Que faire des clients ne connaissant aujourd'hui que les portages
+GELL\ ? \\
+Il existe en effet des clients n'ayant jamais utilis\'{e} de portage
+natif. Ces clients ont bien souvent souffert de l'installation GELL,
+et seraient m\'{e}contents d'avoir \`{a} se refabriquer une cha\^{\i}ne de
+production, m\^{e}me si celle-ci est plus simple. En g\'{e}n\'{e}ral ces clients
+utilisent le GRT pour fabriquer leurs applis. Il revient \`{a} Ilog de
+fournir l'effort n\'{e}cessaire pour que l'utilisation du GRT sous
+LL15.25.4 en natif, puis en 15.26 ne soit pas incompatible avec l'utilisation
+actuelle qu'en font les clients sous GELL. Cette t\^{a}che sera
+\'{e}galement facilit\'{e}e par la r\'{e}daction d'une documentation de passage
+de GELL vers NATIF sur HP9700.
+
+\SSection{Cruncher et G\'{e}n\'{e}rateur de RunTime}
+L'id\'{e}e consiste \`{a} harmoniser la cha\^{\i}ne de production de code, pour
+l'ensemble des produits de la ligne LL. Tous les produits devront
+utiliser le cruncher de LL ({/tt ll2lm}) et le GRT en cons\'{e}quence.
+
+Les probl\`{e}mes soulev\'{e}s par cette d\'{e}cision sont: \\
+
+De quoi est compos\'{e} le GRT et que doit passer dans LL\ ? \\
+On consid\'{e}rera d'une part le {\it cruncher} qui fabrique des modules
+({\tt .lm}) et un {\it Makefile} permettant de {\it complicer} ces
+modules, d'autre part le g\'{e}n\'{e}rateur de runtime qui permet d'avoir
+une chaine de production engendrant une application (un core LL) de
+fa\c{c}on automatique. Une troisi\`{e}me partie due \`{a} GELL (gestion des .o,
+fabrication des binaires, etc) devient obsol\`{e}te avec la disparition de
+GELL. Seule la 1ere partie : {\bf ll2lm}, passe dans \LeLisp\ .
+La partie, {\it g\'{e}n\'{e}rateur de runtime} reste un module \Aida\ .
+
+\SSection{plombage de la 15.26}
+Un nouveau type de plombeur, d\'{e}velopp\'{e} en interne \`{a} Ilog, est
+install\'{e} dans la 15.26 distribu\'{e}e par Ilog. L'ancien plombeur,
+attach\'{e} au hostid des 
+machines, et ne permettant que des licences type machine, est
+remplac\'{e} par un plombeur de type serveur de jetons, sur un r\'{e}seau de
+machines. La possibilit\'{e} de plomber sur le hostid des machines avec le
+nouveau plombeur est \'{e}galement possible afin de fonctionner sur les machines
+ne disposant pas de r\'{e}seau (msdos, standalone,...). \\
+Au niveau du code, l'interface d'utilisation a \'{e}t\'{e} modifi\'{e}e puisque
+la fonction C {\tt tryaccess(int)} a \'{e}t\'{e} remplac\'{e}e par {\tt
+lmaccess(char *)}, et la fonction {\tt lmalive(char *)} a \'{e}t\'{e}
+ajout\'{e}e.
+Le code \LeLisp\ change en cons\'{e}quence dans {\tt llib/llpboot.ll}: \\
+\BeginLL
+(defextern lmaccess(string fix))
+(defextern lmalive(string))
+\EndLL
+
+\Section{liste des principales corrections}
+
+\begin {itemize}
+
+\item Interventions sur LLIB :\\
+\begin{enumerate}
+\item
+Reprise de tous les commentaires en anglais.
+
+\item
+Encore des bugs sur le module PATHNAME (cf rats) ainsi que qq
+optimisations \`{a} faire.
+
+\item 
+Optimisation du module FORMAT.
+
+\item
+Quelques rats concernant LLIB (voir section RATS).
+\end{enumerate}
+
+\item Intervention sur les codes C et assembleur :\\
+
+\begin {itemize}
+
+\item
+Utilisation de {\bf ANSI C}  et de {\bf POSIX}.
+Cela devient de + en + indispensable avec des syst\`{e}mes comme Solaris
+et SVR4 plus g\'{e}n\'{e}ralement. Mais aussi parce que de + en + de clients
+utilisent ANSI C (intervention dans nos .h au minimun, recompilation
+possible dans leur environnement).
+
+\item
+Am\'{e}lioration de la gestion des d\'{e}tections d'anomalies dans les clefs
+d'acc\`{e}s du plombage. En particulier, le {\it warning} affich\'{e} en pr\'{e}vention
+d'expiration de date n'apparait plus que pour le produit test\'{e} et lui
+seul. De plus le message affich\'{e} est plus explicite (num\'{e}ro de clef
+et nom de produit sont indiqu\'{e}s).
+
+\item
+Affichage du {\it hostid} et de sa {\it checksum}.
+
+\item 
+Introduction de la gestion des r\'{e}pertoires en \LeLisp\ , au travers
+de fonctionnalit\'{e}es telles que {\tt create-directory}, {\tt
+remove-directory}.
+
+\item 
+Introduction d'un processus fant\^{o}me \`{a} la {\tt lelispgo} permettant
+de r\'{e}aliser des appels syst\`{e}mes sans exploser en encombrement
+m\'{e}moire, sur les machines ne disposant pas de VFORK. Ce processus
+est lanc\'{e} d\`{e}s le d\'{e}marrage de \LeLisp\ , et c'est lui qui est
+utiliser pour {\it forker} lors d'appels syst\`{e}me tels que
+COMLINE. Cette possibilit\'{e}e d\'{e}pend du flag de compilation {\tt
+LLGHOSTPROC} et n'est pas op\'{e}rationnelle sur tous les portages.
+
+\end {itemize}
+
+\item Interventions sur le code LLM3:
+
+\begin{itemize}
+
+\item Optimisations diverses d'algorithmes LLM3.
+
+\item Am\'{e}lioration de la gestion des entiers en vue d'un passage
+ult\'{e}rieur \'{e}ventuel en entiers d'un format sup\'{e}rieur \`{a} 16bits.
+Pour cela, ajoput des fonctions (MOST-POSITIVE-FIXNUM),
+(MOST-NEGATIVE-FIXNUM) et (MINUS-0-FIXNUM).
+
+\item Correction du SELECTQ en interpr\'{e}t\'{e} en cas de listes EQ.
+
+\item Renomage de pas mal de symboles internes LLM3 afin d'\'{e}viter
+toute collision de nommage avec des symboles externes (C, ...).
+
+\item Harmonisation des messages d'erreur sur les nombres d'arguments
+entre fonctions compil\'{e}es et fonctions interpr\'{e}t\'{e}es.
+
+\item LHOBLIST, EXPLODECH, IMPLODECH passent de startup.ll \`{a}
+fntstd.llm3. 
+
+\item Ajout d'un {\it finalizer} permettant de lancer une fonction \`{a}
+chaque fois que le GC r\'{e}cup\`{e}re un vecteur LL.
+
+\item Modification de l'affichage des zones par  (GC T) afin d'\^{e}tre
+plus pr\'{e}cis. A noter qu'on reste compatible avec les codes exploitant
+ce r\'{e}sultat.
+
+\item Introduction de la macro LLM3 HOVNI qui lance un bout de code C
+permettant d'afficher l'\'{e}tat de la m\'{e}moire.
+
+\item Introduction de l'itsoft AT-END pour ``faire des choses{''} avant
+de sortir avec la fonction (END).
+
+\item Ajout des fonctions (CREATE-DIRECTORY {\tt path}) et
+(DELETE-DIRECTORY {\tt path}).
+
+\item Ajout de la fonction (SHOW-STACK) qui montre le nombre d'octets
+utilis\'{e}s sur la pile LL pour l'ex\'{e}cution d'une forme donn\'{e}e.
+
+\item Ajout de la variable {\tt \#:system:line-length-max} d\'{e}signant
+la longueur maximale d'un buffer d'impression. Cette valeur est
+syst\`{e}me d\'{e}pendante. On utilisera principalement {\tt
+\#:system:line-length-max} avec {\tt rmargin}.
+
+\end{itemize}
+\item Corrections propres \`{a} COMPLICE:
+\begin{itemize}
+\item [10/03/92]
+        Corrections pour J. Chambon: Pbs dans interd\'{e}pendance de modules.
+         Ordre de chargement des fichiers non respect\'{e}.
+         La fonction :make-single-module1 fait des effets de bord sur
+          le cache :list-of-loaded-file au troisi\`{e}me appel (i.e. la
+          copie n'\'{e}tait faite qu'une seule fois).
+         cpenv \&co ne sont pas respect\'{e}s (revoir list-of-loaded-file)...
+
+\item [23/03/92]
+        On avait oubli\'{e} le warning 5 pour l'appel des SUBR0s....
+
+\item [21/04/92]
+        Correction pour (memq x '()).
+        Pas de registres qui contiennent ce ?? bizarre.
+
+\item [05/07/93]
+        Correction pour (selectq E ... () ...)
+
+\item [06/07/93]
+        Enl\`{e}ve les error et warnings inutiles.
+        (loadmodule ? NIL) pour les macros.
+        On fait une copie des instructions LAP dans le cas du precompile.
+        Double \'{e}valuation dans cpmac.ll pour le catcherror.
+        macro-expand-error vir\'{e} de cpmac.ll.
+        
+\item [02/12/93]
+        Correction pour la fausse tail-rec des nsubrs via une fermeture:
+          (de f1 (a . b) (mon-mapc (lambda (x) (f1 x)) a))
+        On rajoute une globale :funarg? qui sp\'{e}cifie si on compile une
+        fermeture..
+
+\item {\tt rmargin}
+        Par d\'{e}faut, {\tt rmargin} prend la valeur maximale autoris\'{e}e sur
+le syst\`{e}me h\^{o}te. 
+\item Nouvelles options de la commande {\tt complice}:
+\begin{itemize}
+\item option {\bf -h}
+        Pour brancher la m\'{e}moire cache des fichiers de description
+des modules: si cette option est utilis\'{e}e, chaque fichier de
+description modulaire ne sera charg\'{e} qu'une seule fois par sessions
+et stock\'{e} en 
+m\'{e}moire. Les autres consultations se feront sur les donn\'{e}es
+stock\'{e}es.
+\item option {\bf -callext}
+        Dor\'{e}navant, {\tt complice} n'ex\'{e}cute plus les {\tt
+callextern} par d\'{e}faut. Cela permet de compiler les modules contenant
+des {\tt defextern} sans se soucier de la pr\'{e}sence du code C
+correspondant. Cette d\'{e}cision peut \^{e}tre d\'{e}connect\'{e}e gr\^{a}ce \`{a}
+l'option {\tt -callext}. Si cette option est utilis\'{e}e, {\tt complice}
+ex\'{e}cutera les {\tt defextern} et autres {\tt getglobal} normalement.
+
+\end{itemize}
+\end{itemize}
+
+\item Intervention sur la technologie de portage:
+
+\begin {itemize}
+
+\item 
+Introduction de nouvelles recettes, en particulier pour tester le
+{\it Makefile} et ses entr\'{e}es g\'{e}n\'{e}riques.
+
+\end {itemize}
+
+\end {itemize}
+
+\newpage
+\tableofcontents
+
+\end{document}
+
+
+
+

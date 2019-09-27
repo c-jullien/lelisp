@@ -1,0 +1,92 @@
+\documentstyle[11pt,fr]{iarticle}
+
+\begin{document}
+\frenchspacing
+\setlength{\parindent}{0in}
+\setlength{\parskip}{3ex}
+\raggedbottom
+
+\Title {Gell}
+\SuperTitle {portage Gell/Portage Natif \\ La transition sur HP9700}
+
+\Author {janvier 1994}
+\bigskip
+
+Cher client, \\
+Vous e^tes possesseur d'une HP9700, et 
+vous avez eu a` travailler jusqu'a` ce jour avec les produits Ilog
+dont le portage ce nommait {\tt Chp9700}, correspondant a`
+l'utilisation de la technologie {\it GELL}. Nous vous proposons
+d'e'voluer vers notre nouveau portage des me^mes produits, de
+technologie {\it NATIVE}, nomme' {\tt hp9700} {\bf plus simple}
+d'utilisation et {\bf plus performant}. 
+\par
+
+\Section {Rappel: Technologie GELL}
+La technologie {\it GELL} consistait a` prendre du code
+\LeLisp\ compile' ({\tt file.lo}), a` le traduire en C ({\tt file.c,
+file.h}), puis a` compiler ce code C ({\tt file.o}), a` linker ce code
+C compile' avec les librairies des produits Ilog ({\tt LlibO.o,
+AidaO.o, ...}) afin d'optenir un binaire \LeLisp\ ({\tt leAIX11bin,
+...}). Un outil nomme' {\tt configurator} vous aidait dans cette de'marche.
+Il convenait ensuite d'e'xecuter ce binaire, puis d'e'laborer
+les fonctions \LeLisp\ correspondant au code C compile' ({\tt
+file.le}), et de sauver le tout dans une image me'moire. Le document
+intitule' {\tt
+gene'rateur de runtime sur HP9700} vous aidait dans cette de'marche.
+\par
+L'avantage de cette technique e'tait essentiellement la
+portabilite'. Les inconve'nients e'taient principalement la
+complexite' de la mise en oeuvre (cf ci-dessus), le cycle de
+de'veloppement (pas de chargement dynamique), et les performances
+de'grade'es par rapport a` un portage natif.
+
+\Section{Technologie NATIVE}
+Peut-e^tre disposiez-vous d'autres portages des produits Ilog (sun4,
+decstation, ...) auquel cas la simplicite' d'utilisation d'un portage
+NATIF en regard d'un portage GELL vous parait e'vidente. 
+Si vous ne disposez que du portage des produits Ilog sur Chp9700
+(GELL), vous 
+de'couvrirez un monde plus simple avec le portage ds me^mes produits
+sur HP9700 (NATIF): la phase strictement lisp reste la me^me, jusqu'a`
+la compilation (optention des fichiers {\tt file.lo}). On passe alors
+directement au lancement d'un binaire minimal fourni avec la bande de
+distribution de \LeLisp , dans lequel on charge les fichiers lisp compile's
+({\tt <Crtl>A file.lo}). Il existe toujours un {\tt ge'ne'rateur de runtime}
+pour vous aider dans cette phase.
+L'outil {\tt configurator} a disparu, ainsi que la plupart des
+{\tt makefile}. Il ne subsite en effet qu'un seul makefile ({\tt
+lelisp/hp9700/Makefile}) permettant de refabriquer des binaires lisp,
+et les fabricateurs d'images me'moire {\tt makeaida, makesmeci, ...}.
+\par
+Comme nous venons de le voir, le code \LeLisp\ peut maintenant e^tre
+charge' dynamiquement en compile' ({\tt file.lo}) a` l'aide de la
+fonction {\tt loadmodule} (ou du caracte`re spe'cial {\tt <Crtl>A}). Il est
+possible e'galement de compiler ``a` 
+la vole'e '' avec les fonctions {\tt compile, compilemodule,
+compile-all-in-core}. Si vous de'veloppez du code C en plus du code
+\LeLisp\ , vous n'aurez qu'a` compiler ce code C, puis a` le charger
+dynamiquement a` l'aide de la fonction {\tt cload} (il est e'galement
+possible de linker statiquement ces fichiers C avec le binaire
+\LeLisp\,: cf document de configuration de \LeLisp ).
+\par
+En plus de la simplicite' d'emploi, il vous sera facile de constater
+une ame'lioration des performances d'un facteur 2 a` 2,5.
+
+\Section {Conclusion}
+L'introduction de la technologie NATIVE sur HP9700 a pour but de
+simplifier le travail des de'veloppeurs, et de leur permettre de
+produire plus rapidement encore leurs applications, et d'augmenter la
+rapidite' de celles-ci.
+\par
+Ilog, et toute son e'quipe de developpeurs vous demande
+de les excuser pour les inconve'nients que pourrait entrainer cette
+e'volution.
+
+\tableofcontents
+
+\end{document}
+
+
+
+

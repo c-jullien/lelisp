@@ -1,0 +1,7 @@
+; Modular Le-Lisp system.
+(progn
+  (load-stm #:system:name t t t t t)
+  (add-feature (if (eq 0.0 0.0)
+                 '31BITFLOATS
+                 '64BITFLOATS))
+  )

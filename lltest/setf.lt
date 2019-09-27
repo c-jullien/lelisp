@@ -1,0 +1,135 @@
+        (test-serie "[Setf (original)]" ())
+
+(setf l '(1 2 3))                          (1 2 3)
+l                                          (1 2 3)
+(setf (car l) '(0))                        (0)
+l                                          ((0) 2 3)
+(setf (cdr l) '(1 2))                      (1 2)
+l                                          ((0) 1 2)
+(progn (setf (nth 1 l) 11) l)              ((0) 11 2)
+(progn (setf (caar l) 100) l)              ((100) 11 2)
+
+(setf v (vector 1 2 3))                    #[1 2 3]
+(setf (vref v 1) 22)                       22
+v                                          #[1 22 3]
+
+(setf (get 'foo 'ind) 33)                  33
+(get 'foo 'ind)                            33
+(setf (getprop 'foo 'ind) 33)              33
+(getprop 'foo 'ind)                        33
+(setf foo 99)                              99
+foo                                        99
+;;; Setf of valfn ?
+
+        (test-serie "[Setf on Defstruct]" ())
+
+(defstruct tsetf x y)                          tsetf
+(setq tsetf (#:tsetf:make))                    #:tsetf:#[() ()]
+(#:tsetf:x tsetf)                              ()
+(setf (#:tsetf:x tsetf) 'val)                  val
+(#:tsetf:x tsetf)                              val
+(#:tsetf:y tsetf)                              ()
+(setf (#:tsetf:y tsetf) 'val)                  val
+(#:tsetf:y tsetf)                              val
+tsetf                                          #:tsetf:#[val val]
+
+        (test-serie "[Setf on Macros]" ())
+
+(defmacro kar (x) `(car ,x))               kar
+(setf l '(0 3 4))                          (0 3 4)
+(setf (kar l) '(1 2))                      (1 2)
+l                                          ((1 2) 3 4)
+(defmacro quar (x) `(kar ,x))              quar
+(progn (setf (quar l) '(0 1 2)) l)         ((0 1 2) 3 4)
+(progn (setf (kar (car l))  100) l)        ((100 1 2) 3 4)
+
+        (test-serie "[Setf & Defsetf]" ())
+
+;;; simple case
+(defsetf kkar (x) (y) `(progn (rplaca ,x ,y) ,y)) kkar
+(setq l '(1 2 3))                                 (1 2 3)
+(setf (kkar l) 11)                                11
+l                                                 (11 2 3)
+
+;;;This Example is very weird.  It is not a real setf.
+
+;;; do nothing but...:
+;;; verifie that each parameter if evaluated only one time.
+(defsetf fuu (x) (y) `(list ,x ,x ,y))            fuu
+(setq n 3)                                        3
+(setf (fuu n) 55)                                 (3 3 55)
+(setf (fuu (incr n)) 44)                          (4 4 44)
+n                                                 4
+
+
+        (test-serie "[Setf & Define-Setf-Method]" ())
+(defmacro :values l `(list ,@l)))                 :values
+
+(define-setf-method kdr (x)
+  (let ((v2 (gensym)))
+    (:values ()         ; temp. parameters 
+	     ()         ; parameters
+	     (list v2)  ; new value
+	     `(rplacd ,x ,v2) ; update form
+	     `(cdr ,x))))     ; access form
+                                                  kdr
+(setf l '(1 2 3))                                 (1 2 3)
+(setf (kdr l) 2)                                  (1 . 2)
+
+;;; more complicated: with many parameters, each of them use.
+;;; many times.
+(define-setf-method fii (x y)
+  (let ((v1 (gensym))(v2 (gensym))(v3 (gensym)))
+    (:values (list v1 v2)
+	    (list x y)
+	    (list v3)
+	    `(progn (rplaca (cdr (setq res
+				       (append ,v1
+					       (cons ,v2
+						     (cons ,v2 ,v1))))) ,v3)
+		    ,v3)
+	    `(cadr (append ,v1 ,v2 ,v1)))))
+                                                  fii
+(setq res ())                                     ()
+(setf l '(1 2 3) nn 4)                            4
+;;; minimun test
+(setf (fii l nn) 22)                              22
+res                                               (1 22 3 4 4 1 2 3)
+(setq l '(0))                                     (0)
+(setf (fii l nn) 44)                              44
+res                                               (0 44 4 0)
+(setq l '(1 2) n 10)                              10
+
+;;; verifie each parameter is evaluated only one time:
+nn                                                4
+l                                                 (1 2)
+(setf (fii l (incr nn)) 22)                       22
+nn                                                5
+res                                               (1 22 5 5 1 2)
+
+;;; idem with the firt parameter, but with the same used variable
+;;; verifie the evaluation order rigth->left.
+n                                                 10
+l                                                 (1 2)
+(setf (fii (rplaca l (incr n)) n) 22)             22
+res                                               (11 22 11 11 11 2)
+n                                                 11
+l                                                 (11 2)
+
+        (test-serie "[Define-Modify-Macro]" ())
+(setq l '(1 2 3) n 1 m 1)                         1
+(defun foo (x y) (cons y x))                      foo
+(define-modify-macro setfoo (a) foo)              setfoo
+(setfoo l 0)                                      (0 1 2 3)
+(setfoo l (incr n))                               (2 0 1 2 3)
+n                                                 2
+(setfoo (nth 1 l) (incr n))                       (3 . 0)
+l                                                 (2 (3 . 0) 1 2 3)
+n                                                 3
+(setfoo (nth (incr m) l) (incr n))                (4 . 1)
+l                                                 (2 (3 . 0) (4 . 1) 2 3)
+n                                                 4
+m                                                 2
+
+(test-serie "[End of test]" ())
+

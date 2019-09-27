@@ -1,0 +1,63 @@
+defmodule kern
+   ;; Ce module n'exite que pour generer correctement les cles de Complice.
+   files  (bnkern)
+   ;; Les fonctions de l'interface.
+   export (
+           ;; C, assembleur ou Lisp.
+           bnsettozero bnassign bnsetdigit bngetdigit bnnumdigits
+           bnnumleadingzerobitsindigit bndoesdigitfitinword bnisdigitzero
+           bnisdigitnormalized bnisdigitodd bncomparedigits bncomplement
+           bnanddigits bnordigits bnxordigits bnshiftleft bnshiftright
+           bnaddcarry bnadd bnsubtractborrow bnsubtract bnmultiplydigit
+           bndividedigit
+           ;; Ecrites en Lisp.
+           bnalloc bncreate bnfree bngettype bnsettype bngetsize
+           ;; Utilitaires.
+           #:n:prin
+          )
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(bnsettozero subr3 ())
+(bnassign nsubr ())
+(bnsetdigit subr3 ())
+(bngetdigit subr2 ())
+(bnnumdigits subr3 ())
+(bnnumleadingzerobitsindigit subr2 ())
+(bndoesdigitfitinword subr2 ())
+(bnisdigitzero subr2 ())
+(bnisdigitnormalized subr2 ())
+(bnisdigitodd subr2 ())
+(bncomparedigits nsubr ())
+(bncomplement subr3 ())
+(bnanddigits nsubr ())
+(bnordigits nsubr ())
+(bnxordigits nsubr ())
+(bnshiftleft nsubr ())
+(bnshiftright nsubr ())
+(bnaddcarry nsubr ())
+(bnadd nsubr ())
+(bnsubtractborrow nsubr ())
+(bnsubtract nsubr ())
+(bnmultiplydigit nsubr ())
+(bndividedigit nsubr ())
+(bnalloc subr1 ())
+(bncreate subr2 ())
+(bnfree subr1 ())
+(bngettype subr1 ())
+(bnsettype subr2 ())
+(bngetsize subr1 ())
+(#:n:prin subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop 'bn_digit_size 't '#:complice:globalvar)
+)((putprop 'bn_word_size 't '#:complice:globalvar)
+)((defvar bn_digit_size 16)
+(defvar bn_word_size 15)
+)((putprop '#:ex:regret 't '#:complice:globalvar)
+)((putprop '#:kern:tampon 't '#:complice:globalvar)
+))

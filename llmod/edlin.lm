@@ -1,0 +1,83 @@
+defmodule
+edlin
+files (
+edlin
+)
+export (
+#:edlin:bol
+#:edlin:move
+#:edlin:delete
+#:edlin:history:add
+edlin
+edlinend
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:edlin:bol subr0 () () (#:edlin:last-string))
+(#:edlin:move subr1 ())
+(#:edlin:history:add subr1 ())
+(#:edlin:delete subr1 ())
+(edlin subr0 ())
+(edlinend subr0 ())
+)
+cpfunctions (
+(#:edlin:history:endp subr0)
+(#:edlin:do-command subr1)
+(#:edlin:image:move subr1)
+(#:edlin:store-line subr0)
+(#:edlin:history:last subr0)
+(#:edlin:util:delete-in-string subr3)
+(#:edlin:image:delete subr1)
+(#:edlin:image:redisplay-eol subr1)
+(#:edlin:image:tycleol subr0)
+(#:edlin:delete-end-of-line subr0)
+(#:edlin:delete-without-redisplay subr1)
+(#:edlin:image:delete-without-redisplay subr1)
+(#:edlin:delete-begining-of-line subr0)
+(#:edlin:insert-substring subr2)
+(#:edlin:insert subr1)
+(#:edlin:util:insert-in-string nsubr)
+(#:edlin:image:insert subr1)
+(#:edlin:replace-string subr1)
+(#:edlin:redisplay subr0)
+(#:edlin:image:redisplay subr0)
+(#:edlin:history:previous subr0)
+(#:edlin:history:next subr0)
+(#:edlin:do-esc-command subr1)
+(#:edlin:work-on subr1)
+(#:edlin:backword subr1)
+(#:edlin:alphap subr1)
+(#:edlin:forword subr1)
+(#:edlin:delete-backword subr0)
+(#:edlin:history:show subr0)
+(#:edlin:history:show-aux subr1)
+(#:edlin:delete-forword subr0)
+(#:edlin:history:first subr0)
+(#:edlin:history:find subr1)
+(#:edlin:find-in-oblist subr1)
+(#:edlin:search-in-oblist subr2 (string) (pkgc) () (subr1) (()))
+(#:edlin:comm-string subr1)
+(#:edlin:backwardparen subr1)
+(#:edlin:insert-rpar subr0)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:edlin:history:last-string 't '#:complice:globalvar)
+)((putprop '#:edlin:history:maxlen 't '#:complice:globalvar)
+)((putprop '#:edlin:history:history 't '#:complice:globalvar)
+)((putprop '#:edlin:history:position 't '#:complice:globalvar)
+)((putprop '#:edlin:util:tampon 't '#:complice:globalvar)
+)((putprop '#:edlin:inbuf 't '#:complice:globalvar)
+)((putprop '#:edlin:kill-buffer 't '#:complice:globalvar)
+)((putprop '#:edlin:kill-length 't '#:complice:globalvar)
+)((putprop '#:edlin:max 't '#:complice:globalvar)
+)((putprop '#:edlin:pos 't '#:complice:globalvar)
+)((putprop '#:edlin:loop 't '#:complice:globalvar)
+))

@@ -1,0 +1,724 @@
+%=======================================================================
+\Chapter {5} {Manuel de r\'{e}f\'{e}rence}
+%=======================================================================
+Ce chapitre documente de fa\c{c}on exhaustive toutes les clefs accept\'{e}es
+par la forme de d\'{e}finition
+de projet {\tt define-rt-project}, et toutes les
+options d'analyse de la commande {\tt ll2lm}.
+
+%-----------------------------------------------------------------------
+\Section {DEFINE-RT-PROJECT}
+%-----------------------------------------------------------------------
+La forme de d\'{e}finition d'un projet accepte un certain nombre de clefs
+dont les principales sont abord\'{e}es dans le chap\^{\i}tre 2.  Nous documentons
+ici l'ensemble des clefs, pr\'{e}sent\'{e}es dans l'ordre
+alphab\'{e}tique. 
+
+\begin{itemize}
+
+\item {\Large \|activate-function|}\,: permet de sp\'{e}cifier une
+fonction sans argument qui sera appel\'{e}e lorsque l'on r\'{e}f\'{e}rencera ce
+projet dans l'analyse d'un module. Par exemple, pour les projets
+\Aida, il est n\'{e}cessaire de positionner la variable
+\|#:system:defstruct-all-access-flag| \`{a} \|nil|. Pour cela, il suffit
+de sp\'{e}cifier:
+
+\begin{Code*}
+activate-function (lambda () 
+                    (setq #:system:defstruct-all-access-flag ()))
+\end{Code*}
+
+Cette fonction sert g\'{e}n\'{e}ralement \`{a} modifier l'environnement \Lisp \
+avant de commencer l'analyse d'un module.
+
+Cette clef est h\'{e}rit\'{e}e lorsque ce projet est "import\'{e}" par un
+autre projet ({\bf Attention\,: Ce comportement est diff\'{e}rent 
+de celui de l'ancien analyseur de modules}).
+
+Cette fonction est appel\'{e}e lorsque l'on active un projet pour
+l'{\em Analyseur de Modules} par la fonction \|activate-rt-project|,
+soit \`{a} chaque fois qu'un projet se trouve import\'{e} r\'{e}cursivement via
+la clef \|required-project|
+
+Voir aussi la clef \|initialize-function|.
+
+\item {\Large \|analyzer-options|}\,: cette clef, si elle existe,
+contient une A-liste o\`{u} le premier \'{e}l\'{e}ment de chaque sous-liste est le
+nom d'un fichier descripteur de module, et le reste de la sous liste
+est une liste de cha\^{\i}nes de caract\`{e}res repr\'{e}sentant des options
+utilis\'{e}es lors de l'analyse du module d\'{e}sign\'{e}. \\
+Par exemple, si {\tt mymod} doit \^{e}tre le seul module analys\'{e} avec les options
+\|-includeflag|\ et \|-dynamic|\ :
+\begin{Code*}
+(define-rt-project myproject
+  ...
+  analyzer-options ((mymod "-includeflag" "-dynamic"))
+  ...
+)
+\end{Code*}
+Il est possible d'imposer des options d'analyse pour tous les modules
+du projet en utilisant le mot clef {\em "all"} sous forme de {\it
+string} \`{a} la place du nom d'un module\,:
+\begin{Code*}
+(define-rt-project myproject
+  ...
+  analyzer-options ((mymod "-includeflag" "-dynamic")
+                    ("all" "-v 1"))
+  ...
+)
+\end{Code*}
+Dans l'exemple pr\'{e}c\'{e}dent, le module \|mymod| ne b\'{e}n\'{e}ficie pas du
+flag pr\'{e}cis\'{e} par "all". Pour analyser \|mymod| avec \|-v 1|, on
+devra le pr\'{e}ciser explicitement avec \|mymod|\,:
+\begin{Code*}
+(define-rt-project myproject
+  ...
+  analyzer-options (;; only mymod
+                    (mymod "-v 1 -includeflag" "-dynamic")
+                    ;; all others
+                    ("all" "-v 1"))
+  ...
+)
+\end{Code*}
+
+
+Cette clef est exploit\'{e}e par l'option \|-init| de l'{\em Analyseur de
+Modules}. 
+
+\item {\Large \|complice-options|}\,: cette clef, si elle existe,
+contient une A-liste o\`{u} le premier \'{e}l\'{e}ment de chaque sous-liste est le
+nom d'un fichier descripteur de module, et le reste de la sous liste
+est une liste de cha\^{\i}nes de caract\`{e}res repr\'{e}sentant des options
+utilis\'{e}es lors de la compilation du module d\'{e}sign\'{e}. On choisira
+d'\'{e}crire une cha\^{\i}ne de caract\`{e}res par option pour \'{e}viter les
+lignes trop longues dans un \|Makefile|.\\
+Par exemple, si {\tt mymod} doit \^{e}tre
+compil\'{e} avec le flag de compilation \|-parano T|\, et en chargeant le
+fichier {\tt myfile}, on \'{e}crira\,:
+\begin{Code*}
+(define-rt-project myproject
+  ...
+  complice-options ((mymod "-e ""(loadfile 'myfile.ll t)"""
+                           "-parano T"))
+  ...
+)
+\end{Code*}
+Il est possible d'imposer des options de compilation pour tous les modules
+du projet en utilisant le mot clef {\em "all"} sous forme de {\it
+string} \`{a} la place du nom d'un module:
+\begin{Code*}
+(define-rt-project myproject
+  ...
+  complice-options ((mymod "-e ""(loadfile 'myfile.ll t)"""
+                           "-parano T")
+                    ("all" "-o /tmp/"))
+  ...
+)
+\end{Code*}
+Le comportement de "all" dans la clef \|complice-options| est
+identique \`{a} celui de "all" dans la clef \|analyzer-options|.
+
+Cette clef est exploit\'{e}e par l'option \|-makefile| de l'{\em Analyseur de
+Modules}.
+
+\item {\Large \|crunch-directory|}\,: le r\'{e}pertoire qui va contenir
+le fichier contenant la table des r\'{e}f\'{e}rences. Par d\'{e}faut,
+\|crunch-directory| prend la valeur de \|root-directory|.
+
+\item {\Large \|directories|}\,: pour sp\'{e}cifier la liste des
+r\'{e}pertoires qui contiennent les sources et/ou les modules du projet
+\|name|.
+
+\item {\Large \|exclude-modules|}\,: cette clef permet de sp\'{e}cifier les
+modules \`{a} ne pas prendre en compte
+pour construire les tables d'analyse. Cela
+peut par exemple concerner les modules de patch. Par exemple\,:
+
+\begin{Code*}
+(define-rt-project mycasetool
+        required-projects (aida smeci)
+        root-directory #.mycasetool-dir
+        directories ("src" "include" "modules")
+        crunch-directory #u"mycasetool/work/"
+        exclude-modules (graphpatches devpatches))
+\end{Code*}
+
+\item {\Large \|extensions-list|}\,: cette clef , si elle est
+sp\'{e}cifi\'{e}e, doit contenir une liste d'extensions de fichiers (type
+string) servant \`{a} calculer les noms des fichiers sources \`{a} partir de
+la racine du nom du module. Il est fr\'{e}quent de voir un module
+\|mymod| avoir comme description modulaire\,:
+\begin{Code*}
+defmodule mymod
+files (mymod.ll mymod.lh mymod.li)
+\end{Code*}
+Si cela est r\'{e}p\'{e}titif dans le projet, on utilisera la clef
+\|extensions-list|\ : 
+\begin{Code*}
+(define-rt-project myproject
+  ...
+  extensions-list ("ll" "lh" "li")
+  ...
+)
+\end{Code*}
+Bien entendu, l'{\em Analyseur de Modules} ne range alors dans le champ
+\|files| de la description modulaire que les fichiers qui existent.
+Ainsi dans notre exemple, si un autre module {\tt othermod.lm}
+utilise les fichiers source {\tt othermod.ll} et {\tt othermod.lh}
+mais que le fichier {\tt othermod.li} n'existe pas, nous aurons comme
+description modulaire:
+\begin{Code*}
+defmodule othermod
+files (othermod.ll othermod.lh)
+\end{Code*}
+Cette clef est exploit\'{e}e par les options \|-init| et \|-defmodule| de
+l'analyseur.
+
+\item {\Large \|init-makefile|}\,: cette clef, si elle existe, doit
+d\'{e}signer le nom du {\tt Makefile} d'initialisation engendr\'{e} par
+l'{\em Analyseur de Modules} avec l'option \|-init|. Cette
+valeur peut \^{e}tre du type {\tt string} ou {\tt pathname}.  \\
+Par d\'{e}faut, le nom de ce {\tt Makefile} sera calcul\'{e} \`{a}
+partir du nom du projet, suffix\'{e} par l'extension {\tt ".mki"}, et
+rang\'{e} dans le r\'{e}pertoire d\'{e}sign\'{e} par la clef \|system-directory|
+(ou sa valeur par d\'{e}faut s'il elle n'existe pas).
+Cette clef est exploit\'{e}e par l'option \|-init| de l'{\em Analyseur de
+Modules}.
+
+\item {\Large \|initialize-function|}\,: cette clef permet de sp\'{e}cifier
+une fonction sans argument qui sera appel\'{e}e lorsque l'on
+r\'{e}f\'{e}rencera ce projet lors de l'analyse d'un module. \`{A} la
+diff\'{e}rence de la clef \|activate-function|, cette clef n'est appel\'{e}e
+qu'une seule fois par analyse et par session. 
+
+Par exemple pour certains des sous-projets d'\Aida, 
+il est n\'{e}cessaire d'initialiser l'environnement
+de mani\`{e}re sp\'{e}cifique avant de d\'{e}marrer l'analyse\,:
+
+\begin{Code*}
+(define-rt-project mdacurve
+  required-projects (mdakerne)
+  root-directory #.rt-aida-directory
+  ...
+  initialize-function aida-init-func
+  ...
+  )
+\end{Code*}
+
+Cette fonction est appel\'{e}e lorsque l'on charge les tables d'un projet
+par les fonctions \|load-rt-project| ou \|reload-rt-project|.
+
+\item {\Large \|ll-module-directory|}\,: cette clef, si elle existe,
+doit d\'{e}signer le r\'{e}pertoire o\`{u} seront rang\'{e}s tous les fichiers
+descripteurs de modules ({\tt .lm}) fabriqu\'{e}s automatiquement. Cette
+valeur peut \^{e}tre du type {\tt string} ou {\tt pathname}. \\
+Par d\'{e}faut, les nouveaux modules seront
+rang\'{e}s dans le r\'{e}pertoire d\'{e}sign\'{e} par la clef
+\|ll-object-directory| ou, si cette clef n'existe pas non plus, chaque
+fichier descripteur de module sera rang\'{e} dans le m\^{e}me r\'{e}pertoire
+que le premier fichier source ({\tt .ll}) trouv\'{e} sous le champ \|files|
+du module.
+Cette clef est exploit\'{e}e par les options \|-init| et \|-defmodule| de
+l'{\em Analyseur de Modules}.
+
+\item {\Large \|ll-object-directory|}\,: cette clef, si elle existe,
+doit d\'{e}signer le r\'{e}pertoire o\`{u} seront rang\'{e}s tous les fichiers
+r\'{e}sultat de la compilation des modules ({\tt .lo}) par {\tt
+complice}. Cette
+valeur peut \^{e}tre du type {\tt string} ou {\tt pathname}.  \\
+Par d\'{e}faut, ces fichiers seront
+rang\'{e}s dans le r\'{e}pertoire d\'{e}sign\'{e} par la clef
+\|ll-module-directory| ou, si cette clef n'existe pas non plus, ils
+seront rang\'{e}s dans le m\^{e}me r\'{e}pertoire que le fichier descripteur
+de module ({\tt .lm}).
+Cette clef est exploit\'{e}e par l'option \|-makefile| de
+l'{\em Analyseur de Modules}.
+
+\item {\Large \|make-file|}\,: cette clef, si elle existe, doit
+d\'{e}signer le nom du {\tt Makefile} de compilation engendr\'{e} par l'analyseur
+de modules avec l'option \|-makefile|. Cette
+valeur peut \^{e}tre du type {\tt string} ou {\tt pathname}. \\
+Par d\'{e}faut, le nom de ce {\tt Makefile} sera calcul\'{e} \`{a}
+partir du nom du projet, suffix\'{e} par l'extension {\tt ".mk"}, et
+rang\'{e} dans le r\'{e}pertoire d\'{e}sign\'{e} par la clef \|system-directory|
+(ou sa valeur par d\'{e}faut s'il elle n'existe pas).
+Cette clef est exploit\'{e}e par l'option \|-makefile| de l'{\em Analyseur de
+Modules}.
+
+\item {\Large \|module-extension|}\,: cette clef, si elle existe,
+contient une cha\^{\i}ne de caract\`{e}res. Cette cha\^{\i}ne de carat\`{e}res
+d\'{e}signe l'extension utilis\'{e}e pour d\'{e}signer le nom du fichier
+servant de r\'{e}f\'{e}rence de description modulaire. Si l'utilisateur
+d\'{e}sire conserver une version de ses fichiers de descriptions modulaires, non
+``pollu\'{e}e {''} par {\tt complice} (rappel: {\tt complice} \'{e}crit ses
+propres informations dans les fichiers de description modulaire), il
+choisira une nouvelle extension de fichier diff\'{e}rente de {\tt
+"lm"}, afin de cr\'{e}er un nouveau fichier. On choisi habituellement
+l'extension {\tt "lc"}. \\
+Cette clef est exploit\'{e}e par les options \|-init|, \|-makefile| et
+\|-build| de l'{\em Analyseur de Modules}.
+Les {\tt Makefile} engendr\'{e}s par l'utilisation de ces options utilisent alors
+les {\tt "lc"} comme point de d\'{e}part. 
+\begin{itemize}
+\item Dans le cas du {\tt Makefile}
+d'analyse, on utilisera le {\tt .lc} comme fichier source du {\tt .lm}
+sur lequel s'effectuera l'analyse. Le r\'{e}sultat de l'analyse sera
+ensuite recopi\'{e} dans le {\tt .lc}. Bien entendu cela n'est
+op\'{e}rationnel pour chacun des modules que si le fichier {\tt .lc}
+pr\'{e}-existe au momnet de la fabrication du {\tt Makefile}.
+Le champ \|module-extension| est particuli\`{e}rement utile
+pour l'utilisateur d\'{e}sireux de maintenir sa connaissance des modules
+dans les {\tt .lc} consid\'{e}r\'{e}s alors comme fichiers sources des {\tt
+.lm}. \`{A} l'oppos\'{e}, l'utilisateur d\'{e}sireux de stocker toutes les
+informations relatives \`{a} l'analyse de ses modules, dans le champ
+\|analyzer-options| (\|-import|, \|-export|, \|-allexport|, \|-files|,
+\|-include|, \|-includeflag|) devra \'{e}viter
+d'utiliser le champ 
+\|module-extension| sous peine de voir des informations redondantes
+ou incompatibles d'une
+m\'{e}thodes de stockage \`{a} l'autre.
+
+\item Dans le cas du {\tt Makefile} de compilation, on commencera par
+recopier le {\tt .lc} en {\tt .lm} avant de lancer la compilation du
+module. Le compilateur {\tt complice} \'{e}crira ses donn\'{e}es dans le
+{\tt .lm} mais ne touchera pas au {\tt .lc}, le laissant ainsi plus
+lisible.
+
+\item Dans le cas de l'option \|-build|, la base sera fabriqu\'{e}e \`{a}
+partir des informations contenues dans les {\tt ".lc"}.
+
+\end{itemize}
+\begin{Side}{\bf Attention} 
+L'utilisation de \|module-extension| est d\'{e}conseill\'{e}e
+avec l'option d'analyse \|-r|. En effet, une analyse r\'{e}cursive ne
+garantit pas la coh\'{e}rence des "{\tt .lc}" avec les "{\tt .lm}",
+cette garantie \'{e}tant r\'{e}alis\'{e}e par le {\tt Makefile} d'analyse, 
+\end{Side}
+
+\item {\Large \|modules|}\,: si elle existe, cette clef contient la
+liste exhaustive de tous les noms de fichiers de description de
+modules du projet. Cette clef est prioritaire sur \|modules-lists|.
+Si cette liste contient la cha\^{\i}ne de caract\`{e}res
+{\tt "all"}, alors tous les fichiers dans tous les r\'{e}pertoires du
+projet seront pris en compte.
+
+\item {\Large \|modules-files|}\,: si on d\'{e}sire g\'{e}rer compl\`{e}tement 
+les noms des fichiers source de chaque module dans une
+d\'{e}finition de projet, on utilisera la clef \|modules-files|. Il doit
+s'agir d'une A-liste dont le premier \'{e}l\'{e}ment d'une sous-liste
+est le nom du module (cf
+option d'analyse \|-defmodule|) et le reste de la sous liste, les noms
+complets (extension comprise) des fichiers sources tels qu'il
+apparaitront dans le champ \|files| de la description modulaire.
+Les noms des modules sont eux-m\^{e}mes g\'{e}r\'{e}s par les m\'{e}caniques
+d\'{e}crites pour le champs \|modules-lists|.
+\begin{Code*}
+Le cas de mymod peut se resoudre de la facon suivante :
+
+(define-rt-project myproject
+  ...
+  modules-files ((mymod mymod.ll mymod.lh mymod.li))
+  ...
+\end{Code*}
+Cette clef est exploit\'{e}e par les options \|-init| et \|-defmodule| de
+l'{\em Analyseur de Modules}. Voir \'{e}ventuellement le contenu
+des {\tt .lc}, si la clef \|module-extension| est utilis\'{e}.
+
+\item {\Large \|modules-lists| {\em list}}: cette clef est
+destin\'{e}e \`{a} informer 
+pr\'{e}cis\'{e}ment le projet sur les modules \`{a} traiter. 
+Si \|modules-lists| existe, elle permet de
+sp\'{e}cifier une liste de fichiers ({\tt *.lst}) contenant la liste des modules
+composant le projet. Les fichiers ({\tt *.lst})  ainsi r\'{e}f\'{e}renc\'{e}s
+par \|modules-lists| 
+sont recherch\'{e}s dans chacun des 
+r\'{e}pertoires de la clef \|directories| ou \|ll-module-directory|.
+
+\begin{Side}{\bf Remarque}
+Si aucun des fichiers 
+sp\'{e}cifi\'{e}s avec la clef \|modules-list| ne figure dans un r\'{e}pertoire
+donn\'{e} par la cl\'{e} \|directories| alors {\bf aucun}
+module de {\em ce r\'{e}pertoire} ne sera pris en compte pour construire
+les tables d'analyse. En mode \|-verbose 2|, un message est affich\'{e}
+dans ce cas.
+\end{Side}
+
+\item {\Large \|project-file|}\,: cette clef, si elle existe, doit
+d\'{e}signer le nom du fichier contenant la d\'{e}finition du projet (en
+fait, l\`{a} o\`{u} se trouve le {\tt define-rt-project} d\'{e}finissant le
+projet concern\'{e}). Cette
+valeur peut \^{e}tre du type {\tt string} ou {\tt pathname}.  \\
+Par d\'{e}faut, le nom de ce fichier sera calcul\'{e} \`{a} partir du nom du
+projet, suffix\'{e} par l'extension {\tt ".prj"} et rang\'{e} dans le
+r\'{e}pertoire d\'{e}sign\'{e} par la clef \|system-directory| (ou sa valeur
+par d\'{e}faut s'il elle n'existe pas).
+Cette clef est exploit\'{e}e par l'option \|-init| de l'{\em Analyseur de
+Modules}.
+
+\item {\Large \|ref-file|}\,: cette clef, si elle existe, doit d\'{e}signer
+le nom du fichier des r\'{e}f\'{e}rences du projet. C'est dans ce fichier
+que l'{\em Analyseur de Modules} stocke tous les informations relatives aux
+analyses de tous les modules du projet. Cette
+valeur peut \^{e}tre du type {\tt string} ou {\tt pathname}.  \\
+Par d\'{e}faut, le nom de ce fichier sera calcul\'{e} \`{a} partir du nom du
+projet, suffix\'{e} par l'extension {\tt ".ref"}, et rang\'{e} dans le
+r\'{e}pertoire d\'{e}sign\'{e} par la clef \|crunch-directory| (ou sa valeur
+par d\'{e}faut si elle n'existe pas).
+Cette clef est exploit\'{e}e par toutes les options principales
+de l'{\em Analyseur de Modules}.
+
+\item {\Large \|required-projects|}\,: les ``sous-projets{''} qui sont
+n\'{e}cessaires \`{a} l'utilisation de ce projet. La valeur de cette clef
+est une liste de symboles d\'{e}signant les noms des projets requis. Par
+exemple: 
+
+\begin{Code*}
+(define-rt-project smeci
+   required-projects (smstr)
+   ...)
+\end{Code*}
+
+
+\item {\Large \|root-directory|}\,: le r\'{e}pertoire ``racine{''} 
+du projet \|name|. L'utilisation de cette clef
+permet de sp\'{e}cifier des chemins relatifs pour les autres clefs de
+r\'{e}pertoires telles que \|directories| par exemple.
+Lorsque cette clef est omise, il faut sp\'{e}cifier la clef \|directories|
+avec des chemins absolus. Pour \Aida:
+
+\begin{Code*}
+root-directory #u"/usr/ilog/aida/"
+\end{Code*}
+
+\item {\Large \|system-directory|}\,: le r\'{e}pertoire qui va contenir
+tous les fichiers directement utiles \`{a} la gestion du projet:
+{\tt Makefiles}, d\'{e}finitions de projets, etc. Par d\'{e}faut,
+\|system-directory| prend la valeur de \|root-directory|.
+
+\end{itemize}
+
+%-----------------------------------------------------------------------
+\Section {LL2LM}
+%-----------------------------------------------------------------------
+La commande d'analyse accepte un certain nombre d'options dont les
+principales sont abord\'{e}es dans le chap\^{\i}tre 2. Nous allons \'{e}num\'{e}rer
+ici l'ensemble des options, pr\'{e}sent\'{e}es dans l'ordre alphab\'{e}tique.
+
+\begin{itemize}
+
+\item {\Large \|-allexport|}\,: dans le cas o\`{u} l'utilisateur demande de
+g\'{e}n\'{e}rer (ou de mettre \`{a} jour) une description modulaire, toutes les
+fonctions du module sont export\'{e}es (champ \|export| de la
+description). Cela permet de lib\'{e}rer une contrainte lors du passage
+de l'interpr\'{e}t\'{e} en compil\'{e}, qui concerne la visibilit\'{e} des
+fonctions d'un module. Rappelons que les m\'{e}thodes, qui sont
+appel\'{e}es dynamiquement {\em doivent} \^{e}tre export\'{e}es (voir
+\'{e}galement \|-dynamic| pour ce cas pr\'{e}cis).
+\begin{Side} {\bf Remarque}
+L'utilisateur d\'{e}sireux de ne prendre aucun risque d\^{u} \`{a}
+d'eventuelles fonctions non export\'{e}es, utilisera \|-allexport| dans
+un premier temps, quite \`{a} optimiser cela par la suite.
+\end{Side}
+
+\item {\Large \|-build|}\,: cette option principale est utilis\'{e}e pour
+construire les tables de description d'un contexte d'analyse. 
+Cette option est destin\'{e}e \`{a} l'utilisateur 
+qui d\'{e}sire fabriquer la table de descriptions de son projet sans
+analyser les modules du projet concern\'{e} (cf option \|-project|). Cela
+suppose donc que les fichiers descripteur de module ({\tt file.lm} ou
+{\tt file.lc}) existent d\'{e}j\`{a}.
+
+\item {\Large \|-delete| {\em module-name}, \|-del| {\em
+module-name}}\,: cette option principale 
+permet d'effacer toutes les occurences d'un module dans une base de
+r\'{e}f\'{e}rence d'un projet ({\it project.ref}).
+
+\item {\Large \|-defmodule| {\em module-name}}\,: cette option principale
+permet de 
+sp\'{e}cifier le nom du module devant apparaitre sous la clef \|defmodule| du
+module. L'utilisation de cette option signifie \`{a} l'analyseur de
+fabriquer un nouveau fichier de description modulaire du module {\em
+module-name}.
+Par d\'{e}faut le nom de ce fichier est calcul\'{e} \`{a}
+partir du nom du module (cf \|defmodule|) suffix\'{e} par l'extension {\tt
+.lm}. Ce fichier est alors plac\'{e} dans le r\'{e}pertoire sp\'{e}cifi\'{e} par
+la clef {\bf ll-module-directory} s'il existe, sinon par celui
+sp\'{e}cifi\'{e} par {\bf ll-object-directory} s'il existe, ou sinon dans
+le m\^{e}me r\'{e}pertoire que le premier fichier source trouv\'{e} dans le champ
+\|files|. Il est toujours possible d'imposer un path et un nom de
+fichier avec l'option \|-output|. \\
+Voir \'{e}galement les clefs de {\tt define-rt-project}\ : 
+les fichiers source devant appara\^{\i}tre sous le champ \|files| sont
+calcul\'{e}s par d\'{e}faut \`{a} partir du nom du module\,: 
+si la clef {\tt modules-files} est pr\'{e}sente dans 
+la description du projet concern\'{e} (cf option \|-project|) et
+concerne ce module, c'est elle qui fournira la liste exhaustive
+des fichiers source. Dans le cas contraire, 
+si la clef {\tt extensions-list} est
+pr\'{e}sente, elle doit
+contenir une liste d'extensions ({\tt ll, li}, ...) \`{a} adjoindre \`{a}
+cette racine pour fabriquer les noms des fichiers source, sinon, si
+cette clef n'est pas pr\'{e}sente, le
+nom du fichier source sera {\em module-name}.{\tt ll}.
+
+\item {\Large \|-dependency| {\em level}, \|-dep| {\em level}}\,: pour
+d\'{e}terminer le niveau de 
+d\'{e}pendance du {\tt Makefile} engendr\'{e} (cf options d'analyse
+\|-makefile| et \|-init|). \|level| peut prendre les valeurs 0, 1, 2\ :
+\begin{itemize}
+\item {\Large {\bf 0}}\, :
+il y a une d\'{e}pendance minimale sur les points d'entr\'{e}e du
+{\tt Makefile}\,:\\
+\begin{itemize}
+\item
+Dans le cas d'une conjugaison avec l'option \|-makefile|, 
+les {\tt .lo} d\'{e}pendent du {\tt .lm} et des {\tt .ll} des champs {\tt
+files} et {\tt include} du module.
+\item
+Dans le cas d'une conjugaison avec l'option \|-init|, il n'y a aucune
+d\'{e}pendance. 
+\end{itemize}
+\item {\Large {\bf 1}} (d\'{e}faut) \ :
+il y a une d\'{e}pendance normale sur chaque entr\'{e}e du {\tt Makefile}\,: \\
+\begin{itemize}
+\item
+Dans le cas d'une conjugaison avec l'option \|-makefile|, 
+idem {\em level 0}, plus une d\'{e}pendance sur
+les {\tt .lm} des modules import\'{e}s. 
+\item
+Dans le cas d'une conjugaison avec l'option \|-init|, on force
+syst\'{e}matiquement l'ex\'{e}cution au moyen d'une d\'{e}pendance fictive sur
+une entr\'{e}e \|work| jamais mise \`{a} jour.
+\end{itemize}
+\item {\Large {\bf 2}} \ :
+on cr\'{e}e une d\'{e}pendance forte\,: \\
+\begin{itemize}
+\item
+Dans le cas d'une conjugaison avec l'option \|-makefile|, 
+idem {\em level 0}, plus une d\'{e}pendance sur
+les {\tt .lo} des modules import\'{e}s.
+\item
+Dans le cas d'une conjugaison avec l'option \|-init|, le lancement de
+l'analyse d'un module d\'{e}pend de ses fichiers sources, et de ses
+modules import\'{e}s. On notera que cette derni\`{e}re possibilit\'{e} est
+particuli\`{e}rement int\'{e}ressante lorsqu'on utilise le {\tt Makefile} d'analyse
+en mode {\it -update} (en mode {\it -defmodule}, on ne connait
+\'{e}videmment pas encore les modules import\'{e}s!).
+\end{itemize}
+\end{itemize}
+Cette option se combine avec les options \|-init| ou \|-makefile|.
+
+\item {\Large \|-dynamic|}\,: cette option sp\'{e}cifie \`{a} l'analyseur de
+reconnaitre les fonction appel\'{e}es dynamiquement de la forme {\tt
+'function}. Voir \'{e}galement le d\'{e}finisseur de formes dynamiques\,: {\tt
+defdynamiccall} .
+Cette option permet d'automatiser la d\'{e}tection des importations
+n\'{e}cessaires pour une bonne utilisation des fonctions appel\'{e}es
+dynamiquement.
+\|-dynamic| se combine avec les options \|-defmodule| ou \|-update|.
+
+\item {\Large \|-export function|}\,: pour ajouter une fonction {\tt
+function} dans le champ \|export| du module analys\'{e}. 
+Cette option
+est cumulative et se combine avec les options \|-defmodule| ou
+\|-update|. \\
+\begin{Side}{\bf Remarque}
+L'{\em Analyseur de Modules} utilise cette option pour ses
+besoins propres 
+lors d'analyses r\'{e}cursives destin\'{e}es \`{a} mettre \`{a} jour
+les modules et le fichier de r\'{e}f\'{e}rences concern\'{e}s.
+\end{Side}
+
+\item {\Large \|-files file.ll|}\,: pour ajouter le fichier {\tt
+file.ll} dans le champ \|files| du module analys\'{e}. 
+Cette option est cumulative.
+\|-files| se combine avec les options \|-defmodule| ou \|-update|.
+
+\item {\Large \|-import module|}\,: pour ajouter
+le module {\tt module} dans le champ \|import| du module analys\'{e}. 
+Cela est
+particuli\`{e}rement utile si l'{\em Analyseur de Modules} ne ``voit''
+pas certains 
+modules, ou bien lorsque le module n'est pas encore int\'{e}gr\'{e} dans un
+contexte d'analyse. Cette option est cumulative.
+\|-import| se combine avec les options \|-defmodule| ou \|-update|.
+
+\item {\Large \|-include file.ll|}\,: pour ajouter le fichier {\tt
+file.ll} dans le champ \|include| du module analys\'{e}. Cette option
+est cumulative.
+\|-include| se combine avec les options \|-defmodule| ou \|-update|.
+
+\item {\Large \|-includeflag|}\,: cette option sp\'{e}cifie \`{a} l'analyseur
+d'utiliser le champ \|include| lorsqu'il fabrique ou met \`{a} jour un
+module. Cela peut \^{e}tre utile lorsque le programmeur ne d\'{e}sire pas
+revoir certaines formes {\tt eval-when} dans ses sources d\'{e}j\`{a}
+analys\'{e}s. 
+\|-includeflag| se combine avec les options \|-defmodule| ou \|-update|.
+
+\item {\Large \|-init|}\,: cette option principale permet d'engendrer un
+{\tt Makefile} d'analyse pour un projet donn\'{e}. Ce {\tt Makefile} r\'{e}alise
+par d\'{e}faut l'\'{e}quivalent de l'option \|-update| sur tous les modules
+du projet. \\
+L'ensemble des modules du projet sont d\'{e}finis \`{a} partir de la
+d\'{e}finition du projet d'une des fa\c{c}ons suivantes\,:
+\begin{enumerate}
+\item la clef \|modules| permet de sp\'{e}cifier explicitement la liste
+des modules composant ce projet. Cette clef peut contenir le mot clef
+{\tt all}\,: nous sommes alors dans le cas 3;
+\item la clef \|modules-lists| permet de sp\'{e}cifier une liste de
+fichiers dans lesquels on trouvera les listes des modules d\'{e}crivant
+ce projet. Cette liste est amput\'{e}e des modules \'{e}num\'{e}r\'{e}s dans la
+clef  \|exclude-modules|. \\
+Cette clef peut contenir le mot clef {\tt all}\,: nous sommes alors
+dans le cas 3;
+\item la liste des modules est constitu\'{e}e \`{a} partir de l'ensemble des
+fichiers source trouv\'{e}s dans les r\'{e}pertoires sp\'{e}cifi\'{e}s par la clef
+\|directories|. 
+\end{enumerate}
+Le {\tt Makefile} poss\`{e}de des entr\'{e}es pr\'{e}d\'{e}finies: {\tt init1}, {\tt
+init2} , {\tt update} et {\tt clean}\,:
+\begin{itemize}
+\item \|init1| \ : n'est \`{a} utiliser qu'une seule fois lors de la
+toute premi\`{e}re phase d'analyse. En effet de nombreux messages de
+l'analyseur sont uniquement dus \`{a} l'absence de fichier de
+r\'{e}f\'{e}rence du projet.
+\item \|init2| \ : est \`{a} utiliser une seule fois \'{e}galement apr\`{e}s
+\|init1|, ou, par la suite si l'utilisateur d\'{e}sire refabriquer tous ses
+modules. 
+\item \|update| (d\'{e}faut)\ : est \`{a} utiliser apr\`{e}s \^{e}tre intervenu
+manuellement sur chaque message important ({\tt ** ...}) issus de la
+pr\'{e}c\'{e}dente analyse.
+\item \|clean| \ : efface tous les fichiers de description modulaire
+du projet et la base de r\'{e}f\'{e}rences du projet.
+\end{itemize}
+Il est possible de pr\'{e}ciser des options d'analyse, module par module,
+ou globalement\,: voir la clef {\tt analyzer-options} de {\tt
+define-rt-project}. \\
+Voir \'{e}galement l'option \|-dependency|.
+
+\item {\Large \|-load file|}\,: permet de charger le fichier {\em file}
+dans l'environnement d'analyse. En g\'{e}n\'{e}ral, il s'agit d'un fichier
+de description de projet du type {\tt prjname.prj} et se place avant
+l'option \|-project|. 
+Cette option est cumulative.
+
+\item {\Large \|-makefile|, \|-make|}\,: cette option
+principale permet 
+d'engendrer un {\tt Makefile} de compilation modulaire ({\tt cf
+complice}) de tous les modules du projet concern\'{e} (cf option
+\|-project|). Par d\'{e}faut le fichier r\'{e}sultat de la compilation 
+d'un module, par {\tt complice} ({\tt
+.lo}) est rang\'{e} dans le r\'{e}pertoire sp\'{e}cifi\'{e} par la clef {\tt
+ll-object-directory} s'il existe, ou sinon \`{a} c\^{o}t\'{e} du fichier de
+description modulaire ({\tt .lm}). \\
+Ce {\tt Makefile} offre certaines entr\'{e}es pr\'{e}d\'{e}finies:
+\begin {enumerate}
+\item \|all| (d\'{e}faut)\ :\ 
+permet de mettre \`{a} jour les compilations de tous les modules du projet.
+\item \|clean|\ :\ 
+permet d'effacer les fichiers de compilation ({\tt .lo}) de tous les
+modules du projet.
+\item \|i|\ :\ 
+permet d'entrer dans la boucle {\tt toplevel} interactive du
+compilateur, avec tous les flags de compilation charg\'{e}s dans
+l'environnement. Tr\`{e}s utile pour le d\'{e}bbogage.
+\end{enumerate}
+Voir \'{e}galement l'option \|-dependency| pour jouer sur le niveau de
+d\'{e}pendance des entr\'{e}es du {\tt Makefile}.\\
+En m\^{e}me temps que le {\tt Makefile}, est g\'{e}n\'{e}r\'{e} un fichier {\bf
+project.pth} contenant une d\'{e}finition de la variable {\tt
+\#:system:path} avec tous les chemins d'acc\`{e}s n\'{e}cessaires \`{a}
+l'execution des modules du project {\tt project>}.
+
+\item {\Large \|-merge|}\,: cette option principale permet de
+concat\'{e}ner les fichiers de 
+r\'{e}f\'{e}rences de deux projets diff\'{e}rents, en un seul fichier de
+r\'{e}f\'{e}rences. Cela peut \^{e}tre utile pour simplifier des d\'{e}pendances
+de projets import\'{e}s r\'{e}cursivement au moyen de la clef
+\|required-project|. Cette option est \'{e}galement utile dans certains
+cas d'utilisation des {\em meta-modules}.
+
+\item {\Large \|-meta|}\,: cette option principale permet 
+de g\'{e}n\'{e}rer un module r\'{e}unissant les clefs \|import| et \|export| de
+tous les modules du projet. On appelle un tel module un {\bf
+meta-module}. Ce {\tt meta-module} peut entre autre \^{e}tre utilis\'{e}
+pour charger tous les modules du projet en une seule op\'{e}ration (voir
+{\tt loadmodule}, {\em Manuel de R\'{e}f\'{e}rence} \LeLisp).
+
+\item {\Large \|-nowrite|}\,: permet de r\'{e}aliser une analyse compl\`{e}te
+(nouveau module ou mise \`{a} jour) sans en \'{e}crire le r\'{e}sultat ni dans
+le fichier de description modulaire, ni dans le fichier de r\'{e}f\'{e}rence
+du projet. Cette option est utile pour ``voir{''} ce que va faire
+l'analyseur. 
+\|-nowrite| se combine avec les options \|-defmodule| ou \|-update|.
+
+\item {\Large \|-output| {\em target}, \|-o| {\em target}}\,: pour
+sp\'{e}cifier le nom 
+du fichier o\`{u} \'{e}crire les r\'{e}sultats de l'analyse. Cette option peut
+se conjuguer avec les options\,:
+\begin {itemize}
+\item \|-defmodule| lorsqu'il s'agit de
+fabriquer un fichier descripteur de module pour la 1\`{e}re fois,
+\item \|-makefile| lorsqu'il s'agit d'engendrer le fichier {\tt Makefile} de
+compilation modulaire,
+\item \|-init| lorsqu'il s'agit d'engendrer le fichier {\tt Makefile}
+d'initialisation d'analyse,
+\item \|-meta| lorsqu'il s'agit d'engendrer un {\em meta-module}.
+\item \|-merge| lorsqu'il s'agit d'engendrer un nouveau fichier de
+r\'{e}f\'{e}rences. 
+\end{itemize}
+Cette option est incompatible avec l'option \|-update| qui sp\'{e}cifie
+elle-m\^{e}me le nom du fichier sur lequel l'analyse se fait.
+
+\item {\Large \|-project| {\em project}, \|-p| {\em project}}\,: pour sp\'{e}cifier un
+contexte d'analyse. La fonction
+\|(declared-rt-projects)| permet de conna\^{\i}tre l'ensemble des projets
+qui sont d\'{e}clar\'{e}s (mais non activ\'{e}s) dans l'environnement de
+l'{\em Analyseur de Modules}. Cette option est l'une des plus importantes
+puisqu'elle doit presque toujours \^{e}tre sp\'{e}cifi\'{e}e, quelque soit
+l'option principale.
+
+\item {\Large \|-recursive|, \|-r|}\,: cette option permet de mettre \`{a} jour,
+r\'{e}cursivement, l'analyse des modules import\'{e}s. Si un module utilise
+une fonction d\'{e}finie dans un autre module du m\^{e}me projet, mais non
+export\'{e}e, et si l'option \|-r| est mise, l'analyseur lancera une
+analyse r\'{e}cursive sur ce module import\'{e}, en imposant d'exporter la
+fonction en question. Cette analyse r\'{e}cursive se fait mode {\tt -v
+0}. Si l'analyse r\'{e}cursive \'{e}choue (erreur...), le message \|W.120|
+s'affiche. \\
+Cette option est positionn\'{e}e par les entr\'{e}es du {\tt Makefile}
+d'analyse : {\tt init1, init2} et {\tt update}. Elle n'est pas
+activ\'{e}e par d\'{e}faut, mais est tr\`{e}s utile dans une optique ``tout
+automatique{''}. 
+
+\item {\Large \|-update| {\em file.lm}, \|-u| {\em file.lm}}\,: cette option
+principale est utilis\'{e}e pour demander la
+mise \`{a} jour d'un module d\'{e}j\`{a} existant, dont on d\'{e}sire conserver
+les informations d\'{e}j\`{a} existantes. Des commentaires seront
+\'{e}ventuellement ajout\'{e}s dans le fichier {\tt file.lm} mais ni les
+importations, ni les exportations semblant inutiles ne seront
+supprim\'{e}es. Les fonctions export\'{e}es sans \^{e}tre d\'{e}finies dans
+les sources de ce module engendrent le warning {\tt W.105}.
+
+\item {\Large \|-usage|, \|-help|}\,: pour obtenir la description des options de
+la commande \|ll2lm|.
+
+\item {\Large \|-verbose| {\em level}, \|-v| {\em level}}\,: pour d\'{e}terminer le
+niveau de 
+messages de l'analyse. \|level| peut prendre les valeurs 0, 1, 2\,: 
+\begin{itemize}
+\item 0 (d\'{e}faut)\ :
+niveau minimun de messages: seuls les messages importants
+n\'{e}cessitant une intervention, sont imprim\'{e}s \`{a} l'\'{e}cran,
+\item 1 \ :
+l'analyseur d\'{e}taille l'ensemble des op\'{e}rations effectu\'{e}es,
+\item 2 \ :
+l'analyseur \'{e}met en plus un diagnostic de son analyse en commentant
+ses choix.
+\end{itemize}
+Le niveau de messages requis lors de la fabrication d'un {\tt Makefile}
+influence le niveau de messages durant l'utilisation de ce {\tt Makefile}.
+Cette option se combine avec toutes les autres options.
+
+\end{itemize}
+

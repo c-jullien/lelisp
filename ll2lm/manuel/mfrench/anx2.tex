@@ -1,0 +1,170 @@
+%===================================================================
+\Chapter {2}{Limitations et difficult\'{e}s connues}
+%===================================================================
+
+%---------------------------------------------------------------------------
+\Section {Restrictions}
+%---------------------------------------------------------------------------
+
+Certains points ne sont pas parfaitement trait\'{e}s\,:
+
+\begin{itemize}
+\item les modules utilis\'{e}s par l'{\em Analyseur de Modules} lui-m\^{e}me
+(\|path|, \|sets|, \|stringio|,...) peuvent \^{e}tre oubli\'{e}s dans ses
+propositions d'importations\,;
+
+\item les m\'{e}thodes et les fonctions appel\'{e}es par leur nom (avec {\tt
+send}, {\tt map}, ...), si le nom de fonction n'apparait pas
+explicitement de mani\`{e}re {\em quot\'{e}e}: {\tt '<function>}.
+\end{itemize}
+
+Pour ces raisons, les diagnostics de l'{\em Analyseur de Modules} peuvent ne
+pas \^{e}tre complets,
+mais ils aident \`{a} affiner la description d'un module.
+
+%---------------------------------------------------------------------------
+\Section {Probl\`{e}mes connus}
+%---------------------------------------------------------------------------
+
+\SSection{Coupure des symboles trop longs}
+
+Lors de l'\'{e}criture des fichiers \|.lm|
+ou des bases de r\'{e}f\'{e}rences (.ref),
+il peut arriver qu'un symbole trop long soit coup\'{e} incorrectement.
+Par exemple, le nom de fonction \Masai2d\ suivant:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point):ge-contains?
+\end{Longcode*}
+
+est mal coup\'{e} et devient:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point)
+:ge-contains?
+\end{Longcode*}
+
+Ceci sera relu comme deux symboles diff\'{e}rents lors du chargement
+ult\'{e}rieur du fichier\,:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point)
+#:user:ge-contains?
+\end{Longcode*}
+
+
+Cette mauvaise \'{e}criture provoquera des erreurs lors de l'analyse du
+module concern\'{e} et de tout module utilisant la fonction en question.
+
+Il est bien s\^{u}r possible de modifier \`{a} la main le fichier \|.lm|. 
+Par contre, le fichier de r\'{e}f\'{e}rences (.ref) est relu et r\'{e}\'{e}crit \`{a}
+l'analyse de tout module du projet, la modification manuelle de ce
+fichier est donc inutile.
+
+La seule solution s\'{e}rieuse
+consiste \`{a} changer la valeur de la marge lors de
+l'analyse en modifiant la description de projet comme suit:
+
+\begin{Code*}
+(defun proj-activate-func ()
+  ...
+  (rmargin 255))
+
+(define-rt-project proj
+    required-projects (lisp)    
+    ...
+    activate-function proj-activate-func
+    ...
+    ))
+\end{Code*}
+
+Le changement de la marge peut, \'{e}ventuellement, provoquer la m\^{e}me
+erreur sur d'autres noms de fonctions du projet. Dans ce cas, essayer
+une autre valeur de la marge, jusqu'\`{a} la valeur maximale\,:
+
+\begin{Code*}
+(rmargin (1+ (slen (outbuf))))
+\end{Code*}
+
+
+\SSection{H\'{e}ritage de structure}
+
+Si votre projet d\'{e}finit des objets \|microceyx|, vous avez d\^{u}
+choisir entre l'h\'{e}ritage et la red\'{e}finition des accesseurs aux
+champs. Ce m\'{e}canisme est contr\^{o}l\'{e} par la variable globale
+\|#:system:defstruct-all-access-flag|. Les projets \Aida\ et \Masai2d\
+utilisent l'h\'{e}ritage des accesseurs et positionnent donc la variable
+\|#:system:defstruct-all-access-flag| \`{a} \|()| lors de l'activation du
+projet.
+
+Si vous souhaitez que la variable
+\|#:system:defstruct-all-access-flag| soit \`{a} \|t| dans votre projet
+alors que celui-ci requiert les projets \Aida\ ou \Masai2d\, il faut que
+vous definissiez une fonction d'activation comme suit \,:
+
+\begin{Code*}
+(defun proj-activate-func ()
+  (setq #:system:defstruct-all-access-flag t))               
+
+(define-rt-project proj
+  required-projects (aida)      
+  ...
+  activate-function maida2d-activate-func
+  )
+\end{Code*}
+
+Dans ce cas, l'avertissement suivant peut se produire lors de
+l'analyse de vos modules\,:
+
+\begin{Longcode*}
+** W.114 :
+structure image must be defined inside an EVAL-WHEN(COMPILE) in module:
+(image)
+\end{Longcode*}
+
+Vous pouvez ignorer ce message.
+
+
+\SSection{Abr\'{e}viations}
+
+Il existe des cas o\`{u} une abr\'{e}viation n'est pas trouv\'{e}e lors de
+l'analyse.
+En effet, il peut arriver que le champ \|cpenv| du module soit alt\'{e}r\'{e} par
+l'ajout d'une abr\'{e}viation erron\'{e}e: \|{unknown-abbrev}:<abrev>|.
+Dans ce cas, les analyses suivantes provoqueront le message d'erreur
+ci-dessous\,:
+
+\begin{Code*}
+** W.104 : parent structure package unknown-abbrev not found for : {
+unknown-abbrev}:<abrev>
+\end{Code*}
+
+Il est alors n\'{e}cessaire de corriger manuellement le fichier \|.lm|, 
+quite \`{a} supprimer la forme \LeLisp\ contenant l'abr\'{e}viation erron\'{e}e.
+
+\SSection{Conflits de noms de modules}
+Il se peut qu'un fichier d'une application en cours d'analyse porte le
+m\^{e}me nom qu'un des projets utilis\'{e}s.
+La priorit\'{e} d'utilisation est g\'{e}r\'{e}e avec la variable {\tt
+\#:system:path}. Par d\'{e}faut, priorit\'{e} est donn\'{e}e aux projets import\'{e}s.
+Il conviendra de r\'{e}soudre de tels conflits
+\`{a} la main, l'id\'{e}al \'{e}tant d'\'{e}viter tout conflit de nom de
+fichier.
+
+
+\SSection{G\'{e}n\'{e}ration du {\tt Makefile} de compilation}
+
+La g\'{e}n\'{e}ration du \|Makefile| de compilation se fait \`{a} partir de la
+base de r\'{e}f\'{e}rences (fichier .ref) et non \`{a} partir des descriptions
+modulaires (fichiers \|.lm|). Il est donc n\'{e}cessaire de fabriquer la
+base de r\'{e}f\'{e}rences -- soit par l'option \|-build|, soit en analysant
+tous les modules du projet -- avant de construire le \|Makefile|
+de compilation. \\
+On prendra soin lors de l'utilisation d'options de compilation \`{a}
+l'aide de \|complice-options|, que les cha\^{\i}nes de caract\`{e}res
+utilis\'{e}es ne soient pas plus longues qu'une ligne de {\tt Makefile}.
+Si c'etait le cas, il conviendrait de supprimer les {\tt \^M}
+perturbateurs.
+
+
+

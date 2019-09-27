@@ -1,0 +1,24 @@
+defmodule #:display:x11
+files (x11color.ll)
+include (
+virstruct.ll
+)
+import (
+virutil
+x11_def x11struct
+virgraph ; x-base-space
+)
+export (
+:make-color 
+:make-mutable-color 
+:make-named-color
+:kill-color  
+:red-component
+:green-component 
+:blue-component
+:init-color
+:name-to-rgb
+:get-rgb-values
+:get-default
+)
+

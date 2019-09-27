@@ -1,0 +1,20 @@
+defmodule make
+files (make)
+import (
+format
+sets
+defvar
+ref
+defrtprj
+rtmsg
+rtprint
+)
+
+export (
+#:rtproject:build-make
+#:rtproject:makefile:comment:eol
+#:rtproject:print-env
+#:rtproject:prinf
+#:rtproject:make-output-filename
+#:rtproject:make-module-filename
+)

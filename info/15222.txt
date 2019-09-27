@@ -1,0 +1,203 @@
+
+ 	      Le_Lisp  de  l'INRIA  version 15.22
+	      -----------------------------------
+
+                       Pascal  KUCZYNSKI
+	                   Aout 89
+
+Voici les corrections  et les extensions de la nouvelle diffusion 
+de Le-Lisp version 15.22 sous-version 2 date'e du 15 Aou^t 1989.
+
+Il s'agit de la deuxie^me diffusion de maintenance de la version
+intitule'e 15.22.  Cette diffusion comprend uniquement des 
+contournements et corrections effectue's en Lisp.  
+Comme de'cide' au Club des Porteurs, aucune expansion LLM3 n'est ne'cessaire.
+
+Le contenu de cette diffusion est :
+
+Les catalogues avec tous les fichiers (pour cohe'rence):
+
+	benchmarks
+	common:	
+	info:
+	llib:		
+	llmod:
+	llobj:
+	lltest:		
+	llub:	
+	virbitmap:
+	virtty:
+
+Les catalogues avec seulement les fichiers ne'ce'ssaires pour construire
+des configurations :
+
+	sun:		
+	vax:
+	ibmrt:
+
+Les catalogues non inclus:
+
+	llm3:	aucun fichier
+	lltool:
+	68k:
+	manuel:
+
+Survol de 15.22 sous-version 2
+==============================
+
+Les diffe'rences majeures dans cette diffusion sont:
+
+- Des corrections aux erreurs signale'es. (cf RATs)
+
+- Une version remanie'e du bitmap virtuel pour 
+X Windows Version 11 Release 3 (X11r3) compatible X11r2. Un certain 
+nombre de bugs ont e'te' corrige's. Les bitmaps couleurs ont 
+e'te' introduits [voir le document joint].
+
+- Les messages polyglottes ont e'te' incorpore's 
+dans Le-Lisp[voir le document joint]. Cela permet 
+a` l'utilisateur de modifier dynamiquement la langue dans laquelle 
+s'imprimeront tous les messages Le-Lisp. Seules les langues franc,aise 
+et anglaise sont fournies. La langue franc,aise est le choix par de'faut.
+Tous les messages syste`mes, issus de C sont de'sormais imprime's
+en anglais (le flag FOREIGN est toujours positionne').
+
+- Le chargeur 68K permet de re'soudre des sauts sur 32bits (68020 & 68030 
+seulement). L'erreur "Module trop gros" ne devrait plus apparaitre.
+
+- Introduction du nouveau package de Bignums de l'INRIA
+  [charger le module bnq, puis charger testbignum.ll pour voir, et 
+  benchbignum.ll pour mesurer]
+
+- Modifications apporte'es au compilateur modulaire complice:
+[07/07/89]
+	Toutes les fonctions exporte'es et non documente'es sont maintenant
+	package'es dans `complice`. Le module cp2 est plus petit pour passer
+	sur les 80286. la rmargin passe a` (add1 (slen (outbuf))). Le
+	langage des messages est decide' a load-time (les #+ et #- sont
+	remplace's par un if).
+
+[08/08/89]
+	rat ILOG.
+	Copie systematique des expressions des 'cpenv' pour eviter que les
+	formes soient 'macroexpanser'.
+	Rajout des messages polyglottes.
+
+[16/08/89]
+	#:compiler:peephole passe par le relai de #:complice:peephole
+	pour ne pas exporter de fonction 'compiler' ce qui perturbe
+	la compilation de llcp.
+	Modification du contenu de la cle' cpenv des modules. Maintenant
+	elle contient, en plus des formes E* definies par des
+	(eval-when (.. compile ..) E*) locales a ce module, la liste des
+	nom de modules ou il faut chercher un environnement de compilation.
+	La fermeture transitive est faite a` la vole'e.
+
+Les RATS
+========
+
+Les changements de Le-Lisp sont ge're's avec des RATs
+(Reque^tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez avoir le texte complet
+d'un rat d'ILOG en nous en communiquant le nume'ro.  (Notez s'il vous
+plai^t que les nume'ros des RATs sont partage's par tous les produits
+ILOG et pas uniquement Le-Lisp.  Ne soyez pas effraye' par les
+nume'ros e'leve's!)
+
+rat 254			area:  run-time
+aspect:  o/s-interface 	status:  fixed 
+origin:  devin
+BV sur sun 3/60 couleur
+ 
+  
+rat 281			area:  other 	status:  fixed 
+origin:  J. Duthen [IRCAM]
+X10.4/x.ll :font-max n'est pas utilise'
+ 
+  
+rat 293			area:  i/o
+aspect:  basic-i/o 	status:  fixed 
+origin:  devin
+dernier caractere de outbuf
+ 
+  
+rat 296			area:  compiler
+aspect:  complice 	status:  fixed 
+origin:  devin
+il faut une mode branchements 32 bits dans le loader 68k
+ 
+  
+rat 324			area:  i/o
+aspect:  basic-i/o 	status:  fixed 
+origin:  neidl
+noms des fichiers dans les bibliotheques
+ 
+  
+rat 325			area:  run-time
+aspect:  o/s-interface 	status:  fixed 
+origin:  neidl
+comline, cd, pathnames, wildcards
+ 
+  
+rat 326			area:  compiler
+aspect:  complice 	status:  fixed 
+origin:  Danan [Ilog]
+pointillisme ortographique dans un Warning
+ 
+  
+rat 330			area:  ports
+aspect:  tools 	status:  fixed 
+origin:  Longchambon [Thomson Grenoble]
+want EXECORE on Sun-4
+ 
+  
+rat 338			area:  ports
+aspect:  tools 	status:  fixed 
+origin:  Jose GRIMM [INRIA]
+La machine GOULDPN sait faire CLOAD
+ 
+  
+rat 339			area:  other 	status:  fixed 
+origin:  Jose GRIMM [INRIA]
+Certains compilateurs C refusent le -c & -o ensembles ds testextern.ll
+ 
+  
+rat 340			area:  language
+aspect:  interpreter 	status:  fixed 
+origin:  Jose GRIMM [INRIA]
+Les pathnames sont mal imprime's avec #:system:print-for-read a` T
+ 
+  
+rat 341			area:  language
+aspect:  interpreter 	status:  fixed 
+origin:  Jose GRIMM
+les 2 objets #u"foo" et #u"/foo" sont equals
+ 
+  
+rat 347			area:  language
+aspect:  interpreter 	status:  fixed 
+origin:  kuczynsk
+(CURRENT-DIRECTORY) doit rendre un dir. cad terminant par "/" en UNIX
+ 
+  
+rat 348			area:  i/o
+aspect:  basic-i/o 	status:  fixed 
+origin:  kuczynsk
+pb avec le ^Z qui met #$FF dans le tampon d'entre'e sur sun4
+ 
+  
+rat 349			area:  i/o
+aspect:  formatted-i/o 	status:  fixed 
+origin:  Ing [ILOG]
+pbs autour de EXPAND-PATHNAME (ou WILDCARD qui n'est pas de'finie!)
+ 
+  
+rat 360			area:  memory-management 	status:  fixed 
+origin:  B. Serpette [INRIA]
+cas limite dans l'allocation des zones [lelisp.c]
+ 
+  
+rat 362			area:  language
+aspect:  interpreter 	status:  fixed 
+origin:  kuczynsk
+mauvaise valeur de retour dans DO et DO*

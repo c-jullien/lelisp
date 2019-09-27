@@ -1,0 +1,50 @@
+
+This directory contains the C and assembler source code for BigNum.
+
+   Documentation files:
+      doc/bn.tex        - Document BigNum in LaTeX format
+      doc/bnf.tex       - Document BigNum in French and LaTeX format
+      doc/makeidx.sty	- macro used in BigNum document
+
+   C Include Files:
+      h/BigZ.h		- Types and structures for clients of BigZ
+      h/BigNum.h	- Types and structures for clients of BigNum
+
+   C Source Code:
+      c/bz.c		- BigZ implementation
+      c/bn.c		- BigNum implementation ("non-kernel" routines)
+      c/KerN.c		- BigNum implementation ("kernel" routines)
+      c/bzf.c		- Miscellaneous functions built on top of BigZ
+      c/bztest.c	- Test program for verifying a BigNum implementation
+      c/testKerN.c	- Test program for verifying KerN implementation
+
+   Assembly-Language Source Code:
+      s/vaxKerN.s	- Vax implementation of KerN
+      s/68KerN.s	- 68020 implementation of KerN (MIT syntax)
+      s/68KerN.mot.s	- 68020 implementation of KerN (Motorola syntax)
+      s/nsKerN.s	- NS implementation of KerN
+      s/mipsKerN.s	- MIPS implementation of KerN
+      s/pyramidKerN.s	- Pyramid implementation of KerN
+
+   Other Files:
+      Makefile		- Compiles source code, creates test program
+
+In order to build or modify the current version of the package, the
+following commands are provided:
+	make vax	- to use vax assembly code
+	make 68K	- to use 68020 assembly code
+	make ns		- to use NS assembly code
+	make mips	- to use mips assembly code
+	make pyramid	- to use pyramid assembly code
+	make C16	- to use C code with 16 bits digits
+	make C32	- to use C code with 32 bits digits (default version)
+
+One of these commands products the following files:
+	BigNum.a	- BigNum library
+	testKerN	- Test program executable for KerN
+	bztest		- Test program executable for BigZ
+
+If you have the tools LaTeX, makeindex and aptex, type:
+	make doc	- to build the Postscript files of the documents
+
+

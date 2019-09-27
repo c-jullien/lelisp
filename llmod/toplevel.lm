@@ -1,0 +1,66 @@
+defmodule
+system
+files (
+toplevel
+)
+export (
+catcherror
+errset
+err
+break
+syserror
+toplevel
+printerror
+)
+import (
+messages
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(catcherror fsubr ())
+(errset dmsubr ())
+(err dmsubr ())
+(break subr0 ())
+(syserror subr3 ())
+(printerror subr3 ())
+(toplevel subr0 ())
+)
+cpfunctions
+()
+cpimport (
+(messages
+(get-message-p . subr1)
+(get-message . subr1)
+))
+cpenv (
+messages
+((putprop '#:sys-package:itsoft 't '#:complice:globalvar)
+)((putprop '#:system:debug 't '#:complice:globalvar)
+)((putprop '#:trace:trace 't '#:complice:globalvar)
+)((putprop '#:system:print-msgs 't '#:complice:globalvar)
+)((putprop '#:system:error-flag 't '#:complice:globalvar)
+)((putprop '#:system:f 't '#:complice:globalvar)
+)((putprop '#:system:m 't '#:complice:globalvar)
+)((putprop '#:system:b 't '#:complice:globalvar)
+)((putprop '#:toplevel:status 't '#:complice:globalvar)
+)((putprop '#:toplevel:read 't '#:complice:globalvar)
+)((putprop '#:toplevel:cread 't '#:complice:globalvar)
+)((putprop '#:toplevel:print 't '#:complice:globalvar)
+)((putprop '#:toplevel:eval 't '#:complice:globalvar)
+)((putprop '#:system:fatal-errors 't '#:complice:globalvar)
+)((putprop 'errfstk 't '#:complice:globalvar)
+)((putprop 'errfsgc 't '#:complice:globalvar)
+)((putprop 'errfpgc 't '#:complice:globalvar)
+)((putprop 'errfsud 't '#:complice:globalvar)
+)((putprop 'errfstr 't '#:complice:globalvar)
+)((putprop 'errfvec 't '#:complice:globalvar)
+)((putprop 'errfsym 't '#:complice:globalvar)
+)((putprop 'errfcns 't '#:complice:globalvar)
+)((putprop 'errfflt 't '#:complice:globalvar)
+)((putprop 'errffix 't '#:complice:globalvar)
+)((putprop 'errfhep 't '#:complice:globalvar)
+)((putprop 'errfcod 't '#:complice:globalvar)
+))

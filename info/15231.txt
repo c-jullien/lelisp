@@ -1,0 +1,324 @@
+		 Le-Lisp  de  l'INRIA  version 15.23
+
+			      Fe'vrier 90
+
+
+Voici les corrections et les extensions de la nouvelle diffusion de
+Le-Lisp version 15.23 (dite de ``la Saint Valentin'') date'e du 14 Fe'vrier
+1990.
+
+Une fois par an, l'INRIA et ILOG livrent aux porteurs une nouvelle
+version de Le-Lisp comprenant des ame'liorations, extensions et
+corrections.  Seule cette diffusion annuelle contient des changements
+a` la souche de Le-Lisp, e'crite en LLM3.
+
+
+Survol de 15.23
+===============
+
+La 15.23 est sence'es e^tre entie`rement compatible avec la 15.22.  La seule 
+modification pouvant entrainer une incompatibilite' est le passage
+de la taille des buffers d'entre'e/sortie de 256 a` 1024, a` cause de certains
+codes exploitant la forme "(rmargin 257)" 
+au lieu de "(rmargin (add1 (slen (outbuf))))". la variable syste`me
+ #:system:23-compatibility-flag re'soud ce cas si elle est positionne'e
+ a` T (valeur par de'faut).
+
+
+Les diffe'rences majeures entre la version 15.22.2 et la version 15.23 sont
+les suivantes : 
+
+- Des corrections aux erreurs signale'es. (cf RATs)
+
+- Quelques modifications supple'mentaires sont apporte'es pour la 15.23 telles
+  que la prise en compte de X11r4, la gestion propre de REVERSE-BIT-FLAG, 
+  l'ajout d'entre'es pour les couleurs et les patterns dans .Xdefaults,
+  la gestion des polices de caracte`res dans les menus, la gestion du 
+  cadre du window manager.
+
+- Gonflage se'rieux des tests et des recettes.
+
+- Introduction du nouveau package de Bignums de l'INRIA
+  [charger le module bnq, puis charger testbignum.ll pour voir, et 
+  benchbignum.ll pour mesurer] (cf 15.22.2)
+
+- Documentation plus  comple`te de complice et des modules. Il s'agit
+  en fait d'un micro manuel de l'utilisateur de complice.
+
+- Documentation plus comple`te des DEFEXTERN en tous genres.
+
+- Introduction de DATE-OF-FILE (dans libdate.ll) qui rame`ne 
+  la date d'un fichier. 
+
+- Possibilite' sur certains portages Unix de lancer Le-Lisp a`
+  partir d'un programe C: l'utilisateur e'crit son 
+  propre "main" (dans llmain.c) et de'clenche lui-me^me
+  le passage a` Le-Lisp avec retour en C possible
+  dans son environnement initial. Un exemple complet est fourni
+  dans lltest/fromc.c & fromc.ll
+
+- Introduction d'un module sur les ope'rations ensemblistes: sets.
+
+- Complice version 15.23 de l'INRIA
+  [01/02/90]
+        Affiche un avertissement pour les fonctions exporte'es non
+        pre'sentes dans le module (mais pre'sentes dans l'environnement
+        de compilation). Dans ce cas (et comme avant) la fonction
+        n'est pas mise dans le fichier objet (.lo).
+
+- re'organisation de certains outils sur les portages Unix: 
+  * Introduction du repertoire "system" dans Le-Lisp qui contiendra tous les
+  outils partageables par plusieurs distributions: partage du makefile de 
+  compilation de la librairie Le-Lisp; partage du configurateur de cores
+  lelisp "config" lequel permet en plus de faire des cores a` distance.
+  * possibilite' avec le makefile porteur "makeport" de faire de 
+  l'expansion LLM3 croise'e
+  * dans le makefile: introduction d'une entre'e tre`s ge'ne'rique dans 
+  le makefile pour refaire un binaire avec e'dition de liens statiques 
+  inte'gre'e; 
+
+Portages
+========
+ Depuis le 6 janvier 1989, Le-Lisp a e'te' porte' sur 
+	DECSTATION, MACAUX, SONY, SUN386i
+
+Pascal Kuczynski
+ILOG, S.A.
+
+
+les RATs
+========
+Les changements de Le-Lisp sont ge're's avec des RATs
+(Reque^tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez avoir le texte complet
+d'un rat d'ILOG en nous en communiquant le nume'ro.  
+
+
+rat 7 area: language aspect: arithmetic 
+status: fixed origin: J. Chailloux 
+documentation de floor ceiling et round 
+
+rat 40 area: language aspect: interpreter 
+status: fixed origin: tres vieux! 
+&NOBIND et LET sont incompatibles 
+
+rat 55 area: ports aspect: tests 
+status: fixed origin: B. Serpette 
+Le test des fonctions d'impression plaante dans la recette du vax. 
+
+rat 93 area: other 
+status: fixed origin: Francis Montagnac 
+LISPCALL sur vax detruit le registre r11 de la machine 
+
+rat 126 area: compiler aspect: llcp 
+status: fixed origin: Parquier [BULL] 
+Mauvaise compilation de (REPEAT) : 
+
+rat 128 area: compiler aspect: llcp 
+status: fixed origin: Parquier [BULL] 
+Il faut mieux documenter les cas de la compilation des fonctions. 
+
+rat 130 area: language aspect: interpreter 
+status: fixed origin: Parquier [BULL] 
+message d'erreur a revoir pour les e'chappements inde'finis au toplevel. 
+
+rat 171 area: i/o aspect: basic-i/o 
+status: fixed origin: Duthen [IRCAM] 
+#| n'est pas un commentaire pour " 
+
+rat 178 area: ports aspect: tools 
+status: fixed origin: Parquier [BULL] 
+les messages d'erreur ne sont pas encore tous traduits en anglais. 
+
+rat 208 area: ports aspect: tools 
+status: fixed origin: kuczynsk 
+Les compilations C sont faites en plusieurs endroits. 1 seul suffirait. 
+
+rat 212 area: run-time aspect: external-functions 
+status: fixed origin: erhili 
+pusharg ne marche pas avec les flottants 
+
+rat 228 area: ports aspect: loader 
+status: fixed origin: J. Chailloux [Ilog] 
+le clacalcul empirique des sauts courts n'est pas toujours suffisant. 
+
+rat 247 area: run-time aspect: o/s-interface 
+status: fixed origin: devin 
+fill area dans X10 ne marche pas toujours en noir sur blanc 
+
+rat 300 area: language aspect: interpreter 
+status: fixed origin: nuyens 
+le recherche pour #* trouve le fonction *.  Il devrait arreter avant. 
+
+rat 329 area: run-time aspect: o/s-interface 
+status: fixed origin: neidl 
+lelisp.c - F.Dupont 
+
+rat 331 area: language aspect: other 
+status: fixed origin: Jose GRIMM [INRIA] 
+petits problemes de de'clarations en LLM3 
+
+rat 333 area: i/o aspect: basic-i/o 
+status: fixed origin: bessone 
+impression incohe'rent des flottants. 
+
+rat 334 area: programming-environment aspect: trace 
+status: fixed origin: danan [ilog] 
+incoherence doc/code des arguments de la fonction save-std 
+
+rat 337 area: memory-management 
+status: fixed origin: B. Serpette [INRIA] 
+coherence lelisp.c et llsun.llm3 au sujet des variables de zones. 
+
+rat 340 area: language aspect: interpreter 
+status: fixed origin: Jose GRIMM [INRIA] 
+Les pathnames sont mal imprime's avec #:system:print-for-read a` T 
+
+rat 345 area: language aspect: other 
+status: fixed origin: B. Serpette [INRIA] 
+Bug dans ~/lelisp/sun/llsun.llm3. ITCOUNT n'est pas remis a` ze'ro 
+
+rat 346 area: language aspect: other 
+status: fixed origin: P. Couronne [CISI] 
+lors d'un appel de C vers Lisp avec strings, pb de zone pleine. 
+
+rat 350 area: i/o aspect: basic-i/o 
+status: fixed origin: Emmanuel Chailloux emmanuel@fuchsia.ens.fr 
+difficulte's a` aggrandir les buffers de lecture 
+
+rat 351 area: run-time aspect: o/s-interface 
+status: fixed origin: Emmanuel Chailloux  emmanuel@fuchsia.ens.fr 
+CAML compatible Le-Lisp - differents pb de runtime 
+
+rat 352 area: memory-management 
+status: fixed origin: B. Serpette [INRIA] 
+Bug du GC: PRINT et STRING utilisent un tampon commun 
+
+rat 354 area: compiler aspect: complice 
+status: fixed origin: meller 
+cpenv 
+
+rat 355 area: i/o aspect: virtty 
+status: fixed origin: meller 
+termcap 
+
+rat 356 area: compiler aspect: complice 
+status: fixed origin: meller 
+eval-when 
+
+rat 358 area: ports aspect: tests 
+status: fixed origin: Kuczynski [Ilog] 
+Le portage sur HP9000 n'inte`gre pas les patchs dans la V15.22 
+
+rat 363 area: compiler aspect: complice 
+status: fixed origin: meller 
+eval-when 
+
+rat 364 area: i/o aspect: virtty 
+status: fixed origin: meller 
+Pb de creation d'un nouveau virtty 
+
+rat 365 area: programming-environment aspect: rats 
+status: fixed origin: meller 
+erreur de syntaxe chaine trop longue dans la lecture d'1 rat 
+
+rat 367 area: language aspect: interpreter 
+status: fixed origin: meller [Ilog] 
+erreur dans l'exemple page 3.21 
+
+rat 368 area: language aspect: other 
+status: fixed origin: M Nanni [BULL] 
+incoherence de read-case-flag entre les librairies et la doc. 
+
+rat 371 area: language aspect: interpreter 
+status: fixed origin: M Nanni [Bull] 
+BITVECTORS ne devrait pas etre exclusivement decrit dans le graphisme 
+
+rat 374 area: programming-environment aspect: trace 
+status: fixed origin: A Danan [Ilog] 
+la facon de rediriger la sortie de trace devrait etre documente'e 
+
+rat 375 area: user-contributed-software 
+status: fixed origin: weinberg 
+pb avec portable-pathname-p qui rend tjrs () 
+
+rat 376 area: other 
+status: fixed origin: meller 
+bibliothe`que "read-case-flag" bugge'e 
+
+rat 382 area: language aspect: interpreter 
+status: fixed origin: Jo Piquer (piquer@inria.inria.fr) 
+mauvaise detection d'erreur ds les parametres d'1 LAMBDA 
+
+rat 384 area: run-time aspect: external-functions 
+status: fixed origin: kuczynsk 
+LL_C_FLOAT a disparu de lelisp.h 
+
+rat 386 area: run-time aspect: o/s-interface 
+status: fixed origin: M Mauny [INRIA] 
+TTY mal initialise' au lancement d'un EXECORE sur Sun 
+
+rat 387 area: language aspect: other 
+status: fixed origin: A. Danan [Ilog] 
+Suppression des messages [REMOVE-LANGUAGE] encore difficile... 
+
+rat 395 area: language aspect: arithmetic 
+status: fixed origin: F Dupont [Inria] 
+pb des tres grands entiers 
+
+rat 401 area: language aspect: interpreter 
+status: fixed origin: M. Danan [ENST] 
+compatibilite' entre les strings et les pathname pour SEARCH-IN-PATH 
+
+rat 403 area: other 
+status: fixed origin: F Montagnac [Inria] 
+"-u _bidon" est-il necessaire avec X11? 
+
+rat 404 area: other 
+status: fixed origin: F Montagnac Inria 
+introduction de features pour le GOULD dans lelisp.c 
+
+rat 407 area: compiler aspect: complice 
+status: fixed origin: M.NANNI [Bull] 
+il serait souhaitable de documenter la cle INCLUDE de DEFMODULE 
+
+rat 409 area: language aspect: other 
+status: fixed origin: M. Nanni [Bull] 
+liaison d'arbre 
+
+rat 411 area: language aspect: interpreter 
+status: fixed origin: kuczynsk 
+RESTORE-CORE rend T sur ibmrt (ce qui fait planter SAVE-STD!) 
+
+rat 413 area: language aspect: interpreter 
+status: fixed origin: kuczynsk 
+il reste encore des messages non traduits 
+
+rat 415 area: ports aspect: tests 
+status: fixed origin: Marco.Nanni@cediag.bull.fr 
+ajout de tests sur la presence de symboles globaux (GETGLOBAL) 
+
+rat 421 area: i/o aspect: formatted-i/o 
+status: fixed origin: martinet@ilog 
+problemes d'arrondis effectue's par FORMAT 
+
+rat 422 area: ports aspect: tools 
+status: fixed origin: berizzi@ilog 
+le module stringio de lelisp n'est pas compile' 
+
+rat 424 area: programming-environment aspect: step 
+status: fixed origin: Marco.Nanni@cediag.bull.fr 
+parmi toutes les &NOBIND, SEND doit absolument pouvoir etre steppe'e 
+
+rat 433 area: language aspect: extended-types 
+status: fixed origin: kerjean 
+les pathnames 
+
+rat 438 area: ports aspect: tests 
+status: fixed origin: kuczynsk 
+les tests sur EXPAND-PATHNAME ne sont pas corrects 
+
+rat 439 area: language aspect: arithmetic 
+status: fixed origin: kuczynsk 
+problemes d'impression des flottants avec exposant 
+

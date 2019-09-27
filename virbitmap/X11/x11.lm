@@ -1,0 +1,50 @@
+defmodule
+x11
+files
+()
+export
+()
+import (
+x11init
+x11menu
+x11color
+x11bitmap
+x11event
+x11draw
+x11graph
+x11window
+x11struct
+)
+include (
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport
+()
+cpfunctions
+()
+cpimport
+()
+cpenv (
+virutil
+vircolor
+virbit
+x11_def
+x11struct
+virgraph
+x11color
+x11graph
+x11bitmap
+x11event
+x11window
+virwindow
+x11init
+virdraw
+virevent
+files
+virmenu
+virinit
+x11menu
+x11draw
+)

@@ -1,0 +1,30 @@
+;;; GELL 15.26: elaboration file for the module: x11menu
+;;;             translation done: "Tue Aug  24 93 10:48:32 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: x11menu.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'x11menu)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZx11menu" "Tue Aug  24 93 10:48:32 "
+
+'((#:display:x11:create-menu . subr2) (#:display:x11:kill-menu . subr2) (#:display:x11:activate-menu . nsubr) (#:display:x11:menu-insert-item . nsubr) (#:display:x11:menu-insert-item-list . nsubr) (#:display:x11:menu-delete-item-list . subr3) (#:display:x11:menu-delete-item . nsubr) (#:display:x11:menu-modify-item-list . nsubr) (#:display:x11:menu-modify-item . nsubr))
+
+#[#:image:rectangle:window:menu-window:make (save-under override-redirect) #:x11:menu:make #:display:x11:activate-menu #:llcp:errwna current-display eventp read-event #:event:make bltvector nconc add-event nth #:display:x11:menu-insert-item #:display:x11:menu-insert-item-list #:display:x11:menu-delete-item #:display:x11:menu-modify-item-list #:display:x11:menu-modify-item font-height imax width-substring x-base-space font-ascent current-window current-clip clear-graph-env draw-substring current-mode fill-rectangle moved repaint-window-event up-event t #:llcp:exit drag-event grab-event bitmap-sync #:display:x11:ev ungrab-event kill-window bitxmax min max bitymax make-window current-font #:display:x11:create-menu #:gell-resetfn:function-name #:gell-resetfn:function-2 #:display:x11:kill-menu #:gell-resetfn:function-n #:display:x11:menu-delete-item-list #:gell-resetfn:function-3]
+)
+
+(defvar #:sys-package:colon '#:display:x11)
+(defcsetfn '#:display:x11:create-menu "GZx11menu" 0)
+(defcsetfn '#:display:x11:kill-menu "GZx11menu" 1)
+(defcsetfn '#:display:x11:activate-menu "GZx11menu" 2)
+(defcsetfn '#:display:x11:menu-insert-item "GZx11menu" 3)
+(defcsetfn '#:display:x11:menu-insert-item-list "GZx11menu" 4)
+(defcsetfn '#:display:x11:menu-delete-item-list "GZx11menu" 5)
+(defcsetfn '#:display:x11:menu-delete-item "GZx11menu" 6)
+(defcsetfn '#:display:x11:menu-modify-item-list "GZx11menu" 7)
+(defcsetfn '#:display:x11:menu-modify-item "GZx11menu" 8)
+(defvar #:display:x11:ev (#:event:make))
+
+(defccheck '(current-font make-window bitymax max min bitxmax kill-window ungrab-event bitmap-sync grab-event #:llcp:exit fill-rectangle current-mode draw-substring clear-graph-env current-clip current-window font-ascent x-base-space width-substring imax font-height nth add-event nconc bltvector #:event:make read-event eventp current-display #:llcp:errwna #:x11:menu:make #:image:rectangle:window:menu-window:make))

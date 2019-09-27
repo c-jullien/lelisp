@@ -1,0 +1,39 @@
+#!/bin/sh
+#ident	"@(#)asall	(c) C. Jullien 1998/11/07"
+#
+#	Usage:  asall <system> fpu
+
+if [ ! $# -eq 2 ]
+then
+	echo Usage: $0 system fpu-option
+	echo "	ex: $0 solaris386 31"
+	echo " 	ex: $0 sco386 64"
+	exit 1
+fi
+
+KERNEL="ll386.o		llinit.o		toperr.o \
+	gc.o		physio.o		read.o   \
+	macroch.o	print.o			cntrl.o  \
+	carcdr.o	symbs.o			fntstd.o \
+	number.o	specnb.o		string.o \
+	chars.o		fspecs.o		eval.o   \
+	extend.o	bllsht.o"
+
+for I in s$2fpu/*.s
+do
+	echo $I ..
+	if [ "`uname`" = "Linux" ] || [ "$1" = "cygwin" ]
+	then
+		sed -e "s/\.even/\.align 2/g" $I | as --gstabs -o `basename $I .s`.o
+	else
+		as $I
+	fi
+done
+
+#ld -r $KERNEL -o ../../$1/lelisp$2llm3.o
+#echo ld -r $KERNEL -o ../../$1/lelisp$2llm3.o
+#
+
+mv ll386.o ll$1.o
+cp *.o ../../$1/o$2
+rm *.o

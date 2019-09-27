@@ -1,0 +1,57 @@
+defmodule
+module
+files (
+module
+)
+export (
+readdefmodule
+getdefmodule
+setdefmodule
+printdefmodule
+#:module:bol
+loadmodule
+autoloadmodule
+#:module:std-autoload
+autoloadp
+)
+import (
+files
+)
+include
+()
+cpexport (
+(readdefmodule subr1 ())
+(getdefmodule subr2 ())
+(setdefmodule subr3 ())
+(printdefmodule subr2 ())
+(#:module:bol subr0 ())
+(loadmodule nsubr ())
+(autoloadmodule fsubr ())
+(#:module:std-autoload subr1 ())
+(autoloadp subr1 ())
+)
+cpfunctions (
+(#:module:print-rest-of-keys subr2)
+(#:module:loadmodule-aux nsubr)
+(#:module:find-object-file subr1)
+(#:module:makeautoload subr3)
+(filegetdef subr2)
+)
+cpimport (
+(files
+(probepathm . subr1)
+(featurep . subr1)
+(libloadfile . subr2)
+(probepathf . subr1)
+))
+cpenv (
+files
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:module:compiled-list 't '#:complice:globalvar)
+)((putprop '#:module:interpreted-list 't '#:complice:globalvar)
+)((putprop '#:module:list-of-user-key 't '#:complice:globalvar)
+)((putprop '#:module:endofheader 't '#:complice:globalvar)
+)((putprop '#:module:header 't '#:complice:globalvar)
+)((putprop '#:module:in-user-part 't '#:complice:globalvar)
+)((putprop '#:system:object-file-formats 't '#:complice:globalvar)
+))

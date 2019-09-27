@@ -1,0 +1,28 @@
+; The Le-Lisp Benchmarks (5) : takl
+
+defmodule    takl
+files       (takl)
+export      (check-takl meter-takl test-takl listn)
+import      (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-takl subr0 ())
+(meter-takl subr0 ())
+(test-takl subr1 ())
+(listn subr1 ())
+)
+cpfunctions (
+(takl subr3)
+(shorterp subr2)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+((putprop 'll-18 't '#:complice:globalvar)
+)((putprop 'll-12 't '#:complice:globalvar)
+)((putprop 'll-6 't '#:complice:globalvar)
+))

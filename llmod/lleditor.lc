@@ -1,0 +1,34 @@
+defmodule
+#:edit:editor
+files (
+lleditor
+)
+export (
+trap-editor
+init-editor
+bind-to-key
+bind-to-ekey
+bind-to-xkey
+local-bind-to-key
+local-bind-to-ekey
+local-bind-to-xkey
+edit-command-redisplay
+#:edit:editor:edit-query
+#:edit:editor:edit-redisplaystring
+#:edit:editor:edit-redisplaycleol
+#:edit:editor:edit-drawcursor
+#:edit:editor:prin
+#:edit:editor:make
+#:edit:editor:bol
+#:edit:editor:eol
+#:edit:editor:syserror
+edit-print-query
+#:edit-print-query:eol
+edit-eval-redisplay
+)
+import (
+lledit
+)
+include (
+macedit
+)

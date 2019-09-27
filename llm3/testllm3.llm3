@@ -1,0 +1,349 @@
+;;; .EnTete "Le_Lisp (c) version 15.2" "0/19" "testllm3.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 0 "Test des Macros LLM3"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/testllm3.llm3,v 1.2 2016/05/21 09:16:58 jullien Exp $
+
+          TITLE     TESTLLM3
+
+;          XDEFP     LLINIT
+;          XDEFP     REENTER
+;          XDEFP     THEEND
+;          XDEFI     .T
+;          XDEFP     LLVERSION
+;          XDEFP     LLSYSTEM
+;          XDEFP     STOP
+	   XREFP	LELISP,LL_EXIT
+; .Section "Les variables globales initialise's par le lanceur"
+
+          IMPURE
+
+          XDEFI     BIMPUR
+
+          XDEFI     BSTACK
+          XDEFI     ESTACK
+          XDEFI     MSTACK
+
+          XDEFI     BCODE
+          XDEFI     CCODE
+          XDEFI     ECODE
+
+          XDEFI     BHEAP
+          XDEFI     CHEAP
+          XDEFI     EHEAP
+
+          XDEFI     BNUMB
+          XDEFI     CNUMB
+
+          XDEFI     BFLOAT
+          XDEFI     CFLOAT
+
+          XDEFI     BVECT
+          XDEFI     CVECT
+
+          XDEFI     BSTRG
+          XDEFI     CSTRG
+
+          XDEFI     BSYMB
+          XDEFI     CSYMB
+
+          XDEFI     BVAR
+
+          XDEFI     BCONS
+          XDEFI     CCONS
+
+          XDEFI     BOLD
+          XDEFI     EOLD
+
+          XDEFI     FNUMB
+          XDEFI     FFLOAT
+          XDEFI     FVECT
+          XDEFI     FSTRG
+          XDEFI     FSYMB
+          XDEFI     FCONS
+;          XDEFI     HASHTAB
+;          XDEFI     .UNDEF
+;          XDEFI     .SYSPKGC
+;          XDEFI     .VOID
+;          XDEFI     .ITSOFT
+;          XDEFP     ITSOFT
+;          XDEFI     .LLSYSTEM
+          XDEFI     FILIN
+          XDEFI     FILIZ
+          XDEFI     FILIT
+          XDEFI     LLBAN
+          XDEFI     NBSYST
+          XDEFI     MAXCHAN
+          XDEFI     ITSTATE
+          XDEFI     ITCOUNT
+
+BIMPUR    LABEL
+
+; .SSection "La pile"
+
+BSTACK    ADR       0                   ; adresse du debut de la pile
+ESTACK    ADR       0                   ; adresse de la fin de la pile
+MSTACK    ADR       0                   ; adresse de la fin de la pile (- 64)
+
+; .SSection "Les diffe'rentes zones des objets Lisp"
+
+BCODE     ADR       0                   ; adresse du debut de la zone binaire
+CCODE     ADR       0                   ; adresse courante de la zone binaire
+ECODE     ADR       0                   ; adresse de la fin de la zone binaire
+
+BHEAP     ADR       0                   ; adresse du debut de la zone tas
+CHEAP     ADR       0                   ; adresse courante de la zone tas
+EHEAP     ADR       0                   ; adresse de la fin de la zone tas
+
+BNUMB     ADR       0                   ; adresse du debut des nombres entiers
+CNUMB     ADR       0                   ; adresse courante de la zone nombres
+
+BFLOAT    ADR       0                  ; adresse du debut de la zone flottante
+CFLOAT    ADR       0                  ; adresse courante de la zone flottante
+
+BVECT     ADR       0                   ; adresse du debut de la zone vecteur
+CVECT     ADR       0                   ; adresse courante de la zone vecteur
+
+BSTRG     ADR       0                   ; adresse du debut de la zone chaine
+CSTRG     ADR       0                   ; adresse courante de la zone chaine
+
+BSYMB     ADR       0                   ; adresse du debut de la zone symbole
+CSYMB     ADR       0                   ; adresse courante de la zone symbole
+
+BVAR      ADR       0                   ; adresse du debut de la zone variable
+
+BCONS     ADR       0                   ; adresse du debut de la zone liste
+CCONS     ADR       0                   ; adresse courante de la zone liste
+
+BOLD      ADR       0                   ; adresse du debut de l'autre zone
+EOLD      ADR       0                   ; adresse de la fin de l'autre zone
+
+FNUMB     ADR       0                   ; FREE NUMB
+FFLOAT    ADR       0                   ; FREE FLOAT
+FSTRG     ADR       0                   ; FREE STRING
+FVECT     ADR       0                   ; FREE VECTOR
+FSYMB     ADR       0                   ; FREE SYMB
+FCONS     ADR       0                   ; FREE CONS
+
+; .SSection "Fichier Initial et ligne de commande"
+
+FILIZ     ADR       0              ; taille du nom du fichier (0 = pas de nom)
+FILIT     ADR       0                ; type (0 = fichier, <>0 = image memoire)
+FILIN     ADR       0                   ; nom  [pointeur externe]
+
+LLBAN     ADR       0                 ; type de la banniere (0 normal, 1 muet)
+
+; .SSection "Le nume'ro du syste`me"
+
+NBSYST    ADR       0
+
+; .SSection "Le nombre de canaux disponibles"
+
+MAXCHAN   ADR       0
+
+; .SSection "La Gestion des ITs"
+
+ITSTATE   ADR       0                   ; validation d'IT : =0 IT masquees
+ITCOUNT   ADR       0                   ; nb d'IT pendantes
+
+; .Section "Les points d'entre'e PUREs"
+	  PURE
+LLINIT    LABEL
+	  SSTACK    BSTACK
+          BRA       LLGOTEST
+
+LLGOTEST  LABEL
+; If you successfully reach this point, there are already many things that
+; are nominally working, though not guaranteed.  You have already executed
+; many moves to transfer working variables from their C name (_foo) to their
+; LLM3 name (foo).  In addition, SSTACK has been called to initialize the
+; stack pointer to the value of BSTACK (which should be the same as the value
+; the C variable BSTACK which looks like _BSTACK to LLM3).
+
+; .Section "Test des sorties de messages"
+
+          TTYMSG    20,"TTYMSG and TTYCRLF "
+          TTYCRLF
+
+; TTYMSG is usually implemented with a call to a C routine. This means that
+; a successful call to TTYMSG suggests that the basics of the calling routine
+; are correct.  Up to here, however, there is no guarantee that registers
+; have been correctly restored.
+
+; .Section "Flow of control"
+
+	  JCALL		ROUTINE
+	  JCALL		ROUTINE
+	  BRA		CPOINTERS
+
+; When this section succeeds, the suggestion is that the ability to push
+; a return address (not necessarily PUSH) works, and that RETURN works.
+; It also suggests that the C calling routine is really correct, since
+; multiple calls together with register saving/restoring has occurred.
+; (otherwise the SP would have been destroyed in the C call.)
+
+ROUTINE   TTYMSG	26,"executing JCALL'ed routine"
+          TTYCRLF
+	  RETURN
+
+; Les comparaisons de pointeurs
+
+CPOINTERS MOV		#1,A1
+	  MOV		#1,A2
+	  CABEQ		A1,A2,CPYUP
+	  TTYMSG	22,"MOV #1 or CABEQ failed"
+	  TTYCRLF
+	  BRA 		DONE
+CPYUP	  TTYMSG	12,"CABEQ worked"
+	  TTYCRLF
+	  MOV		#2,A3
+	  CABNE		A1,A3,CPYUP2
+	  TTYMSG	12,"CABNE failed"
+	  TTYCRLF
+	  BRA		DONE
+CPYUP2	  TTYMSG	12,"CABNE worked"
+	  TTYCRLF
+
+; .Section " the rest of control, now that there are predicates to test with"
+
+FCONTROL  MOV @TARGET,A1
+	  BRI A1
+	  TTYMSG	10,"BRI failed"
+	  BRA		DONE
+TARGET	  LABEL
+	  TTYMSG	3,"BRI"
+	  JCALL		WORKED
+	  NOP
+	  NOP
+	  TTYMSG	9,"Whew! NOP"
+	  JCALL		WORKED
+
+	  TTYMSG	3,"BRX"
+	  BRX		@TARGET0,#2
+BRXF	  BRA		FAILED
+TARGET0	  ADR		FAILED
+	  ADR		FAILED
+	  ADR		JWORKED
+	  ADR		FAILED
+
+JWORKED   JCALL		WORKED
+
+; Try the loop operators.
+	  MOV		#3,A4
+PLOOP	  TTYMSG	9,"3 x msg? "
+	  SOBGTZ	A4,PLOOP
+	  TTYCRLF
+	  MOV		#1,A3
+PLOOP2	  TTYMSG	9,"2 x msg? "
+	  SOBGEZ	A3,PLOOP2
+	  TTYCRLF
+
+; .Section "Pile de contro^le"
+; In fact, by this point, the only one we need to check is CALLI
+; (we have already used CALL, JCALL and RETURN)
+
+	  MOV		@WORKED,A2
+	  TTYMSG	5,"CALLI"
+	  CALLI		A2
+
+; .Section "Gestion du pointeur de pile"
+; We have already used SSTACK once to get this far.  We have not used
+; PUSH up to now, but it will only be presumed to sideeffect the SP.
+; No test of the contents of the stack is made in this section.
+
+	  STACK		STACKTMP
+	  IMPURE
+STACKTMP  ADR		0
+STACKTMP2 ADR		0
+	  PURE
+	  PUSH		#1
+	  SSTACK	STACKTMP
+	  STACK		STACKTMP2
+	  TTYMSG	16,"SSTACK and STACK"
+	  CABNE		STACKTMP,STACKTMP2,FAILED
+	  JCALL		WORKED
+
+; .Section "simple Arithmetic"
+	  MOV		#2,A1
+	  MOV		#3,A2
+	  PLUS		A1,A2
+	  TTYMSG	4,"PLUS"
+	  CABNE		#5,A2,FAILED
+	  JCALL		WORKED
+
+; .Section "simple floating point"
+
+	  MOV		#3,A1
+	  FLOAT		A1
+	  FIX		A1
+	  TTYMSG	13,"FIX and FLOAT"
+	  CABNE		#3,A1,FAILED
+	  JCALL		WORKED
+
+	  MOV		#2,A1
+	  MOV		#5,A2
+	  MOV		#10,A3
+	  FLOAT		A1
+	  FLOAT		A2
+	  FLOAT		A3
+	  FTIMES	A1,A2
+	  TTYMSG	#6,"FTIMES"
+	  CABNE		A2,A3,FAILED
+	  JCALL		WORKED
+
+
+	  BRA		DONE
+
+; .Section "Auxiliaries for the tests"
+
+WORKED	  LABEL	
+	  TTYMSG	8," worked."
+	  TTYCRLF
+	  RETURN
+
+FAILED	  TTYMSG	7,"failed."
+	  TTYCRLF
+	  BRA		DONE
+
+; .Section "Cre'ation d'une cellule de liste"
+;
+;CONSTEST  MOV		#1,A1
+;	  MOV		#2,A2
+;	  CONS		A1,A2
+;	  BTCONS	A2, CTYUP
+;	  TTYMSG	21,"BTCONS or CONS failed"
+;	  BRA		DONE
+;
+;; At this point, all we know is that the result of CONS was something
+;; which BTCONS thought was good.  There is no guarantee that the
+;; CONS inequalities will hold.  e.g. (car (cons -x- -y-)) = -x-
+;
+;CTYUP	  TTYMSG	23,"CONS's result is BTCONS"
+;	  CABEQ		#1,CAR(A2),CTYUP2
+;	  TTYMSG	21,"CAR or CABEQ failed"
+;	  BRA		DONE
+;CTYUP2	  TTYMSG	10, "CAR worked"
+;	  CABEQ		#2,CDR(A2),CTYUP3
+;	  TTYMSG	10,"CDR failed"
+;	  BRA		DONE
+;
+;; we now know that (cons a b) produces something whose car is a and whose
+;; cdr is b.  This also means that the CAR and CDR operands are accessing
+;; the right things.
+;
+;CTYUP3	  TTYMSG	10, "CDR worked"
+
+
+
+DONE      TTYMSG     #25,"May Le-Lisp be with you. "
+          TTYCRLF
+	  JCALL		LL_EXIT
+          END
+
+

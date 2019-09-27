@@ -1,0 +1,30 @@
+#!/bin/sh
+
+NAME=`basename $1 .lo`
+
+if test -z "$BOOTLISP"
+then
+    BOOTLISP=lelisp
+fi
+
+$BOOTLISP <<EOF
+(loadfile "../C/modtoc.ll" t)
+(loadfile "../C/modopt.ll" t)
+(loadfile "../C/modpeep.ll" t)
+(setq #:modtoc:use-threshold-read-only  2)  ; 2
+(setq #:modtoc:use-threshold-read-write 3)  ; 3
+(setq #:modtoc:C-verbose-mode            ())
+(setq #:modtoc:peephole-optimize-p       t)
+(setq #:modtoc:optimize-local-labels-p   t)
+(setq #:modtoc:llm3-module-p             t)
+(setq #:modtoc:stats-on-C-size-p         t)
+(setq #:modtoc:peephole-debug            ())
+(setq #:modtoc:doit-debug                ())
+(let ((#:system:path (cons "C3/" #:system:path)))
+   (module-to-C '$NAME) )
+(end)
+EOF
+
+mv $NAME.c $2/$NAME.c
+mv $NAME.h $2/$NAME.h
+mv $NAME.le $2/$NAME.le

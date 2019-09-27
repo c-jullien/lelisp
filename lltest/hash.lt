@@ -1,0 +1,104 @@
+
+         (test-serie "[Hash-tables benchs]" () )
+
+(when (featurep 'complice)
+      (compile-all-in-core)  ; speedy
+      (print " Testing with Complice.")
+      ())                                ()
+(progn (:test) ())                       ()
+(progn (:subexpr) ())                    ()
+
+         (test-serie "[Hash-tables tests: EQ]" () )
+
+(setq ht (make-hash-table-eq) v ())      ()
+ht                                       #17H(eq)
+(hash-table-p ht)                        t
+(hash-table-p 'truc)                     ()
+(puthash 'k1 ht 1)                       1
+(gethash 'k1 ht)                         1
+(gethash 'k2 ht)                         ()
+(gethash 'k2 ht 'def)                    def
+ht                                       #17H(eq (k1 1))
+(remhash 'k1 ht)                         t
+(remhash 'k1 ht)                         ()
+(puthash 'k2 ht 2)                       2
+(gethash 'k2 ht)                         2
+(puthash '(k 3) ht 3)                    3
+(gethash '(k 3) ht)                      ()
+(maphash (lambda (key v)
+           key v) ht)                    () ; maphash always return nil
+(hash-table-count ht)                    2
+(clrhash ht)                             #17H(eq)
+(hash-table-count ht)                    0
+
+(puthash (setq s "k1") ht 1)             1
+(gethash s ht)                           1
+(gethash (copy s) ht)                    ()
+
+(puthash (setq v #[1 2]) ht 2)           2
+(gethash v ht)                           2
+(gethash (copy v) ht)                    ()
+
+(puthash (setq l '(1 2)) ht 3)           3
+(gethash l ht)                           3
+(gethash (copy l) ht)                    ()
+
+(puthash (setq f 1.2) ht 4)              4
+(gethash f ht)                           4
+; vrai en 31bitfloat , faux en 64bitfloats
+(gethash 1.2 ht)                         #.(if (eq 0. 0.) 4 ())
+
+(puthash (setq i 5) ht 5)                5
+(gethash i ht)                           5
+(gethash 5 ht)                           5
+
+
+
+         (test-serie "[Hash-tables tests: EQUAL]" () )
+
+(setq ht (make-hash-table-equal) v ())   ()
+ht                                       #17H(equal)
+(hash-table-p ht)                        t
+(hash-table-p 'truc)                     ()
+(puthash 'k1 ht 1)                       1
+(gethash 'k1 ht)                         1
+(gethash 'k2 ht)                         ()
+(gethash 'k2 ht 'def)                    def
+ht                                       #17H(equal (k1 1))
+(remhash 'k1 ht)                         t
+(remhash 'k1 ht)                         ()
+(puthash 'k2 ht 2)                       2
+(gethash 'k2 ht)                         2
+(puthash '(k 3) ht 3)                    3
+(gethash '(k 3) ht)                      3
+ht                                       #17H(equal (k2 2)((k 3) 3))
+(maphash (lambda (key v)
+           key v) ht)                    () ; maphash always return nil
+(hash-table-count ht)                    2
+(clrhash ht)                             #17H(equal)
+(hash-table-count ht)                    0
+
+(puthash (setq s "k1") ht 1)             1
+(gethash s ht)                           1
+(gethash (copy s) ht)                    1
+
+(puthash (setq v #[1 2]) ht 2)           2
+(gethash v ht)                           2
+(gethash (copy v) ht)                    2
+
+(puthash (setq l '(1 2)) ht 3)           3
+(gethash l ht)                           3
+(gethash (copy l) ht)                    3
+
+(puthash (setq f 1.2) ht 4)              4
+(gethash f ht)                           4
+; vrai en 31bitfloat , faux en 64bitfloats
+(gethash 1.2 ht)                         4
+
+(puthash (setq i 5) ht 5)                5
+(gethash i ht)                           5
+(gethash 5 ht)                           5
+
+         (test-serie "[End of test]" () )
+
+()                                       ()

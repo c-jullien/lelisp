@@ -1,0 +1,137 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	fsymb:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zvoid:dword
+	extrn	zundef:dword
+	extrn	zt:dword
+	extrn	zllsystem:dword
+	extrn	zsyspkgc:dword
+	extrn	hashtab:dword
+	extrn	fstrg:dword
+	extrn	zllexpr:dword
+	extrn	istream:dword
+	extrn	inmax:dword
+	extrn	polig:dword
+	extrn	zsyscol:dword
+	extrn	savea4:dword
+	extrn	zquote:dword
+	extrn	zllcons:dword
+	extrn	zmcons:dword
+tsymb000	dd	0
+asymb	dd	0
+ksymb	dd	0
+hsymb	dd	0
+count	dd	0
+tabch	dd	0
+cachch	dd	0
+ibase	dd	0
+all09	dd	0
+negatif	dd	0
+quotes	dd	0
+getchfl	dd	0
+ringur	dd	0
+curread	dd	0
+rdprd	dd	0
+impli	dd	0
+impld	dd	0
+bufat	dd	0
+lgbufat	dd	0
+cpkgc	dd	0
+zstatrc	dd	0
+pnmac580	db	'read-case-flag'
+	even
+zstinread	dd	0
+pnmac581	db	'in-read-flag'
+	even
+pnmac582	db	'read'
+	even
+pnmac583	db	'implode'
+	even
+pnmac584	db	'implodech'
+	even
+pnmac585	db	'readch'
+	even
+pnmac586	db	'readcn'
+	even
+pnmac587	db	'curread'
+	even
+pnmac588	db	'teread'
+	even
+pnmac589	db	'reread'
+	even
+pnmac590	db	'readline'
+	even
+pnmac591	db	'readstring'
+	even
+pnmac592	db	'stratom'
+	even
+pnmac593	db	'read-delimited-list'
+	even
+pnmac594	db	'peekch'
+	even
+pnmac595	db	'peekcn'
+	even
+pnmac596	db	'concatpkgc'
+	even
+pnmac597	db	'ascii'
+	even
+pnmac598	db	'cascii'
+	even
+pnmac599	db	'uppercase'
+	even
+pnmac600	db	'lowercase'
+	even
+pnmac601	db	'asciip'
+	even
+pnmac602	db	'digitp'
+	even
+pnmac603	db	'letterp'
+	even
+pnmac604	db	'ibase'
+	even
+	extrn	_accusingle2:dword
+zlread	dd	0
+zimplode	dd	0
+zimplodech	dd	0
+zreadch	dd	0
+zreadcod	dd	0
+zlcuread	dd	0
+zteread	dd	0
+zreread	dd	0
+zpeekch	dd	0
+zpeekcn	dd	0
+zreadline	dd	0
+zstratom	dd	0
+zreadstrg	dd	0
+zreaddltd	dd	0
+zfascii	dd	0
+zcascii	dd	0
+zconcatpk	dd	0
+zuppercase	dd	0
+zlowercase	dd	0
+zasciip	dd	0
+zdigitp	dd	0
+zletterp	dd	0
+zfibase	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	csymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	mstack:dword
+	extrn	crwork:dword
+_DATA	ends

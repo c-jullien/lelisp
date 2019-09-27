@@ -1,0 +1,57 @@
+defmodule
+schedule
+files (
+schedule
+)
+export (
+clock
+clockstart
+clockstop
+parallel
+parallelvalues
+tryinparallel
+progn-no-suspend
+letparallel
+)
+import (
+debug
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(clock subr0 parano)
+(clockstart dmsubr ())
+(clockstop dmsubr ())
+(parallel fsubr parano (#:schedule:ll) (#:schedule:l) (subr1) (()) (#:schedule:|e|))
+(parallelvalues fsubr parano (#:schedule:ll) (#:schedule:ltask #:schedule:l #:schedule:r #:schedule:i) (subr1) (()) (#:schedule:|e|))
+(tryinparallel fsubr parano (#:schedule:ll) (#:schedule:ltask #:schedule:l) (subr1) (()) (#:schedule:|e|))
+(progn-no-suspend dmsubr ())
+(letparallel dmsubr ())
+)
+cpfunctions
+()
+cpimport (
+(debug
+(debug . fsubr)
+))
+cpenv (
+files
+virtty
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+pretty
+debug
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:system:clock-tick 't '#:complice:globalvar)
+)((putprop '#:schedule:ll 't '#:complice:globalvar)
+))

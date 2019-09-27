@@ -1,0 +1,36 @@
+;;; GELL 15.26: elaboration file for the module: sets
+;;;             translation done: "Wed June 16 93 18:02:31 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: sets.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'sets)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZsets" "Wed June 16 93 18:02:31 "
+
+'((adjoin . nsubr) (union . nsubr) (nunion . nsubr) (intersection . nsubr) (nintersection . nsubr) (set-difference . nsubr) (nset-difference . nsubr) (set-exclusive-or . nsubr) (nset-exclusive-or . nsubr) (subsetp . nsubr) (set-equal . nsubr) (transitive-closure . nsubr) (power-set . subr1) (cartesian-product . subr2))
+
+#[errwna adjoin listp errnla union nunion delq intersection nintersection set-difference nset-difference set-exclusive-or nset-exclusive-or #:sets:found (#:sets:found) lambda (#:sets:found) funcall subsetp t set-equal = transitive-closure equal member eq delete nconc cartesian-product #:gell-resetfn:function-name #:gell-resetfn:function-n power-set #:gell-resetfn:function-1 #:gell-resetfn:function-2]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'sets)))
+(defvar #:sys-package:colon 'sets)
+(add-feature 'sets)
+(defcsetfn 'adjoin "GZsets" 0)
+(defcsetfn 'union "GZsets" 1)
+(defcsetfn 'nunion "GZsets" 2)
+(defcsetfn 'intersection "GZsets" 3)
+(defcsetfn 'nintersection "GZsets" 4)
+(defcsetfn 'set-difference "GZsets" 5)
+(defcsetfn 'nset-difference "GZsets" 6)
+(defcsetfn 'set-exclusive-or "GZsets" 7)
+(defcsetfn 'nset-exclusive-or "GZsets" 8)
+(defcsetfn 'subsetp "GZsets" 9)
+(defcsetfn 'set-equal "GZsets" 10)
+(defcsetfn 'transitive-closure "GZsets" 11)
+(defcsetfn 'power-set "GZsets" 12)
+(defcsetfn 'cartesian-product "GZsets" 13)
+
+(defccheck '(cartesian-product nconc delete member = funcall delq listp))

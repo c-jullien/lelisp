@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: toperr
+;;;             translation done: "Sat Oct   7 17 20:52:59 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: toperr.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'toperr)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZtoperr" "Sat Oct   7 17 20:52:59 "
+
+'((toplevel . subr0) (cstack . subr0) (comline . subr1) (getenv . subr1) (getglobal . subr1) (callextern . nsubr) (runtime . subr0) (sleep . subr1) (date . subr0) (clockalarm . subr1) (with-interrupts . fsubr) (without-interrupts . fsubr) (time . subr1) (stack-info . subr1) (error . subr3) (syserror . subr3) (sysdebug . subr0) (user-interrupt . subr0) (mouse . subr0) (clock . subr0))
+
+#[toplevel #:gell-resetfn:function-name #:gell-resetfn:function-0 cstack comline #:gell-resetfn:function-1 getenv getglobal callextern #:gell-resetfn:function-n runtime sleep date clockalarm with-interrupts #:gell-resetfn:function-f without-interrupts time stack-info error #:gell-resetfn:function-3 syserror sysdebug user-interrupt mouse clock]
+)
+
+
+(defccheck '())

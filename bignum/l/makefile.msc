@@ -1,0 +1,8 @@
+CC=cl386
+
+kern.lib: ..\o\kern.obj llkern.obj
+	-@del kern.lib
+	@lib kern.lib + llkern.obj ..\o\kern.obj;
+
+llkern.obj: common\llkern.c
+	@$(CC) -DNOMEM -c -DDIGITon32BITS -I../h -O common/llkern.c

@@ -1,0 +1,20 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule too
+
+files (
+|too.ll|
+)
+
+import ()
+
+export (
+
+; ;;; Functions unused unless exported
+(structure s-too)
+
+)
+
+cpenv (
+((defstruct s-too a b)
+))

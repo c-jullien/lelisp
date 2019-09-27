@@ -1,0 +1,24 @@
+#!/bin/sh
+
+## Valeurs par de'faut:
+BOOTLISP=./save/lelisp31bin
+
+SYSTEM=linuxsparc
+
+while test x$1 != x
+do
+case $1 in
+-bootl*) BOOTLISP=$2 ;;
+-system) SYSTEM=$2;;
+esac
+shift; shift
+done
+
+$BOOTLISP <<EOI
+../lltool/llm3
+../lltool/expand
+../lltool/macllm3
+mksymval
+(mksymval)
+(end)
+EOI

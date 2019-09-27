@@ -1,0 +1,280 @@
+#  Le Makefile d'expansion LLM3 du syste`me Le_Lisp [linuxsparc]
+###################################################################
+
+SYSTEM		= linuxsparc
+HOST		= $(SYSTEM)
+MAKE		= make
+SHELL		= /bin/sh
+
+# Pour choisir son Lisp d'amorcage:
+BOOTLISP	= ../$(HOST)/lelisp
+
+# la version de flottants
+FLT		= 31
+
+S		= s$(FLT)
+O		= o$(FLT)
+
+BIN		= lisp$(FLT)
+
+# pour compilo, assembleur, linker
+
+ASFLAGS		= -32
+AS		= as # /usr/ccs/bin/as
+LDFLAGS		= -r
+
+##################################################################
+# l'ordre de ces fichiers est TRES important!
+
+s		= \
+		$(S)/llinit.s 	\
+		$(S)/toperr.s	\
+		$(S)/gc.s	\
+		$(S)/physio.s	\
+		$(S)/read.s	\
+		$(S)/macroch.s	\
+		$(S)/print.s	\
+		$(S)/eval.s	\
+		$(S)/fspecs.s	\
+		$(S)/cntrl.s	\
+		$(S)/carcdr.s	\
+		$(S)/symbs.s	\
+		$(S)/fntstd.s	\
+		$(S)/number.s	\
+		$(S)/specnb.s	\
+		$(S)/string.s	\
+		$(S)/chars.s	\
+		$(S)/extend.s	\
+		$(S)/bllsht.s
+
+sobj		= \
+		$(O)/llinit.o 	\
+		$(O)/toperr.o	\
+		$(O)/gc.o	\
+		$(O)/physio.o	\
+		$(O)/read.o	\
+		$(O)/macroch.o	\
+		$(O)/print.o	\
+		$(O)/eval.o	\
+		$(O)/fspecs.o	\
+		$(O)/cntrl.o	\
+		$(O)/carcdr.o	\
+		$(O)/symbs.o	\
+		$(O)/fntstd.o	\
+		$(O)/number.o	\
+		$(O)/specnb.o	\
+		$(O)/string.o	\
+		$(O)/chars.o	\
+		$(S)/extend.o	\
+		$(O)/bllsht.o
+
+pobj		= $(O)/lllinuxsparc.o $(sobj) 
+
+##################################################################
+# les entre'es classiques
+
+all: le$(BIN)llm3.o
+
+clean:
+	rm -f le*llm3.o 
+	rm -f o??/*.o
+	rm -f s??/*.s
+
+
+################################################################
+# l'edition de liens sur tous les fichiers issus de LLM3
+
+le$(BIN)llm3.o: ../$(HOST)/llcore/expdlinuxsparc.core $(pobj) 
+
+################################################################
+# L'expanseur: LLM3 -> Assembleur SPARC
+
+LLTOOLS		= ../lltool/llm3.ll ../lltool/expand.ll ../lltool/macllm3.ll
+
+../$(HOST)/llcore/expdlinuxsparc.core: macsol.ll $(llm3tools) symval.ll faire.llexpand
+	@echo "...Generating" $@ "because of" $?
+	@./faire.llexpand -system $(HOST) -bootlisp "$(BOOTLISP)"
+
+symval.ll: $(llm3) mksymval.ll faire.symval $(llm3tools)
+	@echo "...Generating" $@ "because of" $?
+	@./faire.symval -bootlisp "$(BOOTLISP)"
+
+################################################################
+# expansion
+
+s31/lllinuxsparc.s: lllinuxsparc.llm3
+	@echo ...Generating $@ because of $?
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)"  \
+		-source ./ -files lllinuxsparc
+
+s31/llinit.s:  ../llm3/llinit.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/toperr.s:  ../llm3/toperr.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/gc.s:      ../llm3/gc.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/physio.s:  ../llm3/physio.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/read.s:    ../llm3/read.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/macroch.s: ../llm3/macroch.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/print.s:   ../llm3/print.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/eval.s:    ../llm3/eval.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/fspecs.s:  ../llm3/fspecs.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/cntrl.s:   ../llm3/cntrl.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/carcdr.s:  ../llm3/carcdr.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/symbs.s:   ../llm3/symbs.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/fntstd.s:  ../llm3/fntstd.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/number.s:  ../llm3/number.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/specnb.s:  ../llm3/specnb.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/string.s:  ../llm3/string.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/chars.s:   ../llm3/chars.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/extend.s:  ../llm3/extend.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s31/bllsht.s:  ../llm3/bllsht.llm3
+	./llexpand -dest s31/ -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+
+s64/lllinuxsparc.s: lllinuxsparc.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" \
+		-source ./ -files lllinuxsparc
+
+s64/bm.s: bm.sa
+	cp bm.sa s64/bm.s
+
+s64/llinit.s:  ../llm3/llinit.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/toperr.s:  ../llm3/toperr.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/gc.s:      ../llm3/gc.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/physio.s:  ../llm3/physio.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/read.s:    ../llm3/read.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/macroch.s: ../llm3/macroch.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/print.s:   ../llm3/print.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/eval.s:    ../llm3/eval.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/fspecs.s:  ../llm3/fspecs.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/cntrl.s:   ../llm3/cntrl.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/carcdr.s:  ../llm3/carcdr.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/symbs.s:   ../llm3/symbs.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/fntstd.s:  ../llm3/fntstd.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/number.s:  ../llm3/number.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/specnb.s:  ../llm3/specnb.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/string.s:  ../llm3/string.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/chars.s:   ../llm3/chars.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/extend.s:  ../llm3/extend.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+s64/bllsht.s:  ../llm3/bllsht.llm3
+	./llexpand -dest s64/ -flag 31bitfloats \(\) -bootlisp "$(BOOTLISP)" -files `basename $? .llm3`
+
+################################################################
+# Assemblages 
+
+o31/lllinuxsparc.o:   	s31/lllinuxsparc.s     ; $(AS) $(ASFLAGS) -o $@ $?
+o31/testlllinuxsparc.o:	s31/testlllinuxsparc.s ; $(AS) $(ASFLAGS) -o $@ $?
+o31/llinit.o:		s31/llinit.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/toperr.o:		s31/toperr.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/gc.o:	        s31/gc.s               ; $(AS) $(ASFLAGS) -o $@ $?
+o31/physio.o:           s31/physio.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/read.o:	        s31/read.s             ; $(AS) $(ASFLAGS) -o $@ $?
+o31/macroch.o:          s31/macroch.s          ; $(AS) $(ASFLAGS) -o $@ $?
+o31/print.o:            s31/print.s            ; $(AS) $(ASFLAGS) -o $@ $?
+o31/eval.o:	        s31/eval.s             ; $(AS) $(ASFLAGS) -o $@ $?
+o31/fspecs.o:           s31/fspecs.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/cntrl.o:            s31/cntrl.s            ; $(AS) $(ASFLAGS) -o $@ $?
+o31/carcdr.o:           s31/carcdr.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/symbs.o:            s31/symbs.s            ; $(AS) $(ASFLAGS) -o $@ $?
+o31/fntstd.o:           s31/fntstd.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/number.o:           s31/number.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/specnb.o:           s31/specnb.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/string.o:           s31/string.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/chars.o:            s31/chars.s            ; $(AS) $(ASFLAGS) -o $@ $?
+o31/extend.o:           s31/extend.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/bllsht.o:           s31/bllsht.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o31/testllm3.o:         s31/testllm3.s         ; $(AS) $(ASFLAGS) -o $@ $?
+
+# L'assemblage
+o64/lllinuxsparc.o:        s64/lllinuxsparc.s     ; $(AS) $(ASFLAGS) -o $@ $?
+o64/testlllinuxsparc.o:    s64/testlllinuxsparc.s ; $(AS) $(ASFLAGS) -o $@ $?
+o64/llinit.o:           s64/llinit.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/toperr.o:           s64/toperr.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/gc.o:	        s64/gc.s               ; $(AS) $(ASFLAGS) -o $@ $?
+o64/physio.o:           s64/physio.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/read.o:	        s64/read.s             ; $(AS) $(ASFLAGS) -o $@ $?
+o64/macroch.o:          s64/macroch.s          ; $(AS) $(ASFLAGS) -o $@ $?
+o64/print.o:            s64/print.s            ; $(AS) $(ASFLAGS) -o $@ $?
+o64/eval.o:	        s64/eval.s             ; $(AS) $(ASFLAGS) -o $@ $?
+o64/fspecs.o:           s64/fspecs.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/cntrl.o:            s64/cntrl.s            ; $(AS) $(ASFLAGS) -o $@ $?
+o64/carcdr.o:           s64/carcdr.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/symbs.o:            s64/symbs.s            ; $(AS) $(ASFLAGS) -o $@ $?
+o64/fntstd.o:           s64/fntstd.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/number.o:           s64/number.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/specnb.o:           s64/specnb.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/string.o:           s64/string.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/chars.o:            s64/chars.s            ; $(AS) $(ASFLAGS) -o $@ $?
+o64/extend.o:           s64/extend.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/bllsht.o:           s64/bllsht.s           ; $(AS) $(ASFLAGS) -o $@ $?
+o64/testllm3.o:         s64/testllm3.s         ; $(AS) $(ASFLAGS) -o $@ $?

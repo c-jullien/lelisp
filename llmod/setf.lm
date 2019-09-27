@@ -1,0 +1,56 @@
+defmodule
+setf
+files (
+setf
+)
+export (
+setf
+defsetf
+get-setf-method
+define-setf-method
+push-setf-inverse
+system-put
+push-setf-method
+push-setf-expander
+define-modify-macro
+#:setf:make-call
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(setf dmsubr ())
+(get-setf-method subr1 ())
+(defsetf dmsubr ())
+(define-setf-method dmsubr ())
+(push-setf-inverse dmsubr ())
+(system-put dmsubr ())
+(push-setf-method dmsubr ())
+(push-setf-expander dmsubr ())
+(define-modify-macro dmsubr ())
+(#:setf:make-call nsubr ())
+)
+cpfunctions (
+(macro-function subr1)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((defmacro system-put (a i v) (list 'progn (list 'putprop a v i) a))
+(defmacro system-get (a i) (list 'getprop a i))
+)((defmacro push-setf-method (n f) (list 'system-put n ''setf-method f))
+(defmacro pop-setf-method (n) (mcons 'system-get n '('setf-method)))
+)((defmacro push-setf-inverse (n f) (list 'system-put n ''setf-inverse f))
+(defmacro pop-setf-inverse (n) (mcons 'system-get n '('setf-inverse)))
+)((defmacro push-setf-expander (n f) (list 'system-put n ''setf-expander f))
+(defmacro pop-setf-expander (n) (mcons 'system-get n '('setf-expander)))
+)((defmacro define-setf-method (access-fn lambda-list . body) (list 'progn (list 'push-setf-method (list 'quote access-fn) (mcons 'lambda lambda-list body)) (list 'quote access-fn)))
+)((defun get-setf-method (form) (cond ((symbolp form) (let ((v (gensym))) (list () () (list v) (list 'setq form v) form))) ((and (listp form) (symbolp (car form))) (let (tmp) (cond ((macro-function (car form)) (get-setf-method (macroexpand form))) ((setq tmp (pop-setf-method (car form))) (apply tmp (cdr form))) ((setq tmp (pop-setf-inverse (car form))) (let ((v (gensym)) (lp (mapcar (lambda &nobind (gensym)) (cdr form)))) (list lp (cdr form) (list v) (cons tmp (append lp (ncons v))) (cons (car form) lp)))) ((setq tmp (pop-setf-expander (car form))) (let ((largs (cdr form))) (let ((temp-list (mapcar (lambda &nobind (gensym)) largs)) (temp-value (gensym))) (list temp-list largs (list temp-value) (apply tmp (cons temp-value temp-list)) (cons (car form) temp-list))))) (t (error 'get-setf-method 'errgen form))))) (t (error 'get-setf-method 'errbpa form))))
+)((defmacro setf l (cond ((cddr l) (do ((lpairs l (cddr lpairs)) (lsetf (list 'progn) (if (cdr lpairs) (nconc lsetf (ncons (list 'setf (car lpairs) (cadr lpairs)))) (error 'setf 'errwna l)))) ((null lpairs) lsetf))) ((cdr l) (let ((x (car l)) (y (cadr l))) (cond ((symbolp x) (list 'setq x y)) ((and (listp x) (symbolp (car x))) (let (tmp) (cond ((setq tmp (pop-setf-inverse (car x))) (cons tmp (append (cdr x) (ncons y)))) (t (let (((vars vals stores store-form access-form) (get-setf-method x))) (if vars (list 'let* (mapcar 'list vars vals) (list 'let (ncons (append stores (ncons y))) store-form)) (if stores (list 'let (ncons (append stores (ncons y))) store-form) store-form))))))) (t (error 'setf 'errbpa x))))) (t (error 'setf 'errwna l))))
+)((defmacro defsetf (access . rest) (cond ((not (symbolp access)) (error 'defsetf 'errnaa access)) ((listp (car rest)) (unless (listp (cadr rest)) (error 'defsetf 'errbpa (cadr rest))) (list 'push-setf-expander (list 'quote access) (mcons 'lambda (append (cadr rest) (car rest)) (cddr rest)))) ((symbolp (car rest)) (list 'push-setf-inverse (list 'quote access) (list 'quote (car rest)))) (t (error 'defsetf 'errbal (car rest)))))
+)((defun macro-function (x) (and (symbolp x) (memq (typefn x) '(dmacro dmsubr macro msubr)) (cons 'lambda (valfn x))))
+))

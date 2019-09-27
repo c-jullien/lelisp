@@ -1,0 +1,32 @@
+defmodule
+#:system:debug
+files (
+|debug.ll|
+)
+export (
+debug
+break
+printstack
+debug-command
+#:system:debug:bol
+#:system:debug:toplevel
+#:system:debug:hilited:prin
+#:system:debug:print-current-variables
+#:system:debug:printstack
+#:system:debug:print-error
+#:system:debug:print-current-function
+#:system:debug:down-stack
+#:system:debug:up-stack
+#:system:debug:continue
+#:system:debug:help
+#:tty:system:hilited:tyattrib
+#:system:debug:hilited:eol
+)
+import (
+files
+virtty
+virbitmap
+pretty
+)
+include
+()

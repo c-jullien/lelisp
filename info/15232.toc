@@ -1,0 +1,51 @@
+\contentsline {chapter}{\numberline {1}Version "15.23.2"}{1-3}
+\contentsline {section}{\numberline {1.1}Contenu de cette diffusion}{1-3}
+\contentsline {section}{\numberline {1.2}Survol de 15.23 sous-version 2}{1-4}
+\contentsline {section}{\numberline {1.3}Les RATS}{1-5}
+\contentsline {chapter}{\numberline {2}Le Bitmap Virtuel 1+}{2-9}
+\contentsline {section}{\numberline {2.1}Changements pour l'utilisateur}{2-10}
+\contentsline {subsection}{\numberline {2.1.1}Structures}{2-10}
+\contentsline {subsection}{\numberline {2.1.2}Nouvelles fonctions}{2-12}
+\contentsline {subsubsection}{Module virinit}{2-12}
+\contentsline {subsubsection}{Module virdraw}{2-14}
+\contentsline {subsubsection}{Module virgraph}{2-15}
+\contentsline {subsubsection}{Module virwindow}{2-17}
+\contentsline {subsubsection}{Module virbit}{2-18}
+\contentsline {subsubsection}{Module vircolor}{2-19}
+\contentsline {subsubsection}{Module virevent}{2-19}
+\contentsline {subsection}{\numberline {2.1.3}Anciennes fonctions redocument{\accent 19 e}es}{2-20}
+\contentsline {section}{\numberline {2.2}Manuel d'implantation}{2-21}
+\contentsline {subsection}{\numberline {2.2.1}M{\accent 19 e}thodes du module virutil}{2-21}
+\contentsline {subsection}{\numberline {2.2.2}M{\accent 19 e}thodes du module virinit}{2-21}
+\contentsline {subsection}{\numberline {2.2.3}M{\accent 19 e}thodes du module virevent}{2-22}
+\contentsline {subsection}{\numberline {2.2.4}M{\accent 19 e}thodes du module virmenu}{2-22}
+\contentsline {subsection}{\numberline {2.2.5}M{\accent 19 e}thodes du module vircolor}{2-22}
+\contentsline {subsection}{\numberline {2.2.6}M{\accent 19 e}thodes du module virbit}{2-23}
+\contentsline {subsection}{\numberline {2.2.7}M{\accent 19 e}thodes du module virdraw}{2-23}
+\contentsline {subsection}{\numberline {2.2.8}M{\accent 19 e}thodes du module virgraph}{2-24}
+\contentsline {subsection}{\numberline {2.2.9}M{\accent 19 e}thodes du module virwindow}{2-25}
+\contentsline {subsection}{\numberline {2.2.10}Notes d'impl{\accent 19 e}mentation}{2-25}
+\contentsline {subsubsection}{Les fen{\accent 94 e}tres}{2-26}
+\contentsline {subsubsection}{{\accent 19 e}v{\accent 19 e}nements}{2-26}
+\contentsline {subsubsection}{Communication avec le Window Manager}{2-27}
+\contentsline {subsection}{\numberline {2.2.11}Les tests automatiques}{2-27}
+\contentsline {subsubsection}{Principe}{2-27}
+\contentsline {subsubsection}{Organisation des fichiers sous Unix}{2-27}
+\contentsline {subsubsection}{Les tests sur X11}{2-28}
+\contentsline {subsubsection}{{\accent 19 e}volution des tests}{2-29}
+\contentsline {subsubsection}{La mesure des performances}{2-29}
+\contentsline {chapter}{\numberline {3}Les messages multilingues}{3-31}
+\contentsline {section}{\numberline {3.1}Anciennes fonctions modifi{\accent 19 e}es dans le paragraphe 1.1}{3-31}
+\contentsline {section}{\numberline {3.2}Nouvelles fonctions pour le paragraphe 1.1}{3-31}
+\contentsline {chapter}{\numberline {4}Les pathnames virtuels}{4-33}
+\contentsline {section}{\numberline {4.1}Anciennes fonctions modifi{\accent 19 e}es dans le paragraphe 6.10.1}{4-33}
+\contentsline {section}{\numberline {4.2}Nouvelles fonctions pour le paragraphe 6.10.1}{4-33}
+\contentsline {section}{\numberline {4.3}Nouvelles fonctions pour le paragraphe 6.10.3}{4-34}
+\contentsline {chapter}{\numberline {5}Le mode EXECORE sous UNIX}{5-37}
+\contentsline {section}{\numberline {5.1}Description}{5-37}
+\contentsline {section}{\numberline {5.2}Exemple}{5-37}
+\contentsline {section}{\numberline {5.3}Notation}{5-41}
+\contentsline {chapter}{\numberline {6}La boucle d'{\accent 19 e}v{\accent 19 e}nements}{6-43}
+\contentsline {section}{\numberline {6.1}Fonctions}{6-43}
+\contentsline {subsection}{\numberline {6.1.1}Traitement des sorties}{6-46}
+\contentsline {section}{\numberline {6.2}Exemple}{6-47}

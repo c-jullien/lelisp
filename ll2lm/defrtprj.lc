@@ -1,0 +1,39 @@
+defmodule defrtprj
+files (defrtprj)
+import (
+defvar
+kernellm
+ref
+)
+
+export (
+(structure rtproject)
+define-rt-project
+find-rt-project
+declare-rt-project
+remove-rt-project
+define-rt-group-project
+find-rt-group-project
+declare-rt-group-project
+remove-rt-group-project
+declared-rt-projects
+load-rt-project
+reload-rt-project
+activate-rt-project
+get-system-directory
+get-main-ll-object-directory
+get-main-ll-module-directory
+list-rt-directories
+list-complice-directories
+list-complice-flags
+;list-complice-options
+list-analyzer-options
+
+#:rtproject:defrtproject
+#:rtproject:initialise-structure
+#:rtproject:prin
+#:rtproject:pretty
+#:rtproject:gcalarm
+#:rtproject:gc-before-alarm
+)
+

@@ -1,0 +1,20 @@
+% Nom du produit: Le-Lisp
+
+\documentstyle {ilogpaper}
+\pagestyle{myheadings}
+
+\Begin
+\Title {Configurations des portages Le-Lisp 15.25.2}
+\Author {Pascal KUCZYNSKI}
+\Author {ILOG \ \ \  2, avenue Gallie'ni, \\ BP 85  94253 Gentilly Cedex}
+
+\begin{center}
+
+\footnote{Ce document a e'te' engendre' automatiquement a` partir
+des outils de maintenance V15}
+
+\begin{tabular}{|c||c|c||c|c|c|c|} \hline 
+machines &    Unix  &   CPU        & float & Cload & \^\ Z & Core \\ \cline{2-3}
+ &  \multicolumn{2}{|c||}{Authorized Systems} & 31/64 &       &     & Exe.  \\
+\hline \hline \hline
+

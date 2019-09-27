@@ -1,0 +1,207 @@
+#	Makefile for lelispbin.o kernel.
+#	It does not use gmake features and should work on any make.
+
+DIRL	= @SOURCE@
+CC	= @CC@
+CFLAGS	= @CFLAGS@ -w -I$(DIRL)/C/C
+LDLIBS  = @LIBS@
+LDRFLAGS= @LDEXPORT@ @LDRFLAGS@
+O	= @OBJEXT@
+BOOTLISP= @BOOTLISP@
+FLT	= 31
+BIN	= lelisp$(FLT)
+
+all:	$(BIN)bin.$(O)
+
+PHONY += all
+
+bootstrap: $(BIN)bin.$(O)
+
+PHONY += boostrap
+
+#
+# Compile llm3 files converted in C
+# 
+
+mobj=	o/llinit.$(O)  o/toperr.$(O) o/gc.$(O)     o/physio.$(O) o/read.$(O)   \
+	o/macroch.$(O) o/print.$(O)  o/eval.$(O)   o/fspecs.$(O) o/cntrl.$(O)  \
+	o/carcdr.$(O)  o/symbs.$(O)  o/fntstd.$(O) o/number.$(O) o/specnb.$(O) \
+	o/string.$(O)  o/chars.$(O)  o/extend.$(O) o/bllsht.$(O)
+
+o/bllsht.$(O): C3/bllsht.c
+	$(CC) $(CFLAGS) -c C3/bllsht.c -o o/bllsht.$(O)
+
+o/carcdr.$(O): C3/carcdr.c
+	$(CC) $(CFLAGS) -c C3/carcdr.c -o o/carcdr.$(O)
+
+o/chars.$(O): C3/chars.c
+	$(CC) $(CFLAGS) -c C3/chars.c -o o/chars.$(O)
+
+o/cntrl.$(O): C3/cntrl.c
+	$(CC) $(CFLAGS) -c C3/cntrl.c -o o/cntrl.$(O)
+
+o/eval.$(O): C3/eval.c
+	$(CC) $(CFLAGS) -c C3/eval.c -o o/eval.$(O)
+
+o/extend.$(O): C3/extend.c
+	$(CC) $(CFLAGS) -c C3/extend.c -o o/extend.$(O)
+
+o/fntstd.$(O): C3/fntstd.c
+	$(CC) $(CFLAGS) -c C3/fntstd.c -o o/fntstd.$(O)
+
+o/fspecs.$(O): C3/fspecs.c
+	$(CC) $(CFLAGS) -c C3/fspecs.c -o o/fspecs.$(O)
+
+o/gc.$(O): C3/gc.c
+	$(CC) $(CFLAGS) -c C3/gc.c -o o/gc.$(O)
+
+o/llinit.$(O): C3/llinit.c
+	$(CC) $(CFLAGS) -c C3/llinit.c -o o/llinit.$(O)
+
+o/macroch.$(O): C3/macroch.c
+	$(CC) $(CFLAGS) -c C3/macroch.c -o o/macroch.$(O)
+
+o/number.$(O): C3/number.c
+	$(CC) $(CFLAGS) -c C3/number.c -o o/number.$(O)
+
+o/physio.$(O): C3/physio.c
+	$(CC) $(CFLAGS) -c C3/physio.c -o o/physio.$(O)
+
+o/print.$(O): C3/print.c
+	$(CC) $(CFLAGS) -c C3/print.c -o o/print.$(O)
+
+o/read.$(O): C3/read.c
+	$(CC) $(CFLAGS) -c C3/read.c -o o/read.$(O)
+
+o/specnb.$(O): C3/specnb.c
+	$(CC) $(CFLAGS) -c C3/specnb.c -o o/specnb.$(O)
+
+o/string.$(O): C3/string.c
+	$(CC) $(CFLAGS) -c C3/string.c -o o/string.$(O)
+
+o/symbs.$(O): C3/symbs.c
+	$(CC) $(CFLAGS) -c C3/symbs.c -o o/symbs.$(O)
+
+o/toperr.$(O): C3/toperr.c
+	$(CC) $(CFLAGS) -c C3/toperr.c -o o/toperr.$(O)
+
+# C files part of kernel.
+
+o/last.$(O): C/last.c
+	$(CC) $(CFLAGS) -c C/last.c -o o/last.$(O)
+
+o/plombe.$(O): ../lltool//plombe.c
+	$(CC) $(CFLAGS) -c ../lltool//plombe.c -o o/plombe.$(O)
+
+# Le-Lisp kernel, order of files is very important?
+
+$(BIN)bin.$(O): $(mobj) o/last.$(O) o/plombe.$(O)
+	$(CC) $(LDRFLAGS) -o $(BIN)bin.$(O) $(mobj) o/last.$(O) o/plombe.$(O)
+
+generateo: $(mobj)
+	echo o files generated
+
+#
+# generate the C files of lo ones
+#
+mcobj=  C3/llinit.c  C3/toperr.c  C3/gc.c     C3/physio.c C3/read.c   \
+	C3/macroch.c C3/print.c   C3/eval.c   C3/fspecs.c C3/cntrl.c  \
+	C3/carcdr.c  C3/symbs.c   C3/fntstd.c C3/number.c C3/specnb.c \
+	C3/string.c  C3/chars.c   C3/extend.c C3/bllsht.c
+
+generatec: $(mcobj)
+	  echo C files generated
+
+#
+# generate the lo files from llm3 files
+#
+moobj=  C3/llinit.lo  C3/toperr.lo  C3/gc.lo     C3/physio.lo C3/read.lo   \
+	C3/macroch.lo C3/print.lo   C3/eval.lo   C3/fspecs.lo C3/cntrl.lo  \
+	C3/carcdr.lo  C3/symbs.lo   C3/fntstd.lo C3/number.lo C3/specnb.lo \
+	C3/string.lo  C3/chars.lo   C3/extend.lo C3/bllsht.lo
+
+generatelo: $(moobj)
+	echo lo files generated
+
+C3/bllsht.c: ../llm3/bllsht.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/bllsht.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/bllsht.lo C3
+
+C3/carcdr.c: ../llm3/carcdr.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/carcdr.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/carcdr.lo C3
+
+C3/chars.c: ../llm3/chars.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/chars.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/chars.lo C3
+
+C3/cntrl.c: ../llm3/cntrl.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/cntrl.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/cntrl.lo C3
+
+C3/eval.c: ../llm3/eval.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/eval.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/eval.lo C3
+
+C3/extend.c: ../llm3/extend.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/extend.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/extend.lo C3
+
+C3/fntstd.c: ../llm3/fntstd.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/fntstd.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/fntstd.lo C3
+
+C3/fspecs.c: ../llm3/fspecs.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/fspecs.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/fspecs.lo C3
+
+C3/gc.c: ../llm3/gc.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/gc.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/gc.lo C3
+
+C3/llinit.c: ../llm3/llinit.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/llinit.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/llinit.lo C3
+
+C3/macroch.c: ../llm3/macroch.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/macroch.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/macroch.lo C3
+
+C3/number.c: ../llm3/number.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/number.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/number.lo C3
+
+C3/physio.c: ../llm3/physio.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/physio.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/physio.lo C3
+
+C3/print.c: ../llm3/print.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/print.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/print.lo C3
+
+C3/read.c: ../llm3/read.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/read.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/read.lo C3
+
+C3/specnb.c: ../llm3/specnb.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/specnb.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/specnb.lo C3
+
+C3/string.c: ../llm3/string.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/string.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/string.lo C3
+
+C3/symbs.c: ../llm3/symbs.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/symbs.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/symbs.lo C3
+
+C3/toperr.c: ../llm3/toperr.llm3
+	BOOTLISP=$(BOOTLISP) ./loexpand ../llm3/toperr.llm3 C3
+	BOOTLISP=$(BOOTLISP) ./llexpand C3/toperr.lo C3
+
+world: $(BOOTLISP)
+	@rm -f C3/*.c kern.$(O) o/*.$(O)
+	@@MAKE@ -f Makeport FLT=$(FLT) $(BIN)bin.$(O)
+	@@MAKE@ FLT=$(FLT)
+
+PHONY += world

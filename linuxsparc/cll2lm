@@ -1,0 +1,1 @@
+exec /home/jullien/lelisp-opensource-2017-10-03/linuxsparc/lelispbin -stack 18 -code 1000 -heap 1024 -number 0 -vector 10 -string 20 -symbol 18 -cons 20 -float 0 -r /home/jullien/lelisp-opensource-2017-10-03/linuxsparc/llcore/cll2lm.core $*

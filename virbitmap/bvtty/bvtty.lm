@@ -1,0 +1,177 @@
+defmodule
+#:display:bvtty
+files (
+|bvtty.ll|
+)
+export (
+#:display:bvtty:bitprologue
+#:display:bvtty:bitepilogue
+#:display:bvtty:make
+#:display:bvtty:bitmap-sync
+#:display:bvtty:bitmap-refresh
+#:display:bvtty:bitmap-flush
+#:display:bvtty:create-window
+#:display:bvtty:create-subwindow
+#:display:bvtty:current-window
+#:display:bvtty:uncurrent-window
+#:display:bvtty:modify-window
+#:display:bvtty:kill-window
+#:display:bvtty:pop-window
+#:display:bvtty:move-behind-window
+#:display:bvtty:find-window
+#:display:bvtty:map-window
+#:display:bvtty:current-keyboard-focus-window
+#:display:bvtty:uncurrent-keyboard-focus-window
+#:display:bvtty:event-mode
+#:display:bvtty:eventp
+#:display:bvtty:read-event
+#:display:bvtty:peek-event
+#:display:bvtty:flush-event
+#:display:bvtty:add-event
+#:display:bvtty:grab-event
+#:display:bvtty:ungrab-event
+#:display:bvtty:itsoft-event
+#:display:bvtty:read-mouse
+#:display:bvtty:font-max
+#:tty:window:redisplayscreen
+#:tty:window:tybeep
+#:display:bvtty:current-font
+#:display:bvtty:load-font
+#:display:bvtty:draw-substring
+#:display:bvtty:clear-graph-env
+#:display:bvtty:width-substring
+#:display:bvtty:height-substring
+#:display:bvtty:x-base-substring
+#:display:bvtty:y-base-substring
+#:display:bvtty:x-inc-substring
+#:display:bvtty:y-inc-substring
+#:display:bvtty:font-ascent
+#:display:bvtty:font-height
+#:display:bvtty:draw-cursor
+#:display:bvtty:current-clip
+#:display:bvtty:current-line-style
+#:display:bvtty:line-style-max
+#:display:bvtty:current-pattern
+#:display:bvtty:pattern-max
+#:display:bvtty:current-mode
+#:display:bvtty:draw-polyline
+#:display:bvtty:draw-polymarker
+#:display:bvtty:fill-area
+#:display:bvtty:draw-ellipse
+#:display:bvtty:fill-ellipse
+#:display:bvtty:create-bitmap
+#:display:bvtty:create-window-bitmap
+#:display:bvtty:get-bit-line
+#:display:bvtty:set-bit-line
+#:display:bvtty:kill-bitmap
+#:display:bvtty:bmref
+#:display:bvtty:bmset
+#:display:bvtty:bitblit
+#:display:bvtty:do-redisplay
+)
+import (
+virbitmap
+defstruct
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:bvtty:bitprologue subr1 ())
+(#:display:bvtty:bitepilogue subr1 ())
+(#:display:bvtty:make subr0 ())
+(#:display:bvtty:bitmap-sync subr1 ())
+(#:display:bvtty:bitmap-refresh subr1 ())
+(#:display:bvtty:do-redisplay nsubr ())
+(#:display:bvtty:bitmap-flush subr1 ())
+(#:display:bvtty:create-window subr2 ())
+(#:display:bvtty:create-subwindow subr2 ())
+(#:display:bvtty:current-window subr2 ())
+(#:display:bvtty:uncurrent-window subr2 ())
+(#:display:bvtty:modify-window nsubr ())
+(#:display:bvtty:kill-window subr2 ())
+(#:display:bvtty:pop-window subr2 ())
+(#:display:bvtty:move-behind-window subr3 ())
+(#:display:bvtty:find-window subr3 ())
+(#:display:bvtty:map-window nsubr ())
+(#:display:bvtty:current-keyboard-focus-window subr2 ())
+(#:display:bvtty:uncurrent-keyboard-focus-window subr2 ())
+(#:display:bvtty:event-mode subr2 ())
+(#:display:bvtty:eventp subr1 ())
+(#:display:bvtty:read-event subr2 ())
+(#:display:bvtty:peek-event subr2 ())
+(#:display:bvtty:flush-event subr1 ())
+(#:display:bvtty:add-event subr2 ())
+(#:display:bvtty:grab-event subr2 ())
+(#:display:bvtty:ungrab-event subr1 ())
+(#:display:bvtty:itsoft-event subr2 ())
+(#:display:bvtty:read-mouse subr2 ())
+(#:display:bvtty:font-max subr2 ())
+(#:tty:window:redisplayscreen nsubr ())
+(#:tty:window:tybeep subr0 ())
+(#:display:bvtty:current-font subr3 ())
+(#:display:bvtty:load-font subr3 ())
+(#:display:bvtty:draw-substring nsubr ())
+(#:display:bvtty:clear-graph-env subr2 ())
+(#:display:bvtty:width-substring nsubr ())
+(#:display:bvtty:height-substring nsubr ())
+(#:display:bvtty:x-base-substring nsubr ())
+(#:display:bvtty:y-base-substring nsubr ())
+(#:display:bvtty:x-inc-substring nsubr ())
+(#:display:bvtty:y-inc-substring nsubr ())
+(#:display:bvtty:font-ascent subr2 ())
+(#:display:bvtty:font-height subr2 ())
+(#:display:bvtty:draw-cursor nsubr ())
+(#:display:bvtty:current-clip nsubr ())
+(#:display:bvtty:current-line-style subr3 ())
+(#:display:bvtty:line-style-max subr2 ())
+(#:display:bvtty:current-pattern subr3 ())
+(#:display:bvtty:pattern-max subr2 ())
+(#:display:bvtty:current-mode subr3 ())
+(#:display:bvtty:draw-polyline nsubr ())
+(#:display:bvtty:draw-polymarker nsubr ())
+(#:display:bvtty:fill-area nsubr ())
+(#:display:bvtty:draw-ellipse nsubr ())
+(#:display:bvtty:fill-ellipse nsubr ())
+(#:display:bvtty:create-bitmap subr2 ())
+(#:display:bvtty:create-window-bitmap subr3 ())
+(#:display:bvtty:get-bit-line nsubr ())
+(#:display:bvtty:set-bit-line nsubr ())
+(#:display:bvtty:kill-bitmap subr2 ())
+(#:display:bvtty:bmref nsubr ())
+(#:display:bvtty:bmset nsubr ())
+(#:display:bvtty:bitblit nsubr ())
+)
+cpfunctions (
+(#:display:bvtty:full-redisplay subr0)
+(#:display:bvtty:redisplay nsubr)
+(#:display:bvtty:delayed-redisplay nsubr)
+(#:display:bvtty:flush-delayed-redisplay nsubr)
+(#:display:bvtty:redisplay1 subr1)
+(#:display:bvtty:redisplay1-mini nsubr)
+(#:display:bvtty:make-framed-screen nsubr)
+(make-ascii-event subr2)
+)
+cpimport
+()
+cpenv (
+sort
+callext
+defstruct
+path
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+((putprop '#:sys-package:bitmap 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((defstruct #:display:bvtty)
+))

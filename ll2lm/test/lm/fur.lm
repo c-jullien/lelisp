@@ -1,0 +1,15 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule fur
+
+files (
+|fur.ll|
+)
+
+import ()
+
+export (
+
+; ;;; Functions unused unless exported
+f-fur
+)

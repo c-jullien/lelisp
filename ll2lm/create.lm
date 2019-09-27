@@ -1,0 +1,84 @@
+defmodule create
+files (create)
+import (
+format
+sets
+defvar
+readlm
+rtprint
+rtmsg
+defrtprj
+make
+)
+
+export (
+#:rtproject:build-init
+#:rtproject:build-module
+#:rtproject:all-files
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:rtproject:build-init subr2 ())
+(#:rtproject:all-files nsubr ())
+(#:rtproject:build-module subr3 ())
+)
+cpfunctions (
+(#:rtproject:print-init-makefile subr2)
+(#:rtproject:merge subr3)
+(#:rtproject:filenames subr2)
+(#:rtproject:simplify-list-of-strings subr1)
+(#:rtproject:excl-mod subr2)
+(#:rtproject:short-list-name subr1)
+(#:rtproject:read-modules-lists subr2)
+(#:rtproject:read-one-modules-list subr2)
+(#:rtproject:print-analyzer-command subr2)
+(#:rtproject:print-lm-dependencies subr2)
+(#:rtproject:build-files subr3)
+(#:rtproject:b-m subr1)
+(#:rtproject:list-import subr2)
+)
+cpimport (
+(rtprint
+(#:crunch:save-file . subr1)
+)(format
+(format . nsubr)
+)(readlm
+(#:crunch:openi . subr1)
+)(defrtprj
+(get-system-directory . subr1)
+(get-main-ll-object-directory . subr1)
+(get-main-ll-module-directory . subr1)
+)(make
+(#:rtproject:print-env . subr2)
+(#:rtproject:prinf . subr1)
+(#:rtproject:make-module-filename . subr2)
+)(sets
+(nset-difference . nsubr)
+(union . nsubr)
+))
+cpenv (
+format
+sets
+files
+module
+defvar
+sort
+callext
+defstruct
+path
+kernellm
+rtmsg
+rtprint
+readlm
+pretty
+diagnostic
+ref
+defrtprj
+make
+((putprop '#:rtproject:analyze-command 't '#:complice:globalvar)
+)((putprop '#:rtproject:make-command 't '#:complice:globalvar)
+)((putprop '#:rtproject:extension 't '#:complice:globalvar)
+)((putprop '#:rtproject:permute-lc 't '#:complice:globalvar)
+)((putprop '#:rtproject:config-ext 't '#:complice:globalvar)
+))

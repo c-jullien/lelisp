@@ -1,0 +1,467 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "19/19" "bllsht.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 19 "Les fonctions me'moire et CPU"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+          TITLE     BLLSHT              ; LLM3 : le bullshit en tout genre
+
+          XREFI     LLINIT,.UNDEF       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,.LLSYSTEM
+          XREFI     LLINIT,CCODE
+          XREFI     LLINIT,ECODE
+          XREFP     LLINIT,REENTER
+          XREFP     LLINIT,THEEND
+          XREFI     LLINIT,MSTACK
+          XREFP     TOPERR,ERRNDA       ; 2 - TOPERR
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNVA
+          XREFP     TOPERR,ERRVEC
+          XREFP     TOPERR,ERRFS
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFP     EVAL,APPLY          ; 8 - EVAL
+          XREFP     EVAL,EVALCAR
+
+          XDEFP     INI_BLL
+          XDEFI     EIMPUR
+	  XDEFP	    EPUR
+          XDEFP     LOC
+          XDEFP     VAG
+          XDEFP     VAGA1
+
+          PURE
+
+;
+;         Creation des symboles
+;         =====================
+;
+
+INI_BLL   LABEL      
+
+
+          MAKFNT    LOC,#3,"loc"        ; la fonction loc
+          MAKFNT    LOCINT,#6,"locint"
+          MOV       .LLSYSTEM,PKGC(A1)
+          MAKFNT    VAG,#3,"vag" 
+          MAKFNT    MEMORY,#6,"memory"
+          MAKFNT    BLTMEMORY,#9,"bltmemory"
+
+     IFEQ COMPILO     
+
+          MAKFNT    ADDADR,#6,"addadr" 
+          MAKFNT    INCRADR,#7,"incradr" 
+          MAKFNT    SUBADR,#6,"subadr" 
+          MAKFNT    GTADR,#5,"gtadr" 
+          MAKFNT    ACCODE,#5,"ccode"   ; #:system:ccode
+          MOV       .LLSYSTEM,PKGC(A1)
+          MAKFNT    AECODE,#5,"ecode" 
+          MOV       .LLSYSTEM,PKGC(A1)  ; #:system:ecode
+     ENDC ; de COMPILO
+
+          MAKFNT    PRECOMP,#10,"precompile"
+          MAKFNT    LLCALL,#4,"call" 
+          MAKFNT    LLCALN,#5,"calln" 
+
+
+;
+;         Fin de l'initialisateur
+;
+
+          RETURN
+          PURE
+
+;============================================================
+;
+;         Les fonctions qui travaillent sur des adresses
+;
+;============================================================
+
+;
+;         (LOC s)   retourne l'adresse de s
+;                   (sous la forme (high . low))
+;
+;  ----------------------------------------
+          FENTRY    LOC,SUBR1
+;  ----------------------------------------
+          ADRHL     A1,A2,A1            ; expansion de l'adresse
+          CNBEQ     A2,#0,LOC9          ; les poids forts sont nulls
+          CONS      A2,A1               ; fabrique (high . low)
+LOC9      RETURN                        ; qui est retournee
+
+;
+;         (#:SYSTEM:LOCINT s)
+;         retourne un FIXNUM compose' de la somme <high> + <low>
+;         de l'adresse de l'objet <s>
+;
+;  ----------------------------------------
+          FENTRY    LOCINT,SUBR1
+;  ----------------------------------------
+          ADRHL     A1,A2,A1            ; expansion de l'adresse
+          PLUS      A2,A1               ; fabrique le FIX
+          LAND      #MAXFIX,A1          ; toujours >= 0
+          RETURN                        ; qui est retournee
+
+;
+;         (VAG (high . low))  retourne l'objet d'adresse (l . h)
+;         (VAG numb)
+;
+;  ----------------------------------------
+          FENTRY    VAG,SUBR1
+;  ----------------------------------------
+          MOV       .VAG,A2             ; le nom en cas d'erreur
+;
+;         VAG interne 
+;         A1 -> un cons que l'on veut transformer en adresse
+;         A2 -> le nom de la fonction (en cas d'erreur)
+;         A1 <- l'adresse ; A2 est bouzille'
+;
+VAGA1     LABEL
+          BFCONS    A1,VAGC             ; si non (h . l)
+          BFFIX     CAR(A1),VAGERR      ; test high
+          BFFIX     CDR(A1),VAGERR      ; test low
+          MOV       CAR(A1),A2          ; high
+          MOV       CDR(A1),A1          ; low
+          HLADR     A2,A1,A1            ; fabrique l'adresse
+VAGRET    RETURN    
+VAGC      BFFIX     A1,VAGERR           ; tout le reste est bete!
+          BFNUMB    A1,VAGRET           ; petit entier ok.
+          MOV       VAL(A1),A1          ; !! deboxe le nb !!
+          RETURN                        ; on espere que ca a un sens.
+
+VAGERR3   MOV       A3,A1
+VAGERR    LABEL
+          JMP       ERRNDA              ; ce doit etre une adresse
+
+;         La meme fonction mais convertissant A3
+
+VAGA3     LABEL
+          BFCONS    A3,VAGA3C           ; si non (h . l)
+          BFFIX     CAR(A3),VAGERR3     ; test high
+          BFFIX     CDR(A3),VAGERR3     ; test low
+          MOV       CAR(A3),A2          ; high
+          MOV       CDR(A3),A3          ; low
+          HLADR     A2,A3,A3            ; fabrique l'adresse
+VAGA3RET  RETURN    
+VAGA3C    BFFIX     A3,VAGERR3          ; pas possible.
+          BFNUMB    A3,VAGA3RET         ; c'est un petit entier
+          MOV       VAL(A3),A3          ; !! on deboxe !!
+          RETURN
+
+
+;=======
+;  special compilo
+;=======
+
+
+     IFEQ COMPILO
+
+
+;
+;         (ADDADR (high . low) (high . low))
+;         fait l'addition des 2 adresses sans de'bordement!
+;
+;  ----------------------------------------
+          FENTRY    ADDADR,SUBR2
+;  ----------------------------------------
+          MOV      .ADDADR,ADRTMP
+          CALL     ADRVERIF
+          ADDADR                        ; A3|A1 + A4|A2 -> A3|A1
+;M        Macro LLM3 e'quivalente a` :
+;M        EPLUS    A1,A2,#0,A2,A1       ; ajoute les parties basses
+;M        EPLUS    A3,A4,A2,A2,A3       ; puis la retenue
+          BRA      ADRCREAT             ; cre'e l'adresse Lisp re'sultat.
+
+;
+;         (INCRADR (high . low) inc)
+;         incremente en place (high . low)!
+;
+;  ----------------------------------------
+          FENTRY    INCRADR,SUBR2
+;  ----------------------------------------
+          PUSH      A1                  ; s'il faut CONSER
+          MOV       .INCRADR,ADRTMP
+          CALL      ADRVERIF
+          ADDADR                        ; A3|A1 + A4|A2 -> A3|A1
+;M        Macro LLM3 e'quivalente a` :
+;M        EPLUS     A1,A2,#0,A2,A1      ; ajoute les parties basses
+;M        EPLUS     A3,A4,A2,A2,A3      ; puis la retenue
+          POP       A4                  ; la valeur
+          CNBNE     A3,#0,INCADR2       ; est ce un FIX?
+          CNBGE     A1,#0,INCADR3       ; c'est un FIX >= 0
+INCADR2   CNBEQ     A3,#-1,INCADR3      ; c'est un FIX < 0
+          BFCONS    A4,INCADR1          ; je dois CONSER
+          MOV       A3,CAR(A4)          ; utilise le meme CONS
+          MOV       A1,CDR(A4)
+          MOV       A4,A1               ; retourne le me^me pointeur
+          RETURN
+INCADR1   CONS      A3,A1               ; il FAUT conser
+INCADR3   RETURN
+
+
+;
+;         (SUBADR (high . low) (high . low))
+;         fait la soustraction de 2 adresses (sans ovfl)
+;
+;  ----------------------------------------
+          FENTRY    SUBADR,SUBR2
+;  ----------------------------------------
+; 
+; (de sa (a1 a2)
+;     (addadr a1
+;         (incradr
+;             (cons (ex- (car a2)) (ex- (cdr a2))) 1))
+
+          MOV       .SUBADR,ADRTMP
+          CALL      ADRVERIF            ; prepare A3|A1 et A4|A2
+          SUBADR                        ; A3|A1 - A4|A2 -> A3|A1
+;M        Macro LLM3 e'quivalente a` :
+;M        PUSH      A3                  ; le temps de faire le calcul
+;M        NEGATE    A2                  ; calcul l'oppose du 2eme arg
+;M        DECR      A2,SUBADR1          ; A4 <- ex- (CDR a2)
+;SUBADR1  NEGATE    A4
+;M        DECR      A4,SUBADR2          ; A2 <- ex- (CAR a2)
+;SUBADR2  CNBEQ     #$8000,A2,SUBADR3   ; cas bizare du #$8000
+;M        EPLUS     A2,#1,#0,A3,A2
+;M        EPLUS     A4,#0,A3,A3,A4      ; (incradr (A2 . A4) 1)
+;SUBADR3  POP       A3
+;M        EPLUS     A1,A2,#0,A2,A1      ; ajoute les parties basses
+;M        EPLUS     A3,A4,A2,A2,A3      ; puis la retenue
+          BRA       ADRCREAT            ; pour la cre'ation finale.
+
+;
+;         (GTADR (high . low) (high . low))
+;         fait une comparaison d'adresse :
+;         retourne T si a1 > a2
+;
+;  ----------------------------------------
+          FENTRY    GTADR,SUBR2
+;  ----------------------------------------
+          MOV       .GTADR,ADRTMP
+          CALL      ADRVERIF
+          ECOMP     A3,A4,GTADR0,GTADR1,GTADR2; les poids forts
+GTADR1    ECOMP     A1,A2,GTADR0,GTADR0,GTADR2; les poids faibles
+GTADR2    MOV       .T,A1
+          RETURN
+GTADR0    MOVNIL    A1
+          RETURN
+
+;   Petit utilitaire : ve'rification d'adresses.
+;   recoit deux "adresses" en A1 et A2,
+;   En cas d'erreur: nom de la fonction appelante ; ADRTMP
+;   rends  dans A1 et A2 les parties basses des adresses
+;          dans A3 et A4 les parties hautes
+
+ADRVERIF  BTCONS    A1,ADRVER1
+          BFFIX     A1,ADRERR1
+          MOV       #0,A3               ; A1 FIX>0, A3=0
+          CNBGE     A1,#0,ADRVER4       ; sauf si A1<0
+          MOV       #-1,A3              ;  alors A3=0000FFFF
+ADRVER4   BTCONS    A2,ADRVER2
+          BFFIX     A2,ADRERR2
+          MOV       #0,A4               ; A1 FIX , A2 FIX
+          CNBGE     A2,#0,ADRVER5       ; si A2<0
+          MOV       #-1,A4              ;  alors A4=0000FFFF
+ADRVER5   RETURN
+                                        ; A1 FIX, A2 CONS
+ADRVER2   MOV       CAR(A2),A4          ; haute
+          BFFIX     A4,ADRERR2
+          BFFIX     CDR(A2),ADRERR2
+          MOV       CDR(A2),A2
+          RETURN
+ADRVER1   BTCONS    A2,ADRVER3
+          BFFIX     A2,ADRERR2
+          MOV       CAR(A1),A3          ; A1 CONS, A2 FIX
+          BFFIX     A3,ADRERR1
+          MOV       #0,A4               ; A2=FIX > 0; A4=0
+          CNBGE     A2,#0,ADRVER6       ; mais si A2 < 0
+          MOV       #-1,A4              ;  alors A4=0000FFFF
+ADRVER6   BFFIX     CDR(A1),ADRERR1
+          MOV       CDR(A1),A1
+          RETURN
+ADRVER3   MOV       CAR(A1),A3          ; les 2 sont des CONS
+          BFFIX     A3,ADRERR1
+          MOV       CAR(A2),A4          ; hautes
+          BFFIX     A4,ADRERR2
+          BFFIX     CDR(A1),ADRERR1
+          MOV       CDR(A1),A1
+          BFFIX     CDR(A2),ADRERR2
+          MOV       CDR(A2),A2
+          RETURN
+
+ADRERR2   MOV       A2,A1               ; ce sont des erreurs
+ADRERR1   MOV       ADRTMP,A2           ; la fonction appellee
+          JMP       ERRNDA              ; l'argument n'est pas une adresse
+
+;   Petit utilitaire : cre'ation d'adresse.
+;   recoit une adresse dans A3 et A1. 
+;   Retourne une adresse canonique :
+;        hhhh hhhh hhhh hhhh . llll llll llll llll
+;        ssss ssss ssss ssss . slll llll llll llll  s= 0 ou 1
+
+ADRCREAT  LABEL                         ; cre'ation d'une adresse
+          CNBNE    A3,#0,ADRCREA1       ; 
+          CNBLT    A1,#0,ADRCREA2       ; 
+          RETURN
+ADRCREA1  CNBNE    A3,#-1,ADRCREA2
+          CNBLT    A1,#0,ADRCREAR       ; c'est un FIX < 0
+ADRCREA2  CONS     A3,A1                ; il FAUT conser
+ADRCREAR  RETURN
+
+
+;
+;         Manipulation de l'adresse de la zone code
+;
+;  ----------------------------------------
+          FENTRY    ACCODE,SUBRN
+;  ----------------------------------------
+          MOV       .ACCODE,A2
+          CNBEQ     A4,#0,ACCODEG       ; vers le GET
+          CNBEQ     A4,#1,ACCODES       ; vers le SET
+          MOV       #1,A1               ; 0 ou 1 argument
+          JMP       ERRWNA
+ACCODES   LABEL
+          POP       A1                  ; le dernier argument
+          CALL      VAGA1               ; traduction (h . l) -> adr
+          MOV       A1,CCODE
+ACCODEG   MOV       CCODE,A1            ; la veritable adresse
+          BRA       LOC                 ; transformee en (high . low)
+
+;  ----------------------------------------
+          FENTRY    AECODE,SUBR0
+;  ----------------------------------------
+          MOV       ECODE,A1            ; la veritable adresse
+          BRA       LOC                 ; transformee en (high . low)
+
+;=============================================
+;         FIN de ce qui est special au COMPILO
+;=============================================
+
+          ENDC
+
+;
+;         (MEMORY adr [val])
+;         Appele l'instruction MEMGET/MEMSET
+;
+;  ----------------------------------------
+          FENTRY    MEMORY,SUBRN
+;  ----------------------------------------
+          MOV       .MEMORY,A2          ; en cas d'erreur
+          CNBNE     A4,#2,MEMOR2        ; ce n'est pas un SET
+          POP       A1                  ; la valeur
+          POP       A3                  ; l'adresse de chargement
+          CALL      VAGA3               ;   conversion en vraie adresse
+          MEMSET    A1,A3               ; set MEMORY
+          RETURN                        ; et retourne cette valeur
+MEMOR2    CNBNE     A4,#1,MEMOR3        ; ce n'est pas un GET
+          POP       A1                  ; l'adresse de lecture
+          CALL      VAGA1               ;   conversion en vraie adresse
+          MEMGET    A1,A1               ; lecture de mem'moire
+          RETURN                        ; et retour
+MEMOR3    MOV       #2,A1               ; 1 ou 2 args
+          JMP       ERRWNA              ; il fallait 1 ou 2 args.
+
+;
+;         (BLTMEMORY borneinf bornesup dest)
+;         transfert [borneinf bornesup[ vers [dest ..
+;
+;  ----------------------------------------
+          FENTRY    BLTMEMORY,SUBR3
+;  ----------------------------------------
+          PUSH      A2
+          MOV       .BLTMEMORY,A2       ; en cas d'erreur
+          CALL      VAGA1               ; A1 <- borneinf
+          CALL      VAGA3               ; A3 <- dest
+          MOV       A1,A4               ; A4 <- borneinf
+          MOV       &0,A1               ; A1 <- bornesup (h . l)
+          CALL      VAGA1               ; A1 <- bornesup
+          MOV       A4,A2               ; A2 <- borneinf
+          MEMMOVM   A2,A1,A3            ; blit
+          POP       A1                  ; ramene bornesup
+          RETURN
+
+
+;  ----------------------------------------
+          FENTRY    PRECOMP,SUBRF
+;  ----------------------------------------
+          JMP       EVALCAR             ; suppose (e . lap)
+
+;
+;         Appel de routines en LLM3 : de type SUBR ou NSUBR
+;
+;
+;         (CALL <adr> <a1> <a2> <a3>)
+;  ----------------------------------------
+          FENTRY    LLCALL,SUBRN
+;  -----------------------------------------
+          CNBNE     A4,#4,CALLERR1      ; une adresse et trois registres
+          POP       A3                  ; dans l'ordre inverse
+          POP       A2
+          POP       A4                  ; temporairement
+          POP       A1                  ; de'pile l'adresse
+          PUSH      A2                  ; a cause de VAGA1
+          CALL      VAGA1
+          XTOPST    A1                  ; adresse en sommet de pile
+          MOV       A1,A2     
+          MOV       A4,A1
+          RETURN                        ; POP A1  BRI A1
+
+CALLERR1  MOV       .LLCALL,A2          ; le nom de la fonction
+          MOV       #4,A1               ; le nombre d'arguments
+          JMP       ERRWNA              ; Wrong Number Argument
+
+;
+;         (CALLN <adr> <larg>)
+;  ----------------------------------------
+          FENTRY    LLCALN,SUBR2
+;  ----------------------------------------
+          MOV       A2,A3               ; on s'en occupe apres
+          MOV       .LLCALN,A2          ; en cas d'erreur
+          CALL      VAGA1               ; on traduit en adresse
+          MOV       #0,A4               ; A4 compteur d'arguments
+          BRA       CALLN3              ; la boucle
+CALLN2    PUSH      CAR(A3)             ; empile la valeur precedente
+          CHKSTK    MSTACK,ERRFS
+          MOV       CDR(A3),A3          ; le reste dans A3
+          INCR      A4                  ; actualise le compteur
+CALLN3    LABEL
+          BTCONS    A3,CALLN2           ; il en reste
+          BRI       A1                  ; vers la continuation
+
+;========================================
+;
+;         fin du text
+;
+;========================================
+EPUR	  LABEL
+
+;========================================
+;
+;         Les donnees
+;
+;========================================
+
+          IMPURE
+
+;
+;         Fin de la zone impure sauvee par SAVE-CORE
+;
+
+ADRTMP    ADR       0
+EIMPUR    ADR       0                   ; ne pas enlever .....
+
+          END
+
+

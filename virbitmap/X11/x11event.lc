@@ -1,0 +1,47 @@
+defmodule #:display:x11
+files (x11event.ll)
+include (
+virstruct.ll
+)
+import (
+virutil
+x11_def
+x11struct
+)
+export (
+:event-mode 
+:flush-event 
+:eventp 
+:read-event
+:peek-event 
+:read-mouse 
+:add-event 
+:grab-event
+:ungrab-event
+:itsoft-event
+:parse-event
+:allow-event
+:disallow-event
+:allowed-event-p
+:compute-event-mask
+
+;;;; Function for events code
+:default-event-code
+:reparent-notify-code
+:visibility-change-code
+:client-message-code
+:map-window-code
+:unmap-window-code
+:modify-window-event-code
+:kill-window-event-code
+:repaint-window-event-code
+:keyboard-focus-event-code
+:movedrag-event-code
+:leavewindow-event-code
+:enterwindow-event-code
+:up-event-code
+:down-event-code
+:functionkey-event-code
+:ascii-event-code
+)
+

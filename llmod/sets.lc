@@ -1,0 +1,25 @@
+defmodule
+sets
+files (
+|sets.ll|
+)
+export (
+intersection
+nintersection
+union
+nunion
+set-difference
+nset-difference
+set-exclusive-or
+nset-exclusive-or
+adjoin
+subsetp
+set-equal
+transitive-closure
+power-set
+cartesian-product
+)
+import
+()
+include
+()

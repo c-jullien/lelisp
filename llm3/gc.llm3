@@ -1,0 +1,1648 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "3/19" "gc.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 3 "Garbage Collector"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/gc.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $
+
+
+          TITLE     GC                  ; LLM3 : garbage collecting.
+
+          XREFI     LLINIT,BSTACK       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,MSTACK
+          XREFI     LLINIT,ESTACK
+          XREFI     LLINIT,BCONS
+          XREFI     LLINIT,BSYMB
+          XREFI     LLINIT,BSTRG
+          XREFI     LLINIT,FSTRG
+          XREFI     LLINIT,BCODE
+          XREFI     LLINIT,CCODE
+          XREFI     LLINIT,ECODE
+          XREFI     LLINIT,BVECT
+          XREFI     LLINIT,FVECT
+          XREFI     LLINIT,BHEAP
+          XREFI     LLINIT,CHEAP
+          XREFI     LLINIT,EHEAP
+          XREFI     LLINIT,BNUMB
+          XREFI     LLINIT,FNUMB
+          XREFI     LLINIT,CNUMB
+          XREFI     LLINIT,BFLOAT
+          XREFI     LLINIT,FFLOAT
+          XREFI     LLINIT,FSYMB
+          XREFI     LLINIT,HASHTAB
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.UNDEF
+          XREFI     LLINIT,.ITSOFT
+          XREFI     LLINIT,.LLSYSTEM
+          XREFP     LLINIT,ITSOFT
+          XREFI     LLINIT,CSTSYSTE
+          XREFI     LLINIT,ITSTATE
+          XREFI     TOPERR,.SYSERROR    ; 2 - TOPERR
+          XREFP     TOPERR,ERRFS
+          XREFP     TOPERR,ERRFSGC
+          XREFP     TOPERR,ERRFM
+          XREFP     TOPERR,ERRFR
+          XREFP     TOPERR,ERRFF
+          XREFP     TOPERR,ERRFN
+          XREFP     TOPERR,ERRFV
+          XREFP     TOPERR,ERRATO
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRNAA
+          XREFP     TOPERR,ERRSTC
+          XREFP     TOPERR,ERRSYM
+          XREFP     TOPERR,ERRUDF
+          XREFP     TOPERR,ERRUDM
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRVEC
+          XREFI     PHYSIO,CURPRMPT     ; 4 - PHYSIO
+          XREFI     PHYSIO,TABCHAN
+          XREFI     PHYSIO,CNTRLC
+          XREFI     PHYSIO,BUFCH
+          XREFI     PHYSIO,RUBSTRG
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFI     READ,ASYMB
+          XREFI     READ,IMPLD
+          XREFI     READ,RINGUR
+          XREFI     READ,TABCH
+          XREFI     READ,CACHCH
+          XREFI     READ,BUFAT
+          XREFI     READ,CURREAD
+          XREFI     READ,CPKGC 
+          XREFI     READ,IMPLI
+          XREFI     MACROCH,TABCTYP    ; 6 - MACROCH
+          XREFI     MACROCH,TABCCOD
+          XREFP     PRINT,PROBJT       ; 7 - PRINT
+          XREFI     PRINT,BUFPN
+          XREFI     PRINT,IEXPLD
+          XREFI     PRINT,LEXPLD
+          XREFP     EVAL,FUNCALL       ; 8 - EVAL
+          XREFP     EVAL,FFUNCALL
+          XREFP     EVAL,SYSPROT
+          XREFI     EVAL,LLINK
+          XREFI     EVAL,EVALST
+          XREFI     EVAL,FORME
+          XREFI     EVAL,FUNCT
+          XREFI     EVAL,SAVEA1
+          XREFI     EVAL,SAVEA2
+          XREFI     EVAL,SAVEA3
+          XREFI     EVAL,SAVEA4
+          XREFI     EVAL,ERRNAME
+          XREFI     EVAL,INTRET
+          XREFI     EVAL,INTLLINK
+          XREFI     CNTRL,TABTYPFN      ; 10 - CNTRL
+          XREFI     CNTRL,TABCODFN
+          XREFP     SYMBS,GETFNS        ; 12 - SYMBS
+          XREFP     SYMBS,GETBI
+          XREFP     FNTSTD,LIST         ; 13 - FNTSTD
+          XREFI     FNTSTD,.LLCONS
+          XREFI     FNTSTD,.LLNULL
+          XREFI     NUMBER,.LLFLOAT     ; 14 - NUMBER
+          XREFI     NUMBER,.LLFIX
+          XREFI     NUMBER,FZERO
+          XREFI     NUMBER,FLTUN
+          XREFI     NUMBER,FLTMUN
+          XREFI     NUMBER,FLTIMAX
+          XREFI     NUMBER,FLTIMIN
+          XREFI     STRING,.STRING      ; 16 - STRING
+          XREFI     STRING,.VECTOR
+          XREFI     STRING,.FFSYMBOL
+          XREFI     STRING,BUFSTRG
+
+          XDEFP     GCINFO
+          XDEFP     GETTYPE
+          XDEFP     GCCONS
+          XDEFP     GCSYMB
+          XDEFP     GCSTRG
+          XDEFP     GCVECT
+          XDEFP     GCFLOAT
+          XDEFP     GCNUMB
+          XDEFP     HGC
+          XDEFP     INI_GC
+          XDEFP     LLSEND
+          XDEFP     GCSTMRK
+
+          XDEFP     SMPVECT
+          XDEFP     SMPSTRG
+
+
+;
+;         Donnees du G.C.
+;         ===============
+;
+
+          IMPURE
+
+NGCCONS   ADR       0                   ; nb de GC CONS depuis le debut
+NGCSYMB   ADR       0                   ; nb de GC SYMB depuis le debut
+NGCSTRG   ADR       0                   ; nb de GC STRG depuis le debut
+NGCVECT   ADR       0                   ; nb de GC VECT depuis le debut
+NGCFLOAT  ADR       0                   ; nb de GC FLOAT depuis le debut
+NGCNUMB   ADR       0                   ; nb de GC NUMB depuis le debut
+NGCH      ADR       0                   ; nb de HGC (tas) depuis le debut
+NGCUSER   ADR       0                   ; nb de GC USER depuis le debut
+
+FREENU    ADR       0                   ; nb d'unites d'entiers recuperes
+FREENM    ADR       0                   ; nb de milliers (k) d'entiers recuperes
+FREEFU    ADR       0                   ; nb d'unites de flottants recuperes
+FREEFM    ADR       0                   ; nb de milliers (k) de flottants recuperes
+FREEVU    ADR       0                   ; nb d'unite' de vecteurs recuperes
+FREEVM    ADR       0                   ; nb de milliers (k) de vecteurs recuperes
+FREESU    ADR       0                   ; nb d'unite's de chaines recuperees.
+FREESM    ADR       0                   ; nb de milliers (k) de chaines recuperees.
+FREEYU    ADR       0                   ; nb d'unites de symboles libres
+FREEYM    ADR       0                   ; nb de milliers (k) de symboles libres
+FREELU    ADR       0                   ; nb d'unites de cons recuperes.
+FREELM    ADR       0                   ; nb de milliers (k) de cons recuperes
+
+SWHEAP    ADR       0                   ; balayage du HEAP
+CPHEAP    ADR       0                   ; copie du HEAP
+OSWHEAP   ADR       0                   ; auxiliaire de copie.
+
+
+          PURE
+
+;
+;         INI_GC : initialise le GC
+;         =========================
+;
+
+INI_GC    LABEL      
+
+          MAKFNT    GCUSER,#2,"gc" 
+          MAKFNT    GCALARM,#7,"gcalarm" 
+          MAKFNT    GCALARB,#15,"gc-before-alarm" 
+          MAKFNT    GCINFO,#6,"gcinfo" 
+          MAKCST    SIZECD,#4,"code" 
+          MAKCST    SIZEHP,#4,"heap" 
+
+          MAKFNT    TCONSCL,#7,"tconscl" 
+          MAKFNT    TCONSMK,#7,"tconsmk" 
+          MAKFNT    TCONS,#5,"tcons" 
+          MAKFNT    TCONSP,#6,"tconsp" 
+
+          MAKFNT    FRCONS,#8,"freecons"
+          MAKFNT    FRTREE,#8,"freetree"
+
+          MAKFNT    GETTYPE,#7,"type-of" 
+          MAKFNT    SUBTYPEP,#8,"subtypep"
+          MAKFNT    TYPEP,#5,"typep"
+          MAKFNT    LLSEND,#4,"send" 
+          MAKFNT    SUPSEND,#10,"send-super"
+          MAKFNT    CSEND,#5,"csend" 
+          MAKFNT    SENDBI,#5,"send2"
+          MAKFNT    SENDERRO,#10,"send-error"
+
+          MOV       .LLSYSTEM,CPKGC       ; #:system:xxxx
+
+          MAKFNT    STRCTACC,#12,"structaccess"
+          MAKCST    BIGTYPE,#11,"bignum-type"
+          MAKFNT    SMPVECT,#12,"mapallvector"
+          MAKFNT    SMPSTRG,#12,"mapallstring"
+
+          MAKCST    FNALZEFF,#13,"finalize-flag"
+          MOVNIL    CVAL(A1)
+          MAKFNT    FNALZEFN,#17,"finalize-function"
+
+          MOVNIL    CPKGC
+
+          MOV       #0,NGCCONS
+          MOV       #0,NGCSYMB
+          MOV       #0,NGCSTRG
+          MOV       #0,NGCVECT
+          MOV       #0,NGCFLOAT
+          MOV       #0,NGCNUMB
+          MOV       #0,NGCUSER
+          MOV       #0,NGCH             ; raz le compteur des HGC
+
+          RETURN
+
+;
+;         Entrees du Garbage Collecting
+;         =============================
+;
+
+HGC       LABEL                         ; entre'e de l'HyperGC
+          INCR      NGCH                ; le compteur d'HGC
+          BRA       GCGO                ; et c'est parti.
+
+GCCONS    LABEL      
+          INCR      NGCCONS
+          CALL      GCGO
+          CNBGT     FREELM,#0,GCRET     ; plus de 1000 CONS..
+          CNBGE     FREELU,#400,GCRET   ; tout va bien au - 400 CONS!
+          JMP       ERRFM               ; plus de CONS !
+
+GCSYMB    LABEL      
+          INCR      NGCSYMB
+          CALL      GCGO
+          CABNE     FSYMB,#0,GCRET      ; il en reste.
+          JMP       ERRATO              ; MORT!
+
+GCSTRG    LABEL      
+          INCR      NGCSTRG
+          CALL      GCGO
+          BFNIL     FSTRG,GCRET         ; il en reste.
+          JMP       ERRFR               ; MORT!
+
+GCVECT    LABEL      
+          INCR      NGCVECT
+          CALL      GCGO
+          BFNIL     FVECT,GCRET         ; il en reste.
+          JMP       ERRFV               ; MORT!
+
+GCFLOAT   LABEL      
+          INCR      NGCFLOAT
+          CALL      GCGO
+          CNBGT     FREEFM,#0,GCRET     ; plus de 1k float.
+          CNBGT     FREEFU,#0,GCRET     ; il en reste au moins 1
+          JMP       ERRFF               ; MORT!
+
+GCNUMB    LABEL      
+          INCR      NGCNUMB
+          CALL      GCGO
+          CNBGT     FREENM,#0,GCRET     ; plus de 1k numb.
+          CNBGT     FREENU,#0,GCRET     ; il en reste au moins 1
+          JMP       ERRFN               ; MORT!
+
+GCRET     LABEL
+          RETURN
+
+
+;         sauve le contexte de l'appelant
+;         -------------------------------
+
+GCGO      LABEL      
+
+     IFNE GCDEBUG
+          TTYMSG    #6," SAVE "
+     ENDC
+          PUSH      A1
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4                  ; sauve les 4 registres garbageables
+
+;         sauve les mots me'moire a` nettoyer
+;         -----------------------------------
+
+;         1er type : a` restaurer absolument pour e^tre re'entrant
+
+          PUSH      LLINK               ; EVAL
+          PUSH      EVALST              ; EVAL
+          PUSH      FORME               ; EVAL
+          PUSH      FUNCT               ; EVAL
+          PUSH      SAVEA1              ; EVAL
+          PUSH      SAVEA2              ; EVAL
+          PUSH      SAVEA3              ; EVAL
+          PUSH      SAVEA4              ; EVAL
+          PUSH      ERRNAME             ; EVAL
+          PUSH      INTRET              ; EVAL
+          PUSH      INTLLINK            ; EVAL
+          PUSH      IEXPLD              ; sauve l'ancien indic EXPLODE
+          PUSH      IMPLI               ; sauve l'ancien indic IMPLODE
+          PUSH      RINGUR              ; READ
+          PUSH      CURREAD             ; READ
+          PUSH      IMPLD               ; READ
+          PUSH      LEXPLD              ; PRINT
+
+;         2e`me type : a` marquer simplement
+
+          STACK     A4                  ; pour e'viter de faire les POPs!
+
+;         le lecteur n'est he'las pas vraiment re'entrant.
+
+          PUSH      ASYMB               ; READ
+          PUSH      TABCH               ; READ
+          PUSH      CACHCH              ; READ
+          PUSH      BUFAT               ; READ
+          PUSH      CPKGC               ; READ
+
+          PUSH      TABTYPFN
+          PUSH      TABCODFN
+
+          PUSH      TABCTYP
+          PUSH      TABCCOD
+
+          PUSH      BUFPN
+          PUSH      BUFSTRG
+          PUSH      CURPRMPT
+          PUSH      TABCHAN
+          PUSH      CNTRLC
+          PUSH      BUFCH
+          PUSH      RUBSTRG
+          PUSH      CSTSYSTE
+          PUSH      FZERO               ; 0.0
+          PUSH      FLTUN               ; 1.0
+          PUSH      FLTMUN              ; -1.0
+          PUSH      FLTIMAX             ; +32767.
+          PUSH      FLTIMIN             ; -32767.
+
+          PUSH      A4                  ; un POP A4, SSTACK A4 nettoiera
+
+
+;
+;         Prote`ge les indicateurs des IMPLODE/EXPLODE
+;         car GC-BEFORE-ALARM / GCALARM peuvent imprimer ou lire.
+
+
+          MOVNIL    IEXPLD              ; plus en mode EXPLODE
+          MOVNIL    IMPLI               ; plus en mode IMPLODE
+          MOVNIL    LLINK               ; pas d'env lexical.
+
+;         appel l'IT soft BEFORE-GCALARM
+;         ------------------------------
+
+     IFNE GCDEBUG
+          TTYMSG    #6," BEFR "
+     ENDC
+          MOV       .GCALARB,A1         ; nom de l'IT  : GC-BEFORE-ALARM
+          MOVNIL    A2                  ; sans argument
+          JCALL     ITSOFT              ; et on l'exe'cute
+
+
+;         lance le GC effectivement
+;         -------------------------
+
+          CALL      GCNOIT              ; appelle la se'quence initerruptible
+
+
+;         appel l'IT soft GCALARM
+;         -----------------------
+
+     IFNE GCDEBUG
+          TTYMSG    #6," STEP "
+     ENDC
+          MOV       .GCALARM,A1         ; nom de l'IT   : GCALARM
+          MOVNIL    A2                  ; sans argument
+          JCALL     ITSOFT              ; et on l'exe'cute
+
+
+;         restaure le contexte de l'appelant
+;         --------------------------------------
+
+     IFNE GCDEBUG
+          TTYMSG    #6," REST "
+     ENDC
+          POP       A4                  ; cf la sauvagarde
+          SSTACK    A4
+
+;         a` restaurer pour e^tre re'entrant.
+
+          POP       LEXPLD              ; PRINT
+          POP       IMPLD               ; READ
+          POP       CURREAD             ; READ
+          POP       RINGUR              ; READ
+          POP       IMPLI               ; restaure l'ancien indic IMPLODE
+          POP       IEXPLD              ; restaure l'ancien indic EXPLODE
+          POP       INTLLINK
+          POP       INTRET
+          POP       ERRNAME
+          POP       SAVEA4              ; les mots a` restaurer
+          POP       SAVEA3
+          POP       SAVEA2
+          POP       SAVEA1
+          POP       FUNCT
+          POP       FORME
+          POP       EVALST
+          POP       LLINK
+
+          POP       A4                  ; restaure les 4 reg. garbageables
+          POP       A3
+          POP       A2
+          POP       A1
+
+GCEND     LABEL      
+GCPOPJ    RETURN                        ; et c'est tout
+
+;  -------------------------------------------
+;         DEBUT du MARQUAGE : PAS d'IT !!!!
+;  -------------------------------------------
+
+GCNOIT    LABEL
+          CABEQ     ITSTATE,#0,GCST0    ; IT elles e'taient de'ja` interdites
+          MOV       @GCST00,A3          ; la routine prote'ge'e
+          JCALL     SYSPROT
+          POP       A1                  ; la valeur de retour.
+          MOV       #1,ITSTATE
+          BRI       A3
+
+GCST00    MOV       #0,ITSTATE          ; c'est interdit
+
+;         marquage de la pile
+;         -------------------
+
+GCST0     LABEL                         ; de'but se'quence non interruptible
+
+          GCSTART
+
+     IFNE GCDEBUG
+          TTYMSG    #6," STAK "
+     ENDC
+GCSTMRK   LABEL
+          STACK     A4                  ; re'cupe`re le pointeur de pile.
+          MOV       BSTACK,A3           ; le de'but de la pile
+GCST1     POPR      A4,A1
+          CALL      MARK                ; on marque
+          CABNE     A4,A3,GCST1         ; jusqu'au de'but de la pile
+
+;         marquage de la table de hachage
+;         -------------------------------
+;         n'utilise pas CALL MARK, car les symboles te^te de bucket
+;         ne doivent pas e^tre marque's.
+;         C'est donc un cas explicite de "pointeur mou".
+
+     IFNE GCDEBUG
+          TTYMSG    #6," HASH "
+     ENDC
+          MOV       HASHTAB,A1
+          STMARK    A1                 ; et c'est tout
+
+
+;         marquage de la zone symbole
+;         ---------------------------
+
+     IFNE GCDEBUG
+          TTYMSG    #6," SYMB "
+     ENDC
+          HGSIZE    HASHTAB,A4          ; taille de la table de hachage
+          DECR      A4                  ; plus rapide que BRA ..
+GCAT0     HPXMOV    HASHTAB,A4,A4       ; nouveau bucket
+          BRA       GCAT8               ; direct vers le test
+GCAT1     MOV       A4,A3               ; pour le test d'arre^t
+          BTSTRG    PNAME(A4),GCAT5     ; cas 2D
+GCAT2     MOV       PNAME(A4),A4        ; avance en 3D
+
+GCAT5     LABEL                         ; le symbole courant.
+          MOV       CVAL(A4),A1         ; la cval
+          CABEQ     A1,.UNDEF,GCATM1    ; symbole inde'fini
+          CALL      MARK
+GCATM1    MOV       PLIST(A4),A1        ; la p-list
+          BTNIL     A1,GCATM2           ; pas de P-list
+          CALL      MARK
+GCATM2    MOV       FVAL(A4),A1         ; la fval
+          CABEQ     A1,#0,GCATM3        ; pas de fval
+          CALL      MARK
+GCATM3    MOV       PKGC(A4),A1         ; le pakage-cell
+          BTNIL     A1,GCATM4           ; pas de package
+          CALL      MARK
+GCATM4    MOV       OVAL(A4),A1         ; la obj-val
+          BTNIL     A1,GCATM5
+          CALL      MARK
+GCATM5    MOV       ALINK(A4),A1        ; le pname
+          BTSTRG    A1,GCATM9           ; c'est un symbole 3D
+          MOV       PNAME(A4),A1        ; c'est un symbole 2D
+          BTSTRG    A1,GCATM9
+          MOV       ALINK(A1),A1        ; le vrai PNAME
+GCATM9    CALL      MARK
+
+          CABNE     A4,A3,GCAT2         ; more
+GCAT6     MOV       ALINK(A4),A4        ; symbole 2D suivant
+GCAT8     BTSYMB    A4,GCAT1            ; il en reste
+          SOBGEZ    A4,GCAT0            ; autre bucket
+
+GCAT9     LABEL      
+          BRA       GCFNLZ		; vers la finalisation
+
+
+;
+;         Marquage d'un objet Lisp quelconque
+;         (ne doit pas toucher a` A3 et A4)
+;         (si stop & copy, remet la valeur
+;          dans A1 pour le forwarding)
+;         ================================
+;
+
+MARK      LABEL                         ; marque l'objet dans A1
+
+          GCMARK                        ; c'est une belle macro maintenant.
+
+;            BFLISP    A1,MARKR            ; je ne sais pas marquer.
+;            BTMARK    A1,MARKR            ; marque' c'est marque'!
+;            STMARK    A1                  ; sinon c,a l'est.
+;            BTCONS    A1,MARKL            ; on privilegie les listes.
+;            BTVECT    A1,MARKV            ; marquage spe'cialise' vecteurs
+;            BTSTRG    A1,MARKT            ; marquage spe'cialise' chai^nes
+;  MARKR     RETURN     
+;  MARKT     MOV       TYP(A1),A1          ;;; marquage d'un type,
+;            BRA       MARK
+;  MARKL     CHKSTK    ESTACK,ERRFSGC      ;;; marque la liste contenue dans A1
+;            PUSH      CDR(A1)             ; sauve le reste
+;            MOV       CAR(A1),A1          ; l'e'le'ment de liste a` marquer.
+;            CALL      MARK                ; re'curse sur les CARs
+;            POP       A1                  ; re'cupe`re le CDR
+;            BRA       MARK                ; ite`re sur les CDRs
+;  MARKV     PUSH      A3                  ; A3/A4 inchange's dans MARK.
+;            HGSIZE    A1,A3               ; nombre d'e'le'ments du vecteur.
+;            PUSH      A1                  ; le vecteur (en &0)
+;            CHKSTK    ESTACK,ERRFSGC      ; erreur fatale!!
+;            BRA       MARKV4              ; de'marre bien la boucle.
+;  MARKV2    HPXMOV    &0,A3,A1            ; e'le'ment suivant.
+;            PUSH      A3
+;            CALL      MARK                ; marque l'e'le'ment quelconque.
+;            POP       A3
+;  MARKV4    SOBGEZ    A3,MARKV2           ; on boucle sur le nb d'e'le'ments.
+;            POP       A1                  ; le vecteur
+;            POP       A3                  ; A3/A4 inchange's dans MARK.
+;            BRA       MARKT
+
+          RETURN
+
+
+;
+;         F I N A L I Z A T I O N
+;         =======================
+;
+; Le version 15.26 posse`de un "finalizateur" expe'rimental
+; Ce finaliseur aurait du^ se trouver dans le balayage des
+; vecteurs. Mais l'architecture actuelle du GC lance le compacteur
+; avant les balayeurs. Pour e'viter de tout chambouler le code 
+; a` quelques jours de la release, je cre'e une passe supple'mentaire
+; pour les vecteurs qui est un peu plus che`re que la technique
+; pre'ce'dente mais qui va e'viter bien des malheurs. [JER]
+
+GCFNLZ    LABEL
+          MOV       .FNALZEFF,A2	; le nom #:system:finalize-flag
+          MOV       CVAL(A2),A2		; sa valeur courante.
+          BTNIL     A2,GCFNLZ9		; pas de finalisateur actif
+          MOV       .FNALZEFN,A2	; le nom de la fonction
+          GFTYPE    A2,A3               ; le type courant
+          CABNE     A3,#SUBR1,GCFNLZ9   ;  la fonction DOIT e^tre SUBR1
+          MOV       FVAL(A2),A3		; A3 = la fval pre^te.
+          MOV       BVECT,A1		; premier vecteur
+GCFNLZ2   BTMARK    A1,GCFNLZ8		; c'e'tait marque' : au suivant
+          MOV       VAL(A1),A2		; la valeur du non marque'
+          BTNIL     A2,GCFNLZ8		; pas un desalloue'
+          BTVECT    A2,GCFNLZ8		; idem (un ancien de la liste libre)
+          PUSH      A1			; le temps du funcall
+          PUSH      A3			; la Fval pre^te
+          PUSH      @GCFNLZ6		; l'adresse de retour
+          BRI       A3			; appel rapide d'une SUBR1
+GCFNLZ6   POP       A3			; la fval pre^te
+          POP       A1			; le vecteur courant
+GCFNLZ8   NXVECT    A1,GCFNLZ2		; au suivant
+         
+GCFNLZ9   BRA      GCOMPACT		; c'est tout bon, vers le compacteur
+
+
+;
+;         C O M P A C T : tasse le tas (sans effacer les bits de marquage)
+;         =============
+;
+
+; Durant la phase de compactage, A3 et A4 contiennent des adresses de TAS !!!!
+
+GCOMPACT  LABEL      
+          MOV       BHEAP,A3            ; initialisation du balayage
+          MOV       BHEAP,A4            ; initialisation de la copie.
+          BRA       HSWEEP8             ; on de'marre la boucle ou` il le faut
+
+HSWEEP2   LABEL
+          MOV       VAL(A3),A1          ; A1 = obj correspondant
+          BTSTRG    A1,HSWEEP4          ; chai^ne ?
+          BTVECT    A1,HSWEEP5          ; vecteur ?
+          BTFLOAT   A1,HSWEEP6          ; flottant ?
+          BTSYMB    A1,HSWEEP7          ; symbole ?
+          TTYMSG    #13,"* HEAP-OVNI *"
+          HOVNI     BHEAP,CHEAP,EHEAP,OSWHEAP ; memory dump
+          BRA       HSWEEP9
+
+HSWEEP4   LABEL                         ; c'est une chai^ne!
+          MOV       A3,OSWHEAP          ; de'but de la zone a` copier
+          MOV       TYP(A3),A2
+          NXHB      A2,A3               ; avance dans le balayage
+          BFMARK    A1,HSWEEP8          ; chai^ne non marque'e.
+          CABNE     OSWHEAP,A4,HSWEEP41 ; il faut recopier
+          MOV       A3,A4               ; mise a` niveau de la copie
+          BRA       HSWEEP8
+HSWEEP41  HBLT      OSWHEAP,A3,A4       ; de [oswheap swheap[ -> [cpheap ...
+          MOV       A4,VAL(A1)
+          NXHB      A2,A4               ; mise a` niveau de la copie.
+          BRA       HSWEEP8
+
+HSWEEP5   LABEL                         ; c'est un vecteur!
+          MOV       A3,OSWHEAP          ; de''but de la zone a` copier
+          MOV       TYP(A3),A2          ; A2 = taille correspondante
+          NXHP      A2,A3               ; avance dans le balayage
+          BFMARK    A1,HSWEEP8          ; vecteur non marque'
+          CABNE     OSWHEAP,A4,HSWEEP51 ; il faut recopier
+          MOV       A3,A4               ; mise a` niveau de la copie
+          BRA       HSWEEP8
+HSWEEP51  HBLT      OSWHEAP,A3,A4       ; de [oswheap swheap[ -> [cpheap ...
+          MOV       A4,VAL(A1)
+          NXHP      A2,A4               ; mise a` niveau de la copie.
+          BRA       HSWEEP8
+
+HSWEEP6   LABEL                         ; c'est un nombre flottant
+          MOV       A3,OSWHEAP          ; de'but de la zone a` copier
+          NXHF      A3                  ; avance dans le balayage
+          BFMARK    A1,HSWEEP8          ; flottant non marque'
+          CABNE     OSWHEAP,A4,HSWEEP61 ; il faut recopier
+          MOV       A3,A4               ; mise a` niveau de la copie
+          BRA       HSWEEP8
+HSWEEP61  HBLT      OSWHEAP,SWHEAP,A4   ; de [oswheap swheap[ -> [cpheap ...
+          MOV       A4,VAL(A1)
+          NXHF      A4                  ; mise a` niveau de la copie.
+          BRA       HSWEEP8
+
+HSWEEP7   LABEL                         ; c'est un symbole
+          MOV       A3,OSWHEAP          ; de'but de la zone a` copier
+          NXHS      A3                  ; avance dans le balayage
+          BFMARK    A1,HSWEEP8          ; symbole non marque'
+          CABNE     OSWHEAP,A4,HSWEEP71 ; il faut recopier
+          MOV       A3,A4               ; mise a` niveau de la copie
+          BRA       HSWEEP8
+HSWEEP71  HBLT      OSWHEAP,A3,A4       ; de [oswheap swheap[ -> [cpheap ...
+          MOV       A4,VAL(A1)
+          NXHS      A4                  ; mise a` niveau de la copie.
+
+HSWEEP8   CHBLT     A3,CHEAP,HSWEEP2    ; il reste des objets dans le tas.
+          MOV       A4,CHEAP            ; le nouveau CHEAP!
+HSWEEP9   LABEL      
+          BRA       GCSWEEP
+
+
+
+;
+;         S W E E P :	(re)construit les listes libres
+;			et efface les bits de marquage.
+;         ===========
+
+GCSWEEP   LABEL      
+
+;         balaie la zone NUMB
+;         -------------------
+
+     IFNE GCDEBUG
+          TTYMSG    #6," SWEN "
+     ENDC
+          MOV       #0,A1               ; init FNUMB
+          MOV       #0,A2               ; init FREEN U
+          MOV       #0,A3               ; init FREEN M
+          MOV       CNUMB,A4            ; les premiers boxe's sont toujours garde's!
+          BFNUMB    A4,GCSWN4           ; pas de NUMB.
+GCSWN1    TCMARK    A4,GCSWN3           ; c'e'tait marque' : au suivant
+          MOV       A1,VAL(A4)          ; chainage
+          MOV       A4,A1               ; nouveau FNUMB
+          INCRINK   A2,A3               ; comptage en k, FREENU-FREENM
+GCSWN3    NXNUMB    A4,GCSWN1           ; au suivant
+GCSWN4    MOV       A1,FNUMB            ; nouveau FREE NUMB
+          MOV       A2,FREENU           ; range le nb d'entiers re'cupe're's.
+          MOV       A3,FREENM           ; le nb de milliers.
+
+;         balaie la zone FLOAT
+;         --------------------
+
+     IFNE GCDEBUG
+          TTYMSG    #6," SWEF "
+     ENDC
+          MOV       #0,A1               ; init FFLOAT
+          MOV       #0,A2               ; init FREEF U
+          MOV       #0,A3               ; init FREEF M
+          MOV       BFLOAT,A4
+          BFFLOAT   A4,GCSWF4           ; pas de flottants
+GCSWF1    TCMARK    A4,GCSWF3           ; c'e'tait marque : au suivant
+          MOV       A1,VAL(A4)          ; chainage
+          MOV       A4,A1               ; nouveau FFLOAT
+          INCRINK   A2,A3               ; comptage en k, FREEFU-FREEFM
+GCSWF3    NXFLOAT   A4,GCSWF1           ; au suivant
+GCSWF4    LABEL                         ; balayage termine
+          MOV       A1,FFLOAT           ; nouveau FREE FLOAT
+          MOV       A2,FREEFU           ; range le nb de flottants re'cupe're's
+          MOV       A3,FREEFM           ; range le nb de milliers.
+
+;         balaie la zone VECTOR
+;         ---------------------
+
+     IFNE GCDEBUG
+          TTYMSG    #6," SWEV "
+     ENDC
+          MOVNIL    A1                  ; init FVECT
+          MOV       #0,A2               ; init FREEV U
+          MOV       #0,A3               ; init FREEV M
+          MOV       BVECT,A4
+GCSWV1    TCMARK    A4,GCSWV2           ; c'e'tait marque' : au suivant
+          MOV       A1,VAL(A4)          ; vector
+          MOV       A4,A1               ; nouveau FVECT
+          INCRINK   A2,A3               ; comptage en k, FREEVU-FREEVM
+GCSWV2    NXVECT    A4,GCSWV1           ; au suivant
+          MOV       A1,FVECT            ; nouveau FREE VECT
+          MOV       A2,FREEVU           ; range le nb de vecteurs re'cupe're's.
+          MOV       A3,FREEVM           ; range le nb de milliers.
+
+;         balaie la zone CHAINE
+;         ---------------------
+
+     IFNE GCDEBUG
+          TTYMSG    #6," SWES "
+     ENDC
+          MOVNIL    A1                  ; init FSTRG
+          MOV       #0,A2               ; init FREES U
+          MOV       #0,A3               ; init FREES M
+          MOV       BSTRG,A4
+GCSWS1    TCMARK    A4,GCSWS2           ; c'etait marque' : a` la suivante.
+          MOV       A1,VAL(A4)          ; chaine
+          MOV       A4,A1               ; nouveau FSTRG
+          INCRINK   A2,A3               ; comptage en k, FREESU-FREESM
+GCSWS2    NXSTRG    A4,GCSWS1           ; au suivant
+          MOV       A1,FSTRG            ; nouveau FREE STRING
+          MOV       A2,FREESU           ; range le nb de chaines re'cupe're'es.
+          MOV       A3,FREESM           ; range le nb de milliers.
+
+;         balaie la zone SYMBOL
+;         ---------------------
+
+;         Le balayage de cette zone n'est pas lineaire. Il passe
+;         par la table de hachage et ne visite que les symboles
+;         se trouvant dans les diffe'rents buckets.
+
+     IFNE GCDEBUG
+          TTYMSG    #6," SWEY "
+     ENDC
+          MOV       #0,A2               ; init FREEY U
+          MOV       #0,A3               ; init FREEY M
+          MOV       FSYMB,A1            ; comptage du reste des symboles
+          BRA       GCSWYC3             ; pre^t pour le comptage
+GCSWYC2   MOV       ALINK(A1),A1        ; et c,a roule
+          INCRINK   A2,A3               ; comptage en k, FREEYU-FREEYM
+GCSWYC3   BTSYMB    A1,GCSWYC2          ; pour tout compter
+          MOV       A2,FREEYU           ; le nb de symboles restants
+          MOV       A3,FREEYM           ; les milliers
+
+          HGSIZE    HASHTAB,A1          ; la taille de la table de hachage
+          BRA       GCSWY9              ; pour calculer le 1er index
+GCSWY2    MOV       A1,A2               ; A2 <- la te^te 3D pre'ce'dente (index)
+          HPXMOV    HASHTAB,A1,A1       ; A1 <- le symbole courant
+          BRA       GCSWY8              ; directement sur le test
+GCSWY3    MOV       A1,A3               ; A3 <- la te^te 3D courante
+          MOV       A1,A4               ; A4 <- le symbole 3D pre'ce'dent
+GCSWY4    TCMARK    A1,GCSWY5           ; marque' ? de'marque et continue.
+          BFVAR     A1,GCSWY5           ; je garde les constantes syste`me
+;         teste si on peut detruire le symbole :
+;         cf le point d'entre'e ISTDSYM (de read.llm3)
+          CABNE     CVAL(A1),.UNDEF,GCSWY5; il y a une CVAL
+          BFNIL     PLIST(A1),GCSWY5    ; il y a une PLIST
+          BFNIL     OVAL(A1),GCSWY5     ; il y a une OVAL
+          PUSH      A2                  ; le temps du calcul (a de'piler!)
+          GFTYPE    A1,A2
+          CNBEQ     A2,#0,GCSWYS        ; il n'y a pas de FTYPE : snap!
+          POP       A2                  ; re'cupe`re le reg de travail
+GCSWY5    LABEL                         ; le symbole est a` conserver.
+          BTSTRG    PNAME(A1),GCSWY6    ; c'est pas un lien 3D
+GCSWY50   MOV       A1,A4               ; A4 <- le symbole 3D pre'ce'dent
+          MOV       PNAME(A1),A1        ; A1 <- avance dans la liste 3D
+          CABNE     A1,A3,GCSWY4        ; Il en reste dans la sous-liste 3D
+GCSWY6    MOV       A3,A2               ; A2 <- la tete 3D pre'ce'dente
+          MOV       ALINK(A3),A1        ; symbole suivant
+GCSWY8    BTSYMB    A1,GCSWY3           ; il en reste dans le bucket
+GCSWY9    SOBGEZ    A1,GCSWY2           ; il reste des buckets.
+          BRA       GCSWCONS            ; vers le balayage des CONS
+
+;         Elimine le symbole A1 et accrochage a` la liste libre des symboles.
+;         A2 contient le symbole 2D pre'ce'dent (ou un nombre indiquant
+;            l'index du bucket, s'il s'agit de son 1er symbole)
+;         A3 contient la te^te 3D du symbole s'il en a une.
+;         A4 contient le symbole 3D pre'ce'dent
+
+GCSWYS    LABEL
+
+          POP       A2                   ; le temps du GTYPE
+
+     IFNE GCDEBUG
+          TTYMSG    #10," GCSWSYMB "
+          PUSH      A1
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          XREFP     STRING,STRINGA1
+          JCALL     STRINGA1
+          HGSIZE    A1,A2
+          TTYSTRG   A2,A1
+          POP       A4
+          POP       A3
+          POP       A2
+          POP       A1
+     ENDC
+
+          BTSTRG    PNAME(A1),GCSWYS1   ; dans une liste 2D
+          CABNE     A1,A3,GCSWYS2       ; au milieu d'une liste 3D
+          BRA       GCSWYS3             ; en te^te de liste 3D
+
+GCSWYS1   LABEL                         ;;; e'limination dans une liste 2D
+     IFNE GCDEBUG
+          TTYMSG    #10," GCSWS_2D "
+      ENDC
+          MOV       ALINK(A1),A4        ; le prochain symbole a` visiter
+          BTFIX     A2,GCSWYS12         ; en te^te de bucket
+          MOV       A4,ALINK(A2)        ; on snappe le ALINK
+          BRA       GCSWYS14
+GCSWYS12  HPMOVX    A4,HASHTAB,A2       ; le bucket est vide.
+GCSWYS14  MOV       FSYMB,ALINK(A1)     ; rajoute A1 dans la FSYMB
+          MOV       A1,FSYMB
+          INCRINK   FREEYU,FREEYM       ; le compteur de symboles libres.
+          MOV       A4,A1
+          BRA       GCSWY8              ; Visite le symbole A1
+
+GCSWYS2   LABEL                         ;;; e'limination au milieu d'une liste 3D
+     IFNE GCDEBUG
+          TTYMSG    #11," GCSWS_M3D "
+      ENDC
+          MOV       PNAME(A1),PNAME(A4) ; couic !
+          CABEQ     A3,PNAME(A3),GCSWYS20; Il ne reste qu'un symbole en 3D!
+          ; il reste plusieurs symboles
+          MOV       FSYMB,ALINK(A1)     ; rajoute A1 dans la FSYMB
+          MOV       A1,FSYMB
+          INCRINK   FREEYU,FREEYM       ; le compteur de symboles libres.
+          MOV       A4,A1               ; l'ancien symbole
+          BRA       GCSWY50             ; on boucle en 3D
+          ; ici il ne reste qu'un symbole dans la liste 3D
+GCSWYS20  LABEL
+          MOV       ALINK(A1),PNAME(A3) ; le vrai PNAME
+          MOV       FSYMB,ALINK(A1)     ; rajoute A1 dans la FSYMB
+          MOV       A1,FSYMB
+          INCRINK   FREEYU,FREEYM       ; le compteur de symboles libres.
+          BRA       GCSWY6              ; Avance en 2D sur A3
+
+; sweep de liste 3D (le plus dur!)
+; principe: on efface la tete de liste 3D
+;           on ajouste PNAME si il ne reste qu'un element
+;           on explore la nouvelle liste obtenue (ou l'e'lement) comme
+;              un debut de liste 3D normal (->GCSWY3)
+
+GCSWYS3   LABEL                         ;;; e'limination en te^te d'une liste 3D
+     IFNE GCDEBUG
+          TTYMSG    #11," GCSWS_T3D "
+     ENDC
+          BTFIX     A2,GCSWYS30         ; on est aussi en tete de bucket!
+          MOV       PNAME(A3),ALINK(A2) ; couic !
+          BRA       GCSWYS31
+GCSWYS30  HPMOVX    PNAME(A3),HASHTAB,A2; couic!
+GCSWYS31  MOV       A3,A4               ; pour le test de fin
+GCSWYS32  MOV       PNAME(A4),A4        ; cherche fin de liste 3D
+          CABNE     PNAME(A4),A3,GCSWYS32; on boucle sur les liens 3D
+          MOV       PNAME(A3),PNAME(A4) ; A3 est efface de la liste circulaire
+          MOV       PNAME(A3),A3        ; la nouvelle tete (pas exploree)
+          CABNE     A3,PNAME(A3),GCSWYS33; ne reste-t-il qu'un element ?
+          ; il ne reste qu'un element dans la 3D
+          MOV       ALINK(A3),PNAME(A3) ; le vrai PNAME          
+          MOV       ALINK(A1),ALINK(A3) ; le ALINK 2D
+          BRA       GCSWYS34            ; go go go, Jhonny go
+          ; il en reste plusieurs
+GCSWYS33  MOV       ALINK(A1),ALINK(A3) ; snap en 2D
+GCSWYS34  MOV       FSYMB,ALINK(A1)     ; rajoute A1 dans la FSYMB
+          MOV       A1,FSYMB
+          INCRINK   FREEYU,FREEYM       ; le compteur de symboles libres.
+          MOV       A3,A1               ; le nouveau symbole courant
+          BRA       GCSWY3              ; continue le balayage
+
+
+;         balaie la zone des CONS
+;         -----------------------
+
+          XDEFP     GCSWCONS
+GCSWCONS  LABEL      
+     IFNE GCDEBUG
+          TTYMSG    #6," SWEL "
+     ENDC
+          MOVNIL    A1                  ; init FREE list
+          MOV       #0,A2               ; init FREEL U
+          MOV       #0,A3               ; init FREEL M
+          MOV       BCONS,A4
+
+          SWPCONS   A1,A4,A2,A3
+
+;;        La macro pre'ce'dente correspond exactement au code
+;;        ci-dessous. une e'criture raisonnable en langage
+;;        machine permet d'obtenir un gain de l'ordre de 2.
+;;        QSLD (qu'on se le dise).
+;;
+;;GCSW1   TCMARK    A4,GCSW2            ; c'e'tait marque' : au suivant
+;;        MOV       A1,CDR(A4)          ; chaine la liste libre.
+;;        MOVNIL    CAR(A4)             ; clean, clean
+;;        MOV       A4,A1               ; nouveau FREE
+;;        CLINVSBL  A1                  ; plus invisible.
+;;        INCRINK   A2,A3               ; comptage par K
+;;GCSW2   NXCONS    A4,GCSW1            ; au suivant
+
+          SFCONS    A1                  ; nouveau FREE List
+          MOV       A2,FREELU           ; range le nb de doublets re'cupe're's.
+          MOV       A3,FREELM           ; range le nb milliers.
+
+          BRA       GCSWEND             ; fin de GC
+
+;  ---------------------------------------------
+;         FIN de la sequence non interruptible
+;  ---------------------------------------------
+
+GCSWEND   LABEL      
+
+
+          GCSTOP
+
+          RETURN
+
+
+;
+;         Fonctions utilisateur
+;         =====================
+;
+
+;
+;         Appel explicite du GC, retourne T ou GCINFO.
+;
+;  ----------------------------------------
+          FENTRY    GCUSER,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#1,GCUSER5       ; il y a un arg
+          CNBEQ     A4,#0,GCUSER4       ; pas d'arg
+          MOV       #1,A1               ; le nb d'arguments.
+          MOV       .GCUSER,A2
+          JMP       ERRWNA
+GCUSER4   MOVNIL    A1
+          PUSH      A1                  ; on pushe NIL
+GCUSER5   LABEL
+     IFNE GCDEBUG
+          TTYMSG    #8," GC_ON  "
+     ENDC
+          INCR      NGCUSER
+          CALL      GCGO                ; toujours direct
+          POP       A1                  ; alors on cause ?
+          BFNIL     A1,GCINFO0          ; et oui (appel interne) ....
+     IFNE GCDEBUG
+          TTYMSG    #8," GC_OFF "
+          TTYCRLF
+     ENDC
+          MOV       .T,A1               ; il faut bien retourner quelquechose!
+          RETURN                        ; et c'est tout
+
+;
+;         GCALARB, appele'e automatiquement AVANT chaque GC
+;         correspond a` la fonction GC-BEFORE-ALARM
+;
+;  ----------------------------------------
+          FENTRY    GCALARB,SUBR0
+;  ----------------------------------------
+          MOVNIL    A1                  ; il faut bien retourner qch
+          RETURN                        ; en standard ne fait rien.
+
+;
+;         GCALARM, appele'e automatiquement apre`s chaque GC
+;
+;  ----------------------------------------
+          FENTRY    GCALARM,SUBR0
+;  ----------------------------------------
+          MOVNIL    A1                  ; il faut bien retourner qch
+          RETURN                        ; en standard ne fait rien.
+
+;
+;         (#:SYSTEM:FINALIZE-FUNCTION vect)
+;
+;  ----------------------------------------
+          FENTRY    FNALZEFN,SUBR1
+;  ----------------------------------------
+          TTYMSG    #34,"Calling #:system:finalize-function"
+          TTYCRLF
+          RETURN                        ; en standard ne fait rien.
+
+;
+;         GCINFO : retourne les infos relatives au dernier GC
+;
+;  ----------------------------------------
+          FENTRY    GCINFO,SUBRN
+;  ----------------------------------------
+          CABEQ     A4,#0,GCINFO0       ; pas d'arguments
+          CABEQ     A4,#1,GCINFO1       ; 1 argument = vals initiales.
+          MOV       #1,A1               ; le nb d'arguments.
+          MOV       .GCINFO,A2
+          JMP       ERRWNA
+         
+GCINFO0   LABEL
+          MOVNIL    A4                  ; pour ce qui est consomme
+          
+;; GCINFOU : retourne une liste de type GCINFO
+;;           si A4 = NIL, de forme (GCINFO)
+;;           si A4 <> NIL de forme (GCINFO T)
+
+GCINFOU   LABEL
+          PUSH      .GCUSER             ; (GC <n> ....
+          PUSH      NGCCONS
+          PUSH      NGCSYMB
+          PUSH      NGCSTRG
+          PUSH      NGCVECT
+          PUSH      NGCFLOAT
+          PUSH      NGCNUMB
+          PUSH      NGCH
+          PUSH      NGCUSER
+          PUSH      .LLCONS             ; (CONS <n>)
+          MOV       FREELU,A1           ; le nb d'unites de cons
+          MOV       FREELM,A2           ; le nb de k CONS
+          CALL      GCINFZ
+          PUSH      A1
+          PUSH      .FFSYMBOL           ; (SYMBOL <n> ....
+          MOV       FREEYU,A1           ; le nb d'unites de symboles
+          MOV       FREEYM,A2           ; le nb de k
+          CALL      GCINFZ
+          PUSH      A1
+          PUSH      .STRING             ; (STRING <n> ....
+          MOV       FREESU,A1           ; le nb d'unites de chaines
+          MOV       FREESM,A2           ; le nb de k
+          CALL      GCINFZ
+          PUSH      A1
+          PUSH      .VECTOR             ; (VECTOR <n> ....
+          MOV       FREEVU,A1           ; le nb d'unites de vecteurs
+          MOV       FREEVM,A2           ; le nb de k
+          CALL      GCINFZ
+          PUSH      A1
+          PUSH      .LLFLOAT            ; (FLOAT <n> ....
+          MOV       FREEFU,A1           ; le nb d'unites de flottants
+          MOV       FREEFM,A2           ; le nb de k
+          CALL      GCINFZ
+          PUSH      A1
+          PUSH      .LLFIX              ; (FIX <n> ....
+          MOV       FREENU,A1           ; le nb d'unites d'entiers
+          MOV       FREENM,A2           ; le nb de k
+          CALL      GCINFZ
+          PUSH      A1
+          PUSH      .SIZEHP             ; (HEAP (<k> .<u>))
+          BTNIL     A4,GCINFOU2         ; 
+          CONVTOK   BHEAP,EHEAP,A2,A1   ; pour retourner le cons (K . U)
+          BRA       GCINFOU3
+GCINFOU2  CONVTOK   CHEAP,EHEAP,A2,A1   ; pour retourner le cons (K . U)
+GCINFOU3  XCONS     A1,A2               ; fabrique le cons (K . U)
+          MOV       A2,A1
+          PUSH      A1
+          PUSH      .SIZECD             ; (CODE (<k> .<u>))
+          BTNIL     A4,GCINFOU4         ;
+          CONVTOK   BCODE,ECODE,A2,A1   ; pour retourner le cons (K . U)
+          BRA       GCINFOU5
+GCINFOU4  CONVTOK   CCODE,ECODE,A2,A1   ; pour retourner le cons (K . U)
+GCINFOU5  XCONS     A1,A2               ; fabrique le cons (K . U)
+          MOV       A2,A1
+          PUSH      A1                  ;
+          MOV       #25,A4              ; taille de la Liste
+          JMP       LIST
+
+;; En cas de (GCINFO T), re'alise un pseudo balayage juste pour compter,
+;; c'est plus lent mais tellement plus portable (cf alpha).
+
+
+GCINFO1   LABEL
+          POP       A1                  ; depile l'argument
+          MOV       #0,A2               ; init FREEN U
+          MOV       #0,A3               ; init FREEN M
+          MOV       BNUMB,A4            ; debut des nbs
+          BFNUMB    A4,GCINFON9         ; pas de NUMB.
+GCINFON1  INCRINK   A2,A3               ; comptage en k, FREENU-FREENM
+          NXNUMB    A4,GCINFON1         ; au suivant
+GCINFON9  MOV       A2,FREENU           ; range le nb d'entiers alloues
+          MOV       A3,FREENM           ; le nb de milliers.
+
+          MOV       #0,A2               ; init FREEF U
+          MOV       #0,A3               ; init FREEF M
+          MOV       BFLOAT,A4
+          BFFLOAT   A4,GCINFOF9         ; pas de flottants
+GCINFOF1  INCRINK   A2,A3               ; comptage en k, FREEFU-FREEFM
+          NXFLOAT   A4,GCINFOF1         ; au suivant
+GCINFOF9  MOV       A2,FREEFU           ; range le nb de flottants alloues
+          MOV       A3,FREEFM           ; range le nb de milliers.
+
+          MOV       #0,A2               ; init FREEV U
+          MOV       #0,A3               ; init FREEV M
+          MOV       BVECT,A4
+GCINFOV1  INCRINK   A2,A3               ; comptage en k, FREEVU-FREEVM
+          NXVECT    A4,GCINFOV1         ; au suivant
+          MOV       A2,FREEVU           ; range le nb de vecteurs alloues
+          MOV       A3,FREEVM           ; range le nb de milliers.
+
+          MOV       #0,A2               ; init FREES U
+          MOV       #0,A3               ; init FREES M
+          MOV       BSTRG,A4
+GCINFOS1  INCRINK   A2,A3               ; comptage en k, FREESU-FREESM
+          NXSTRG    A4,GCINFOS1         ; au suivant
+          MOV       A2,FREESU           ; range le nb de chaines allouees
+          MOV       A3,FREESM           ; range le nb de milliers.
+
+          MOV       #0,A2               ; init FREEY U
+          MOV       #0,A3               ; init FREEY M
+          MOV       BSYMB,A4
+GCINFOY1  INCRINK   A2,A3               ; comptage en k, FREEYU-FREEYM
+          NXSYMB    A4,GCINFOY1         ; au suivant
+          MOV       A2,FREEYU           ; range le nb de chaines allouees
+          MOV       A3,FREEYM           ; range le nb de milliers.
+
+          MOV       #0,A2               ; init FREEL U
+          MOV       #0,A3               ; init FREEL M
+          MOV       BCONS,A4
+GCINFOL1  INCRINK   A2,A3               ; comptage en k, FREELU-FREELM
+          NXCONS    A4,GCINFOL1         ; au suivant
+          MOV       A2,FREELU           ; range le nb de cons alloues
+          MOV       A3,FREELM           ; range le nb de milliers.
+
+          MOV       #0,A4               ; <> NIL, les tailles initiales.
+          BRA       GCINFOU             ; et cree le bon resultat
+
+
+;; Pour calculer le mode d'affichage des zones dans (GC t).
+;; A1 = les unites
+;; A2 = les milliers
+;; retour A1 = un fix si < 32k ou un CONS (k . u) si > 32k
+
+GCINFZ    LABEL
+          CNBEQ     A2,#0,GCINFZ9       ; pas de milliers
+          CNBGE     A2,#32,GCINFZ1      ; si > 32k
+          TIMES     #1024,A2            ; si < 32k
+          PLUS      A2,A1               ; le compte est bon
+          BRA       GCINFZ9   
+GCINFZ1   XCONS     A1,A2               ; retourne le cons (K . U)
+          MOV       A2,A1
+GCINFZ9   RETURN
+
+
+;         Les fonctions qui traitent du bit invisible
+;         ===========================================
+;
+;  ----------------------------------------
+          FENTRY    TCONS,SUBR2
+;  ----------------------------------------
+          XCONS     A2,A1
+          STINVSBL  A1                  ; force le bit invisible
+          RETURN     
+
+;  ----------------------------------------
+          FENTRY    TCONSMK,SUBR1       ; force le BIT
+;  ----------------------------------------
+          BFCONS    A1,TCMKER
+          STINVSBL  A1
+          RETURN
+TCMKER    MOV       .TCONSMK,A2
+          JMP       ERRNLA
+
+;  ----------------------------------------
+          FENTRY    TCONSCL,SUBR1       ; enleve le BIT
+;  ----------------------------------------
+          BFCONS    A1,TCCLER
+          CLINVSBL  A1
+          RETURN
+TCCLER    MOV       .TCONSCL,A2
+          JMP       ERRNLA
+
+;         (de tconsp (x) (and (consp x) (symbolp (car x))
+;             (objval (car x)))
+;  ----------------------------------------
+          FENTRY    TCONSP,SUBR1
+;  ----------------------------------------
+          BFCONS    A1,TCONSP1          ; c'est forcement un CONS!
+          BTINVSBL  A1,TCONSP2          ; avec le bit invisible
+TCONSP1   MOVNIL    A1                  ; retourne NIL ou le CONS!
+TCONSP2   RETURN
+
+; ========================================================
+;         Fonctions de gestion de la liste libre
+; ========================================================
+
+; ----------------------------------------
+          FENTRY    FRCONS,SUBR1
+; ----------------------------------------
+          CABEQ     ITSTATE,#0,FRCS1    ; de'ja` interdit
+          MOV       @FRCS0,A3           ; la routine prote'ge'e
+          JCALL     SYSPROT             ; protect
+          POP       A1
+          MOV       #1,ITSTATE          ; re'autorise
+          BRI       A3
+
+FRCS0     LABEL
+          MOV       #0,ITSTATE
+FRCS1     GFCONS    A2                  ; tete de Free liste
+          BFCONS    A1,FRCSER           ; il faut un CONS obligatoirement.
+          MOVNIL    CAR(A1)             ; plus sur!
+          MOV       A2,CDR(A1)          ; chainage
+          CLINVSBL  A1                  ; enle`ve le bit invisible.
+          SFCONS    A1
+          MOVNIL    A2                  ; pas rester dans un registre.
+          MOVNIL    A1                  ; valeur de retour.
+          RETURN
+FRCSER    MOV       .FRCONS,A2          ; qui provoque l'erreur
+          JMP       ERRNLA
+
+; ----------------------------------------
+          FENTRY    FRTREE,SUBR1
+; ----------------------------------------
+          CABEQ     ITSTATE,#0,FRTR1    ; de'ja interdit
+          MOV       @FRTR0,A3           ; la routine prote'ge'e
+          JCALL     SYSPROT             ; protect
+          POP       A1
+          MOV       #1,ITSTATE          ; re'autorise
+          BRI       A3
+
+FRTR0     LABEL
+          MOV       #0,ITSTATE
+FRTR1     GFCONS    A4                  ; la liste libre !!
+          CALL      FRTR3               ; ca roule.
+          SFCONS    A4                  ; nouvelle liste libre.
+          MOVNIL    A4                  ; libe`re tous les registres
+          MOVNIL    A3                  ; libe`re tous les registres
+          MOVNIL    A2                  ; libe`re tous les registres
+          MOVNIL    A1                  ; valeur de retour.
+FRTRET    RETURN
+FRTR2     MOV       A3,A1
+FRTR3     BFCONS    A1,FRTRET           ; fin de la liste CDR
+FRTR4     MOV       CAR(A1),A2          ; des fois qu'il faille re'curser
+          MOV       CDR(A1),A3
+          MOV       A4,CDR(A1)
+          MOVNIL    CAR(A1)
+          CLINVSBL  A1                  ; enle`ve le bit invisible.
+          MOV       A1,A4
+          BFCONS    A2,FRTR2            ; ite`re sur les CDRs
+          PUSH      A3
+          MOV       A2,A1
+          CALL      FRTR4
+          POP       A1
+          BRA       FRTR3
+
+;============================================================
+;
+;        Les fonctions spe'ciales de CEYX
+;
+;============================================================
+
+;
+;        (de type-of (s) 
+;               (cond
+;                  ((tconsp s) (car s))
+;                  ((consp s) 'cons)
+;                  ((null s) 'null)
+;                  ((symbolp s) 'symbol)
+;                  ((floatp s) 'float)
+;                  ((fixp s) 'fix)
+;                  ((stringp s) (typevect s)
+;                  ((vectorp s) (typevect s)))
+;
+;         Laisse tous les registres inchanges sauf A1
+;
+;  ----------------------------------------
+          FENTRY    GETTYPE,SUBR1
+;  ----------------------------------------
+          BFCONS    A1,GETTYPE0      
+          BFINVSBL  A1,GETTYPE2
+          MOV       CAR(A1),A1
+          BTSYMB    A1,GETTYPER         ; pour ne pas pe'naliser Ceyx
+          BTFIX     A1,GETTYPFX         ; c'est un bignum
+          BFCONS    A1,GETTYPER         ; cas standard
+          BFSYMB    CAR(A1),GETTYPFX    ; c'est un bignum
+GETTYPER  RETURN
+
+GETTYPE0  BTVECT    A1,GETTYPE1
+          BTFIX     A1,GETTYPE6
+          BTFLOAT   A1,GETTYPE5
+          BTSTRG    A1,GETTYPE1
+          BTNIL     A1,GETTYPE3
+          BTSYMB    A1,GETTYPE4
+GETTYPE6  MOV       .LLFIX,A1           ; c'est donc un NUMB
+          RETURN
+GETTYPE1  MOV       TYP(A1),A1          ; le type du vecteur/chaine
+          RETURN
+GETTYPE2  MOV       .LLCONS,A1
+          RETURN
+GETTYPE3  MOV       .LLNULL,A1
+          RETURN
+GETTYPE4  MOV       .FFSYMBOL,A1
+          RETURN
+GETTYPE5  MOV       .LLFLOAT,A1
+          RETURN
+GETTYPFX  MOV       .BIGTYPE,A1         ; #:system:bignum-type
+          MOV       CVAL(A1),A1         ; c'est sa valeur qui compte
+          RETURN
+
+;----------------------------------------
+          FENTRY    TYPEP,SUBR2
+;----------------------------------------
+          PUSH      @SUBTYPEP           ; puis cherche le sous-type
+          BRA       GETTYPE             ; prend le type de A1
+
+
+;----------------------------------------
+          FENTRY    SUBTYPEP,SUBR2
+;----------------------------------------
+          BFSYMB    A1,SUBTYPR1         ; pas un symbole
+          BFSYMB    A2,SUBTYPR2         ; ici non plus
+          BRA       SUBTYP1             ; dans la boucle
+SUBTYP0   MOV       PKGC(A1),A1         ; avance dans les packages
+SUBTYP1   CABEQ     A1,A2,SUBTYP3       ; C'est bon
+          ;BTCONS    A1,SUBTYP4          ; c'est une flavor
+          BTCONS    A1,SUBTYP5          ; c'est une flavor
+          BFSYMB    A1,SUBTYP2          ; il faut un symbole
+          BFNIL     A1,SUBTYP0          ; pas au bout
+SUBTYP2   RETURN                        ; rate'
+SUBTYP3   MOV       .T,A1               ; a cause du type ||???
+          RETURN
+
+
+SUBTYP4   POP       A1                  ; recupere
+          BFCONS    A1,SUBTYP7          ; le dernier a` la ITSOFT
+SUBTYP5   PUSH      CDR(A1)             ; le reste
+          MOV       CAR(A1),A1          ; le type
+          CALL      SUBTYP7
+          BTNIL     A1,SUBTYP4          ; pas trouve'
+          ADJSTK    #1                  ; vire le cdr empile'
+          RETURN                        ; et rentre
+SUBTYP6   MOV       PKGC(A1),A1         ; avance dans les packages
+SUBTYP7   CABEQ     A1,A2,SUBTYP9       ; C'est bon
+          BTCONS    A1,SUBTYP5          ; c'est une flavor
+          BFSYMB    A1,SUBTYP8          ; il faut un symbole
+          BFNIL     A1,SUBTYP6          ; pas au bout
+SUBTYP8   RETURN                        ; rate'
+
+SUBTYP9   MOV       .T,A1               ; a cause du type ||???
+          RETURN
+
+SUBTYPR2  MOV       A2,A1               ; le fautif
+SUBTYPR1  MOV       .SUBTYPEP,A2        ; la fonction
+          JMP       ERRSYM
+
+;         (de send (methode objet . largs)
+;             (let ((fnt (getfn (type-of objet) methode '||)))
+;                  (if fnt
+;                      (apply fnt objet largs)
+;                      (funcall 'send-error methode (cons objet largs)))))
+; 
+;  ----------------------------------------
+          FENTRY    LLSEND,SUBRN
+;  ----------------------------------------
+;         dans le cas normal il n'y a pas de rupture de se'quence
+;         et les objets type's de type vecteurs sont privilegies.
+          CNBLE     A4,#1,SENDER        ; il y a bien au moins 2 args?
+          DECR      A4                  ; XSPMOV A4 pointe sur methode
+          DECR      A4                  ; XSPMOV A4 pointe sur objet
+          XSPMOV    A4,A1               ; A1 <- objet
+          INCR      A4                  ; XSPMOV A4 pointe sur methode          
+          BFVECT    A1,SEND2            ; cas spe'cial rapide.
+          MOV       TYP(A1),A1          ; retourne directement le type
+SEND1     LABEL                         ; Point d'entree de SUPER-SEND
+          XSPMOV    A4,A2               ; A2 <- methode
+          MOV       .VOID,A3            ; A3 <- package final
+          PUSH      A4                  ; ca reservira bien un jour ...
+          JCALL     GETFNS              ; A1 <- la fonction de la methode
+          POP       A4                  ; le nombre d'args OK pour FFUNCALL
+          BTNIL     A1,SEND3            ; non, rate
+          MOVXSP    @GCPOPJ,A4          ; on ecrase methode par un POPJ
+          JMP       FFUNCALL            ; on y va
+
+SEND2     CALL      GETTYPE             ; A1 <- (type-of objet)
+          BRA       SEND1
+
+SEND3     LABEL                         ; pas de methode : appel SEND-ERROR
+          MOV       A4,A3               ; le compteur
+          BRA       SEND5
+SEND4     POP       A2                  ; l'argument suivant
+          CONS      A2,A1               ; rajoute' en tete
+SEND5     SOBGEZ    A3,SEND4            ; encore
+          PUSH      A1                  ; en pile: /s/(cons o largs)/..
+          MOV       #2,A4               ; deux arguments
+          MOV       .SENDERRO,A1        ; apelle send-error
+          JMP       FFUNCALL
+
+SENDER    MOV       #2,A1               ; nb d'arg mini
+          MOV       .LLSEND,A2            ; le nom de la fonction
+          JMP       ERRWNA
+
+
+;----------------------------------------
+          FENTRY    SENDERRO,SUBR2
+;----------------------------------------
+          XCONS     A2,A1               ; (s . rest)
+          MOV       .LLSEND,A2            ; la fonction qui provoque
+          JMP       ERRUDM              ; me'thode inde'finie
+
+
+;         Le SEND avec continuation explicite (def)
+; 
+;         (de csend (def s o . largs)
+;             (let ((fun (getfn (type-of o) s '||)))
+;                  (if fun
+;                      (funcall fun o . largs)
+;                      (funcall def s o . larg))))
+;
+;  ----------------------------------------
+          FENTRY    CSEND,SUBRN
+;  ----------------------------------------
+          CNBLE     A4,#2,CSENDER       ; il y a bien au moins 3 args?
+          PUSH      @CSEND1             ; pour le retour du TYPE-OF
+          DECR      A4                  ; A4 <- nbre d'obj
+          DECR      A4                  ; def et sem
+          XSPMOV    A4,A1               ; A1 <- o
+          BRA       GETTYPE             ; A1 <- (type-of o)
+CSEND1    LABEL
+          XSPMOV    A4,A2               ; A2 <- sem
+          MOV       .VOID,A3            ; A3 <- package final
+          PUSH      A4                  ; ca reservira bien un jour ...
+          JCALL     GETFNS              ; A1 <- la semantique
+          POP       A4                  ; le nombre d'args OK pour FFUNCALL
+          BTNIL     A1,CSEND3           ; non, rate
+          MOVXSP    @GCPOPJ,A4          ; on ecrase sem par un POPJ
+          INCR      A4
+          MOVXSP    @GCPOPJ,A4          ; on ecrase def par un POPJ
+          DECR      A4
+          JMP       FFUNCALL            ; on y va
+
+CSEND3    PLUS      #2,A4
+          JMP       FUNCALL
+
+
+CSENDER   MOV       #3,A1               ; nb mini d'args
+          MOV       .CSEND,A2           ; le nom de la fonction
+          JMP       ERRWNA
+
+
+;         (de super-send (pack s o .largs)
+;             (ifn (typep s pack)
+;                  (error 'super-send "not a subtype" (list pack o))
+;                  (let ((fun (getfn (packagecell pack) s ||)))
+;                     ...puis comme send...
+; 
+;----------------------------------------
+          FENTRY    SUPSEND,SUBRN
+;----------------------------------------
+          CNBLE     A4,#2,SUPSENR1      ; pas assez d'arguments
+          PUSH      A4                  ; le temps des verifs
+          XSPMOV    A4,A2               ; le super-type
+          DIFF      #2,A4               ; saute sem, pointe sur l'objet
+          XSPMOV    A4,A1               ; l'objet
+          CALL      TYPEP               ; ve'rifie le type
+          BTNIL     A1,SUPSENR3         ; c'est une erreur!
+          POP       A4                  ; comme avant
+          DECR      A4
+          XSPMOV    A4,A1               ; le package
+          BFSYMB    A1,SUPSENR2
+          MOV       PKGC(A1),A1         ; au dessus!
+          MOVXSP    @GCPOPJ,A4          ; e'crase le package
+          DECR      A4
+          BRA       SEND1               ; comme Send
+
+SUPSENR1  MOV       #3,A1               ; le nombre d'arguments requis
+          MOV       .SUPSEND,A2         ; la fonction
+          JMP       ERRWNA
+
+SUPSENR2  MOV       .SUPSEND,A2         ; la fonction
+          JMP       ERRSYM              ; pas un symbole
+
+SUPSENR3  MOV       .SUPSEND,A2         ; la fonction
+          POP       A4
+          DECR      A4
+          XSPMOV    A4,A1               ; l'objet
+          DIFF      #2,A4               ; le type
+          XSPMOV    A4,A3
+          NCONS     A3
+          XCONS     A3,A1               ; le message
+          JMP       ERROOB              ; le plus proche de "pas un sous-type"
+
+;         (de send2 (s o1 o2 . largs)
+;             (let ((fun (getfn2 (type-of o1) (type-of o2) sem)))
+;                  (if fun
+;                      (funcall fun o1 o2 . largs)
+;                      (error 'send 'errnti (mcons s o1 o2 . largs)))))
+; 
+;  ----------------------------------------
+          FENTRY    SENDBI,SUBRN
+;  ----------------------------------------
+          CNBLE     A4,#2,SENDBIER      ; il y a bien au moins 3 args?
+          PUSH      A4                  ; empile le nombre d'objets
+          DECR      A4                  ; un de moins
+          XSPMOV    A4,A1               ; A1 <- o1
+          CALL      GETTYPE             ; A1 <- (type-of o1)
+          PUSH      A1                  ; empile le type
+          XSPMOV    A4,A1               ; A1 <- o2
+          CALL      GETTYPE             ; A1 <- (type-of o2)
+          MOV       A1,A2               ; pre'pare le GETBI
+          POP       A1                  ; le premier package
+          POP       A4                  ; le nombre d'arguments
+          DECR      A4                  ; un de moins
+          XSPMOV    A4,A3               ; la se'mantique a` chercher
+          PUSH      A4                  ; sauve A4!
+          JCALL     GETBI               ; cherche!
+          POP       A4                  ; restaure
+          BTNIL     A1,SENDBI3          ; non, rate
+          MOVXSP    @GCPOPJ,A4          ; on ecrase sem par un POPJ
+          JMP       FFUNCALL            ; on y va
+
+SENDBI2   LABEL
+          POP       A3                  ; l'argument empile suivant
+          CONS      A3,A1               ; on fabrique la liste    
+SENDBI3   LABEL                         ; continuation
+          SOBGEZ    A4,SENDBI2          ; tant qu'il y a des args
+          MOV       .SENDBI,A2
+          JMP       ERRUDM
+
+SENDBIER  MOV       #3,A1               ; nb mini d'args
+          MOV       .SENDBI,A2          ; le nom de la fonction
+          JMP       ERRWNA
+
+;----------------------------------------
+          FENTRY    STRCTACC,SUBRN
+; 
+; (system:structaccess <fn> <index> <objet> <valeur> <narg>)
+;----------------------------------------
+          CNBNE     A4,#5,FIELDR1       ; il faut 5 arguments
+          XSPMOV    #2,A1               ; le vecteur
+          BFVECT    A1,FIELDR2          ; il faut un vecteur
+          XSPMOV    #4,A2               ; la fonction
+          BFSYMB    A2,FIELDR3          ; il faut un symbole!
+          MOV       PKGC(A2),A2         ; le type de la fct d'acce`s
+          PUSH      A1                  ; le vecteur
+          PUSH      A4                  ; narg
+          CALL      TYPEP               ; bon type?
+          POP       A4                  ; narg
+          POP       A2                  ; le vecteur
+          BTNIL     A1,FIELDR4          ; pas du bon type
+          XSPMOV    #3,A3               ; index dans le vecteur
+          CNBLT     A3,#0,FIELDR5       ; pas bon
+          HGSIZE    A2,A4               ; taille du vecteur
+          CNBGE     A3,A4,FIELDR4       ; pas une structure du bon type
+          TOPST     A4                  ; narg
+FIELDN    CNBEQ     A4,#1,FIELDGET      ; A3 contient l'index
+          CNBEQ     A4,#2,FIELDSET
+          MOV       #1,A1               ; le nombre requis (A2 est pret)
+          XSPMOV    #4,A2               ; le nom de la fonction
+          JMP       ERRWNA              ; pas le bon nombre d'arguments
+
+FIELDGET  HPXMOV    A2,A3,A1            ; on extrait
+          ADJSTK    #5                  ; clean la pile
+          RETURN                        ; fini!
+
+FIELDSET  XSPMOV    #1,A1               ; la valeur
+          HPMOVX    A1,A2,A3            ; set la valeur
+          ADJSTK    #5                  ; clean la pile
+          RETURN
+
+FIELDR1   MOV       #5,A1               ; le nombre ne'cessaire
+          MOV       .STRCTACC,A2        ; la fonction
+          JMP       ERRWNA
+
+FIELDR4   MOV       A2,A1               ; l'argument de'fectueux
+FIELDR2   XSPMOV    #4,A2               ; la fonction
+          JMP       ERRSTC
+
+FIELDR3   MOV       A2,A1               ; l'objet defectueux
+          XSPMOV    #4,A2               ; la fonction
+          JMP       ERRNAA              ; pas un symbole
+
+FIELDR5   MOV       A3,A1               ; le mauvais index
+          MOV       .STRCTACC,A2        ; la fonction
+          JMP       ERROOB              ; hors limite
+
+
+;;
+;;       Pour faire des Stats d'occupation du tas :
+;;       (#:system:mapallvector fn)
+;;       (#:system:mapallstring fn)
+;;
+
+          FENTRY    SMPVECT,SUBR1
+          MOV       BVECT,A2            ; le de'but des vecteurs.
+SMPVECT2  LABEL                         ; VAL(A2) = heap-ptr ou next-vect
+                                        ; pas dans un reg : pollution du GC
+          BTVECT    VAL(A2),SMPVECT4    ; fait partie de la liste libre
+          BTNIL     VAL(A2),SMPVECT4    ;  ou fin de la liste libre          
+          PUSH      A2                  ; sauvegarde de l'objet courant
+          PUSH      A1                  ;      et de la fonction
+          PUSH      @SMPVECT3           ; retour de FUNCALL
+          PUSH      A1                  ; empile la fonction a invoquer
+          PUSH      A2                  ; l'argument
+          MOV       #2,A4               ; narg de FUNCALL
+          JMP       FUNCALL
+SMPVECT3  POP       A1
+          POP       A2                  ; le vecteur suivant
+SMPVECT4  NXVECT    A2,SMPVECT2         ; vecteur physique suivant
+          MOVNIL    A1                  ; retourne toujours ()
+          RETURN
+
+
+          FENTRY    SMPSTRG,SUBR1
+          MOV       BSTRG,A2            ; le de'but des chaines
+SMPSTRG2  LABEL                         ; VAL(A2) = heap-ptr ou next-strg
+                                        ; pas dans un reg : pollution du GC
+          BTSTRG    VAL(A2),SMPSTRG4    ; fait partie de la liste libre
+          BTNIL     VAL(A2),SMPSTRG4    ;  ou fin de la liste libre          
+          PUSH      A2                  ; sauvegarde de l'objet courant
+          PUSH      A1                  ;      et de la fonction
+          PUSH      @SMPSTRG3           ; retour de FUNCALL
+          PUSH      A1                  ; empile la fonction a invoquer
+          PUSH      A2                  ; l'argument
+          MOV       #2,A4               ; narg de FUNCALL
+          JMP       FUNCALL
+SMPSTRG3  POP       A1
+          POP       A2                  ; la chaine suivante
+SMPSTRG4  NXSTRG    A2,SMPSTRG2         ; chaine physique suivante
+          MOVNIL    A1                  ; retourne toujours ()
+          RETURN
+
+
+          END
+

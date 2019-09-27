@@ -1,0 +1,434 @@
+          (test-serie "[FIX arguments type test]" ())
+
+(_tlno)                                 0
+(tlfix 0)                              0
+(tlfix 1)                              2
+(tlfix -1)                             -2
+(tlfix 32767)                          -2
+(tlfix -32767)                         2
+(tlfix #$8000)                         0
+
+          (test-serie "[FLOAT arguments type test]" ())
+(tlfloat 1.)                             2
+(tlfloat -1.)                            0
+(tlfloat_ 1.)                            0
+(tlfloat_ -1.)                           -2
+(tlfloat_1 0.)                           0
+(tlfloat_1 1.)                           2
+(tlfloat_1 -1.)                          -2
+(tlfloat_1 32767.)                       -2
+(tlfloat_1 -32767.)                      2
+(tlfloat_1 0.001)                        0
+(tlfloat_1 0.5)                          1
+(tlfloat_1 -0.5)                         -1
+(tlfloat_2 0. 0.)                        0
+(tlfloat_2 1. 2.)                        3
+
+          (test-serie "[STRING arguments type test]" ())
+(setq a "abc")                          "abc"
+(_tlstring a)                           3
+a                                       "Cbc"
+(_tlstring "")                          0
+(_tlstring3 a a a)                      9
+(_tlstring3 "a" a "")                   4
+(_tlstring3 "" "" "")                   0
+#.(progn (setq a (makestring 32000 #/a)) ())  ()
+(_tlstring a)                           32000
+
+          (test-serie "[VECTOR arguments type test]" ())
+(setq a #[1 a b 4])                     #[1 a b 4]
+(tlvector a (vlength a))               1
+a                                       #[1 a a 4]
+(setq a #[-1 -2])                       #[-1 -2]
+(tlvector a (vlength a))               -1
+a                                       #[-1 -2]
+
+          (test-serie "[RFIX arguments type test]" ())
+(_trfix 3)                              6
+(_trfix 0)                              0
+(_trfix -3)                             -6
+(_trfix 16383)                          32766
+(_trfix -16384)                         -32768
+
+          (test-serie "[RFLOAT arguments type test]" ())
+(trfloat 5.0)                          25.0
+(trfloat 32.0)                         1024.
+(trfloat1 1.)                          0.
+(trfloat1 0.)                          -1.
+
+          (test-serie "[FIXVECTOR arguments type test]" ())
+(ttabint 3 (setq v #[1 2 3]))          3
+v                                       #[2 4 6]
+(ttabint 2 v)                          2
+v                                       #[4 8 6]
+(ttabint 3 (setq v #[-3 16383 -16384])) 3
+v                                       #[-6 32766 -32768]
+(t_tabintonly v)                        -12
+v                                       #[-12 32766 -32768]
+
+#-(featurep '64bitfloats)(test-serie "[FLOATVECTOR arguments type test]" ())
+#+(featurep '64bitfloats) ()
+#+(featurep '64bitfloats)
+  (test-serie "[No FLOATVECTOR arguments type test in 64BITFLOATS]" ())
+
+#-(featurep '64bitfloats) (ttabflt 3 (setq v #[1.0 2.0 3.4]))
+                          #-(featurep '64bitfloats) 3
+#-(featurep '64bitfloats) v
+                          #-(featurep '64bitfloats) #[1.0 4.0 11.56]
+
+#-(featurep '64bitfloats) (tflt_lispcall 3 (setq v #[1.0 2.0 3.4]))
+                          #-(featurep '64bitfloats) 3
+#-(featurep '64bitfloats) v
+                          #-(featurep '64bitfloats) #[2.0 4.0 6.8]
+
+#-(featurep '64bitfloats) (tflt_getsym 3 (setq v #[1.0 2.0 3.4]))
+                          #-(featurep '64bitfloats) 3
+#-(featurep '64bitfloats) v
+                          #-(featurep '64bitfloats) #[2.0 4.0 6.8]
+
+          (test-serie "[T arguments type test]" ())
+(setq a 1)                              1
+(tlt 'a)                                1
+(setq a -1)                             -1
+(tlt 'a)                                -1
+
+          (test-serie "[lfloat_to_cfloat C fct]" ())
+(t_l_to_c_float 0.)                  1.
+(t_l_to_c_float -2.)                 -1.
+(t_l_to_c_float -1.)                 0.
+(t_l_to_c_float 99999.)              100000.
+(t_l_to_c_float -100001.)            -100000.
+
+          (test-serie "[cfloat_to_lfloat C fct]" ())
+(tcfloat_to_lfloat 0.)                  1.
+(tcfloat_to_lfloat -2.)                 -1.
+(tcfloat_to_lfloat -1.)                 0.
+(tcfloat_to_lfloat 99999.)              100000.
+
+          (test-serie "[lfix_to_cfix C fct]" ())
+(tlfix_cfix 1)                          2                          
+(tlfix_cfix 32766)                      32767
+(tlfix_cfix 32767)                      #$8000
+
+          (test-serie "[cfix_to_lfix C fct]" ())
+(tcfix_lfix 1)                          2                          
+(tcfix_lfix 32766)                      32767
+(tcfix_lfix 32767)                      #$8000
+(tcfix_lfix -32767)                     -32766
+
+          (test-serie "[EXTERNAL arguments type test]" ())
+(setq a 1)                              1
+(tlexternal (loc 'a))                   1
+(setq a -1)                             -1
+(tlexternal (loc 'a))                   -1
+
+	  (test-serie "[FIX result type test]" ())
+(_tlno)                                 0
+
+          (test-serie "[FLOAT result type test]" ())
+(tcfloat 0)                            0.
+(tcfloat -1)                           -2.
+(tcfloat 1)                            2.
+(tcfloat 32767)                        65534.
+(tcfloat -32767)                       -65534.
+
+(tcfloat2 0. 0.)                       0.
+(tcfloat2 123. 456.)                   56088.4102298864848144286
+
+(f_s_to_d)                             2.3
+
+          (test-serie "[STRING result type test]" ())
+(tcstring 0)                           "a"
+(tcstring 1)                           "ab"
+(tcstring 2)                           "abc"
+(tcstring 3)                           "abcd"
+(tcstring 4)                           ""
+(tcstring -1)                          "abcdefghijklmnopqrstuvwxyz"
+(tcstring 5)                           "abcdefghijklmnopqrstuvwxyz"
+(conv1_tcstring "one_strg")            "200.14999 - 550.29999"
+(conv2_tcstring "one_strg" "two_strg") "200.14999 - 550.29999"
+
+(tc_string 5)                          "aaaaa"
+(tc_string 0)                          ""
+(tc_string 256)                        #.(makestring 256 #/a)
+(tc_string 32000)                      #.(makestring 32000 #/a)
+
+;          (test-serie "[VECTOR result type test]" ())
+;(setq vect #['(1 2 3) #[1 2 3] 'foo]
+;      lg   3)                           3
+;(tcvector vect lg)                     #.vect
+
+          (test-serie "[T result type test]" ())
+(loc (tct 1))                          1
+(loc (tct -1))                         -1
+
+          (test-serie "[EXTERNAL result type test]" ())
+(tcexternal 1)                         1
+(tcexternal -1)                        -1
+(tcexternal 1)                         1
+
+          (test-serie "[FLOAT/FIX conversion (C<->LL) tests]" ())
+
+(tcllfloat 0.)                         0.
+(tcllfloat 12.34)                      12.34
+(tllcfloat 0.)                         0.
+(tllcfloat -1.)                        -1.
+(tllcfloat 1.)                         1.
+(tcllfloat (tllcfloat 56.78))          56.78
+(tllcfloat (tcllfloat 90.12))          90.12
+(tcllfloat1 1.11 2.22 3.33)            6.66
+(tllcfloat1 1.11 2.22 3.33)            6.66
+(tclcfloat  1.11 2.22 3.33)            6.66
+
+(t_l_to_l_float -100002.)               -100001.
+(tcfloat_to_lfloat -100001.)            -100000.
+(t_l_to_l_float 0.)                     1.
+(setq a 999998.)                        999998.
+(tsymb_to_lfloat 'a)                    999999.
+a                                       999998.
+(tsymb_to_lfloat1 'a)                   999999.
+a                                       999999.
+
+(tllcfix 32000 767)                    32767
+(tllcfix 32767 -32767)                 0
+(tllcfix -32000 -767)                  -32767
+(tllcfix -2 1)                         -1
+(t1llcfix 181 181)                     32761
+(t1llcfix 181 -181)                    -32761
+(t1llcfix -181 181)                    -32761
+(t1llcfix -181 -181)                   32761
+(t1llcfix -1 1)                        -1
+(t1llcfix 1 -1)                        -1
+(tcclfix 32000 767)                    32767
+(tcclfix 32767 -32767)                 0
+(tcclfix -32000 -767)                  -32767
+(tcllfix  181 181)                     32761
+(tcllfix 181 -181)                     -32761
+(tcllfix -181 181)                     -32761
+(tcllfix -181 -181)                    32761
+(tlllfix 32000 767)                    32767
+(tlllfix 32767 -32767)                 0
+(tlllfix -32000 -767)                  -32767
+
+
+          (test-serie "[Commons tests]" ())
+
+; test number and order of arguments
+(tlnadic 1 2 3 4 5 6 7 8 9 10 11)     66
+(tlnadic 11 2 3 4 5 6 7 8 9 10 1)     -1
+; test max number of arguments
+(tnbmaxi 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+	  17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32) 32
+(tnbmaxf 1. 2. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13. 14. 15. 16.
+	  17. 18. 19. 20. 21. 22. 23. 24. 25. 26. 27. 28. 29. 30. 31. 32.) 32
+(tnbmaxri 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+	   17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32) 32
+(tnbmaxrf 1. 2. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13. 14. 15. 16.
+	   17. 18. 19. 20. 21. 22. 23. 24. 25. 26. 27. 28. 29. 30. 31. 32.) 32
+
+(tnbsmaxi 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+	  17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32) 528
+(tnbsmaxf 1. 2. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13. 14. 15. 16.
+	  17. 18. 19. 20. 21. 22. 23. 24. 25. 26. 27. 28. 29. 30. 31. 32.) 528
+(tnbsmaxri 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+	   17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32) 528
+(tnbsmaxrf 1. 2. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13. 14. 15. 16.
+	   17. 18. 19. 20. 21. 22. 23. 24. 25. 26. 27. 28. 29. 30. 31. 32.) 528
+
+; test overlapping types
+(trfixrfloat 3 5.0)                   8.0
+#.(setq rv2 (makevector 1000 10.6))    #.rv2
+#-(featurep '64bitfloats)
+(ttabother 10
+	    3
+	    (setq v1 #[1 2 3])
+	    1.2
+	    0.5
+	    100
+	    (setq v2 (makevector 1000 10.0))
+	    (setq v3 #[1000 2000 3000 4000])
+	    4
+	    1000)
+            #-(featurep '64bitfloats) 1000
+#-(featurep '64bitfloats) v1
+                          #-(featurep '64bitfloats) #[1010 2010 3010]
+#-(featurep '64bitfloats) v2
+                          #-(featurep '64bitfloats) #.rv2
+#-(featurep '64bitfloats) v3
+                          #-(featurep '64bitfloats) #[101 102 103 4000]
+
+; test talking with C global structure
+(and (consp (setq x (struct_un 1 2. "abc")))
+     (atom (cdr x)))                   t
+; test "almost" all 
+(tltout -100 1.2e+3 "hello" #[46] 3)   -9341
+
+(neq (tlmalloc 100) 0)                 t
+(neq (tlmalloc 1000) 0)                t
+(neq (tlmalloc 10000) 0)               t
+
+          (test-serie "[LISPCALL test]" ())
+
+(getsym "concat")                      concat
+(symbolp (getsym "bar"))               t
+(eq 'getsym (getsym "getsym"))       t
+
+(cons_en_c 1 2)                        (1 . 2)
+(trace cons)                            (cons)
+(cons_en_c 1 2)                        (1 . 2)
+(untrace)                               (cons)
+
+(let ((#:sys-package:itsoft (cons 'testgc #:sys-package:itsoft))
+      (gcalarm ())
+      (consab ()))
+     (until gcalarm
+            (setq consab (cons_en_c 'a 'b)))
+     consab)                            (a . b)
+
+(cons_en_c 1 2)                        (1 . 2)
+
+(vect_to_list #[1 2 3 4 5] 3)          (1 2 3)
+(vect_to_list #[] 0)                   ()
+(vect_to_list #[Q W E R T Y U I O P]
+          10)                           (Q W E R T Y U I O P)
+
+(let ((#:sys-package:itsoft (cons 'testgc #:sys-package:itsoft))
+      (gcalarm ())
+      (liste ()))
+     (until gcalarm
+            (setq liste (vect_to_list #[Q W E R T Y U I O P] 10)))
+     liste)                             (Q W E R T Y U I O P)
+
+(vect_to_list #[Q W E R T Y U I O P]
+          10)                           (Q W E R T Y U I O P)
+
+(init_fib)                             0
+(fib 4)                                 3
+(trace fib cfib)                        (fib cfib)
+(fib 4)                                 3
+(untrace)                               (cfib fib)
+(fib 20)                                6765
+
+; test LLT_FLOAT in LISPCALL
+;(tlcfloat 12)                          12.
+; test LLT_FLOAT in PUSHARG
+(tpafloat)                             1.2
+; test LLT_FLOAT in PUSHARG (several times!)
+(tpamultifloat 2.1)                    (1.1 2.1 3.1)
+; test LLT_STRING in LISPCALL
+(tlcstring)                            "concat"
+; test LLT_STRING in PUSHARG
+(tpastring)                            67
+; test LLT_STRING in PUSHARG (several times!)
+(tpamultistrg "b")                     ("a" "b" "c")
+
+
+	          (test-serie "[GC test during LISPCALL]" ())
+
+(de gcalarm ()(setq gcalarm t))      gcalarm
+(setq 
+ ; GC
+ :gc (gc t)
+ ; only strings
+ :strg (cadr (memq 'string :gc))
+ ; trues values
+ :strg (cond ((consp :strg) (* :strg 1024))
+	     (t :strg))
+ ; in order to not exit with stack overflow
+ :strg (if (> :strg 2000)
+	   (progn
+	     (setq :lsav ())
+	     (repeat (- :strg 2000)(newl :lsav (makestring 1 #/a)))
+	     (cadr (memq 'string (setq :gc (gc t)))))
+	 :strg)
+ ; to be certain of overflow
+ :strg (+ :strg 100)
+ gcalarm ())                        ()
+
+; even number of strings
+(progn (when (oddp :strg) 
+	   (setq :llsav ())
+	   (newl :llsav (makestring 1 #/a)))
+       0)                           0
+
+; test PUSHARG when GC during PUSHARG
+(crac :strg)                       0
+gcalarm                             t
+
+; teste 2 PUSHARG when GC during PUSHARG
+(setq gcalarm ())                   ()
+(crac2 :strg)                      0
+gcalarm                             t
+
+; test GETSYM when GC during GETSYM
+(setq gcalarm ())                   ()
+(croc :strg)                       0
+gcalarm                             t
+
+; test LISPCALL when GC during LISPCALL
+(setq gcalarm ())                   ()
+(cric :strg)                       0
+gcalarm                             t
+
+(setq :lsav () :llsav ())           ()
+
+          (test-serie "[fix|float vectors overlapping tests]" ())
+
+(setq mem (cons ()())
+      v1 (vector 1. 2. 3. ))       #[1. 2. 3.]
+
+#-(featurep '64bitfloats)          (ll_f1 v1 (vlength v1))
+                                   #-(featurep '64bitfloats) 0
+#-(featurep '64bitfloats)          v1
+                                   #-(featurep '64bitfloats) #[2. 4. 6.]
+#-(featurep '64bitfloats)          ll_f2
+                                   #-(featurep '64bitfloats) #[6. 12. 18.]
+#-(featurep '64bitfloats)          mem
+                                   #-(featurep '64bitfloats)
+				     (#[6. 12. 18.] . "ok")
+
+(setq mem (cons ()())
+      v1 (vector 10 20 30))       #[10 20 30]
+
+(ll_i1 v1 (vlength v1))           0
+v1                                #[20 40 60]
+ll_i2                             #[60 120 180]
+mem                               (#[60 120 180] . "ok")
+
+ (test-serie "[LISPCALL test with floats]" ())
+;; 6/09/90
+(test_float_lispcall)       (1.1 1.2 1.3)  
+;; 2/94
+(test_lispcall_div 3 2)   1.5
+
+  (test-serie "[C system functions called by LISPCALL]" ())
+;;; 7/92
+(progn (setq co (test_openo "llfile.tst")) 0)   0
+(with ((outchan co)) (print 123))               123
+(test_close co)                                 t
+(progn (setq ci (test_openi "llfile.tst")) 0)   0
+(with ((inchan ci))(test_read_in_file))         123
+(test_close ci)                                 t
+(test_flush)                                    t
+(test_renamefile "llfile.tst" "llfole.tst")     t
+(test_copyfile "llfole.tst" "llfile.tst")       t
+(test_probefile "llfole.tst")                   t
+(test_deletefile "llfole.tst")                  t
+(test_deletefile "llfile.tst")                  t
+(test_probefile "llfile.tst")                   ()
+(> (test_runtime) 0.)                 t
+(test_sleep 1.)                       1.
+(progn (test_date) 0)                 0
+;(test_getenv "HOME")
+(test_float 1)                        1.
+(test_fix 1.2)                        1
+(test_string 1.2)                     "1.2"
+(test_version)                        #.(version)
+(test_getglobal "cboucle")            #.(getglobal "cboucle")
+(test_fadd 1.2 3.4)                   4.6
+(test_power 2. 3.)                    8.
+(do_not_kill1)                        1
+(c_kill1)                             1
+
+          (test-serie "[End of test]" ())
+()                                      ()

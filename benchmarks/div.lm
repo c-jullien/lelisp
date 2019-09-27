@@ -1,0 +1,33 @@
+; The Le-Lisp Benchmarks (14-15) : div
+
+defmodule     div
+files        (div)
+export       (check-div2iter meter-div2iter test-div2iter
+	      check-div2rec meter-div2rec test-div2rec create-n)
+import       (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-div2iter subr0 ())
+(meter-div2iter subr0 ())
+(test-div2iter subr1 ())
+(check-div2rec subr0 ())
+(meter-div2rec subr0 ())
+(test-div2rec subr1 ())
+(create-n subr1 ())
+)
+cpfunctions (
+(test-1 subr1)
+(iterative-div2 subr1)
+(iterative-div2-aux subr2)
+(test-2 subr1)
+(recursive-div2 subr1)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+((putprop '*ll* 't '#:complice:globalvar)
+))

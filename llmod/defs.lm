@@ -1,0 +1,87 @@
+defmodule system
+files (defs)
+import (cpmac)
+include ()
+
+export (
+macroexpand
+macroexpand1
+with
+resetfn
+de
+df
+dm
+dmd
+defmacro
+defun
+ds
+letn
+slet
+for
+ifor
+ffor
+closure
+prog
+prog*
+do
+do*
+backtrack
+catch-all-but
+dynamic
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(macroexpand subr1 ())
+(macroexpand1 subr1 ())
+(with dmsubr ())
+(resetfn subr3 ())
+(de fsubr ())
+(df fsubr ())
+(dm fsubr ())
+(dmd fsubr ())
+(defmacro fsubr ())
+(defun fsubr ())
+(ds fsubr ())
+(letn dmsubr ())
+(slet dmsubr ())
+(for dmsubr () (res))
+(ifor dmsubr () (res))
+(ffor dmsubr () (res))
+(closure subr2 ())
+(prog dmsubr ())
+(prog* dmsubr ())
+(do dmsubr ())
+(do* dmsubr ())
+(backtrack dmsubr ())
+(catch-all-but dmsubr ())
+(dynamic fsubr ())
+)
+cpfunctions (
+(#:system:resetfn subr3)
+(#:system:def-check-all subr2)
+(#:system:def-check-larg subr3 (lpar))
+(#:system:def-check-larg-aux subr2)
+(#:system:generate-for-1 nsubr)
+(#:system:generate-for-2 subr3 (_+))
+(#:system:generate-for-3 subr1)
+(#:system:generate-block subr2)
+(#:system:generate-block-aux subr1)
+(#:system:generate-tagbody subr1)
+)
+cpimport (
+(cpmac
+(macro-openp . subr1)
+(remove-macro-open . subr1)
+))
+cpenv (
+cpmac
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:system:redef-flag 't '#:complice:globalvar)
+)((defun #:system:generate-for-3 (test) (mcons 'until (list test #:system:var #:system:end) (append #:system:body (ncons (list 'setq #:system:var (list _+ #:system:var #:system:step))))))
+(defun #:system:generate-for-2 (_> _< _+) (let (stepnum) (when (numberp #:system:init) (unless (funcall #:system:_pred #:system:init) (error #:system:_for #:system:_err #:system:init))) (mcons 'let (cons (list #:system:var #:system:init) (append (unless (or (numberp #:system:step) (symbolp #:system:step)) (prog1 (ncons (list '#:system:for:arg1 #:system:step)) (setq #:system:step '#:system:for:arg1))) (unless (or (numberp #:system:end) (symbolp #:system:end)) (prog1 (ncons (list '#:system:for:arg2 #:system:end)) (setq #:system:end '#:system:for:arg2))))) (append (if (numberp #:system:step) (progn (unless (funcall #:system:_pred #:system:step) (error #:system:_for #:system:_err #:system:step)) (setq stepnum #:system:step) ()) (ncons (list 'unless (list #:system:_pred #:system:step) (list 'error (list 'quote #:system:_for) (list 'quote #:system:_err) #:system:step)))) (if (numberp #:system:end) (unless (funcall #:system:_pred #:system:end) (error #:system:_for #:system:_err #:system:end)) (ncons (list 'unless (list #:system:_pred #:system:end) (list 'error (list 'quote #:system:_for) (list 'quote #:system:_err) #:system:end)))) (list (cond ((null stepnum) (list 'cond (list (mcons '> #:system:step '(0)) (#:system:generate-for-3 _>)) (list (mcons '< #:system:step '(0)) (#:system:generate-for-3 _<)) (list 't (mcons 'error (list 'quote #:system:_for) '('#:system:errnulinc 0))))) ((> stepnum 0) (#:system:generate-for-3 _>)) ((< stepnum 0) (#:system:generate-for-3 _<)) (t (error #:system:_for '#:system:errnulinc 0))) (cons 'progn res))))))
+(defun #:system:generate-for-1 (#:system:var #:system:init #:system:step #:system:end #:system:res #:system:body #:system:_for #:system:_pred #:system:_err _> _< _+) (unless (variablep #:system:var) (error #:system:_for 'errnva #:system:var)) (unless (and #:system:init #:system:step #:system:end) (error #:system:_for 'errsxt (list #:system:var #:system:init #:system:step #:system:end))) (#:system:generate-for-2 _> _< _+))
+(dmd for ((var init step end . res) . body) (#:system:generate-for-1 var init step end res body 'for 'numberp 'errnna '> '< '|+|))
+(dmd ifor ((var init step end . res) . body) (#:system:generate-for-1 var init step end res body 'ifor 'fixp 'errnia 'gt 'lt 'add))
+(dmd ffor ((var init step end . res) . body) (#:system:generate-for-1 var init step end res body 'ffor 'floatp 'errnfa 'fgt 'flt 'fadd))
+))

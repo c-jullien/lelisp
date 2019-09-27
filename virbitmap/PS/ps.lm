@@ -1,0 +1,292 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule #:display:ps
+
+files (
+ps
+)
+
+import (
+
+; ;;; Imports which seem necessary
+stringio
+abbrev
+virbitmap
+defstruct
+psprint
+product
+virgraph
+)
+
+export (
+
+; ;;; Functions unused unless exported
+ps-reset-device
+ps-clear-output
+#:display:ps:current-display
+#:display:ps:synchronize
+#:display:ps:bitmap-save
+#:display:ps:bitmap-restore
+#:display:ps:bitmap-refresh
+#:display:ps:bitmap-flush
+#:display:ps:bitmap-sync
+#:display:ps:standard-roman-font
+#:display:ps:standard-bold-font
+#:display:ps:small-roman-font
+#:display:ps:large-roman-font
+#:display:ps:standard-background-pattern
+#:display:ps:standard-foreground-pattern
+#:display:ps:standard-medium-gray-pattern
+#:display:ps:standard-light-gray-pattern
+#:display:ps:standard-dark-gray-pattern
+#:display:ps:standard-lelisp-cursor
+#:display:ps:standard-gc-cursor
+#:display:ps:standard-busy-cursor
+#:display:ps:store-selection
+#:display:ps:get-selection
+#:display:ps:display-depth
+#:display:ps:font-max
+#:display:ps:current-font
+#:display:ps:get-font-names
+#:display:ps:get-font-info
+#:display:ps:height-substring
+#:display:ps:y-base-substring
+#:display:ps:x-inc-substring
+#:display:ps:y-inc-substring
+#:display:ps:font-ascent
+#:display:ps:font-height
+#:display:ps:current-line-style
+#:display:ps:make-line-style
+#:display:ps:pattern-max
+#:display:ps:current-pattern
+#:display:ps:current-stipple
+#:display:ps:current-fill-mode
+#:display:ps:create-stipple
+#:display:ps:kill-stipple
+#:display:ps:make-color
+#:display:ps:make-mutable-color
+#:display:ps:kill-color
+#:display:ps:create-window
+#:display:ps:create-subwindow
+#:image:rectangle:window:set-window-hints
+#:image:rectangle:window:modify-window-hints
+#:display:ps:current-window
+#:display:ps:uncurrent-window
+#:display:ps:move-window
+#:display:ps:resize-window
+#:display:ps:move-resize-window
+#:display:ps:window-events-list
+#:display:ps:window-title
+#:display:ps:window-state
+#:display:ps:window-background
+#:display:ps:window-border
+#:display:ps:window-change-attributes
+#:display:ps:update-window
+#:display:ps:kill-window
+#:display:ps:pop-window
+#:display:ps:move-behind-window
+#:display:ps:current-keyboard-focus-window
+#:display:ps:uncurrent-keyboard-focus-window
+#:display:ps:find-window
+#:display:ps:map-window
+#:display:ps:window-clear-region
+#:display:ps:draw-cn
+#:display:ps:float-draw-cn
+#:display:ps:draw-cn-nobackground
+#:display:ps:float-draw-cn-nobackground
+#:display:ps:draw-substring
+#:display:ps:float-draw-substring
+#:display:ps:draw-substring-nobackground
+#:display:ps:float-draw-substring-nobackground
+#:display:ps:float-draw-point
+#:display:ps:draw-polymarker
+#:display:ps:float-draw-polymarker
+#:display:ps:draw-line
+#:display:ps:float-draw-line
+#:display:ps:draw-rectangle
+#:display:ps:float-draw-rectangle
+#:display:ps:draw-rectangles
+#:display:ps:float-draw-rectangles
+#:display:ps:highlight-rectangle
+#:display:ps:float-highlight-rectangle
+#:display:ps:draw-polyline
+#:display:ps:float-draw-polyline
+#:display:ps:draw-segments
+#:display:ps:float-draw-segments
+#:display:ps:draw-ellipse
+#:display:ps:float-draw-ellipse
+#:display:ps:draw-arc
+#:display:ps:float-draw-arc
+#:display:ps:draw-circle
+#:display:ps:float-draw-circle
+#:display:ps:float-fill-rectangle
+#:display:ps:fill-rectangles
+#:display:ps:float-fill-rectangles
+#:display:ps:fill-area
+#:display:ps:float-fill-area
+#:display:ps:fill-ellipse
+#:display:ps:float-fill-ellipse
+#:display:ps:fill-arc
+#:display:ps:float-fill-arc
+#:display:ps:fill-circle
+#:display:ps:float-fill-circle
+#:display:ps:create-menu
+#:display:ps:kill-menu
+#:display:ps:activate-menu
+#:display:ps:menu-insert-item
+#:display:ps:menu-insert-item-list
+#:display:ps:menu-delete-item-list
+#:display:ps:menu-delete-item
+#:display:ps:menu-modify-item-list
+#:display:ps:menu-modify-item
+#:display:ps:create-bytemap
+#:display:ps:subst-colors
+#:display:ps:create-window-bitmap
+#:display:ps:bitblit
+#:display:ps:cursor-max
+#:display:ps:make-cursor
+#:display:ps:make-named-cursor
+#:display:ps:cursor-name
+#:display:ps:current-cursor
+#:display:ps:move-cursor
+#:display:ps:draw-cursor
+#:display:ps:event-mode
+#:display:ps:flush-event
+#:display:ps:eventp
+#:display:ps:read-event
+#:display:ps:peek-event
+#:display:ps:read-mouse
+#:display:ps:add-event
+#:display:ps:grab-event
+#:display:ps:ungrab-event
+#:display:ps:itsoft-event
+#:display:ps:allow-event
+#:display:ps:disallow-event
+#:display:ps:allowed-event-p
+#:display:ps:clear-graph-env
+#:display:ps:current-clip
+#:display:ps:current-foreground
+#:display:ps:current-background
+#:display:ps:red-component
+#:display:ps:green-component
+#:display:ps:blue-component
+#:display:ps:name-to-rgb
+#:display:ps:get-rgb-values
+#:display:ps:current-mode
+#:display:ps:current-arc-mode
+#:display:ps:graph-env-planemask
+
+; ;;; Exports required by other modules
+#:display:ps:bitprologue
+#:display:ps:bitepilogue
+#:display:ps:load-font
+#:display:ps:width-substring
+#:display:ps:x-base-substring
+#:display:ps:line-style-max
+#:display:ps:make-pattern
+#:display:ps:make-named-color
+#:display:ps:modify-window
+#:display:ps:draw-point
+#:display:ps:fill-rectangle
+#:display:ps:psge
+#:display:ps:create-bitmap
+#:display:ps:kill-bitmap
+#:display:ps:bmref
+#:display:ps:bmset
+#:display:ps:byteref
+#:display:ps:byteset
+#:display:ps:get-bit-line
+#:display:ps:set-bit-line
+#:display:ps:get-byte-line
+#:display:ps:set-byte-line
+
+; ;;; Not exported because only internally used
+; #:display:ps:psdefaults
+; #:display:ps:psscale
+; #:display:ps:initialize
+; #:display:ps:init-font
+; #:display:ps:font-namestr
+; #:display:ps:font-sizestr
+; #:display:ps:get-font-alias
+; #:display:ps:find-alias
+; #:display:ps:font-realname
+; #:display:ps:test-font
+; #:display:ps:vect-max
+; #:display:ps:vect-min
+; #:display:ps:read-font-metrics
+; #:display:ps:ps-font-ascent
+; #:display:ps:round
+; #:display:ps:fsize
+; #:display:ps:no-control
+; #:display:ps:init-line-style
+; #:display:ps:init-pattern
+; #:display:ps:add-a-pattern
+; #:display:ps:init-color
+; #:display:ps:do-color
+; #:display:ps:make-named-pscolor
+; #:display:ps:init-window
+; #:display:ps:create-graph-env
+; #:display:ps:copy-ge
+; #:display:ps:set-clip-for-window
+; #:display:ps:set-clip-for-subwindows
+; #:display:ps:set-offsets
+; #:display:ps:intersect
+; #:display:ps:set-view-rectangle
+; #:display:ps:set-visibility
+; #:display:ps:draw-cn-internal
+; #:display:ps:draw-substring-internal
+; #:display:ps:get-ps-default
+; #:display:ps:ps-newfont
+; #:display:ps:ps-newlinestyle
+; #:display:ps:ps-newwin
+; #:display:ps:bits-to-bytes
+; #:display:ps:bytes-to-bits
+)
+
+cpenv (
+stringio
+abbrev
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+defstruct
+psprint
+setf
+cpmac
+hash
+messages
+date
+product
+((putprop '#:sys-package:bitmap 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:all-bitmaps 't '#:complice:globalvar)
+)((putprop 'pi 't '#:complice:globalvar)
+)((putprop '#:display:ps:apple-lw-fontnames 't '#:complice:globalvar)
+)((putprop '#:display:ps:default-colors 't '#:complice:globalvar)
+)((putprop '#:display:ps:qms-800-fontnames 't '#:complice:globalvar)
+)((putprop '#:display:ps:lino-300-fontnames 't '#:complice:globalvar)
+)((putprop '#:display:ps:default-ps-fonts 't '#:complice:globalvar)
+)((putprop '#:display:ps:ps-font-dir 't '#:complice:globalvar)
+)((putprop '#:display:ps:ps-rgb-file 't '#:complice:globalvar)
+)((putprop '#:display:ps:a4h 't '#:complice:globalvar)
+)((putprop '#:display:ps:a4v 't '#:complice:globalvar)
+)((putprop '#:display:ps:a5h 't '#:complice:globalvar)
+)((putprop '#:display:ps:a5v 't '#:complice:globalvar)
+)((putprop '#:display:ps:ps-xmax-default 't '#:complice:globalvar)
+)((putprop '#:display:ps:ps-ymax-default 't '#:complice:globalvar)
+)((putprop '#:display:ps:rgb 't '#:complice:globalvar)
+)((putprop '#:display:ps:cnstring 't '#:complice:globalvar)
+)((putprop '#:display:ps:line-style-conversion 't '#:complice:globalvar)
+)((putprop '#:display:ps:init-bitmap 't '#:complice:globalvar)
+)((putprop '#:display:ps:subst-str 't '#:complice:globalvar)
+)((putprop '#:display:ps:bitvector 't '#:complice:globalvar)
+)((putprop '#:display:ps:bitvector2 't '#:complice:globalvar)
+))

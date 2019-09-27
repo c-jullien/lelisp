@@ -1,0 +1,161 @@
+defmodule
+pepe
+files (
+pepe
+)
+export (
+pepe
+pepefile
+pepend
+defkey
+defesckey
+#:pepe:eval:eol
+#:pepe:pepecmd
+#:pepe:escommand
+#:pepe:redisplay
+#:pepe:trueredisplay
+#:pepe:fillminibuf
+#:pepe:fillminibufnb
+#:pepe:clrscreen
+#:pepe:more
+#:pepe:readname
+#:pepe:deadend
+#:pepe:currentline
+#:pepe:currentlines
+#:pepe:cursor
+#:pepe:bolp
+#:pepe:eolp
+#:pepe:bobp
+#:pepe:eobp
+#:pepe:bosp
+#:pepe:eosp
+#:pepe:left
+#:pepe:right
+#:pepe:endline
+#:pepe:begline
+#:pepe:up
+#:pepe:down
+#:pepe:nextscreen
+#:pepe:prevscreen
+#:pepe:insertchar
+#:pepe:deletechar
+#:pepe:breakline
+#:pepe:killine
+#:pepe:search
+#:pepe:gotoabs
+#:pepe:matchparent
+#:pepe:curlexnext
+#:pepe:curchar
+#:pepe:readfile
+#:pepe:writefile
+#:pepe:insertfile
+#:pepe:backup
+#:pepe:help
+#:pepe:evalbuffer
+#:pepe:evalbuffer:bol
+#:pepe:evalbuffer:syserror
+#:pepe:evalbuffer:eol
+)
+import (
+files
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(pepe fsubr parano (#:pepe:f))
+(pepefile subr1 parano (#:pepe:f) (#:pepe:xmax #:pepe:ymax #:pepe:xmax+1 #:pepe:-xmax+1 #:pepe:xmax-1 #:pepe:xmax/2+2 #:pepe:xmax/2-2 #:pepe:ymax+1 #:pepe:ymax-1 #:pepe:ymax/2 #:pepe:ymax/4 #:pepe:xmax+1*ymax) (#:pepe:oscreen #:pepe:nscreen) (#:sys-package:itsoft))
+(#:pepe:clrscreen subr0 ())
+(#:pepe:readfile subr1 ())
+(#:pepe:redisplay subr0 ())
+(#:pepe:fillminibufnb subr1 ())
+(#:pepe:pepecmd subr1 ())
+(#:pepe:insertchar subr1 ())
+(pepend subr0 ())
+(defkey dmsubr ())
+(defesckey fsubr ())
+(#:pepe:eval:eol subr0 ())
+(#:pepe:escommand subr0 ())
+(#:pepe:trueredisplay dmsubr ())
+(#:pepe:fillminibuf dmsubr ())
+(#:pepe:more subr0 ())
+(#:pepe:readname subr1 ())
+(#:pepe:deadend dmsubr ())
+(#:pepe:currentline dmsubr ())
+(#:pepe:currentlines dmsubr ())
+(#:pepe:cursor dmsubr ())
+(#:pepe:bolp dmsubr ())
+(#:pepe:eolp dmsubr ())
+(#:pepe:bobp dmsubr ())
+(#:pepe:eobp dmsubr ())
+(#:pepe:bosp dmsubr ())
+(#:pepe:eosp dmsubr ())
+(#:pepe:left subr0 ())
+(#:pepe:up subr0 ())
+(#:pepe:endline subr0 ())
+(#:pepe:right subr0 ())
+(#:pepe:begline subr0 ())
+(#:pepe:down subr0 ())
+(#:pepe:nextscreen subr0 ())
+(#:pepe:prevscreen subr0 ())
+(#:pepe:deletechar subr0 ())
+(#:pepe:breakline subr0 ())
+(#:pepe:killine subr0 ())
+(#:pepe:search subr0 ())
+(#:pepe:gotoabs subr2 ())
+(#:pepe:matchparent subr1 ())
+(#:pepe:curlexnext subr0 ())
+(#:pepe:curchar subr0 ())
+(#:pepe:writefile subr1 ())
+(#:pepe:insertfile subr0 ())
+(#:pepe:backup subr0 ())
+(#:pepe:help subr0 ())
+(#:pepe:evalbuffer subr0 parano () (#:sys-package:itsoft #:pepe:buffer #:pepe:xy) (#:with:arg0 #:with:arg1))
+(#:pepe:evalbuffer:bol subr0 ())
+(#:pepe:evalbuffer:syserror subr3 ())
+(#:pepe:evalbuffer:eol subr0 ())
+)
+cpfunctions
+()
+cpimport (
+(files
+(rem-feature . subr1)
+(libautoload . fsubr)
+))
+cpenv (
+files
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:pepe:buffer 't '#:complice:globalvar)
+)((putprop '#:pepe:xcursor 't '#:complice:globalvar)
+)((putprop '#:pepe:ycursor 't '#:complice:globalvar)
+)((putprop '#:pepe:column 't '#:complice:globalvar)
+)((putprop '#:pepe:ydisplay 't '#:complice:globalvar)
+)((putprop '#:pepe:file 't '#:complice:globalvar)
+)((putprop '#:pepe:commands 't '#:complice:globalvar)
+)((putprop '#:pepe:escommands 't '#:complice:globalvar)
+)((putprop '#:pepe:modbuf 't '#:complice:globalvar)
+)((putprop '#:pepe:kill 't '#:complice:globalvar)
+)((putprop '#:pepe:searchstrg 't '#:complice:globalvar)
+)((putprop '#:pepe:x 't '#:complice:globalvar)
+)((putprop '#:pepe:y 't '#:complice:globalvar)
+)((putprop '#:pepe:l 't '#:complice:globalvar)
+)((putprop '#:pepe:s 't '#:complice:globalvar)
+)((putprop '#:pepe:fm 't '#:complice:globalvar)
+)((putprop '#:pepe:char 't '#:complice:globalvar)
+)((putprop '#:pepe:oscreen 't '#:complice:globalvar)
+)((putprop '#:pepe:nscreen 't '#:complice:globalvar)
+)((putprop '#:pepe:xy 't '#:complice:globalvar)
+)((putprop '#:pepe:pos 't '#:complice:globalvar)
+)((putprop '#:pepe:xmax 't '#:complice:globalvar)
+)((putprop '#:pepe:xmax+1 't '#:complice:globalvar)
+)((putprop '#:pepe:xmax/2+2 't '#:complice:globalvar)
+)((putprop '#:pepe:xmax/2-2 't '#:complice:globalvar)
+)((putprop '#:pepe:xmax+1*ymax 't '#:complice:globalvar)
+)((putprop '#:pepe:-xmax+1 't '#:complice:globalvar)
+)((putprop '#:pepe:ymax 't '#:complice:globalvar)
+)((putprop '#:pepe:ymax+1 't '#:complice:globalvar)
+)((putprop '#:pepe:ymax-1 't '#:complice:globalvar)
+)((putprop '#:pepe:ymax/2 't '#:complice:globalvar)
+)((putprop '#:pepe:ymax/4 't '#:complice:globalvar)
+))

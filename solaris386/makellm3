@@ -1,0 +1,251 @@
+#  Le Makefile du syste`me Le_Lisp [386]
+###################################################################
+#  Ce makefile exploite  ../386dx/makefile pour
+#  obtenir les fichiers d'assembleur: $(s)
+###################################################################
+# La machine a base de 386dx: par defaut: solaris386  [cf ../386dx/makefile]
+# C'est aussi: lelisp/$(SYSTEM)
+
+SYSTEM	= solaris386
+HOST	= $(SYSTEM)
+AS	= sed -e "s/\.even/\.align 2/g"
+ASFLAGS	= | gas --gstabs
+
+# Les entre'es standard
+#
+# Entree par defaut:
+
+all: llm3expand
+
+llm3expand:
+	(cd ../386dx; sh ./faire.assembler ../$(SYSTEM)/lelisp31bin)
+	cp ../386dx/unix/s31fpu/[a-z]* s31
+	cp ../386dx/unix/s64fpu/[a-z]* s64
+	$(MAKE) -f makellm3 llm31 llm64
+
+# Entree pour tout effacer: les binaires
+
+clean:
+	rm -f lelisp64llm3.o lelisp31llm3.o
+
+lelisp31llm3.o:
+	(cd ../386dx; make uxs31fpu)
+
+lelisp64llm3.o:
+	(cd ../386dx; make uxs64fpu)
+
+O31FPU	= 			\
+	o31/bllsht.o		\
+	o31/carcdr.o		\
+	o31/chars.o		\
+	o31/cntrl.o		\
+	o31/eval.o		\
+	o31/extend.o		\
+	o31/fntstd.o		\
+	o31/fspecs.o		\
+	o31/gc.o		\
+	o31/llinit.o		\
+	o31/llsolaris386.o	\
+	o31/macroch.o		\
+	o31/number.o		\
+	o31/physio.o		\
+	o31/print.o		\
+	o31/read.o		\
+	o31/specnb.o		\
+	o31/string.o		\
+	o31/symbs.o		\
+	o31/toperr.o
+
+O64FPU	= 			\
+	o64/bllsht.o		\
+	o64/carcdr.o		\
+	o64/chars.o		\
+	o64/cntrl.o		\
+	o64/eval.o		\
+	o64/extend.o		\
+	o64/fntstd.o		\
+	o64/fspecs.o		\
+	o64/gc.o		\
+	o64/llinit.o		\
+	o64/llsolaris386.o	\
+	o64/macroch.o		\
+	o64/number.o		\
+	o64/physio.o		\
+	o64/print.o		\
+	o64/read.o		\
+	o64/specnb.o		\
+	o64/string.o		\
+	o64/symbs.o		\
+	o64/toperr.o
+
+####################################################
+#	s31
+####################################################
+
+llm31: $(O31FPU)
+
+o31/bllsht.o: s31/bllsht.s
+	@echo $<
+	@$(AS) s31/bllsht.s $(ASFLAGS) -o $@
+
+o31/carcdr.o: s31/carcdr.s
+	@echo $<
+	@$(AS) s31/carcdr.s $(ASFLAGS) -o $@
+
+o31/chars.o: s31/chars.s
+	@echo $<
+	@$(AS) s31/chars.s $(ASFLAGS) -o $@
+
+o31/cntrl.o: s31/cntrl.s
+	@echo $<
+	@$(AS) s31/cntrl.s $(ASFLAGS) -o $@
+
+o31/eval.o: s31/eval.s
+	@echo $<
+	@$(AS) s31/eval.s $(ASFLAGS) -o $@
+
+o31/extend.o: s31/extend.s
+	@echo $<
+	@$(AS) s31/extend.s $(ASFLAGS) -o $@
+
+o31/fntstd.o: s31/fntstd.s
+	@echo $<
+	@$(AS) s31/fntstd.s $(ASFLAGS) -o $@
+
+o31/fspecs.o: s31/fspecs.s
+	@echo $<
+	@$(AS) s31/fspecs.s $(ASFLAGS) -o $@
+
+o31/gc.o: s31/gc.s
+	@echo $<
+	@$(AS) s31/gc.s $(ASFLAGS) -o $@
+
+o31/llinit.o: s31/llinit.s
+	@echo $<
+	@$(AS) s31/llinit.s $(ASFLAGS) -o $@
+
+o31/llsolaris386.o: s31/ll386.s
+	@echo $<
+	@$(AS) s31/ll386.s $(ASFLAGS) -o $@
+
+o31/macroch.o: s31/macroch.s
+	@echo $<
+	@$(AS) s31/macroch.s $(ASFLAGS) -o $@
+
+o31/number.o: s31/number.s
+	@echo $<
+	@$(AS) s31/number.s $(ASFLAGS) -o $@
+
+o31/physio.o: s31/physio.s
+	@echo $<
+	@$(AS) s31/physio.s $(ASFLAGS) -o $@
+
+o31/print.o: s31/print.s
+	@echo $<
+	@$(AS) s31/print.s $(ASFLAGS) -o $@
+
+o31/read.o: s31/read.s
+	@echo $<
+	@$(AS) s31/read.s $(ASFLAGS) -o $@
+
+o31/specnb.o: s31/specnb.s
+	@echo $<
+	@$(AS) s31/specnb.s $(ASFLAGS) -o $@
+
+o31/string.o: s31/string.s
+	@echo $<
+	@$(AS) s31/string.s $(ASFLAGS) -o $@
+
+o31/symbs.o: s31/symbs.s
+	@echo $<
+	@$(AS) s31/symbs.s $(ASFLAGS) -o $@
+
+o31/toperr.o: s31/toperr.s
+	@echo $<
+	@$(AS) s31/toperr.s $(ASFLAGS) -o $@
+
+####################################################
+#	o64
+####################################################
+
+llm64: $(O64FPU)
+
+o64/bllsht.o: s64/bllsht.s
+	@echo $<
+	@$(AS) s64/bllsht.s $(ASFLAGS) -o $@
+
+o64/carcdr.o: s64/carcdr.s
+	@echo $<
+	@$(AS) s64/carcdr.s $(ASFLAGS) -o $@
+
+o64/chars.o: s64/chars.s
+	@echo $<
+	@$(AS) s64/chars.s $(ASFLAGS) -o $@
+
+o64/cntrl.o: s64/cntrl.s
+	@echo $<
+	@$(AS) s64/cntrl.s $(ASFLAGS) -o $@
+
+o64/eval.o: s64/eval.s
+	@echo $<
+	@$(AS) s64/eval.s $(ASFLAGS) -o $@
+
+o64/extend.o: s64/extend.s
+	@echo $<
+	@$(AS) s64/extend.s $(ASFLAGS) -o $@
+
+o64/fntstd.o: s64/fntstd.s
+	@echo $<
+	@$(AS) s64/fntstd.s $(ASFLAGS) -o $@
+
+o64/fspecs.o: s64/fspecs.s
+	@echo $<
+	@$(AS) s64/fspecs.s $(ASFLAGS) -o $@
+
+o64/gc.o: s64/gc.s
+	@echo $<
+	@$(AS) s64/gc.s $(ASFLAGS) -o $@
+
+o64/llinit.o: s64/llinit.s
+	@echo $<
+	@$(AS) s64/llinit.s $(ASFLAGS) -o $@
+
+o64/llsolaris386.o: s64/ll386.s
+	@echo $<
+	@$(AS) s64/ll386.s $(ASFLAGS) -o $@
+
+o64/macroch.o: s64/macroch.s
+	@echo $<
+	@$(AS) s64/macroch.s $(ASFLAGS) -o $@
+
+o64/number.o: s64/number.s
+	@echo $<
+	@$(AS) s64/number.s $(ASFLAGS) -o $@
+
+o64/physio.o: s64/physio.s
+	@echo $<
+	@$(AS) s64/physio.s $(ASFLAGS) -o $@
+
+o64/print.o: s64/print.s
+	@echo $<
+	@$(AS) s64/print.s $(ASFLAGS) -o $@
+
+o64/read.o: s64/read.s
+	@echo $<
+	@$(AS) s64/read.s $(ASFLAGS) -o $@
+
+o64/specnb.o: s64/specnb.s
+	@echo $<
+	@$(AS) s64/specnb.s $(ASFLAGS) -o $@
+
+o64/string.o: s64/string.s
+	@echo $<
+	@$(AS) s64/string.s $(ASFLAGS) -o $@
+
+o64/symbs.o: s64/symbs.s
+	@echo $<
+	@$(AS) s64/symbs.s $(ASFLAGS) -o $@
+
+o64/toperr.o: s64/toperr.s
+	@echo $<
+	@$(AS) s64/toperr.s $(ASFLAGS) -o $@

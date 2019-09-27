@@ -1,0 +1,110 @@
+;;; GELL 15.26: elaboration file for the module: trace
+;;;             translation done: "Wed June 16 93 18:01:33 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: trace.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'trace)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZtrace" "Wed June 16 93 18:01:33 "
+
+'((#:trace:output . dmsubr) (trace . fsubr) (untrace . fsubr) (#:trace:untrace-one . subr1) (#:trace:trace-one . subr1) (step . fsubr) (#:step:stepeval . subr2) (unstep . fsubr) (cstep . fsubr) (stepend . subr0) (tracend . subr0) (debugend . subr0))
+
+#[with ((outchan *trace-output*)) mcons r (r) lambda reverse #:trace:trace-one #:trace:trace window featurep tracewindow #:trace:windowp #:window:tty bitxmax font-height bitymax "Le-Lisp : Trace" create-window #:trace:last-untraced #:trace:untrace-one kill-window trace getprop #:trace:errntf untrace printerror resetfn&trace resetfn remprop setfn delq entry #:trace:output print quote #:trace:fct list " ---> " "subr" #:trace:ftype index #:trace:larg " " nreconc kwote "=" exit (" <--- " #:trace:value) when (t) break step (entry exit when break step) unstep #:trace:if #:trace:not-in-trace-flag #:trace:let ((#:trace:not-in-trace-flag ())) (setq #:trace:step-in-trace-flag ()) #:trace:when #:trace:with current-window #:trace:progn let ((#:trace:not-in-trace-flag t) (#:system:debug t)) #:trace:itsoft 'syserror (break tracebreak) #:trace:value #:trace:and #:trace:or #:trace:step-in-trace-flag ((#:trace:not-in-trace-flag t)) #:trace:call ((#:trace:not-in-trace-flag t)) cstep (#:trace:value) (#:trace:fct) #:trace:untracable #:trace:errcnt valfn &nobind #:trace:errtnb typefn (#:trace:call #:trace:larg #:trace:ftype) (t resetfn&trace) expr fexpr macro dmacro subr0 (() () ()) subr1 (#:trace:arg1) (#:trace:arg1 () ()) subr2 (#:trace:arg1 #:trace:arg2) (#:trace:arg1 #:trace:arg2 ()) subr3 (#:trace:arg1 #:trace:arg2 #:trace:arg3) (#:trace:arg1 #:trace:arg2 #:trace:arg3) fsubr msubr dmsubr #:trace:arg1 (#:trace:arg1 () ()) nsubr #:trace:calln (#:trace:arg1) errunk #:trace:errknt (expr fexpr macro dmacro) ((subr1 . expr) (subr2 . expr) (subr3 . expr) (subr0 . expr) (fsubr . fexpr) (nsubr . expr) (msubr . macro) (dmsubr . dmacro)) putprop #:step:exp (#:step:exp) #:sys-package:itsoft t #:step:history #:step:speak #:step:value #:step:depth (#:sys-package:itsoft #:step:history #:trace:trace #:step:speak #:step:value #:step:depth) progn #:trace:traceval #:step:env #:step:forme (#:step:env #:step:forme) |1+| (#:step:history #:step:depth) eval stepeval (#:step:exp) #:trace:eprogn (#:step:exp) ((#:trace:and (#:trace:boundp '#:step:speak) #:step:speak) (#:trace:traceval #:step:exp) (#:trace:eval #:step:exp)) < princn #:step:auto-step outchan *trace-output* printlevel printline " -> " " step>" prinflush inchan *trace-input* teread readline #:system:debug (#:system:debug) syserror itsoft (#:step:speak) " <- " #:system:toplevel-tag #:llcp:exit (#:step:history) #:step:help1 get-message #:step:help2 #:step:help3 #:step:help4 #:step:help5 #:step:help6 #:step:help7 send #:sys-package:tty tyi getfn #:tty:tyi member (#:trace:windowp) ((send (entry (setq #:step:fnt (getfn (type-of (cadr #:trace:arg1)) (car #:trace:arg1))) (cond ((null #:step:fnt)) ((or (memq #:step:fnt #:trace:untracable) (memq #:step:fnt '(car print prin)))) (t (#:trace:trace-one (cons #:step:fnt '((step t))))))) (exit (if (memq #:step:fnt #:trace:trace) (#:trace:untrace-one #:step:fnt))))) (#:step:speak) #:trace:eval (send) #:step:errnosendwindow #:step:errnonobind traceval oblist remob (trace step unstep cstep) libautoload stepend () (trace trace untrace) tracend debug rem-feature debugend #:gell-resetfn:function-name #:gell-resetfn:function-1 #:gell-resetfn:function-f #:step:stepeval #:gell-resetfn:function-2 #:gell-resetfn:function-0]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'trace)))
+(add-feature 'debug)
+(defvar #:sys-package:colon 'trace)
+(#:messages:put-message '#:trace:errtnb 'french '"Je ne sais pas tracer une fonction &NOBIND" 'defmessage)
+(#:messages:put-message '#:trace:errtnb 'english '"I don't know how to trace an &NOBIND function" 'defmessage)
+'#:trace:errtnb
+(#:messages:put-message '#:trace:errcnt 'french '"Je ne peux pas tracer" 'defmessage)
+(#:messages:put-message '#:trace:errcnt 'english '"I can't trace" 'defmessage)
+'#:trace:errcnt
+(#:messages:put-message '#:trace:errknt 'french '"Je ne sais pas tracer une fonction de ce type" 'defmessage)
+(#:messages:put-message '#:trace:errknt 'english '"I don't know trace a function of this type" 'defmessage)
+'#:trace:errknt
+(#:messages:put-message '#:trace:errntf 'french '"cette fonction n'e'tait pas trace'e" 'defmessage)
+(#:messages:put-message '#:trace:errntf 'english '"this function wasn't traced" 'defmessage)
+'#:trace:errntf
+(defvar #:system:debug ())
+(defvar *trace-input* ())
+(defvar *trace-output* ())
+(defvar #:step:auto-step ())
+(defcsetfn '#:trace:output "GZtrace" 0)
+(defvar #:trace:trace ())
+(defvar #:trace:last-untraced ())
+(defvar #:trace:untracable '(cstep step unstep quote arg =))
+(defvar tracewindow ())
+(defvar #:trace:windowp t)
+(defcsetfn 'trace "GZtrace" 1)
+(defcsetfn 'untrace "GZtrace" 2)
+(defcsetfn '#:trace:untrace-one "GZtrace" 3)
+(defvar #:trace:not-in-trace-flag t)
+(defvar #:trace:step-in-trace-flag ())
+(synonym '#:trace:if 'if)
+(synonym '#:trace:let 'let)
+(synonym '#:trace:when 'when)
+(synonym '#:trace:with 'with)
+(synonym '#:trace:progn 'progn)
+(synonym '#:trace:itsoft 'itsoft)
+(synonym '#:trace:and 'and)
+(synonym '#:trace:or 'or)
+(synonym '#:trace:call 'call)
+(synonym '#:trace:calln 'calln)
+(synonym '#:trace:boundp 'boundp)
+(synonym '#:trace:eval 'eval)
+(synonym '#:trace:traceval 'traceval)
+(synonym '#:trace:eprogn 'eprogn)
+(defvar #:trace:fct)
+(defvar #:trace:ftype)
+(defvar #:trace:larg)
+(defvar #:trace:call)
+(defcsetfn '#:trace:trace-one "GZtrace" 4)
+(setq #:sys-package:colon 'step)
+(#:messages:put-message '#:step:errnonobind 'french '"je ne peux pas suivre une fonction &NOBIND" 'defmessage)
+(#:messages:put-message '#:step:errnonobind 'english '"I can't step an &NOBIND function" 'defmessage)
+'#:step:errnonobind
+(#:messages:put-message '#:step:errnosendwindow 'french '"je ne sais pas suivre SEND dans une fene^tre graphique" 'defmessage)
+(#:messages:put-message '#:step:errnosendwindow 'english '"I can't step SEND into graphic window" 'defmessage)
+'#:step:errnosendwindow
+(#:messages:put-message '#:step:help1 'french '";Les commandes de pas a pas sont : " 'defmessage)
+(#:messages:put-message '#:step:help1 'english '";Commands for step are : " 'defmessage)
+'#:step:help1
+(#:messages:put-message '#:step:help2 'french '";   CR  pour passer a l'expression suivante" 'defmessage)
+(#:messages:put-message '#:step:help2 'english '";   CR  go to next expression" 'defmessage)
+'#:step:help2
+(#:messages:put-message '#:step:help3 'french '";   .   pour voir l'expression courante" 'defmessage)
+(#:messages:put-message '#:step:help3 'english '";   .   see current expression" 'defmessage)
+'#:step:help3
+(#:messages:put-message '#:step:help4 'french '";   <   pour evaluer sans pas a pas et y revenir" 'defmessage)
+(#:messages:put-message '#:step:help4 'english '";   <   evaluate without step and come back" 'defmessage)
+'#:step:help4
+(#:messages:put-message '#:step:help5 'french '";   q   retour au toplevel" 'defmessage)
+(#:messages:put-message '#:step:help5 'english '";   q   return to toplevel" 'defmessage)
+'#:step:help5
+(#:messages:put-message '#:step:help6 'french '";   h   pour avoir l'historique du pas a pas" 'defmessage)
+(#:messages:put-message '#:step:help6 'english '";   h   view history" 'defmessage)
+'#:step:help6
+(#:messages:put-message '#:step:help7 'french '";   ?   pour avoir ce texte ...." 'defmessage)
+(#:messages:put-message '#:step:help7 'english '";   ?   this message ..." 'defmessage)
+'#:step:help7
+(defvar #:step:depth 0)
+(defvar #:step:value ())
+(defvar #:step:speak t)
+(defvar #:step:history ())
+(defvar #:step:exp)
+(makunbound '#:step:speak)
+(defcsetfn 'step "GZtrace" 5)
+(defcsetfn '#:step:stepeval "GZtrace" 6)
+(defcsetfn 'unstep "GZtrace" 7)
+(putprop 'unstep 'parano '#:complice:fvar)
+(defcsetfn 'cstep "GZtrace" 8)
+(defcsetfn 'stepend "GZtrace" 9)
+(defcsetfn 'tracend "GZtrace" 10)
+(defcsetfn 'debugend "GZtrace" 11)
+
+(defccheck '(rem-feature stepend tracend libautoload remob oblist traceval untrace #:trace:eval trace member getfn get-message #:llcp:exit print itsoft readline teread inchan prinflush printline printlevel outchan princn < #:trace:if #:trace:eprogn stepeval eval |1+| #:trace:traceval putprop typefn valfn kwote nreconc index list delq setfn remprop resetfn printerror getprop kill-window #:trace:untrace-one create-window bitymax font-height bitxmax featurep #:trace:trace-one reverse mcons))

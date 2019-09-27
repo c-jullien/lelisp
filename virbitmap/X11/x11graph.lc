@@ -1,0 +1,56 @@
+defmodule #:display:x11
+files (x11graph.ll)
+include (
+virmacros.ll
+virstruct.ll
+)
+import (
+virutil ; ..make
+x11_def x11struct
+virgraph ; #:display:space
+)
+export (
+:graph-env-subwindow-mode
+:font-max 
+:load-font 
+:current-font 
+:width-substring
+:height-substring 
+:x-base-substring 
+:y-base-substring 
+:x-inc-substring 
+:y-inc-substring 
+:line-style-max 
+:current-line-style 
+:pattern-max 
+:make-pattern 
+:current-pattern
+:current-mode  
+:current-arc-mode  
+:cursor-name
+:cursor-max
+:make-cursor 
+:make-named-cursor 
+:current-cursor 
+:move-cursor 
+:current-foreground 
+:current-background
+
+:graph-env-set-clip
+:make-graph-env
+:kill-graph-env
+
+:make-line-style
+:font-ascent
+:font-height
+:graph-env-set-clips
+:graph-env-change-values
+
+:get-font-names
+:get-font-info
+:graph-env-planemask
+
+:current-stipple
+:current-fill-mode
+)
+

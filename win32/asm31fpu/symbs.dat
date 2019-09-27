@@ -1,0 +1,114 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	mstack:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zundef:dword
+	extrn	hashtab:dword
+	extrn	cpkgc:dword
+	extrn	tabcodfn:dword
+	extrn	tabtypfn:dword
+pnmac731	db	'makunbound'
+	even
+pnmac732	db	'plist'
+	even
+pnmac733	db	'packagecell'
+	even
+pnmac734	db	'3d-root-symbol'
+	even
+pnmac735	db	'objval'
+	even
+pnmac736	db	'valfn'
+	even
+pnmac737	db	'typefn'
+	even
+pnmac738	db	'setfn'
+	even
+pnmac739	db	'remfn'
+	even
+pnmac740	db	'findfn'
+	even
+pnmac741	db	'getfn1'
+	even
+pnmac742	db	'getfn'
+	even
+pnmac743	db	'getsymb1'
+	even
+pnmac744	db	'getsymb'
+	even
+pnmac745	db	'getfn2'
+	even
+pnmac746	db	'synonym'
+	even
+pnmac747	db	'synonymq'
+	even
+pnmac748	db	'remob'
+	even
+pnmac749	db	'get'
+	even
+pnmac750	db	'getprop'
+	even
+pnmac751	db	'getl'
+	even
+pnmac752	db	'addprop'
+	even
+pnmac753	db	'putprop'
+	even
+pnmac754	db	'defprop'
+	even
+pnmac755	db	'remprop'
+	even
+pnmac756	db	'incr'
+	even
+pnmac757	db	'decr'
+	even
+zmakunbound	dd	0
+zfplist	dd	0
+zpckgcell	dd	0
+zd3root	dd	0
+zobjval	dd	0
+zvalfn	dd	0
+ztypefn	dd	0
+zsetfn	dd	0
+zgetfn1	dd	0
+zgetfn	dd	0
+zgetbi	dd	0
+zremfn	dd	0
+zfindfn	dd	0
+zsynonym	dd	0
+zsynqnym	dd	0
+zremob	dd	0
+zgetsymb	dd	0
+zgetsym1	dd	0
+	extrn	itstate:dword
+	extrn	itcount:dword
+	extrn	_itloop:dword
+zgetprop	dd	0
+zgetl	dd	0
+zaddprop	dd	0
+zputprop	dd	0
+zdefprop	dd	0
+zremprop	dd	0
+zfincr	dd	0
+zfdecr	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

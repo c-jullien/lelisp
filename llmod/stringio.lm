@@ -1,0 +1,52 @@
+defmodule
+stringio
+files (
+stringio
+)
+export (
+read-from-string
+with-input-from-string
+print-to-string
+with-output-to-string
+#:stringio:bol
+#:stringio:in:bol
+#:stringio:in:syserror
+#:stringio:out:eol
+#:stringio:out:flush
+#:stringio:out:syserror
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(read-from-string subr1 ())
+(with-input-from-string dmsubr ())
+(print-to-string subr1 ())
+(with-output-to-string dmsubr ())
+(#:stringio:bol subr1 ())
+(#:stringio:in:bol subr0 ())
+(#:stringio:in:syserror subr3 ())
+(#:stringio:out:eol subr0 ())
+(#:stringio:out:flush subr0 ())
+(#:stringio:out:syserror subr3 ())
+)
+cpfunctions (
+(#:stringio:aux-error nsubr)
+(#:stringio:copy-output-buffer subr0)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:stringio:string-in-buffer 't '#:complice:globalvar)
+)((putprop '#:stringio:string-in-bindex 't '#:complice:globalvar)
+)((putprop '#:stringio:sbuf 't '#:complice:globalvar)
+)((putprop '#:stringio:buf 't '#:complice:globalvar)
+)((putprop '#:stringio:string-out-length 't '#:complice:globalvar)
+)((putprop '#:stringio:string-out-buffer 't '#:complice:globalvar)
+)((putprop '#:stringio:string-out-bindex 't '#:complice:globalvar)
+)((putprop '#:stringio:string-out-outpos 't '#:complice:globalvar)
+))

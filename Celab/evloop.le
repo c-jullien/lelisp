@@ -1,0 +1,68 @@
+;;; GELL 15.26: elaboration file for the module: evloop
+;;;             translation done: "Tue Aug  24 93 10:49:33 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: evloop.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'evloop)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZevloop" "Tue Aug  24 93 10:49:33 "
+
+'((evloop_build_mask . subr2) (evloop_mask_to_fds . subr2) (#:event-loop:tty-input . subr1) (#:tty:evloop:tyi . subr0) (evloop-init . subr0) (evloop-initialized-p . subr0) (evloop-restart . subr0) (evloop-stop . subr0) (evloop-set-timeout . subr2) (evloop-select . subr0) (evloop-wait . subr0) (evloop-readp . subr0) (evloop-add-input . subr3) (evloop-remove-input . subr1) (evloop-change-manage-function . subr3) (evloop-disallow-tty-input . subr0) (evloop-allow-tty-input . subr0) (evloop-input-managed-p . subr1) (evloop-set-timeout-handler . subr1) (evloop-add-output . subr3) (evloop-remove-output . subr1) (evloop-change-output-manage-function . subr3) (evloop-add-display . nsubr) (#:event-loop:evloop-display-manage . subr1) (evloop-remove-display . subr1) (evloop-display-managed-p . subr1))
+
+#[loc #:sys-package:tty #:tty:evloop #:tty:tyi #:event-loop:something-to-read t tyflush tys #:event-loop:initialized #:display:all-displays bitmap-flush send evloop-select #:event-loop:mask-file-descriptors-in #:event-loop:mask-file-descriptors-out #:event-loop:number-of-file-descriptors-in #:event-loop:number-of-file-descriptors-out #:event-loop:tty-input list #:event-loop:all-file-descriptors-in #:event-loop:all-file-descriptors-out makevector #:event-loop:result-file-descriptors #:event-loop:type-file-descriptors tty errbpa #:event-loop:set-timeout evloop-initialized-p #:event-loop:not-initialized #:event-loop:timeout-handler funcall "empty event loop " evloop-stop printerror evloop-wait evloop-readp getdef errudf evloop-add-input errnia acons evloop-remove-input delete #:event-loop:change-manage-function #:event-loop:can-not-change evloop-input-managed-p "One of the bit masks specified an invalid descriptor" #:event-loop:select "Null number of file descriptors" evloop-set-timeout-handler evloop-add-output evloop-remove-output evloop-add-remove-output evloop-change-output-manage-function evloop-output-change-manage-function evloop-add-display #:llcp:errwna file-descriptor #:event-loop:evloop-display-manage current-display eventp read-event print evloop_build_mask #:gell-resetfn:function-name #:gell-resetfn:function-2 evloop_mask_to_fds #:gell-resetfn:function-1 #:tty:evloop:tyi #:gell-resetfn:function-0 evloop-init evloop-restart evloop-set-timeout #:gell-resetfn:function-3 evloop-change-manage-function evloop-disallow-tty-input evloop-allow-tty-input #:gell-resetfn:function-n evloop-remove-display evloop-display-managed-p]
+)
+
+(if (not (and (>= (version) 15.2))) (progn (error 'load 'erricf 'event-loop)))
+(add-feature 'event-loop)
+(setq #:sys-package:colon 'event-loop)
+(defvar #:event-loop:number-of-file-descriptors-in (if (boundp '#:event-loop:number-of-file-descriptors-in) #:event-loop:number-of-file-descriptors-in 0))
+(defvar #:event-loop:number-of-file-descriptors-out (if (boundp '#:event-loop:number-of-file-descriptors-out) #:event-loop:number-of-file-descriptors-out 0))
+(defvar #:event-loop:initialized (if (boundp '#:event-loop:initialized) #:event-loop:initialized ()))
+(defvar #:display:all-displays (if (boundp '#:display:all-displays) #:display:all-displays ()))
+(defvar #:event-loop:all-file-descriptors-in (if (boundp '#:event-loop:all-file-descriptors-in) #:event-loop:all-file-descriptors-in ()))
+(defvar #:event-loop:all-file-descriptors-out (if (boundp '#:event-loop:all-file-descriptors-out) #:event-loop:all-file-descriptors-out ()))
+(defvar #:event-loop:mask-file-descriptors-in (if (boundp '#:event-loop:mask-file-descriptors-in) #:event-loop:mask-file-descriptors-in 0))
+(defvar #:event-loop:mask-file-descriptors-out (if (boundp '#:event-loop:mask-file-descriptors-out) #:event-loop:mask-file-descriptors-out 0))
+(defvar #:event-loop:result-file-descriptors (if (boundp '#:event-loop:result-file-descriptors) #:event-loop:result-file-descriptors ()))
+(defvar #:event-loop:type-file-descriptors (if (boundp '#:event-loop:type-file-descriptors) #:event-loop:type-file-descriptors ()))
+(defvar #:event-loop:something-to-read (if (boundp '#:event-loop:something-to-read) #:event-loop:something-to-read ()))
+(defvar #:event-loop:timeout-handler (if (boundp '#:event-loop:timeout-handler) #:event-loop:timeout-handler ()))
+(#:messages:put-message '#:event-loop:not-initialized 'french '"La boucle n'est pas initialise'e" 'defmessage)
+(#:messages:put-message '#:event-loop:not-initialized 'english '"event loop not initialized" 'defmessage)
+'#:event-loop:not-initialized
+(#:messages:put-message '#:event-loop:can-not-change 'french '"mapping inexistant pour l'entre'e" 'defmessage)
+(#:messages:put-message '#:event-loop:can-not-change 'english '"no mapping associated to the file descriptor" 'defmessage)
+'#:event-loop:can-not-change
+(defextern-cache t)
+(defcsetfn 'evloop_build_mask "GZevloop" 0)
+(defcsetfn 'evloop_mask_to_fds "GZevloop" 1)
+(defextern-cache ())
+(defcsetfn '#:event-loop:tty-input "GZevloop" 2)
+(defcsetfn '#:tty:evloop:tyi "GZevloop" 3)
+(defcsetfn 'evloop-init "GZevloop" 4)
+(defcsetfn 'evloop-initialized-p "GZevloop" 5)
+(defcsetfn 'evloop-restart "GZevloop" 6)
+(defcsetfn 'evloop-stop "GZevloop" 7)
+(defcsetfn 'evloop-set-timeout "GZevloop" 8)
+(defcsetfn 'evloop-select "GZevloop" 9)
+(defcsetfn 'evloop-wait "GZevloop" 10)
+(defcsetfn 'evloop-readp "GZevloop" 11)
+(defcsetfn 'evloop-add-input "GZevloop" 12)
+(defcsetfn 'evloop-remove-input "GZevloop" 13)
+(defcsetfn 'evloop-change-manage-function "GZevloop" 14)
+(defcsetfn 'evloop-disallow-tty-input "GZevloop" 15)
+(defcsetfn 'evloop-allow-tty-input "GZevloop" 16)
+(defcsetfn 'evloop-input-managed-p "GZevloop" 17)
+(defcsetfn 'evloop-set-timeout-handler "GZevloop" 18)
+(defcsetfn 'evloop-add-output "GZevloop" 19)
+(defcsetfn 'evloop-remove-output "GZevloop" 20)
+(defcsetfn 'evloop-change-output-manage-function "GZevloop" 21)
+(defcsetfn 'evloop-add-display "GZevloop" 22)
+(defcsetfn '#:event-loop:evloop-display-manage "GZevloop" 23)
+(defcsetfn 'evloop-remove-display "GZevloop" 24)
+(defcsetfn 'evloop-display-managed-p "GZevloop" 25)
+
+(defccheck '(evloop-input-managed-p print read-event eventp current-display #:llcp:errwna evloop-add-input evloop-remove-input delete acons getdef printerror evloop-stop funcall evloop-initialized-p makevector list evloop-select send tys tyflush #:tty:tyi loc))

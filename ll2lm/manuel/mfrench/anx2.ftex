@@ -1,0 +1,170 @@
+%===================================================================
+\Chapter {2}{Limitations et difficulte's connues}
+%===================================================================
+
+%---------------------------------------------------------------------------
+\Section {Restrictions}
+%---------------------------------------------------------------------------
+
+Certains points ne sont pas parfaitement traite's\,:
+
+\begin{itemize}
+\item les modules utilise's par l'{\em Analyseur de Modules} lui-me^me
+(\|path|, \|sets|, \|stringio|,...) peuvent e^tre oublie's dans ses
+propositions d'importations\,;
+
+\item les me'thodes et les fonctions appele'es par leur nom (avec {\tt
+send}, {\tt map}, ...), si le nom de fonction n'apparait pas
+explicitement de manie`re {\em quote'e}: {\tt '<function>}.
+\end{itemize}
+
+Pour ces raisons, les diagnostics de l'{\em Analyseur de Modules} peuvent ne
+pas e^tre complets,
+mais ils aident a` affiner la description d'un module.
+
+%---------------------------------------------------------------------------
+\Section {Proble`mes connus}
+%---------------------------------------------------------------------------
+
+\SSection{Coupure des symboles trop longs}
+
+Lors de l'e'criture des fichiers \|.lm|
+ou des bases de re'fe'rences (.ref),
+il peut arriver qu'un symbole trop long soit coupe' incorrectement.
+Par exemple, le nom de fonction \Masai2d\ suivant:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point):ge-contains?
+\end{Longcode*}
+
+est mal coupe' et devient:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point)
+:ge-contains?
+\end{Longcode*}
+
+Ceci sera relu comme deux symboles diffe'rents lors du chargement
+ulte'rieur du fichier\,:
+
+\begin{Longcode*}
+#:(#:ge-object:point:bbox:set:lego:ge-plain:polyline . #:ge-object:point)
+#:user:ge-contains?
+\end{Longcode*}
+
+
+Cette mauvaise e'criture provoquera des erreurs lors de l'analyse du
+module concerne' et de tout module utilisant la fonction en question.
+
+Il est bien su^r possible de modifier a` la main le fichier \|.lm|. 
+Par contre, le fichier de re'fe'rences (.ref) est relu et re'e'crit a`
+l'analyse de tout module du projet, la modification manuelle de ce
+fichier est donc inutile.
+
+La seule solution se'rieuse
+consiste a` changer la valeur de la marge lors de
+l'analyse en modifiant la description de projet comme suit:
+
+\begin{Code*}
+(defun proj-activate-func ()
+  ...
+  (rmargin 255))
+
+(define-rt-project proj
+    required-projects (lisp)	
+    ...
+    activate-function proj-activate-func
+    ...
+    ))
+\end{Code*}
+
+Le changement de la marge peut, e'ventuellement, provoquer la me^me
+erreur sur d'autres noms de fonctions du projet. Dans ce cas, essayer
+une autre valeur de la marge, jusqu'a` la valeur maximale\,:
+
+\begin{Code*}
+(rmargin (1+ (slen (outbuf))))
+\end{Code*}
+
+
+\SSection{He'ritage de structure}
+
+Si votre projet de'finit des objets \|microceyx|, vous avez du^
+choisir entre l'he'ritage et la rede'finition des accesseurs aux
+champs. Ce me'canisme est contro^le' par la variable globale
+\|#:system:defstruct-all-access-flag|. Les projets \Aida\ et \Masai2d\
+utilisent l'he'ritage des accesseurs et positionnent donc la variable
+\|#:system:defstruct-all-access-flag| a` \|()| lors de l'activation du
+projet.
+
+Si vous souhaitez que la variable
+\|#:system:defstruct-all-access-flag| soit a` \|t| dans votre projet
+alors que celui-ci requiert les projets \Aida\ ou \Masai2d\, il faut que
+vous definissiez une fonction d'activation comme suit \,:
+
+\begin{Code*}
+(defun proj-activate-func ()
+  (setq #:system:defstruct-all-access-flag t))		     
+
+(define-rt-project proj
+  required-projects (aida)	
+  ...
+  activate-function maida2d-activate-func
+  )
+\end{Code*}
+
+Dans ce cas, l'avertissement suivant peut se produire lors de
+l'analyse de vos modules\,:
+
+\begin{Longcode*}
+** W.114 :
+structure image must be defined inside an EVAL-WHEN(COMPILE) in module:
+(image)
+\end{Longcode*}
+
+Vous pouvez ignorer ce message.
+
+
+\SSection{Abre'viations}
+
+Il existe des cas ou` une abre'viation n'est pas trouve'e lors de
+l'analyse.
+En effet, il peut arriver que le champ \|cpenv| du module soit alte're' par
+l'ajout d'une abre'viation errone'e: \|{unknown-abbrev}:<abrev>|.
+Dans ce cas, les analyses suivantes provoqueront le message d'erreur
+ci-dessous\,:
+
+\begin{Code*}
+** W.104 : parent structure package unknown-abbrev not found for : {
+unknown-abbrev}:<abrev>
+\end{Code*}
+
+Il est alors ne'cessaire de corriger manuellement le fichier \|.lm|, 
+quite a` supprimer la forme \LeLisp\ contenant l'abre'viation errone'e.
+
+\SSection{Conflits de noms de modules}
+Il se peut qu'un fichier d'une application en cours d'analyse porte le
+me^me nom qu'un des projets utilise's.
+La priorite' d'utilisation est ge're'e avec la variable {\tt
+\#:system:path}. Par de'faut, priorite' est donne'e aux projets importe's.
+Il conviendra de re'soudre de tels conflits
+a` la main, l'ide'al e'tant d'e'viter tout conflit de nom de
+fichier.
+
+
+\SSection{Ge'ne'ration du {\tt Makefile} de compilation}
+
+La ge'ne'ration du \|Makefile| de compilation se fait a` partir de la
+base de re'fe'rences (fichier .ref) et non a` partir des descriptions
+modulaires (fichiers \|.lm|). Il est donc ne'cessaire de fabriquer la
+base de re'fe'rences -- soit par l'option \|-build|, soit en analysant
+tous les modules du projet -- avant de construire le \|Makefile|
+de compilation. \\
+On prendra soin lors de l'utilisation d'options de compilation a`
+l'aide de \|complice-options|, que les chai^nes de caracte`res
+utilise'es ne soient pas plus longues qu'une ligne de {\tt Makefile}.
+Si c'etait le cas, il conviendrait de supprimer les {\tt \^M}
+perturbateurs.
+
+
+

@@ -1,0 +1,32 @@
+defmodule
+minimore
+files (
+minimore
+)
+export (
+more
+morend
+#:minimore:bol
+#:minimore:eol
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(more subr0 ())
+(morend subr0 ())
+(#:minimore:bol subr0 ())
+(#:minimore:eol subr0 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:minimore:count 't '#:complice:globalvar)
+)((putprop '#:minimore:string 't '#:complice:globalvar)
+))

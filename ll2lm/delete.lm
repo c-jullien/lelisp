@@ -1,0 +1,42 @@
+defmodule delete
+files (delete)
+import (
+kernellm
+ref
+rtmsg
+)
+
+export (
+#:llmodule:delete-modules
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:llmodule:delete-modules subr2 ())
+)
+cpfunctions
+()
+cpimport (
+(ref
+(#:llmodulereferences:read-from-file . subr2)
+(standardmodulereferences . nsubr)
+(#:llmodulereferences:write-to-file . subr2)
+))
+cpenv (
+sets
+sort
+callext
+defstruct
+path
+files
+module
+defvar
+kernellm
+pretty
+format
+rtmsg
+rtprint
+readlm
+diagnostic
+ref
+)

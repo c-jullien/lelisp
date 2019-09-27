@@ -1,0 +1,983 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "12/19" "symbs.llm3" 
+;;; .EnPied " " "%" " "
+;;; .Chapitre 12 "Les fonctions sur les symboles" 
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/symbs.llm3,v 1.2 2016/05/21 09:16:58 jullien Exp $
+
+          TITLE     SYMBS              ; LLM3 : les fonctions sur les symboles
+
+          XREFI     LLINIT,MSTACK       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.UNDEF
+          XREFI     LLINIT,HASHTAB
+          XREFP     TOPERR,ERRNVA       ; 2 - TOPERR
+          XREFP     TOPERR,ERRSYM
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRUDF
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRNLA
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFI     READ,CPKGC          ; 5 - READ
+          XREFP     READ,INISYMB
+          XREFP     READ,INICST
+          XREFP     READ,ISTDSYM
+          XREFP     EVAL,EVALCAR        ; 8 - EVAL
+          XREFI     CNTRL,TABCODFN      ; 10 - CNTRL
+          XREFI     CNTRL,TABTYPFN
+          XREFP     NUMBER,GAPLUS2I     ; 14 - NUMBER
+          XREFP     NUMBER,GADIFF2I
+          XREFP     BLLSHT,LOC          ; 19 - BLLSHT
+          XREFP     BLLSHT,VAG
+
+          XDEFP     INI_SYM
+          XDEFP     GETFN1
+          XDEFP     GETBI
+          XDEFP     GETFNS
+          XDEFP     SETFN
+          XDEFP     FINDFN
+          XDEFP     GETPROP
+          XDEFP     PUTPROP
+          XDEFP     ADDPROP
+          XDEFP     REMPROP
+
+          PURE
+
+;.Section "Initialise les fonctions sur les symboles"
+
+INI_SYM   LABEL      
+
+          MAKFNT    MAKUNBOUND,#10,"makunbound" 
+          MAKFNT    FPLIST,#5,"plist" 
+          MAKFNT    PCKGCELL,#11,"packagecell" 
+          MAKFNT    D3ROOT,#14,"3d-root-symbol"
+          MAKFNT    OBJVAL,#6,"objval" 
+          MAKFNT    VALFN,#5,"valfn" 
+          MAKFNT    TYPEFN,#6,"typefn" 
+          MAKFNT    SETFN,#5,"setfn" 
+          MAKFNT    REMFN,#5,"remfn" 
+          MAKFNT    FINDFN,#6,"findfn" 
+          MAKFNT    GETFN1,#6,"getfn1" 
+          MAKFNT    GETFN,#5,"getfn" 
+          MAKFNT    GETSYM1,#8,"getsymb1"
+          MAKFNT    GETSYMB,#7,"getsymb"
+          MAKFNT    GETBI,#6,"getfn2"
+          MAKFNT    SYNONYM,#7,"synonym" 
+          MAKFNT    SYNQNYM,#8,"synonymq" 
+          MAKFNT    REMOB,#5,"remob" 
+
+          MAKFNT    GETPROP,#3,"get" 
+          MAKFNT    GETPROP,#7,"getprop" 
+          MAKFNT    GETL,#4,"getl" 
+          MAKFNT    ADDPROP,#7,"addprop" 
+          MAKFNT    PUTPROP,#7,"putprop" 
+          MAKFNT    DEFPROP,#7,"defprop" 
+          MAKFNT    REMPROP,#7,"remprop" 
+
+          MAKFNT    FINCR,#4,"incr" 
+          MAKFNT    FDECR,#4,"decr" 
+
+     IFNE SEDEBUG
+          MAKCST    SEDEBG,#9,"send-stat"
+          MOV       .SEDEBG,CPKGC
+          MAKCST    SEPRED,#8,"activate"
+	  MOVNIL    CVAL(A1)
+          MAKCST    GNLOOPC,#10,"loop-count"
+          MAKCST    GNLOOPH,#10,"get0-count"
+          MAKCST    GNLOOPG,#10,"get1-count"
+          MAKCST    GNLOOPK,#10,"get2-count"
+          MAKCST    GNLOOPL,#10,"get3-count"
+          MAKCST    GNLOOPS,#10,"send-count"
+          MAKFNT    GNLOOP,#4,"init"
+          MOVNIL    CPKGC
+     ENDC
+
+          RETURN
+
+;
+;         Points d'entre'e communs au module "symbs"
+;
+
+SYBFALSE  MOVNIL    A1
+          RETURN
+
+SYBRET    RETURN
+
+;
+;         Fonctions d'acces aux attributs des symboles
+;         ============================================
+;
+;         Acces aux attributs : PLIST FVAL FTYPE
+;
+
+;  ----------------------------------------
+          FENTRY    MAKUNBOUND,SUBR1
+;  ----------------------------------------
+          BFVAR     A1,MAKUERR          ; il faut une variable
+          MOV       .UNDEF,CVAL(A1)     ; et voila!
+          RETURN
+MAKUERR   MOV       .MAKUNBOUND,A2      ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait un symbole
+
+
+;  ----------------------------------------
+          FENTRY    FPLIST,SUBRN
+;  ----------------------------------------
+          MOV       .FPLIST,A2          ; le nom de la fonction
+          MOV       @SETPLIST,A3        ; l'adresse si c'est un SET
+          CALL      GETSET12            ; les verifications d'usage
+          MOV       PLIST(A1),A1        ; et voila le GET
+          RETURN
+SETPLIST  LABEL
+          MOV       A1,PLIST(A3)        ; ca peut etre n'importe quoi.
+          RETURN
+
+
+;  ----------------------------------------
+          FENTRY    PCKGCELL,SUBRN
+;  ----------------------------------------
+          MOV       .PCKGCELL,A2        ; le nom de la fonction
+          MOV       @PCKGSET,A3         ; l'adresse si c'est un SET
+          CALL      GETSET12            ; les verifications d'usage
+          MOV       PKGC(A1),A1         ; recupere son 'package cell'
+          RETURN
+PCKGSET   LABEL
+;?!?!?!!? Il faudrait voir pour la dependance multiple
+;         BFSYMB    A1,PCKGCER3         ; le nom du package
+          MOV       A1,PKGC(A3)         ; force le 'package cell'
+          RETURN                        ; retourne la valeur forcee
+
+;  Fonction spe'ciale GBN : retourne le symbole non package'
+;  du symbole package' A1. Si A1 n'est pas un symbole posse'dant
+;  une racine, c,a casse!
+;  ----------------------------------------
+          FENTRY    D3ROOT,SUBR1
+;  ----------------------------------------
+          BFSYMB    PNAME(A1),D3ROOTN
+          MOV       A1,A4
+D3ROOTA   BTNIL     PKGC(A1),D3ROOTR
+          MOV       PNAME(A1),A1
+          CABNE     A1,A4,D3ROOTA
+D3ROOTN   MOVNIL    A1
+D3ROOTR   RETURN
+
+;  ----------------------------------------
+          FENTRY    OBJVAL,SUBRN
+;  ----------------------------------------
+          MOV       .OBJVAL,A2          ; erreur
+          MOV       @OBJVSET,A3         ; l'adresse si c'est un SET
+          CALL      GETSET12            ; verifications
+          MOV       OVAL(A1),A1         ; et voila le GET
+          RETURN
+OBJVSET   LABEL
+          MOV       A1,OVAL(A3)         ; ca peut etre n'importe quoi.
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    VALFN,SUBR1
+;  ----------------------------------------
+          BFSYMB    A1,VALFERR          ; il faut un symbole
+          MOV       FVAL(A1),A1         ; get la FVAL
+          BTLISP    A1,VALFNR           ; et oui mathieu ...
+          JMP       LOC                 ; en cas de (h . l)
+VALFERR   MOV       .VALFN,A2           ; nom de la fonction
+          JMP       ERRSYM              ; argument non symbolique
+VALFNR    RETURN
+
+;  ----------------------------------------
+          FENTRY    TYPEFN,SUBR1
+;  ----------------------------------------
+          BFSYMB    A1,TYPEFER1         ; il faut un symbole
+          GFTYPE    A1,A1               ; get le FTYPE
+          MOV       TABCODFN,A2         ; la table des codes
+          HGSIZE    A2,A3               ; sa taille
+          DECR      A3                  ; l'index de de'part
+TYPEFN1   HPXMOV    A2,A3,A4
+          CABEQ     A4,A1,TYPEFN2       ; trouve'
+          SOBGTZ    A3,TYPEFN1          ; on s'arrete sur 0
+TYPEFN2   HPXMOV    TABTYPFN,A3,A1      ; retourne le type en clair.
+          RETURN                        ; et voila
+TYPEFER1  MOV       .TYPEFN,A2          ; nom de la fonction
+          JMP       ERRSYM              ; argument non symbolique
+TYPEFER2  MOV       .TYPEFN,A2          ; c'est typefn qui de'clenche l'erreur
+          JMP       ERROOB
+
+
+;  ----------------------------------------
+          FENTRY    SETFN,SUBR3
+;  ----------------------------------------
+          BFVAR     A1,SETFNER2         ; bug
+          BFSYMB    A2,SETFNER1
+          PUSH      A3                  ; la FVAL
+          HGSIZE    TABTYPFN,A4         ; la taille du tableau de type
+          BRA       SETFN3
+SETFNER1  MOV       A2,A1               ; le mauvais argument
+          MOV       .SETFN,A2
+          JMP       ERRSYM
+SETFNER2  MOV       .SETFN,A2           ; pour l'erreur
+          JMP       ERRNVA              ; il faut une variable
+SETFNER3  MOV       .SETFN,A2           ; pour l'erreur
+          MOV       A3,A1               ; l'argument defaillant
+          JMP       ERROOB
+SETFN2    HPXMOV    TABTYPFN,A4,A3      ; l'element suivant
+          CABEQ     A3,A2,SETFN4        ; c'est le bon
+SETFN3    SOBGEZ    A4,SETFN2           ; il en reste
+          BRA       SETFNER3            ; c'est une erreur OOB
+SETFN4    HPXMOV    TABCODFN,A4,A4      ; le ftype code' machine de'pendant
+          SFTYPE    A4,A1               ; set le FTYPE
+          XTOPST    A1                  ; recupere la FVAL, sauve le nom
+          BFCONS    A1,SETFN5           ; toujours VAG
+          BFFIX     CAR(A1),SETFN6      ; c'est une SEXP!
+SETFN5    JCALL     VAG                 ; (h . l) -> adr
+SETFN6    MOV       A1,A2
+          POP       A1
+          MOV       A2,FVAL(A1)         ; set la FVAL
+          RETURN                        ; retourne le nom.
+
+;
+;         Retourne le nom de la fonction associee dans un package 
+;         (getfn1 <pkgc> <symb>)
+;  ----------------------------------------
+          FENTRY    GETFN1,SUBR2
+;  ----------------------------------------
+          BFSYMB    A1,GETFN1R2         ; il faut un symbole pour pkgc
+          BFSYMB    A2,GETFN1R1         ; la aussi (pour le nom)
+          BFNIL     PKGC(A2),SYBFALSE   ; le symbole doit etre dans ||
+;                                         A1 <- pkgc, A2 <- symb
+; point d'entree pour GETFN
+GETFN1I   CALL      GETSYM1I            ; recherche le symbole correspondant
+          GFTYPE    A1,A2               ; son ftype
+          CNBEQ     A2,#0,SYBFALSE      ; pas une fonction
+          RETURN
+
+GETFN1R1  MOV       A2,A1               ; l'argument defectueux
+GETFN1R2  MOV       .GETFN1,A2          ; le nom de la fonction
+          JMP       ERRSYM              ; il fallait un symbole
+
+
+;         Retourne la fonction associe'e dans un he'ritage de packages
+;         avec un arre^t au 3e`me argument s'il est donne'.
+;         Rajout de l'he'ritage multiple depth-first par liste de packages!
+;         (GETFN <pkgc> <symb> [<packagefin>])
+;  ----------------------------------------
+          FENTRY    GETFN,SUBRN
+;  ----------------------------------------
+          MOV       .GETFN,A2           ; nom de la fonction GETFN.
+          MOV       #0,A3               ; packagefin par de'faut.
+          CNBEQ     A4,#2,GETFN2        ; forme (getfn <pkgc> <symb>)
+          CNBEQ     A4,#3,GETFN3        ; forme (getfn <pkgc> <symb> <pkgcf>)
+          MOV       #3,A1               ; le bon nb
+          JMP       ERRWNA              ; mauvais nb d'arguments
+GETFN3    POP       A3                  ; A3 = pckgfin
+          BFSYMB    A3,GETFNER3         ; le pckgfin est mauvais
+GETFN2    LABEL
+          POP       A2                  ; A2 = symbole
+          POP       A1                  ; A1 = package
+	  BRA       GETFNS
+
+;	  Les erreurs de GETFNx
+
+GETFNER1  MOV       A2,A1               ; l'argument de'fectueux.
+GETFNER2  MOV       .GETFN,A2           ; le nom de la fonction.
+          JMP       ERRSYM              ; il fallait un symbole.
+GETFNER3  MOV       A3,A1               ; l'argument de'fectueux.
+          JMP       ERRSYM              ; il fallait un symbole.
+
+;         Point d'entre'e interne (sans test WNA et type du 3e`me argument)
+;         ici A1=pckg, A2=symb, A3=pckgfin
+
+GETFNS    LABEL
+;	  Tout le code suivant est duplique' en cas de
+;         SEDEBUG et #:send-stat:activate a` T
+
+     IFNE SEDEBUG
+          MOV       .SEPRED,A4		; #:send-stat:activate
+	  BFNIL     CVAL(A4),GSTFNS
+     ENDC
+          BFSYMB    A2,GETFNER1         ; symb doit e^tre un symbole.
+          BTSYMB    A1,GETFN5           ; hie'rarchie simple.
+          BFCONS    A1,GETFNER2         ; si multiple doit e^tre une liste!
+          MOV       A1,A4               ; pre'pare la boucle.
+          BTCONS    A4,GETFNM1          ; pas termine'.
+          MOVNIL    A1
+          RETURN
+GETFNM1   MOV       CAR(A4),A1          ; pkgc suivant.
+          BFSYMB    A1,GETFNER2         ; doit e^tre atomique.
+          PUSH      CDR(A4)             ; le reste des packages.
+          CALL      GETFN5              ; recherche dans une seule hierarchie
+          BTNIL     A1,GETFNM2          ; rate'!
+          ADJSTK    #1                  ; saute le reste des packages.
+          RETURN
+GETFNM2   POP       A4                  ; le reste des packages.
+          BTCONS    A4,GETFNM1          ; pas termine'.
+          MOVNIL    A1
+          RETURN
+
+;         la recherche proprement dite    A1 = pkgc, A2 = symb, A3 = pkgcfin
+
+GETFN5    BTSTRG    PNAME(A2),GETFNONE  ; si il n'y en a qu'un (2D).
+          BFCONS    A1,GETFN8           ; he'ritage simple
+GETFN7    MOV       CDR(A1),A4          ; he'ritage multiple
+          MOV       CAR(A1),A1          ; d'abord sur les car (en DEEP-FIRST)
+          BTNIL     A4,GETFN8           ; "last-hack" YEAH!
+          PUSH      A4                  ; le reste
+          CALL      GETFN8
+          POP       A4                  ; le reste
+          BFNIL     A1,GETFNRT          ; on a trouve
+          MOV       A4,A1               ; le package
+          BFCONS    A1,GETFN8           ; he'ritage simple
+          BRA       GETFN7              ; he'ritage multiple
+GETFNRT   RETURN
+
+GETFN8    LABEL
+GETFN80   MOV       A2,A4               ; pour le test d'arre^t.
+GETFN81   LABEL                         ;  la boucle la plus interne
+          CABEQ     PKGC(A2),A1,GETFN9  ; trouve' ?
+          MOV       PNAME(A2),A2        ; avance dans la 3D.
+          CABNE     A2,A4,GETFN81       ; je ne retombe pas sur le me^me.
+GETFN82   BTNIL     A1,GETFN83          ; ca finit mal, plus de package.
+          MOV       PKGC(A1),A1         ; le pe`re du package.
+          CABNE     A1,A3,GETFN84       ; ce n'est pas le package d'arre^t.
+GETFN83   MOVNIL    A1                  ; et c'est rate'
+          RETURN
+GETFN84   BFCONS    A1,GETFN80          ; he'ritage simple
+          BRA       GETFN7              ; he'ritage multiple
+
+GETFN9    PUSH      A3                  ; le package d'arre^t.
+          GFTYPE    A2,A3               ; y-a-t-il une fonction de'finie ?
+          CNBEQ     A3,#0,GETFN91       ; pas de de'finition, on he'rite.
+          POP       A3                  ; restaure le package d'arre^t,
+          MOV       A2,A1               ; et retourne le symbole.
+          RETURN
+GETFN91   POP       A3                  ; restaure le package d'arre^t,
+          BRA       GETFN82             ; vous he'ritez de F 20000.
+
+; Recherche dans le cas ou l'on a pas de sous-liste 3D (un seul symbole)
+
+GETFNONE  LABEL                         ; il y a un seul symbole et il faut he'riter
+          GFTYPE    A2,A4               ; est-ce une fonction ?
+          CNBEQ     A4,#0,SYBFALSE      ; non, pas la peine de chercher
+          MOV       PKGC(A2),A4         ; le seul package existant
+GETFNO1   LABEL
+          BFCONS    A1,GETFNO3          ; he'ritage simple
+GETFNO2   MOV       CDR(A1),A4          ; he'ritage multiple
+          MOV       CAR(A1),A1
+          BTNIL     A4,GETFNO3          ; last-hack hack hack
+          PUSH      A4
+          MOV       PKGC(A2),A4         ; le package existant
+          CALL      GETFNO3             ; en deep-first
+          POP       A4                  ; recupere la liste
+          BFNIL     A1,GETFNOR          ; trouve !
+          MOV       A4,A1               ; la liste
+          BRA       GETFNO2             ; on avance
+GETFNOR   RETURN
+; A1 package courant, A2 symb, A3 borne, A4 pack du symb
+GETFNO3   CABEQ     A1,A4,GETFNO9       ; trouve
+          BTNIL     A1,SYBFALSE         ; si ca fini mal
+          MOV       PKGC(A1),A1         ; on he'rite 
+          CABNE     A1,A3,GETFNO1       ; pas fini
+GETFNOF   MOVNIL    A1                  ; rate
+          RETURN
+
+GETFNO9   MOV       A2,A1               ; c'est fini! trouve !
+          RETURN
+
+;	  Le code duplique' mais avec des stats !
+
+     IFNE SEDEBUG
+GSTFNS    LABEL
+          PUSH      A1                  ;;
+          MOV       .GNLOOPS,A1         ;; incr #:send-stat:send-count
+          XREFI     NUMBER,FLTUN        ;;
+          FPLUS     FLTUN,CVAL(A1)      ;;
+          POP       A1                  ;;
+          BFSYMB    A2,GETFNER1         ; symb doit e^tre un symbole.
+          BTSYMB    A1,GSTFN5           ; hie'rarchie simple.
+          BFCONS    A1,GETFNER2         ; si multiple doit e^tre une liste!
+          MOV       A1,A4               ; pre'pare la boucle.
+          BRA       GSTFNM3
+GSTFNM1   MOV       CAR(A4),A1          ; pkgc suivant.
+          BFSYMB    A1,GETFNER2         ; doit e^tre atomique.
+          PUSH      CDR(A4)             ; le reste des packages.
+          CALL      GSTFN5              ; recherche dans une seule hierarchie
+          BTNIL     A1,GSTFNM2          ; rate'!
+          ADJSTK    #1                  ; saute le reste des packages.
+          RETURN
+GSTFNM2   POP       A4                  ; le reste des packages.
+GSTFNM3   BTCONS    A4,GSTFNM1          ; pas termine'.
+          MOVNIL    A1
+          RETURN
+
+;         la recherche proprement dite    A1 = pkgc, A2 = symb, A3 = pkgcfin
+;         e'quivalent de GETFN1
+
+GSTFN5    LABEL
+          PUSH      A1                  ;;
+          MOV       .GNLOOPG,A1         ;;  incr #:send-stat:get1-count
+          XREFI     NUMBER,FLTUN        ;;
+          FPLUS     FLTUN,CVAL(A1)      ;;
+          POP       A1                  ;;
+          BTSTRG    PNAME(A2),GSTFNONE  ; si il n'y en a qu'un (2D).
+GSTFN6    BFCONS    A1,GSTFN8           ; he'ritage simple
+GSTFN7    MOV       CDR(A1),A4          ; he'ritage multiple
+          MOV       CAR(A1),A1          ; d'abord sur les car (en DEEP-FIRST)
+          BTNIL     A4,GSTFN8           ; "last-hack" YEAH!
+          PUSH      A4                  ; le reste
+          CALL      GSTFN8
+          POP       A4                  ; le reste
+          BFNIL     A1,GSTFNR           ; on a trouve
+          MOV       A4,A1               ; le package
+          BRA       GSTFN6              ; more
+GSTFNR    RETURN
+
+GSTFN8    LABEL
+          PUSH      A1                  ;;
+          MOV       .GNLOOPK,A1         ;;  incr #:send-stat:get2-count
+          XREFI     NUMBER,FLTUN        ;;
+          FPLUS     FLTUN,CVAL(A1)      ;;
+          POP       A1                  ;;
+          MOV       A2,A4               ; pour le test d'arre^t.
+GSTFN81   LABEL                         ; la boucle la plus interne
+          PUSH      A1                  ;;
+          MOV       .GNLOOPC,A1         ;; incr #:send-stat:loop-count
+          XREFI     NUMBER,FLTUN        ;;
+          FPLUS     FLTUN,CVAL(A1)      ;;
+          POP       A1                  ;;
+          CABEQ     PKGC(A2),A1,GSTFN9  ; trouve' ?
+          MOV       PNAME(A2),A2        ; avance dans la 3D.
+          CABNE     A2,A4,GSTFN81       ; je ne retombe pas sur le me^me.
+GSTFN82   BTNIL     A1,GSTFNFL          ; ca finit mal, plus de package.
+          MOV       PKGC(A1),A1         ; le pe`re du package.
+          CABNE     A1,A3,GSTFN6        ; ce n'est pas le package d'arre^t.
+          BRA       GSTFNFL
+
+GSTFN9    PUSH      A3                  ; le package d'arre^t.
+          GFTYPE    A2,A3               ; y-a-t-il une fonction de'finie ?
+          CNBEQ     A3,#0,GSTFN91       ; pas de de'finition, on he'rite.
+          POP       A3                  ; restaure le package d'arre^t,
+          MOV       A2,A1               ; et retourne le symbole.
+          RETURN
+
+GSTFN91   POP       A3                  ; restaure le package d'arre^t,
+          BRA       GSTFN82             ; vous he'ritez de F 20000.
+
+; Recherche dans le cas ou l'on a pas de sous-liste 3D (un seul symbole)
+
+GSTFNONE  LABEL                   ; il y a un seul symbole et il faut he'riter
+          PUSH      A1                  ;;
+          MOV       .GNLOOPH,A1         ;; incr #:send-stat:get0-count
+          XREFI     NUMBER,FLTUN        ;;
+          FPLUS     FLTUN,CVAL(A1)      ;;
+          POP       A1                  ;;
+          GFTYPE    A2,A4               ; est-ce une fonction ?
+          CNBEQ     A4,#0,GSTFNFL       ; non, pas la peine de chercher
+          MOV       PKGC(A2),A4         ; le seul package existant
+GSTFNO1   LABEL
+          BFCONS    A1,GSTFNO3          ; he'ritage simple
+GSTFNO2   MOV       CDR(A1),A4          ; he'ritage multiple
+          MOV       CAR(A1),A1
+          BTNIL     A4,GSTFNO3          ; last-hack hack hack
+          PUSH      A4
+          MOV       PKGC(A2),A4         ; le package existant
+          CALL      GSTFNO3             ; en deep-first
+          POP       A4                  ; recupere la liste
+          BFNIL     A1,GSTFNOR          ; trouve !
+          MOV       A4,A1               ; la liste
+          BRA       GSTFNO2             ; on avance
+GSTFNOR   RETURN
+; A1 package courant, A2 symb, A3 borne, A4 pack du symb
+GSTFNO3   LABEL
+          PUSH      A1                  ;;
+          MOV       .GNLOOPK,A1         ;; incr #:send-stat:get2-count
+          XREFI     NUMBER,FLTUN        ;;
+          FPLUS     FLTUN,CVAL(A1)      ;;
+          MOV       .GNLOOPC,A1         ;; incr #:send-stat:loop-count
+          FPLUS     FLTUN,CVAL(A1)      ;;
+          POP       A1                  ;;
+          CABEQ     A1,A4,GSTFNO9       ; trouve
+          BTNIL     A1,GSTFNFL          ; si ca fini mal
+          MOV       PKGC(A1),A1         ; on he'rite 
+          CABNE     A1,A3,GSTFNO1       ; pas fini
+          BRA       GSTFNFL             ; rate
+
+GSTFNO9   MOV       A2,A1               ; c'est fini! trouve !
+          RETURN
+
+GSTFNFL   LABEL
+          MOV       .GNLOOPL,A1         ;; incr #:send-stat:get3-count
+          XREFI     NUMBER,FLTUN        ;;
+          FPLUS     FLTUN,CVAL(A1)      ;;
+          MOVNIL    A1                  ; ca retourne faux
+          RETURN
+     ENDC
+
+;----------------------------------------
+          FENTRY    GETBI,SUBR3
+; 
+;        (GETFN2 t1 t2 fonction)
+; 
+;----------------------------------------
+          BFSYMB    A1,GETBIER1         ; pas un symbole!
+          BFSYMB    A2,GETBIER2         ; pas un symbole!
+          BFSYMB    A3,GETBIER3         ; pas un symbole!
+          BFNIL     PKGC(A3),SYBFALSE   ; me'thode dans ||
+
+GETBI1    PUSH      A2                  ; empile le second package
+GETBI2    PUSH      A1                  ; sauve le premier package
+          CALL      GETBI1I             ; cherche ici
+          BFNIL     A1,GETBI9           ; trouve'
+          POP       A1                  ; re'cupere le package
+          MOV       PKGC(A2),A2         ; avance dans le package
+          BFNIL     A2,GETBI2           ; continue sur le second
+          POP       A2                  ; la base pour le second
+          MOV       PKGC(A1),A1         ; le package
+          BFNIL     A1,GETBI1           ; boucle sur le premier
+          RETURN                        ; rend ()
+
+GETBI9    ADJSTK    #2                  ; nettoie la pile
+          RETURN                        ; c'est fini
+
+GETBIER3  MOV       A3,A1               ; le vilain
+          BRA       GETBIER1
+GETBIER2  MOV       A2,A1               ; le fautif
+GETBIER1  MOV       .GETBI,A2           ; la fonction
+          JMP       ERRSYM              ; pas un symbole
+
+; A1 = car du pkgc
+; A2 = cdr du pkgc
+; A3 = pname a` trouver (symbole courant dans la boucle)
+GETBI1I   LABEL
+          MOV       PKGC(A3),A4         ; le package
+          BFCONS    A4,GETBI1I1         ; il faut un cons!
+          CABNE     CAR(A4),A1,GETBI1I1 ; rate'
+          CABNE     CDR(A4),A2,GETBI1I1 ; rate'
+          GFTYPE    A3,A4               ; le ftype?
+          CNBNE     A4,#0,GETBI1I9      ; trouve'!
+GETBI1I1  BTSTRG    PNAME(A3),SYBFALSE  ; pas de lien 3D
+          PUSH      A3                  ; pour le test d'arret
+GETBI1I2  MOV       PNAME(A3),A3        ; avance dans la 3D
+          MOV       PKGC(A3),A4         ; le package
+          BFCONS    A4,GETBI1I3         ; il faut un cons!
+          CABNE     CAR(A4),A1,GETBI1I3 ; rate'
+          CABNE     CDR(A4),A2,GETBI1I3 ; trouve! (le cas 1 est traite ici)
+          GFTYPE    A3,A4
+          CNBNE     A4,#0,GETBI1I8      ; trouve'!
+GETBI1I3  CABNE     A3,&0,GETBI1I2      ; y en a encore
+          ADJSTK    #1                  ; vire la valeur empile'e
+          BRA       SYBFALSE            ; on a rien trouve --> ()
+
+GETBI1I8  ADJSTK    #1                  ; vire la valeur d'arret empile'e
+GETBI1I9  MOV       A3,A1               ; retourne le symbole
+          RETURN
+
+
+;  ----------------------------------------
+          FENTRY    REMFN,SUBR1
+;  ----------------------------------------
+          BFSYMB    A1,MAKUNFNER        ; il faut un symbole
+          MOV       #0,FVAL(A1)         ; nettoie la FVAL et
+          SFTYPE    #0,A1               ; le FTYPE
+          RETURN
+MAKUNFNER MOV       .REMFN,A2           ; nom de la fonction
+          JMP       ERRSYM              ; erreur argument non symbolique
+
+
+;
+;         (FINDFN <s>)  retourne le symbole dont la FVAL egale <s>
+;
+;  ----------------------------------------
+          FENTRY    FINDFN,SUBR1
+;  ----------------------------------------
+          MOV       A1,A2               ; facilite le retour
+          HGSIZE    HASHTAB,A1          ; taille de la table
+          DECR      A1
+FINDFN1   HPXMOV    HASHTAB,A1,A1       ; A1 symbole suivant
+          BRA       FINDFN8             ; vers le test
+FINDFN2   MOV       A1,A3               ; pour le test d'arret 3D
+          BTSTRG    PNAME(A1),FINDFN4   ; pas de lien 3D
+FINDFN3   MOV       PNAME(A1),A1        ; avance 3D
+FINDFN4   CABEQ     FVAL(A1),A2,FINDFN9 ; c'est le bon!
+          CABNE     A1,A3,FINDFN3       ; boucle en 3D
+          MOV       ALINK(A1),A1        ; avance en 2D
+FINDFN8   BTSYMB    A1,FINDFN2          ; il y en a encore
+          SOBGEZ    A1,FINDFN1          ; bucket suivant
+          MOVNIL    A1
+FINDFN9   RETURN
+
+;
+;         (SYNONYM at1 at2)      SUBR
+;         (SYNONYMQ at1 at2)     FSUBR
+;
+;  ----------------------------------------
+          FENTRY    SYNONYM,SUBR2
+;  ----------------------------------------
+          BFSYMB    A1,SYNMERR2         ; il faut un symbole
+          BTNIL     A1,SYNMERR2         ; on ne touche pas a NIL!
+          BTSYMB    A2,SYNOM            ; c'est tout bon.
+          MOV       A2,A1               ; c'est le 2eme arg qui ne va pas
+SYNMERR2  MOV       .SYNONYM,A2         ; le nom de la fonction
+          JMP       ERRSYM              ; l'argument n'etait pas un symbole
+SYNOM     GFTYPE    A2,A3
+          CNBEQ     A3,#0,SYNMERR3      ; fonction inde'finie!
+          SFTYPE    A3,A1               ; change le FTYPE
+          MOV       FVAL(A2),FVAL(A1)   ; change la FVAL
+          RETURN                        ; et c'est tout
+SYNMERR3  PUSH      A1                  ; des fois que l'on rentre
+          MOV       A2,A1               ; l'arg
+          MOV       .SYNONYM,A2         ; le nom de la fonction
+          JCALL     ERRUDF              ; "fonction inde'finie"
+          POP       A1
+          BRA       SYNONYM
+
+;  ----------------------------------------
+          FENTRY    SYNQNYM,SUBRF
+;  ----------------------------------------
+          MOV       CDR(A1),A2
+          MOV       CAR(A1),A1
+          MOV       CAR(A2),A2
+          BFSYMB    A1,SYNMERQ2         ; il faut un symbole
+          BTNIL     A1,SYNMERQ2         ; on ne touche pas a NIL!
+          BFSYMB    A2,SYNMERQ1         ; et la encore
+          BRA       SYNOM               ; apres c'est comme SYNONYM
+SYNMERQ1  MOV       A2,A1               ; c'est le 2eme arg qui ne va pas
+SYNMERQ2  MOV       .SYNQNYM,A2         ; le nom de la fonction
+          JMP       ERRSYM              ; l'argument n'etait pas un symbole
+
+;
+;         (REMOB <symb>)   [SUBR1]
+;         detruit tout un symbole (pret a etre recuperer par le GC)
+;
+;  ----------------------------------------
+          FENTRY    REMOB,SUBR1
+;  ----------------------------------------
+          BFVAR     A1,REMOBERR
+          JMP       ISTDSYM             ; initialisation de depart
+REMOBERR  MOV       .REMOB,A2
+          JMP       ERRSYM
+
+     IFNE SEDEBUG
+; ----------------------------------------
+          FENTRY    GNLOOP,SUBR0
+; ----------------------------------------
+          XREFI     NUMBER,FZERO
+          MOV       .GNLOOPC,A1
+          MOV       FZERO,CVAL(A1)          
+          MOV       .GNLOOPH,A1
+          MOV       FZERO,CVAL(A1)          
+          MOV       .GNLOOPG,A1
+          MOV       FZERO,CVAL(A1)          
+          MOV       .GNLOOPK,A1
+          MOV       FZERO,CVAL(A1)          
+          MOV       .GNLOOPL,A1
+          MOV       FZERO,CVAL(A1)          
+          MOV       .GNLOOPS,A1
+          MOV       FZERO,CVAL(A1)          
+          MOVNIL    A1                  ; c'est quand me^me plus propre.
+          RETURN
+     ENDC
+
+; 
+;         (GETSYMBOL <pkg> <pname> [<pkgfin>])
+; 
+;         Cherche un symbole de pname <pname> a partir du pkg
+;         <pkg> jusqu'a <pkgfin> exclus.
+; 
+;----------------------------------------
+          FENTRY    GETSYMB,SUBRN
+;----------------------------------------
+          CNBEQ     A4,#3,GETSYMB0      ; les trois args sont fournis
+          CNBEQ     A4,#2,GETSYMB1      ; il n'y en a que deux
+          MOV       .GETSYMB,A2         ; la fonction
+          MOV       #3,A1               ; le bon nb
+          JMP       ERRWNA              ; Wrong Number of Arg.
+GETSYMB0  POP       A3                  ; le pkg fin
+          BTSYMB    A3,GETSYMB2         ; vers la suite
+          MOV       A3,A1               ; pas un symbole
+          MOV       .GETSYMB,A2         ; la fonction
+          JMP       ERRSYM              ; il fallait un symbole
+GETSYMB1  MOV       #0,A3               ; pas d'arre^t
+GETSYMB2  POP       A2                  ; le symbole
+          POP       A1                  ; le package de de'part
+          BRA       GETSYMI
+
+; La recherche de symboles avec he'ritage simple
+;  A1 pkg de'part
+;  A2 symb de pname a` chercher
+;  A3 pkg fin
+; Rend dans A1 le symbole trouve'
+GETSYMI   LABEL
+          BFSYMB    A2,GETSYMER         ; il faut un symbole
+GETSYMI1  BTSYMB    A1,GETSYMI3         ; he'ritage simple
+          MOVNIL    A1                  ; he'ritage multiple (hum)
+          RETURN
+
+GETSYMI3  LABEL                         ; he'ritage selon A1
+          CABEQ     A1,A3,SYBFALSE      ; c'est fini!
+          PUSH      A1                  ; le package
+          CALL      GETSYM1I            ; cherche dans ce package
+          BFNIL     A1,GETSYMI5         ; on a trouve'
+          POP       A1
+          BTNIL     A1,SYBFALSE         ; on est au bout des pkgs
+          MOV       PKGC(A1),A1         ; avance dans les packages
+          BRA       GETSYMI1            ; continue l'he'ritage
+          
+GETSYMI5  ADJSTK    #1                  ; nettoie la pile
+          RETURN                        ; et rentre
+
+GETSYMER  MOV       .GETSYMB,A1         ; la fonction
+          JMP       ERRSYM              ; pas un symbole
+
+;----------------------------------------
+          FENTRY    GETSYM1,SUBR2
+;----------------------------------------
+          BFSYMB    A1,GETSY1R1         ; il faut un symbole
+          BFSYMB    A2,GETSY1R2         ; la aussi
+          BFNIL     PKGC(A2),SYBFALSE   ; pas dans ||
+
+; Recherche d'un symbole dans un package (sans aucun he'ritage)
+;  A1 pkg de recherche (symbole)
+;  A2 pname a` chercher (symbole)
+; Rend dans A1 le symbole trouve', () s'il n'existe pas
+; Ne touche pas a` A3!
+
+GETSYM1I  LABEL
+          CABEQ     PKGC(A2),A1,GETSYM12; trouve! (le cas 1 est traite ici)
+          BTSTRG    PNAME(A2),SYBFALSE  ; pas de lien 3D
+          MOV       A2,A4               ; pour le test d'arret pour le cas N
+GETSYM11  MOV       PNAME(A2),A2        ; avance dans la 3D
+          CABEQ     PKGC(A2),A1,GETSYM12; trouve ?
+          CABNE     A2,A4,GETSYM11      ; y en a encore
+          BRA       SYBFALSE            ; on a rien trouve --> ()
+GETSYM12  MOV       A2,A1               ; retourne le nom.
+          RETURN
+
+GETSY1R2  MOV       A2,A1               ; le fautif
+GETSY1R1  MOV       .GETSYM1,A2         ; l'appelant
+          JMP       ERRSYM
+
+
+;
+;         Fonctions sur P-LISTES
+;         ======================
+;
+;         Ne supportent que les Plistes des symboles
+;         les indicateurs sont des atomes (predicat EQ)
+;
+;
+;         GETI  (interne) teste si l'indic A2 est present dans la
+;         PLIST de A1 (qui doit etre un symbole correct (/= de NIL))
+;         Ramene dans A4 le debut de la PLIST de A1 qui commence
+;         a l'indicateur A2 ou un atome si A2 n'est pas present.
+;         Et dans A3 le pointeur precedent (ou NIL s'il s'agit du 1er element)
+;
+
+GETI      LABEL      
+          MOV       PLIST(A1),A4        ; A4 <- la plist du symbole
+          MOVNIL    A3                  ; le 1er pointeur arriere
+          BRA       GETI3
+GETI2     CABEQ     A2,CAR(A4),GETIRET  ; c'est tout bon
+          MOV       CDR(A4),A4          ; saute l'indicateur
+          BFCONS    A4,GETI4            ; on ne sait jamais.
+          MOV       A4,A3               ; le pointeur precedent.
+          MOV       CDR(A4),A4          ; saute la valeur
+          INTEST
+GETI3     BTCONS    A4,GETI2            ; la PLIST se continue
+GETI4     MOVNIL    A4                  ; pour les petits malins ...
+GETIRET   RETURN
+
+
+;  ----------------------------------------
+          FENTRY    GETPROP,SUBR2
+;  ----------------------------------------
+          BTNIL     A1,GETPR4           ; c'est toujours NIL
+          BFSYMB    A1,GETERR           ; il faut un symbole
+          MOV       PLIST(A1),A4        ; A4 <- la plist du symbole
+          BFCONS    A4,GETPR4           ; la pliste est vide.
+GETPR2    CABEQ     A2,CAR(A4),GETPR5   ; c'est tout bon!
+          MOV       CDR(A4),A4          ; saute l'indicateur
+          BFCONS    A4,GETPR4           ; on ne sait jamais.
+          MOV       CDR(A4),A4          ; saute la valeur
+          INTEST
+          BTCONS    A4,GETPR2           ; la PLIST se continue
+GETPR4    MOVNIL    A1                  ; pour les petits malins ...
+          RETURN
+GETPR5    MOV       CDR(A4),A4          ; pointe sur la (valeur)
+          BFCONS    A4,GETPR4           ; on ne sait jamais.
+          MOV       CAR(A4),A1          ; ramene la valeur simple
+          RETURN     
+GETERR    MOV       .GETPROP,A2         ; nom de la fonction
+          JMP       ERRSYM              ; il fallait un symbole
+
+
+;  ----------------------------------------
+          FENTRY    GETL,SUBR2
+;  ----------------------------------------
+          BTNIL     A1,SYBFALSE         ; la pliste de NIL est toujours NIL
+          BFSYMB    A1,GETLERR          ; il faut un symbole
+          BTNIL     A2,SYBFALSE         ; la liste d'indicateurs est vide
+          BFCONS    A2,GETLERR2         ; ce n'est pas une liste
+          MOV       PLIST(A1),A1        ; la p-liste du symbole
+          BRA       GETL7
+GETL1     MOV       CAR(A1),A3          ; l'indicateur suivant de la p-list
+          PUSH      A2                  ; sauve la liste des indics
+GETL2     MOV       CAR(A2),A4
+          CABEQ     A3,A4,GETL8         ; c'est celui-la!
+          MOV       CDR(A2),A2          ; avance dans la liste
+          BTCONS    A2,GETL2            ; il en reste
+          POP       A2
+          MOV       CDR(A1),A1          ; saute l'indicateur
+          BFCONS    A1,GETL7            ; on ne sait jamais.
+          MOV       CDR(A1),A1          ; saute la valeur
+GETL7     BTCONS    A1,GETL1            ; la p-liste continue
+          RETURN                        ; A1 est ok!
+GETL8     POP       A2                  ; restaure la liste des indics
+          RETURN                        ; A1 est pret
+GETLERR   MOV       .GETL,A2            ; le nom de la fonction
+          JMP       ERRSYM              ; il fallait un symbole
+GETLERR2  MOV       A2,A1               ; le mauvais arg
+          MOV       .GETL,A2            ; le nom de la fonction
+          JMP       ERRNLA              ; il fallait une liste
+
+;  ----------------------------------------
+          FENTRY    ADDPROP,SUBR3
+;  ----------------------------------------
+          BFSYMB    A1,ADDPRET          ; ce doit etre un symbole
+          BTNIL     A1,ADDPRET          ; ce doit etre un symbole
+          MOV       PLIST(A1),A4        ; revcupere l'ancienne pliste.
+          CONS      A2,A4               ; (val . pl)
+          CONS      A3,A4               ; (ind val . pl)
+          MOV       A4,PLIST(A1)        ; force la nouvelle pliste
+          MOV       A2,A1               ; retourne la val (dixit GH)!
+          RETURN
+ADDPRET   MOV       .ADDPROP,A2         ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+
+;  ----------------------------------------
+          FENTRY    PUTPROP,SUBR3
+;  ----------------------------------------
+          BFSYMB    A1,PUTPERR          ; ce n'est pas une variable
+          BTNIL     A1,PUTPERR          ; ce n'est pas une variable
+          PUSH      A2                  ; sauve la valeur
+          MOV       A3,A2               ; pour le ADDPROP
+          CALL      GETI                ; effectue la recherche
+          MOV       A2,A3               ; arguments comme au depart.
+          POP       A2                  ; la valeur
+          BFCONS    A4,ADDPROP          ; l'element n'existait pas!
+          MOV       CDR(A4),A4          ; avance dans la P-LIST
+          BFCONS    A4,SYBFALSE         ; on ne sait jamais.
+          MOV       A2,CAR(A4)          ; force la nouvelle valeur
+          MOV       A2,A1               ; retourne la valeur.
+          RETURN
+PUTPERR   MOV       .PUTPROP,A2         ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+
+;  ----------------------------------------
+          FENTRY    DEFPROP,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,DEFPERR          ; il faut un CONS
+          MOV       CDR(A1),A4          ; A4 <- (pval prop)
+          MOV       CAR(A1),A1          ; A1 <- plist
+          BFCONS    A4,DEFPERR          ; il faut un CONS
+          MOV       CAR(A4),A2          ; A2 <- pval
+          MOV       CDR(A4),A3          ; A3 <- (prop)
+          BFCONS    A3,DEFPERR          ; il faut un CONS
+          MOV       CAR(A3),A3          ; A3 <- prop
+          BRA       PUTPROP
+DEFPERR   MOV       .DEFPROP,A2         ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+
+;  ----------------------------------------
+          FENTRY    REMPROP,SUBR2
+;  ----------------------------------------
+          BFSYMB    A1,REMPERR          ; il faut un symbole
+          CALL      GETI
+          BFCONS    A4,SYBFALSE         ; la recherche a echouee
+          PUSH      A4                  ; sera la valeur de retour
+          MOV       CDR(A4),A2          ; A2 <- ( val indic val ...)
+          BFCONS    A2,REMPR2           ; on ne sait jamais.
+          MOV       CDR(A2),A2          ; A3 <- (indic val ... suivants)
+REMPR2    BFCONS    A3,REMPR4           ; c'etait le 1er element
+          MOV       A2,CDR(A3)
+          POP       A1                  ; retourne le bout de Pliste concerne
+          RETURN
+REMPR4    MOV       A2,PLIST(A1)        ; c'est une nouvelle P-liste!
+          POP       A1                  ; retourne le bout de Pliste concerne
+          RETURN
+REMPERR   MOV       .REMPROP,A2         ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait un symbole
+
+;
+;         Pour faciliter les fonctions a 1/2 arguments operant sur un symbole
+;         A2 -> le nom de la fonction
+;         A3 -> l'adresse si c'est un SET
+;         A4 -> nombre d'arguments
+;
+GETSET12  LABEL
+          CNBEQ     A4,#1,GETSETA       ; 1 argument
+          CNBEQ     A4,#2,GETSETB       ; 2 arguments
+          MOV       #2,A1               ; le bon nb
+          JMP       ERRWNA              ; mauvais nb d'arguments
+GETSETA   POP       A3                  ; l'adresse de retour
+          POP       A1                  ; le premier argument
+          BFSYMB    A1,GETSETC          ; il faut un symbole
+          BRI       A3                  ; RETURN
+GETSETB   LABEL
+          POP       A4                  ; on oublie l'adresse de retour
+          POP       A1                  ; le deuxieme argument
+          XTOPST    A3                  ; le premier argument <-> retour
+          BFSYMB    A3,GETSETD          ; il faut un symbole
+          BTNIL     A3,GETSETD          ; || est toujours interdit en ecrit
+          RETURN
+GETSETD   MOV       A3,A1
+GETSETC   JMP       ERRSYM
+
+
+;  ----------------------------------------
+          FENTRY    FINCR,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; sauve le nom du symbole
+          MOV       CDR(A1),A1          ; (s)
+          BFNIL     A1,INCR2            ; il faut faire un EVAL
+          MOV       #1,A1               ; par defaut c'est 1
+          BRA       INCR3               ; pour l'addition
+INCR2     JCALL     EVALCAR             ; evalue l'expression
+INCR3     MOV       A1,A2               ; l'increment
+          TOPST     A1                  ; recupere le nom du symbole
+          BFVAR     A1,INCRERR1         ; il faut une variable
+          MOV       CVAL(A1),A1         ; la valeur de la variable
+          MOV       #2,A4               ; compatibilite' avec le ge'ne'rique
+          JCALL     GAPLUS2I            ; le + generique binaire interne
+          POP       A2                  ; de nouveau le nom
+          MOV       A1,CVAL(A2)         ; force la nouvelle CVAL
+          RETURN
+INCRERR1  MOV       .FINCR,A2           ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+
+;  ----------------------------------------
+          FENTRY    FDECR,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; sauve le nom du symbole
+          MOV       CDR(A1),A1          ; (s)
+          BFNIL     A1,DECR2            ; il faut faire un EVAL
+          MOV       #1,A1               ; par defaut c'est 1
+          BRA       DECR3               ; pour l'addition
+DECR2     JCALL     EVALCAR             ; evalue l'expression
+DECR3     MOV       A1,A2               ; le decrement
+          TOPST     A1                  ; recupere le nom du symbole
+          BFVAR     A1,DECRERR1         ; il faut une variable
+          MOV       CVAL(A1),A1         ; la valeur de la variable
+          JCALL     GADIFF2I            ; (- x y) generique interne
+          POP       A2                  ; recup le nom
+          MOV       A1,CVAL(A2)         ; force la nouvelle CVAL
+          RETURN
+DECRERR1  MOV       .FDECR,A2           ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+
+          END
+

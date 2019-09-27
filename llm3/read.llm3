@@ -1,0 +1,1733 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "5/19" "read.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 5 "Le lecteur Le-Lisp"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/read.llm3,v 1.2 2016/05/21 09:16:58 jullien Exp $
+
+          TITLE     READ                ; LLM3 : les entrees logiques.
+
+          XREFI     LLINIT,FSYMB        ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,.UNDEF
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.LLSYSTEM
+          XREFI     LLINIT,.SYSPKGC
+          XREFI     LLINIT,HASHTAB
+          XREFI     LLINIT,FSTRG
+          XREFP     TOPERR,ERRNIA       ; 2 - TOPERR
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRNSA
+          XREFP     TOPERR,ERRSXT
+          XREFP     TOPERR,ERRSYM
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRUDF
+          XREFP     TOPERR,ERRUDV
+          XREFP     TOPERR,GETSETN
+          XREFI     TOPERR,.LLEXPR
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     GC,GCSYMB
+          XREFP     GC,HGC
+          XREFP     PHYSIO,INPHY        ; 4 - PHYSIO
+          XREFI     PHYSIO,ISTREAM
+          XREFI     PHYSIO,INMAX
+          XREFI     PHYSIO,POLIG
+          XREFI     MACROCH,.SYSCOL     ; 6 - MACROCH
+          XREFP     EVAL,SYSPROT        ; 8 - EVAL
+          XREFP     EVAL,EVALA1
+          XREFP     EVAL,APPLY
+          XREFP     EVAL,FFUNCALL
+          XREFI     EVAL,SAVEA4
+          XREFP     CNTRL,LLDE          ; 10 - CNTRL
+          XREFI     CNTRL,.QUOTE
+          XREFP     SYMBS,GETFNS        ; 12 - SYMBS
+          XREFP     SYMBS,SETFN
+          XREFP     SYMBS,GETPROP
+          XREFI     FNTSTD,.LLCONS      ; 13 - FNTSTD
+          XREFI     FNTSTD,.MCONS
+          XREFP     FNTSTD,NREVERSE
+          XREFP     FNTSTD,LLLENGTH
+          XREFP     FNTSTD,EQUAL
+          XREFP     NUMBER,GAPLUS2I     ; 14 - NUMBER
+          XREFP     NUMBER,GATIM2I
+          XREFP     NUMBER,GADINV
+          XREFP     NUMBER,GADIV
+          XREFP     STRING,STRINGA1     ; 16 - STRING
+          XREFP     STRING,STRGALLC
+          XREFP     STRING,MAKESTRG
+          XREFP     STRING,MAKEVECT
+
+          XDEFP     FASCII
+          XDEFP     INI_READ
+          XDEFP     ISTDSYM
+          XDEFP     HASHINT
+          XDEFP     INISYMB
+          XDEFP     INICST
+          XDEFP     INASYMB             ; a` laisser IBM/PC
+          XDEFP     INACST              ; a` laisser IBM/PC
+          XDEFP     TRYATOM
+          XDEFP     TRYSYMP
+          XDEFP     TRYSYMB             ; a` laisser Lisp_caller
+          XDEFP     TRYSYMPK
+          XDEFP     CRASTRG
+          XDEFP     ERLEC11
+          XDEFP     READDLTD
+          XDEFP     LREAD
+          XDEFP     READI
+          XDEFP     GETCH
+          XDEFP     ASCIII
+          XDEFP     REREADA4
+          XDEFP     GETCV
+          XDEFP     READ2
+          XDEFP     RDPKGC2
+          XDEFP     BASE10P
+          XDEFP     ERLEC6
+
+          XDEFI     .LREAD
+          XDEFI     .STINREAD
+          XDEFI     .STATRC
+
+          XDEFI     TSYMB
+          XDEFI     ASYMB
+          XDEFI     KSYMB
+          XDEFI     HSYMB
+          XDEFI     COUNT
+          XDEFI     TABCH
+          XDEFI     CACHCH
+          XDEFI     IBASE
+          XDEFI     ALL09
+          XDEFI     NEGATIF
+          XDEFI     QUOTES
+          XDEFI     GETCHFL
+          XDEFI     RINGUR
+          XDEFI     CURREAD
+          XDEFI     RDPRD
+          XDEFI     IMPLI
+          XDEFI     IMPLD
+          XDEFI     BUFAT
+          XDEFI     LGBUFAT
+          XDEFI     CPKGC
+
+          IMPURE
+
+TSYMB     ADR       0                   ; taille du symbole
+ASYMB     ADR       0                   ; [GC] adresse du symbole
+KSYMB     ADR       0                   ; clef de hachage du symbole
+HSYMB     ADR       0                   ; le symbole precedent (snap!)
+COUNT     ADR       0                   ; variable auxiliaire de comptage
+
+TABCH     ADR       0                   ; [GC] table des types des caracteres
+CACHCH    ADR       0                   ; [GC] table des READCH
+
+IBASE     ADR       0                   ; base des caracteres d'entree
+ALL09     ADR       0                   ; indicateur pour trynum
+NEGATIF   ADR       0                   ; le fixnum est ne'gatif
+QUOTES    ADR       0                   ; il y a des caracteres quote's
+GETCHFL   ADR       0                   ; ou` a e'te' lu le dernier car
+
+RINGUR    ADR       0                   ; [GC] liste caractere a re-ingurgiter
+CURREAD   ADR       0                   ; [GC] le CURent READ si macro- carac
+RDPRD     ADR       0                   ; profondeur du READ (cf: pretty-read)
+
+IMPLI     ADR       0                   ; =0 si READ, <>0 si IMPLODE
+IMPLD     ADR       0                   ; [GC] liste des caracteres de IMPLODE
+
+BUFAT     ADR       0                   ; [GC] tampon d'un PNAME en entree
+LGBUFAT   ADR       0                   ; longueur de ce tampon
+
+CPKGC     ADR       0                   ; [GC] current package cell.
+
+          PURE
+
+;
+;         Initialise le lecteur
+;         =====================
+;
+
+INI_READ  LABEL      
+
+          MOVNIL    RINGUR              ; rien a relire
+          MOVNIL    CURREAD             ; [GC] en cas de macro-caractere
+          MOVNIL    IMPLI               ; pas dans IMPLODE
+          MOVNIL    IMPLD               ; rien a lire.
+;                                       ;;; Creation des symboles
+
+
+          MOV       .LLSYSTEM,CPKGC     ; les variables systeme
+          MAKCST    STATRC,#14,"read-case-flag"; #:system:read-case-flag
+          MOVNIL    CVAL(A1)
+          MAKCST    STINREAD,#12,"in-read-flag"; #:system:in-read-flag
+          MOVNIL    CVAL(A1)
+
+          MOVNIL    CPKGC               ; retour au package racine ||
+
+          MAKFNT    LREAD,#4,"read" 
+          MAKFNT    IMPLODE,#7,"implode"
+          MAKFNT    IMPLODECH,#9,"implodech"
+          MAKFNT    READCH,#6,"readch" 
+          MAKFNT    READCOD,#6,"readcn" 
+          MAKFNT    LCUREAD,#7,"curread" 
+          MAKFNT    TEREAD,#6,"teread"
+          MAKFNT    REREAD,#6,"reread" 
+          MAKFNT    READLINE,#8,"readline" 
+          MAKFNT    READSTRG,#10,"readstring"
+          MAKFNT    STRATOM,#7,"stratom"
+          MAKFNT    READDLTD,#19,"read-delimited-list"
+          MAKFNT    PEEKCH,#6,"peekch" 
+          MAKFNT    PEEKCN,#6,"peekcn" 
+          MAKFNT    CONCATPK,#10,"concatpkgc" 
+          MAKFNT    FASCII,#5,"ascii" 
+          MAKFNT    CASCII,#6,"cascii" 
+          MAKFNT    UPPERCASE,#9,"uppercase" 
+          MAKFNT    LOWERCASE,#9,"lowercase" 
+          MAKFNT    ASCIIP,#6,"asciip" 
+          MAKFNT    DIGITP,#6,"digitp" 
+          MAKFNT    LETTERP,#7,"letterp"
+          MAKFNT    FIBASE,#5,"ibase"
+          MOV       #10,IBASE
+;
+;         fabrication de la table des types des carateres
+;          Code des caracteres de la table TABCH
+;
+;               type-ch = 0 :   TCNULL : caracteres null (a ignorer)
+;               type-ch = 1 :   TCBCOM : debut de commentaires (;)
+;               type-ch = 2 :   TCECOM : fin de commentaires (RC)
+;               type-ch = 3 :   TCQUOTE : quote caractere (/)
+;               type-ch = 4 :   TCLPAR : debut de liste (
+;               type-ch = 5 :   TCRPAR : fin de liste )
+;               type-ch = 6 :   TCDOT : point .
+;               type-ch = 7 :   TCSEP : separateur normal (SP, TAB)
+;               type-ch = 8 :   TCSPKGC : delimiteur de package (:)
+;               type-ch = 9 :   TCSPLICE : splice macro
+;               type-ch = 10 :  TCMACRO : macro-caractere
+;               type-ch = 11 :  TCSTRING : delimiteur de chaines de caracteres
+;               type-ch = 12 :  TCPNAME : caractere normal
+;               type-ch = 13 :  TCSYMB : delimiteur de p-names speciaux
+;               type-ch = 14 :  TCMSYMB : symbole mono caractere
+
+          MOV       #256,A1             ; taille de la table
+          MOV       #TCPNAME,A2         ; le type standard
+          JCALL     MAKESTRG            ; A1 <- la chaine
+          MOV       A1,TABCH            ; et voila, TABCH est pret.
+
+          HBMOVX    #TCNULL,A1,#0       ; 0   00 ctl-@  null
+;         HBMOVX    #TCPNAME,A1,#^A     ; 1   01 ctl-A
+;         HBMOVX    #TCPNAME,A1,#^B     ; 2   02 ctl-B
+;         HBMOVX    #TCPNAME,A1,#^C     ; 3   03 ctl-C
+;         HBMOVX    #TCPNAME,A1,#^D     ; 4   04 ctl-D
+;         HBMOVX    #TCPNAME,A1,#^E     ; 5   05 ctl-E
+;         HBMOVX    #TCPNAME,A1,#^F     ; 6   06 ctl-F
+;         HBMOVX    #TCPNAME,A1,#^G     ; 7   07 ctl-G
+          HBMOVX    #TCSEP,A1,#^H       ; 8   10 ctl-H  bs
+          HBMOVX    #TCSEP,A1,#^I       ; 9   11 ctl-I  tab
+          HBMOVX    #TCECOM,A1,#^J      ; 10  12 ctl-J  lf
+          HBMOVX    #TCSEP,A1,#^K       ; 11  13 ctl-K  vt
+          HBMOVX    #TCSEP,A1,#^L       ; 12  14 ctl-L  ff
+          HBMOVX    #TCECOM,A1,#^M      ; 13  15 ctl-M  rc
+;         HBMOVX    #TCPNAME,A1,#^N     ; 14  16 ctl-N
+;         HBMOVX    #TCPNAME,A1,#^O     ; 15  17 ctl-O
+;         HBMOVX    #TCPNAME,A1,#^P     ; 16  20 ctl-P
+;         HBMOVX    #TCPNAME,A1,#^Q     ; 17  21 ctl-Q
+;         HBMOVX    #TCPNAME,A1,#^R     ; 18  22 ctl-R
+;         HBMOVX    #TCPNAME,A1,#^S     ; 19  23 ctl-S
+;         HBMOVX    #TCPNAME,A1,#^T     ; 20  24 ctl-T
+;         HBMOVX    #TCPNAME,A1,#^U     ; 21  25 ctl-U
+;         HBMOVX    #TCPNAME,A1,#^V     ; 22  26 ctl-V
+;         HBMOVX    #TCPNAME,A1,#^W     ; 23  27 ctl-W
+;         HBMOVX    #TCPNAME,A1,#^X     ; 24  30 ctl-X
+;         HBMOVX    #TCPNAME,A1,#^Y     ; 25  31 ctl-Y
+;         HBMOVX    #TCPNAME,A1,#^Z     ; 26  32 ctl-Z
+;         HBMOVX    #TCPNAME,A1,#^[     ; 27  33 ctl-[  esc
+;         HBMOVX    #TCPNAME,A1,#^\     ; 28  34 ctl-\
+;         HBMOVX    #TCPNAME,A1,#^]     ; 29  35 ctl-]
+;         HBMOVX    #TCPNAME,A1,#^^     ; 30  36 ctl-^
+;         HBMOVX    #TCPNAME,A1,#^_     ; 31  37 ctl-_
+          HBMOVX    #TCSEP,A1,#/        ; 32  40 SP
+;         HBMOVX    #TCPNAME,A1,#/!     ; 33  41 !
+          HBMOVX    #TCSTRING,A1,#/"    ; 34  42 "
+          HBMOVX    #TCSPLICE,A1,#/#    ; 35  43 #
+;         HBMOVX    #TCPNAME,A1,#/$     ; 36  44 $
+;         HBMOVX    #TCPNAME,A1,#/%     ; 37  45 %
+;         HBMOVX    #TCPNAME,A1,#/&     ; 38  46 &
+          HBMOVX    #TCMACRO,A1,#/'     ; 39  47 '
+          HBMOVX    #TCLPAR,A1,#/(      ; 40  50 (
+          HBMOVX    #TCRPAR,A1,#/)      ; 41  51 )
+;         HBMOVX    #TCPNAME,A1,#/*     ; 42  52 *
+;         HBMOVX    #TCPNAME,A1,#/+     ; 43  53 +
+          HBMOVX    #TCMACRO,A1,#/,     ; 44  54 ,
+;         HBMOVX    #TCPNAME,A1,#/-     ; 45  55 -
+          HBMOVX    #TCDOT,A1,#/.       ; 46  56 .
+;         HBMOVX    #TCPNAME,A1,#//     ; 47  57 /    (parfois TCQUOTE)
+;         HBMOVX    #TCPNAME,A1,#/0     ; 48  60 0
+;         HBMOVX    #TCPNAME,A1,#/1     ; 49  61 1
+;         HBMOVX    #TCPNAME,A1,#/2     ; 50  62 2
+;         HBMOVX    #TCPNAME,A1,#/3     ; 51  63 3
+;         HBMOVX    #TCPNAME,A1,#/4     ; 52  64 4
+;         HBMOVX    #TCPNAME,A1,#/5     ; 53  65 5
+;         HBMOVX    #TCPNAME,A1,#/6     ; 54  66 6
+;         HBMOVX    #TCPNAME,A1,#/7     ; 55  67 7
+;         HBMOVX    #TCPNAME,A1,#/8     ; 56  70 8
+;         HBMOVX    #TCPNAME,A1,#/9     ; 57  71 9
+          HBMOVX    #TCMACRO,A1,#/:     ; 58  72 :
+          HBMOVX    #TCBCOM,A1,#/;      ; 59  73 ;
+;         HBMOVX    #TCPNAME,A1,#/<     ; 60  74 <
+;         HBMOVX    #TCPNAME,A1,#/=     ; 61  75 =
+;         HBMOVX    #TCPNAME,A1,#/>     ; 62  76 >
+;         HBMOVX    #TCPNAME,A1,#/?     ; 63  77 ?
+;         HBMOVX    #TCPNAME,A1,#/@     ; 64  100 @
+;         HBMOVX    #TCPNAME,A1,#/A     ; 65  101 A
+;         HBMOVX    #TCPNAME,A1,#/B     ; 66  102 B
+;         HBMOVX    #TCPNAME,A1,#/C     ; 67  103 C
+;         HBMOVX    #TCPNAME,A1,#/D     ; 68  104 D
+;         HBMOVX    #TCPNAME,A1,#/E     ; 69  105 E
+;         HBMOVX    #TCPNAME,A1,#/F     ; 70  106 F
+;         HBMOVX    #TCPNAME,A1,#/G     ; 71  107 G
+;         HBMOVX    #TCPNAME,A1,#/H     ; 72  110 H
+;         HBMOVX    #TCPNAME,A1,#/I     ; 73  111 I
+;         HBMOVX    #TCPNAME,A1,#/J     ; 74  112 J
+;         HBMOVX    #TCPNAME,A1,#/K     ; 75  113 K
+;         HBMOVX    #TCPNAME,A1,#/L     ; 76  114 L
+;         HBMOVX    #TCPNAME,A1,#/M     ; 77  115 M
+;         HBMOVX    #TCPNAME,A1,#/N     ; 78  116 N
+;         HBMOVX    #TCPNAME,A1,#/O     ; 79  117 O
+;         HBMOVX    #TCPNAME,A1,#/P     ; 80  120 P
+;         HBMOVX    #TCPNAME,A1,#/Q     ; 81  121 Q
+;         HBMOVX    #TCPNAME,A1,#/R     ; 82  122 R
+;         HBMOVX    #TCPNAME,A1,#/S     ; 83  123 S
+;         HBMOVX    #TCPNAME,A1,#/T     ; 84  128 T
+;         HBMOVX    #TCPNAME,A1,#/U     ; 85  125 U
+;         HBMOVX    #TCPNAME,A1,#/V     ; 86  126 V
+;         HBMOVX    #TCPNAME,A1,#/W     ; 87  127 W
+;         HBMOVX    #TCPNAME,A1,#/X     ; 88  130 X
+;         HBMOVX    #TCPNAME,A1,#/Y     ; 89  131 Y
+;         HBMOVX    #TCPNAME,A1,#/Z     ; 90  132 Z
+          HBMOVX    #TCMACRO,A1,#/[     ; 91  133 [ 
+;         HBMOVX    #TCPNAME,A1,#/\     ; 92  134 \  (parfois TCQUOTE)
+          HBMOVX    #TCMACRO,A1,#/]     ; 93  135 ] 
+          HBMOVX    #TCMACRO,A1,#/^     ; 94  136 ^
+;         HBMOVX    #TCPNAME,A1,#95     ; 95  137
+          HBMOVX    #TCMACRO,A1,#/`     ; 96  140 `
+;         HBMOVX    #TCPNAME,A1,#/a     ; 97  141 a
+;         HBMOVX    #TCPNAME,A1,#/b     ; 98  142 b
+;         HBMOVX    #TCPNAME,A1,#/c     ; 99  143 c
+;         HBMOVX    #TCPNAME,A1,#/d     ; 100 144 d
+;         HBMOVX    #TCPNAME,A1,#/e     ; 101 145 e
+;         HBMOVX    #TCPNAME,A1,#/f     ; 102 146 f
+;         HBMOVX    #TCPNAME,A1,#/g     ; 103 147 g
+;         HBMOVX    #TCPNAME,A1,#/h     ; 104 150 h
+;         HBMOVX    #TCPNAME,A1,#/i     ; 105 151 i
+;         HBMOVX    #TCPNAME,A1,#/j     ; 106 152 j
+;         HBMOVX    #TCPNAME,A1,#/k     ; 107 153 k
+;         HBMOVX    #TCPNAME,A1,#/l     ; 108 154 l
+;         HBMOVX    #TCPNAME,A1,#/m     ; 109 155 m
+;         HBMOVX    #TCPNAME,A1,#/n     ; 110 156 n
+;         HBMOVX    #TCPNAME,A1,#/o     ; 111 157 o
+;         HBMOVX    #TCPNAME,A1,#/p     ; 112 160 p
+;         HBMOVX    #TCPNAME,A1,#/q     ; 113 161 q
+;         HBMOVX    #TCPNAME,A1,#/r     ; 114 162 r
+;         HBMOVX    #TCPNAME,A1,#/s     ; 115 163 s
+;         HBMOVX    #TCPNAME,A1,#/t     ; 116 164 t
+;         HBMOVX    #TCPNAME,A1,#/u     ; 117 165 u
+;         HBMOVX    #TCPNAME,A1,#/v     ; 118 166 v
+;         HBMOVX    #TCPNAME,A1,#/w     ; 119 167 w
+;         HBMOVX    #TCPNAME,A1,#/x     ; 120 170 x
+;         HBMOVX    #TCPNAME,A1,#/y     ; 121 171 y
+;         HBMOVX    #TCPNAME,A1,#/z     ; 122 172 z
+;         HBMOVX    #TCPNAME,A1,#/{     ; 123 173 {
+          HBMOVX    #TCSYMB,A1,#/|      ; 124 174 |
+;         HBMOVX    #TCPNAME,A1,#/}     ; 125 175 }
+;         HBMOVX    #TCPNAME,A1,#/~     ; 126 176 ~
+          HBMOVX    #TCNULL,A1,#127     ; 127 177 DEL
+;         HBMOVX    #TCPNAME,A1,#128    ; 128-255 pour avoir 8 bits!
+
+          MOV       #1024,LGBUFAT       ; taille max d'un atome
+          MOV       LGBUFAT,A1          ;  pour le tampon de lecture
+          MOV       #0,A2               ; le "fill character"
+          JCALL     MAKESTRG            ; on en fabrique une chaine
+          MOV       A1,BUFAT            ; et voila pret a bosser!
+
+          MOV       #128,A1             ; taille de la table des caracteres
+          MOV       #0,A2               ; valeur initiale
+          JCALL     MAKEVECT            ; un vecteur
+          MOV       A1,CACHCH
+
+          RETURN
+
+RDPOPJ    RETURN
+
+;
+;         HASHINT le hash interne
+;         =======================
+;
+;         en entre'e   A1 = chaine du pname
+;         en sortie    A1 = key :: plen + les 6 1ers caracteres
+;
+
+HASHINT   MOV       A1,A2               ; A2 <- la string
+          HGSIZE    A2,A1               ; A1 <- la taille
+HASHFAST  LABEL                         ; un point d'entree rapide
+          MOV       A1,A3               ; A3 <- la taille (pour la suite)
+          CNBLE     A1,#6,HASHCOUR      ; spe'cial si moins de 6 car.
+          PUSH      A3                  ; sauve le nombre de caract
+          MOV       #5,A3               ; d'abord les 6 premiers
+HASHF1    HBXMOV    A2,A3,A4            ; car suivant
+          PLUS      A1,A1               ; (logshift #1 a1)
+          PLUS      A4,A1               ; ajoute les caracte`res
+          SOBGEZ    A3,HASHF1
+          MOV       #5,A3               ; nb de caracteres poids forts
+HASHF5    XTOPST    A3                  ; sauve le compteur, recup l'index
+          DECR      A3                  ; on recule d'1 car
+          HBXMOV    A2,A3,A4
+          PLUS      A1,A1               ; (logshift #1 a1)
+          PLUS      A4,A1               ; ajoute les caracte`res
+          XTOPST    A3                  ; recupere le compteur          
+          SOBGEZ    A3,HASHF5           ; boucle caracteres forts.
+          POP       A3                  ; nettoie la pile.
+          BRA       HASHEND             ; et rentre
+HASHCOUR  LABEL                         ; hachage special si <= 6 caracteres
+          CNBEQ     A1,#0,HASHRET       ; le cas merdique de .VOID!!
+          BRA       HASHCOU3            ; vers le dernier caractere
+HASHCOU1  HBXMOV    A2,A3,A4            ; prend le caractere
+          PLUS      A1,A1               ; (logshift #1 a1)
+          PLUS      A4,A1               ; l'ajoute
+HASHCOU3  SOBGEZ    A3,HASHCOU1         ; et boucle
+HASHEND   LABEL                         ; calcul le modulo
+          LAND      #MAXFIX,A1          ; que voudrait dire un nb < 0 ?
+          HGSIZE    HASHTAB,A4          ; pour le modulo
+          REM       A4,A1               ; modulo nombre de buckets
+HASHRET   RETURN                        ; on rentre
+
+;
+;         INISYMB : initialise un nouveau symbole (dynamique)
+;         ===================================================
+;
+;         A1 <- PLEN, A2 <- PNAME, A3 <- FVAL, A4 <- .FVAL
+;         et FTYPE empile.
+;         retour, A1 le symbole
+
+INISYMB   LABEL      
+          PUSH      A4                  ; la .FVAL
+          PUSH      A3                  ; la FVAL
+          CALL      CRASTRG             ; A1 <- une chaine [from A1-A2]
+          MOV       A1,A2               ; A2 <- le PNAME pour CRASYMB
+          CALL      CRASYMB             ; A1 <- le symbole.
+          POP       A4                  ; l'adresse de la FVAL
+          MOV       A4,FVAL(A1)   
+          POP       A4                  ; l'adresse de la .FVAL
+          BTNIL     A4,INISYMR          ; ne pas stocker la .VAL
+          MOV       A1,VAL(A4)          ; force l'adresse allouee.
+INISYMR   POP       A3                  ; l'adresse de retour
+          POP       A4                  ; le FTYPE
+          SFTYPE    A4,A1
+          BRI       A3                  ; et on rentre!
+;
+;         INICST : initialise une nouvelle constante (en dynamique)
+;         =========================================================
+;
+;         A1 <- PLEN, A2 <- PNAME, A3 <- .FVAL/NIL
+;         retour, A1 la constante
+
+INICST    LABEL      
+          PUSH      A3                  ; l'adresse .FVAL
+          CALL      CRASTRG             ; A1 <- une chaine
+          MOV       A1,A2               ; A2 <- le PNAME
+          CALL      CRASYMB             ; A1 <- le symbole.
+          MOV       A1,CVAL(A1)         ; fabrique une constante.
+          POP       A3                  
+          BTNIL     A3,INICSTR          ; ne pas stocker la .VAL
+          MOV       A1,VAL(A3)          ; l'adresse actuelle .FVAL
+INICSTR   RETURN
+
+; Cre'e un symbole de PNAME A2 dans le package CPKGC
+; il faudra e'ventuellement faire des liens 3D
+CRASYMB   CALL      SYMBALLC            ; alloue un symbole dans A1
+          PUSH      A1                  ; sauve ce symbole
+          MOV       CPKGC,PKGC(A1)      ; positionne son package
+          MOV       A2,PNAME(A1)        ; positionne son PNAME
+          HGSIZE    A2,A1               ; la taille du symbole
+          CALL      TRYSYMB0            ; cherche si le symbole existe
+;                                         dans d'autres packages (liens 3D)
+          POP       A1                  ; re'cupere le symbole
+          CNBEQ     A2,#1,PLAC2D        ; le place en 2D
+          CNBEQ     A2,#2,PLAC3D12      ; placement 3D cas 1--2
+          BRA       PLAC3D2N            ; c'est donc un cas 2--N
+;
+;         INASYMB : initialise un nouveau symbole (statique)
+;         ===================================================
+;
+;         A1 <- l'adresse d'un symbole qui a deja ete alloue
+;         le PNAME, la FVAL et le FTYPE ont ete pre-charges
+;         retour, A1 le symbole
+
+INASYMB   LABEL      
+          MOV       .UNDEF,CVAL(A1)     ; initialise tous les champs
+INASYMB2  LABEL                         ; INACST rembraie ici.
+          MOVNIL    PLIST(A1)           ; pas de PTES
+          SPTYPE    #0,A1               ; ni de PTYPE
+          MOV       CPKGC,PKGC(A1)      ; dans le package courant
+          MOVNIL    OVAL(A1)            ; sans valeur objet
+          PUSH      A1                  ; la valeur retour (le symbole)
+          MOV       PNAME(A1),A2        ; pour la recherche dans la HASHTAB
+          HGSIZE    A2,A1               ; la taille de la chaine
+          CALL      TRYSYMB0            ; ou doit-il aller ?
+          POP       A1                  ; re'cupere le symbole
+          CNBEQ     A2,#1,PLAC2D        ; le placer en 2D
+          CNBEQ     A2,#2,PLAC3D12      ; placement 3D cas 1--2
+          BRA       PLAC3D2N            ; c'est donc un cas 2--N
+
+;
+;         INACST : initialise une nouvelle constante (statique)
+;         ====================================================
+;
+;         A1 <- l'adresse d'un symbole qui a deja ete alloue
+;         le PNAME a ete pre-charge
+;         retour, A1 le symbole
+
+INACST    LABEL      
+          MOV       A1,CVAL(A1)         ; c'est une constante!
+          MOV       #0,FVAL(A1)         ; pas de fonction
+          SFTYPE    #FUNDEF,A1          ; ni de FTYPE
+          BRA       INASYMB2            ; apres c'est pareil.
+
+;         Le horner dans la base IBASE utilisant l'arithmetique generique.
+
+MAKEFIX   MOVNIL    NEGATIF             ; le nombre est positif par de'faut
+          MOV       #0,A3               ; on commence par la tete
+MAKEFIX0  MOV       #0,A1               ; l'accumulateur
+          HBXMOV    A2,A3,A4            ; le premier caractere
+          CNBEQ     A4,#/+,MAKEFIX8     ; un '+'
+          CNBNE     A4,#/-,MAKEFIX1     ; pas un -
+          MOV       A4,NEGATIF          ; c'est ne'gatif
+          BRA       MAKEFIX8            ; interne en non signe'
+MAKEFIX1  HBXMOV    A2,A3,A4            ; le caractere
+                                        ;;;  code portable non ASCII!
+          CNBEQ     A4,#//,MAKEFXR1     ; un rationnel!
+          CNBLT     A4,#/0,MAKEFXD1     ; surement pas un chiffre
+          CNBGT     A4,#/9,MAKEFXD1     ;   itou.
+          DIFF      #/0,A4              ; devient un chiffre
+          BRA       MAKEFIX2            ; au travail avec le digit.
+MAKEFXD1  CNBLT     A4,#/A,MAKEFXD2     ; surement pas une lettre CAP
+          CNBGT     A4,#/Z,MAKEFXD2     ;   itou.
+          DIFF      #/A,A4              ; passage dans l'alphabet
+          PLUS      #10,A4              ; A=10, B=11 ...
+          BRA       MAKEFIX2
+MAKEFXD2  CNBLT     A4,#/a,MAKEFIX2     ; surement pas une lettre minuscule
+          CNBGT     A4,#/z,MAKEFIX2     ;   itou.
+          DIFF      #/a,A4              ; passage dans l'alphabet
+          PLUS      #10,A4              ; a=10, b=11 ...
+MAKEFIX2  CNBEQ     IBASE,#10,MAKEFIX6  ; arith generique pour la base 10
+          TIMES     IBASE,A1,MAKEFIX3   ; sans debordement
+MAKEFIX3  PLUS      A4,A1,MAKEFIX4      ;   itou ...
+MAKEFIX4  BRA       MAKEFIX8
+MAKEFIX6  PUSH      A2                  ; pour tout sauver
+          PUSH      A3                  ;   dito
+          PUSH      A4                  ; le nouveau digit
+          MOV       IBASE,A2            ; 2eme op de *
+          MOV       #2,A4               ; narg
+          JCALL     GATIM2I             ; A1*A2 en generique
+          POP       A2                  ; le digit
+          MOV       #2,A4               ; narg
+          JCALL     GAPLUS2I            ; A1+A2 -> A1 en generique.
+          POP       A3                  ; nettoie
+          POP       A2                  ;   dito
+MAKEFIX8  INCR      A3                  ; avance dans le nombre
+          CNBNE     A3,TSYMB,MAKEFIX1   ; more!
+          BTNIL     NEGATIF,MAKEFIXR    ; c'est positif
+          JMP       GADINV              ; inversion generique. -A1 -> A1
+MAKEFIXR  RETURN                        ; tout est fini
+
+MAKEFXR1  BTNIL     NEGATIF,MAKEFIXR2   ; le nume'rateur est >0
+          PUSH      A2                  ; le tampon
+          PUSH      A3                  ; l'index
+          JCALL     GADINV              ; il est bon
+          POP       A3                  ; l'index
+          POP       A2                  ; le tampon
+MAKEFIXR2 PUSH      A1                  ; empile le premier terme du rationnel
+          INCR      A3                  ; saute le /
+          MOVNIL    NEGATIF             ; a priori pas ne'gatif
+          CALL      MAKEFIX0            ; cre'e le second terme du rationnel
+          PUSH      A1                  ; empile le re'sultat
+          MOV       #2,A4               ; deux parametres pour /
+          JMP       GADIV               ; La division ge'ne'rique
+
+MAKEFLO   CVATOF    A2,TSYMB,TRYSYMI,A1 ; cre'ation du flottant sinon
+          RETURN
+
+NEXTFIX   CNBNE     A3,TSYMB,NEXTXXX    ; il en reste ?
+          ADJSTK    #1                  ; vire l'adressee de retour
+          BRA       MAKEFIX             ; cre'e un fix
+NEXTFLO   CNBNE     A3,TSYMB,NEXTXXX    ; il en reste ?
+          ADJSTK    #1                  ; vire l'adressee de retour
+          BRA       MAKEFLO             ; cre'e un flottant
+NEXTSYM   CNBNE     A3,TSYMB,NEXTXXX    ; il en reste ?
+          ADJSTK    #1                  ; vire l'adressee de retour
+          BRA       TRYSYMI             ; c'est donc un symbole
+NEXTXXX   HBXMOV    A2,A3,A4            ; le caractere suivant dans A4
+          INCR      A3                  ; avance dans la chai^ne
+          RETURN
+
+DIGITPI   LABEL                         ;;; A4 est-il un chiffre pour IBASE
+                                        ;;; A1 retourne le digit idoine
+          MOV       A4,A1               ; A1 sera le digit
+          CNBLT     A4,#/0,DIGITPI1     ; a4 < '0'
+          CNBGT     A4,#/9,DIGITPI1     ; a4 > '9' !
+          DIFF      #/0,A1              ; A1 <- le digit.
+          BRA       DIGITPI9            ; vers le test.
+DIGITPI1  CNBLT     A4,#/A,DIGITPI2     ; a4 < 'A'
+          CNBGT     A4,#/Z,DIGITPI2     ; a4 > 'Z' !
+          DIFF      #/A,A1              ; A1 <- le digit.
+          BRA       DIGITPI8            ; vers le test.
+DIGITPI2  CNBLT     A4,#/a,DIGITPIF     ; a4 < 'a'
+          CNBGT     A4,#/z,DIGITPIF     ; a4 > 'z' !
+          DIFF      #/a,A1              ; A1 <- le digit.
+DIGITPI8  PLUS      #10,A1              ; a=10, b=11 ...
+DIGITPI9  CNBGE     A1,IBASE,DIGITPIF   ; A4 >= IBASE ca rate
+          CNBLE     A1,#/9,DIGITPT      ; donc 0..9 (indic pour TRYFLO)
+          MOVNIL    ALL09               ;   indic pas que des 0..9
+DIGITPIT  RETURN
+DIGITPIF  MOVNIL    A1                  ; FALSE!
+          RETURN
+
+BASE10P   LABEL                         ; A4 est-il un caractere base 10
+          CNBLT     A4,#/0,DIGITPIF     ; a4 < '0'
+          CNBGT     A4,#/9,DIGITPIF     ; a4 > '9'
+          MOV       A4,A1
+          RETURN
+
+;
+;         TRYATOM : Interne un atome (symbole ou nombre)
+;         ==============================================
+;
+;         A1 <- une taille, A2 <- une adresse de chaine de caracteres
+;         retourne dans A1 un atome.
+;          
+TRYATOM   LABEL                         ; l'internage interne
+          CNBNE     A1,#0,TRYNUM        ; c'est pas VOID, essaie les nombres.
+          BFNIL     CPKGC,TRYNUM        ; ce n'est pas #:||:||
+          MOVNIL    A1                  ; c'est VOID, || ou ()
+          RETURN                        ; VOID is VOID!
+TRYNUM    LABEL                         ; essai de conversion numerique.
+          MOV       A1,TSYMB            ; sauve la taille et
+          MOV       A2,ASYMB            ; l'adresse de l'objet.
+          BFNIL     QUOTES,TRYSYMI      ; il y a des caracteres quote's
+          MOV       #0,A3               ; index dans l'atome
+          MOV       A3,ALL09            ; pour le moment c'est tous des 0-9
+          CALL      NEXTSYM             ; prochain caractere
+          CNBEQ     A4,#/.,TRYFLO0      ; un .
+          CNBEQ     A4,#/-,TRYFIX0      ; un - 
+          CNBEQ     A4,#/+,TRYFIX0      ; un +
+          CALL      DIGITPI             ; chiffre ?
+          BFNIL     A1,TRYFIX1          ; oui!
+          BRA       TRYSYMI
+
+TRYFIX0   CALL      NEXTSYM             ; vu: signe
+          CNBEQ     A4,#/.,TRYFLO0      ; .
+          CALL      DIGITPI             ; un chiffre?
+          BTNIL     A1,TRYSYMI          ; non, symbole
+TRYFIX1   CALL      NEXTFIX             ; vu: {signe} chiffre+
+          CALL      DIGITPI
+          BFNIL     A1,TRYFIX1          ; un chiffre
+          CNBEQ     A4,#/.,TRYFLO2      ; .
+          CNBEQ     A4,#/E,TRYFLO3      ; E 
+          CNBEQ     A4,#/e,TRYFLO3      ; e 
+          CNBEQ     A4,#//,TRYFIX2      ; / les rationels
+          BRA       TRYSYMI
+
+TRYFIX2   CALL      NEXTSYM             ; il faut au moins un digit apres /
+          CNBEQ     A4,#/+,TRYFIX3      ; ou bien un signe
+          CNBEQ     A4,#/-,TRYFIX3
+          CALL      DIGITPI             ; un digit au moins
+          BTNIL     A1,TRYSYMI          ; c'est donc un symbole
+          BRA       TRYFIX4             ; vers la suite
+
+TRYFIX3   CALL      NEXTSYM             ; 12/- n'est pas un nombre
+          CALL      DIGITPI
+          BTNIL     A1,TRYSYMI          ; c'est un symbole (12/ par exemple)
+TRYFIX4   CALL      NEXTFIX             ; vu 0-9*/
+          CALL      DIGITPI             ; un chiffre?
+          BFNIL     A1,TRYFIX4          ; oui!
+          BRA       TRYSYMI             ; c'est donc un symbole
+
+TRYFLO0   CALL      NEXTSYM             ; vu: {signe} .
+          CALL      BASE10P
+          BTNIL     A1,TRYSYMI          ; tombe dans TRYFLO1
+TRYFLO1   CALL      NEXTFLO             ; vu: {signe} . chiffre+
+          CALL      BASE10P
+          BFNIL     A1,TRYFLO1
+          CNBEQ     A4,#/E,TRYFLO4      ; E
+          CNBEQ     A4,#/e,TRYFLO4      ; e
+          BRA       TRYSYMI
+
+TRYFLO2   BFNIL     ALL09,TRYFLO1       ; vu: {signe} chiffre+ .
+          BRA       TRYSYMI
+
+TRYFLO3   BTNIL     ALL09,TRYSYMI       ; vu: {signe} chiffre+ E
+TRYFLO4   CALL      NEXTSYM             ; vu: flottant E
+          CALL      BASE10P
+          BFNIL     A1,TRYFLO6
+          CNBEQ     A4,#/-,TRYFLO5      ; un -
+          CNBNE     A4,#/+,TRYSYMI      ; + tombe dans TRYFLO5
+TRYFLO5   CALL      NEXTSYM             ; vu: flottant E signe
+          CALL      BASE10P
+          BTNIL     A1,TRYSYMI          ; tombe dans TRYFLO6
+TRYFLO6   CALL      NEXTFLO             ; vu: flottant E {signe} chiffre
+          CALL      BASE10P
+          BFNIL     A1,TRYFLO6
+          BRA       TRYSYMI
+
+;         TRYSYMB 
+;         =======
+;
+;         recherche un symbole de taille A1 et de pname la chaine dans A2
+;         dans le package CPKG.
+;         On le cree dans le package courant s'il n'existait pas
+;         et retourne toujours un symbole dans A1
+;
+TRYSYMI   MOV       TSYMB,A1            ; re'cupere la taille
+TRYSYMB   CALL      TRYSYMB0            ; cherche le symbole
+TRYSYMBX  CNBEQ     A2,#0,TRYSYMRE      ; on l'a trouve'!
+          CNBEQ     A2,#1,MAK2D         ; il faut cre'er en 2D
+          CNBEQ     A2,#2,MAK3D12       ; cre'ation en 3D cas 1--2
+;                                         c'est donc en 3D cas 2--N
+MAK3D2N   LABEL                         ; cre'ation 3D 2--N
+          CALL      SYMBALLC            ; alloue un nouveau symbole
+; placement d'un symbole en 3D dans le cas 2--N
+;    A4 contient la tete de sous liste 3D
+;    A1 le symbole a placer
+PLAC3D2N  MOV       PNAME(A4),A3        ; le second de la sous-liste
+          MOV       A3,PNAME(A1)        ; insere' avant
+          MOV       A1,PNAME(A4)        ; le lien 3D
+          MOV       ALINK(A3),ALINK(A1) ; le vrai PNAME
+TRYSYMRE  RETURN                        ; on rentre
+
+MAK3D12   LABEL                         ; creation 3D 1--2
+          CALL      SYMBALLC            ; un nouveau symbole dans A1
+; placement d'un symbole en 3D ddans le cas 1--2
+;    A4 contient la tete de sous-liste 3D
+;    A1 le symbole a placer
+PLAC3D12  MOV       PNAME(A4),ALINK(A1) ; son PNAME
+          MOV       A1,PNAME(A4)        ; le lien 3D
+          MOV       A4,PNAME(A1)        ; la sous-liste est circulaire
+          RETURN
+
+MAK2D     MOV       TSYMB,A2            ; longeur du PNAME
+          JCALL     STRGALLC            ; copie d'un nouveau PNAME
+          HBMOVM    A2,ASYMB,#0,A1,#0   ; un beau PNAME tout neuf
+          MOV       A1,A2               ; sauve dans A1
+          CALL      SYMBALLC            ; alloue un symbole dans A1
+          MOV       A2,PNAME(A1)        ; positionne son PNAME
+          MOV       KSYMB,A4            ; la clef de hashage pour PLAC2D
+; placement d'un symbole en 2D
+;    A4 contient le nume'ro de bucket
+;    A1 contient le symbole
+PLAC2D    HPXMOV    HASHTAB,A4,ALINK(A1); le A-LINK
+          HPMOVX    A1,HASHTAB,A4       ; actualise le bucket.          
+          RETURN                        ; tout est dit.
+
+; TRYSYMB0: recherche d'un symbole et retour de codes conditions dans A2
+; ========
+; En entree:  A1 longueur du PNAME, A2 le PNAME (STRING)
+; En sortie:
+;    A2=0 le symbole cherche' est dans A1
+;    A2=1 il faut cre'er le symbole en 2D (clef hashage dans A4)
+;    A2=2 il faut cre'er le symbole en 3D dans le cas 1--2 (tete 3D dans A4)
+;    A2=3 il faut cre'er le symbole en 3D dans le cas 2--n (tete 3D dans A4)
+
+TRYSYMB0  LABEL
+          MOV       A1,TSYMB            ; on sauve la taille
+          MOV       A2,ASYMB            ; sauve la chaine
+          CALL      HASHFAST            ; calcule le bucket dans A1
+          MOV       A1,KSYMB            ; sauve la clef de hachage
+          HPXMOV    HASHTAB,A1,A3       ; prend le bucket
+          MOV       A3,HSYMB            ; pour le snap final!
+          MOV       TSYMB,A1            ; la taille de la bete.
+          BRA       TRYSYMB6            ; et roule
+TRYSYMB1  LABEL      
+          MOV       PNAME(A3),A4        ; PNAME 2D ou lien 3D
+          BTSTRG    A4,TRYSYMB2         ;  c'est un PNAME 2D
+          MOV       ALINK(A4),A4        ; PNAME 3D
+TRYSYMB2  HGSIZE    A4,A2               ; la plen du symbole courant
+          CNBNE     A1,A2,TRYSYMB5      ; pas la meme plen
+          HBTEQ     A1,ASYMB,#0,A4,#0,TRYSYMB8; on a trouve' !
+TRYSYMB5  MOV       A3,HSYMB            ; pour le snap final
+          MOV       ALINK(A3),A3        ; prend l'atome suivant
+TRYSYMB6  BFFIX     A3,TRYSYMB1         ; on boucle
+; on ne trouve pas le symbole il faut le cre'er en 2D
+          MOV       #1,A2               ; status: il faut cre'er en 2D
+          MOV       KSYMB,A4            ; clef de hashage dans A4
+          RETURN
+TRYSYMB8  MOV       A3,A1               ; le symbole trouve'
+          MOV       HSYMB,A2            ; pour le snap
+          CABEQ     A1,A2,TRYSY3D       ; il est deja en tete de bucket
+          MOV       ALINK(A1),ALINK(A2) ; snap!
+          MOV       KSYMB,A3            ; la clef
+          HPXMOV    HASHTAB,A3,ALINK(A1)
+          HPMOVX    A1,HASHTAB,A3       ; done!
+          BRA       TRYSY3D
+
+;
+;         TRYSYMP
+;         =======
+;
+;         recherche un symbole d'adresse A2 (A2 est une chaine)
+;         dans le package A1 (ou dans la liste de package)
+;         Creation du symbole s'il n'existe pas dans ce package (A3).
+;
+TRYSYMP   LABEL      
+          PUSH      CPKGC               ; l'ancien package
+          MOV       A1,CPKGC            ; le package a utiliser
+          HGSIZE    A2,A1               ; pour TRYSYMB
+          MOV       @TRYSYMB,A3         ;; go there
+          JCALL     SYSPROT             ;; faut se prote'ger
+          POP       A1                  ;; le re'sultat
+          POP       CPKGC               ;; restore l'ancien package
+          BRI       A3                  ;; retour toujours par A3
+;
+;         TRYSYMPK
+;         ========
+;
+;         recherche un symbole dans la liste 3D A2 (A2 est un symbole)
+;         dans le package A1.
+;         Creation du symbole s'il n'existe pas dans ce package (A1).
+;
+TRYSYMPK  LABEL      
+          PUSH      CPKGC               ; faire un bloc SYS-PROTECT !!!
+          MOV       A1,CPKGC            ; le package a utiliser
+          MOV       A2,A1               ; la liste 3D
+          MOV       @TRYSYMP1,A3        ;; vers la recherche 3D
+          JCALL     SYSPROT             ;; PROTECT
+          POP       A1                  ;;
+          POP       CPKGC               ;; restore l'ancien package
+          BRI       A3                  ;; retour toujours par A3
+
+TRYSYMP1  PUSH      @TRYSYMBX           ; retour vers la cre'ation
+          BRA       TRYSY3D             ; recherche en 3D
+
+PKGCEQU   LABEL
+          PUSH      A1                  ; Le symbole en sommet de pile
+          MOV       PKGC(A1),A1
+          MOV       CPKGC,A2
+          JCALL     EQUAL               ; le test dur!
+          MOV       A1,A2
+          POP       A1
+          RETURN
+
+TRYSY3D   MOV       CPKGC,A4            ; le package
+          BTSYMB    A4,TRYSY3S          ; c'est bien un symbole
+TRYSY3C   CALL      PKGCEQU             ; test e'galite' de packages RES->A2
+          BFNIL     A2,TRYSYR4          ; trouve'
+          BFSTRG    PNAME(A1),TRYSY3C0  ; il y a un lien 3D
+; on doit rajouter un symbole dans le cas 3D 1--2
+TRYSYR1   MOV       #2,A2               ; indicateur 3D 1--2
+          MOV       A1,A4               ; la tete 3D
+          RETURN
+; recherche dans le cas 2--N
+TRYSY3C0  PUSH      A1                  ; la test 3D presumee
+          PUSH      A1                  ; pour le test de fin de boucle 3D
+TRYSY3C1  MOV       PNAME(A1),A1        ; le second symbole
+          CALL      PKGCEQU             ; teste par EQUAL
+          BFNIL     A2,TRYSYR3          ; trouve
+          BTSTRG    ALINK(A1),TRYSY3C2  ; pas la tete 3D
+          MOV       A1,&1               ; la vraie tete 3D
+TRYSY3C2  CABNE     A1,&0,TRYSY3C1      ; il y en a encore
+; ici il faut ajouter en 3D dans le cas  2--N
+          ADJSTK    #1                  ; ote le test d'arret
+          POP       A4                  ; la tete 3D
+TRYSYR2   MOV       #3,A2               ; indicateur 3D 2--N
+          RETURN
+TRYSYR3   ADJSTK    #2                  ; de'pile les locales
+TRYSYR4   MOV       #0,A2               ; code on a trouve'
+          RETURN                        ; symbole dans A1
+
+; Cas rapide: le package est un symbole
+TRYSY3S   CABEQ     A4,PKGC(A1),TRYSYR4 ; on a trouve du premier coup !
+          BTSTRG    PNAME(A1),TRYSYR1   ; a cree 3D 1--2
+; recherche dans le cas 2--N
+          MOV       A1,A2               ; la tete 3D presumee
+          MOV       A1,A3               ; pour le test de fin de boucle 3D
+TRYSY31   MOV       PNAME(A1),A1        ; le second symbole
+          CABEQ     A4,PKGC(A1),TRYSYR4 ; on a trouve', c'est la fin
+          BTSTRG    ALINK(A1),TRYSY32   ; pas la tete 3D
+          MOV       A1,A2               ; la vraie tete 3D!
+TRYSY32   CABNE     A1,A3,TRYSY31       ; il y en a encore
+          MOV       A2,A4               ; la tete 3D
+          BRA       TRYSYR2             ; rajouter 2--N
+
+;
+;         ISTDSYM : initialise les champs d'un nouveau symbole
+;         ====================================================
+;
+;         A1 <- l'adresse du symbole a` initialiser.
+;         ne touche pas aux registres A2, A3, A4
+;         ne remplis pas les champs : PKGC et ALINK.
+
+ISTDSYM   LABEL      
+          MOV       .UNDEF,CVAL(A1)     ; valeur UNDEF
+          MOVNIL    PLIST(A1)           ; plus de Plist
+          MOV       #0,FVAL(A1)         ; plus de defs
+          SFTYPE    #FUNDEF,A1          ; plus de type de def
+          SPTYPE    #0,A1               ; plus de type print
+          MOVNIL    OVAL(A1)            ; et plus d'object value.
+          RETURN
+
+;
+;         SYMBALLC  construit un nouveau symbole dans A1
+; 
+; initialise les champs FVAL, FTYPE, PTYPE, CVAL, PLIST, OVAL, et PKGC
+; mais PAS les champs PNAME et ALINK
+
+SYMBALLC  LABEL
+          MOV       FSYMB,A1            ; prepare la construction
+          CABNE     A1,#0,SYMBALL1      ; il en reste (pas CNBNE car adresse)
+          JCALL     GCSYMB              ; on recupere
+          MOV       FSYMB,A1            ; pret pour la suite
+SYMBALL1  MOV       ALINK(A1),FSYMB     ; avance dans la free-liste symboles
+          CALL      ISTDSYM             ; initialise les champs
+          MOV       CPKGC,PKGC(A1)      ; et le package
+          RETURN
+
+;         CRASTRG : fabrique une chaine de caracteres
+;         ===========================================
+;
+;         A1 <- la taille, A2 <- l'adresse
+;         retourne dans A1 l'adresse de la chaine.
+
+CRASTRG   LABEL      
+          PUSH      A2
+          MOV       A1,A2
+          JCALL     STRGALLC
+          POP       A3
+;?!?!?!?!
+;?!?!?!?!  c'est le seul MOVBM qui reste
+;?!?!?!?!  pouvoir faire les initialisations
+;?!?!?!?!  a partir de la zone DATA -> HEAP
+;?!?!?!?!
+          MOVBM     A2,A3,A1
+          RETURN
+
+;
+;         Acces au caractere logique
+;         ==========================
+;
+
+;
+;          GETCH : lit le caractere suivant ou celui a reingurgiter
+;                  dans le flux d'entree courant
+;                  retourne A4 <- le caractere
+;                           A3 <- le type du caractere (type-ch)
+;                  A1 et A2 ne sont pas modifies
+;
+;                       type-ch = 0 :   caracteres null (a ignorer)
+;                       type-ch = 1 :   debut de commentaires
+;                       type-ch = 2 :   fin de commentaires
+;                       type-ch = 3 :   quote caractere
+;                       type-ch = 4 :   debut de liste
+;                       type-ch = 5 :   fin de liste
+;                       type-ch = 6 :   point
+;                       type-ch = 7 :   separateur nul
+;                       type-ch = 8 :   delimiteur de package
+;                       type-ch = 9 :   splice macro
+;                       type-ch = 10 :  macro-caractere
+;                       type-ch = 11 :  delimiteur de chaine de caracteres
+;                       type-ch = 12 :  caractere normal
+;                       type-ch = 13 :  delimiteur de pname speciaux
+;                       type-ch = 14 :  symbole mono-caractere
+;
+
+GETCH     LABEL      
+          BTNIL     RINGUR,GETCH1       ; rien a relire
+          MOV       #1,GETCHFL          ; on a lu par RINGUR
+          MOV       RINGUR,A4           ; recupere le caractere
+          MOV       CDR(A4),RINGUR      ; sauve le reste de la liste
+          MOV       CAR(A4),A4          ; A4 <- le caractere suivant
+          BRA       GETCH2              ; recup le chtype
+GETCH1    BFNIL     IMPLI,GETCH3        ; si on se trouve dans IMPLODE
+          MOV       #0,GETCHFL          ; on a lu dans le tampon
+          JCALL     INPHY               ; sinon lecture physique
+;                                       ; recherche du type
+GETCH2    MOV       #TCPNAME,A3         ; type = CPNAME par defaut
+          CNBGT     A4,#$FF,GETCH21     ; c'est sur 8 bits!
+          HBXMOV    TABCH,A4,A3         ; A3 <- le type du caractere
+GETCH21   RETURN                        ; et voila
+;                                       ; si dans IMPLODE
+GETCH3    MOV       IMPLD,A4            ; recup la liste du implode
+          MOV       #2,GETCHFL          ; on a lu dans IMPLI
+          BTNIL     A4,GETCH4           ; elle est vide!
+          BFCONS    A4,ERLEC1           ; c'est une erreur
+          MOV       CDR(A4),IMPLD       ; sauve le reste de la liste
+          MOV       CAR(A4),A4          ; A4 <- le caractere suivant
+          BFFIX     A4,ERLEC9           ; erreur IMPLODE No 9!
+          BRA       GETCH2              ; vers la rech du type
+GETCH4    MOV       #0,IMPLD            ; marque la liste finie
+          MOV       #32,A4              ; espace = sep normal!
+          BRA       GETCH2              ; vers la rech du type
+
+;
+;         Acces au caractere logique valide
+;         =================================
+;
+;
+;          GETCV : retourne dans A4 le caractere LISP valide suivant
+;                  traite les commentaires et les caracteres quotes
+;                  retourne dans A3 le type du car. valide (type-cv)
+;                  A1 et A2 non modifies
+
+GETCV     CALL      GETCH               ; lit un caractere
+          BRX       @TGETCV,A3          ; aiguillage sur son type
+TGETCV    ADR       GETCV               ; CNULL
+          ADR       GETCVC              ; CBCOM
+          ADR       GETCVS              ; CECOM
+          ADR       GETCV1              ; CQUOTE
+          ADR       GETCVR              ; CLPAR
+          ADR       GETCVR              ; CRPAR
+          ADR       GETCVR              ; CDOT
+          ADR       GETCVR              ; CSEP
+          ADR       GETCVR              ; CPKGC
+          ADR       GETCVR              ; CSPLICE
+          ADR       GETCVR              ; CMACRO
+          ADR       GETCVR              ; CSTRING
+          ADR       GETCV2              ; CPNAME
+          ADR       GETCVR              ; CSYMB
+          ADR       GETCVR              ; CMSYMB
+
+; retour normal
+GETCVR    RETURN
+
+; quote caractere
+GETCV1    MOV       A4,QUOTES           ; positionne l'indicateur de TRYNUM
+          CALL      GETCH
+          MOV       #TCPNAME,A3         ; force le type PNAME
+          RETURN
+
+; caractere pname (passage en minuscule)
+GETCV2    MOV       .STATRC,A3          ; #:system:read-case-flag
+          BFNIL     CVAL(A3),GETCV3     ; si ^= NIL, pas de conversion.
+          CNBLT     A4,#/A,GETCV3       ; "A" majuscule
+          CNBGT     A4,#/Z,GETCV3       ; "Z" majuscule
+          LOWERC    A4                  ; passage en minuscule.
+GETCV3    MOV       #TCPNAME,A3         ; force le type PNAME
+          RETURN
+
+GETCVC    LABEL                         ; bouffe un commentaire
+          CALL      GETCH               ; nouveau caractere
+          CNBNE     A3,#TCECOM,GETCVC   ; si non fin de commentaires
+
+GETCVS    LABEL                         ; fin de commentaire = sep de symbole
+          MOV       #TCSEP,A3
+          RETURN
+
+
+;
+;         Acces a l'unite syntaxique suivante
+;         ===================================
+;
+;
+;          RD1 : lit l'unite syntaxique suivante
+;                retourne dans A3 son type :
+;                 type-us  = 0 :        (
+;                 type-us  = 1 :        )
+;                 type-us  = 2 :        .
+;                 type-us  = 3 :    objet LISP  (et A1 contient l'objet)
+;                 type-us  = 4 :    liste LISP  (et A1 contient la liste)
+
+RD1       MOVNIL    QUOTES              ; pas encore de car quote's
+          MOV       #0,A2               ; RAZ BUFAT
+RDSEP     CALL      GETCV               ; premier caractere
+          BRX       @RDTB1,A3           ; aiguillage sur son type
+;
+RDTB1     ADR       ERLEC1              ; CNULL
+          ADR       ERLEC1              ; CBCOM
+          ADR       ERLEC1              ; CECOM
+          ADR       ERLEC1              ; CQUOTE
+          ADR       RDPARO              ; CLPAR
+          ADR       RDPARF              ; CRPAR
+          ADR       RDDOT               ; CDOT
+          ADR       RDSEP               ; CSEP
+          ADR       RDPKGC              ; CPKGC
+          ADR       RDSPLIC             ; CSPLICE
+          ADR       RDMAC               ; CMACRO
+          ADR       RDSTR               ; CSTRING
+          ADR       RDPNAME             ; CPNAME
+          ADR       RDSYMB              ; CSYMB
+          ADR       RDMSYMB             ; CMSYMB
+
+;                                       ;;; traitement (
+RDPARO    LABEL      
+          INCR      RDPRD               ;  comptage pretty-read
+          MOV       #TCNULL,A3
+          RETURN
+;                                       ;;; traitement )
+RDPARF    LABEL      
+          SOBGEZ    RDPRD,RDPARFR       ; comptage pretty-read
+          MOV       #0,RDPRD            ; jamais negatif!
+RDPARFR   MOV       #TCBCOM,A3
+          RETURN                        ; c'est tout
+
+; Point
+RDDOT     CNBNE     A4,#/.,RDDOT1       ; c'est pas un .
+          CALL      GETCV               ; pour les fortranistes perdants!
+          CNBEQ     A3,#TCPNAME,RDDOT2  ; c'est dans un PNAME
+          MOV       #TCECOM,A3          ; le type "."
+          BRA       REREADA4            ; et on perd 1 CONS!!!!!
+
+RDDOT1    MOV       #TCECOM,A3
+          RETURN
+
+RDDOT2    HBMOVX    #/.,BUFAT,#0        ; la sauve
+          MOV       #1,A2               ; il y a de'ja un caractere
+          BRA       RDPNAME             ; continue comme un PNAME
+
+; Delimiteur de packages
+RDPKGC    MOV       .SYSCOL,A1          ; le package VOID
+          MOV       CVAL(A1),A1
+          BRA       RDPKGC2
+RDPKGC1   MOV       A2,A1               ; la taille du nom du package
+          MOV       BUFAT,A2            ; la chaine du nom
+          CALL      TRYATOM             ; A1 <- le nom du package
+          BFSYMB    A1,ERLEC6           ; mauvais package
+; lit un symbole dans le package A1
+RDPKGC2   PUSH      CPKGC               ; l'ancien PKGC
+          MOV       A1,CPKGC            ; le nouveau
+          MOV       @READI,A3           ; pour lire une nouvelle US
+          JCALL     SYSPROT             ; pour remettre CPKGC en sortant
+          POP       A1                  ; le symbole lu
+          POP       CPKGC               ; l'ancien package
+          PUSH      A3                  ; la suite
+          MOV       #TCOBJ,A3           ; c'est un objet lisp
+          RETURN                        ; retour sur la suite empilee! (arf!)
+
+; Splice macro
+RDSPLIC   LABEL      
+          CALL      ASCIII              ; le caractere en symbole
+          MOVNIL    A2                  ; pas d'argument
+          JCALL     APPLY               ; appel de la fonction associe'e
+          BTNIL     A1,RDSPLIC1         ; () est correct
+          BTCONS    A1,RDSPLIC1         ; il faut une liste
+          BRA       ERLEC10
+RDSPLIC1  MOV       #TCLIST,A3          ; type = liste LISP
+          RETURN
+
+
+; Macro-caractere
+RDMAC     LABEL      
+          CALL      ASCIII              ; A1 <- le nom du symbole
+          MOVNIL    A2                  ; pas d'arg
+          JCALL     APPLY               ; et appelle la fonction
+RDRETOBJ  MOV       #TCOBJ,A3           ; type objet lisp
+          RETURN
+
+; Chaine de caracteres
+RDSTR0    HBMOVX    A4,BUFAT,A2
+          INCR      A2
+          CNBGE     A2,LGBUFAT,ERLEC2   ; trop grande
+RDSTR     CALL      GETCH               ; le car suivant
+          CNBNE     A3,#TCSTRING,RDSTR0 ; pas un ""
+          CALL      GETCH               ; la suite
+          CNBEQ     A3,#TCSTRING,RDSTR0 ; "" = "
+          CALL      REREADA4            ; il faut re'ingurgiter
+          JCALL     STRGALLC            ; alloc de taille A2
+          HBMOVM    A2,BUFAT,#0,A1,#0   ; on la remplie
+          BTNIL     CPKGC,RDRETOBJ      ; pas une chai^ne packagee
+          MOV       CPKGC,TYP(A1)       ; la chai^ne est packagee
+          BRA       RDRETOBJ            ; c'est un objet lisp
+
+; Pnames normaux
+RDPNAME   HBMOVX    A4,BUFAT,A2
+          INCR      A2
+          CNBGE     A2,#128,ERLEC3      ; trop long
+          CALL      GETCV               ; le car suivant
+          CNBEQ     A3,#TCPNAME,RDPNAME ; c'est un pname
+          CNBEQ     A3,#TCDOT,RDPNAME   ; ou bien un .
+;          CNBEQ     A3,#TCSYMB,RDSYMB    ; Les BARRES de Common Lisp
+RDFINSYM  CNBEQ     A3,#TCSPKGC,RDPKGC1 ; c'est un delimiteur de packages
+          CALL      REREADA4            ; le re'ingurgite
+          MOV       A2,A1               ; la taille de l'atome
+          MOV       BUFAT,A2            ; la chaine de l'atome
+          CALL      TRYATOM             ; et construit le symbole
+          BRA       RDRETOBJ            ; c'est un objet lisp
+
+; Pnames entre barres
+RDSYMB    MOV       A4,QUOTES           ; pour TRYNUM
+          BRA       RDSYMB1
+RDSYMB0   HBMOVX    A4,BUFAT,A2
+          INCR      A2
+          CNBGE     A2,#256,ERLEC5      ; trop long
+RDSYMB1   CALL      GETCH               ; le suivant
+          CNBNE     A3,#TCSYMB,RDSYMB0  ; pas une |
+          CALL      GETCH               ; la suite
+          CNBEQ     A3,#TCSYMB,RDSYMB0  ; || = |
+;          CNBEQ      A3,#TCPNAME,RDPNAME  ; Les BARRES de Common Lisp
+          BRA       RDFINSYM            ; la fin commune
+
+; Symbole mono caractere
+RDMSYMB   MOV       A4,QUOTES           ; eh oui
+          HBMOVX    A4,BUFAT,#0         ; on stocke le caractere
+          MOV       #1,A2               ; il n'y en a qu`un
+          CALL      GETCV               ; si la suite e'tait un package
+          BRA       RDFINSYM            ; la fin commune
+
+
+;         Acces a l'expression
+;         ====================
+;
+
+;
+;          READI : lecture interne
+;          retourne dans A1 l'expression lue suivante
+;
+
+READI     LABEL      
+          CALL      RD1                 ; us suivante
+READ0     LABEL      
+          BRX       @READT1,A3          ; aiguillage sur le 1er type-us
+
+;
+READT1    ADR       READ2               ; type-us = 0 : (
+          ADR       ERLEC4              ; type-us = 1 : )
+          ADR       ERLEC4              ; type-us = 2 : .
+          ADR       RDPOPJ              ; type-us = 3 : objet LISP
+          ADR       READ1               ; type-us = 4 : liste LISP
+
+;         une valeur de splice au toplevel du READ
+
+READ1     BFNIL     CDR(A1),ERLEC10     ; au top-level c'est une erreur
+          MOV       CAR(A1),A1          ; 1ere valeur
+          RETURN
+
+;         une ( a ete lue
+
+READ2     LABEL      
+          PUSH      CURREAD             ; pour la restauration
+          MOV       .LCUREAD,A1         ; prepare la tete de lecture
+          NCONS     A1                  ;   avec un CONS vide
+          PUSH      A1                  ; sauve le 1er doublet
+          MOV       A1,CURREAD          ; qui devient le nouveau CURREAD
+;                                       ; traite l'us suivante
+READ3     PUSH      A1                  ; sauve la queue de liste
+          CALL      RD1                 ; us suivante
+;                                       ; elle  est prete
+READ31    BRX       @READT2,A3          ; aiguillage sur le type-us
+
+;
+READT2    ADR       READ6               ; type-us = 0 :  (
+          ADR       READ7               ; type-us = 1 :  )
+          ADR       READ9               ; type-us = 2 :  .
+          ADR       READ4               ; type-us = 3 : objet LISP
+          ADR       READ5               ; type-us = 4 : liste LISP
+
+;          rajoute l'objet LISP contenu dans A1
+
+READ4     LABEL      
+          NCONS     A1                  ; nouvel element
+          POP       A2                  ; recupere LAST
+          MOV       A1,CDR(A2)          ; rajoute l'element en queue
+          BRA       READ3               ; et c'est tout
+
+;         traite une splice macro
+
+READ5     LABEL
+          BTCONS    A1,READ51           ; seul cas interessant
+          POP       A1                  ; l'ancienne queue
+          BRA       READ3
+READ51    POP       A2                  ; l'ancienne queue
+          MOV       A1,CDR(A2)          ; la nouvelle liste queue
+READ52    BFCONS    CDR(A1),READ3       ; dernier CONS le la queue
+          MOV       CDR(A1),A1          ; == LAST
+          BRA       READ52
+
+;          traite une (
+
+READ6     LABEL      
+          PUSH      @READ4              ; prepare la continuation
+          BRA       READ2               ; JRST HACK
+
+;         traite une )
+
+READ7     LABEL      
+          POP       A1                  ; dernier doublet
+READ71    POP       A1                  ; 1er doublet
+          MOV       CDR(A1),A1          ; la vraie liste
+          POP       CURREAD             ; il etait juste en dessous!
+          RETURN
+
+;          traite un .
+
+READ9     LABEL      
+          CALL      READI               ; lecture de l'expression
+          PUSH      A1                  ; sauve sa valeur
+          CALL      RD1                 ; et lit le separateur
+          POP       A1                  ; derniere expression
+          POP       A2                  ; dernier doublet
+          BRX       @READT3,A3          ; aiguillage sur le type dernier us
+
+READT3    ADR       ERLEC7              ; type-us = 0 : (
+          ADR       READ91              ; type-us = 1 : )
+          ADR       ERLEC7              ; type-us = 2 : .
+          ADR       ERLEC7              ; type-us = 3 : objet LISP
+          ADR       ERLEC7              ; type-us = 4 : liste LISP
+
+;                                       cas : .   <s> )
+READ91    LABEL      
+          MOV       A1,CDR(A2)          ; paire pointee simple
+          BRA       READ71
+
+;
+;         Erreurs a la lecture
+;         ====================
+;
+
+ERLEC1    MOV       #1,A1
+          BRA       ERLEC
+ERLEC2    MOV       #2,A1
+          BRA       ERLEC
+ERLEC3    MOV       #3,A1
+          BRA       ERLEC
+ERLEC4    MOV       #4,A1
+          BRA       ERLEC
+ERLEC5    MOV       #5,A1
+          BRA       ERLEC
+ERLEC6    MOV       #6,A1
+          BRA       ERLEC
+ERLEC7    MOV       #7,A1
+          BRA       ERLEC
+ERLEC8    MOV       #8,A1
+          BRA       ERLEC
+ERLEC9    MOV       #9,A1
+          BRA       ERLEC
+ERLEC10   MOV       #10,A1
+          BRA       ERLEC
+ERLEC11   MOV       #11,A1
+          BRA       ERLEC
+;
+ERLEC     LABEL      
+          BFNIL     IMPLI,ERLECC1       ; je ne suis pas dans IMPLODE
+          MOV       .LREAD,A2           ; nom de la fonction
+          JMP       ERRSXT              ; vers l'erreur de syntaxe
+ERLECC1   MOV       .IMPLODE,A2         ; nom de la fonction
+          MOVNIL    IMPLI               ; plus dans IMPLODE
+          MOVNIL    IMPLD               ; et plus rien a lire.
+          JMP       ERRSXT              ; vers l'erreur de syntaxe
+
+;
+;         Fonctions standards
+;         ===================
+;
+;         (READ)
+;         saute les ) en trop et positionne STATUS-IN-READ
+;  ----------------------------------------
+          FENTRY    LREAD,SUBR0
+;  ----------------------------------------
+          CALL      GETCV               ; premier caractere valide.
+          CNBEQ     A3,#TCRPAR,LREAD    ; saute toutes les ) en trop
+          CNBEQ     A3,#TCSEP,LREAD     ; saute tous les separateurs
+          CALL      REREADA4            ; a relire dans le vrai READ
+          MOV       .STINREAD,A1        ; adresse du symbole STATUS-IN-READ
+          PUSH      CVAL(A1)            ; pour le restaurer
+          MOV       .T,CVAL(A1)         ; je suis dans un READ!
+          MOV       @READI,A3           ; la continuation
+          JCALL     SYSPROT
+; ne pas utiliser A2, A3 la suite, la valeur empilee!
+LREADEND  LABEL      
+          POP       A1                  ; la valeur de retour
+          MOV       .STINREAD,A4        ; adresse de STATUS-IN-READ
+          POP       CVAL(A4)            ; remet l'ancien etat
+          BRI       A3                  ; a la suite de UNWIND
+
+;
+;          (IMPLODE l)
+;
+;  ----------------------------------------
+          FENTRY    IMPLODE,SUBR1
+;  ----------------------------------------
+          PUSH      IMPLD               ; sauve l'ancienne liste
+          PUSH      IMPLI               ; sauve l'ancien indicateur
+          PUSH      RINGUR              ; pour ne pas les melanger!
+          MOV       A1,IMPLD            ; range la liste a interner
+          MOV       .T,IMPLI            ; indic IMPLODE = vrai
+          MOVNIL    RINGUR              ; la il n'y a plus rien
+          MOV       @READI,A3           ; la continuation
+          JCALL     SYSPROT             ; la remise a NIL est protegee
+;         au retour, la veleur a` retourner est empile'e
+;         et A3 contient la continuation
+          POP       A1                  ; la valeur de retour
+          POP       RINGUR              ; et la l'ancien RINGUR du READ.
+          POP       IMPLI               ; l'ancien indicateur
+          POP       IMPLD               ; l'ancienne liste.
+          BRI       A3                  ; vers la continuation.
+
+;
+;          (IMPLODECH l)
+;
+;  ----------------------------------------
+          FENTRY    IMPLODECH,SUBR1
+;  ----------------------------------------
+          MOV       A1,A2           ; A2 pour travailler
+          MOVNIL    A3              ; la liste a construire pour implode
+IMPLDECH1 BFCONS    A2,IMPLDECH2    ; un cons ???
+          MOV       CAR(A2),A1      ; si oui, le CAR dans A1
+          CALL      CASCII          ; calcule le CASCII
+          CONS      A1,A3           ; on le cons
+          MOV       CDR(A2),A2      ; continue sur le CDR
+          BRA       IMPLDECH1       ; car c'est pas finit
+IMPLDECH2 MOV       A3,A1           ; le pointeur de liste dans A1
+          JCALL     NREVERSE        ; remet la liste a l'endroit
+          JMP       IMPLODE         ; pour implode
+          RETURN
+
+;
+;          (READCH)           retourne le caractere suivant
+;
+;  ----------------------------------------
+          FENTRY READCH,SUBR0
+;  ----------------------------------------
+          PUSH      @ASCIII             ; un jouli JRST
+          BRA       GETCH
+
+;
+;         (READCN)            retourne le caractere suivant (ascii)
+;
+;  ----------------------------------------
+          FENTRY    READCOD,SUBR0
+;  ----------------------------------------
+          CALL      GETCH               ; A4 <- le caractere
+          MOV       A4,A1               ; la valeur de retour
+          RETURN     
+
+;
+;         (CURREAD)  retourne la forme courante
+;
+;  ----------------------------------------
+          FENTRY    LCUREAD,SUBR0
+;  ----------------------------------------
+          MOV       CURREAD,A1          ; il doit etre au frais
+          RETURN
+
+;         (TEREAD)
+;         termine la lecture
+;         INMAX <- 0
+;         RINGUR <- ()
+;  ----------------------------------------
+          FENTRY    TEREAD,SUBR0
+;  ----------------------------------------
+          MOVNIL    RINGUR              ; rien a re`ingurgiter
+          MOV       #0,INMAX            ; rien dans le tampon
+          RETURN
+
+;
+;         (REREAD l)   SUBR1   rebouffe une liste de caracteres
+;         RINGUR <- (APPEND l RINGUR)
+;
+;  ----------------------------------------
+          FENTRY    REREAD,SUBR1
+;  ----------------------------------------
+          BTNIL     A1,REREAD9          ; rien a rajouter
+          BFCONS    A1,REREADE          ; ca va pas il faut une liste
+          MOVNIL    A2                  ; la tete du append
+          NCONS     A2                  ; (nil) fausse tete
+          PUSH      A2                  ; pour la recuperation finale
+REREAD4   MOV       CAR(A1),A3          ; nb suivant
+          NCONS     A3                  ; elem du append suivant
+          MOV       A3,CDR(A2)          ; accrochage dans le bon sens
+          MOV       A3,A2               ; nouvelle tete
+          MOV       CDR(A1),A1          ; 1ere liste
+          BTCONS    A1,REREAD4          ; il en reste
+          MOV       RINGUR,CDR(A2)      ; le restant de RINGUR
+          POP       A1
+          MOV       CDR(A1),A1          ; la vraie liste
+          MOV       A1,RINGUR          
+REREAD9   MOV       RINGUR,A1           ; la val de retour
+          RETURN     
+REREADE   MOV       .REREAD,A2          ; le nom de la fonction
+          JMP       ERRNLA              ; il fallait une liste!
+
+;         Pour relire au prochain GETCH le caractere de A4
+REREADA4  LABEL
+          CNBNE     GETCHFL,#0,RRDA41   ; on a pas lu dans le tampon
+          DECR      POLIG               ; C'est pas cher ! 
+          RETURN
+RRDA41    XCONS     RINGUR,A4           ; A4 <- (A4 . RINGUR)
+          MOV       A4,RINGUR           ; le rend disponible
+          RETURN
+
+;
+;          (PEEKCH)           renifle le caractere suivant
+;
+;  ----------------------------------------
+          FENTRY PEEKCH,SUBR0
+;  ----------------------------------------
+          CALL      GETCH               ; car suivant
+          PUSH      A4                  ; pour ASCIII
+          CALL      REREADA4            ; pour le relire
+          POP       A4                  ; ni vu ni connu.
+          BRA       ASCIII              ; conversion de retour
+
+;
+;          (PEEKCN)           renifle le caractere suivant (ascii)
+;
+;  ----------------------------------------
+          FENTRY PEEKCN,SUBR0
+;  ----------------------------------------
+          CALL      GETCH               ; car suivant
+          MOV       A4,A1               ; la valeur de retour
+          BRA       REREADA4            ; pour le relire
+
+
+;
+;         (READLINE)    SUBR0  
+;         retourne une ligne de code ASCII sous forme de liste
+;
+;  ----------------------------------------
+          FENTRY    READLINE,SUBR0
+;  ----------------------------------------
+          CALL      GETCH
+          MOVNIL    A1
+          CNBNE     A4,#^M,READL2       ; saute le premier RC
+          CALL      GETCH
+          MOVNIL    A1
+          CNBNE     A4,#^J,READL2       ;    LF en debut de ligne.
+          RETURN                        ; le coup de la ligne vide ...
+READL2    CNBEQ     A4,#^J,READL4       ; on saute si c'est un LF
+READL3    CNBEQ     A4,#^J,READL5       ; LF => c'est la fin
+          CONS      A4,A1
+READL4    PUSH      A1                  ; sauve le result intermediaire
+          CALL      GETCH               ; A4 <- le code suivant
+          POP       A1                  ; A1 <- la liste en construction
+          CNBNE     A4,#^M,READL3       ; c'est un return : fin de la ligne
+READL5    JMP       NREVERSE            ; en on renverse le tout.
+
+
+;         (STRATOM <nb de caracte`res>  <chaine> <indicateur>)
+;         retourne un symbole ou un nombre lu a` partir
+;         de la chai^ne <chai^ne> sur <nb caracte`res>
+; 
+;  ----------------------------------------
+          FENTRY    STRATOM,SUBR3
+; ----------------------------------------
+          BFFIX     A1,ERSTRAT1         ; Faut un fix.
+          BFSTRG    A2,ERSTRAT2         ; Faut une chai^ne.
+          MOV       A3,QUOTES           ; pas de caracte`res quote's
+          BRA       TRYATOM
+ERSTRAT1  MOV       .STRATOM,A2
+          JMP       ERRNIA
+ERSTRAT2  MOV       A2,A1
+          MOV       .STRATOM,A2
+          JMP       ERRNSA
+
+
+;
+;         (READSTRING)   SUBR0
+;         retourne la ligne suivante sous la forme d'une chaine.
+;
+;  ----------------------------------------
+          FENTRY    READSTRG,SUBR0
+;  ----------------------------------------
+          CALL      GETCH
+          MOV       #0,A2
+          CNBEQ     A4,#^J,READS4       ; on saute un eventuel LF
+          CNBNE     A4,#^M,READS3       ; saute tous les RC/
+          CALL      GETCH
+          MOV       #0,A2
+READS3    CNBEQ     A4,#^J,READS5       ; LF => c'est la fin
+          HBMOVX    A4,BUFAT,A2         ; range le caractere.
+          CNBEQ     A2,LGBUFAT,READS5   ; pas plus de `LGBUFAT` caracteres!
+          INCR      A2                  ; nouvel index.
+READS4    PUSH      A2                  ; sauve le result intermediaire
+          CALL      GETCH               ; A4 <- le code suivant
+          POP       A2                  ; A2 index.
+          CNBNE     A4,#^M,READS3       ; c'est un return : fin de la ligne
+READS5    LABEL
+          JCALL     STRGALLC            ; de taille A2.
+          HBMOVM    A2,BUFAT,#0,A1,#0   ; une belle chaine.
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    READDLTD,SUBR1
+;  ----------------------------------------
+          BFFIX     A1,READDLTR         ; le caracte`re doit e^tre un fix
+          HBXMOV    TABCH,A1,A2         ; le type courant
+          PUSH      A1                  ; pour remettre le bon type a` la fin
+          PUSH      A2                  ;   idem.
+          HBMOVX    #TCRPAR,TABCH,A1    ; on dit que c'est ")"
+          MOV       @READ2,A3           ;; go there
+          JCALL     SYSPROT             
+          POP       A1                  ;; le re'sultat
+          POP       A2                  ;; l'ancien type
+          POP       A4                  ;; l'ancien caracte`re
+          HBMOVX    A2,TABCH,A4         ;; remet l'ancien type
+          BRI       A3
+
+READDLTR  MOV       .READDLTD,A2        ; le nom de la fonction
+          JMP       ERRNIA              ; il fallait un fix.
+
+;
+;  ASCIII: routine interne : conversion du code interne A4
+;  dans un caracte`re (symbol mono car) dans A1
+;
+
+ASCIII    LABEL      
+          MOV       A4,A1               ; ASCII interne
+          BFFIX     A1,ASCIERR          ; il faut vraiment un nb
+          CNBLT     A1,#0,FASCII3       ; bizarre < 0 ?!?
+          CNBGE     A1,#128,FASCII3     ; sort de la table!
+          HPXMOV    CACHCH,A1,A2        ; table du cache CH
+          BFSYMB    A2,FASCII3
+          MOV       A2,A1               ; ca c'est rapide!
+          RETURN
+FASCII3   LABEL                         ; il faut le creer
+          PUSH      A1                  ; l'index
+          MOV       #0,A2               ; index sur le tampon
+          HBMOVX    A1,BUFAT,A2         ; 1er car du tampon
+          INCR      A2                  ; caractere suivant
+          MOV       A2,A1               ; la taille
+          MOV       BUFAT,A2            ; la chaine
+          PUSH      CPKGC               ; dans le package ||!
+          MOV       @FASCII8,A3         ; interne le symbole
+          JCALL     SYSPROT             ; en prote'geant
+          POP       A1                  ; le re'sultat
+          POP       CPKGC               ; restaure
+          POP       A2                  ; l'index
+          BFSYMB    A1,FASCII7          ; c'est un nb!
+          CNBLT     A2,#0,FASCII7       ; bizarre < 0 ?!?
+          CNBGE     A2,#128,FASCII7     ; sort de la table!
+          HPMOVX    A1,CACHCH,A2        ; pour le prochain coup.
+FASCII7   BRI       A3                  ; et rentre
+FASCII8   MOVNIL    CPKGC               ; package ||
+          BRA       TRYATOM
+ASCIERR   MOV       .FASCII,A2          ; le nom de la fonction
+          JMP       ERRNIA
+
+;
+;          (ASCII n) retourne le caractere de code n
+;
+;  ----------------------------------------
+          FENTRY    FASCII,SUBR1
+;  ----------------------------------------
+          MOV       A1,A4               ; pour e^tre compatible
+          BRA       ASCIII
+
+;
+;          (CASCII c) retourne le code du caractere c *
+;
+;  ----------------------------------------
+          FENTRY    CASCII,SUBR1
+;  ----------------------------------------
+          MOV       .CASCII,SAVEA4      ; le nom de l'appelant
+          JCALL     STRINGA1            ; comme ca on est sur.
+          HBXMOV    A1,#0,A1            ; retourne le 1er caractere!
+          RETURN     
+; 
+;         (CONCATPKGC pack1 pack2)
+; 
+;         (de concatpkgc (pkgc1 pkgc2)
+;             ; concatene les packages <pkgc1> et <pkgc2>
+;             (if pkgc2
+;                 (symbol (concatpkgc pkgc1 (packagecell pkgc2)) pkgc2)
+;                 pkgc1))
+; 
+;  ----------------------------------------
+          FENTRY    CONCATPK,SUBR2
+;  ----------------------------------------
+          BFSYMB    A1,CONCPKR1         ; il faut un symbole
+          BFSYMB    A2,CONCPKR2         ; ici aussi
+CONCPK0   BTNIL     A2,CONCPKR          ; le cas trivial
+          PUSH      A2                  ; le temps de l'appel re'cursif
+          MOV       PKGC(A2),A2         ; recurse sur les packages
+          CALL      CONCPK0
+          POP       A2                  ; le symbole
+          BRA       TRYSYMPK            ; (symbol a1 a2)
+CONCPKR   RETURN
+
+CONCPKR2  MOV       A2,A1               ; l'argument de'fectueux
+CONCPKR1  MOV       .CONCATPK,A2        ; la fonction qui provoque l'erreur
+          JMP      ERRSYM
+;
+;         (UPPERCASE n)   SUBR1 passe en majuscule
+;
+;  ----------------------------------------
+          FENTRY    UPPERCASE,SUBR1
+;  ----------------------------------------
+          BFFIX     A1,UPPER9           ; il faut vraiment un nb
+          CNBLT     A1,#/a,UPPER8       ; "a" minuscule
+          CNBGT     A1,#/z,UPPER8       ; "z" minuscule
+          UPPERC    A1                  ; passage en majuscule
+UPPER8    RETURN                        ; et c'est tout
+UPPER9    MOV       .UPPERCASE,A2       ; nom de la fonction
+          JMP       ERRNIA              ; il fallait un nb
+
+;
+;         (LOWERCASE n)   SUBR1
+;
+;  ----------------------------------------
+          FENTRY    LOWERCASE,SUBR1
+;  ----------------------------------------
+          BFFIX     A1,LOWER9           ; il faut vraiment un nb
+          CNBLT     A1,#/A,LOWER8       ; "A" majuscule
+          CNBGT     A1,#/Z,LOWER8       ; "Z" majuscule
+          LOWERC    A1                  ; passage en minuscule
+LOWER8    RETURN                        ; et c'est tout
+LOWER9    MOV       .LOWERCASE,A2       ; le nom de la fonction
+          JMP       ERRNIA              ; il fallait vraiment un nb.
+
+;
+;         (ASCIIP n)   SUBR1  test si n est un code ascii
+;
+;  ----------------------------------------
+          FENTRY    ASCIIP,SUBR1
+;  ----------------------------------------
+          BFFIX     A1,ASCIIPN          ; rate
+          CNBLT     A1,#0,ASCIIPN       ; caramba
+          CNBLE     A1,#$FF,ASCIIPT     ; la c'est bon
+ASCIIPN   MOVNIL    A1                  ; retourne faux
+ASCIIPT   RETURN                        ; et c'est marre
+
+;
+;         (DIGITP n)   SUBR1  test si n est un digit
+;
+;  ----------------------------------------
+          FENTRY    DIGITP,SUBR1
+;  ----------------------------------------
+          BFFIX     A1,DIGITPN          ; rate
+          CNBLT     A1,#/0,DIGITPN      ; caramba
+          CNBLE     A1,#/9,DIGITPT      ; la c'est bon
+DIGITPN   MOVNIL    A1                  ; retourne faux
+DIGITPT   RETURN                        ; et c'est marre
+
+;
+;         (LETTERP n)   SUBR1  test si n est une lettre
+;
+;  ----------------------------------------
+          FENTRY    LETTERP,SUBR1
+;  ----------------------------------------
+          BFFIX     A1,LETTERN          ; rate
+          CNBLT     A1,#/A,LETTERE      ; caramba
+          CNBLE     A1,#/Z,LETTERT      ; la c'est bon
+LETTERE   CNBLT     A1,#/a,LETTERN      ; caramba
+          CNBLE     A1,#/z,LETTERT      ; la c'est bon
+LETTERN   MOVNIL    A1                  ; retourne faux
+LETTERT   RETURN                        ; et c'est marre
+
+;
+;         (IBASE [<n>])   acces/modif de la base d'entree
+;
+;  -------------------------------------------------
+          FENTRY    FIBASE,SUBRN
+;  ----------------------------------------
+          MOV       .FIBASE,A2          ; le nom de l'appelant
+          MOV       IBASE,A3            ; l'ancienne valeur
+          PUSH      #2                  ; le min
+          PUSH      #36                 ; le max
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,IBASE
+          RETURN  
+
+          END
+

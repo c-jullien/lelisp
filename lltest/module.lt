@@ -1,0 +1,63 @@
+        (test-serie "[Access keys modules test]" ())
+
+;;; This series counts on the representation of modules, but
+;;; Complice counts on the fact that setdefmodule returns the modified
+;;; module as its value, so we test it here.
+
+(setq :mod ())                                         ()
+(setq :mod
+   (setdefmodule :mod 'defmodule 'testm1) :fu ())      ()
+(getdefmodule :mod 'defmodule)                         testm1
+(setdefmodule :mod 'files '(testm1 testm2))            ((defmodule . testm1)
+						         (files testm1 testm2))
+(getdefmodule :mod 'files)                             (testm1 testm2)
+
+
+        (test-serie "[WRITE/READ modules test]" ())
+
+(progn (setq :fname (temporary-file-pathname "testm1.lm")) ())
+                                                    ()
+(with ((outchan (openo :fname)))
+      (print "foo")
+      (close (outchan))
+      ())                                           ()
+;;; test that :simple-module still creates a valid module
+(getdefmodule (:simple-module) 'files)              (foofile barfile zeefile)
+(setq :def (:simple-module) :fu ())                 ()
+(progn (newl #:system:path (directory-namestring :fname)) ())       ()
+(printdefmodule :def :fname)                        #.:fname
+(setq :lu (readdefmodule :fname) :fu ())            ()
+(:similar-module :def :lu)                          t
+
+;;; The same thing but with #:system:print-for-read set to T
+(setq :new (:simple-module) :fu ())                 ()
+(let ((#:system:print-for-read t))
+   (printdefmodule :new :fname))                    #.:fname
+(setq :lu (readdefmodule :fname) :fu ())            ()
+(:similar-module :new :lu)                          t
+
+;;; clean up
+(deletefile :fname)                                 t
+
+;;; but this time having modified the module.
+(progn (setq :fname (temporary-file-pathname "testm2.lm")) ())
+                                                    ()
+(setq :new (:simple-module) :fu ())                 ()
+(with ((outchan (openo :fname)))
+      (print "foo")
+      (close (outchan))
+      ())                                           ()
+(printdefmodule :new :fname)                        #.:fname
+(setq :lu (readdefmodule 'testm2) :fu ())           ()
+(:similar-module :new :lu)                          t
+(progn (setdefmodule :lu 'cpexport '(this that)) ())()
+(let ((#:system:print-for-read t))
+   (printdefmodule :lu :fname))                     #.:fname
+(setq :lu2 (readdefmodule :fname) :fu ())           ()
+(:similar-module :lu :lu2)                          t
+
+;;; clean up
+(deletefile :fname)                                 t
+(setq #:system:path (cdr #:system:path) :fu ())     ()
+
+        (test-serie "[End of test]" ())

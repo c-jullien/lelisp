@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+
+chmod a+x faire.llexpand
+chmod a+x llexpand
+
+for FILE in *.ll *.llm3
+do
+	echo $FILE
+	tr -d "\015" < $FILE > conv$$.tmp
+	mv conv$$.tmp $FILE
+#	dos2unix $FILE $FILE
+done

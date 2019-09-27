@@ -1,0 +1,61 @@
+defmodule callext
+
+files (callext)
+export (
+defextern
+cload
+defextern-cache
+getinlib
+calllibextern
+load-shared-lib
+unload-shared-lib
+loaded-shared-libs
+; et pour optimiser 
+buildextern
+#:system:cached-getglobal
+)
+import (
+sort
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(defextern dmsubr ())
+(getinlib subr3 ())
+(#:system:cached-getglobal subr1 ())
+(cload subr1 ())
+(defextern-cache nsubr ())
+(calllibextern dmsubr ())
+(load-shared-lib subr1 ())
+(unload-shared-lib subr1 ())
+(loaded-shared-libs subr0 ())
+(buildextern nsubr ())
+)
+cpfunctions (
+(#:callext:build nsubr)
+(#:callext:build-parameter-list subr2)
+(#:callext:conv-extern-to-ll subr1)
+(#:callext:conv-ll-to-extern subr1)
+(map-lib subr1)
+(ll_add_shared_lib subr1)
+(llgetinlib nsubr)
+(getglobal-flush-cache subr0 () (subr2) (()))
+(llmgetglo subr2)
+(#:callext:flush-cache subr2)
+(ll_rem_shared_lib subr1)
+)
+cpimport (
+(sort
+(sort . subr2)
+))
+cpenv (
+sort
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:system:callextern-notesttypes 't '#:complice:globalvar)
+)((putprop 'InvokeIndirectFunction 't '#:complice:globalvar)
+)((putprop '#:system:defextern-cache 't '#:complice:globalvar)
+)((putprop '#:system:getglobal-cache 't '#:complice:globalvar)
+)((putprop '#:system:recloadp 't '#:complice:globalvar)
+))

@@ -1,0 +1,74 @@
+defmodule
+#:menu:llmenu
+files (
+llmenu
+)
+export (
+#:bitmap:create-menu
+#:menu:llmenu:kill-menu
+#:menu:llmenu:activate-menu
+#:menu:llmenu:menu-insert-item
+#:menu:llmenu:menu-insert-item-list
+#:menu:llmenu:menu-delete-item
+#:menu:llmenu:menu-delete-item-list
+#:menu:llmenu:menu-modify-item
+#:menu:llmenu:menu-modify-item-list
+)
+import (
+virbitmap
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:bitmap:create-menu subr1 ())
+(#:menu:llmenu:kill-menu subr1 ())
+(#:menu:llmenu:activate-menu subr3 ())
+(#:menu:llmenu:menu-insert-item nsubr ())
+(#:menu:llmenu:menu-insert-item-list nsubr () (active))
+(#:menu:llmenu:menu-delete-item subr3 ())
+(#:menu:llmenu:menu-delete-item-list subr2 ())
+(#:menu:llmenu:menu-modify-item nsubr ())
+(#:menu:llmenu:menu-modify-item-list nsubr ())
+)
+cpfunctions (
+(#:menu:llmenu:make subr0)
+(#:menu:llmenu:draw-menu subr3)
+(#:menu:llmenu:width subr1)
+(#:itemlist:width subr1)
+(width-string subr1)
+(#:menu:llmenu:height subr1)
+(#:menu:llmenu:follow-mouse subr1)
+(#:menu:llmenu:local-read-mouse subr0)
+(#:menu:llmenu:find-list subr2)
+(#:menu:llmenu:find-list1 subr3)
+(#:menu:llmenu:invert-item subr3)
+(#:menu:llmenu:itemlist-x subr2)
+(#:menu:llmenu:itemlist-x1 subr2)
+(insertnth subr3)
+(item subr3)
+(#:item:make subr0)
+(itemlist subr2)
+(#:itemlist:make subr0)
+(deletenth subr2)
+)
+cpimport
+()
+cpenv (
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:menu:llmenu:local-read-mouse:x 't '#:complice:globalvar)
+)((putprop '#:menu:llmenu:local-read-mouse:y 't '#:complice:globalvar)
+)((putprop '#:menu:llmenu:local-read-mouse:event 't '#:complice:globalvar)
+))

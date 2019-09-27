@@ -1,0 +1,132 @@
+
+
+
+CONFIG(L)                LOCAL COMMANDS                 CONFIG(L)
+
+
+
+NOM
+     config - construit une image me'moire Le-Lisp
+
+SYNOPSIS
+     lelisp/<machine>/config name  bin  conf  [llcore  [<tailles-
+     lelispbin>]]
+
+DESCRIPTION
+     Construit l'image me'moire et le script shell  de  lancement
+     d'un syste`me Le_ Lisp de nom _n_a_m_e.
+
+
+     _b_i_n  est le nom du binaire Le-Lisp a` utiliser. En ge'ne'ral
+          ce  nom  est _l_e_l_i_s_p_b_i_n. On utilise parfois des binaires
+          contenant l'interpre`te Le-Lisp et des programmes C  ou
+          FORTRAN.  Ceci  permet de construire une image me'moire
+          contenant des programmes de'finissables comme _f_o_n_c_t_i_o_n_s
+          _e_x_t_e_r_n_e_s  de  l'interpre`te  Le-Lisp (voir le manuel de
+          re'fe'rence, section 14 et la commande _l_e_l_i_s_p(_l)).
+
+     _c_o_n_f est un fichier Le-Lisp qui de'crit la  construction  de
+          l'image  me'moire.   En principe les fichiers de confi-
+          guration standard sont dans le re'pertoire  _c_o_n_f,  sous
+          le re'pertoire de la machine.
+
+     _l_l_c_o_r_e
+          Cette option influence uniquement la ge'ne'ration de la
+          commande  de  lancement du syste`me Le-Lisp en cours de
+          fabrication.  Si cet argument est omis, la commande  de
+          lancement  de  l'image  fabrique'e  exigera que le core
+          soit       range'       dans       le       re'pertoire
+          lelisp/<machine>/llcore.   Mais,  si  le  configurateur
+          de'cide d'un  autre  emplacement,  il  conviendra,  par
+          cohe'rence  avec la commande de lancement, de pre'ciser
+          a`  l'aide  de  cette  option  le  chemin   absolu   du
+          re'pertoire ou` le core est range'.
+
+          _C_o_n_f_i_g lance le binaire _l_e_l_i_s_p_b_i_n qui  lit  d'abord  le
+          fichier  _s_t_a_r_t_u_p._l_l  de  la bibliothe`que Le-Lisp, puis
+          e'value les formes Lisp du fichier _c_o_n_f.  L'e'valuation
+          de  ces  formes  doit  cre'er une image me'moire de nom
+          _n_a_m_e._c_o_r_e  range'e   habituellement   dans   le   sous-
+          re'pertoire _l_l_c_o_r_e de la machine. voir l'option _l_l_c_o_r_e.
+          Durant l'e'valuation du fichier _c_o_n_f la  variable  glo-
+          bale  Lisp  #:SYSTEM:NAME a pour valeur le symbole Lisp
+          _n_a_m_e. Ceci permet d'utiliser le me^me fichier de confi-
+          guration   pour   construire   des  syste`mes  de  noms
+          diffe'rents (avec diffe'rentes  tailles  de  zones  par
+          exemple).
+
+          _C_o_n_f_i_g cre'e ensuite un script shell de  nom  _n_a_m_e  qui
+          permet  de  lancer  le  binaire _l_e_l_i_s_p_b_i_n en restaurant
+
+
+
+Le-Lisp v15.2    Last change: 30 Septembre 1990                 1
+
+
+
+
+
+
+CONFIG(L)                LOCAL COMMANDS                 CONFIG(L)
+
+
+
+          l'image me'moire construite.
+
+          On  peut  optionnellement  donner  des  arguments   qui
+          de'crivent la taille des diffe'rentes zones me'moire de
+          l'interpre`te. Ces arguments sont passe's tels quels a`
+          _l_e_l_i_s_p_b_i_n.
+
+
+EXEMPLE
+     Construire un syste`me de nom _l_e_l_i_s_p avec le binaire _l_e_l_i_s_p_-
+     _b_i_n,  le  fichier de configuration standard _L_e_l_i_s_p_c_o_n_f._l_l et
+     une zone code de 400 koctets.
+     cd lelisp/<machine>
+     ./config lelisp lelispbin Lelispconf.ll -code 400
+
+     Le  fichier   _L_e_l_i_s_p_c_o_n_f._l_l   contient   les   formes   Lisp
+     suivantes :
+     (progn
+       (load-stm #:system:name t t t t t)
+       (add-feature (if (eq 0.0 0.0)
+                        '31BITFLOATS
+                      '64BITFLOATS))
+       )
+
+VOIR AUSSI
+     lelisp(l),
+     Le-Lisp V15.2, le manuel de re'fe'rence, Je'ro^me  Chailloux
+     et al., INRIA, Rocquencourt, 78153 Le Chesnay Cedex.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Le-Lisp v15.2    Last change: 30 Septembre 1990                 2
+
+
+

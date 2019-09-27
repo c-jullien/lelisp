@@ -1,0 +1,62 @@
+% pscompact.ps
+%
+systemdict/colorimage known
+  {
+    %% - READ-COLOR-BITMAP uncompressed-color-bitvector
+    /read-color-bitmap{
+      currentfile read pop 42 eq
+      {
+        bands 0
+	currentfile bmline readhexstring pop
+        {colors x get 0 get 3 copy putinterval pop 3 add}forall pop
+      }{bands}ifelse
+      currentfile read pop pop
+    }BD
+    /read-inv-color-bitmap{
+      currentfile read pop 42 eq
+      {
+        bands 0
+	currentfile bmline readhexstring pop
+        {colors x get 0 get 3 string copy
+	 dup dup 0 get 255 x sub 0 x put
+	 dup dup 1 get 255 x sub 1 x put
+	 dup dup 2 get 255 x sub 2 x put
+	 3 copy putinterval pop 3 add}forall pop
+      }{bands}ifelse
+      currentfile read pop pop
+    }BD
+  }
+  %% width height depth matrix proc mode bands COLORIMAGE
+  % replaced if not implemented on that PostScript device
+  {
+    /read-color-bitmap{
+      currentfile read pop 42 eq
+      {
+        bmline 0 0
+        currentfile bmline readhexstring pop
+        {colors x get 1 get 3 index 3 1 roll put 1 add dup}forall
+	pop pop
+      }{bmline}ifelse
+      currentfile read pop pop
+    }BD
+    /read-inv-color-bitmap{
+      currentfile read pop 42 eq
+      {
+        bmline 0 0
+        currentfile bmline readhexstring pop
+        {colors x get 1 get 255 x sub 3 index 3 1 roll put 1 add dup}forall
+	pop pop
+      }{bmline}ifelse
+      currentfile read pop pop
+    }BD
+    %% width height depth matrix proc mode bands COLORIMAGE
+    % replaced if not implemented on that PostScript device
+    /colorimage{pop pop image}BD
+  }ifelse
+
+%% - READ-BITMAP bitvector
+/read-bitmap
+{
+  bmline currentfile read pop 42 eq{currentfile x readhexstring pop}if
+  currentfile read pop pop
+}BD

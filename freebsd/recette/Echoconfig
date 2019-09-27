@@ -1,0 +1,7 @@
+#!/bin/sh
+
+UNIX=FreeBSD
+
+echo You are running on `uname -s` version `uname -r`_`uname -v`
+echo based on hardware : `uname -m`
+

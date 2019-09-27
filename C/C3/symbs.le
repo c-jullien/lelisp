@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: symbs
+;;;             translation done: "Sat Oct   7 17 20:53:36 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: symbs.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'symbs)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZsymbs" "Sat Oct   7 17 20:53:36 "
+
+'((makunbound . subr1) (plist . nsubr) (packagecell . nsubr) (3d-root-symbol . subr1) (objval . nsubr) (valfn . subr1) (typefn . subr1) (setfn . subr3) (getfn1 . subr2) (getfn . nsubr) (getfn2 . subr3) (remfn . subr1) (findfn . subr1) (synonym . subr2) (synonymq . fsubr) (remob . subr1) (getsymb . nsubr) (getsymb1 . subr2) (get . subr2) (getl . subr2) (addprop . subr3) (putprop . subr3) (defprop . fsubr) (remprop . subr2) (incr . fsubr) (decr . fsubr))
+
+#[makunbound #:gell-resetfn:function-name #:gell-resetfn:function-1 plist #:gell-resetfn:function-n packagecell 3d-root-symbol objval valfn typefn setfn #:gell-resetfn:function-3 getfn1 #:gell-resetfn:function-2 getfn getfn2 remfn findfn synonym synonymq #:gell-resetfn:function-f remob getsymb getsymb1 get getl addprop putprop defprop remprop incr decr]
+)
+
+
+(defccheck '())

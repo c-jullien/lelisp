@@ -1,0 +1,76 @@
+defmodule #:display:windows
+files   (
+	winstruc.ll
+)
+include (
+	virstruct.ll
+;;	virmacro
+)
+import  (
+)
+export  (
+	#:tclass:winwindow:make
+	#:tclass:winwindow:windows-window
+	#:tclass:winwindow:transparent-window:make
+	#:tclass:winwindow:opaque-window:make
+	#:tclass:winwindow:opaque-window:top-window:make
+	#:windows:bitmap:make
+	#:image:rectangle:window:menu-window:make
+	#:windows:menu:make
+	#:display:windows:make
+	#:display:windows:windows-window
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:tclass:winwindow:make subr0 ())
+(#:tclass:winwindow:windows-window nsubr ())
+(#:tclass:winwindow:transparent-window:make subr0 ())
+(#:tclass:winwindow:opaque-window:make subr0 ())
+(#:tclass:winwindow:opaque-window:top-window:make subr0 ())
+(#:windows:bitmap:make subr0 ())
+(#:image:rectangle:window:menu-window:make subr0 ())
+(#:windows:menu:make subr0 ())
+(#:display:windows:make subr0 ())
+(#:display:windows:windows-window dmsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((defstruct #:display:windows drawing-flag function-keys line-style-vector pattern-vector cursor-vector font-vector mode-vector cursors-alist args-vector default-window-type depth reread event-responses events-list top-events-list opaque-events-list transparent-events-list drag-event-p move-event-p functionkey-event-p ascii-event-p unmap-window-p map-window-p client-message-p visibility-change-p reparent-notify-p grab-window synchrone (top-window-border 2) all-font-names transient-window-p)
+)((deftclass winwindow windows-window windows-graph-env)
+)((deftclass #:tclass:winwindow:opaque-window)
+)((deftclass #:tclass:winwindow:opaque-window:top-window)
+)((deftclass #:tclass:winwindow:transparent-window visible view-rect offset-x offset-y top-opaque-father)
+)((defstruct #:windows:bitmap window winbitmap)
+)((defstruct #:windows:menu invertedx invertedy window)
+)((defstruct #:image:rectangle:window:menu-window)
+)((dmd #:display:windows:display-address (dpy . val) (if val (mcons '#:display:extend dpy val) (list '#:display:extend dpy)))
+(dmd #:display:windows:vector-args (dpy . val) (if val (mcons '#:display:windows:args-vector dpy val) (list '#:display:windows:args-vector dpy)))
+(dmd #:display:windows:window-address (win . val) (if val (mcons '#:tclass:winwindow:windows-window (list '#:window:extend win) val) (list '#:tclass:winwindow:windows-window (list '#:window:extend win))))
+(dmd #:display:windows:window-graph-env (win . val) (if val (mcons '#:tclass:winwindow:windows-graph-env (list '#:window:extend win) val) (list '#:tclass:winwindow:windows-graph-env (list '#:window:extend win))))
+(dmd #:display:windows:graph-env-view-rect (ge . val) (if val (mcons '#:tclass:winwindow:transparent-window:view-rect (list '#:graph-env:extend ge) val) (list '#:tclass:winwindow:transparent-window:view-rect (list '#:graph-env:extend ge))))
+(dmd #:display:windows:graph-env-font-y (ge . val) (if val (mcons '#:graph-env:font-y ge val) (list '#:graph-env:font-y ge)))
+(dmd #:display:windows:graph-env-font-h (ge . val) (if val (mcons '#:graph-env:font-h ge val) (list '#:graph-env:font-h ge)))
+(dmd #:display:windows:window-offset-x (win . val) (if val (mcons '#:tclass:winwindow:transparent-window:offset-x (list '#:window:extend win) val) (list '#:tclass:winwindow:transparent-window:offset-x (list '#:window:extend win))))
+(dmd #:display:windows:window-offset-y (win . val) (if val (mcons '#:tclass:winwindow:transparent-window:offset-y (list '#:window:extend win) val) (list '#:tclass:winwindow:transparent-window:offset-y (list '#:window:extend win))))
+(dmd #:display:windows:window-visible (win . val) (if val (mcons '#:tclass:winwindow:transparent-window:visible (list '#:window:extend win) val) (list '#:tclass:winwindow:transparent-window:visible (list '#:window:extend win))))
+(dmd #:display:windows:graph-env-address (ge . val) (if val (mcons '#:tclass:winwindow:windows-graph-env (list '#:graph-env:extend ge) val) (list '#:tclass:winwindow:windows-graph-env (list '#:graph-env:extend ge))))
+)((dmd #:display:windows:windows-display (dpy . val) (if val (mcons '#:display:extend dpy val) (list '#:display:extend dpy)))
+(dmd #:display:windows:windows-window (win . val) (if val (mcons '#:tclass:winwindow:windows-window (list '#:window:extend win) val) (list '#:tclass:winwindow:windows-window (list '#:window:extend win))))
+(dmd #:display:windows:windows-graph-env (win . val) (if val (mcons '#:tclass:winwindow:windows-graph-env (list '#:window:extend win) val) (list '#:tclass:winwindow:windows-graph-env (list '#:window:extend win))))
+(dmd #:display:windows:view-rect (ge . val) (if val (mcons '#:tclass:winwindow:transparent-window:view-rect (list '#:graph-env:extend ge) val) (list '#:tclass:winwindow:transparent-window:view-rect (list '#:graph-env:extend ge))))
+(dmd #:display:windows:offset-x (win . val) (if val (mcons '#:tclass:winwindow:transparent-window:offset-x (list '#:window:extend win) val) (list '#:tclass:winwindow:transparent-window:offset-x (list '#:window:extend win))))
+(dmd #:display:windows:offset-y (win . val) (if val (mcons '#:tclass:winwindow:transparent-window:offset-y (list '#:window:extend win) val) (list '#:tclass:winwindow:transparent-window:offset-y (list '#:window:extend win))))
+(dmd #:display:windows:visible (win . val) (if val (mcons '#:tclass:winwindow:transparent-window:visible (list '#:window:extend win) val) (list '#:tclass:winwindow:transparent-window:visible (list '#:window:extend win))))
+(dmd #:display:windows:wincolor (c . val) (if val (mcons '#:color:extend c val) (list '#:color:extend c)))
+(dmd #:display:windows:winbitmap (bitmap . val) (if val (mcons '#:windows:bitmap:winbitmap (list '#:bitmap:extend bitmap) val) (list '#:windows:bitmap:winbitmap (list '#:bitmap:extend bitmap))))
+(dmd #:display:windows:window-bitmap (bitmap . val) (if val (mcons '#:windows:bitmap:window (list '#:bitmap:extend bitmap) val) (list '#:windows:bitmap:window (list '#:bitmap:extend bitmap))))
+(dmd #:display:windows:menu-window (menu . val) (if val (mcons '#:windows:menu:window (list '#:menu:extend menu) val) (list '#:windows:menu:window (list '#:menu:extend menu))))
+(dmd #:display:windows:invertedx (menu . val) (if val (mcons '#:windows:menu:invertedx (list '#:menu:extend menu) val) (list '#:windows:menu:invertedx (list '#:menu:extend menu))))
+(dmd #:display:windows:invertedy (menu . val) (if val (mcons '#:windows:menu:invertedy (list '#:menu:extend menu) val) (list '#:windows:menu:invertedy (list '#:menu:extend menu))))
+)((dmd #:display:windows:top-opaque-window (window) (list '#:tclass:winwindow:transparent-window:top-opaque-father (list '#:window:extend window)))
+))

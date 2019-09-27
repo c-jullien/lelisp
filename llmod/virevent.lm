@@ -1,0 +1,98 @@
+defmodule
+mouse
+files (
+|virevent.ll|
+)
+export (
+which-window
+event-mode
+eventp
+read-event
+peek-event
+local-read-event
+flush-event
+add-event
+grab-event
+ungrab-event
+itsoft-event
+read-mouse
+allow-event
+disallow-event
+allowed-event-p
+#:display:event-mode
+#:display:eventp
+#:display:read-event
+#:display:peek-event
+#:display:flush-event
+#:display:read-event
+#:display:add-event
+#:display:grab-event
+#:display:ungrab-event
+#:display:isoft-event
+#:display:allow-event
+#:display:disallow-event
+#:display:allowed-event-p
+#:display:read-mouse
+)
+import (
+virutil
+virwindow
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(which-window subr0 ())
+(read-mouse nsubr ())
+(event-mode nsubr ())
+(eventp subr0 ())
+(read-event nsubr ())
+(peek-event nsubr ())
+(local-read-event subr0 ())
+(flush-event subr0 ())
+(add-event nsubr ())
+(grab-event subr1 ())
+(ungrab-event subr0 ())
+(itsoft-event subr0 ())
+(allow-event subr2 ())
+(disallow-event subr2 ())
+(allowed-event-p subr2 ())
+(#:display:event-mode nsubr ())
+(#:display:eventp nsubr ())
+(#:display:read-event nsubr ())
+(#:display:peek-event nsubr ())
+(#:display:flush-event nsubr ())
+(#:display:add-event nsubr ())
+(#:display:grab-event nsubr ())
+(#:display:ungrab-event nsubr ())
+(#:display:isoft-event nsubr ())
+(#:display:allow-event nsubr ())
+(#:display:disallow-event nsubr ())
+(#:display:allowed-event-p nsubr ())
+(#:display:read-mouse nsubr ())
+)
+cpfunctions (
+(parse-mouse subr1)
+(parse-event subr1)
+)
+cpimport (
+(virwindow
+(map-window . nsubr)
+(current-window . nsubr)
+(windowp . subr1)
+))
+cpenv (
+virutil
+virwindow
+((putprop '#:mouse:event 't '#:complice:globalvar)
+)((putprop '#:mouse:event-mode 't '#:complice:globalvar)
+)((putprop '#:mouse:x 't '#:complice:globalvar)
+)((putprop '#:mouse:y 't '#:complice:globalvar)
+)((putprop '#:mouse:state 't '#:complice:globalvar)
+)((putprop '#:event:code 't '#:complice:globalvar)
+)((putprop '#:event:x 't '#:complice:globalvar)
+)((putprop '#:event:y 't '#:complice:globalvar)
+))

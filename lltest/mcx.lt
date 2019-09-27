@@ -1,0 +1,679 @@
+          (test-serie "[DEFSTRUCT test]" ())
+
+(defstruct homme age (poids 75))               homme
+(setq h1 (#:homme:make))                       #:homme:#[() 75]
+(#:homme:age h1 40)                            40
+(#:homme:poids h1)                             75
+(structurep h1)                                t
+(defstruct #:homme:chercheur projet articles)  #:homme:chercheur
+(setq hc1 (#:homme:chercheur:make))            #:homme:chercheur:#[() 75 () ()]
+(#:homme:chercheur:articles hc1 '("CC" "TH"))  ("CC" "TH")
+(#:homme:poids hc1)                            75
+(#:homme:age hc1 26)                           26
+(#:homme:chercheur:age hc1)                    26
+
+          (test-serie "[TYPExxx test]" ())
+
+(type-of 12)                                   fix
+(type-of 12.2)                                 float
+(type-of ())                                   null
+(type-of 'asd)                                 symbol
+(type-of "aaaa")                               string
+(type-of #[1 2 3])                             vector
+(type-of #:foo:bar:"gee")                      #:foo:bar
+(type-of #:homme:#[() 75])                     homme
+(type-of '(1))                                 cons
+(type-of '#(foo . 1))                          foo
+
+(subtypep '#:homme:chercheur 'homme)           t
+(subtypep 'symbol 'symbol)                     t
+(subtypep '#:homme:chercheur '#:homme:trouveur) ()
+(subtypep 'fix'||)                             t
+
+(typep (#:homme:chercheur:make) 'homme)        t
+(typep 'foo 'symbol)                           t
+(typep (#:homme:chercheur:make) '#:homme:trouveur) ()
+(typep 12 '||)                                 t
+
+          (test-serie "[GETFNx / SENDx test]" ())
+
+(getfn1 () 'car)                               car
+(de #:foo:bar ())                              #:foo:bar
+(getfn1 'foo 'bar)                             #:foo:bar
+(getfn1 'gee 'bar)                             ()
+
+(de foo ())                          foo
+(de #:bar:foo ())                    #:bar:foo
+(de #:bar:gee:buz:foo ())            #:bar:gee:buz:foo
+(getfn '#:bar:gee:buz 'foo)          #:bar:gee:buz:foo
+(getfn '#:bar:gee 'foo)              #:bar:foo
+(getfn 'bar 'foo)                    #:bar:foo
+(getfn () 'foo)                      foo
+(getfn '#:potop:teraz 'foo)          foo
+(getfn '#:bar:gee 'foo ())           #:bar:foo
+(getfn 'bar 'foo ())                 #:bar:foo
+(getfn 'gee 'foo ())                 ()
+(getfn '#:bar:gee:buz 'foo 'bar)     #:bar:gee:buz:foo
+(getfn '#:bar:gee 'foo 'bar)         ()
+
+          (test-serie "[ABBREV test]" ())
+
+(defabbrev potop #:d:e:l:u:g:e)      potop
+
+(abbrevp 'potop)                     t
+(get-abbrev 'potop)                  #:d:e:l:u:g:e
+(has-an-abbrev '#:d:e:l:u:g:e)       potop
+(rem-abbrev 'potop)                  potop
+(abbrevp 'potop)                     ()
+
+          (test-serie "[DEFTCLASS test]" ())
+
+(deftclass foo a (b 1) c)     #:Tclass:foo
+'{foo}                        #:Tclass:foo
+(deftclass foo a (b 1) c)     #:Tclass:foo ; deux fois c'est permis
+'{foo}                        #:Tclass:foo
+(deftclass {foo}:bar (d 12))  #:Tclass:foo:bar
+'{bar}                        #:Tclass:foo:bar
+(deftclass {bar}:gee e)       #:Tclass:foo:bar:gee
+'{gee}                        #:Tclass:foo:bar:gee
+(deftclass #:Tclass:gee:muu)  (#:microceyx:errnotatclass deftclass #:Tclass:gee:muu)
+(deftclass (foo bar))         (#:microceyx:errnotatclass deftclass (foo bar))
+(deftclass {foo}:gee)         (#:microceyx:errtclassabbrev deftclass gee)
+
+          (test-serie "[TCLASS-NAMEP test]" ())
+
+(tclass-namep 'foo)                ()
+(tclass-namep '{foo})              t
+(tclass-namep '{bar})              t
+(tclass-namep '(foo bar))          ()
+(tclass-namep '#:foo:bar:gee)      ()
+
+          (test-serie "[OMAKEQ test]" ())
+
+(omakeq {foo})                {foo}:#[() 1 ()]
+(omakeq {bar})                {bar}:#[() 1 () 12]
+(omakeq {gee})                {gee}:#[() 1 () 12 ()]
+
+(setq objfoo
+    (omakeq {foo} a 10 b 11 c 12))      {foo}:#[10 11 12]
+(setq objbar
+    (omakeq {bar} a 10 b 11 c 12))      {bar}:#[10 11 12 12]
+(setq objgee
+    (omakeq {gee} a 10 d 11 e 12))      {gee}:#[10 1 () 11 12]
+
+(setq l '(10 20))             (10 20)
+(omakeq {foo} 
+    a (nextl l)
+    c (nextl l))              {foo}:#[10 1 20]
+
+(setq l '(10 20 30))          (10 20 30)
+(omakeq {bar}
+    a (nextl l)
+    d (nextl l)
+    b (nextl l))              {bar}:#[10 30 () 20]
+
+(omakeq muubuu)               (#:microceyx:errnotarecordoratclass omakeq muubuu)
+(omakeq #:Tclass:muu)         (#:microceyx:errnotarecordoratclass omakeq #:Tclass:muu)
+(omakeq (foo bar))            (#:microceyx:errnotarecordoratclass omakeq (foo bar))
+
+(omakeq {foo} d 12)           (#:microceyx:errnotafield omakeq ({foo} d))
+(omakeq {bar} g 10)           (#:microceyx:errnotafield omakeq ({bar} g))
+
+(omakeq {foo} a)              (errwna omakeq ())
+(omakeq {foo} a . 12)         (errbpa omakeq 12)
+(omakeq {foo} a 12 . bid)     (errbpa omakeq bid)
+
+          (test-serie "[DEFMAKE test]" ())
+
+(defmake {foo} make-foo (c a))  make-foo
+(make-foo 12 34)              {foo}:#[34 1 12]
+(defmake foo (c a) ())        (errsym defmake (c a))
+
+          (test-serie "[SEND test]" ())
+
+(de hello (x) `(hello ,x))    hello
+(send 'hello (omakeq {foo}))  (hello {foo}:#[() 1 ()])
+(send 'hello "hello")         (hello "hello")
+(sendq hello (omakeq {foo}))  (hello {foo}:#[() 1 ()])
+(sendq hello "hello")         (hello "hello")
+(mapcar (sendf 'hello)
+    (list (omakeq {foo}) "hello")) ((hello {foo}:#[() 1 ()]) (hello "hello"))
+(mapcar (sendfq hello)
+    (list (omakeq {foo}) "hello")) ((hello {foo}:#[() 1 ()]) (hello "hello"))
+
+          (test-serie "[FIELD-LIST test]" ())
+
+(field-list '{foo})           (a b c)
+(field-list '{bar})           (a b c d)
+(field-list '{gee})           (a b c d e)
+
+(field-list 'muubuu)          (#:microceyx:errnotarecordoratclass field-list muubuu)
+(field-list '#:Tclass:muu)
+    (#:microceyx:errnotarecordoratclass field-list #:Tclass:muu)
+(field-list '(foo bar))
+    (#:microceyx:errnotarecordoratclass field-list (foo bar))
+
+          (test-serie "[OGETQ / OPUTQ test]" ())
+
+
+(ogetq muubuu a gee)          (#:microceyx:errnotarecordoratclass ogetq muubuu)
+(ogetq {foo} kk gee)          (#:microceyx:errnotafield ogetq ({foo} kk))
+
+(oputq muubuu a gee 3)        (#:microceyx:errnotarecordoratclass oputq muubuu)
+(oputq {foo} kk gee 3)        (#:microceyx:errnotafield oputq ({foo} kk))
+
+(ogetq {foo} a objfoo)        10
+(ogetq {foo} a objbar)        10
+(ogetq {foo} a objgee)        10
+
+(ogetq {foo} b objfoo)        11
+(ogetq {foo} b objbar)        11
+(ogetq {foo} b objgee)        1
+
+(ogetq {foo} c objfoo)        12
+(ogetq {foo} c objbar)        12
+(ogetq {foo} c objgee)        ()
+
+(ogetq {bar} a objbar)        10
+(ogetq {bar} a objgee)        10
+
+(ogetq {bar} b objbar)        11
+(ogetq {bar} b objgee)        1
+
+(ogetq {bar} c objbar)        12
+(ogetq {bar} c objgee)        ()
+
+(ogetq {gee} a objgee)        10
+
+(ogetq {gee} b objgee)        1
+
+(ogetq {gee} c objgee)        ()
+
+(ogetq {bar} d objbar)        12
+(ogetq {bar} d objgee)        11
+
+(ogetq {gee} d objgee)        11
+
+(ogetq {gee} e objgee)        12
+
+(oputq {foo} a objfoo (list 1 2))       (1 2)
+(ogetq {foo} a objfoo)        (1 2)
+
+(oputq {foo} a objbar 13)     13
+(ogetq {foo} a objbar)        13
+
+(oputq {foo} a objgee 14)     14
+(ogetq {foo} a objgee)        14
+
+(oputq {foo} b objfoo 15)     15
+(ogetq {foo} b objfoo)        15
+(oputq {foo} b objbar 12)     12
+(ogetq {foo} b objbar)        12
+(oputq {foo} b objgee 24)     24
+(ogetq {foo} b objgee)        24
+
+(oputq {foo} c objfoo 78)     78
+(ogetq {foo} c objfoo)        78
+(oputq {foo} c objbar 67)     67
+(ogetq {foo} c objbar)        67
+(oputq {foo} c objgee 'a)     a
+(ogetq {foo} c objgee)        a
+
+(oputq {bar} a objbar 11)     11
+(ogetq {bar} a objbar)        11
+(oputq {bar} a objgee -1)     -1
+(ogetq {bar} a objgee)        -1
+
+(oputq {bar} b objbar 99)     99
+(ogetq {bar} b objbar)        99
+(oputq {bar} b objgee 45)     45
+(ogetq {bar} b objgee)        45
+
+(oputq {bar} c objbar 78)     78
+(ogetq {bar} c objbar)        78
+(oputq {bar} c objgee 11)     11
+(ogetq {bar} c objgee)        11
+
+(oputq {gee} a objgee 55)     55
+(ogetq {gee} a objgee)        55
+
+(oputq {gee} b objgee 66)     66
+(ogetq {gee} b objgee)        66
+
+(oputq {gee} c objgee 55)     55
+(ogetq {gee} c objgee)        55
+
+(oputq {bar} d objbar 78)     78
+(ogetq {bar} d objbar)        78
+(oputq {bar} d objgee 97)     97
+(ogetq {bar} d objgee)        97
+
+(oputq {gee} d objgee 46)     46
+(ogetq {gee} d objgee)        46
+
+(oputq {gee} e objgee 79)     79
+(ogetq {gee} e objgee)        79
+
+
+          (test-serie "[OMATCHQ test]" ())
+
+(omatchq {foo} objfoo)        t
+(omatchq {foo} objbar)        t
+(omatchq {foo} objgee)        t
+
+(omatchq {bar} objfoo)       ()
+(omatchq {bar} objbar)        t
+(omatchq {bar} objgee)        t
+
+(omatchq {gee} objfoo)       ()
+(omatchq {gee} objbar)       ()
+(omatchq {gee} objgee)        t
+
+(omatchq muubuu objfoo)       (#:microceyx:errnotatclass omatchq muubuu)
+
+
+          (test-serie "[DEFRECORD test]" ())
+
+(defrecord recfoo a (b 1) c)  recfoo
+'{recfoo}                     recfoo
+(defrecord recbar a (b binit) (c (cons 1 2)) (d dinit))
+                              recbar
+'{recbar}                     recbar
+(defrecord recgee (a 'a) (b 'b) (c 'c) (d 'd)
+    (e 'e) (f 'f) (g 'g))     recgee
+'{recgee}                     recgee
+
+(defrecord muu q w e r t y u i o p a s d f g h)   
+                              muu
+'{muu}                        muu
+(defrecord biz q w e r t y u i o p a s d f g h j)
+                              (#:microceyx:errrecordtoolong defrecord
+                               (biz q w e r t y u i o p a s d f g h j))
+
+(defrecord single (a (+ 2 3)))          single
+'{single}                               single
+
+(defrecord "foo" a)           (errnva defrecord "foo")
+(defrecord foo (a))           (#:microceyx:errbadfield defrecord (a))
+(defrecord foo (a . 1))       (#:microceyx:errbadfield defrecord (a . 1))
+(defrecord foo (a 1 2))       (#:microceyx:errbadfield defrecord (a 1 2))
+
+          (test-serie "[RECORD-NAMEP test]" ())
+
+(record-namep '{recfoo})       t
+(record-namep '{recbar})       t
+(record-namep '{recgee})       t
+(record-namep '{muu})          t
+(record-namep 'biz)           ()
+(record-namep '(1 2 3))       ()
+
+          (test-serie "[FIELD-LIST of RECORDs test]" ())
+
+(field-list '{recfoo})        (a b c)
+(field-list '{recbar})        (a b c d)
+(field-list '{recgee})        (a b c d e f g)
+(field-list '{muu})           (q w e r t y u i o p a s d f g h)
+
+          (test-serie "[Creation RECORDs functions tests]" ())
+
+(setq recfooobj ({recfoo}:make))    (() . (1 . ()))
+(setq binit 40)               40
+(setq dinit 12.3)             12.3
+(setq recbarobj ({recbar}:make))    ((() . 40) . ((1 . 2) . 12.3))
+(setq recgeeobj ({recgee}:make))    ((a . (b . c)) . ((d . e) . (f . g)))
+
+          (test-serie "[OMAKEQ of RECORDs test]" ())
+
+(omakeq {recfoo})   (() . (1 . ()))
+(omakeq {recbar})   ((() . 40) . ((1 . 2) . 12.3))
+(omakeq {recgee})   ((a . ( b . c)) . ((d . e) . (f . g)))
+
+(omakeq {recfoo} a 12)                  (12 . (1 . ()))
+(omakeq {recbar} b (cons 'a 'b)
+               c (list 123))            ((() . (a . b)) . ((123) . 12.3))
+
+(omakeq {recgee} a 1 b 2 c 3 d 4 e 5 f 6 g 7)
+                         ((1 . (2 . 3)) . ((4 . 5) . (6 . 7)))
+
+(omakeq {single})                       (5)
+(setq single
+   (omakeq {single} a (ncons 12)))      ((12))
+
+(setq l '(10 20 30))          (10 20 30)
+(omakeq {recfoo}
+    a (nextl l)
+    c (nextl l))              (10 . (1 . 20))
+
+
+(setq l '(10 20 30))          (10 20 30)
+(omakeq {recbar}
+    a (nextl l)
+    d (nextl l)
+    b (nextl l))              ((10 . 30) . ((1 . 2) . 20))
+
+          (test-serie "[DEFMAKE of RECORDs test]" ())
+
+(defmake {recbar} make-bar (b d))   make-bar
+(make-bar (cons 1 2) (cons 2 3))    ((() . (1 . 2)) . ((1 . 2) . (2 . 3)))
+
+          (test-serie "[Read fields RECORDs test]" ())
+
+({recfoo}:a recfooobj)              ()
+({recfoo}:b recfooobj)              1
+({recfoo}:c recfooobj)              ()
+
+({recbar}:a recbarobj)              ()
+({recbar}:b recbarobj)              40
+({recbar}:c recbarobj)              (1 . 2)
+({recbar}:d recbarobj)              12.3
+
+({recgee}:a recgeeobj)              a
+({recgee}:b recgeeobj)              b
+({recgee}:c recgeeobj)              c
+({recgee}:d recgeeobj)              d
+({recgee}:e recgeeobj)              e
+({recgee}:f recgeeobj)              f
+({recgee}:g recgeeobj)              g
+
+          (test-serie "[Write fields RECORDs test]" ())
+
+({recfoo}:a recfooobj (cons 1 2))   (1 . 2)
+({recfoo}:a recfooobj)              (1 . 2)
+({recfoo}:b recfooobj 12.23)        12.23
+({recfoo}:b recfooobj)              12.23
+({recfoo}:c recfooobj 24.3)         24.3
+({recfoo}:c recfooobj)              24.3
+({recbar}:a recbarobj (list 1 2))   (1 2)
+({recbar}:a recbarobj)              (1 2)
+({recbar}:b recbarobj '(123))       (123)
+({recbar}:b recbarobj)              (123)
+({recbar}:c recbarobj -1000)        -1000
+({recbar}:c recbarobj)              -1000
+({recbar}:d recbarobj 123)          123
+({recbar}:d recbarobj)              123
+({recgee}:a recgeeobj 123)          123
+({recgee}:a recgeeobj)              123
+({recgee}:b recgeeobj -76)          -76
+({recgee}:b recgeeobj)              -76
+({recgee}:c recgeeobj "poilo")      "poilo"
+({recgee}:c recgeeobj)              "poilo"
+({recgee}:d recgeeobj 'fuub)        fuub
+({recgee}:d recgeeobj)              fuub
+({recgee}:e recgeeobj (- 23 12))    11
+({recgee}:e recgeeobj)              11
+({recgee}:f recgeeobj ''a)          'a
+({recgee}:f recgeeobj)              'a
+({recgee}:g recgeeobj (list 1 2 3)) (1 2 3)
+({recgee}:g recgeeobj)              (1 2 3)
+
+({single}:a single)               (12)
+({single}:a single (list 3))      (3)
+
+
+#.(setq cm (typefn '#:compiler:macroexpand) x 0)  0
+        (test-serie #+cm "[Macros of RECORDs compiler test]"
+		    #-cm "[No test for Macros of RECORDs compiler test]"
+		    ())
+
+#+cm (eval (#:compiler:macroexpand '({recfoo}:a recfooobj (cons 1 2))))
+#+cm (1 . 2)
+#+cm (eval (#:compiler:macroexpand '({recfoo}:a recfooobj)))
+#+cm (1 . 2)
+#+cm (eval (#:compiler:macroexpand '({recfoo}:b recfooobj 12.23)))
+#+cm 12.23
+#+cm (eval (#:compiler:macroexpand '({recfoo}:b recfooobj)))
+#+cm 12.23
+#+cm (eval (#:compiler:macroexpand '({recfoo}:c recfooobj 24.3)))
+#+cm 24.3
+#+cm (eval (#:compiler:macroexpand '({recfoo}:c recfooobj)))
+#+cm 24.3
+#+cm (eval (#:compiler:macroexpand '({recbar}:a recbarobj (list 1 2))))
+#+cm (1 2)
+#+cm (eval (#:compiler:macroexpand '({recbar}:a recbarobj)))
+#+cm (1 2)
+#+cm (eval (#:compiler:macroexpand '({recbar}:b recbarobj '(123))))
+#+cm (123)
+#+cm (eval (#:compiler:macroexpand '({recbar}:b recbarobj)))
+#+cm (123)
+#+cm (eval (#:compiler:macroexpand '({recbar}:c recbarobj -1000)))
+#+cm -1000
+#+cm (eval (#:compiler:macroexpand '({recbar}:c recbarobj)))
+#+cm -1000
+#+cm (eval (#:compiler:macroexpand '({recbar}:d recbarobj 123)))
+#+cm 123
+#+cm (eval (#:compiler:macroexpand '({recbar}:d recbarobj)))
+#+cm 123
+#+cm (eval (#:compiler:macroexpand '({recgee}:a recgeeobj 123)))
+#+cm 123
+#+cm (eval (#:compiler:macroexpand '({recgee}:a recgeeobj)))
+#+cm 123
+#+cm (eval (#:compiler:macroexpand '({recgee}:b recgeeobj -76)))
+#+cm -76
+#+cm (eval (#:compiler:macroexpand '({recgee}:b recgeeobj)))
+#+cm -76
+#+cm (eval (#:compiler:macroexpand '({recgee}:c recgeeobj "poilo")))
+#+cm "poilo"
+#+cm (eval (#:compiler:macroexpand '({recgee}:c recgeeobj)))
+#+cm "poilo"
+#+cm (eval (#:compiler:macroexpand '({recgee}:d recgeeobj 'fuub)))
+#+cm fuub
+#+cm (eval (#:compiler:macroexpand '({recgee}:d recgeeobj)))
+#+cm fuub
+#+cm (eval (#:compiler:macroexpand '({recgee}:e recgeeobj (- 23 12))))
+#+cm 11
+#+cm (eval (#:compiler:macroexpand '({recgee}:e recgeeobj)))
+#+cm 11
+#+cm (eval (#:compiler:macroexpand '({recgee}:f recgeeobj ''a)))
+#+cm 'a
+#+cm (eval (#:compiler:macroexpand '({recgee}:f recgeeobj)))
+#+cm 'a
+#+cm (eval (#:compiler:macroexpand '({recgee}:g recgeeobj (list 1 2 3))))
+#+cm (1 2 3)
+#+cm (eval (#:compiler:macroexpand '({recgee}:g recgeeobj)))
+#+cm (1 2 3)
+#+cm (eval (#:compiler:macroexpand '({single}:a single (cons 1 2))))
+#+cm (1 . 2)
+#+cm (eval (#:compiler:macroexpand '({single}:a single)))
+#+cm (1 . 2)
+
+          (test-serie "[DEMETHOD test]" ())
+
+(demethod {foo}:boo (o) (a b c) (list a b c))  {foo}:boo
+(sendq boo (omakeq {foo} a 1 b 2 c 3))            (1 2 3)
+
+(demethod {foo}:baa (o) () (list 'a 'b 'c))    {foo}:baa
+(sendq baa (omakeq {foo} a 1 b 2 c 3))            (a b c)
+
+(demethod {bar}:bii (o) (a c d) (list d c a))  {bar}:bii
+(sendq bii (omakeq {bar} a 1 b 2 c 3 d 4))         (4 3 1)
+
+(demethod {gee}:bee (o) (e a d) (list a d e))  {gee}:bee
+(sendq bee (omakeq {gee} a 1 b 2 e 3 d 4))         (1 4 3)
+
+(demethod {foo}:muu (objet x y) (a) (+ a x y)) {foo}:muu
+(sendq muu (omakeq {bar} a 12) 10 20)             42
+
+(demethod {recfoo}:baa (rec) (a) a)            {recfoo}:baa
+({recfoo}:baa (omakeq {recfoo} a (list 12)))      (12)
+
+(demethod #:Tclass:asd:asd (ad) ())           
+                                (#:microceyx:errnotarecordoratclass demethod #:Tclass:asd)
+(demethod {foo}:pii (o) (qwerty))    
+                                (#:microceyx:errnotafield demethod ({foo} qwerty))
+
+
+#- (or #:microceyx:ceyxv4-compat #:microceyx:test-compat)
+	(test-serie "[End of test]" ())
+#- (or #:microceyx:ceyxv4-compat #:microceyx:test-compat)
+(exit eof)
+
+#- (or #:microceyx:ceyxv4-compat #:microceyx:test-compat)
+()
+
+          (test-serie "[Compatibility test for CEYXV4]" ())
+
+          (test-serie "[PLINK test]" ())
+
+(plink 'foo)                  {foo}
+(plink 'bar)                  {bar}
+(plink 'gee)                  {gee}
+(plink 'muu)                  muu
+(plink 'poidlqpwo)            poidlqpwo
+(plink ())                    ()
+
+(plink 'poipoi 'kuku)         kuku
+(plink 'poipoi)               kuku
+
+          (test-serie "[OMAKEQ test]" ())
+
+(omakeq foo)                {foo}:#[() 1 ()]
+(omakeq bar)                {bar}:#[() 1 () 12]
+(omakeq gee)                {gee}:#[() 1 () 12 ()]
+
+(setq objfoo
+    (omakeq foo a 10 b 11 c 12))      {foo}:#[10 11 12]
+(setq objbar
+    (omakeq bar a 10 b 11 c 12))      {bar}:#[10 11 12 12]
+(setq objgee
+    (omakeq gee a 10 d 11 e 12))      {gee}:#[10 1 () 11 12]
+
+(setq l '(10 20))             (10 20)
+(omakeq foo 
+    a (nextl l)
+    c (nextl l))              {foo}:#[10 1 20]
+
+(setq l '(10 20 30))          (10 20 30)
+(omakeq bar
+    a (nextl l)
+    d (nextl l)
+    b (nextl l))              {bar}:#[10 30 () 20]
+
+(omakeq muubuu)               (#:microceyx:errnotarecordoratclass omakeq muubuu)
+(omakeq #:Tclass:muu)         (#:microceyx:errnotarecordoratclass omakeq #:Tclass:muu)
+(omakeq (foo bar))            (#:microceyx:errnotarecordoratclass omakeq (foo bar))
+
+(omakeq foo d 12)             (#:microceyx:errnotafield omakeq ({foo} d))
+(omakeq bar g 10)             (#:microceyx:errnotafield omakeq ({bar} g))
+
+(omakeq foo a)                (errwna omakeq ())
+(omakeq foo a . 12)           (errbpa omakeq 12)
+(omakeq foo a 12 . bid)       (errbpa omakeq bid)
+
+          (test-serie "[OGETQ / OPUTQ test]" ())
+
+(ogetq muubuu a gee)          (#:microceyx:errnotarecordoratclass ogetq muubuu)
+(ogetq foo kk gee)          (#:microceyx:errnotafield ogetq ({foo} kk))
+
+(oputq muubuu a gee 3)        (#:microceyx:errnotarecordoratclass oputq muubuu)
+(oputq foo kk gee 3)        (#:microceyx:errnotafield oputq ({foo} kk))
+
+(ogetq foo a objfoo)        10
+(ogetq foo a objbar)        10
+(ogetq foo a objgee)        10
+
+(ogetq foo b objfoo)        11
+(ogetq foo b objbar)        11
+(ogetq foo b objgee)        1
+
+(ogetq foo c objfoo)        12
+(ogetq foo c objbar)        12
+(ogetq foo c objgee)        ()
+
+(ogetq bar a objbar)        10
+(ogetq bar a objgee)        10
+
+(ogetq bar b objbar)        11
+(ogetq bar b objgee)        1
+
+(ogetq bar c objbar)        12
+(ogetq bar c objgee)        ()
+
+(ogetq gee a objgee)        10
+
+(ogetq gee b objgee)        1
+
+(ogetq gee c objgee)        ()
+
+(ogetq bar d objbar)        12
+(ogetq bar d objgee)        11
+
+(ogetq gee d objgee)        11
+
+(ogetq gee e objgee)        12
+
+(oputq foo a objfoo (list 1 2))       (1 2)
+(ogetq foo a objfoo)        (1 2)
+
+(oputq foo a objbar 13)     13
+(ogetq foo a objbar)        13
+
+(oputq foo a objgee 14)     14
+(ogetq foo a objgee)        14
+
+(oputq foo b objfoo 15)     15
+(ogetq foo b objfoo)        15
+(oputq foo b objbar 12)     12
+(ogetq foo b objbar)        12
+(oputq foo b objgee 24)     24
+(ogetq foo b objgee)        24
+
+(oputq foo c objfoo 78)     78
+(ogetq foo c objfoo)        78
+(oputq foo c objbar 67)     67
+(ogetq foo c objbar)        67
+(oputq foo c objgee 'a)     a
+(ogetq foo c objgee)        a
+
+(oputq bar a objbar 11)     11
+(ogetq bar a objbar)        11
+(oputq bar a objgee -1)     -1
+(ogetq bar a objgee)        -1
+
+(oputq bar b objbar 99)     99
+(ogetq bar b objbar)        99
+(oputq bar b objgee 45)     45
+(ogetq bar b objgee)        45
+
+(oputq bar c objbar 78)     78
+(ogetq bar c objbar)        78
+(oputq bar c objgee 11)     11
+(ogetq bar c objgee)        11
+
+(oputq gee a objgee 55)     55
+(ogetq gee a objgee)        55
+
+(oputq gee b objgee 66)     66
+(ogetq gee b objgee)        66
+
+(oputq gee c objgee 55)     55
+(ogetq gee c objgee)        55
+
+(oputq bar d objbar 78)     78
+(ogetq bar d objbar)        78
+(oputq bar d objgee 97)     97
+(ogetq bar d objgee)        97
+
+(oputq gee d objgee 46)     46
+(ogetq gee d objgee)        46
+
+(oputq gee e objgee 79)     79
+(ogetq gee e objgee)        79
+
+
+          (test-serie "[OMATCHQ test]" ())
+
+(omatchq foo objfoo)        t
+(omatchq foo objbar)        t
+(omatchq foo objgee)        t
+
+(omatchq bar objfoo)       ()
+(omatchq bar objbar)        t
+(omatchq bar objgee)        t
+
+(omatchq gee objfoo)       ()
+(omatchq gee objbar)       ()
+(omatchq gee objgee)        t
+
+(omatchq muubuu objfoo)       (#:microceyx:errnotatclass omatchq muubuu)
+
+	 (test-serie "[End of test]" ())

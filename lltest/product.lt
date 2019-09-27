@@ -1,0 +1,22 @@
+	(test-serie "[Test des fonctions du module product]" ())
+
+(product-id 'foo) 			(unknown-product product-id foo)
+(product-build-info 'myprod) 		myprod
+(product-version 'myprod) 		()
+(product-subversion 'myprod) 		()
+(product-comment 'myprod) 		()
+(set-product-comment 'myprod 4) 	(errnsa set-product-comment 4)
+(product-build-info 'myaida 'id 4 'date (date) 'version 1.54 'subversion 6
+  'comment '("Thank's giving version")) myaida
+(product-build-info 'mymasai 'foo 5) 	(errbpa product-build-info foo)
+(set-product-version 'mymasai 1.24) 	1.24
+(set-product-subversion 'mymasai 20) 	20 
+(set-product-comment 'mymasai 45) 	(errnsa set-product-comment 45)
+(false (setq :b '("ing" "bing" "foo"))) ()
+(set-product-comment 'mymasai :b)	#.:b
+(and (every (lambda (e) (memq e '(myprod myaida mymasai)))
+	(product-all-names) 
+	t))  t
+
+        (test-serie "[Fin du test des fonctions du module product]")
+()                                       ()

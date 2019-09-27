@@ -1,0 +1,97 @@
+
+LLDIR=@SOURCE@
+SYSTEM=C
+CMPLC=$LLDIR/$SYSTEM/cmplc++
+
+case $# in
+        0)      exec $CMPLC;;
+esac
+CPCMDFILE="/tmp/cp$$"
+files=""
+CONS=""
+trap "rm -f $CPCMDFILE $CPENVFILE; exit" 0 1 2 3 15
+FLGPA="nil"
+FLGPR="nil"
+FLGWN="t"
+FLGGCT="nil"
+FLGRCF="nil"
+FLGCEXT="nil"
+FLGCH="nil"
+FLGCHH="nil"
+
+DEST=""
+LLPATH=""
+INTER=""
+
+# try to be portable
+echo "(when (boundp '#:system:line-length-max)(rmargin #:system:line-length-max))"  	>> $CPCMDFILE
+
+while test x$1 != x
+        do
+                case $1 in
+                        -w)     FLGWN=$2; shift;;
+                        -o)     DEST=$2; shift;;
+                        -p)     LLPATH="$LLPATH $2"; shift;;
+                        -parano)FLGPA=$2; shift;;
+			-cons)  CONS="-cons $2"; shift;;
+                        -callext)FLGCEXT=$2; shift;;
+                        -lldir)	LLDIR=$2; shift;;
+                        -cmplc)	CMPLC=$LLDIR/$SYSTEM/$2; shift;;
+                        -v)     FLGPR="t";;
+                        -i)     INTER="t";;
+			-g)	FLGGCT="t";;
+			-r)	FLGRCF="t";;
+			-h)	FLGCH="t";;
+			-hh)	FLGCHH="t";;
+                        -e)     echo $2 >> $CPCMDFILE; shift;;
+
+                        *)      files="$files $1" ;;
+                esac
+                shift
+        done
+
+echo "(defvar #:complice:parano-flag  " $FLGPA ")" 	  	>> $CPCMDFILE
+echo "(defvar #:complice:warning-flag " $FLGWN ")" 		>> $CPCMDFILE
+echo "(setq #:system:read-case-flag " $FLGRCF ")" 		>> $CPCMDFILE
+echo "(setq #:system:path (append'(" $LLPATH ") #:system:path))">> $CPCMDFILE
+echo "(when $FLGGCT (with ((outchan ()))(print (gc t))))"	>> $CPCMDFILE
+echo "(unless $FLGCEXT (de getglobal(x)1)(compile getglobal)(de defextern-cache l))">>$CPCMDFILE
+echo "(when $FLGCH (lmcacheinit)(setq #:lmcache:verbose $FLGPR))">> $CPCMDFILE
+echo "(when $FLGCHH (rehashinit)(setq #:rehash:verbose $FLGPR))" >> $CPCMDFILE
+
+if test x$INTER = x
+then
+	echo "(de #:cmplc:user-interrupt () (end 1))" 	  	>> $CPCMDFILE
+	echo "(de #:cmplc:syserror (f m b)(printerror f m b)(end 2))" >> $CPCMDFILE
+	echo "(newl #:sys-package:itsoft 'cmplc)"			>> $CPCMDFILE
+	 for i in $files
+	 do
+
+    echo "(compilemodule '" $i ")" 		  		>> $CPCMDFILE
+
+    echo "(when " $FLGGCT " (with ((outchan ()))(print (gc t))))">> $CPCMDFILE
+  done
+  echo "(end)" 					 	 	>> $CPCMDFILE
+fi
+
+case $FLGPR in
+        t|T)      cat $CPCMDFILE;;
+esac
+
+export CPCMDFILE
+if test x$INTER = x
+then
+  $CMPLC $CONS
+  if test x$DEST != x
+  then
+    for i in $files
+    do
+
+      mv $i.lo $DEST/$i.lo
+
+    done
+  fi
+else
+  exec $CMPLC $CONS
+fi
+

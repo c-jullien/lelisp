@@ -1,0 +1,54 @@
+defmodule
+virutil
+files (
+|virstruct.ll|
+|virutil.ll|
+)
+export (
+current-display
+#:image:rectangle:make
+#:image:rectangle:window:make
+#:menu:make
+#:menu:item:make
+#:menu:itemlist:make
+#:graph-env:make
+#:color:make
+#:bitmap:make
+#:bitmap:stipple:make
+#:bitmap:bytemap:make
+#:window:background
+#:font-info:make
+#:event:make
+)
+import
+()
+include (
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(current-display nsubr ())
+(#:image:rectangle:make subr0 ())
+(#:image:rectangle:window:make subr0 ())
+(#:menu:make subr0 ())
+(#:menu:item:make subr0 ())
+(#:menu:itemlist:make subr0 ())
+(#:graph-env:make subr0 ())
+(#:color:make subr0 ())
+(#:bitmap:make subr0 ())
+(#:bitmap:stipple:make subr0 ())
+(#:bitmap:bytemap:make subr0 ())
+(#:window:background nsubr ())
+(#:font-info:make subr0 ())
+(#:event:make subr0 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((defstruct event code window detail gx gy x y w h b)
+)((defstruct #:image:rectangle (x 0) (y 0) (w 1) (h 1))
+)((if (boundp '#:display:current-display) (defvar #:display:current-display #:display:current-display) (defvar #:display:current-display))
+))

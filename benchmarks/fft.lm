@@ -1,0 +1,31 @@
+defmodule
+fft
+files
+(fft)
+export
+(check-fft meter-fft test-fft fft-test)
+import
+(checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-fft subr0 ())
+(meter-fft subr0 ())
+(test-fft subr1 ())
+(fft-test subr0 ())
+)
+cpfunctions (
+(fft-bench subr0)
+(fft subr2)
+(ipower subr2)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+((putprop '*re* 't '#:complice:globalvar)
+)((putprop '*im* 't '#:complice:globalvar)
+)((putprop 'pi 't '#:complice:globalvar)
+))

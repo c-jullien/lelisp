@@ -1,0 +1,31 @@
+#  Copyright     Digital Equipment Corporation & INRIA     1988, 1989
+
+
+NOMEM	= -DNOMEM		# for ISO C
+
+CC	= cl
+KERNH	= h/BigNum.h
+#DEBUG	= -Zi
+DEBUG	=
+CFLAGS	= -nologo $(DEBUG) -c -Ot -Gs $(NOMEM) -DDIGITon32BITS -I.\h
+LIB	= ..\win32\kern.lib
+OBJECT	= o\KerN.obj l\llkern.obj
+
+# build the BigNum library
+$(LIB):	$(OBJECT)
+	-@del $(LIB)
+	@lib -nologo -out:$@ .\l\llkern.obj .\o\KerN.obj
+
+# How to choose the machine dependante version. All produce KerN.o
+o\KerN.obj: c\KerN.c Makefile.win32
+	@echo The Default is KerN written in C with digits on 32 bits
+	@echo.
+	@echo Compiling $@ ...
+	@$(CC) $(CFLAGS) -Foo\KerN.obj c\KerN.c
+
+l\llkern.obj: l\common\llkern.c
+	@echo Compiling $@ ...
+	@$(CC) $(CFLAGS) -Fol\llkern.obj l\common\llkern.c
+
+cleano:
+	@del $(OBJECT)

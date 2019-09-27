@@ -1,0 +1,18 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule roo
+
+files (
+|roo.ll|
+)
+
+import ()
+
+export (
+
+; ;;; Functions unused unless exported
+m-roo
+
+; ;;; Not exported because only internally used
+; f-roo
+)

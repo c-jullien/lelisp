@@ -1,0 +1,59 @@
+defmodule extrnlib
+
+files	(
+	extrnlib
+)
+export (
+	#:display:windows:ask-file
+	#:display:windows:ask-string
+	#:display:windows:ask-font
+	#:display:windows:ask-color
+	#:display:windows:message-box
+	#:display:windows:get-selection
+	#:display:windows:store-selection
+	#:display:windows:get-resources-info
+)
+import	(
+	callext
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:windows:ask-file subr1 ())
+(#:display:windows:ask-string nsubr ())
+(#:display:windows:ask-font subr0 ())
+(#:display:windows:ask-color subr0 ())
+(#:display:windows:message-box nsubr ())
+(#:display:windows:get-selection subr1 ())
+(#:display:windows:store-selection subr2 ())
+(#:display:windows:get-resources-info subr0 ())
+)
+cpfunctions (
+(#:display:windows:assure-extrnlib-loaded subr0)
+(WDGOpenFile subr2)
+(WDGGetText subr2)
+(WDGGetFont subr1)
+(WDGGetColor subr1)
+(WDGMessageBox nsubr)
+(WDGOpenClipboard subr0)
+(WDGIsAvailable subr1)
+(WDGGetClipboard subr2)
+(WDGCloseClipboard subr0)
+(WDGSetClipboard subr2)
+(WDGResources subr1)
+)
+cpimport
+()
+cpenv (
+sort
+callext
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:windows:work-string-length 't '#:complice:globalvar)
+)((putprop '#:display:windows:work-string 't '#:complice:globalvar)
+)((putprop '#:display:windows:return-button-box 't '#:complice:globalvar)
+)((putprop '#:display:windows:icons 't '#:complice:globalvar)
+)((putprop '#:display:windows:buttons 't '#:complice:globalvar)
+)((putprop '#:display:windows:resources-info 't '#:complice:globalvar)
+))

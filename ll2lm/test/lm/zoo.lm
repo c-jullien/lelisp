@@ -1,0 +1,29 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule zoo
+
+files (
+|zoo.ll|
+)
+
+import (
+
+; ;;; Imports which seem necessary
+pretty
+goo
+)
+
+export (
+
+; ;;; Functions unused unless exported
+#:zoo:a-zoo1:f-zoo1
+f-zoo3
+
+; ;;; Not exported because only internally used
+; f-zoo2
+)
+
+cpenv (
+((defabbrev a-zoo1 #:zoo:a-zoo1)
+(defabbrev a-zoo2 #:zoo:a-zoo2)
+))

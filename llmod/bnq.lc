@@ -1,0 +1,33 @@
+defmodule
+#:r:q
+files (
+bnq
+)
+export (
+numerator
+denominator
+#:fix:1/
+#:fix:/
+#:r:q:quomod
+#:r:q:rationalp
+#:r:q:n:1/
+#:r:q:z:1/
+#:r:q:/:integerp
+#:r:q:/:1/
+#:r:q:/:|0-|
+#:r:q:/:abs
+#:r:q:/:floor
+#:r:q:/:truncate
+#:r:q:/:float
+#:r:q:/:<?>
+#:r:q:/:|+|
+#:r:q:/:*
+#:r:q:/:sqrt
+#:r:q:/:prin
+)
+import (
+bngen
+bnz
+)
+include
+()

@@ -1,0 +1,105 @@
+defmodule #:display:x11
+files (x11event.ll)
+include (
+virstruct.ll
+)
+import (
+virutil
+x11_def
+x11struct
+)
+export (
+:event-mode 
+:flush-event 
+:eventp 
+:read-event
+:peek-event 
+:read-mouse 
+:add-event 
+:grab-event
+:ungrab-event
+:itsoft-event
+:parse-event
+:allow-event
+:disallow-event
+:allowed-event-p
+:compute-event-mask
+
+;;;; Function for events code
+:default-event-code
+:reparent-notify-code
+:visibility-change-code
+:client-message-code
+:map-window-code
+:unmap-window-code
+:modify-window-event-code
+:kill-window-event-code
+:repaint-window-event-code
+:keyboard-focus-event-code
+:movedrag-event-code
+:leavewindow-event-code
+:enterwindow-event-code
+:up-event-code
+:down-event-code
+:functionkey-event-code
+:ascii-event-code
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:x11:event-mode subr2 ())
+(#:display:x11:flush-event subr1 ())
+(#:display:x11:eventp subr1 ())
+(#:display:x11:read-event subr2 ())
+(#:display:x11:parse-event subr3 ())
+(#:display:x11:peek-event subr2 ())
+(#:display:x11:read-mouse subr2 ())
+(#:display:x11:add-event subr2 ())
+(#:display:x11:grab-event subr2 ())
+(#:display:x11:ungrab-event subr1 ())
+(#:display:x11:itsoft-event subr1 ())
+(#:display:x11:allow-event subr2 ())
+(#:display:x11:compute-event-mask subr1 ())
+(#:display:x11:disallow-event subr2 ())
+(#:display:x11:allowed-event-p subr2 ())
+(#:display:x11:default-event-code subr2 ())
+(#:display:x11:reparent-notify-code subr2 ())
+(#:display:x11:visibility-change-code subr2 ())
+(#:display:x11:client-message-code subr2 ())
+(#:display:x11:map-window-code subr2 ())
+(#:display:x11:unmap-window-code subr2 ())
+(#:display:x11:modify-window-event-code subr2 ())
+(#:display:x11:kill-window-event-code subr2 ())
+(#:display:x11:repaint-window-event-code subr2 ())
+(#:display:x11:keyboard-focus-event-code subr2 ())
+(#:display:x11:movedrag-event-code subr2 ())
+(#:display:x11:leavewindow-event-code subr2 ())
+(#:display:x11:enterwindow-event-code subr2 ())
+(#:display:x11:up-event-code subr2 ())
+(#:display:x11:down-event-code subr2 ())
+(#:display:x11:functionkey-event-code subr2 ())
+(#:display:x11:ascii-event-code subr2 ())
+)
+cpfunctions
+()
+cpimport (
+(virutil
+(#:event:make . subr0)
+)(x11_def
+(x11_flush_event . subr1)
+(x11_eventp . subr1)
+(x11_read_event . subr2)
+(x11_peek_event . subr2)
+(x11_read_mouse . subr2)
+(x11_grab_event . subr3)
+(x11_ungrab_event . subr1)
+(x11_build_mask . subr2)
+(x11_get_format . subr0)
+(x11_get_data_string . subr0)
+))
+cpenv (
+virutil
+x11_def
+x11struct
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

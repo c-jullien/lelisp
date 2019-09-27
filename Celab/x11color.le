@@ -1,0 +1,40 @@
+;;; GELL 15.26: elaboration file for the module: x11color
+;;;             translation done: "Tue Aug  24 93 10:48:19 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: x11color.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'x11color)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZx11color" "Tue Aug  24 93 10:48:19 "
+
+'((#:display:x11:get-default . subr2) (#:display:x11:init-color . subr1) (#:display:x11:make-color . nsubr) (#:display:x11:make-mutable-color . nsubr) (#:display:x11:make-named-color . subr3) (#:display:x11:kill-color . subr2) (#:display:x11:red-component . subr3) (#:display:x11:green-component . subr3) (#:display:x11:blue-component . subr3) (#:display:x11:name-to-rgb . subr3) (#:display:x11:get-rgb-values . subr3))
+
+#[x11_get_default substring remq "foreground" #:display:x11:get-default "background" "colors" "reversevideo" #:color:make "" eqstring "black" "white" "on" t #:system:error-flag (#:system:error-flag) lambda #:system:error-tag #:display:x11:make-named-color (#:system:error-flag) list ("" "standard" "color10") member #:display:x11:default-colors "none" equal ("grey4" "grey") #:display:x11:grey4-colors ("grey12" "shade") #:display:x11:grey12-colors ("color24" "basic") #:display:x11:color24-colors ("color49" "extended") #:display:x11:color49-colors #:system:debug #:system:print-msgs (#:system:debug #:system:print-msgs #:system:error-flag) nreconc append x11_init_pixels #[0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15] #[0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15] #[15 7 11 3 13 5 9 1 14 6 10 2 12 4 8 0] #[15 7 11 3 13 5 9 1 14 6 10 2 12 4 8 0] #:display:x11:make-color #:llcp:errwna #:display:x11:rgb x11_make_color errnomorecolors #:display:x11:make-mutable-color x11_make_mutable_color x11_make_named_color #:display:errnotacolor x11_kill_color x11_color_component x11_lookup_named_color x11_query_color #:gell-resetfn:function-name #:gell-resetfn:function-2 #:display:x11:init-color #:gell-resetfn:function-1 #:gell-resetfn:function-n #:gell-resetfn:function-3 #:display:x11:kill-color #:display:x11:red-component #:display:x11:green-component #:display:x11:blue-component #:display:x11:name-to-rgb #:display:x11:get-rgb-values]
+)
+
+(defvar #:sys-package:colon '#:display:x11)
+(#:messages:put-message 'errnomorecolors 'french '"plus de couleurs disponibles" 'defmessage)
+(#:messages:put-message 'errnomorecolors 'english '"no more colours available" 'defmessage)
+'errnomorecolors
+(if (not (boundp '#:display:x11:grey4-colors)) (progn (defvar #:display:x11:grey4-colors '("grey" "lightgrey"))))
+(if (not (boundp '#:display:x11:grey12-colors)) (progn (defvar #:display:x11:grey12-colors '("grey" "lightgrey" "grey20" "grey30" "grey40" "grey50" "grey60" "grey70" "grey80" "grey90"))))
+(if (not (boundp '#:display:x11:default-colors)) (progn (defvar #:display:x11:default-colors '("red" "green" "blue" "yellow" "cyan" "magenta" "grey" "lightgrey"))))
+(if (not (boundp '#:display:x11:color24-colors)) (progn (defvar #:display:x11:color24-colors '("red" "pink" "firebrick" "green" "palegreen" "forestgreen" "blue" "lightsteelblue" "navyblue" "yellow" "mediumgoldenrod" "goldenrod" "cyan" "turquoise" "mediumturquoise" "magenta" "plum" "orchid" "grey" "lightgrey" "grey30" "grey70"))))
+(if (not (boundp '#:display:x11:color49-colors)) (progn (defvar #:display:x11:color49-colors '("red" "pink" "orange" "firebrick" "salmon" "indianred" "green" "palegreen" "limegreen" "forestgreen" "mediumseagreen" "darkgreen" "blue" "lightsteelblue" "mediumblue" "navyblue" "cornflowerblue" "midnightblue" "yellow" "mediumgoldenrod" "wheat" "goldenrod" "khaki" "darkolivegreen" "cyan" "turquoise" "lightblue" "mediumturquoise" "cadetblue" "darkslateblue" "magenta" "plum" "thistle" "orchid" "blueviolet" "violet" "grey" "lightgrey" "grey10" "grey20" "grey30" "grey40" "grey50" "grey60" "grey70" "grey80" "grey90"))))
+(defcsetfn '#:display:x11:get-default "GZx11color" 0)
+(defcsetfn '#:display:x11:init-color "GZx11color" 1)
+(if (not (boundp '#:display:x11:rgb)) (progn (defvar #:display:x11:rgb #[() () ()])))
+(defcsetfn '#:display:x11:make-color "GZx11color" 2)
+(defcsetfn '#:display:x11:make-mutable-color "GZx11color" 3)
+(defcsetfn '#:display:x11:make-named-color "GZx11color" 4)
+(defcsetfn '#:display:x11:kill-color "GZx11color" 5)
+(defcsetfn '#:display:x11:red-component "GZx11color" 6)
+(defcsetfn '#:display:x11:green-component "GZx11color" 7)
+(defcsetfn '#:display:x11:blue-component "GZx11color" 8)
+(defcsetfn '#:display:x11:name-to-rgb "GZx11color" 9)
+(defcsetfn '#:display:x11:get-rgb-values "GZx11color" 10)
+
+(defccheck '(x11_query_color x11_lookup_named_color x11_color_component x11_kill_color x11_make_named_color x11_make_mutable_color x11_make_color #:llcp:errwna x11_init_pixels append nreconc equal member list #:display:x11:make-named-color eqstring #:color:make #:display:x11:get-default remq substring x11_get_default))

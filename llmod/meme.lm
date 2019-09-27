@@ -1,0 +1,65 @@
+defmodule
+#:edit:editor:meme
+files (
+meme
+)
+export (
+meme
+#:edit:editor:meme:edit-drawcursor
+trap-meme
+#:edit:editor:meme:edit-query
+#:edit:editor:meme:trap-query
+#:edit:editor:meme:edit-redisplaystring
+#:edit:editor:meme:edit-redisplaycleol
+#:edit:editor:meme:query-drawcursor
+)
+import (
+lledit
+lleditor
+)
+include (
+macedit
+maceditor
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(meme nsubr ())
+(#:edit:editor:meme:edit-drawcursor nsubr ())
+(trap-meme subr2 ())
+(#:edit:editor:meme:edit-query subr3 ())
+(#:edit:editor:meme:trap-query subr2 ())
+(#:edit:editor:meme:edit-redisplaystring nsubr ())
+(#:edit:editor:meme:edit-redisplaycleol nsubr ())
+(#:edit:editor:meme:query-drawcursor nsubr ())
+)
+cpfunctions (
+(#:edit:editor:meme:make-meme-editor nsubr)
+(#:edit:editor:meme:make subr0)
+(#:edit:editor:meme:rdpscreen subr1)
+(#:edit:editor:meme:unsplit-editor subr1)
+(#:edit:editor:meme:split-editor subr1)
+(#:edit:editor:meme:tycls subr1)
+(#:edit:editor:meme:next-editor subr1)
+(#:edit:editor:meme:previous-editor subr1)
+(#:edit:editor:meme:visit-file subr2)
+)
+cpimport (
+(lledit
+(#:buffer:make . subr0)
+(trap-edit . subr3)
+)(lleditor
+(init-editor . nsubr)
+(local-bind-to-ekey . subr3)
+(local-bind-to-key . subr3)
+(local-bind-to-xkey . subr3)
+(trap-editor . subr3)
+(edit-command-redisplay . subr2)
+))
+cpenv (
+lledit
+lleditor
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:edit:editor:meme:list-editor 't '#:complice:globalvar)
+)((putprop '#:edit:editor:meme:clean-query? 't '#:complice:globalvar)
+))

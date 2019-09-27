@@ -1,0 +1,58 @@
+defmodule
+date
+files (
+date
+)
+export (
+(structure date)
+create-date
+short-string-date
+datep
+#:date:prin
+year-day-number
+week-day-number
+leap-number
+leap-year-p
+month-length
+)
+import (
+messages
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:date:week-day nsubr ())
+(#:date:msecond nsubr ())
+(#:date:second nsubr ())
+(#:date:minute nsubr ())
+(#:date:hour nsubr ())
+(#:date:day nsubr ())
+(#:date:month nsubr ())
+(#:date:year nsubr ())
+(#:date:make subr0 ())
+(create-date subr0 ())
+(week-day-number subr1 ())
+(datep subr1 ())
+(leap-number subr1 ())
+(year-day-number subr1 ())
+(month-length subr2 ())
+(leap-year-p subr1 ())
+(short-string-date subr1 ())
+(#:date:prin subr1 ())
+)
+cpfunctions
+()
+cpimport (
+(messages
+(get-message . subr1)
+(current-language . nsubr)
+))
+cpenv (
+messages
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop 'short-month-names 't '#:complice:globalvar)
+)((putprop 'short-day-names 't '#:complice:globalvar)
+)((putprop 'month-lengths 't '#:complice:globalvar)
+))

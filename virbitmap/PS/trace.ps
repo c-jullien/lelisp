@@ -1,0 +1,57 @@
+% PostScript trace facility
+% ILOG 1994
+% Insert this file just after EndComment line
+
+% Flag enableing trace
+/tracing false def
+% Flag enableing copypage
+/tracecopy false def
+
+% Messages are printed at x=tracex0 with y in tracey0 - 0
+/tracey0 770 def
+/tracex0 20 def
+/tracey tracey0 def
+/tracex tracex0 def
+/tracescale 1 def
+% Line interval
+/traceyinc 12 tracescale mul def
+% Font size
+/tracesize 11 tracescale mul def
+% Size of message
+/tracexinc 200 tracescale mul def
+
+/trshow {.98 setgray newpath tracex tracey moveto 0 traceyinc rlineto 
+	tracexinc 0 rlineto 0 traceyinc neg rlineto closepath
+        gsave fill grestore 0 setgray 0 1 rmoveto show} bind def
+/tracestr 35 string def
+/tracebuf 25 string def
+/tracerootmtrx matrix currentmatrix def
+
+% <message> TRACE : removes <message> from the stack and prints the line:
+%   <message> <totalmemory> <freememory> <imbricated gsaves>
+% If traceing is FALSE, simply removes <message> from the stack.
+% If tracecopy is TRUE, a copy is printed each time TRACEY reaches 0
+% to avoid previous trace to be overwritten.
+/trace {tracing 
+    {
+        gsave tracerootmtrx setmatrix initclip 0 setgray newpath  
+	/tracey tracey traceyinc sub dup 0 gt {def} 
+	{pop tracey0 def tracecopy {copypage} if} ifelse
+	/tracex tracex0 def /Courier findfont tracesize
+	scalefont setfont 
+	% Prints message and vmstatus
+        0 1 34 {tracestr exch 32 put} for
+        tracestr 0 3 -1 roll putinterval
+	vmstatus tracebuf cvs tracestr 10 3 -1 roll putinterval
+                 tracebuf cvs tracestr 18 3 -1 roll putinterval
+                 tracebuf cvs tracestr 26 3 -1 roll putinterval
+        tracestr trshow
+	grestore
+    }
+    {pop}
+    ifelse} def
+
+% Example:
+% /tracing true def
+% (begin) trace
+% (end) trace

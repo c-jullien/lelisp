@@ -1,0 +1,267 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	cpkgc:dword
+	extrn	savea1:dword
+	extrn	savea2:dword
+	extrn	savea3:dword
+	extrn	savea4:dword
+	extrn	zstring000:dword
+	extrn	zvector:dword
+bimpur	label	dword
+bstack	dd	0
+estack	dd	0
+mstack	dd	0
+mstack1	dd	0
+mstack2	dd	0
+bcode	dd	0
+ccode	dd	0
+ecode	dd	0
+bheap	dd	0
+cheap	dd	0
+eheap	dd	0
+bnumb	dd	0
+cnumb	dd	0
+bfloat	dd	0
+cfloat	dd	0
+bvect	dd	0
+cvect	dd	0
+bstrg	dd	0
+cstrg	dd	0
+csymb	dd	0
+bvar	dd	0
+ccons	dd	0
+bold	dd	0
+eold	dd	0
+fnumb	dd	0
+ffloat	dd	0
+fstrg	dd	0
+fvect	dd	0
+fsymb	dd	0
+fcons	dd	0
+filiz	dd	0
+filit	dd	0
+filin	dd	0
+llban	dd	0
+nbsyst	dd	0
+maxchan	dd	0
+itstate	dd	0
+itcount	dd	0
+hashtab	dd	0
+tabsyst	dd	0
+cstsyste	dd	0
+	extrn	btbin:dword
+zvoid	dd	0
+pnmac1175	db	0
+	even
+zundef	dd	0
+pnmac1176	db	'_undef_'
+	even
+znewnil	dd	0
+pnmac1177	db	'nil'
+	even
+zt	dd	0
+pnmac1178	db	't'
+	even
+zsyspkgc	dd	0
+pnmac1179	db	'sys-package'
+	even
+pnmac1180	db	'itsoft'
+	even
+pnmac1181	db	'super-itsoft'
+	even
+pnmac1182	db	'system'
+	even
+zsysobslt	dd	0
+pnmac1183	db	'obsolete'
+	even
+zapollo	dd	0
+pnmac1184	db	'apollo'
+	even
+zvaxunix	dd	0
+pnmac1185	db	'vaxunix'
+	even
+zvaxvms	dd	0
+pnmac1186	db	'vaxvms'
+	even
+zcpm86	dd	0
+pnmac1187	db	'cpm86'
+	even
+zpcdos	dd	0
+pnmac1188	db	'msdos'
+	even
+zksun	dd	0
+pnmac1189	db	'sun'
+	even
+zhp9000	dd	0
+pnmac1190	db	'hp9300'
+	even
+zibmrt	dd	0
+pnmac1191	db	'ibmrt'
+	even
+zunigraph	dd	0
+pnmac1192	db	'cetia'
+	even
+zsllc	dd	0
+pnmac1193	db	'C'
+	even
+zlews	dd	0
+pnmac1194	db	'dpx1000'
+	even
+zsun4	dd	0
+pnmac1195	db	'sun4'
+	even
+zatari	dd	0
+pnmac1196	db	'atari'
+	even
+zmacaux	dd	0
+pnmac1197	db	'macaux'
+	even
+zdecstation	dd	0
+pnmac1198	db	'decstation'
+	even
+zsony	dd	0
+pnmac1199	db	'sony'
+	even
+zm88k	dd	0
+pnmac1200	db	'm88k'
+	even
+zsun386i	dd	0
+pnmac1201	db	'sun386i'
+	even
+zaix386	dd	0
+pnmac1202	db	'aix386'
+	even
+zix386	dd	0
+pnmac1203	db	'ix386'
+	even
+zsonyr3000	dd	0
+pnmac1204	db	'sonyr3000'
+	even
+zllmips	dd	0
+pnmac1205	db	'magnum'
+	even
+zrs6000	dd	0
+pnmac1206	db	'rs6000'
+	even
+zsco386	dd	0
+pnmac1207	db	'sco386'
+	even
+zos2	dd	0
+pnmac1208	db	'os2'
+	even
+zhp9400	dd	0
+pnmac1209	db	'hp9400'
+	even
+ziris4d	dd	0
+pnmac1210	db	'iris4d'
+	even
+zsvr4i386	dd	0
+pnmac1211	db	'svr4i386'
+	even
+zos220	dd	0
+pnmac1212	db	'os2_2'
+	even
+zchp9700	dd	0
+pnmac1213	db	'Chp9700'
+	even
+zcsun4	dd	0
+pnmac1214	db	'Csun4'
+	even
+zcetia88k	dd	0
+pnmac1215	db	'cetia88k'
+	even
+zsun4mbc	dd	0
+pnmac1216	db	'sun4mbc'
+	even
+zhp9700	dd	0
+pnmac1217	db	'hp9700'
+	even
+zcalphavms	dd	0
+pnmac1218	db	'Calphavms'
+	even
+znt386	dd	0
+pnmac1219	db	'nt386'
+	even
+znext68k	dd	0
+pnmac1220	db	'next68k'
+	even
+zsolaris	dd	0
+pnmac1221	db	'solaris'
+	even
+zcalphaosf	dd	0
+pnmac1222	db	'Calphaosf'
+	even
+zciris4d	dd	0
+pnmac1223	db	'Ciris4d'
+	even
+zalphaosf	dd	0
+pnmac1224	db	'alphaosf'
+	even
+zsolaris386	dd	0
+pnmac1225	db	'solaris386'
+	even
+zunixware386	dd	0
+pnmac1226	db	'unixware386'
+	even
+zirix5	dd	0
+pnmac1227	db	'irix5'
+	even
+zalphavms	dd	0
+pnmac1228	db	'alphavms'
+	even
+zlinux	dd	0
+pnmac1229	db	'linux'
+	even
+zwin95	dd	0
+pnmac1230	db	'win95'
+	even
+zcygwin	dd	0
+pnmac1231	db	'cygwin'
+	even
+zhp11	dd	0
+pnmac1232	db	'hp11'
+	even
+zwin32	dd	0
+pnmac1233	db	'win32'
+	even
+zwin64	dd	0
+pnmac1234	db	'win64'
+	even
+zx86macos	dd	0
+pnmac1235	db	'x86macos'
+	even
+zlinuxsparc	dd	0
+pnmac1236	db	'linuxsparc'
+	even
+zfreebsd	dd	0
+pnmac1237	db	'freebsd'
+	even
+znetbsd	dd	0
+pnmac1238	db	'netbsd'
+	even
+pnmac1239	db	'version'
+	even
+znaversion	dd	0
+pnmac1240	db	'15.26'
+	even
+pnmac1241	db	'end'
+	even
+pnmac1242	db	'at-end'
+	even
+pnmac1243	db	'herald'
+	even
+lab_m__1  db 'May Le-Lisp be with you. '
+	even
+zitsoft	dd	0
+zsupitsof	dd	0
+zllversion	dd	0
+zllsystem	dd	0
+zstop	dd	0
+zllatend	dd	0
+zherald	dd	0
+lab_m__4  db '; Le-Lisp (by INRIA) version 15.26  (18/Aug/2017)  ['
+	even
+lab_m__5  db ']'
+	even
+	extrn	econs:dword
+	extrn	crwork:dword
+_DATA	ends

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+find . -name '*.s'   -exec rm {} \;
+find . -name '*.asm' -exec rm {} \;
+find . -name '*.equ' -exec rm {} \;
+find . -name '*.dat' -exec rm {} \;
+find . -name '*.o'   -exec rm {} \;
+find . -name '*.obj' -exec rm {} \;

@@ -1,0 +1,31 @@
+;;; GELL 15.26: elaboration file for the module: dderiv
+;;;             translation done: "Thu Mar  11 93 15:59:11 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: dderiv.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'dderiv)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZdderiv" "Thu Mar  11 93 15:59:11 "
+
+'((check-dderiv . subr0) (meter-dderiv . subr0) (test-dderiv . subr1) (+dderiv . subr1) (-dderiv . subr1) (*dderiv . subr1) (/dderiv . subr1) (dderiv . subr1))
+
+#[(|+| (* (* 3 x x) (|+| (/ 0 3) (/ 1 x) (/ 1 x))) (* (* a x x) (|+| (/ 0 a) (/ 1 x) (/ 1 x))) (* (* b x) (|+| (/ 0 b) (/ 1 x))) 0) (dderiv '(|+| (* 3 x x) (* a x x) (* b x) 5)) check-value (count-calls-init) eval (count-calls-stop) t / dderiv list |+| |-| * x get funcall error (|+| (* 3 x x) (* a x x) (* b x) 5) check-dderiv #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-dderiv test-dderiv #:gell-resetfn:function-1 +dderiv -dderiv *dderiv /dderiv]
+)
+
+(defcsetfn 'check-dderiv "GZdderiv" 0)
+(defcsetfn 'meter-dderiv "GZdderiv" 1)
+(defcsetfn 'test-dderiv "GZdderiv" 2)
+(defcsetfn '+dderiv "GZdderiv" 3)
+(putprop '|+| '+dderiv 'dderiv)
+(defcsetfn '-dderiv "GZdderiv" 4)
+(putprop '|-| '-dderiv 'dderiv)
+(defcsetfn '*dderiv "GZdderiv" 5)
+(putprop '* '*dderiv 'dderiv)
+(defcsetfn '/dderiv "GZdderiv" 6)
+(putprop '/ '/dderiv 'dderiv)
+(defcsetfn 'dderiv "GZdderiv" 7)
+
+(defccheck '(funcall get list dderiv eval check-value))

@@ -1,0 +1,23 @@
+; The Le-Lisp Benchmarks (2) : tak
+
+defmodule    tak
+files       (tak)
+export      (check-tak meter-tak test-tak)
+import      (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-tak subr0 ())
+(meter-tak subr0 ())
+(test-tak subr1 ())
+)
+cpfunctions (
+(tak subr3)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+)

@@ -1,0 +1,128 @@
+
+##
+##  Le Makefile pour fabriquer lelispbin.o
+##
+###################################################################
+# les variables de Makefile
+
+# la premiere entree pour tout demarrer
+all: default
+
+SYSTEM		= solaris386
+HOST		= $(SYSTEM)
+CPU		= 386
+
+# Pour choisir son Lisp d'amorcage:
+BOOTLISP	= "/usr/ilog/lelisp/$(HOST)/complice -i 15"
+
+# le plombage adequat
+PLOMBE		= ../lltool
+
+# la version de flottants
+
+FLT		= 31
+
+BIN		= lisp$(FLT)
+O		= o$(FLT)
+
+CSYSTEM		= SOLARIS386
+
+ACCESSFILENAME	= -DACCESSFILENAME=\"ILOGACCESS\"
+
+##################################################################
+
+makeobj		= plombe.o
+
+preciousobj	= kern.o
+
+otherobj	= $(preciousobj) $(makeobj)
+
+obj		= \
+		$(O)/ll$(SYSTEM).o	\
+		$(O)/llinit.o		\
+		$(O)/toperr.o		\
+		$(O)/gc.o		\
+		$(O)/physio.o		\
+		$(O)/read.o  		\
+		$(O)/macroch.o		\
+		$(O)/print.o		\
+		$(O)/cntrl.o 		\
+		$(O)/carcdr.o		\
+		$(O)/symbs.o		\
+		$(O)/fntstd.o		\
+		$(O)/number.o		\
+		$(O)/specnb.o		\
+		$(O)/string.o		\
+		$(O)/chars.o		\
+		$(O)/fspecs.o		\
+		$(O)/eval.o		\
+		$(O)/extend.o		\
+		$(O)/bllsht.o
+
+sobj		= $(obj)
+
+##################################################################
+# les entre'es classiques
+
+default: le$(BIN)bin.o
+
+clean:
+	rm -f le$(BIN)bin.o
+	rm -f $(makeobj) $(extra_obj)
+
+.PRECIOUS= $(preciousobj)
+
+################################################################
+# lelispbin.o
+
+le$(BIN)bin.o: $(sobj) $(otherobj)
+	@$(MAKE) $@ \
+		USERRFILE=$@ \
+		USERRFILES="$(sobj) $(otherobj)"
+
+################################################################
+# les fichiers C et assembleurs divers
+
+plombe.o: $(PLOMBE)/plombe.c
+	@gcc -m32 -c -O2 $(PLOMBE)/plombe.c -o plombe.o
+
+###############################################################
+# to make .o files from .llm3 files
+
+MAKELLM3=makellm3
+
+$(sobj):
+	@$(MAKE) -f $(MAKELLM3) $@ \
+		FLT=$(FLT) \
+		HOST=$(HOST)
+
+kern.o:
+	(cd ../bignum/; \
+	 rm -f o/*.o; \
+	 $(MAKE) CC="gcc -m32 -w -DNOMEM" o/KerN.o; \
+	 cd l; \
+	 rm -f o/*.o; \
+	 $(MAKE) CC="gcc -m32 -DNOMEM" LDFLAGS="-r -melf_i386" SYSTEM=$(SYSTEM); \
+	 cp o/kern.o ../../$(SYSTEM))
+
+# Use generated .s
+bootstrap:
+	./newdir > /dev/null
+	-rm -f ../bignum/o/*.o *.o o/*.o o31/*.o o64/*o
+	touch s31/*.s s64/*.s
+	$(MAKE) -f Makeport kern.o
+	$(MAKE) -f Makeport FLT=31
+	$(MAKE) -f Makeport FLT=64
+	$(MAKE) allbin cmplc++
+	$(MAKE)
+
+# Build from LLM3 (i.e. generate .s), requires a working lelispbin.
+world:
+	./newdir > /dev/null
+	-rm -f ../bignum/o/*.o *.o o/*.o o31/*.o o64/*o
+	$(MAKE) -f Makeport kern.o
+	$(MAKE) -f makellm3 llm3expand
+	$(MAKE) -f Makeport FLT=31
+	$(MAKE) -f Makeport FLT=64
+	$(MAKE) allbin cmplc++
+	$(MAKE)

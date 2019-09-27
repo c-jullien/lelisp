@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: fntstd
+;;;             translation done: "Wed June 30 93 17:34:40 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: fntstd.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'fntstd)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZfntstd" "Wed June 30 93 17:34:40 "
+
+'((true . nsubr) (false . nsubr) (null . subr1) (not . subr1) (atom . subr1) (atomp . subr1) (symbolp . subr1) (variablep . subr1) (constantp . subr1) (vectorp . subr1) (stringp . subr1) (listp . subr1) (nlistp . subr1) (consp . subr1) (boundp . subr1) (eq . subr2) (neq . subr2) (nequal . subr2) (equal . subr2) (memq . subr2) (member . subr2) (tailp . subr2) (last . subr1) (nth . subr2) (nthcdr . subr2) (length . subr1) (cons . subr2) (xcons . subr2) (ncons . subr1) (mcons . nsubr) (list . nsubr) (evlis . subr1) (kwote . subr1) (makelist . subr2) (reverse . subr1) (append1 . subr2) (append . nsubr) (remq . subr2) (remove . subr2) (copylist . subr1) (copy . subr1) (firstn . subr2) (lastn . subr2) (subst . subr3) (oblist . nsubr) (boblist . nsubr) (rplaca . subr2) (rplacd . subr2) (rplac . subr3) (displace . subr2) (placdl . subr2) (setq . fsubr) (set . subr2) (setqq . fsubr) (psetq . fsubr) (deset . subr2) (desetq . fsubr) (cirlist . nsubr) (nreconc . subr2) (nsubst . subr3) (delq . subr2) (delete . subr2) (nreverse . subr1) (nextl . fsubr) (newl . fsubr) (newr . fsubr) (nconc1 . subr2) (nconc . nsubr) (acons . subr3) (pairlis . subr3) (assq . subr2) (assoc . subr2) (cassq . subr2) (cassoc . subr2) (rassq . subr2) (rassoc . subr2) (sublis . subr2))
+
+#[true #:gell-resetfn:function-name #:gell-resetfn:function-n false null #:gell-resetfn:function-1 not atom atomp symbolp variablep constantp vectorp stringp listp nlistp consp boundp eq #:gell-resetfn:function-2 neq nequal equal memq member tailp last nth nthcdr length cons xcons ncons mcons list evlis kwote makelist reverse append1 append remq remove copylist copy firstn lastn subst #:gell-resetfn:function-3 oblist boblist rplaca rplacd rplac displace placdl setq #:gell-resetfn:function-f set setqq psetq deset desetq cirlist nreconc nsubst delq delete nreverse nextl newl newr nconc1 nconc acons pairlis assq assoc cassq cassoc rassq rassoc sublis]
+)
+
+
+(defccheck '())

@@ -1,0 +1,72 @@
+DEFMODULE rw
+FILES ( rw3.ll )
+
+EXPORT
+( 
+  rw-open
+  rw-close
+  rw-eofp
+  rw-errorp
+  rw-flush
+  rw-read-char
+  rw-unread-char
+  rw-read-buf
+  rw-read-line
+  rw-read-word
+  rw-write-char
+  rw-write-buf
+  rw-write-line
+  rw-write-word
+  rw-get-page
+  rw-get-offset
+  rw-seek
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(rw-open subr2 ())
+(rw-close subr1 ())
+(rw-eofp subr1 ())
+(rw-errorp subr1 ())
+(rw-flush subr1 ())
+(rw-read-char subr1 ())
+(rw-unread-char subr2 ())
+(rw-read-buf subr3 ())
+(rw-read-line subr3 ())
+(rw-read-word subr2 ())
+(rw-write-char subr2 ())
+(rw-write-buf subr3 ())
+(rw-write-line subr3 ())
+(rw-write-word subr3 ())
+(rw-get-page subr1 ())
+(rw-get-offset subr1 ())
+(rw-seek nsubr ())
+)
+cpfunctions (
+(_rw_open subr2)
+(_rw_close subr1)
+(_rw_eofp subr1)
+(_rw_errorp subr1)
+(_rw_flush subr1)
+(_rw_read_char subr1)
+(_rw_unread_char subr2)
+(_rw_read_buf subr3)
+(_rw_read_line subr3)
+(_rw_read_word subr2)
+(_rw_write_char subr2)
+(_rw_write_buf subr3)
+(_rw_write_line subr3)
+(_rw_write_word subr3)
+(_rw_get_page subr1)
+(_rw_get_offset subr1)
+(_rw_seek nsubr)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '*seek-cur* 't '#:complice:globalvar)
+)((putprop '*seek-end* 't '#:complice:globalvar)
+)((putprop '*seek-set* 't '#:complice:globalvar)
+)((putprop 'errbpa 't '#:complice:globalvar)
+))

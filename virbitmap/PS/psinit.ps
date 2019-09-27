@@ -1,0 +1,23 @@
+/LLdict dup where
+  {exch get begin}
+  {
+   250 dict dup 3 1 roll def begin
+   /BD{bind def}bind def/LD{load def}BD
+   /M/moveto LD/m/rmoveto LD/L/lineto LD/l/rlineto LD
+   /x/exch LD
+   /R{newpath moveto dup neg 0 x l x 0 l 0 x l closepath}BD
+   /C/currentgray LD/S/setgray LD/c/currentrgbcolor LD/s/setrgbcolor LD
+   /F/eofill LD/f/stroke LD/N/newpath LD/G/gsave LD/g/grestore LD
+   /iclip {systemdict /initclip get exec
+     newpath clipllx cliplly moveto clipllx clipury lineto
+     clipurx clipury lineto clipurx cliplly lineto clip}BD
+   /I{rootmtrx setmatrix iclip}BD
+          %% font usage
+   /vshow {{pop pop currentpoint round x round x moveto}x kshow}BD
+   /fshow {fix x 0 x ashow}BD
+   /lf{findfont x scalefont setfont(A)stringwidth pop dup round x sub
+        /fix x def}BD
+   /colors 256 array def
+  }
+  ifelse
+  colors 0[(\0\0\0)0]256{3 copy put x 1 add x}bind repeat pop pop pop

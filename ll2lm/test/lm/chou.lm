@@ -1,0 +1,31 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule chou
+
+files (
+|chou.ll|
+)
+
+import (
+
+; ;;; Imports which seem necessary
+view
+fur
+fee
+image
+application
+)
+
+export (
+
+; ;;; Functions unused unless exported
+(structure #:image:rectangle:application:chou)
+(structure #:s-fee2:chou)
+)
+
+cpenv (
+((setq #:system:defstruct-all-access-flag t)
+(defstruct #:s-fee2:chou)
+)((setq #:system:defstruct-all-access-flag t)
+(defstruct #:image:rectangle:application:chou)
+))

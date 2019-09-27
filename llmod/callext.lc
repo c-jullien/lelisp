@@ -1,0 +1,21 @@
+defmodule callext
+
+files (callext)
+export (
+defextern
+cload
+defextern-cache
+getinlib
+calllibextern
+load-shared-lib
+unload-shared-lib
+loaded-shared-libs
+; et pour optimiser 
+buildextern
+#:system:cached-getglobal
+)
+import (
+sort
+)
+include
+()

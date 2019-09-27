@@ -1,0 +1,155 @@
+
+projectname
+ll2lm
+modulesimport
+((syserror)
+ (parse)
+ (printlm)
+ (diagnostic)
+ (readlm)
+ (kernellm)
+ (rtprint)
+ (rtmsg))
+modulesexport
+((syserror #:crunch:load-modules)
+ (parse #:llmodule:get-all-def-in-files
+        defdynamic
+        #:llmodule:defdynamicp
+        #:llmodule:add-dynamic
+        defdefiner
+        #:llmodule:definerp)
+ (printlm update-desc)
+ (diagnostic
+     (structure #:llmodule:analyze)
+     (structure diagnostic)
+     (structure whyi)
+     #:llmodule:analyze:make
+     #:llmodule:analyze:allfnt
+     #:llmodule:analyze:allsynd
+     #:llmodule:analyze:allexpd
+     #:llmodule:analyze:allextd
+     #:llmodule:analyze:allexti
+     #:llmodule:analyze:allother
+     #:llmodule:analyze:defd-f
+     #:llmodule:analyze:alldyn
+     #:llmodule:analyze:allunknow
+     #:llmodule:analyze:used-f
+     #:llmodule:analyze:allcpenv
+     #:llmodule:analyze:prin
+     #:diagnostic:make
+     #:diagnostic:module-name
+     #:diagnostic:necessary-imports
+     #:diagnostic:excess-imports
+     #:diagnostic:import-rewrite-p
+     #:diagnostic:why-to-import
+     #:diagnostic:unknow-things
+     #:diagnostic:all-exports
+     #:diagnostic:localy-necessary-exports
+     #:diagnostic:extern-necessary-exports
+     #:diagnostic:dynamic-necessary-exports
+     #:diagnostic:excess-exports
+     #:diagnostic:internal-functions
+     #:diagnostic:export-rewrite-p
+     #:diagnostic:other-definitions
+     #:diagnostic:exported-cpenv
+     #:diagnostic:cpenv-rewrite-p
+     #:diagnostic:prin
+     #:diagnostic:set-diagnostic-from-analyze
+     #:diagnostic:modules-needed
+     explain-diagnostic
+     #:whyi:make
+     #:whyi:mod
+     #:whyi:f
+     #:whyi:prin
+     who-calls)
+ (readlm read-llmodule
+         #:llmodule:write-to-file
+         #:crunch:loadmodule
+         #:crunch:openi
+         #:crunch:last-file-read)
+ (kernellm
+     (structure llmodule)
+     #:llmodule:file
+     #:llmodule:name
+     #:llmodule:files
+     #:llmodule:include
+     #:llmodule:export
+     #:llmodule:import
+     #:llmodule:cpexport
+     #:llmodule:cpimport
+     #:llmodule:cpenv
+     #:llmodule:filesinfo
+     #:llmodule:definedfunctions
+     #:llmodule:usedfunctions
+     #:llmodule:definedabbrevs
+     #:llmodule:usedabbrevs
+     #:llmodule:use-of
+     #:llmodule:sillyfunctions
+     makellmodule
+     #:llmodule:add-exports
+     #:llmodule:remove-exports
+     #:llmodule:remove-import
+     #:llmodule:pretty
+     #:llmodule:merge-llmodules
+     simplify-list)
+ (rtprint #:crunch:print
+          #:crunch:printerror
+          #:crunch:pprint
+          #:crunch:prin
+          #:crunch:printf
+          #:crunch:prinf
+          #:crunch:prinflush
+          #:crunch:terpri
+          #:cruncherr:printerror
+          #:cruncherr:print
+          #:cruncherr:pprint
+          #:cruncherr:terpri
+          #:cruncherr:warn
+          #:cruncherr:prinflush)
+ (rtmsg #:crunch:warning #:crunch:error #:crunch:advise))
+modulesotherdef
+((syserror unknow-abbrev)
+ (diagnostic whyi diagnostic analyze)
+ (kernellm llmodule))
+modulesinternal
+((syserror
+    #:crunch:load-cpenv
+    #:crunch:load-cpenvs
+    #:crunch:unknow-thing-p
+    #:crunch:add-unknow-thing
+    #:crunch:add-import
+    #:crunch:errudf:syserror
+    #:crunch:errnotanabbrev:syserror
+    #:crunch:syserror)
+ (parse #:llmodule:add-definer
+        #:llmodule:add-defdynamic
+        #:llmodule:search-module
+        #:llmodule:parse-std-function?
+        #:llmodule:parse-anonymous-exp
+        #:llmodule:parse-call
+        #:llmodule:parse-exp
+        #:llmodule:parse-progn
+        #:llmodule:parse-lambda
+        #:llmodule:parse
+        #:llmodule:get-exportable-aux
+        #:llmodule:get-exportable
+        #:llmodule:cp-read-files2
+        #:llmodule:cp-read-files1
+        #:llmodule:quoted-symbol-p
+        #:llmodule:macroexpand)
+ (printlm #:diagnostic:print-rest-of-keys
+          #:diagnostic:printdefmodule
+          #:diagnostic:format-export
+          #:diagnostic:set-def)
+ (diagnostic #:diagnostic:not-necessary-p why-to-import pretty-import)
+ (readlm #:crunch:find-channel
+         #:crunch:readdefmodule
+         #:llmodule:readinclude
+         #:llmodule:readdefmodule
+         #:llmodule:readmodule)
+ (kernellm
+     #:llmodule:modulename
+     #:llmodule:print-comment
+     llmodule
+     #:llmodule:make))
+

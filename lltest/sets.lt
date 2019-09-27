@@ -1,0 +1,186 @@
+        (test-serie "Tests des fonctions ensemblistes" ())
+
+
+; suppose que rien n'est charge'.
+
+(subsetp 'a '(b))			(errnla subsetp a)
+(subsetp '(a) 'b)			(errnla subsetp b)
+(subsetp () ())				t
+(subsetp '(a) '(a b c))			t
+(subsetp '(a) '(c b a))			t
+(subsetp '(a) '(b c d))			()
+(subsetp '(a b c) '(g b a h c e))	t
+(subsetp '(a b c) '(p q b c))		()
+(subsetp '("asd") '("ads" "asd"))	()
+(subsetp '("asd") '("ads" "asd") 'equal)
+					t
+
+
+(set-equal 'a '(b))			(errnla set-equal a)
+(set-equal '(a) 'b)			(errnla set-equal b)
+(set-equal '(a) '(b))			()
+(set-equal '("sda") '("sda"))		()
+(set-equal '("sda") '("sda") 'equal)	t
+(set-equal '(b n q a) '(a b n q))	t
+(set-equal '(1 4 6 2 sd q) '(q 4 6 f 2))
+					()
+(set-equal '((a b) (c d)) '((c d) (a b)))
+					()
+(set-equal '((a b) (c d)) '((c d) (a b)) 'equal)
+					t
+(set-equal '((a b) (c d)) '((a b) (d c)))
+					()
+(set-equal '((a b) (c d)) '((a b) (d c)) 'equal)
+					()
+(set-equal '((a b) (c d)) '((a b) (d c)) 'set-equal)
+					t
+
+(adjoin 'a)				(errwna adjoin 1)
+(adjoin 'a 'b 'c 'd)			(errwna adjoin 4)
+(adjoin 'a 'b)				(errnla adjoin b)
+(set-equal (adjoin 'a '(b c)) '(a b c))	t
+(set-equal (adjoin 'a '(a b)) '(a b))	t
+(set-equal (adjoin 'a '(b a)) '(a b))	t
+(set-equal (adjoin 'a '(b a c)) '(a b c))
+					t
+(adjoin "abc" '("dw" "abc"))		("abc" "dw" "abc")
+(adjoin "abc" '("dw" "abc") 'equal)	("dw" "abc")
+
+
+(union 'a '(b))				(errnla union a)
+(union () 'b)				(errnla union b)
+(union () '(a))				(a)
+(union '(a) ())				(a)
+(set-equal (union '(a b c d) '(e g d a f)) '(a b c d e f g))
+					t
+(set-equal (union '(a b c d) '(a e g d f)) '(a b c d e f g) 'eq)
+					t
+(set-equal (union '(a b c) '(c d)) '(a b c d))
+					t
+(union '(a) '(a) 'eq)			(a)
+(union '("das") '("das"))		("das" "das")
+(union '("das") '("das") 'eqstring)	("das")
+(union '("das") '("das") 'equal)	("das")
+(set-equal (union '("abc" "def") '("def" "xx") 'equal) '("abc" "def" "xx") 'equal)
+					t
+
+
+(nunion 'a '(b))			(errnla nunion a)
+(nunion () 'b)				(errnla nunion b)
+(nunion () '(a))			(a)
+(nunion '(a) ())			(a)
+(set-equal (nunion '(a b c d) '(e g d a f)) '(a b c d e f g))
+					t
+(set-equal (nunion '(a b c d) '(a e g d f)) '(a b c d e f g) 'eq)
+					t
+(set-equal (nunion '(a b c) '(c d)) '(a b c d))
+					t
+(nunion '(a) '(a) 'eq)			(a)
+(nunion '("das") '("das"))		("das" "das")
+(nunion '("das") '("das") 'eqstring)	("das")
+(nunion '("das") '("das") 'equal)	("das")
+(set-equal (nunion '("abc" "def") '("def" "xx") 'equal) '("abc" "def" "xx") 'equal)
+					t
+
+
+(intersection 'a ())			(errnla intersection a)
+(intersection () 'b)			(errnla intersection b)
+(intersection '(a b c d) '(f g a e))	(a)
+(set-equal (intersection '(a b c d e) '(g a f q c)) '(a c))
+					t
+(intersection '("abc") '("abc"))	()
+(intersection '("abc") '("abc") 'equal)
+					("abc")
+
+
+(nintersection 'a ())			(errnla nintersection a)
+(nintersection () 'b)			(errnla nintersection b)
+(nintersection '(a b c d) '(f g a e))	(a)
+(set-equal (nintersection '(a b c d e) '(g a f q c)) '(a c))
+					t
+(setq foo '(a b c d e))			(a b c d e)
+(nintersection '(d e k q) foo)		(d e)
+foo					(a b c d e)
+(nintersection '("abc") '("abc"))	()
+(nintersection '("abc") '("abc") 'equal)
+					("abc")
+
+(set-difference 'a ())			(errnla set-difference a)
+(set-difference () 'b)			(errnla set-difference b)
+(set-difference '(a b c d) '(f d a e b))
+					(c)
+(set-equal (set-difference '(a f e k) '(b q j e)) '(a f k))
+					t
+(set-difference '("abc") '("abc"))	("abc")
+(set-difference '("abc") '("abc") 'equal)
+					()
+
+
+(nset-difference 'a ())			(errnla nset-difference a)
+(nset-difference () 'b)			(errnla nset-difference b)
+(nset-difference '(a b c d) '(f d a e b))
+					(c)
+(set-equal (nset-difference '(a f e k) '(b q j e)) '(a f k))
+					t
+(nset-difference '("abc") '("abc"))	("abc")
+(nset-difference '("abc") '("abc") 'equal)
+					()
+
+
+(set-exclusive-or 'a ())		(errnla set-exclusive-or a)
+(set-exclusive-or () 'b)		(errnla set-exclusive-or b)
+(set-exclusive-or '(a b c d) '(d a c))	(b)
+(set-equal (set-exclusive-or '(3 s 2 3.5) '(3.50 8 b s)) '(b 8 3 2))
+					t
+(set-equal (set-exclusive-or '(a b c d) '(e h a q c)) '(b d e h q))
+					t
+(set-exclusive-or '("abc") '("abc"))	("abc" "abc")
+(set-exclusive-or '("abc") '("abc") 'equal)
+					()
+
+
+(nset-exclusive-or 'a ())		(errnla nset-exclusive-or a)
+(nset-exclusive-or () 'b)		(errnla nset-exclusive-or b)
+(nset-exclusive-or '(a b c d) '(d a c))	(b)
+(set-equal (nset-exclusive-or '(3 s 2 3.5) '(3.50 8 b s)) '(b 8 3 2))
+					t
+(set-equal (nset-exclusive-or '(a b c d) '(e h a q c)) '(b d e h q))
+					t
+(nset-exclusive-or '("abc") '("abc"))	("abc" "abc")
+(nset-exclusive-or '("abc") '("abc") 'equal)
+					()
+
+
+(transitive-closure 'false 'a)		(errnla transitive-closure a)
+(defun test1 (elt)
+  (cassq elt '((b a f c) (d e b) (c q))))
+					test1
+(set-equal (transitive-closure 'test1 '(a)) '(a))
+					t
+(set-equal (transitive-closure 'test1 '(b)) '(a b f c q))
+					t
+(set-equal (transitive-closure 'test1 '(d g)) '(d e b g a f c q))
+					t
+(set-equal (transitive-closure 'test1 '(d g)) '(d e b g a c q))
+					()
+(defun test2 (s) (list (substring s 0 (sub1 (slen s)))))
+					test2
+(set-equal (transitive-closure 'test2 '("bonjour") 'equal)
+      '("" "b" "bo" "bon" "bonj" "bonjo" "bonjou" "bonjour")
+      'equal)
+					t
+(set-equal (transitive-closure 'test2 '("hip" "hop") 'equal) '("ho" "hop" "" "h" "hi" "hip") 'equal)
+					t
+
+(power-set ())                          (())
+(set-equal (power-set '(a b c)) '(() (c) (b) (b c) (a) (a c) (a b) (a b c))
+	   'set-equal)
+                                        t
+
+(set-equal (cartesian-product '(a b) '(c d))
+	   '((a . c) (a . d) (b . c) (b . d))
+	   'equal)
+                                        t
+
+        (test-serie "Fin des Tests des fonctions ensemblistes" ())
+()                                      ()

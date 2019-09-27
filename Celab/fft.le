@@ -1,0 +1,27 @@
+;;; GELL 15.26: elaboration file for the module: fft
+;;;             translation done: "Thu Mar  11 93 15:59:30 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: fft.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'fft)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZfft" "Thu Mar  11 93 15:59:30 "
+
+'((check-fft . subr0) (meter-fft . subr0) (test-fft . subr1) (fft-test . subr0))
+
+#[t (test-fft 1) check-value (count-calls-init) eval (count-calls-stop) "error ... array size not a power of two." prin read terpri 1. 0. pi float cos sin *im* *re* verif ("fft2.ll") load "Ces resultats sont a` comparer avec la Re'fe'rence ci-apre`s:" print "End of DO: ur=-1., ui=1.509958e-07" "End of DO: ur=7.549789e-08, ui=1." "End of DO: ur=.7071068, ui=.7071067" "End of DO: ur=.9238795, ui=.3826834" "End of DO: ur=.9807853, ui=.1950903" "End of DO: ur=.9951847, ui=.09801713" "End of DO: ur=.9987954, ui=.04906767" "End of DO: ur=.9996988, ui=.02454123" "End of DO: ur=.9999247, ui=.01227154" "End of DO: ur=.9999812, ui=.006135884" check-fft #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-fft test-fft #:gell-resetfn:function-1 fft-test]
+)
+
+(defcsetfn 'check-fft "GZfft" 0)
+(defcsetfn 'meter-fft "GZfft" 1)
+(defcsetfn 'test-fft "GZfft" 2)
+(defvar *re* (makevector 1025 0.))
+(defvar *im* (makevector 1025 0.))
+(defvar pi 3.14159)
+(if (not (boundp 'verif)) (progn (defvar verif ())))
+(defcsetfn 'fft-test "GZfft" 3)
+
+(defccheck '(print load sin cos float terpri read prin eval check-value))

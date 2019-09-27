@@ -1,0 +1,16 @@
+defmodule
+abbrev
+files (abbrev)
+export (
+defabbrev
+put-abbrev
+rem-abbrev
+get-abbrev
+abbrevp
+has-an-abbrev
+#:symbol:prin
+)
+import
+()
+include
+()

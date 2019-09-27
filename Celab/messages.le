@@ -1,0 +1,59 @@
+;;; GELL 15.26: elaboration file for the module: messages
+;;;             translation done: "Wed June 16 93 18:00:27 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: messages.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'messages)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZmessages" "Wed June 16 93 18:00:27 "
+
+'((record-language . subr1) (remove-language . subr1) (#:remove-language:g105 . subr1) (message-languages . subr0) (get-all-messages . subr1) (#:get-all-messages:g106 . subr1) (current-language . nsubr) (default-language . nsubr) (get-message . subr1) (get-message-p . subr1) (put-message . subr3) (#:messages:put-message . nsubr) (remove-message . subr2) (defmessage . dmsubr) (#:sharp:m . subr0))
+
+#[#:messages:list-of-languages error-wrong-language record-language error-not-recorded-language remove-language #:messages:working-language getprop remprop #:remove-language:g105 mapoblist #:messages:list-of-notremovable-language delq copy get-all-messages list #:get-all-messages:g106 mapcoblist #:messages:current-language french t #:system:foreign-language #:system:fatal-errors string current-language errwna #:messages:default-language default-language error-wrong-message get-message symbolp put-message #:messages:put-message #:llcp:errwna putprop error-not-string-message remove-message quote ('defmessage) mcons errsxt defmessage append progn read |#M| #:gell-resetfn:function-name #:gell-resetfn:function-1 message-languages #:gell-resetfn:function-0 #:gell-resetfn:function-n get-message-p #:gell-resetfn:function-3 #:gell-resetfn:function-2 #:sharp:m]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'messages)))
+(defvar #:sys-package:colon 'messages)
+(add-feature 'messages)
+(defvar #:messages:list-of-languages ())
+(defvar #:messages:current-language ())
+(defvar #:messages:default-language 'french)
+(defvar #:messages:list-of-notremovable-language '(french english))
+(defvar #:messages:working-language ())
+(defcsetfn 'record-language "GZmessages" 0)
+(defcsetfn 'remove-language "GZmessages" 1)
+(defcsetfn '#:remove-language:g105 "GZmessages" 2)
+(defcsetfn 'message-languages "GZmessages" 3)
+(defcsetfn 'get-all-messages "GZmessages" 4)
+(defcsetfn '#:get-all-messages:g106 "GZmessages" 5)
+(defvar #:system:fatal-errors (when (boundp '#:system:fatal-errors) #:system:fatal-errors))
+(defcsetfn 'current-language "GZmessages" 6)
+(defcsetfn 'default-language "GZmessages" 7)
+(defcsetfn 'get-message "GZmessages" 8)
+(defcsetfn 'get-message-p "GZmessages" 9)
+(defcsetfn 'put-message "GZmessages" 10)
+(defcsetfn '#:messages:put-message "GZmessages" 11)
+(defcsetfn 'remove-message "GZmessages" 12)
+(defcsetfn 'defmessage "GZmessages" 13)
+(defcsetfn '#:sharp:m "GZmessages" 14)
+(synonym (symbol 'sharp "M") '#:sharp:m)
+(record-language 'french)
+(record-language 'english)
+(if #:system:foreign-language (current-language 'english) (current-language 'french))
+(#:messages:put-message 'error-wrong-language 'french '"l'argument n'est pas un nom de langue" 'defmessage)
+(#:messages:put-message 'error-wrong-language 'english '"not a language name" 'defmessage)
+'error-wrong-language
+(#:messages:put-message 'error-not-recorded-language 'french '"l'argument n'est pas une langue enregistre'e" 'defmessage)
+(#:messages:put-message 'error-not-recorded-language 'english '"not a recorded language" 'defmessage)
+'error-not-recorded-language
+(#:messages:put-message 'error-wrong-message 'french '"l'argument n'est pas un nom de message" 'defmessage)
+(#:messages:put-message 'error-wrong-message 'english '"not a message name" 'defmessage)
+'error-wrong-message
+(#:messages:put-message 'error-not-string-message 'french '"l'argument n'est pas une chai^ne de message" 'defmessage)
+(#:messages:put-message 'error-not-string-message 'english '"not a message string" 'defmessage)
+'error-not-string-message
+
+(defccheck '(read append mcons putprop #:llcp:errwna #:messages:put-message symbolp string mapcoblist list copy delq mapoblist remprop getprop))

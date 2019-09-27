@@ -1,0 +1,46 @@
+# script shell de fabrication de l'image me'moire contenant
+# le macro expanseur LLM3 vers la machine MC680x0 en utilisant
+# la syntaxe propose'e par Motorola.
+
+## Variables du script shell :
+
+## BOOTLISP : le nom du Le-Lisp de Boostrap (cf les fichiers
+#  llexpand, makefile). Ce syste`me Le-Lisp d'amorcage est, en ge'ne'ral, 
+# la version publique (souvent: /usr/local/bin/lelisp), mais l'option
+# -bootlisp de faire.llexpand permet de le modifier
+# Utiliser le Lisp en cours de construction comme Lisp d'amorcage est
+# une de'marche tre`s risque'e car il est si facile de couper la branche
+# sur laquelle on est assis ...
+
+## SYSTEM : le nom du syste`me a base de 680x0
+# par de'faut, c'est sun, mais l'option -system de faire.llexpand permet
+# de le modifier.
+
+## Valeurs par de'faut:
+BOOTLISP=/usr/local/bin/lelisp
+# On peut aussi choisir:
+# BOOTLISP="/usr/local/bin/complice -i"
+
+SYSTEM=sun
+
+while test x$1 != x
+do
+case $1 in
+-bootl*) BOOTLISP=$2 ;;
+-system) SYSTEM=$2;;
+esac
+shift; shift
+done
+
+$BOOTLISP <<EOF
+(libloadfile "../lltool/llm3.ll" t)   ; de'finition des instructions LLM3
+(libloadfile "../lltool/expand.ll" t) ; expanseur des fichiers LLM3
+(libloadfile "../lltool/macllm3.ll" t); de'finition des macros LLM3
+(loadfile "mac68k.ll" t)         ; de'finition des traductions LLM3 -> MC680x0
+(compile-all-in-core)                 ; c'est nettement plus rapide
+
+(progn (save-core "../$SYSTEM/llcore/expd68k.core")
+        "L'expanseur LLM3 -> MC 680x0 syntaxe MOTOROLA")
+(end)
+EOF
+

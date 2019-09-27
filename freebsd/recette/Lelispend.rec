@@ -1,0 +1,5 @@
+
+cd ..
+make lelispbin
+../lltest/testend.sh
+

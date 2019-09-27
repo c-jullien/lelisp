@@ -1,0 +1,114 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule virmacros
+
+files (
+|virmacros.ll|
+)
+
+import ()
+
+export (
+
+; ;;; Exports unless unused
+#:graph-env:assert
+#:window:assert-same-display
+#:window:assert
+#:fill-mode:assert
+#:stipple:assert
+#:bitmap:assert-in
+#:bitmap:assert-same-display
+#:bitmap:assert
+#:color:assert-mutable
+#:color:assert
+#:menu:assert
+#:display:assert-current
+#:display:assert
+#:line-style:assert
+#:font:assert
+#:cursor:assert
+#:pattern:assert
+#:mode:assert
+#:vector:assert
+#:symbol:assert
+#:cons:assert
+#:string:assert
+#:number:assert
+#:fix:assert
+#:display:define-default-method
+#:display:define-graph-env
+#:display:define-string-func
+#:display:define-0
+#:display:define-n
+#:display:define-draw-no-default
+#:display:define-draw
+defconstant
+#:display:internal-current-display
+
+; ;;; Exports required by others modules
+#:display:defun
+)
+
+cpenv (
+((unless (getdef 'defconstant) (defmacro defconstant (a b) (list 'defvar a b))
+)
+)((defun #:display:good-parms (parms) (ifn (consp parms) parms (cons (if (
+consp (car parms)) (caar parms) (car parms)) (#:display:good-parms (cdr parms)
+))))
+)((defmacro #:display:defun (func parms . body) (let ((good-parms (#:display:
+good-parms parms))) (mcons 'defun func good-parms (append (mapcan (lambda (
+parm) (when (consp parm) (list (list (symbol (cadr parm) 'assert) (list 'quote
+func) (car parm))))) parms) body))))
+)((defmacro #:display:define-draw (func parms) (let ((good-parms (#:display:
+good-parms parms))) (list 'progn (list '#:display:defun func parms (list 'let 
+'((display (#:display:internal-current-display))) (mcons '#:display:
+assert-current (list 'quote func) '(display)) (list 'when '(#:display:window 
+display) (list 'when '#:display:dumpdevice (mcons 'funcall (list 'getfn ''#:
+display:dump (list 'quote func)) 'display '(#:display:graph-env display) 
+good-parms)) (mcons 'send (list 'quote func) 'display '(#:display:graph-env 
+display) good-parms)))) (list '#:display:define-default-method func))))
+(defmacro #:display:define-draw-no-default (func parms) (let ((good-parms (#:
+display:good-parms parms))) (list 'progn (list '#:display:defun func parms (
+list 'let '((display (#:display:internal-current-display))) (mcons '#:display:
+assert-current (list 'quote func) '(display)) (list 'when '(#:display:window 
+display) (list 'when '#:display:dumpdevice (mcons 'funcall (list 'getfn ''#:
+display:dump (list 'quote func)) 'display '(#:display:graph-env display) 
+good-parms)) (mcons 'send (list 'quote func) 'display '(#:display:graph-env 
+display) good-parms)))))))
+)((defmacro #:display:define-n (func . func-to-call) (list 'progn (list 'defun
+func '&nobind (list 'let '((display (if (eq (arg) 1) (arg 0) (#:display:
+internal-current-display)))) (mcons '#:display:assert (list 'quote func) '(
+display)) (if func-to-call (cons (car func-to-call) '(display)) (mcons 'send (
+list 'quote func) '(display))))) (list '#:display:define-default-method func))
+)
+)((defmacro #:display:define-0 (func graph-env? . default) (list 'progn (list 
+'defun func () (list 'let '((display (#:display:internal-current-display))) (
+mcons '#:display:assert-current (list 'quote func) '(display)) (mcons 'send (
+list 'quote func) 'display (when graph-env? '((#:display:graph-env display))))
+)) (mcons '#:display:define-default-method func default)))
+)((defmacro #:display:define-string-func (func) (list 'progn (list 'defun func
+'(s start length) (list 'let '((display (#:display:internal-current-display)))
+(mcons '#:display:assert-current (list 'quote func) '(display)) (mcons 'send (
+list 'quote func) '(display (#:display:graph-env display) s start length)))) (
+list '#:display:define-default-method func)))
+)((defmacro #:display:define-graph-env (name . type) (let ((func-cur (concat '
+current- name)) (func (concat 'graph-env- name)) (accessor (symbol 'graph-env 
+name))) (list 'progn (list 'defun func '(graph-env . x) (mcons '#:graph-env:
+assert (list 'quote func) '(graph-env)) (list 'let '((display (#:graph-env:
+display graph-env)) num) (list 'ifn 'x (cons accessor '(graph-env)) '(setq num
+(car x)) (mcons (symbol (or (car type) name) 'assert) (list 'quote func) '(num
+)) (mcons 'send (list 'quote func-cur) '(display graph-env num)) (cons 
+accessor '(graph-env num))))) (list 'defun func-cur '&nobind (list 'let '((arg
+(arg)) (new-x (arg 0)) (display (#:display:internal-current-display)) 
+graph-env old-x) (list 'when '(gt arg 1) (mcons 'error (list 'quote func-cur) 
+'('errwna arg))) (mcons '#:display:assert-current (list 'quote func-cur) '(
+display)) (list 'setq 'graph-env '(#:display:graph-env display) 'old-x (cons 
+accessor '(graph-env))) (list 'if '(or (eq 0 arg) (eq old-x new-x)) 'old-x (
+mcons (symbol (or (car type) name) 'assert) (list 'quote func-cur) '(new-x)) (
+mcons 'send (list 'quote func-cur) '(display graph-env new-x)) (cons accessor 
+'(graph-env new-x))))) (list '#:display:define-default-method func) (list '#:
+display:define-default-method func-cur))))
+)((defmacro #:display:define-default-method (func . body) (mcons 'defun (
+symbol 'display func) '&nobind (or body (list (mcons 'error (list 'quote func)
+'('#:display:not-yet-inplemented (arg 0)))))))
+))

@@ -1,0 +1,29 @@
+defmodule
+defstruct
+files (
+defstruct
+)
+export (
+structurep
+defstruct
+new
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(structurep subr1 ())
+(defstruct dmsubr ())
+(new subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:system:defstruct-all-access-flag 't '#:complice:globalvar)
+))

@@ -1,0 +1,31 @@
+;;; GELL 15.26: elaboration file for the module: pretty
+;;;             translation done: "Wed June 16 93 18:01:40 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: pretty.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'pretty)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZpretty" "Wed June 16 93 18:01:40 "
+
+'((#:pretty:eol . subr0) (pprint . subr1) (pprin . subr1) (pretty . fsubr) (prettyf . fsubr) (prettyend . subr0))
+
+#[type-of pretty getfn funcall prin quote princn printlevel printlength #:pretty:quotelevel #:pretty:quotelength lambda listp last let list mcons ptype t l f (l f) lmargin terpri numberp outpos imin (f l) #:pretty:sizeline plength scale #:pretty:inlinep #:sys-package:itsoft (#:sys-package:itsoft) outbuf fillstring #:llcp:exit #:system:print-package-flag rmargin #:system:print-for-read (#:pretty:sizeline #:system:print-for-read #:system:print-package-flag) (#:pretty:sizeline) #:trace:trace current-language english "; " " is traced" print french " est tracee" trace pprint resetfn getprop getdef makedef outchan openo apply close oblist remob rem-feature (pretty pprint pprin pretty prettyf prettyend) libautoload prettyend #:pretty:eol #:gell-resetfn:function-name #:gell-resetfn:function-0 #:gell-resetfn:function-1 pprin #:gell-resetfn:function-f prettyf]
+)
+
+(if (not (>= (version) 15.21)) (progn (error 'load 'erricf 'pretty)))
+(defvar #:sys-package:colon 'pretty)
+(add-feature 'pretty)
+(defvar #:pretty:quotelevel 0)
+(defvar #:pretty:quotelength 0)
+(defcsetfn '#:pretty:eol "GZpretty" 0)
+(defcsetfn 'pprint "GZpretty" 1)
+(defcsetfn 'pprin "GZpretty" 2)
+(defcsetfn 'pretty "GZpretty" 3)
+(defcsetfn 'prettyf "GZpretty" 4)
+(defcsetfn 'prettyend "GZpretty" 5)
+((lambda (x) (while x (ptype (nextl x) (nextl x)))) '(|+| 1 |-| 1 * 1 append 1 and 1 calln 1 catenate 1 concat 1 list 1 max 1 mcons 1 min 1 or 1 plus 1 prin 1 print 1 prog1 1 progn 1 protect 1 times 1 any 2 block 2 call 2 catcherror 2 do 2 do* 2 every 2 evexit 2 evtag 2 exit 2 funcall 2 if 2 ifn 2 lambda 2 let 2 lets 2 let* 2 map 2 mapc 2 mapcar 2 maplist 2 mapcon 2 mapcan 2 repeat 2 slet 2 tag 2 unless 2 until 2 untilexit 2 when 2 while 2 with 2 de 3 defun 3 df 3 dm 3 dmc 3 dmd 3 dms 3 defmacro 3 defsharp 3 letn 3 backtrack 3 cond 4 selectq 5 setq 6 setqq 6 psetq 6 tagbody 7))
+
+(defccheck '(libautoload rem-feature remob oblist close apply openo outchan makedef getdef getprop pprint print current-language rmargin #:llcp:exit fillstring outbuf scale plength imin outpos numberp terpri lmargin ptype mcons list last listp printlength printlevel princn prin funcall getfn type-of))

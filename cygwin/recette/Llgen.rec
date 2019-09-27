@@ -1,0 +1,138 @@
+#!/bin/sh
+set -x
+date
+cd ..
+
+# involved files
+LLC=../lltest/testext.c
+LLO=o/ttext.o
+LLO2=testext.o
+LLCMD=lelispgen
+LLCONF=Lelispconf.ll
+LLBIN=legenbin
+LLCORE=llcore/lelispgen.core
+
+rm -f $LLO $LLCMD $LLBIN $LLCORE
+
+# 1st test on generique entry for making C compilation
+# twice tests: same .o than compiler, and other .o
+echo "    [Generiques Makefile's entries Test]"
+make $LLO \
+	USERCFILE=$LLC \
+	USEROFILE=$LLO \
+ || echo "** Probleme(1) in Generique Makefile's entry USEROFILE"
+
+if [ -f "$LLO" ]
+then
+ echo "OK for $LLO"
+else
+ echo "** No $LLO"
+fi
+
+make $LLO2 \
+	USERCFILE=$LLC \
+	USEROFILE=$LLO2 \
+ || echo "** Probleme(2) in Generique Makefile's entry USEROFILE"
+
+if [ -f "$LLO2" ]
+then
+ echo "OK for $LLO2"
+else
+ echo "** No $LLO2"
+fi
+rm -f $LLO2
+
+# others tests on generiques entries for making LL binary & core
+make $LLBIN \
+	USERXBIN=$LLBIN \
+	USERO="$LLO"
+
+if [ -f "./$LLBIN" ]
+then
+ echo "OK for generated binary"
+else
+ echo "** No binary"
+fi
+
+make $LLCMD \
+	USERLELISP=$LLCMD \
+	USERCONF=$LLCONF \
+	USERLELISPBIN=$LLBIN \
+	USERSIZE='$(SIZEH)' \
+	STACK_P=6 \
+	CODE_P=1750 \
+	HEAP_P=300 \
+	NUMBER_P=0 \
+	VECTOR_P=4 \
+	STRING_P=8 \
+	SYMBOL_P=7 \
+	CONS_P=24 \
+ || echo "** Probleme(3) in Generiques Makefile's entries"
+
+if [ -f "./$LLCMD" ]
+then
+ echo "OK for generated script-shell"
+else
+ echo "** No script-shell"
+fi
+
+if [ -f "$LLCORE" ]
+then
+ echo "OK for generated core"
+else
+ echo "** No core"
+fi
+
+./$LLCMD << Eoi
+(end)
+Eoi
+
+rm -f $LLCMD $LLBIN $LLCORE
+
+# idem with 64bitfloat
+make $LLCMD \
+	FLT=64 \
+	USERLELISP=$LLCMD \
+	USERCONF=$LLCONF \
+	USERLELISPBIN=$LLBIN \
+	USERXBIN=$LLBIN \
+	USERO="$LLO" \
+	USERSIZE='$(SIZEH)' \
+	STACK_P=6 \
+	CODE_P=1750 \
+	HEAP_P=300 \
+	NUMBER_P=0 \
+	VECTOR_P=4 \
+	STRING_P=8 \
+	SYMBOL_P=7 \
+	CONS_P=24 \
+ || echo "** Probleme(4) in Generiques Makefile's entries"
+
+if [ -f "./$LLCMD" ]
+then
+ echo "OK for generated script-shell"
+else
+ echo "** No script-shell"
+fi
+
+if [ -f "./$LLBIN" ]
+then
+ echo "OK for generated binary"
+else
+ echo "** No binary"
+fi
+
+if [ -f "$LLCORE" ]
+then
+ echo "OK for generated core"
+else
+ echo "** No core"
+fi
+
+./$LLCMD << Eoi
+(when (eq 0. 0.) (printerror '$LLCMD "not a 64bitfloats binary" ()))
+(end)
+Eoi
+
+rm -f $LLO $LLCMD $LLBIN $LLCORE
+

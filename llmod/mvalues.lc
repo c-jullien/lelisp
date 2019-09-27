@@ -1,0 +1,18 @@
+defmodule
+multiple-value
+files (
+mvalues
+)
+export (
+values
+values-list
+multiple-value-list
+multiple-value-call
+multiple-value-prog1
+multiple-value-bind
+multiple-value-setq
+)
+import
+()
+include
+()

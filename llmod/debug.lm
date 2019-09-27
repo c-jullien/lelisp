@@ -1,0 +1,130 @@
+defmodule
+#:system:debug
+files (
+|debug.ll|
+)
+export (
+debug
+break
+printstack
+debug-command
+#:system:debug:bol
+#:system:debug:toplevel
+#:system:debug:hilited:prin
+#:system:debug:print-current-variables
+#:system:debug:printstack
+#:system:debug:print-error
+#:system:debug:print-current-function
+#:system:debug:down-stack
+#:system:debug:up-stack
+#:system:debug:continue
+#:system:debug:help
+#:tty:system:hilited:tyattrib
+#:system:debug:hilited:eol
+)
+import (
+files
+virtty
+virbitmap
+pretty
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(debug fsubr parano (#:system:l) (#:system:debug))
+(break subr0 parano () (#:system:debug #:sys-package:itsoft) (#:with:arg0 #:with:arg1))
+(debug-command subr1 ())
+(#:system:debug:up-stack subr0 parano () (#:system:debug:rebind-frames))
+(printstack nsubr ())
+(#:system:debug:bol subr0 ())
+(#:system:debug:toplevel subr0 parano () (#:system:error-flag))
+(#:system:debug:hilited:prin subr1 ())
+(#:system:debug:print-current-variables subr0 parano)
+(#:system:debug:printstack nsubr ())
+(#:system:debug:print-error subr0 parano)
+(#:system:debug:print-current-function subr0 parano () (current-definition))
+(#:system:debug:down-stack subr0 parano () (#:system:debug:next-form) (#:system:debug:next-function) (#:system:debug:previous-form))
+(#:system:debug:continue subr0 parano () (#:with:arg0) (form))
+(#:system:debug:help subr0 ())
+(#:tty:system:hilited:tyattrib subr1 ())
+(#:system:debug:hilited:eol subr0 ())
+)
+cpfunctions (
+(#:system:debug:break-loop subr1 (#:system:debug:stack) (subr1) (()) (#:system:debug:error-message #:system:debug:current-function #:system:debug:current-form #:system:debug:current-error-form #:system:debug:resetfn-alist current-window #:system:debug:break-number) (#:with:arg0))
+(#:system:debug:create-break-window subr1)
+(#:system:debug:init-stack subr1)
+(#:system:debug:is-a-struct-access subr1)
+(#:system:debug:find-function subr1)
+(#:system:debug:has-function-definition subr1)
+(#:system:debug:findfn subr1)
+(#:system:debug:stack-in-error subr1)
+(#:system:debug:cut-to-toplevel subr1)
+(#:system:debug:is-at-toplevel subr1)
+(#:system:debug:find-syserror subr1)
+(#:system:debug:find-break subr1)
+(#:system:debug:remove-fn subr2)
+(#:system:debug:is-in-lvalfn subr2)
+(#:system:debug:up-frame-list subr2)
+(#:system:debug:bind/unbind subr1 (#:system:debug:frame) (#:system:debug:lval))
+(#:system:debug:exchange-arguments subr2 (#:system:debug:larg #:system:debug:lval))
+(#:system:debug:cval subr1 (#:system:debug:s))
+(#:system:debug:scval subr2 (#:system:debug:s #:system:debug:v))
+(#:system:debug:is-hidden-block subr1)
+(#:system:debug:print-variables subr1 (#:system:debug:s))
+(#:system:debug:print-arguments subr1 (#:system:debug:larg))
+(#:system:debug:getdef subr1)
+(#:system:debug:get-plist-def subr2)
+(#:system:debug:print-filtered subr1)
+(#:system:debug:flush-hilited subr0)
+(#:system:debug:hilited:make subr1)
+(#:system:debug:hilite-expr subr2)
+(substq subr3)
+(#:system:debug:current-expr subr1 (definition) (#:system:debug:frame-list))
+(#:system:debug:find-expr subr2 (frame sexpr) (subr1) (()) (subr1) (()) (subr1) (()) (subr1) (()) (subr1) (()) (subr1) (()) (subr1) (()))
+(#:system:debug:find-tree subr2 (#:system:debug:fn #:system:debug:tree))
+(#:system:debug:find-tree1 subr2 (#:system:debug:fn #:system:debug:tree))
+(#:system:debug:find-error subr1 (expr) (subr1) (()) (subr1) (()) (subr1) (((expr) (subr1) (()))))
+)
+cpimport (
+(files
+(featurep . subr1)
+)(virtty
+(tyattrib . nsubr)
+)(pretty
+(pprin . subr1)
+(pprint . subr1)
+))
+cpenv (
+files
+virtty
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+pretty
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:system:debug-line 't '#:complice:globalvar)
+)((putprop '#:system:stack-depth 't '#:complice:globalvar)
+)((putprop '#:system:debug 't '#:complice:globalvar)
+)((putprop '#:system:debug:current-form 't '#:complice:globalvar)
+)((putprop '#:system:debug:current-function 't '#:complice:globalvar)
+)((putprop '#:system:debug:current-error-form 't '#:complice:globalvar)
+)((putprop '#:system:debug:error-message 't '#:complice:globalvar)
+)((putprop '#:system:debug:break-number 't '#:complice:globalvar)
+)((putprop '#:system:debug:resetfn-alist 't '#:complice:globalvar)
+)((putprop '#:system:debug:commands 't '#:complice:globalvar)
+)((putprop '#:system:debug:v 't '#:complice:globalvar)
+)((putprop '#:system:debug:outlist 't '#:complice:globalvar)
+)((putprop '#:system:debug:hibegin 't '#:complice:globalvar)
+)((putprop '#:system:debug:hiend 't '#:complice:globalvar)
+)((putprop '#:system:debug:nlines 't '#:complice:globalvar)
+)((putprop '#:tty:system:hilited:tyattrib 't '#:complice:globalvar)
+))

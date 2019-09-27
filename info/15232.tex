@@ -1,0 +1,2134 @@
+\documentstyle{ilogmanuel}
+
+
+\Begin
+\Title {Diffusion Le-Lisp}
+\SuperTitle {Le-Lisp  de  l'INRIA  version 15.23 \\
+sous-version 2}
+
+\Author {Septembre 1990}
+
+                 
+                            
+\chapter {Version "15.23.2"}
+Voici les corrections et les extensions de la nouvelle diffusion de
+\LeLisp\ version 15.23 dat\'{e}e du 30 septembre 1990.
+
+Il s'agit de la deuxi\^{e}me diffusion de maintenance de la version
+15.23.  Cette diffusion comprend uniquement des 
+contournements et corrections effectu\'{e}s en Lisp.  
+Comme d\'{e}cid\'{e} au Club des Porteurs, aucune expansion LLM3 n'est n\'{e}cessaire.
+
+\Section {Contenu de cette diffusion}
+
+La bande de diffusion est explicit\'{e}e ci-dessous.
+
+Les catalogues avec tous les fichiers (pour coh\'{e}rence):
+
+\begin {itemize}
+\item   benchmarks:
+\item   bignum:
+\item   common: 
+\item   info:
+\item   llib:           
+\item   llmod:
+\item   llobj:
+\item   lltest:         
+\item   llub:   
+\item   manl:
+\item   system:
+\item   virbitmap:
+\item   virtty: 
+\end {itemize}
+
+Les catalogues avec seulement les fichiers n\'{e}c\'{e}ssaires pour construire
+des configurations :
+
+\begin {itemize}
+\item   68k:            
+\item   ibmrt:
+\item   lltool:
+\item   sun:
+\item   vax:
+\end {itemize}
+
+Les catalogues non inclus:
+
+\begin {itemize}
+\item   llm3:   aucun fichier
+\item   manual: aucun fichier
+\end {itemize}
+
+\Section {Survol de 15.23 sous-version 2}
+
+\begin {itemize}
+
+\item Le nouveau BV dit \|BV 1+| (voir plus loin). \\
+Ce nouveau BV est 
+compatible ascendant au niveau du code source. La
+d\'{e}finition de nouveaux champs dans certaines structures document\'{e}es,
+oblige cependant la recompilation de tout code utilisant le BV, et cr\'{e}ant 
+des sous-types des structures du BV;
+
+\item Quelques nouveaut\'{e}s dans les modules 'messages' et 'path'
+          (voir plus loin);
+
+\item G\'{e}n\'{e}ralisation des {\tt images m\'{e}moire ex\'{e}cutables} 
+sur un maximun de portages UNIX: \\
+Les portages Sun et IBMRT offrent le choix \`{a} l'utilisateur 
+de fabriquer des images ex\'{e}cutables ou non, le portage
+Vax permet de fabriquer des images \LeLisp\ ex\'{e}cutables
+en standard. Le code C aff\'{e}rant au mode \|EXECORE| est
+d\'{e}sormais disponible dans un fichier \|execore.c|
+rang\'{e} dans le r\'{e}pertoire de la machine, et non plus
+dans \|lelisp.c|.
+Voir plus loin pour plus de pr\'{e}cisions.
+
+\item Mise \`{a} disposition d'une boucle d'\'{e}v\'{e}nements 
+g\'{e}n\'{e}ralis\'{e}e (voir plus loin);
+
+\item Disparition de l'instance X10.4 du BV. En effet toutes les
+machines qui offraient X10, sont pass\'{e}es sur X11, et les nouvelles
+implantations de X-Windows sont faites sous X11. Le BV X11 actuel supporte
+X11r2, X11r3 et X11r4, ainsi que Dec-Windows, Open-Window et Motif.
+
+\item Mise \`{a} niveau du {\tt multiple-getglobal} sur tous les portages.
+
+\item Le nom de la fonction de plombage a chang\'{e}: elle se nomme
+maintenant {\em tryaccess} et doit accepter un entier en argument. \\
+rappel: l'\'{e}ventuel m\'{e}canisme de plombage est du ressort de chaque
+porteur. La bande de distribution aux porteurs fournit une fonction
+passante. 
+
+\item Les {\tt Makefiles} ont \'{e}t\'{e} revus et homog\'{e}n\'{e}is\'{e}s entre les
+diff\'{e}rents portages. Les tailles des images standard ont \'{e}t\'{e}
+adapt\'{e}es; les syst\`{e}mes fournis en standard sont d\'{e}sormais \|lelispX11|, 
+et \|cmplc|++; la commande \|complice| lance maintenant le 
+core \|cmplc++| afin d'\'{e}viter les probl\`{e}mes de d\'{e}bordements de
+zones lors de la compilation de modules \LeLisp\ cons\'{e}quents; dans la
+m\^{e}me optique, la commande \|complice| accepte un argument
+suppl\'{e}mentaire: {\tt -cons <n>} capable d'augmenter la zone des cellules.
+
+\item Dans la m\^{e}me optique d'homog\'{e}n\'{e}isation des portages, les
+recettes ont \'{e}t\'{e} revues, adapt\'{e}es et homog\'{e}n\'{e}is\'{e}es. Tous les
+portages Le-Lisp fournis, poss\`{e}dent un r\'{e}pertoire {\tt recette/}
+sous le r\'{e}pertoire de la machine, qui
+contient des commandes de lancement de recettes. Parmi celles-ci on
+notera la commande {\tt Suites} qui lance toutes les recettes (y
+compris celle du BV). Les r\'{e}sultats peuvent \^{e}tre \'{e}tudi\'{e}s dans le
+sous-r\'{e}pertoire {\tt recette/log/}. Toutes les erreurs sont
+rep\'{e}rables par {\tt "**"} dans les fichiers de log.
+
+\item Un nouveau r\'{e}pertoire sous lelisp: {\tt manl} qui contient les
+pages des manuels Unix pour les commandes \|lelisp|, \|complice|,
+\|config|, \|newdir|. Ces manuels sont au formal ``local{''}, c'est \`{a}
+dire qu'ils peuvent \^{e}tre rang\'{e}s dans le r\'{e}pertoire /usr/man/manl
+pour \^{e}tre utilis\'{e}s en standard avec la commande Unix {\tt man}.
+\end {itemize}
+
+\Section {Les RATS}
+
+Les changements de \LeLisp\ sont g\'{e}r\'{e}s avec des \|RATs|
+(Requ\^{e}tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez avoir le texte complet
+d'un rat d'ILOG en nous en communiquant le num\'{e}ro.  (Notez s'il vous
+pla\^{\i}t que les num\'{e}ros des RATs sont partag\'{e}s par tous les produits
+ILOG et pas uniquement \LeLisp.  Ne soyez pas effray\'{e} par les
+num\'{e}ros \'{e}lev\'{e}s!) \\
+
+\newpage
+
+\frenchspacing
+\setlength{\parindent}{0in}
+\setlength{\parskip}{3ex}
+\raggedbottom
+\begin{tabbing}
+\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx \= \kill
+
+\verb_Rats for le-lisp selected by status-fixed? as of 21/9/1990._\\ \verb_ _\\
+\hspace{-5em}rat 42 \> area: {\it  i/o
+\ }\> aspect: {\it  virbitmap
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  nuyens
+\ }\\ 
+\verb_les tests ne teste pas fill-rectangle, ni "character attributes"
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 346 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  P. Couronne [CISI]
+\ }\\ 
+\verb_lors d'un appel de C vers Lisp avec strings, pb de zone pleine.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 359 \> area: {\it  ports
+\ }\> aspect: {\it  tests
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  Kuczynski[Ilog]
+\ }\\ 
+\verb_>Le breack nous ek nous ejecte en 2 coups sur HP9000!
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 387 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  A. Danan [Ilog]
+\ }\\ 
+\verb_Suppression des messages [REMOVE-LANGUAGE] encore difficile...
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 394 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  Debiasy [Michelin]
+\ }\\ 
+\verb_EXPAND-PATHNAME ne fonctionne pas sur toutes les machines
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 399 \> area: {\it  run-time
+\ }\> aspect: {\it  o/s-interface
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  kuczynsk
+\ }\\ 
+\verb_CLOAD sur sun4
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 418 \> area: {\it  i/o
+\ }\> aspect: {\it  basic-i/o
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  Francis.Montagnac@mirsa.inria.fr
+\ }\\ 
+\verb_pb d'ouverture de fichier (OPENO) sur SUN4 et IBMRT
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 432 \> area: {\it  run-time
+\ }\> aspect: {\it  o/s-interface
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  E. Chailloux
+\ }\\ 
+\verb_le terminal est mal reinitialis\'{e} apres un save-core
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 435 \> area: {\it  run-time
+\ }\> aspect: {\it  external-functions
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  Macro NANNI [BULL]
+\ }\\ 
+\verb_la macro C LL>C>FLOAT marche-t-elle vraiment?
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 440 \> area: {\it  i/o
+\ }\> aspect: {\it  basic-i/o
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  berizzi
+\ }\\ 
+\verb_Mauvais message d'erreur dans path.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 446 \> area: {\it  compiler
+\ }\> aspect: {\it  complice
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  berizzi
+\ }\\ 
+\verb_Des lignes trop longues dans la generation.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 448 \> area: {\it  run-time
+\ }\> aspect: {\it  external-functions
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  kuczynsk
+\ }\\ 
+\verb_>>>LISPCALL avec plusieurs flottants plante sur Sun4
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 460 \> area: {\it  i/o
+\ }\> aspect: {\it  basic-i/o
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  berizzi
+\ }\\ 
+\verb_Bug dans renamefile sur macaux
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 468 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_messages
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 469 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_bug dans les benchmarks (do-check)
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 474 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\verb_paths virtuels
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 477 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  gallou@madeleine (Francoise Gallou)
+\ }\\ 
+\verb_option -v dans le lanceur
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 481 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  davis
+\ }\\ 
+\verb_read macro H for hash tables returns bad result
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 485 \> area: {\it  programming-environment
+\ }\> aspect: {\it  step
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  meller
+\ }\\ 
+\verb_trace du send
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 487 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  meller
+\ }\\ 
+\verb_MACROEXPAND expanse trop (suite)...>
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 491 \> area: {\it  i/o
+\ }\> aspect: {\it  basic-i/o
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  berizzi
+\ }\\ 
+\verb_PROBEPATHM  et ses s\oe urs ne supportent pas les num\'{e}ros de version
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 492 \> area: {\it  memory-management
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  berizzi
+\ }\\ 
+\verb_Perte de place dans les cores.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 494 \> area: {\it  ports
+\ }\> aspect: {\it  loader
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  J. Grimm [INRIA]
+\ }\\ 
+\verb_confusion entre 0 et 0.0 par le loader du GOULD
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 496 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  weinberg@ilog
+\ }\\ 
+\verb_QUOTE ou pas QUOTE en reprise errudv en mode debug
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 497 \> area: {\it  other
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  berizzi@ilog
+\ }\\ 
+\verb_le nouveau MAKEMOD (15.23) n'est pas correct sur les path de llobj
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 500 \> area: {\it  run-time
+\ }\> aspect: {\it  external-functions
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  erhili@ilog
+\ }\\ 
+\verb_Doit-on tjrs mettre ">" devant les symboles de DEFEXTERN
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 505 \> area: {\it  language
+\ }\> aspect: {\it  extended-types
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  ducournau@semagroup
+\ }\\ 
+\verb_y a-t-il 2 SEND diff\'{e}rents selon que MICROCEYX soit charg\'{e} ou non
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 507 \> area: {\it  ports
+\ }\> aspect: {\it  loader
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  kuczynsk
+\ }\\ 
+\verb_Pourquoi ne peut-on pas faire une image sans loader compil\'{e}?
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 509 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  chailloux@ilog
+\ }\\ 
+\verb_libell\'{e}s des dates en anglais
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 515 \> area: {\it  run-time
+\ }\> aspect: {\it  o/s-interface
+\ }\\ 
+\> status: {\it  fixed
+\ }\> origin: {\it  ingenia
+\ }\\ 
+\verb_RENAMEFILE plante sur Sun4 OS4.1
+_\\ 
+\verb_ _\\ 
+\end{tabbing}
+
+\chapter {Le Bitmap Virtuel 1+}
+
+Le {\em Bitmap Virtuel} 1+ est un sur-ensemble strict de l'ancienne version :
+\begin {Itemize}
+\item toutes les fonctions qui \'{e}taient document\'{e}es dans l'ancienne version
+sont maintenues\,;
+\item toutes les structures continuent \`{a} exister. Toutefois certaines
+structures comme {\tt window}, {\tt display} et {\tt graph-env} ont \'{e}t\'{e}
+\'{e}tendues d'o\`{u} la n\'{e}cessit\'{e} de recompiler 
+toute application qui d\'{e}finit des sous-types de ces structures.
+\end{Itemize}
+Des changements ont \'{e}t\'{e} apport\'{e}s au niveau de :
+\begin{Itemize}
+\item la s\'{e}paration en plusieurs modules coh\'{e}rents correspondants
+aux diff\'{e}rents types de fonctionnalit\'{e}s offertes par le bitmap virtuel
+(dessin, gestion des \'{e}v\'{e}nements ...)\,;
+\item l'ajout de nouvelles fonctionnalit\'{e}s\,.
+\item l'incarnation du Bitmap Virtuel au dessus de X-window version 11 ;
+\end{Itemize}
+Ces changements ob\'{e}issent \`{a} deux motivations :
+\begin {Itemize}
+\item am\'{e}liorer les performances et la fiabilit\'{e} ;
+\item pouvoir faire cohabiter le Bitmap Virtuel  avec des applications \'{e}crites
+avec d'autres biblioth\`{e}ques graphiques et sp\'{e}cialement sur X11 : 
+(biblioth\`{e}ques de {\tt widgets}, GKS, PHIGS, logiciels de cartographies, ...).
+Cette cohabitation ne saurait \^{e}tre possible que si le mod\`{e}le du Bitmap
+Virtuel est conforme au mod\`{e}le de ces biblioth\`{e}ques (Gestion des
+\'{e}v\'{e}nements, fen\^{e}tres opaques,..).\\
+\end{Itemize}
+
+
+
+
+
+\Section  {Changements pour l'utilisateur}
+
+Pour l'utilisateur, seules les nouvelles fonctionnalit\'{e}s sont
+visibles.\\
+Elles correspondent \`{a} de nouvelles fonctions et \`{a} l'ajout
+de nouveaux champs aux structures.\\
+A partir du BV1+, La version 10 de {\em X-window} n'est plus support\'{e}e.\\
+La fonction {\tt bitprologue} \'{e}tait appel\'{e}e automatiquement lors du premier
+appel de certaines fonctions de l'ancien BV. Ce n'est plus le cas dans le
+BV1+. La fonction {\tt bitprologue} doit donc maintenant \^{e}tre ex\'{e}cut\'{e}e
+avant toute op\'{e}ration graphique (dans le fichier {\tt .lelisp} par exemple).
+
+
+\SSection {Structures}
+Le fichier {\tt virstruct.ll} contient la d\'{e}finition de toutes les strutures
+utilis\'{e}es par le BV.\\
+Les structures qui ont \'{e}t\'{e} modifi\'{e}es sont les suivantes :
+\BeginLL
+(defstruct display
+  name
+  package
+  device
+  xmax
+  ymax 
+  eventmode
+  prologuep
+  keyboard-focus-window
+  window
+  graph-env
+  root-window
+  main-graph-env
+  background
+  foreground
+  windows
+  bitmaps
+  menus
+  colors         
+  font-names     
+  pattern-bitmaps
+  cursor-bitmaps 
+  extend
+% New fields
+  graph-envs        ;;; List of all graph env created by the user
+                    ;;; except those associated to windows
+                    ;;; Don't forget them in bitmap-save bitmap-restore
+  current-selection ;;; To store current selection (a string) 
+                    ;;; When the display is not an X11 display
+                    ;;; Must be a globale variable for the multi-display
+  resource          ;;; New field for resources (see Aida)
+  named-cursors     ;;; list of the names of loaded named cursors.
+  )
+
+(defstruct graph-env 
+  (font 0)
+  (line-style 0)
+  (pattern 1)
+  (mode 3)
+  foreground 
+  background
+  (clip-x 0)
+  (clip-y 0)
+  (clip-w 0)
+  (clip-h 0)
+  bitmap
+  display
+  extend
+  font-y ;;; New field
+  font-h ;;; New field
+  )
+
+
+;;; Information in field graphic-properties is not portable But is very
+;;; useful for X11
+
+(defstruct #:image:rectangle:window
+  title
+  hilited
+  visible
+  graph-env
+  extend
+  father
+  properties
+  (cursor 0)
+  display
+  subwindows
+  ;; new fields :
+  events-list     ;; (list of 'up-event 'down-event  'ascii-event  ...)
+  window-type     ;; Window type : ('transparent or 'opaque) if () see display
+  graphic-properties ;; list of symbols : backing-store, save-under,..
+  state           ;; Symbol : 'iconify 'map 'unmap 'raise 'lower
+  )
+
+
+(defstruct font-info
+  ascent
+  descent
+  angle
+  weight
+  minrbearing
+  minlbearing
+  minascent
+  mindescent
+  minwidth
+  maxrbearing
+  maxlbearing
+  maxascent
+  maxdescent
+  maxwidth
+  )
+\EndLL
+
+
+
+
+\SSection {Nouvelles fonctions}
+
+Dans cette section, nous d\'{e}crivons les nouvelles fonctions ajout\'{e}es au Bitmap
+Virtuel.\\
+
+
+\SSSection {Module virinit}
+
+Ce module contient les fonctions d'initialisation du Bitmap Virtuel ainsi que
+des fonctions de bas niveau.
+
+\Function {display-store-selection} {display buffer} {2}
+Prend une cha\^{\i}ne de caract\`{e}res {\tt buffer} et la recopie dans un tampon
+associ\'{e} au dispositif d'affichage {\tt display}.\\
+Si le dispositif d'affichage le permet, ce {\em buffer} est partag\'{e} avec
+toutes les applications autres que \LeLisp\ utilisant ce dispositif
+d'affichage.\\
+
+
+\Function {display-get-selection} {display} {1}
+Cette fonction se charge de recup\'{e}rer une cha\^{\i}ne de
+caract\`{e}res qui repr\'{e}sente la s\'{e}lection courante dans le dispositif
+d'affichage {\tt display}.\\
+Si le dispositif d'affichage offre cette caract\'{e}ristique (c'est le cas de
+X11), cette fonction permet de r\'{e}cup\'{e}rer une cha\^{\i}ne de caract\`{e}res provenant
+d'une autre application  utilisant le m\^{e}me dispositif d'affichage.
+
+
+\Function {display-depth} {display} {1}
+Cette fonction retourne le nombre de plans (bits/pixel) dans l'\'{e}cran
+utilis\'{e} par le dispositif d'affichage {\tt display}.\\
+Si le dispositif d'affichage est monochrome, elle retourne
+donc 1.
+
+
+\Function {bitmap-sync} {display} {0-1}
+Cette fonction assure que toutes les requ\^{e}tes envoy\'{e}es au serveur ont \'{e}t\'{e}
+ex\'{e}cut\'{e}es et que tous les \'{e}v\'{e}nements g\'{e}n\'{e}r\'{e}s par ces requ\^{e}tes
+sont dans la file de \'{e}v\'{e}nements. \\
+L'argument {\tt display} peut \^{e}tre omis, l'op\'{e}ration est effectu\'{e}e dans
+le dispositif d'affichage courant.
+
+
+\Function {display-synchronize} {display flag} {1-2}
+Certains syst\`{e}mes comme X11 peuvent fonctionner en deux modes :
+\begin {Itemize}
+\item asynchrone : une action graphique peut ne pas \^{e}tre encore termin\'{e}e au
+moment o\`{u} la fonction qui l'a d\'{e}clench\'{e}e rend la main (l'option par d\'{e}faut
+sous X11),
+\item synchrone : une action graphique est termin\'{e}e au moment o\`{u} la
+fonction qui l'a d\'{e}clench\'{e}e rend la main.
+\end {Itemize}
+Cette fonction permet sur les syst\`{e}mes fonctionnant dans les deux modes
+{\em synchrone} et {\em asynchrone}, de conna\^{\i}tre le mode courant ou de
+passer de l'un \`{a} l'autre. Le mode synchrone correspond \`{a} une valeur vraie
+de l'argument {\tt flag} et le mode asynchrone \`{a} une valeur fausse.\\
+Cette fonction ne doit servir que pour le {\em debug}, et ne doit pas \^{e}tre
+employ\'{e}e en utilisation normale.
+
+
+\Function {standard-light-gray-pattern} {display} {0-1}
+remplace la fonction {\tt standard-light-pattern} du manuel \LeLisp.
+
+\Function {standard-medium-gray-pattern} {display} {0-1}
+remplace la fonction {\tt standard-medium-pattern} du manuel \LeLisp.
+
+\Function {standard-dark-gray-pattern} {display} {0-1}
+remplace la fonction {\tt standard-dark-pattern} du manuel \LeLisp.
+
+
+
+\SSSection {Module virdraw}
+
+Ce module contient les op\'{e}rateurs de trac\'{e}s.
+
+
+\Function {draw-arc} {x y w h angle1 angle2} {6}
+Cette fonction dessine un arc de cercle ou d'ellipse dans la fen\^{e}tre
+courante.\\
+L'arc dessin\'{e} est d\'{e}fini par le rectangle centr\'{e} en {\tt x} et {\tt y}, 
+de hauteur {\tt h} et de largeur {\tt w}. Seule la portion de l'ellipse
+comprise entre les deux angles {\tt angle1} et {\tt angle2} (exprim\'{e}s en
+degr\'{e}s dans le sens trigonom\'{e}trique avec l'origine \`{a} 3 heures) est
+dessin\'{e}e.\\
+Exemple, pour dessiner le demi-cercle de centre (10, 10) et de rayon 20 :
+\BeginLL
+(draw-arc 10 10 40 40 0 180)
+\EndLL
+
+
+\Function {fill-arc} {x y w h angle1 angle2} {6}
+Cette fonction remplit une portion de camembert dans la fen\^{e}tre courante.\\
+L'arc rempli est d\'{e}fini par le rectangle centr\'{e} en {\tt x} et {\tt y} 
+de hauteur {\tt h} et de largeur {\tt w}. Seule la portion de l'ellipse
+comprise entre les deux angles {\tt angle1} et {\tt angle2} (exprim\'{e}s en
+degr\'{e}s dans le sens trigonom\'{e}trique avec l'origine \`{a} 3 heures).\\
+Exemple, pour dessiner le demi-disque de centre (10, 10) et de rayon 20 :
+\BeginLL
+(fill-arc 10 10 20 20 0 180)
+\EndLL
+
+
+\Function {draw-segments} {n vx1 vy1 vbx2 vy2} {5}
+Cette fonction dessine sur la fen\^{e}tre courante {\tt n} segments en un seul
+appel.\\
+Le {\tt i}-\`{e}me segment  est  d\'{e}fini par ses deux extr\'{e}mit\'{e}s
+(vx[i], vy[i]) et (vx2[i], vy2[i]).\\
+Les arguments {\tt vx1}, {\tt vy1}, {\tt vx2} et {\tt vy2} sont donc des
+objets de type {\tt vector} comprenant au moins {\tt n} \'{e}l\'{e}ments.\\
+
+
+
+\SSSection {Module virgraph}
+
+Ce module contient les op\'{e}rations graphiques standards.
+
+
+\Function {make-named-cursor} {name} {1}
+Cette fonction charge un nouveau curseur dont le nom {\tt name} doit \^{e}tre
+une cha\^{\i}ne de caract\`{e}res parmi la liste suivante :
+\begin {Itemize}
+\item "circle" : un cercle transparent,
+\item "cross" : une intersection de routes,
+\item "crosshair" : une croix fine,
+\item "diamond-cross" : un losange constitu\'{e} de quatre triangles,
+\item "dot" : un cercle plein,
+\item "exchange" : une ic\^{o}ne symbolisant un \'{e}change entre deux entit\'{e}s,
+\item "fleur" : une ic\^{o}ne symbolisant les quatre points cardinaux.
+\item "left-hand" : une main pointant vers la gauche,
+\item "heart" : un c\oe ur,
+\item "iron-cross" : une croix de fer,
+\item "left-ptr" : un pointeur en forme de fl\^{e}che,
+\item "mouse" : une souris d'ordinateur,
+\item "pencil" : un crayon \`{a} papier,
+\item "pirate" : une t\^{e}te de mort,
+\item "plus" : une croix \'{e}paisse,
+\item "question" : un point d'interrogation,
+\item "sizing" : une ic\^{o}ne symbolisant le redimensionnement,
+\item "spray" : une bombe de peinture,
+\item "watch" : une montre \`{a} aiguilles symbolisant l'attente,
+\item "i-beam" : un curseur vertical pour le pointage dans du texte.
+\end {Itemize}
+Le nouveau curseur n'est ajout\'{e} \`{a} la liste des curseurs disponibles que s'il
+n'existait pas d\'{e}j\`{a}.
+Les curseurs nomm\'{e}s sont portables car similaires sur toutes les
+incarnations du Bitmap Virtuel.
+
+
+\Function {cursor-name} {num} {1}
+Prend un num\'{e}ro de curseur (tel que le rendrait la fonction
+{\tt current-cursor}) et retourne la cha\^{\i}ne de caract\`{e}res correspondant au
+nom de ce curseur si c'est un curseur nomm\'{e}, () sinon.\\
+Si ce num\'{e}ro ne correspond pas \`{a} un curseur charg\'{e}, une erreur est
+d\'{e}clench\'{e}e.
+
+
+\Function {make-line-style} {width style} {1}
+Cr\'{e}e un nouveau style de dessin de ligne et retourne son num\'{e}ro.
+Le nouveau style est d\'{e}fini par la largeur {\tt width} exprim\'{e}e en pixels
+et le style {\tt  style} qui est un entier positif qui sera interpr\'{e}t\'{e}
+par le type de dispositif d'affichage.\\
+Par exemple, sur X11 il y a trois styles possibles\,: 0, 1 et 2.
+
+
+\BeginHide
+
+\Function {make-graph-env} {display font line-style pattern mode fg bg} {7}
+Cette fonction cr\'{e}e un nouvel environnement graphique qui poss\`{e}de les
+propri\'{e}t\'{e}s graphiques d\'{e}finies par\,:\\
+\begin {Itemize}
+\item {\tt font} : un num\'{e}ro d'une police de caract\`{e}res ;
+\item {\tt line-style} : un num\'{e}ro de style de dessin de ligne ;
+\item {\tt pattern} : un num\'{e}ro de motif de remplissage ;
+\item {\tt mode} : un mode de combinaison valide ;
+\item {\tt fg} et {\tt bg} : la couleur de fond et la couleur de dessin.
+\end{Itemize}
+Tous les arguments doivent \^{e}tres des objets d\'{e}j\`{a} cr\'{e}\'{e}s et valides.
+
+
+\Function {kill-graph-env} {graph-env} {1}
+Cette fonction lib\`{e}re  la structure {\tt graph-env}.\\
+Plus aucune utilisation sur l'environnement graphique {\tt graph-env} n'est
+possible.
+
+
+\Function {current-graph-env} {graph-env} {0-1}
+Si l'argument {\tt graph-env}  est fourni, cette fonction le positionne
+comme environnement graphique courant pour toutes les op\'{e}rations de dessins.\\
+S'il n'est pas fourni, la fonction retourne l'environnement  graphique
+courant.\\
+{\em Attention :} \\
+Toute fen\^{e}tre \LeLisp\ poss\`{e}de son propre environnement graphique qu'elle
+positionne chaque fois qu'elle devient la fen\^{e}tre courante.
+Si l'on d\'{e}sire utiliser un autre environnement graphique, il faut le
+positionner apr\`{e}s avoir positionn\'{e} la fen\^{e}tre courante.\\
+Exemple :
+\BeginLL
+(current-window my-window)
+(current-graph-env my-graph-env) ; effet limite a la fenetre my-window
+\EndLL
+
+
+\Function {graph-env-font} {graph-env font} {1-2}
+Cette fonction permet de consulter ou de positionner la police de caract\`{e}res 
+dans l'environnement graphique {\tt graph-env}.\\
+Si l'argument {\tt font} est fourni, ce doit \^{e}tre le num\'{e}ro d'une police de
+caract\`{e}res d\'{e}j\`{a} charg\'{e}e.
+
+
+\Function {graph-env-mode} {graph-env mode} {1-2}
+Cette fonction permet de consulter ou de positionner le mode de combinaison
+utilis\'{e} par  l'environnement graphique {\tt graph-env}.\\
+Si l'argument {\tt mode} est fourni, ce doit \^{e}tre le num\'{e}ro d'un mode de
+combinaison valide.
+
+
+\Function {graph-env-pattern} {graph-env pattern} {1-2}
+Cette fonction permet de consulter ou de positionner le motif de remplissage
+utilis\'{e} par  l'environnement graphique {\tt graph-env}.\\
+Si l'argument {\tt pattern} est fourni, ce doit \^{e}tre le num\'{e}ro d'un motif de
+remplissage d\'{e}j\`{a} cr\'{e}e.
+
+
+\Function {graph-env-line-style} {graph-env line-style} {1-2}
+Cette fonction permet de consulter ou de positionner le style de dessin de
+ligne utilis\'{e} par  l'environnement graphique {\tt graph-env}.\\
+Si l'argument {\tt line-style} est fourni, ce doit \^{e}tre le num\'{e}ro d'un style
+de dessin de ligne d\'{e}j\`{a} d\'{e}fini.
+
+
+\Function {graph-env-background} {graph-env color} {1-2}
+Cette fonction permet de consulter ou de positionner la couleur de fond 
+utilis\'{e} par  l'environnement graphique {\tt graph-env}.\\
+Si l'argument {\tt color} est fourni, il doit \^{e}tre une instance valide de
+la classe {\tt color}.
+
+
+\Function {graph-env-foreground} {graph-env color} {1-2}
+Cette fonction permet de consulter ou de positionner la couleur de dessin
+utilis\'{e} par  l'environnement graphique {\tt graph-env}.\\
+Si l'argument {\tt color} est fourni, il doit \^{e}tre une instance valide de
+la classe {\tt color}.
+
+
+\Function {graph-env-set-clip} {graph-env x y w h} {5}
+Cette fonction permet de positionner la zone de {\em clipping}
+utilis\'{e}e par  l'environnement graphique {\tt graph-env}.\\
+Cette zone est d\'{e}finie par le rectangle ({\tt x}, {\tt y}, {\tt w} {\tt h}).
+
+
+\Function {graph-env-set-clips} {graph-env n vx vy vw vh} {6}
+Cette fonction permet de positionner les zones de {\em clipping}
+utilis\'{e}es par  l'environnement graphique {\tt graph-env}.\\
+Cette zone est d\'{e}finie par les {\tt n} rectangles ({\tt vx[i]}, {\tt vy[i]},
+{\tt vw[i]}, {\tt vh[i]}).
+
+
+\EndHide
+
+
+\Function {display-get-font-names} {display maxnames pattern} {2-3}
+Prend une cha\^{\i}ne de caract\`{e}res {\tt pattern} qui peut contenir les
+caract\`{e}res {\tt *} (n'importe quelle suite de caract\`{e}res, m\^{e}me vide) et
+{\tt ?} (n'importe quel caract\`{e}re) et retourne les noms des polices de
+caract\`{e}res chargeables correspondant \`{a} cette expression.
+L'argument {\tt pattern} est facultatif et vaut "*" par d\'{e}faut.
+L'argument {\tt maxnames} permet de limiter le nombre des r\'{e}ponses,
+car il peut y avoir un tr\`{e}s grand nombre de polices de caract\`{e}res dans le
+syst\`{e}me.\\
+Exemple d'utilisation :
+\BeginLL
+? (display-get-font-names (current-display) 100 "adobe*")
+\EndLL
+Recherche tous les noms de polices de caract\`{e}res
+dont le nom commence par la cha\^{\i}ne {\tt "adobe"}.
+
+
+\Function {display-get-font-info} {display font-name font-info} {2-3}
+Cette fonction retourne une instance de la classe {\tt font-info} dont les
+champs donnent des informations m\'{e}triques sur la police de caract\`{e}res de nom
+{\tt font-name}.\\
+Si l'argument {\tt font-info} est fourni, cette fonction n'alloue pas une
+nouvelle instance de {\tt font-info} mais utilise l'argument {\tt font-info}
+qui doit  \^{e}tre de type {\tt font-info}.\\
+Cette fonction ne n\'{e}cessite pas que la police de caract\`{e}res de nom
+{\tt font-name} soit d\'{e}j\`{a} charg\'{e}e.
+La fonction peut par exemple \^{e}tre utile pour savoir si une police
+de caract\`{e}res est de chasse fixe ou variable.\\
+Cette fonction donne les informations m\'{e}triques :
+\begin{Itemize}
+\item g\'{e}n\'{e}rales sur la police (champs {\tt ascent} et {\tt descent})\,;
+\item pour le plus petit caract\`{e}re (champs {\tt minlbearing},
+{\tt minrbearing}, {\tt minascent}, {\tt mindescent}, et {\tt minwidth}\,;
+\item pour le plus grand caract\`{e}re (champs {\tt maxlbearing},
+{\tt maxrbearing}, {\tt maxascent}, {\tt maxdescent}, et {\tt maxwidth}\,;
+\item un {\tt angle} pour l'inclinaison des polices italiques\,;
+\item une \'{e}paisseur {\tt weight} pour les polices grasses\,;
+\end{Itemize}
+Le r\'{e}sultat d\'{e}pend du syst\`{e}me d'\'{e}cran et certains champs peuvent rester
+nuls.\\
+Si la police de caract\`{e}res de nom {\tt font-name} n'existe pas, la fonction
+retourne {\tt ()}.
+
+
+
+\SSSection {Module virwindow}
+
+Ce module comprend toutes les fonctions ayant trait \`{a} la gestion des
+fen\^{e}tres.
+
+
+\Function {move-window} {window x y} {3}
+Positionne la fen\^{e}tre {\tt window} au point de coordonn\'{e}es {\tt x, y}.
+
+
+\Function {resize-window} {window w h} {3}
+Redimensionne la fen\^{e}tre {\tt window} \`{a} largeur {\tt w} et la hauteur {\tt h}.
+
+
+\Function {move-resize-window} {window x y w h} {5}
+Cette fonction effectue en une seule op\'{e}ration un d\'{e}placement \`{a} la position
+({\tt x}, {\tt y}) et un redimensionnement de la fen\^{e}tre {\tt window} avec
+la largeur {\tt w} et la hauteur {\tt h}.
+
+
+\Function {window-events-list} {window events} {1-2}
+Cette fonction permet de consulter ou de positionner la liste des \'{e}v\'{e}nements
+que la fen\^{e}tre {\tt window} d\'{e}sire traiter.\\
+Quand l'argument {\tt events} est fourni, il doit \^{e}tre une liste
+d'\'{e}v\'{e}nements corrects, c'est \`{a} dire de symboles
+parmi\,: {\tt down-event, up-event, ascii-event,...}.
+
+
+\Function {window-title} {window title} {1-2}
+Cette fonction permet de consulter ou de positionner le titre 
+de la fen\^{e}tre {\tt window}.\\
+L'argument {\tt title}, s'il est fourni, est une cha\^{\i}ne de caract\`{e}res.\\
+Seules les fen\^{e}tres principales peuvent avoir un titre, et non les
+sous-fen\^{e}tres.
+Cette fonction est sans effet avec certains dispositifs d'affichage.
+
+
+\Function {window-state} {window state} {1-2}
+Cette fonction permet de consulter ou de positionner l'\'{e}tat de la fen\^{e}tre 
+{\tt window}.\\
+L'argument {\tt state}, s'il est fourni est un symbole parmi :
+{\tt map, unmap, lower, raise, iconify}.\\
+Cette fonction permet par exemple d'iconifier une fen\^{e}tre et de la faire
+r\'{e}appara\^{\i}tre.
+
+
+\Function {window-background} {window color} {1-2}
+Cette fonction permet de consulter ou de positionner la couleur de fond
+de la fen\^{e}tre {\tt window}.\\
+L'argument {\tt color}, s'il est fourni, doit \^{e}tre une instance valide du type
+{\tt color}.\\
+Cette fonction modifie aussi la couleur de fond de l'environnement graphique
+associ\'{e} \`{a} la fen\^{e}tre.\\
+{\em Remarque :}\\
+Il n'est pas possible de changer la couleur de fond des sous-fen\^{e}tres dans
+certains dispositifs d'affichage, mais ceci ne provoque pas d'erreur.
+
+
+\Function {window-border} {window border} {1-2}
+Cette fonction permet de positionner ou de consulter la taille 
+(exprim\'{e}e en pixels) du bord de la fen\^{e}tre {\tt window}.
+
+
+\Function {window-clear-region} {window x y w h} {5}
+Cette fonction permet d'effacer le rectangle ({\tt x, y, w, h}) dans
+la fen\^{e}tre {\tt window}.    
+
+
+\BeginHide
+
+\Function {window-graph-env} {window} {1}
+Cette fonction retourne l'environnement graphique associ\'{e} \`{a} la fen\^{e}tre
+{\tt window}.
+
+
+\Function {graph-change-values} {ge font mode pattern line-style fg bg} {7}
+Cette fonction permet de changer tous les attributs de l'environnement
+graphique {\tt ge} en un seul appel.\\
+Si l'on d\'{e}sire laisser un attribut inchang\'{e}, il faut lui passer
+comme valeur {\tt ()}.
+
+
+\Function {graph-env-subwindow-mode} {graph-env value} {2}
+Cette fonction n'est utile que si le syst\`{e}me fournit des sous-fen\^{e}tres
+qui disposent des m\^{e}me propri\'{e}t\'{e}s que les fen\^{e}tres principales comme
+c'est le cas sur X11.\\
+Cette fonction change l'attribut de l'environnement graphique {\tt graph-env}
+qui sp\'{e}cifie si lorsqu'on dessine dans une fen\^{e}tre on d\'{e}sire dessiner 
+aussi dans les sous-fen\^{e}tres de cette fen\^{e}tre.\\
+L'argument {\tt value} est un entier qui peut prendre deux valeurs :
+\begin{Itemize}
+\item {\tt 0} (valeur par d\'{e}faut) : toute op\'{e}ration de dessin dans une 
+fen\^{e}tre est limit\'{e}e \`{a} cette fen\^{e}tre et ne touche pas le contenu
+des sous-fen\^{e}tres ;
+\item {\tt 1} : dessiner dans une fen\^{e}tre peut alt\'{e}rer le contenu des
+sous-fen\^{e}tres de celle-ci.
+\end{Itemize}
+
+
+\Function {window-change-attributes} {window props-set props-unset} {3}
+Toute fen\^{e}tre \LeLisp\ poss\`{e}de un certain nombre de propri\'{e}t\'{e}s graphiques
+dans son champ {\tt graphic-attributes}, sous forme d'une liste de symboles.\\
+Ces propri\'{e}t\'{e}s ne sont pas garanties d'un syst\`{e}me \`{a} l'autre mais 
+peuvent s'av\'{e}rer tres utiles dans certains syst\`{e}mes.\\
+Par exemple, sur X11 on peut sp\'{e}cifier les propri\'{e}tes suivantes :
+\begin {Itemize}
+\item {\tt backing-store} : le syst\`{e}me de fen\^{e}trage sauvegarde dans ses
+propres structures le contenu d'une fen\^{e}tre et en g\`{e}re lui-m\^{e}me le
+r\'{e}affichage qui s'av\`{e}re plus rapide ;
+\item {\tt save-under} : cette propri\'{e}t\'{e} est utile pour les fen\^{e}tres de
+dialogue qui ont une dur\'{e}e de vie tres courte.
+Elle permet de pr\'{e}server le contenu des fen\^{e}tres qui vont \^{e}tre
+recouvertes par la fen\^{e}tre affich\'{e}e\,;
+\item {\tt user-size} : cette propri\'{e}t\'{e} sert \`{a} sp\'{e}cifier que la taille
+de la fen\^{e}tre sera indiqu\'{e}e interactivement par l'utilisateur lors de son
+apparition ;
+\item {\tt user-position} : cette propri\'{e}t\'{e} sert \`{a} sp\'{e}cifier que la
+position de la fen\^{e}tre sera indiqu\'{e}e interactivement par l'utilisateur
+lors de son apparition ;
+\item {\tt override-redirect} : la fen\^{e}tre cr\'{e}\'{e}e sera totalement ignor\'{e}e
+par le {\tt window-manager} dans X11 ;
+\item {\tt iconic-state} : la fen\^{e}tre cr\'{e}\'{e}e va d\'{e}marrer son existence \`{a}
+l'\'{e}tat d'ic\^{o}ne.
+\end{Itemize}
+La liste {\tt props-set} contient les propri\'{e}t\'{e}s \`{a} ajouter \`{a} la fen\^{e}tre
+{\tt window} et la liste {\tt props-unset} les propri\'{e}t\'{e}s \`{a} enlever.\\
+L'une ou l'autre de ces deux listes peut \^{e}tre vide.
+
+
+\EndHide
+
+
+\SSSection {Module virbit}
+
+Ce module contient les fonctions de gestion des m\'{e}moires de points.
+
+
+\Function {subst-colors} {bytetmap l} {2}
+L'argument {\tt l} est une liste de la forme
+{\tt ((old1 . new1) ... (oldn . newn))}
+o\`{u} les {\tt oldi} et {\tt newi} sont des instances de la classe {\tt color}.
+Cette fonction permet de substituer dans une m\'{e}moire de points {\tt bytemap}
+tous les points de la couleur {\tt oldi} en la couleur {\tt newi}.\\
+Cette fonction est sans effet sur une m\'{e}moire de points monochrome.
+
+
+\SSSection {Module vircolor}
+
+Ce module regroupe les fonctions de gestion de la couleur.
+
+
+\Function {name-to-rgb} {name} {1}
+Prend un nom de couleur {\tt name} et retourne les valeurs RGB
+({\em red, green, blue}) correspondantes sous forme d'un vecteur de trois
+entiers, ou () si cette couleur n'existe pas.
+
+
+\Function {get-rgb-values} {pixel} {1}
+Prend une valeur de pixel couleur {\tt pixel} (telle que le rendrait la
+fonction {\tt byteref}) et retourne les valeurs RGB ({\em red, green, blue})
+correspondantes sous forme d'un vecteur de trois entiers, ou () si cette
+valeur de pixel ne correspond \`{a} aucune couleur.
+
+
+
+\SSSection {Module virevent}
+
+Ce module contient les fonctions de gestion des \'{e}v\'{e}nements.
+
+
+\Function {allow-event} {display event} {2}
+Cette fonction permet d'ajouter l'\'{e}v\'{e}nement {\tt event} \`{a} la liste des
+\'{e}v\'{e}nements trait\'{e}s par le dispositif d'affichage {\tt display}.
+Toutes les fen\^{e}tres qui seront cr\'{e}\'{e}es apr\`{e}s
+l'appel \`{a} cette fonction vont demander au syst\`{e}me de recevoir
+ce nouveau type d'\'{e}v\'{e}nement sauf si elles ont sp\'{e}cifi\'{e} leurs propres
+listes d'\'{e}v\'{e}nements.
+La fonction retourne l'\'{e}v\'{e}nement.\\
+Exemple d'utilisation :
+\BeginLL
+(allow-event (current-display) 'functionkey-event)
+\EndLL
+
+
+\Function {disallow-event} {display event} {2}
+Cette fonction permet d'enlever l'\'{e}v\'{e}nement {\tt event} de la liste des
+\'{e}v\'{e}nements trait\'{e}s par le dispositif d'affichage {\tt display}.\\
+Toutes les fen\^{e}tres qui seront cr\'{e}\'{e}es
+apr\`{e}s l'appel de cette fonction vont demander au syst\`{e}me de ne pas recevoir
+ce nouveau type d'\'{e}v\'{e}nements sauf si elles ont sp\'{e}cifi\'{e} leurs propres
+listes d'\'{e}v\'{e}nement.
+La fonction retourne l'\'{e}v\'{e}nement.\\
+Exemple d'utilisation :
+\BeginLL
+(disallow-event (current-display) 'functionkey-event)
+\EndLL
+
+
+\Function {allowed-event-p} {display event} {2}
+Ce pr\'{e}dicat indique si l'\'{e}v\'{e}nement {\tt event} fait partie des \'{e}v\'{e}nements
+trait\'{e}s par le dispositif d'affichage {\tt display}, rend cet \'{e}v\'{e}nement
+si c'est le cas, () sinon.
+
+
+
+\SSection {Anciennes fonctions redocument\'{e}es}
+
+\Function {inibitmap} {name} {0-1}
+Charge le fichier de description du gestionnaire d'\'{e}cran de nom {\tt name}.
+Si l'argument {\tt name} n'est pas  fourni, le nom est cherch\'{e} dans la
+variable d'environnement BITMAP (voir la fonction GETENV).
+Quand elle n'est pas d\'{e}finie, {\tt bvtty} est pris par d\'{e}faut.\\
+\BeginLL
+; Exemple : chargement du fichier de description pour X-window 11
+? (inibitmap '|X11|)
+= X11
+\EndLL
+Notez que l'on peut charger successivement plusieurs fichiers de description
+diff\'{e}rents, ce qui peut \^{e}tre utile si l'on veut manipuler plusieurs
+\'{e}crans.
+
+
+\Function {current-clip} {x y w h} {fonction \`{a} 0 ou quatre arguments}
+Le rectangle (x, y , w, h) devient le rectangle de d\'{e}coupe courant.
+Sans argument, retourne les coordonn\'{e}es du rectangle de d\'{e}coupe courant
+dans les variables \#:clip:x, \#:clip:y, \#:clip:w et \#:clip:h.
+Toutes les op\'{e}rations d'affichage sont limit\'{e}es par le rectangle de
+d\'{e}coupe : seules les op\'{e}rations graphiques comprises dans ce rectangle
+seront donc r\'{e}alis\'{e}es.\\
+Remarque : cette fonction n'est pas une variable-fonction. Elle ne doit donc
+pas \^{e}tre employ\'{e}e \`{a} l'int\'{e}rieur d'un {\tt with}.
+
+
+
+
+\Section {Manuel d'implantation}
+
+En compl\'{e}ment de la documentation du chapitre pr\'{e}c\'{e}dent et de celle
+du Manuel de r\'{e}f\'{e}rence \LeLisp\, voici la liste des m\'{e}thodes \`{a} impl\'{e}menter
+pour disposer d'un portage du Bitmap Virtuel dans un nouveau syst\`{e}me
+d'\'{e}cran.\\
+
+Les fonctions sont s\'{e}par\'{e}es en modules interd\'{e}pendants.\\
+Les m\'{e}thodes qui existaient d\'{e}j\`{a} dans l'ancien BV peuvent voir changer
+le nombre et le type de leurs arguments.
+
+
+\SSection {M\'{e}thodes du module virutil}
+\BeginLL
+(send 'current-display display)
+\EndLL
+
+
+\SSection {M\'{e}thodes du module virinit}
+
+\BeginLL
+(send 'bitprologue display)
+(send 'bitmap-save display)
+(send 'bitmap-restore display)
+(send 'bitepilogue display)
+(send 'bitmap-refresh display)
+(send 'bitmap-sync display)
+(send 'bitmap-flush display)
+(send 'standard-roman-font display)
+(send 'standard-bold-font display)
+(send 'large-roman-font display)
+(send 'small-roman-font display)
+(send 'standard-background-pattern display)
+(send 'standard-foreground-pattern display)
+(send 'standard-light-gray-pattern display)
+(send 'standard-medium-gray-pattern display)
+(send 'standard-dark-gray-pattern display)
+(send 'standard-lelisp-cursor display)
+(send 'standard-gc-cursor display)
+(send 'standard-busy-cursor display)
+(send 'synchronize display flag)
+
+;; Nouveau :
+(send 'store-selection display buffer)
+(send 'get-selection display)
+(send 'display-depth display)
+\EndLL
+
+
+\SSection {M\'{e}thodes du module virevent}
+\BeginLL
+(send 'event-mode display event-mode)
+(send 'eventp display)
+(send 'read-event display event)
+(send 'peek-event display event)
+(send 'flush-event display)
+(send 'add-event display event)
+(send 'grab-event display window)
+(send 'ungrab-event display window)
+(send 'itsoft-event display)
+(send 'read-mouse display event)
+
+;; Nouveau :
+(send 'allow-event display event)
+(send 'disallow-event display event)
+(send 'allowed-event-p display event)
+\EndLL
+
+
+\SSection {M\'{e}thodes du module virmenu}
+
+\BeginLL
+(send 'create-menu display menu)
+(send 'kill-menu display menu)
+(send 'activate-menu display menu x y)
+(send 'menu-insert-item display menu choix index name active value)
+(send 'menu-insert-item-list display menu choix name active)
+(send 'menu-delete-item display menu choix index)
+(send 'menu-delete-item-list display menu choix)
+(send 'menu-modify-item display menu choix index name active value)
+(send 'menu-modify-item-list display menu choix name active)
+\EndLL
+
+
+\SSection {M\'{e}thodes du module vircolor}
+
+\BeginLL
+(send 'make-color display color red green blue)
+(send 'make-mutable-color display color red green blue)
+(send 'make-named-color display color name)
+(send 'kill-color display color)
+(send 'red-component display color red)
+(send 'blue-component display color blue)
+(send 'green-component display color green)
+
+;; Nouveau :
+(send 'name-to-rgb display name rgb)
+(send 'get-rgb-values display pixel rgb)
+\EndLL
+
+
+\SSection {M\'{e}thodes du module virbit}
+
+\BeginLL
+(send 'create-bitmap display bitmap)
+(send 'create-window-bitmap display window bitmap)
+(send 'kill-bitmap display bitmap)
+(send 'bmref display bitmap x y)
+(send 'bmset display bitmap x y bit)
+(send 'byteref display bitmap x y)
+(send 'byteset display bitmap x y byte)
+(send 'bitblit display b1 b2 x1 y1 x2 y2 w h)
+(send 'get-bit-line display bitmap y bitvector)
+(send 'set-bit-line display bitmap y bitvector)
+(send 'create-bytemap display bitmap)
+(send 'get-byte-line display bitmap y bytevector)
+(send 'set-byte-line display bitmap y bytevector)
+
+;; Nouveau :
+(send 'subst-colors display bitmap l ) ;;; l : (list of (oldcolor . newcolor))
+\EndLL
+
+
+\SSection {M\'{e}thodes du module virdraw}
+\BeginLL
+
+(send 'draw-cursor display graph-env x y state)
+(send 'draw-substring display graph-env x y s start length)
+(send 'draw-cn display graph-env x y cn)
+(send 'draw-point display graph-env x y)
+(send 'draw-polymarker display graph-env n vx vy)
+(send 'draw-line display graph-env x0 y0 x1 y1)
+(send 'draw-polyline display graph-env n vx vy)
+(send 'draw-rectangle display graph-env x y w h)
+(send 'fill-area display graph-env n vx vy)
+(send 'fill-rectangle display graph-env x y w h)
+(send 'draw-ellipse display graph-env x y rx ry)
+(send 'draw-circle display graph-env x y r)
+(send 'fill-ellipse display graph-env x y rx ry)
+(send 'fill-circle display graph-env x y r)
+
+;; Nouveau :
+(send 'draw-segments display graph-env n vx1 vy1 vx2 vy2)
+(send 'draw-arc display graph-env x y w h angle1 angle2)
+(send 'fill-arc display graph-env x y w h angle1 angle2)
+\EndLL
+
+
+\SSection {M\'{e}thodes du module virgraph}
+
+\BeginLL
+(send 'current-font display graph-env font)
+(send 'current-mode display graph-env mode)
+(send 'current-pattern display graph-env pattern)
+(send 'current-line-style display graph-env line-style)
+(send 'current-foreground display graph-env color)
+(send 'current-background display graph-env color)
+
+(send 'clear-graph-env display graph-env)
+(send 'font-height display graph-env)
+(send 'font-ascent display graph-env)
+
+(send 'font-max display)
+(send 'line-style-max display)
+(send 'pattern-max display)
+(send 'cursor-max display)
+
+(send 'width-substring  display ge string start length)
+(send 'height-substring display ge string start length)
+(send 'x-base-substring display ge string start length)
+(send 'y-base-substring display ge string start length)
+(send 'x-inc-substring  display ge string start length)
+(send 'y-inc-substring  display ge string start length)
+
+(send 'current-clip display graph-env x y w h)
+(send 'load-font display font)
+(send 'make-pattern display bitmap)
+(send 'make-cursor display b1 b2 x y)
+(send 'current-cursor display cursor)
+(send 'move-cursor display x y)
+
+;; Nouveau :
+\EndLL
+\BeginHide
+(send 'graph-env-font display graph-env font)
+(send 'graph-env-mode display graph-env mode)
+(send 'graph-env-pattern display graph-env pattern)
+(send 'graph-env-line-style display graph-env line-style)
+(send 'graph-env-foreground display graph-env color)
+(send 'graph-env-background display graph-env color)
+(send 'make-graph-env display graph-env . window)
+(send 'kill-graph-env display graph-env)
+(send 'graph-env-set-clip display graph-env x y w h)
+(send 'graph-env-set-clips display graph-env n vx vy vw vh)
+(send 'current-graph-env display graph-env)
+(send 'graph-env-change-values display graph-env font mode pattern ls fg bg)
+(send 'graph-env-subwindow-mode display graph-env mode)
+\EndHide
+\BeginLL
+(send 'make-named-cursor display key) ; key : index dans #:display:cursor-names
+(send 'cursor-name display cursor)
+(send 'make-line-style display width style)
+
+(send 'get-font-names display maxnames pattern)
+(send 'get-font-info display fontname font-info)
+
+\EndLL
+
+
+\SSection {M\'{e}thodes du module virwindow}
+\BeginLL
+
+(send 'current-window display window)
+(send 'uncurrent-window display window)
+(send 'find-window display x y)
+(send 'create-window display window)
+(send 'create-subwindow display window)
+(send 'modify-window display window le to wi he ti hi vi)
+(send 'update-window display window le to wi he)
+(send 'kill-window display window)
+(send 'pop-window display window)
+(send 'move-behind-window display window1 window2)
+(send 'current-keyboard-focus-window display window)
+(send 'uncurrent-keyboard-focus-window display window)
+(send 'map-window display window x y lx ly)
+
+;; Nouveau :
+(send 'window-clear-region display window x y w h)      
+(send 'move-window display window le to)        
+(send 'resize-window display window wi he)
+(send 'move-resize-window display window le to wi he)
+(send 'window-events-list display window events)
+(send 'window-title display window title)
+(send 'window-state display window state)
+(send 'window-background display window color)
+(send 'window-border display window border)
+(send 'window-change-attributes display window props-set props-unset)
+\EndLL
+
+
+
+
+\SSection {Notes d'impl\'{e}mentation}
+
+Ce paragraphe traite des nouveaut\'{e}s au niveau de l'impl\'{e}mentation du BV1+ et
+de sa mise en \oe uvre sur X11.
+
+\SSSection {Les fen\^{e}tres}
+
+Le gestionnaire de fen\^{e}tres X11 propose deux types de sous-fen\^{e}tres :
+\begin {Itemize}
+\item {\tt InputOutput} : des sous-fen\^{e}tres qui poss\`{e}dent les m\^{e}mes
+propri\'{e}t\'{e}s que les fen\^{e}tres principales ;
+\item {\tt InputOnly} : des fen\^{e}tres qui ne servent que comme zones
+rectangulaires sensibles aux \'{e}v\'{e}nements et dans lesquelles on ne peut
+en aucun cas dessiner.\\
+L'utilisation que l'on peut faire de ces fen\^{e}tres et de dessiner dans la
+fen\^{e}tre  principale et d'utiliser la sous-fen\^{e}tre pour recevoir les
+\'{e}v\'{e}nements.
+\end {Itemize}
+Nous d\'{e}signerons ces deux types de fen\^{e}tres sous les d\'{e}nominations
+{\tt opaque} et {\tt transparent}.\\
+Le nouveau BV supporte les deux types de fen\^{e}tres. La nouvelle structure de
+fen\^{e}tre contient un champ {\tt window-type} qui doit toujours contenir
+le type de la fen\^{e}tre.\\
+En effet, comme ces deux types de fen\^{e}tres r\'{e}agissent diff\'{e}rement pour les
+op\'{e}rations de dessins et r\'{e}affichage, l'utilisateur doit \^{e}tre inform\'{e} sur
+le type de fen\^{e}tre qu'il utilise.\\
+La diff\'{e}rence principale est que les fen\^{e}tres opaques re\c{c}oivent les
+\'{e}v\'{e}nements de type r\'{e}affichage alors que les fen\^{e}tres transparentes ne
+peuvent pas, et donc chaque fen\^{e}tre ne doit \^{e}tre responsable que du dessin
+explicitement fait dans cette fen\^{e}tre.
+Le dessin dans les sous-fen\^{e}tres opaques ne peut pas alt\'{e}rer le contenu de
+la fen\^{e}tre p\`{e}re.
+L'implantion du BV doit obligatoirement remplir la valeur du champ
+{\tt window-type} de chaque nouvelle instance de la classe {\tt window}.
+
+
+\SSSection {\'{e}v\'{e}nements}
+
+La gestion des \'{e}v\'{e}nements est maintenant partag\'{e}e entre la structure
+{\tt display} et la structure {\tt window}.\\
+Ces deux structures poss\`{e}dent un champ {\tt events-list} qui d\'{e}signe
+l'ensemble des \'{e}v\'{e}nements que l'on d\'{e}sire traiter.\\
+De nouveaux types d'\'{e}v\'{e}nements ont \'{e}t\'{e} rajout\'{e}s :
+\begin {Itemize}
+\item {\tt map-window} : la fen\^{e}tre qui re\c{c}oit cet \'{e}v\'{e}nement est maintenant
+visible et est plac\'{e}e au dessus de toutes les autres fen\^{e}tres\,;
+\item {\tt unmap-window} : la fen\^{e}tre dispara\^{\i}t de l'\'{e}cran (exemple :
+iconifier une fen\^{e}tre)\,;
+\item {\tt visibility-change} : la visibilit\'{e} de la fen\^{e}tre est alt\'{e}r\'{e}e,
+le champ {\tt detail} de l'\'{e}v\'{e}nement est un entier positif ayant
+comme valeurs possibles :
+\begin {Itemize}
+\item 0 : totalemement visible,
+\item 1 : partiellement visible,
+\item 2 : totalemement invisible,
+\end {Itemize}
+Cet \'{e}v\'{e}nement est utile si l'on veut par exemple maintenir une fen\^{e}tre au
+premier plan en permanence.
+\item {\tt client-message} : \'{e}v\'{e}nement de type communication dont le champ
+{\tt detail} contient le message envoy\'{e} si c'est une cha\^{\i}ne de caract\`{e}res.
+\end {Itemize}
+
+
+\SSSection {Communication avec le Window Manager}
+
+L'impl\'{e}mentation du BV1+ respecte le protocole X11 : {\em Inter Client
+Communication Control Protocol} (ICCCM). Cela permet \`{a}
+\LeLisp\ de cohabiter avec les autres applications graphiques pr\'{e}sentes,
+comme le {\em Window Manager} qui sous X11 est un client du serveur.\\
+D'autre part, il est possible de  modifier l'\'{e}tat d'une fen\^{e}tre \,:
+iconifier, faire dispara\^{\i}tre la fen\^{e}tre par le biais de la communication
+avec le {\em window-manager}.\\
+Ainsi le champ {\tt state} d'une fen\^{e}tre indiquera toujours l'\'{e}tat d'une
+fen\^{e}tre : iconify, map ou unmap.\\
+Sur X11, le Bitmap Virtuel ne fonctionne correctement en pr\'{e}sence d'un
+{\em window-manager} que si celui-ci respecte le protocole.
+
+
+
+\SSection {Les tests automatiques}
+
+\SSSection {Principe}
+
+Le Bitmap Virtuel poss\`{e}de maintenant une routine de tests automatiques comme
+les autres modules de \LeLisp.\\
+Ces tests permettent de v\'{e}rifier que les fonctions ont bien un comportement
+correspondant \`{a}  ce qu'on attend d'elles.\\
+Ils permettent aussi de tester certains aspects visuels automatiquement en
+{\em photographiant} une fen\^{e}tre \`{a} un moment donn\'{e} et en comparant son
+contenu avec un mod\`{e}le.\\
+La m\'{e}thode effectivement retenue pour ces tests est plus \'{e}conomique car elle
+permet d'\'{e}viter de charger de tels mod\`{e}les, qui seraient des {\em bitmaps}
+parfois volumineux.
+On prend deux fen\^{e}tres, et on effectue dans chacune de ces
+fen\^{e}tres des trac\'{e}s qui doivent aboutir par des voies diff\'{e}rentes \`{a} un
+r\'{e}sultat identique.\\
+Par exemple, on tracera un rectangle avec {\tt draw-rectangle} dans la
+premi\`{e}re, et le rectangle identique avec quatre {\tt draw-line} dans la
+seconde, et finalement on s'assure que les contenus des deux fen\^{e}tres sont
+bien identiques en comparant point par point leurs {\em bitmaps} respectifs.\\
+
+\SSSection {Organisation des fichiers sous Unix}
+
+Les fichiers de tests du Bitmap Virtuel sont dans le r\'{e}pertoire {\tt lltest}
+de \LeLisp.\\
+Pour lancer le test, lancer un \LeLisp\ graphique et taper :
+\BeginLL
+? ^Ltestbv
+\EndLL
+Le test s'ex\'{e}cute alors automatiquement et prend quelques minutes (pendant
+lesquelles il ne faut toucher \`{a} rien, afin de ne pas influer
+sur le d\'{e}roulement des tests).\\
+Le fichier {\tt testbv} provoque le chargement de plusieurs fichiers de tests
+(appel\'{e}s avec la fonction {\tt testfn}) :
+\begin {Itemize}
+\item un fichier de tests g\'{e}n\'{e}ral : {\tt tbvdata.ll},
+\item un fichier sp\'{e}cifique couleur/monochrome :
+\begin {Itemize}
+\item sur un \'{e}cran monochrome : le fichier {\tt tbvnb.ll}
+\item sur un \'{e}cran couleur ou niveaux de gris : le fichier {\tt tbvcolor.ll}
+\end {Itemize}
+\item un fichier "non portable" pour des tests sp\'{e}cifiques \`{a} un syst\`{e}me
+d'\'{e}cran :
+\begin {Itemize}
+\item pour X11 : le fichier tbvX11.ll,
+\item pour un syst\`{e}me d'\'{e}cran qui s'appellerait {\tt zz69} : le fichier
+serait {\tt tbvzz69.ll}.
+\end {Itemize}
+Le nom de ce fichier est une concat\'{e}nation de la cha\^{\i}ne "tbv" et du nom du
+{\tt bitmap} (la variable {\tt \#:bitmap:name}).
+\end {Itemize}
+Le seul fichier de test sp\'{e}cifique \`{a} l'heure actuelle concerne X11.
+
+
+\SSSection {Les tests sur X11}
+L'utilisation des tests sous Unix est int\'{e}ressante \`{a} conna\^{\i}tre pour qui
+d\'{e}sire porter la routine de test sur son propre syst\`{e}me.\\
+Sur l'incarnation X11 sous Unix, les tests peuvent \^{e}tre lanc\'{e}s gr\^{a}ce \`{a} une
+commande {\tt Bv.rec} dans le r\'{e}pertoire {\tt recette} de la machine.\\
+Cette commande est un {\em shell-script} qui :
+\begin {Itemize}
+\item Cr\'{e}e des fichiers d'environnement sp\'{e}cifiques (.Xdefaults, .lelisp)
+afin d'isoler l'application des options propres \`{a} la personne
+qui effectue le test,
+\item Lance un \LeLisp\ graphique {\tt lelispX11},
+\item charge {\tt testbv.ll}
+\end {Itemize}
+
+Ce test est lanc\'{e} avec l'ensemple de la recette \LeLisp. Les fichiers
+r\'{e}sultats \`{a} consulter sont dans le r\'{e}pertoire {tt recette/log/}.
+Cela permet de lancer le test sur plusieurs machines, donc dans des contextes
+diff\'{e}rents, et de pouvoir conserver trace de tous les r\'{e}sultats.\\
+Le fichier r\'{e}sultat concernant le BV
+contient en t\^{e}te quelques informations quant \`{a} la
+personne qui a lanc\'{e} le test, le contenu de la variable d'environnement
+{\tt DISPLAY}, etc.\\
+
+
+\SSSection {\'{e}volution des tests}
+Ces tests du BV peuvent et doivent \^{e}tre affin\'{e}s et compl\'{e}t\'{e}s.\\
+Si un des tests ne fonctionne pas, il est possible qu'il faille le raffiner.
+Si c'est le test qui est faux dans le contexte du nouveau portage, on peut
+l'\'{e}liminer \`{a} condition d'apposer un commentaire pour expliquer pourquoi
+ce test a \'{e}t\'{e} \'{e}limin\'{e}.\\
+Les modifications et ajouts fournis par les porteurs seront incorpor\'{e}s dans
+les prochaines versions des tests du BV, et devront permettre d'apporter une
+solution fiable et syst\'{e}matique \`{a} la validation du Bitmap Virtuel.
+
+
+
+\SSSection {La mesure des performances}
+
+Le fichier {\tt bvbench.ll} contient un programme de mesure des performances
+du bitmap virtuel.\\
+Il suffit de charger ce fichier et de taper :
+\BeginLL
+? (bench "/tmp/monbench")
+\EndLL
+L'ex\'{e}cution de cette routine prend plusieurs minutes et le r\'{e}sultat est
+sauvegard\'{e} dans le fichier {\tt /tmp/monbench}.
+
+
+\chapter {Les messages multilingues}
+
+\Section {Anciennes fonctions modifi\'{e}es dans le paragraphe 1.1}
+
+\Function {remove-language} {lang} {SUBR \`{a} 1 argument}
+ajouter:
+Si la langue \LT lang\GT\ est une des langues d\'{e}finies d'origine
+({\em french} et {\em english}), {\tt remove-language} efface tous les
+messages associ\'{e}s, mais conserve le nom de la langue dans la base des
+langages autoris\'{e}s. Cela permet de continuer de pouvoir charger des
+librairies standard o\`{u} des messages sont d\'{e}finis dans ces langues
+d'origine, m\^{e}me apr\`{e}s un {\tt remove-language}. 
+
+
+\Section {Nouvelles fonctions pour le paragraphe 1.1}
+
+\Function {default-language} {lang} {SUBR \`{a} 0 ou 1 argument}
+Une nouvelle notion est introduite par cette fonction: le langage par
+d\'{e}faut. L'id\'{e}e est que l'utilisateur qui d\'{e}sire se d\'{e}finir une
+nouvelle langue, ne soit pas contraint de red\'{e}finir tous les messages
+pr\'{e}-existants du syst\`{e}me dans cette nouvelle langue. {\tt
+default-language} lui permet de choisir la langue qui sera utilis\'{e}e
+pour tous les messages n'ayant pas de valeur dans la langue courante
+(cf {\tt current-language}). \\
+Sans argument, cette fonction retourne le nom symbolique de la langue
+par d\'{e}faut. Avec un argument (de type langue qui a \'{e}t\'{e} enregistr\'{e}
+au moyen de la fonction {\tt record-language}), elle change la valeur
+de la langue par d\'{e}faut.\\
+{\tt default-language} peut d\'{e}clencher les erreurs {\tt
+error-wrong-language} et  {\tt error-not-recorded-language}.\\
+A l'initialisation, le langage par d\'{e}faut est le m\^{e}me que le langage
+courant. \\
+
+Exemples:\\
+\? {(current-language)}
+\= {french}
+\? {(default-language)}
+\= {french}
+\? {(get-message 'errwna)}
+\= {mauvais nombre d'arguments}
+\? {(record-language 'german)}
+\= {german}
+\? {(defmessage exemple (german "das ist ein example"))}
+\= {exemple}
+\? {(current-language 'german)}
+\= {german}
+\? {(get-message 'exemple)}
+\= {das ist ein example}
+\? {(get-message 'errwna)}
+\= {mauvais nombre d'arguments}
+\? {(default-language 'english)}
+\= {english}
+\? {(get-message 'exemple)}
+\= {das ist ein example}
+\? {(get-message 'errwna)}
+\= {wrong number of arguments}
+\? {(get-message-p 'example) ; GET-MESSAGE-P suit aussi de DEFAULT-LANGUAGE}
+\= {das ist ein example}
+
+
+\chapter {Les pathnames virtuels}
+
+\Section {Anciennes fonctions modifi\'{e}es dans le paragraphe 6.10.1}
+
+\Function {namestring} {path} {SUBR \`{a} 1 argument}
+Ajouter : l'argument peut \^{e}tre de type {\tt pathname}, {\tt string} 
+ou {\tt symbol}.
+
+\Function {pathname} {x} {SUBR \`{a} 1 argument}
+convertit son argument \LT\ x\GT\ (de type {\tt string}, {\tt symbol} ou
+{\tt pathname}) correspondant
+\`{a} un nom de fichier dans la syntaxe du syst\`{e}me d'exploitation courant en
+l'objet de type {\tt pathname} correspondant.
+
+Ajouter l'exemple :\\
+\? {(pathname \#u"/usr/ilog/")}
+\= {\#:pathname:\#[ () () ("usr" "ilog") () () () ]}
+
+
+
+
+\Section {Nouvelles fonctions pour le paragraphe 6.10.1}
+
+\Function {equal-pathname} {path1 path2} {SUBR \`{a} 2 arguments}
+Cette fonction rend {\tt T} si ses deux arguments sont des pathnames \'{e}quivalents.\\
+Exemples sur Unix :\\
+\? {(equal-pathname \#p"/a/./b" \#p"/a/b")}
+\= {t}
+\? {(equal-pathname \#p"/a/../b" \#p"/b")}
+\= {()}
+Cette fonction consid\`{e}re que {\tt "/a/../b"} et {\tt "/b"} sont des pathnames
+Unix diff\'{e}rents \`{a} cause de l'\'{e}ventuelle pr\'{e}sence de liens
+symboliques.
+
+
+
+\Section {Nouvelles fonctions pour le paragraphe 6.10.3}
+
+Tous les champs des objets de type {\tt pathname} peuvent \^{e}tre modifi\'{e}s au moyen
+des fonctions suivantes.
+
+\Function {set-pathname-host} {path host} {SUBR \`{a} 2 arguments}
+Cette fonction permet de modifier le champs {\tt host} de son 
+argument \LT path\GT\ de
+type {\tt pathname}, et renvoie la nouvelle valeur du champs.
+L'argument \LT host\GT\ doit \^{e}tre de type {\tt string} ou \^{e}tre \'{e}gal \`{a} ().
+
+\Function {set-pathname-device} {path device} {SUBR \`{a} 2 arguments}
+Cette fonction permet de modifier le champs {\tt device} de son argument \LT path\GT\ de
+type {\tt pathname}, et renvoie la nouvelle valeur du champs.
+L'argument \LT device\GT\ doit \^{e}tre de type {\tt string} ou \^{e}tre \'{e}gal \`{a} ().
+
+\Function {set-pathname-directory} {path dir} {SUBR \`{a} 2 arguments}
+Cette fonction permet de modifier le champs {\tt directory} de son argument \LT path\GT\ de
+type {\tt pathname}, et renvoie la nouvelle valeur du champs.
+L'argument \LT dir\GT\ doit \^{e}tre une liste, dont les \'{e}l\'{e}ments sont des cha\^{\i}nes
+de caract\`{e}res ou l'un des symboles {\tt \#:pathname:up},
+{\tt \#:pathname:current} et {\tt \#:pathname:wild}.
+
+\Function {set-pathname-name} {path name} {SUBR \`{a} 2 arguments}
+Cette fonction permet de modifier le champs {\tt name} de son argument \LT path\GT\ de
+type {\tt pathname}, et renvoie la nouvelle valeur du champs.
+L'argument \LT name\GT\ doit \^{e}tre de type {\tt string}, \^{e}tre \'{e}gal \`{a} () ou au
+symbole {\tt \#:pathname:wild}.
+
+\Function {set-pathname-type} {path type} {SUBR \`{a} 2 arguments}
+Cette fonction permet de modifier le champs {\tt type} de son argument \LT path\GT\ de
+type {\tt pathname}, et renvoie la nouvelle valeur du champs.
+L'argument \LT type\GT\ doit \^{e}tre de type {\tt string} ou \^{e}tre \'{e}gal \`{a} ().
+
+\Function {set-pathname-version} {path version} {SUBR \`{a} 2 arguments}
+Cette fonction permet de modifier le champs {\tt version} de son argument \LT path\GT\ de
+type {\tt pathname}, et renvoie la nouvelle valeur du champ.
+
+\Function {combine-pathnames} {path1 path2} {SUBR \`{a} 2 arguments}
+Cette fonction prend comme arguments deux pathnames \LT path1\GT\ et \LT
+path2\GT\ et rend le pathname r\'{e}sultant de leur composition.
+La composition de 2 pathnames suit les r\`{e}gles suivantes: \\
+ - on choisit le champs {\tt host} de \LT path2\GT\, sauf s'il est
+vide, auquel cas on choisit le champs {\tt host} de \LT path1\GT\ ; \\
+ - on choisit le champs {\tt device} de \LT path2\GT\, sauf s'il est
+vide, auquel cas on choisit le champs {\tt device} de \LT path1\GT\ ; \\
+ - concat\'{e}nation des champs {\tt directory} des 2 pathnames 
+si le champs {\tt directory} de \LT path2\GT\ d\'{e}crit un chemin
+relatif. 
+Si le champs {\tt directory} de \LT path2\GT\ n'est pas relatif, alors
+il est pris tel quel comme r\'{e}sultat. Le champs {\tt directory}
+r\'{e}sultat est \'{e}ventuellement simplifi\'{e} dans tous les cas; \\
+ - les champs {\tt name}, {\tt type} et {\tt version} de \LT path2\GT\
+deuxi\`{e}me pathname sont seuls consid\'{e}r\'{e}s au d\'{e}triment de 
+ces champs dans \LT path1\GT\ .
+
+Exemples :\\
+\? {(combine-pathnames \#u"/home/" \#u"foo.sh")}
+\= {\#p"/home/foo.sh"}
+\? {(combine-pathnames \#u"/usr/lelisp/llib/" \#u"../llobj/pretty.lo")}
+\= {\#p"/usr/lelisp/llobj/pretty.lo"}
+\? {(combine-pathnames \#u"/usr/lelisp/llib/path.ll"
+                       \#u"../llmod/path.lm")}
+\= {\#p"/usr/lelisp/llmod/path.lm"}
+\? {(combine-pathnames \#u"/usr/lelisp/llib/path.ll"
+                       \#u"/usr/lelisp/llobj/path.lo")}
+\= {\#p"/usr/lelisp/llobj/path.lo"}
+
+Cette fonction est diff\'{e}rente de {\tt merge-pathnames} dans la mesure o\`{u}
+cette derni\`{e}re sert \`{a} compl\'{e}ter les champs manquants d'un pathname, alors
+que {\tt combine-pathnames} est une composition des champs d\'{e}crivant
+le ``contenant{''} (les champs d\'{e}crivant l\`{a} o\`{u} est le fichier: {\tt
+host, device, directory}) de deux 
+pathnames, avec utilisation de ``l'objet contenu{''} (les champs
+d\'{e}crivant le fichier: {\tt name, type, version}) du deuxi\`{e}me pathname.
+
+On peut noter que quels que soient les pathnames {\tt p1} et {\tt p2},
+l'\'{e}valuation suivante :\\ 
+\? {(probefile (combine-pathnames p1 p2))}
+
+rendra toujours le m\^{e}me r\'{e}sultat que :\\
+\? {(with ((current-directory p1)) (probefile p2))}
+
+\chapter {Le mode EXECORE sous UNIX}
+
+Le mode {\tt EXECORE} existait d\'{e}j\`{a} sur certains portages. Il a
+\'{e}t\'{e} g\'{e}n\'{e}ralis\'{e} autant que faire se peut, et sa mise en \oe uvre
+pour l'utilisateur a \'{e}t\'{e} simplifi\'{e}e.
+
+\Section {Description}
+Certains portages ({\em Sun, IBMRT}... ) laissent le choix \`{a}
+l'utilisateur de fabriquer des syst\`{e}mes \LeLisp\ directement
+ex\'{e}cutables, sans passer par le m\'{e}canisme des {\tt cores}
+d\'{e}port\'{e}s. Le portage sur {\em Vax} offre le m\'{e}canisme des {\tt execore}
+en standard.
+
+Dans une configuration {\tt execore} la commande {\tt lelisp} n'est plus un
+script-shell de lancement du {\em binaire + core}, mais directement l'image
+m\'{e}moire \LeLisp\ ex\'{e}cutable. \\
+Pour obtenir un tel effet, il suffit \`{a}
+l'utilisateur de jouer avec la variable de {\em Makefile} {\tt EXE}. Lorsque
+cette variable n'a pas de valeur (cas par d\'{e}faut sur Sun et IBMRT),
+le m\'{e}canisme {\tt execore} n'est pas utilis\'{e}. Si l'utilisateur
+lui donne la valeur {\tt exe}, les images obtenues seront directement
+{\tt ex\'{e}cutables}. \\
+L'un des avantages au mode {\tt execore} sous certains Unix,
+est qu'une image Le-Lisp se charge plus rapidement, puisqu'on ne
+charge que le code dont on a besoin en m\'{e}moire. \\
+Un autre avantage du mode {\tt execore} est que le message d'erreur
+{\em no compatible core image} n'apparait plus.
+
+\Section {Exemple}
+\BeginLL
+sun% make lelisp
+/bin/cc -O -sun3 -DNBSYST=22 -DBSD4x -DBSD42 -DTIMEUNIT=60. -DINRIA -DSUNOS40 -B
+static  -DSUN    -DFOREIGN  -DFILEINI=\"../llib/startup.ll\" -I../common -DSYSNA
+ME=\"Le-Lisp\" -DSTAMP=\"$$\" -c ../common/lelisp.c
+mv lelisp.o o/lelisp.o
+cc -O -sun3 -DNBSYST=22 -DBSD4x -DBSD42 -DTIMEUNIT=60. -DINRIA -DSUNOS40 -Bstati
+c  -DSUN    -DFOREIGN  -DFILEINI=\"../llib/startup.ll\" -I../common -DSYSNAME=\"
+Le-Lisp\" -z -x -o lefpu31bin \
+o/llmain.o o/llstdio.o o/llfloat.o  o/lelisp.o  lefpu31bin.o \
+-lm -lc
+ln lefpu31bin lelispbin
+../system/config lelisp lelispbin lelispconf.ll "sun" -stack 6 -code 600 -heap 2
+56 -number 0  -vector 4 -string 5 -symbol 5 -cons 4 -float 0
+; Le-Lisp (by INRIA) version 15.23  (14/Fev/90)  [sun]
+= (Version:  15.23)
+= subversion
+= herald
+= defvar
+= syste`me unix
+ (load-std sav min pepe env ld llcp)  pour charger l'environnement std,
+ (load-stm sav min pepe env ld llcp)  pour l'environnement std modulaire,
+ (load-cpl sav min meme env ld cmpl)  pour l'environnement complice.
+= /nfs/work/v15.2/llib/startup.ll
+? (setq #:system:name (quote |lelisp|))
+= lelisp
+? ; configuration du syste`me Le_Lisp standard modulaire
+? (defvar #:ld68k:mc68881 t)
+= #:ld68k:mc68881
+? (progn
+?   (load-stm #:system:name t t t t t)
+?   (add-feature 'MC68881)
+?   (add-feature (if (eq 0.0 0.0)
+?                  '31BITFLOATS
+?                  '64BITFLOATS))
+?   )
+Je charge /nfs/work/v15.2/llib/lap68k.ll
+Je charge loader.lm
+Je charge /nfs/work/v15.2/llmod/llpatch.lm
+Je charge /nfs/work/v15.2/llmod/module.lm
+Je charge /nfs/work/v15.2/llmod/defs.lm
+Je charge /nfs/work/v15.2/llmod/toplevel.lm
+Je charge /nfs/work/v15.2/llmod/cpmac.lm
+Je charge /nfs/work/v15.2/llmod/llcp.lm
+Je charge /nfs/work/v15.2/llmod/peephole.lm
+Je charge /nfs/work/v15.2/llmod/virtty.lm
+Je charge /nfs/work/v15.2/llmod/virbitmap.lm
+Je charge /nfs/work/v15.2/llmod/pepe.lm
+Je charge /nfs/work/v15.2/llmod/setf.lm
+Je charge /nfs/work/v15.2/llmod/defstruct.lm
+Je charge /nfs/work/v15.2/llmod/sort.lm
+Je charge /nfs/work/v15.2/llmod/array.lm
+Je charge /nfs/work/v15.2/llmod/callext.lm
+Je charge /nfs/work/v15.2/llmod/trace.lm
+Je charge /nfs/work/v15.2/llmod/pretty.lm
+Je charge /nfs/work/v15.2/llmod/debug.lm
+Je charge /nfs/work/v15.2/llmod/ttywindow.lm
+Je charge /nfs/work/v15.2/llmod/abbrev.lm
+Je charge /nfs/work/v15.2/llmod/microceyx.lm
+Attendez, je sauve : Syste`me standard modulaire
+; Le-Lisp (by INRIA) version 15.23 (30/Sept/90)   [sun]
+; Tu utilises /nfs/work/v15.2/
+; Syste`me standard modulaire : lun 24 sept 90 20:37:27
+= (31bitfloats mc68881 edlin date microceyx debug setf pepe virbitmap virtty
+compiler pretty abbrev loader callext defstruct pathname messages)
+? (end)
+Que Le-Lisp soit avec vous.
+sun% ls -l lelisp
+-rwxrwxr-x  1 kuczynsk  184 Sep 24 20:36 lelisp
+sun% cat lelisp
+exec /udd/chatelet/work/v15.2/sun/lelispbin -stack 6 -code 600 -heap \
+256 -number 0 -vector 4 -string 5 -symbol 5 -cons 4 -float 0 \
+-r /udd/chatelet/work/v15.2/sun/llcore/lelisp.core $*
+sun% make lelisp EXE=exe
+/bin/cc -O -sun3 -DNBSYST=22 -DBSD4x -DBSD42 -DTIMEUNIT=60. -DINRIA -DSUNOS40 -B
+static  -DSUN    -DFOREIGN  -DFILEINI=\"../llib/startup.ll\" -I../common -DSYSNA
+ME=\"Le-Lisp\" -DSTAMP=\"$$\" -DEXECORE -c ../common/lelisp.c
+mv lelisp.o o/lelispexe.o
+cc -O -sun3 -DNBSYST=22 -DBSD4x -DBSD42 -DTIMEUNIT=60. -DINRIA -DSUNOS40 -Bstati
+c  -DSUN    -DFOREIGN  -DFILEINI=\"../llib/startup.ll\" -I../common -DSYSNAME=\"
+Le-Lisp\" -z -x -o lefpu31exebin \
+o/llmain.o o/llstdio.o o/llfloat.o  o/lelispexe.o execore.o  lefpu31bin.o \
+-lm -lc
+ln lefpu31exebin lelispexebin
+../system/config lelisp lelispexebin lelispconf.ll "sun" -stack 6 -code 600 -hea
+p 256 -number 0  -vector 4 -string 5 -symbol 5 -cons 4 -float 0
+; Le-Lisp (by INRIA) version 15.23  (14/Fev/90)  [sun]
+= (Version:  15.23)
+= subversion
+= herald
+= defvar
+= syste`me unix
+ (load-std sav min pepe env ld llcp)  pour charger l'environnement std,
+ (load-stm sav min pepe env ld llcp)  pour l'environnement std modulaire,
+ (load-cpl sav min meme env ld cmpl)  pour l'environnement complice.
+= /nfs/work/v15.2/llib/startup.ll
+? (setq #:system:name (quote |lelisp|))
+= lelisp
+? ; configuration du syste`me Le_Lisp standard modulaire
+? (defvar #:ld68k:mc68881 t)
+= #:ld68k:mc68881
+? (progn
+?   (load-stm #:system:name t t t t t)
+?   (add-feature 'MC68881)
+?   (add-feature (if (eq 0.0 0.0)
+?                  '31BITFLOATS
+?                  '64BITFLOATS))
+?   )
+Je charge /nfs/work/v15.2/llib/lap68k.ll
+Je charge loader.lm
+Je charge /nfs/work/v15.2/llmod/llpatch.lm
+Je charge /nfs/work/v15.2/llmod/module.lm
+Je charge /nfs/work/v15.2/llmod/defs.lm
+Je charge /nfs/work/v15.2/llmod/toplevel.lm
+Je charge /nfs/work/v15.2/llmod/cpmac.lm
+Je charge /nfs/work/v15.2/llmod/llcp.lm
+Je charge /nfs/work/v15.2/llmod/peephole.lm
+Je charge /nfs/work/v15.2/llmod/virtty.lm
+Je charge /nfs/work/v15.2/llmod/virbitmap.lm
+Je charge /nfs/work/v15.2/llmod/pepe.lm
+Je charge /nfs/work/v15.2/llmod/setf.lm
+Je charge /nfs/work/v15.2/llmod/defstruct.lm
+Je charge /nfs/work/v15.2/llmod/sort.lm
+Je charge /nfs/work/v15.2/llmod/array.lm
+Je charge /nfs/work/v15.2/llmod/callext.lm
+Je charge /nfs/work/v15.2/llmod/trace.lm
+Je charge /nfs/work/v15.2/llmod/pretty.lm
+Je charge /nfs/work/v15.2/llmod/debug.lm
+Je charge /nfs/work/v15.2/llmod/ttywindow.lm
+Je charge /nfs/work/v15.2/llmod/abbrev.lm
+Je charge /nfs/work/v15.2/llmod/microceyx.lm
+Attendez, je sauve : Syste`me standard modulaire
+; Le-Lisp (by INRIA) version 15.23 (30/Sept/90)   [sun]
+; Tu utilises /nfs/work/v15.2/
+; Syste`me standard modulaire : lun 24 sept 90 20:44:05
+= (31bitfloats mc68881 edlin date microceyx debug setf pepe virbitmap virtty
+compiler pretty abbrev loader callext defstruct pathname messages)
+? (end)
+Que Le-Lisp soit avec vous.
+sun% ls -l lelisp
+-rwxrwxr-x  1 kuczynsk 1754132 Sep 24 20:44 lelisp
+sun% ./lelisp
+; Le-Lisp (by INRIA) version 15.23 (30/Sept/90)   [sun]
+; Tu utilises /nfs/work/v15.2/
+; Syste`me standard modulaire : lun 24 sept 90 20:44:05
+= (31bitfloats mc68881 edlin date microceyx debug setf pepe virbitmap virtty
+compiler pretty abbrev loader callext defstruct pathname messages)
+? (end)
+Que Le-Lisp soit avec vous.
+sun%
+\EndLL
+
+\Section {Notation}
+On notera qu'il n'est pas n\'{e}cessaire d'ajouter l'option {\tt -s}
+comme avec d'anciennes versions apr\`{e}s la commande {\tt lelisp} en
+mode {\tt execore}. \\
+Seules les noms des commandes finales (\|lelisp|, \|cmplc|, etc) sont
+partag\'{e}es
+entre le mode execore et le mode normal. Aussi, il existe un binaire
+diff\'{e}rent selon les deux modes. On trouvera par exemple, un {\tt
+lelispbin} et un {\tt lelispexebin} dans les entr\'{e}es du {\em Makefile}.
+
+\chapter {La boucle d'\'{e}v\'{e}nements}
+
+Dans ce chapitre nous d\'{e}crivons le moyen de disposer d'une seule boucle
+d'\'{e}v\'{e}nements dans un programme \LeLisp\ utilisant plusieurs types
+d'entr\'{e}es\,:\\
+\begin {itemize}
+\item graphiques : clavier,souris,...\,;
+\item fichiers au sens UNIX ({\tt socket}, {\tt pipe}, ...)\,.
+\end{itemize}
+Le module d\'{e}crit dans ce papier, illustre une interface fonctionnelle
+accessible \`{a} l'utilisateur qui permet d'associer des fonctions
+de traitements \`{a} des entr\'{e}es particuli\`{e}res.\\
+Cette boucle d'\'{e}v\'{e}nements permet aussi de r\'{e}gler le probl\'{e}me des
+interruptions\,: dans l'attente d'un ou de plusieurs types d'\'{e}v\'{e}nements
+toutes les interruptions classiques sont trait\'{e}es.\\
+L'impl\'{e}mentation de cette boucle repose aujourd'hui sur le
+ {\em terminal virtuel} de \LeLisp\ (voir le chapitre  15 du Manuel de 
+r\'{e}f\'{e}rence) et sur la fonctionnalit\'{e} UNIX {\tt select}. Le code
+pr\'{e}sent\'{e} ici ne tourne aujourd'hui qu'avec UNIX. D'autres
+implantations de la boucle d'\'{e}v\'{e}nements sur d'autres syst\`{e}mes sont
+faisables et seront r\'{e}alis\'{e}s.\\
+La boucle d'\'{e}v\'{e}nements offerte marche en standard avec le terminal 
+virtuel de type {\tt \#:tty:evloop}.\\
+Cela interdit toute utilisation de la boucle d'\'{e}v\'{e}nements avec
+un autre type de terminal virtuel qui n'est pas un sous-type de
+{\tt \#:tty:evloop}.\\
+Toutefois une exception est faite pour le terminal virtuel utilis\'{e} par
+Aida o\`{u} la boucle d'\'{e}v\'{e}nements est int\'{e}gr\'{e}e d'office.\\
+
+\Section {Fonctions}
+\Function {evloop-init} {} {SUBR sans argument}
+Cette fonction initialise la boucle d'\'{e}v\'{e}nements et positionne
+le terminal virtuel {\tt \#:tty:evloop} comme terminal courant.\\
+Cette fonction ne devrait \^{e}tre appel\'{e}e qu'une seule fois.
+
+\Function {evloop-stop} {} {SUBR sans argument}
+Cette fonction inhibe l'utilisation de la boucle d'ev\`{e}nements et positionne
+comme terminal virtuel le terminal par d\'{e}faut du syst\`{e}me {\tt tty}.\\
+
+\Function {evloop-restart} {} {SUBR sans argument}
+Cette fonction red\'{e}marre la boucle d'\'{e}v\'{e}nements et repositionne
+le terminal virtuel {\tt \#:tty:evloop} comme terminal courant.
+
+\Function {evloop-disallow-tty-input} {} {SUBR sans argument}
+Cette fonction inhibe le traitement des entr\'{e}es de l'utilisateur sur
+l'entr\'{e}e standard par la boucle d'\'{e}v\'{e}nements.\\
+Cette fonction n'a d'effets que si la boucle d'\'{e}v\'{e}nements est 
+initialis\'{e}e et est active.
+
+
+\Function {evloop-allow-tty-input} {} {SUBR sans argument}
+Cette fonction autorise le traitement des entr\'{e}es de l'utilisateur sur
+l'entr\'{e}e standard par la boucle d'\'{e}v\'{e}nements.\\
+Cette fonction n'a d'effets que si la boucle d'\'{e}v\'{e}nements est 
+initialis\'{e}e et est active.
+
+\Function {evloop-add-input} {fd manage-function arg-to-use} {SUBR \`{a} 3 arguments}
+Cette fonction ajoute le descripteur de fichier ({\em unix}) \`{a} la boucle
+d'\'{e}v\'{e}nements.\\
+Si la boucle d'\'{e}v\'{e}nements est active d\`{e}s qu'il y a quelque chose \`{a}
+lire sur le descripteur de fichier {\tt fd} la fonction
+{\tt manage-function} est ex\'{e}cut\'{e}e avec comme argument {\tt arg-to-use}.\\
+Cette fonction n'a aucun effet si la boucle d'\'{e}v\'{e}nements n'est pas 
+initialis\'{e}e.
+
+\Function {evloop-remove-input} {fd} {SUBR \`{a} 1 argument}
+Cette fonction enl\^{e}ve  le descripteur de fichier {\tt fd} de la liste
+des descripteurs de fichiers trait\'{e}s par la boucle d'\'{e}v\'{e}nements.\\
+
+\Function {evloop-change-manage-function} {fd new-manage-function new-arg-to-use} {SUBR \`{a} 3 arguments}
+Si le descripteur de fichier {\tt fd} est d\'{e}j\`{a} trait\'{e} dans la boucle
+d'\'{e}v\'{e}nements cette fonction remplace la fonction \`{a} ex\'{e}cuter 
+lorsqu'il y a quelques choses \`{a} lire dans {\tt fd} par la fonction
+{\tt new-manage-function} avec comme argument {\tt new-arg-to-use}.
+
+\Function {evloop-select} {} {SUBR sans arguments}
+Cette fonction n'est pas utile pour l'utlisation standard de ce module
+ elle ne sert qu'a l'utilisateur qui d\'{e}sire impl\'{e}menter un nouveau type
+de terminal virtuel.\\
+Cette fonction repr\'{e}sente le moteur de la boucle d'\'{e}v\'{e}nements\,:\\
+Elle est tout le temps appel\'{e} par le syst\`{e}me  et c'est elle 
+qui bloque le programme dans l'attente d'un ou de plusieurs descripteurs
+de fichiers pr\^{e}ts en lecture pour ensuite ex\'{e}cuter les
+fonctions  qui leurs sont associ\'{e}s.
+
+\Function {evloop-readp} {fd} {SUBR sans arguments}
+Cette fonction retourne la valeur {\tt t} si une entr\'{e}e est pr\^{e}te en
+lecture. C'est la g\'{e}n\'{e}ralisation de la fonction {\tt eventp} du Bitmap 
+Virtuel. La fonction retourne {\tt ()}  sinon.
+
+\Function {evloop-input-managedp} {} {SUBR \`{a} 1 argument}
+Cette fonction retourne la valeur {\tt t} si l'entr\'{e}e {\tt fd} est trait\'{e} par
+la boucle d'\'{e}v\'{e}nements. L'argument {\tt fd} est typiquement un entier 
+designant un descripteur de fichiers sous {\tt UNIX}.
+
+
+\Function {evloop-initialized-p} {} {SUBR sans  arguments}
+Cette fonction retourne  la valeur {\tt t} si la boucle d'\'{e}v\'{e}nements est
+d\'{e}j\`{a} initialis\'{e}e.
+
+
+\Function {evloop-wait} {} {fonction sans arguments}
+Cette fonction met le processus en attente d'une entr\'{e}e.\\
+Lorsque l'attente est termin\'{e}e la fonction retoune le descripteur
+ (s'il y en a un seul) sous la forme d'une paire point\'{e} LeLisp 
+({\em (fd . (function . arg))}) o\`{u}  {\tt fd} est le descripteur de fichier,
+ {\tt function} la fonction de traitement qui lui est associ\'{e}e et 
+{\tt arg} l'argument enregistr\'{e}.
+S'il y plus d'un descripteur pr\^{e}t en lecture la fonction retourne une
+liste de paires point\'{e}es.
+
+\Function {evloop-set-timeout} {secs millisecs} {fonction \`{a} 2 arguments}
+Cette fonction permet de limiter le temps d'attente du processus durant les
+appels aux fonctions {\tt evloo-select} et {\tt evloop-wait}.\\
+Lorsque le temps d'attente sp\'{e}cifi\'{e} par {\tt secs} -- en secondes -- et (ou)
+{\tt millisecs} -- en milli\'{e}mes de secondes -- est ecoul\'{e} durant une attente
+le deux fonctions cit\'{e}es peuvent \'{e}ventuellement ex\'{e}cuter une fonction
+(voir la fonction {\tt evloop-set-timeout-handler}.\\
+Les arguments {\tt secs} et {\tt millisecs} doivent \^{e}tre des entiers 
+positifs. S'ils valent 0 tous les deux les attentes sont infinies.
+Cette fonction permet donc de d\'{e}clencher un traitement p\'{e}riodique lorsque
+le processus ne re\c{c}oit plus d'entr\'{e}es pendant une p\'{e}riode sup\'{e}rieure 
+\`{a} la frequence d\'{e}finie par {\tt secs } et {\tt millisecs}.\\
+Un exemple d'utilisation dans \Aida de cette fonction serait d'afficher l'heurer\'{e}guli\`{e}rement.\\
+A la difference de la fonction {\tt clockalarm} de \LeLisp le traitement
+n'est pas declench\'{e} pendant l'ex\'{e}cution d'un traitement autre que
+l'appel de des fonction  {\tt evloo-select} et {\tt evloop-wait}.
+
+\Function {evloop-set-timeout-handler} {handler} {fonction \`{a} 1 argument}
+L'argument {\tt  handler} est soit {\tt ()} soit une fonction LeLisp \`{a}
+appeler lorsque le temps specifi\'{e} par la fonction {\tt evloop-set-timeout}
+est ecoul\'{e}.
+
+\SSection {Traitement des sorties}
+Cette section presente les fonctions suppl\'{e}mentaires pour ajouter des 
+sorties (fichiers, descripteurs de fichiers et autres) dans la boucle
+d'\'{e}v\'{e}nements.\\
+\Function {evloop-add-output} {fd manage-function arg-to-use} {fonction \`{a} 3 arguments}
+Cette fonction rajoute le descripteur de fichier {\tt fd} ({\em unix}) \`{a} la boucle d'\'{e}v\'{e}nements.\\
+Si la boucle d'\'{e}v\'{e}nements est active d\`{e}s que le descripteur de fichier
+{\tt fd} est pr\^{e}t en lecture la fonction 
+{\tt manage-function} est ex\'{e}cut\'{e}e avec comme argument {\tt arg-to-use}.\\
+Cette fonction n'a aucun effet si la boucle d'\'{e}v\'{e}nement n'est pas 
+initialis\'{e}e.
+
+\Function {evloop-remove-output} {fd} {fonction \`{a} 1 argument}
+Cette fonction enl\`{e}ve  le descripteur de fichier {\tt fd} de la liste
+des descripteurs de fichiers trait\'{e}s par la boucle d'\'{e}v\`{e}nements en \'{e}criture.\\
+
+\Function {evloop-change-output-manage-function} {fd new-manage-function new-arg-to-use} {fonction \`{a} 3 arguments}
+Si le descripteur de fichier {\tt fd} est d\'{e}j\`{a} trait\'{e} dans la boucle
+d'\'{e}v\`{e}nements cette fonction remplace la fonction \`{a} ex\'{e}cuter 
+lorsqu'il y a quelques choses \`{a} lire dans {\tt fd} par la fonction
+{\tt new-manage-function} avec comme argument {\tt new-arg-to-use}.
+
+\Section {Exemple}
+Nous pr\'{e}sentons dans ce chapitre un exemple d'utilisation de la
+boucle d'\'{e}v\'{e}nements avec le {\tt bitmap virtuel} de \LeLisp\ sur
+l'incarnation {\tt X11 windows}.\\
+\BeginLL
+;;; Definition de fonctions utilitaires
+;;;
+(defun display-manage-events (display)
+;;; Cette fonction lit tous les evenements en attente dans 
+;;; le dipositif d'affichage DISPLAY et les imprime a l'ecran
+        (current-display display)
+        (while (eventp) (print (read-event))))
+;;;
+;;; Lancement du systeme Le-Lisp
+% lelispX11
+; Le-Lisp (by INRIA) version 15.23 (14/Fev/90)   [sony]
+; Systeme standard sur X11-windows : ven  6 juil 90 14:25:52 
+= (31bitfloats abbrev callext compiler date debug defstruct edlin loader 
+mc68881 messages microceyx pathname pepe pretty setf virbitmap virtty)
+? (loadmodule 'evloop)
+= evloop
+? ;;; Chargement du module qui definit la boucle d'evenements
+?  (setq display (bitprologue))
+= #<#:display:x11 X11 trocadero:0.0>
+? ;;; Initialisation du dispositif d'affichage
+? (evloop-init)
+= t
+? (setq fd (send 'file-descriptor display))
+= 3
+? ;;; On recupere le descripteur de fichier (socket) associe a DISPLAY
+? (evloop-add-file-descriptor fd 'display-manage-events display)
+= t
+? ;;; On le rajoute a la boucle d'evenements standard
+? (setq w (create-window 'window 0 0 200 200 "lisp window1" 1 1))
+= #<#:image:rectangle:window lisp window1> 
+? ;;; On cree une fenetre
+?  (setq display1 (bitprologue '|X11| "host1:0"))
+= #<#:display:x11 X11 trocadero:0.0>
+? ;;; Initialisation du dispositif d'affichage sur un deuxieme ecran
+= t
+? (setq fd1 (send 'file-descriptor display))
+= 4
+? ;;; On recupere le descripteur de fichier (socket) associe a DISPLAY1
+? (evloop-add-file-descriptor fd1 'display-manage-events display)
+= t
+? ;;; On le rajoute a la boucle d'evenements standard
+? (setq w1 (create-window 'window 0 0 200 200 "lisp window2" 1 1))
+= #<#:image:rectangle:window lisp window2> 
+? ;;; On cree une deuxieme fenetre dans l'ecran de la machine "host"
+? ;;; Et tous les evenements clavier ou souris associees qux
+? ;;; deux fenetres w et w1  seront affiches
+? ;;; de me^me que tout ce que l'utilisateur tape au clavier
+? ;;; dans la fenetre de lancement de Le-Lisp
+#:event:#[enterwindow-event #<#:image:rectangle:window lisp window1> () 175 
+194 167 169 () ()]
+#:event:#[down-event #<#:image:rectangle:window lisp window1> 0 143 154 135 
+129 () ()]
+#:event:#[up-event #<#:image:rectangle:window lisp window1> 0 143 154 135 129 
+() ()]
+#:event:#[leavewindow-event #<#:image:rectangle:window lisp window1> () 279 
+254 271 229 () ()]
+#:event:#[enterwindow-event #<#:image:rectangle:window lisp window2> () 174 
+177 166 152 () ()]
+#:event:#[ascii-event #<#:image:rectangle:window lisp window2> 97 193 147 185 
+122 () ()]
+#:event:#[leavewindow-event #<#:image:rectangle:window lisp window2> () 225 
+180 217 155 () ()]
+? (end)
+Que Le-Lisp soit avec vous.
+\EndLL
+
+\newpage
+\bigskip
+
+\tableofcontents
+\listoftables
+
+\End

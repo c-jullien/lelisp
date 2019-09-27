@@ -1,0 +1,4 @@
+This directory contains the definition files for the virtual terminals.
+
+For certain terminals these fiels are automatically created using the
+file termcap.ll.

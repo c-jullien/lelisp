@@ -1,0 +1,31 @@
+defmodule
+float
+files (
+bngen
+)
+export (
+floor
+ceiling
+round
+precision
+#:r:error
+#:r:|-|
+#:r:/
+#:r:quomod
+#:r:eval
+#:r:numberp
+#:r:integerp
+#:r:rationalp
+#:r:truncate
+#:float:*
+#:float:|+|
+#:float:<?>
+#:float:quomod
+#:float:floor
+#:float:truncate
+#:fix:<?>
+)
+import
+()
+include
+()

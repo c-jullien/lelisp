@@ -1,0 +1,73 @@
+#
+#	Makefile for 'testdll.dll'	08/17/94
+#
+
+#	-D_ISO			For ISO/IEC 9899:1990 C Compilers
+#	-D_WINDOWS		For Windows 3.x
+
+#	Directories :
+
+SYSDIR	= ..\..\..\msdos
+OBJDIR	= $(SYSDIR)\o
+
+#	Tools:
+
+CC	= cl
+LD	= link
+RC	= rc
+
+#	Flags:
+
+MFLAGS	= -D_ISO -D_WINDOWS
+MODEL	= -AL
+CFLAGS	= -nologo -c -Asnw -Gsw -Oas -Zpe
+LIBDIR	= c:\msvc\lib
+LIB	= $(LIBDIR)\llibcew $(LIBDIR)\libw
+DEBUG	= # /CodeView
+LDFLAGS	= /B /NoLogo /NoDef /NoExt
+
+#	External definition with DLL
+
+all:	$(SYSDIR)\testdll.dll	$(SYSDIR)\testdll.ll	\
+	$(SYSDIR)\testdll.lm	$(SYSDIR)\testdll.lo	\
+	$(SYSDIR)\iabs.dll
+
+#	testdll
+
+$(SYSDIR)\testdll.dll: $(OBJDIR)\libentry.obj $(OBJDIR)\testdll.obj \
+			testdll.def
+	@echo $(LIB) iabs > lib.tmp
+	@$(LD) /B /NOD $(OBJDIR)\testdll $(OBJDIR)\libentry, $@,, @lib.tmp, \
+		testdll.def
+	@del lib.tmp
+
+$(OBJDIR)\testdll.obj: testdll.c
+	@$(CC) $(CFLAGS) -Fo$@ testdll.c
+
+#	iabs
+
+$(SYSDIR)\iabs.dll: $(OBJDIR)\libentry.obj $(OBJDIR)\iabs.obj \
+			iabs.def
+	@echo $(LIB) > lib.tmp
+	@$(LD) /B /NOD $(OBJDIR)\iabs $(OBJDIR)\libentry, $@,, @lib.tmp, \
+		iabs.def
+	@del lib.tmp
+	@\msvc\bin\implib iabs.lib iabs.def
+
+$(OBJDIR)\iabs.obj: iabs.c
+	@$(CC) $(CFLAGS) -Fo$@ iabs.c
+
+$(OBJDIR)\libentry.obj: libentry.obj
+	@copy libentry.obj $(OBJDIR)
+
+testdll.lo:	testdll.ll testdll.lm
+	@echo "testdll.lo is not up to date. Please use compilwl"
+
+$(SYSDIR)\testdll.ll:	testdll.ll
+	@copy testdll.ll $(SYSDIR)
+
+$(SYSDIR)\testdll.lm:	testdll.lm
+	@copy testdll.lm $(SYSDIR)
+
+$(SYSDIR)\testdll.lo:	testdll.lo
+	@copy testdll.lo $(SYSDIR)

@@ -1,0 +1,329 @@
+
+                    Installation Notice for Le-Lisp 15.26
+			       For PC/AT 386
+		              under X86MACOS
+
+                                    ELIGIS
+                           4, villa des REINETTES
+                               95390 Saint-Prix
+                                    France
+                           Tel. +33 (0) 1.34.27.60.09
+
+Dear Eligis client,
+
+You have installed Le-Lisp 15.26 on your disk.  This notice
+allows you to configure or reconfigure Le-Lisp according to your
+needs.  You should distribute this document to all Le-Lisp users at
+your site; they will certainly find it useful.
+
+This notice is divided into three sections:
+
+ * The first section describes all of Le-Lisp's configuration modes
+   for binary and memory image files.  This section describes the way
+   to create the standard binary and memory image files as well as the
+   way to create your own personalized binaries and images.
+
+ * The second section gives further information for the curious about
+   certain features of Le-Lisp.  It explains how to install the
+   Le-Lisp UNIX manual page and how to use the Le-Lisp validation test
+   suite.  The last paragraph speaks about the product's future
+   evolution.
+
+ * The third section describes what you need to do if Le-Lisp is not
+   to be installed in the standard directory /usr/ilog/lelisp.
+
+I/   POSSIBLE CONFIGURATIONS
+============================
+
+Binary creation
+---------------
+
+A certain number of Le-Lisp binaries are supplied and ready to be
+used.  These binaries are found in the directory lelisp/x86macos.
+Standardly, there are:
+
+lelispbin	: standard binary for the Le-Lisp kernel.
+leX11bin	: binary linked with X Windows version 11, which is
+	                 used by the graphic tools including Aida, Masai,
+	                 Smeci, and so on.
+
+Other binaries can be created using the Le-Lisp Makefile.  All
+possible combinations of the following parameters can be generated
+using this Makefile:
+
+ * Use of 31 or 64 bit floating point numbers.  (See below for
+   details.)
+
+ * Linking the binary with X11 library code.
+
+In all, you can make the following standard binaries using the Le-Lisp
+Makefile on PC/AT 386:
+
+lelisp31bin,
+
+lelisp64bin,
+
+lelisp31X11bin,
+
+lelisp64X11bin,
+
+lelisp31M11bin,
+
+lelisp64M11bin,
+
+Example:
+
+             $ cd /usr/ilog/lelisp/x86macos
+
+             $ make lelisp64bin FLT=64 -> with 64 bit floats
+
+You can make your own Le-Lisp binaries linked with your own C or
+Fortran object files, to create a static Le-Lisp interface with this
+so-called `foreign code.'  For this, you should use the `generic
+Makefile entries' found in the Le-Lisp Makefile.  These generic
+entries can be redefined to use the name that you like as well as the
+list of compiled object files to link with the binaries, the
+compilation flags to use, and the Lisp libraries to be loaded.  The
+complete list of redefinable Makefile variables, instructions, and
+examples can be found in the Le-Lisp Unix manual page (lelisp(1)).
+
+Please consult the Le-Lisp Unix manual page (lelisp(1)) to find out
+more.
+
+Memory Image Creation
+---------------------
+
+The following memory images are supplied on the streamer:
+
+lelisp (standard lelisp image)
+cmplc++ (standard module compiler image)
+
+These images can be regenerated if necessary using the command make,
+as follows:
+
+             $ cd /usr/ilog/lelisp/x86macos
+             $ make
+
+The following alternative binary-generating Makefile entries also exist:
+
+Name         Make command             Description
+
+lelispX11    make lelispX11           Le-Lisp image linked with the X11
+                                       virtual bitmap.
+
+lelispi      make lelispi             Interpreted Le-Lisp image.
+
+lelisp64     make lelisp64 FLT=64     64 bit floating point numbers.
+
+You can create your own Le-Lisp memory images using the binaries and
+configuration files of your choice, and which can be dimensioned as
+you wish.  To do so, use the generic Makefile entries.  The complete
+list of redefinable Makefile variables as well as instructions and
+examples are described in the Le-Lisp Unix manual page (lelisp(1)).
+
+Don't hesitate to consult the Le-Lisp Unix manual page (lelisp(1)) to
+find out more.
+
+II For Those Who Wish to Know More:
+===================================
+
+64 Bit Floating Point Coding
+----------------------------
+
+Because of performance and space concerns, Le-Lisp floating point
+numbers are by default coded in one memory word using 31 bits,
+reserving one bit for a tag.  This coding is precise to about 7
+digits.
+
+If you need greater precision, you can reconfigure your
+Le-Lisp binaries to use floating point numbers coded in 64 bits.  The
+precision of these floating point numbers is around 12 digits.  The
+cost of this greater precision is that calculations will be about two
+times slower and your memory needs will increase since the 64 bit
+floating point numbers are allocated Lisp objects rather than
+immediates.  The standard Makefile allows you to create a Le-Lisp
+memory image using the 64 bit floating point numbers using the
+following command:
+
+             $ cd /usr/ilog/lelisp/x86macos
+             $ make lelisp64 FLT=64
+
+Link Editing
+------------
+
+To communicate between Le-Lisp and some other language such as C or
+Fortran, the user must link the Le-Lisp binary with one or more
+external object files.
+
+This link must be done statically on the Le-Lisp port for PC/AT 386 by
+specifying the external object files with which you wish to link the
+binary in the Le-Lisp Makefile.  The function CLOAD does not exist in
+the port for PC/AT 386.  See the above section on binary creation as
+well as the Le-Lisp Unix manual page for further information.
+
+Note: To compile and link foreign language programs with the Le-Lisp
+binary, you need a complete development environment on your machine,
+including the foreign language compiler and linker.  This includes
+
+the C compiler
+
+as well as the link editor and correctly installed libraries.
+
+Le-Lisp in the background
+-------------------------
+
+Sometimes it is useful to start a process in the background:  Control
+in the terminal is immediately returned to the user.  Le-Lisp's
+functioning in the background is intimately connected to the event
+loop which handles input and output to the terminal.  This possibility
+is especially useful for products based on Le-Lisp which define their
+own terminal type --- for example, the Aida terminal.
+
+A command like `aida &' executes in the background but is used
+interactively via the Aida terminal.  You can therefore continue to
+use the Unix shell in the window which started Aida.
+
+Although Le-Lisp does not use its own terminal, it is still possible
+to start Le-Lisp in the background on PC/AT 386, but only in
+non-interactive mode --- ie, no keyboard input is allowed.
+
+Unix manual pages for Le-Lisp
+-----------------------------
+
+Le-Lisp manual pages for Unix, accessible via the command `man', are
+supplied with the Le-Lisp streamer.  They can be found in the
+directory /usr/ilog/lelisp/manl.
+
+The available manual pages are:
+
+* lelisp.l: Describes the command `lelisp' and its cohorts with
+	 explanations concerning the creation of these commands as well as
+	 the creation tool itself. (See make(1).)
+* complice.l: Describes the module compiler complice.
+* config.l: Describes the command `config' which creates Le-Lisp
+	 memory images.
+* newdir.l: Describes the command `newdir' which updates the necessary
+	 Unix path during installation.
+
+You can consult these manual pages by using the Unix command `man'
+(see man(1)), by looking directly in the text of the manual pages, or
+finally by installing these manual pages at your site.  If you would
+like to read the manual page for complice for example, you can execute
+the following command:
+
+             $ nroff -man /usr/ilog/lelisp/manl/complice.l
+              ...
+
+Or you can recopy the files into the local manual directory of your
+machine, /usr/catman/local\_man/man1.  If this directory does not exist, you must create
+it as the super-user, using the following sequence of commands:
+
+             $ su
+	     password: <mot de passe du super-utilisateur>
+	     # mkdir /usr/catman/local\_man/man1
+	     # cd /usr/catman/local\_man/man1
+	     # cp /usr/ilog/lelisp/manl/complice.txt complice.1
+	     # cp /usr/ilog/lelisp/manl/lelisp.txt lelisp.1
+	     # <ctrl-D>
+	     $ man complice
+	     ...
+
+There are also preformatted versions of these manual pages in the
+directory /usr/ilog/lelisp/manl.  The files are named <file>.txt, and
+are directly readable using the following command:
+
+             $ cat /usr/ilog/lelisp/manl/complice.txt
+             ...
+
+Le-Lisp Validation
+------------------
+
+Note: This section need not be systematically followed after a
+standard installation.  However, it may be necessary following certain
+abnormal behavior in order to determine its origin.
+
+To verify the Le-Lisp installation or to extract certain performance
+measurements, there are several commands in the directory
+/usr/ilog/lelisp/x86macos/recette which allow you to launch the complete
+Le-Lisp test suite on your machine or to launch the performance
+measurement tools for your machine.
+
+Note: The launching of the complete test suites necessitates the
+recompilation of C runtime component of Le-Lisp, which requires the
+presence of a complete development environment on your machine,
+including
+
+the C compiler
+
+, linker, correctly installed libraries, and so on.
+
+The memory images supplied standardly must also be recreated.
+
+             $ cd /usr/ilog/lelisp/x86macos/recette
+             $ sh Suites            # to start the test suite
+             ...
+
+Depending on the machine, these tests take from 2 to 8 hours.
+
+             $ sh Bench             # to start the benchmarks
+             ...
+
+The results of the benchmarks do not in any case provide an reliable
+measure of the machine.  They give at most a comparative measure of
+Le-Lisp's performance vis a vis other ports.  These test suites
+destroy the existing binaries; it is thus important to remake them
+using the following sequence of commands:
+
+             $ cd ..                # go back to lelisp/x86macos
+             $ make                 # put all back in order
+             ...
+
+Information about Le-Lisp Versions
+----------------------------------
+
+There are a certain number of Le-Lisp versions following the product's
+evolution.  All the information about these various versions are
+gathered together in the directory lelisp/info.  In particular, there
+is a note on programming in Le-Lisp version 15 to facilitate the
+transfer to Le-Lisp version 16, in the file v15prog.{txt,dvi}.  Please
+consult this directory to find out more.  These files exist in LaTeX
+format (.tex), in raw ASCII format (.txt), and in compiled LaTeX
+format (.dvi) which can be printed using the command `lpr -d <file>'.
+
+III/ Non-standard Installation
+==============================
+
+You just copied Le-Lisp from the streamer to somewhere on your disk,
+but you have not yet installed it in /usr/ilog/lelisp (even using
+symbolic links).  We will call this directory <lelisp-dir>.
+
+Updating Le-Lisp paths
+----------------------
+
+You must partially reconfigure Le-Lisp to indicate the installation
+directory.  To do this, you place yourself in the Le-Lisp directory
+x86macos and use the command `newdir' which will update this absolute
+directory.   (See newdir(l).)
+
+by using the command `make'.  See lelisp(l) and make(1).
+
+             $ cd <repertoire-lelisp>/x86macos
+             $ sh newdir           # to update paths
+             $ make                # to create standard images
+
+Command Accessibility
+---------------------
+
+You are now finished; Le-Lisp is installed.  The commands which allow
+you to start Le-Lisp (lelisp and complice) can be found in the
+directory /usr/ilog/lelisp/x86macos.  You can copy them in a directory of
+your choice where they will be accessible to all of your site's users
+--- often in the directory /usr/local/bin.  You can do this with the
+following sequence of commands:
+
+             $ cd <repertoire-lelisp>/x86macos
+             $ su
+	     password: <mot de passe du super-utilisateur>
+	     # cp complice lelisp /usr/local/bin
+	     # <ctrl-d>
+

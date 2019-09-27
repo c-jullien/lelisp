@@ -1,0 +1,1152 @@
+;;; .Entete "Le-Lisp (c) version 15.2" "10/19" "cntrl.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 10 "Les fonctions de contro^le"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; .Centre "$Header: /usr/cvs/lelisp/llm3/cntrl.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $"
+
+          TITLE     CNTRL               ; LLM3 : les fonctions de controle
+
+          XREFI     LLINIT,HASHTAB      ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,MSTACK
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.UNDEF
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFI     LLINIT,.LLSYSTEM
+          XREFP     TOPERR,ERRSYM       ; 2 - TOPERR
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRNVA
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRVEC
+          XREFP     TOPERR,ERRBAL
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRFS
+          XREFI     TOPERR,.LSUBR0
+          XREFI     TOPERR,.LSUBR1
+          XREFI     TOPERR,.LSUBR2
+          XREFI     TOPERR,.LSUBR3
+          XREFI     TOPERR,.NLSUBR
+          XREFI     TOPERR,.FLSUBR
+          XREFI     TOPERR,.LLEXPR
+          XREFI     TOPERR,.LLFEXPR
+          XREFI     TOPERR,.LLMACRO
+          XREFI     TOPERR,.LLDMACRO
+          XREFI     TOPERR,.LLMSUBR
+          XREFI     TOPERR,.LLDMSUBR
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     EVAL,EVALCAR        ; 4 - EVAL
+          XREFP     EVAL,EVALA1
+          XREFP     EVAL,FUNCALL
+          XREFP     EVAL,FFUNCALL
+          XREFP     EVAL,EVPROGN
+          XREFI     EVAL,SAVEA1
+          XREFI     EVAL,SAVEA2
+          XREFI     EVAL,ERRNAME
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFP     SYMBS,ADDPROP       ; 12 - SYMBS
+          XREFP     SYMBS,GETPROP
+          XREFP     SYMBS,PUTPROP
+          XREFP     SYMBS,REMPROP
+          XREFP     FNTSTD,MEMBER       ; 13 - FNTSTD
+          XREFP     FNTSTD,NREVERSE
+          XREFP     FNTSTD,NRECONC
+          XREFP     FNTSTD,EQUAL
+          XREFP     STRING,MAKEVECT
+          XREFP     BLLSHT,LOC          ; 19 - BLLSHT
+
+          XDEFP     INI_CTL
+
+          XDEFP     LLDE
+
+          XDEFI     .QUOTE
+          XDEFI     .LAMBDA
+          XDEFI     .FLAMBDA
+          XDEFI     .MLAMBDA
+          XDEFI     .PROGN
+          XDEFI     TABTYPFN            ; [gc]
+          XDEFI     TABCODFN            ; [gc]
+
+          IMPURE
+
+
+TABTYPFN  ADR       0                   ; c'est maintenant un vecteur 15
+TABCODFN  ADR       0                   ; les types de fcts encode's
+
+          PURE
+
+;
+;         Creation des symboles
+;         =====================
+;
+
+INI_CTL   LABEL      
+          MAKCST    LFF,#16,"loaded-from-file" 
+          MOV       .LLSYSTEM,PKGC(A1) ; c'est en fait system:loaded-from-file
+          MOVNIL    CVAL(A1)            ; pas de fichier actif
+
+          MOV       #13,A1              ; la taille
+          MOVNIL    A2                  ; tous a ()
+          JCALL     MAKEVECT            ; #[ () () ]
+          MOV       A1,TABTYPFN         ; le vecteur des types.
+          HPMOVX    .LSUBR0,TABTYPFN,#1
+          HPMOVX    .LSUBR1,TABTYPFN,#2
+          HPMOVX    .LSUBR2,TABTYPFN,#3
+          HPMOVX    .LSUBR3,TABTYPFN,#4
+          HPMOVX    .NLSUBR,TABTYPFN,#5
+          HPMOVX    .FLSUBR,TABTYPFN,#6
+          HPMOVX    .LLEXPR,TABTYPFN,#7
+          HPMOVX    .LLFEXPR,TABTYPFN,#8
+          HPMOVX    .LLMACRO,TABTYPFN,#9
+          HPMOVX    .LLDMACRO,TABTYPFN,#10
+          HPMOVX    .LLMSUBR,TABTYPFN,#11
+          HPMOVX    .LLDMSUBR,TABTYPFN,#12
+
+          MOV       #13,A1              ; la taille
+          MOVNIL    A2                  ; tous a ()
+          JCALL     MAKEVECT            ; #[ () () ]
+          MOV       A1,TABCODFN         ; le vecteur des codes
+          HPMOVX    #SUBR0,TABCODFN,#1
+          HPMOVX    #SUBR1,TABCODFN,#2
+          HPMOVX    #SUBR2,TABCODFN,#3
+          HPMOVX    #SUBR3,TABCODFN,#4
+          HPMOVX    #SUBRN,TABCODFN,#5
+          HPMOVX    #SUBRF,TABCODFN,#6
+          HPMOVX    #EXPR,TABCODFN,#7
+          HPMOVX    #FEXPR,TABCODFN,#8
+          HPMOVX    #MACRO,TABCODFN,#9
+          HPMOVX    #DMACRO,TABCODFN,#10
+          HPMOVX    #SUBRM,TABCODFN,#11
+          HPMOVX    #SUBRDM,TABCODFN,#12
+
+          MAKFNT    LLDE,#5,"defun" 
+          MAKFNT    LLDE,#2,"de" 
+          MAKFNT    LLDF,#2,"df" 
+          MAKFNT    LLDM,#2,"dm" 
+          MAKFNT    DMD,#3,"dmd" 
+          MAKFNT    DMD,#8,"defmacro" 
+          MAKFNT    LLDS,#2,"ds"
+          MAKFNT    DEFVAR,#6,"defvar" 
+          MAKCST    PREVDEF,#12,"previous-def" 
+          MOV       .LLSYSTEM,PKGC(A1)
+          MAKFNT    REVERT,#6,"revert" 
+          MAKFNT    GETDEF,#6,"getdef"
+          MAKFNT    MAKEDEF,#7,"makedef"
+          MAKFNT    LLIF,#2,"if" 
+          MAKFNT    LLIFN,#3,"ifn" 
+          MAKFNT    WHEN,#4,"when" 
+          MAKFNT    UNLESS,#6,"unless" 
+          MAKFNT    COND,#4,"cond" 
+          MAKFNT    LLOR,#2,"or" 
+          MAKFNT    LLAND,#3,"and" 
+          MAKFNT    WHILE,#5,"while" 
+          MAKFNT    UNTIL,#5,"until" 
+          MAKFNT    LOOP,#4,"loop"
+          MAKFNT    FREPEAT,#6,"repeat" 
+          MAKFNT    SELECTQ,#7,"selectq" 
+          MAKFNT    MAP,#3,"map" 
+          MAKFNT    MAP,#4,"mapl" 
+          MAKFNT    MAPC,#4,"mapc" 
+          MAKFNT    MAPLIST,#7,"maplist" 
+          MAKFNT    MAPCAR,#6,"mapcar" 
+          MAKFNT    MAPCON,#6,"mapcon" 
+          MAKFNT    MAPCAN,#6,"mapcan" 
+          MAKFNT    FEVERY,#5,"every" 
+          MAKFNT    FANY,#3,"any" 
+          MAKFNT    MAPVECT,#9,"mapvector"
+          MAKFNT    MAPOBLIST,#9,"mapoblist" 
+          MAKFNT    MAPCOBLIST,#10,"mapcoblist" 
+          MAKFNT    MAPLOBLIST,#10,"maploblist" 
+          MAKFNT    QUOTE,#5,"quote" 
+          MAKFNT    LAMBDA,#6,"lambda" 
+          MAKFNT    FLAMBDA,#7,"flambda" 
+          MAKFNT    MLAMBDA,#7,"mlambda" 
+          MAKFNT    LLIDENT,#8,"identity" 
+          MAKFNT    COMMENT,#7,"comment" 
+          MAKFNT    PROGN,#5,"progn" 
+          MAKFNT    EPROGN,#6,"eprogn" 
+          MAKFNT    PROG1,#5,"prog1" 
+	  MAKFNT    EXDEF,#21,"exportable-definition"
+          MAKFNT    PROG2,#5,"prog2" 
+
+;                                       *** Fabrication des constantes
+          MOV       .QUOTE,A1
+          MOV       A1,CVAL(A1)
+          MOV       .LAMBDA,A1
+          MOV       A1,CVAL(A1)
+          MOV       .FLAMBDA,A1
+          MOV       A1,CVAL(A1)
+          MOV       .MLAMBDA,A1
+          MOV       A1,CVAL(A1)
+;
+CNFALSE   MOVNIL    A1
+CNPOPJ    RETURN
+
+CNTTRUE   MOV       .T,A1
+          RETURN
+
+
+;
+;         Fonctions de definition statique
+;         ================================
+;
+
+DEF       LABEL      
+          MOV       CDR(A1),A2          ; A2 <- ((lvar) corps)
+          MOV       CAR(A1),A1          ; A1 <- le nom de la fonction
+          SFTYPE    A3,A1               ; force le nouvel FTYPE
+          MOV       A2,FVAL(A1)         ; force la nouvelle FVAL
+          MOV       .LFF,A3             ; le symbole 'LOADED-FROM-FILE'
+          MOV       CVAL(A3),A2         ; sa valeur.
+          BTNIL     A2,CNPOPJ           ; pas de fichier actif
+          PUSH      A1                  ; PUTPROP retourne la valeur!
+          JCALL     PUTPROP             ; il est actif.
+          POP       A1                  ; retourne le nom de la fonction
+          RETURN
+
+;
+;         LLDE [de];  LLDF [df];  LLDM [dm];  DMD [dmd]
+;         detruisent l'ancien couple FTYP/FVAL
+;
+;  ----------------------------------------
+          FENTRY    LLDE,SUBRF
+;  ----------------------------------------
+          MOV       #EXPR,A3
+          BRA       DEF
+
+;  ----------------------------------------
+          FENTRY    LLDF,SUBRF
+;  ----------------------------------------
+          MOV       #FEXPR,A3
+          BRA       DEF
+
+;  ----------------------------------------
+          FENTRY    LLDM,SUBRF
+;  ----------------------------------------
+          MOV       #MACRO,A3
+          BRA       DEF
+
+;  ----------------------------------------
+          FENTRY    DMD,SUBRF
+;  ----------------------------------------
+          MOV       #DMACRO,A3
+          BRA       DEF
+
+; ----------------------------------------
+          FENTRY    LLDS,SUBRF
+; ----------------------------------------
+          MOVNIL    A1                  ; ne fait rien maintenant!
+          RETURN
+
+;         DEFVAR : FSUBR
+;         petit SETQ pour 1 seule variable mais charge "loaded-from-file"
+;         mais retourne le nom du symbole.
+;
+;  ----------------------------------------
+          FENTRY    DEFVAR,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,DEFVAR9          ; syntaxe vraiment bizarre
+          PUSH      CAR(A1)             ; sauve le nom de la variable
+          MOV       CDR(A1),A1          ; (value)
+          JCALL     EVALCAR             ; calcule la valeur
+          POP       A2                  ; recupere le nom
+          BFVAR     A2,DEFVERR          ; ouille!
+          MOV       A1,CVAL(A2)         ; force la nouvelle valeur
+          MOV       A2,A1               ; le nom de la variable
+          MOV       .LFF,A3             ; le symbole 'LOADED-FROM-FILE'
+          MOV       CVAL(A3),A2         ; sa valeur.
+          BTNIL     A2,DEFVAR9          ; pas de fichier actif
+          PUSH      A1                  ; valeur a retourner
+          JCALL     PUTPROP             ; il est actif.
+          POP       A1                  ; retourne le nom de la variable
+DEFVAR9   RETURN
+DEFVERR   MOV       A2,A1               ; la variable bizarre
+          MOV       .DEFVAR,A2          ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable.
+
+;
+;         (REVERT at)
+;         remet l'ancienne definition de at
+;
+;  ----------------------------------------
+          FENTRY    REVERT,SUBR1
+;  ----------------------------------------
+          MOV       .PREVDEF,A2         ; l'indicateur #:SYSTEM:PREVIOUS-DEF
+          JCALL     GETPROP             ; recupere l'ancienne def
+          BTNIL     A1,CNPOPJ           ; il n'y avait pas de def
+          JMP       EVALA1              ; il y avait un truc (de foo  ...
+
+;         (MAKEDEF symbol typefn valfn)
+;         (GETDEF x)
+; 
+;         retournemt la forme de de'finition
+;         (de getdef (x)
+;             (unless (symbolp x)
+;                     (error 'getdef 'errnaa x))
+;             (makedef x (typefn x) (valfn x)))
+; 
+;         (de makedef (x typefn valfn)
+;             (selectq (typefn x)
+;                 ((SUBR0 SUBR1 SUBR2 SUBR3 NSUBR FSUBR MSUBR DMSUBR)
+;                    (list 'DS x typefn (if (fixp valfn) (loc valfn) valfn)))
+;                 (EXPR (mcons 'DE x valfn))
+;                 (FEXPR (mcons 'DF x valfn))
+;                 (MACRO (mcons 'DM x valfn))
+;                 (DMACRO (mcons 'DMD x valfn))
+;                 (t ())))
+; 
+; ----------------------------------------
+          FENTRY    GETDEF,SUBR1
+; ----------------------------------------
+          BFSYMB    A1,GTDEFE           ; il faut un symbole
+          GFTYPE    A1,A2               ; typefn
+          MOV       FVAL(A1),A3         ; valfn
+          BRA       DEFSUIT             ; tombe dans makedef
+
+GTDEFE    MOV       .GETDEF,A2          ; err non symbole
+          JMP       ERRSYM
+
+; ----------------------------------------
+          FENTRY    MAKEDEF,SUBR3
+; ----------------------------------------
+          BFFIX     A2,UNCOD0           ; c'est pas un nombre
+          CNBLT     A2,#0,UNCODTR       ; rate c'est < 0
+          CNBLE     A2,#12,DEFSUIT      ; tout bon <= 12
+UNCODTR   MOV       .MAKEDEF,A2
+          JMP       ERROOB
+
+UNCOD0    PUSH      A3                  ; le temps de la conversion
+          HGSIZE    TABTYPFN,A4         ; la taille du tableau de type
+          BRA       UNCOD2
+UNCOD1    HPXMOV    TABTYPFN,A4,A3      ; l'element suivant
+          CABEQ     A3,A2,UNCOD3        ; c'est le bon
+UNCOD2    SOBGTZ    A4,UNCOD1           ; il en reste
+UNCOD3    MOV       A4,A2               ; le code trouve'
+          POP       A3                  ; restaure le registre
+
+DEFSUIT   BRX       @TBMAKDEF,A2        ; sur le type
+TBMAKDEF  ADR       MKDEF0              ; code 0  : pas de de'finition
+          ADR       MKDEF1              ; code 1  : SUBR a` 0 argument
+          ADR       MKDEF1              ; code 2  : SUBR a` 1 argument
+          ADR       MKDEF1              ; code 3  : SUBR a` 2 arguments
+          ADR       MKDEF1              ; code 4  : SUBR a` 3 arguments
+          ADR       MKDEF1              ; code 5  : SUBR a` N argumemnts
+          ADR       MKDEF1              ; code 6  : SUBRF
+          ADR       MKDEF2              ; code 7  : EXPR
+          ADR       MKDEF3              ; code 8  : FEXPR
+          ADR       MKDEF4              ; code 9  : MACRO
+          ADR       MKDEF5              ; code 10 : DMACRO
+          ADR       MKDEF1              ; code 11 : SUBRM
+          ADR       MKDEF1              ; code 12 : SUBRDM
+
+MKDEF0    MOVNIL    A1
+          RETURN
+MKDEF1    BTLISP    A3,MKDEF10          ; 
+          PUSH      A1
+          PUSH      A2
+          MOV       A3,A1
+          JCALL     LOC                 ; si valfn > #$ffff
+          MOV       A1,A3
+          POP       A2
+          POP       A1
+MKDEF10   NCONS     A3
+          HPXMOV    TABTYPFN,A2,A2      ; type en clair de la fonction
+          CONS      A2,A3
+          MOV       .LLDS,A4
+          BRA       MKDEF8
+MKDEF2    MOV       .LLDE,A4
+          BRA       MKDEF8
+MKDEF3    MOV       .LLDF,A4
+          BRA       MKDEF8
+MKDEF4    MOV       .LLDM,A4
+          BRA       MKDEF8
+MKDEF5    MOV       .DMD,A4
+MKDEF8    CONS      A1,A3
+          CONS      A4,A3
+          MOV       A3,A1
+          RETURN
+
+
+;
+;         Fonctions de controle
+;         =====================
+
+;
+;         IF : FSUBR. La fonction conditionnelle la plus simple
+;         et ses soeurs IFN, WHEN, UNLESS
+;         permet de traiter les recursions terminales
+;
+;  ----------------------------------------
+          FENTRY    LLIF,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,IFER2            ; bizarre (if)
+          PUSH      CDR(A1)             ; sauve (then else)
+          JCALL     EVALCAR             ; evalue le test
+          POP       A2                  ; recupere (then else)
+          BFCONS    A2,IFER1            ; bizarre (if test)
+          MOV       CDR(A2),A3          ; A3 <- else
+          MOV       .LLIF,ERRNAME         ; si erreur
+          BTNIL     A1,PROGNA3          ; evalue le else
+          MOV       CAR(A2),A1          ; A1 <- le then
+          JMP       EVALA1              ; qui est evalue
+IFER1     MOV       A2,A1
+IFER2     BTNIL     A1,CNPOPJ           ; bizare mais = ()
+          MOV       .LLIF,A2              ; l'appelant
+          JMP       ERRBAL
+
+;  ----------------------------------------
+          FENTRY    LLIFN,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,IFNER2           ; bizarre (ifn)
+          PUSH      CDR(A1)             ; sauve (then else)
+          JCALL     EVALCAR             ; evalue le test
+          POP       A2                  ; recup (then else)
+          BFCONS    A2,IFNER1           ; bizarre (ifn test)
+          MOV       CDR(A2),A3          ; A3 <- (else)
+          MOV       .LLIFN,ERRNAME        ; si erreur
+          BFNIL     A1,PROGNA3          ; evalue le else
+          MOV       CAR(A2),A1          ; A1 <- le then
+          JMP       EVALA1              ; et on l'evalue
+IFNER1    MOV       A2,A1
+IFNER2    BTNIL     A1,CNPOPJ           ; bizare mais = ()
+          MOV       .LLIFN,A2             ; l'appelant
+          JMP       ERRBAL
+
+
+;  ----------------------------------------
+          FENTRY    WHEN,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,WHENER1          ; bizarre (when)
+          PUSH      CDR(A1)             ; sauve le corps
+          JCALL     EVALCAR             ; evalue le test
+          POP       A3                  ; recup le corps
+          MOV       .WHEN,ERRNAME       ; si erreur
+          BFNIL     A1,PROGNA3          ; evalue le corps si vrai
+WHENR     RETURN                        ; NIL est pret dans A1
+WHENER1   BTNIL     A1,WHENR            ; bon ok, (when) = ()
+          MOV       .WHEN,A2            ; l'appelant
+          JMP       ERRBAL
+
+;  ----------------------------------------
+          FENTRY    UNLESS,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,UNLER1           ; bizarre (unless)
+          PUSH      CDR(A1)             ; sauve le corps
+          JCALL     EVALCAR             ; evalue le test
+          POP       A3                  ; recup le corps
+          MOV       .UNLESS,ERRNAME     ; si erreur
+          BTNIL     A1,PROGNA3          ; evalue le corps si faux
+          MOVNIL    A1                  ; doit retourner NIL
+
+UNLESR    RETURN                        ; et c'est tout
+UNLER1    BTNIL     A1,UNLESR           ; bon (unless) = ()
+          MOV       .UNLESS,A2          ; l'appelant
+          JMP       ERRBAL
+
+;
+;         COND : FSUBR. La fonction conditionnelle la plus connue!
+;         permet de traiter les recursions terminales
+;
+;  ----------------------------------------
+          FENTRY    COND,SUBRF
+;  ----------------------------------------
+          MOV       A1,A2               ; facilite le travail
+COND1     BFCONS    A2,CONDER3          ; ya plus de clauses
+          PUSH      CDR(A2)             ; sauve le reste des clauses
+          MOV       CAR(A2),A1          ; A1 <- clause suivante
+          BFCONS    A1,CONDER1          ; une clause DOIT etre une liste.
+          PUSH      CDR(A1)             ; sauve le reste de la clause
+          JCALL     EVALCAR             ; evalue le predicat
+          POP       A3                  ; A3 <- le corps de la clause
+          POP       A2                  ; A2 <- le reste des clauses
+          BTNIL     A1,COND1            ; le predicat a retourne NIL
+          MOV       .COND,ERRNAME       ; si erreur
+          BTCONS    A3,PROGNA3          ; evalue le corps de la clause
+          BTNIL     A3,CONDRET          ; ret la val du test
+          MOV       A3,A1               ; bad arg
+          BRA       CONDER4             ; bar arg list
+CONDRET   RETURN                        ; en cas de clause vide
+CONDER1   BFNIL     A1,CONDER2          ; clause vide!
+          POP       A2                  ; le reste des clauses
+          BRA       COND1               ; et c,a repart
+CONDER2   MOV       .COND,A2            ; qui provoque l'erreur
+          JMP       ERRNLA
+CONDER3   MOV       A2,A1
+          BFNIL     A1,CONDER4
+          RETURN
+CONDER4   MOV       .COND,A2
+          JMP       ERRBAL
+
+;
+;         OR AND : FSUBR, les connecteurs logiques
+;         permettent de traiter les recursions terminales
+;
+
+;  ----------------------------------------
+          FENTRY    LLOR,SUBRF
+;  ----------------------------------------
+          BTCONS    A1,OR2              ; au travail.
+          BTNIL     A1,CNPOPJ           ; (OR) -> NIL
+          BRA       ORER2
+OR1       PUSH      A2                  ; sauve le reste
+          JCALL     EVALCAR             ; evalue l'element suivant
+          BFNIL     A1,PRET             ; retourne sa val si /= NIL
+          POP       A1                  ; recupere le reste
+OR2       MOV       CDR(A1),A2          ; A2 <- le reste des elements
+          BTCONS    A2,OR1              ; ce n'est pas terminal, cas normal.
+          BFNIL     A2,ORER1
+          JMP       EVALCAR             ; on evalue le dernier (tail-rec)
+ORER1     MOV       A2,A1               ; badarg
+ORER2     MOV       .LLOR,A2            ; l'appelant
+          JMP       ERRBAL
+
+;  ----------------------------------------
+          FENTRY    LLAND,SUBRF
+;  ----------------------------------------
+          BTCONS    A1,AND2             ; au travail.
+          BTNIL     A1,CNTTRUE          ; (AND) -> T
+          BRA       ANDER2
+AND1      PUSH      A2                  ; sauve le reste
+          JCALL     EVALCAR             ; evalue l'element suivant
+          BTNIL     A1,PRET             ; retourne sa val si /= NIL
+          POP       A1                  ; recupere le reste
+AND2      MOV       CDR(A1),A2          ; A2 <- le reste des elements
+          BTCONS    A2,AND1             ; ce n'est pas terminal, cas normal.
+          BFNIL     A2,ANDER1
+          JMP       EVALCAR             ; on evalue le dernier (tail-rec)
+PRET      POP       A2                  ; nettoie la pile
+          RETURN                        ; et rentre
+ANDER1    MOV       A2,A1               ; bad arg
+ANDER2    MOV       .LLAND,A2           ; l'appelant
+          JMP       ERRBAL
+
+
+;
+;         WHILE, UNTIL et LOOP : FSUBR
+;         ne permet e'videmment pas de traiter les re'cursions
+;         terminales car il n'y rien en position terminale.
+;
+
+;  ----------------------------------------
+          FENTRY    WHILE,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,WHILER           ; bizarre (while)
+          PUSH      A1                  ; sauve toute la forme
+          BRA       WHILE2              ; et on y va.
+WHILE1    TOPST     A1                  ; recup toute la forme
+          MOV       CDR(A1),A1          ; le corps
+          MOV       .WHILE,ERRNAME      ; si erreur
+          CALL      IPROGN              ; est evalue
+WHILE2    TOPST     A1                  ; recup toute la forme
+          JCALL     EVALCAR             ; le  test est evalue
+          BFNIL     A1,WHILE1           ; il faut reevaluer le corps
+          POP       A2                  ; nettoie la pile
+WHILERET  RETURN                        ; et on retourne toujours NIL
+WHILER    BTNIL     A1,WHILERET
+          MOV       .WHILE,A2
+          JMP       ERRBAL
+
+;  ----------------------------------------
+          FENTRY    UNTIL,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,UNTILER          ; bizarre (until)
+          PUSH      A1                  ; sauve toute l'espression
+          BRA       UNTIL2              ; et on y va ...
+UNTIL1    TOPST     A1                  ; recupere toute l'expression
+          MOV       CDR(A1),A1          ; le corps
+          MOV       .UNTIL,ERRNAME      ; si erreur
+          CALL      IPROGN              ; est evalue
+UNTIL2    TOPST     A1                  ; recupere toute l'expression
+          JCALL     EVALCAR             ; le test est evalue
+          BTNIL     A1,UNTIL1           ; il faut reevaluer le corps
+          POP       A2                  ; nettoie la pile
+UNTILRET  RETURN                        ; ramene la valeur du dernier test
+UNTILER   BTNIL     A1,UNTILRET
+          MOV       .UNTIL,A2
+          JMP       ERRBAL
+
+;  ----------------------------------------
+          FENTRY    LOOP,SUBRF
+;  ----------------------------------------
+          PUSH      A1                  ; sauve toute l'expression
+LOOP1     TOPST     A1                  ; re'cuper`e toute l'expression
+          MOV       .LOOP,ERRNAME       ; si erreur
+          CALL      IPROGN              ; qui est e'value'e
+          BRA       LOOP1               ; et ca roule ...
+
+;
+;         REPEAT : re'alise <n> ite'rations
+;  ----------------------------------------
+          FENTRY    FREPEAT,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,FREPER           ; bizarre (REPEAT)
+          PUSH      CDR(A1)             ; sauve le corps
+          JCALL     EVALCAR             ; e'value le compteur
+          MOV       A1,A2               ; A2 <- la valeur du compteur
+          POP       A1                  ; A1 <- le corps
+          BTFIX     A2,REPEAT2          ; au travail
+          MOV       A2,A1               ; l'argument de'fectueux
+          MOV       .FREPEAT,A2         ; le nom de la fonction
+          JMP       ERRNIA              ; il fallait un nombre entier.
+REPEAT1   PUSH      A1                  ; sauve le corps
+          PUSH      A2                  ; sauve le compteur
+          MOV       .FREPEAT,ERRNAME    ; si erreur dans le corps du PROGN
+          CALL      IPROGN              ; e'value le corps
+          POP       A2                  ; re'cup le compteur
+          POP       A1                  ; re'cup le corps
+REPEAT2   SOBGEZ    A2,REPEAT1          ; ca roule!
+          BRA       CNTTRUE             ; et sinon retourne T.
+FREPER    BTNIL     A1,CNTTRUE          ; (REPEAT) = T
+          MOV       .FREPEAT,A2         ; l'appelant
+          JMP       ERRBAL
+
+;
+;         SELECTQ : la super fonction de choix avec MEMBER
+;
+;  ----------------------------------------
+          FENTRY    SELECTQ,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,SELECER1         ; bizarre (selectq)
+          PUSH      CDR(A1)             ; sauve la liste des clauses
+          JCALL     EVALCAR             ; evalue le selecteur
+          POP       A3                  ; A3 <- la liste des clauses
+          BRA       SELEC5              ; bien partir la boucle
+SELEC1    MOV       CAR(A3),A2          ; A2 <- la clause suivante
+          MOV       CDR(A3),A3          ; A3 <- nouveau reste des clauses
+          BFCONS    A2,SELECER2         ; la clause doit etre une liste!
+          MOV       CDR(A2),A4          ; A4 <- le corps de la clause
+          MOV       CAR(A2),A2          ; A2 <- le selecteur de clause
+          CABEQ     A2,.T,SELEC7        ; c'est la clause T (otherwise)
+          PUSH      A1                  ; sauve le selecteur
+          PUSH      A2                  ; on sauve les registres
+          PUSH      A3
+          PUSH      A4
+          BFCONS    A2,SELEC2           ; le selecteur est il simple ?
+          JCALL     MEMBER              ; pour la selection
+          BRA       SELEC3
+SELEC2    JCALL     EQUAL               ; selection pour string, float, etc.
+SELEC3    POP       A4
+          POP       A3
+          POP       A2
+          BFNIL     A1,SELEC6           ; c'est celle la.
+          POP       A1                  ; nettoie la pile
+SELEC5    BTCONS    A3,SELEC1           ; il reste des clauses.
+          MOV       A3,A1
+SELECER1  BTNIL     A1,CNPOPJ           ; (selectq) = ()
+          MOV       .SELECTQ,A2         ; l'appelant
+          JMP       ERRBAL
+SELECER2  BTNIL     A2,SELEC5           ; mais elle peut etre vide
+          MOV       A2,A1               ; l'argument defectueux.
+          MOV       .SELECTQ,A2         ; le nom de la fonction
+          JMP       ERRNLA              ; il fallait une liste.
+
+SELEC6    POP       A1                  ; nettoie la pile
+SELEC7    MOV       A4,A1               ; pour le PROGN
+          MOV       .SELECTQ,ERRNAME    ; si erreur
+          BRA       IPROGN              ; et evalue le corps
+
+;
+;         Fonctionnelles
+;         ==============
+;
+;         (MAP fnt larg1 ... largN)
+;         (MAPC fnt larg1 ... largN)
+;         (MAPLIST fnt lar1 ... largN)
+;         et ses fre`res
+;         les plus ge'ne'rales a` N arguments !
+;
+;         Comple`tement recode'es avec un partage maximal de code!
+;
+;  ----------------------------------------
+          FENTRY    MAP,SUBRN
+;  ----------------------------------------
+          MOV       .MAP,A2             ; le nom de la fonction si erreur
+          PUSH      #0                  ; on indique que l'on ne CARise pas
+          PUSH      @MAP1               ; pour le retour de FUNCALL
+          MOVNIL    A3                  ; on prepare la valeur de retour
+
+ALLMAP    LABEL                         ; point d'entree des autres MAPxxx
+          PUSH      A4                  ; le nombre d'arguments
+          PUSH      A3                  ; la valeur de retour
+          CNBLE     A4,#1,MAPER         ; il faut au moins 2 args
+MAP1      LABEL                         ; la continuation simple
+          XSPMOV    #3,A4               ; indicateur de CARisation
+          XSPMOV    #2,A1               ; l'adresse de retour
+          XSPMOV    #1,A2               ; A2 <- le nbre d'arguments
+          PUSH      A1                  ; on rempile pour FUNCALL
+          MOV       A2,A3               ; attention, on va ajouter
+          PLUS      #4,A3               ; A3 <- top de pile
+          XSPMOV    A3,A1               ; A1 <- la fonction
+          BRA       MAP3                ; la boucle generale
+MAP2      LABEL                         ; A1 contient la valeur a empiler
+          XSPMOV    A3,A1               ; l'argument suivant
+          BFCONS    A1,MAP4             ; on arrete tout ?
+          MOVXSP    CDR(A1),A3          ; on le remet bien sagement
+          CNBEQ     A4,#0,MAP3          ; faut il prendre le CAR?
+          MOV       CAR(A1),A1          ; on prend le CAR
+MAP3      LABEL
+          PUSH      A1                  ; on l'empile pour funcall
+          SOBGTZ    A2,MAP2             ; on recommence A2 fois
+          DIFF      #4,A3               ; pour le nb arg
+          MOV       A3,A4               ; A4 <- nb arguments du FUNCALL
+          JMP       FUNCALL             ; la pile, A1 et A4 sont ok
+MAP4      LABEL                         ; pour depiler ce qu'il  faut
+;         d'abord les (nbargs - A2) args deja la et l'adresse de retour
+          DIFF      A2,A3               ; A3 - A2 = nbargs + 4 - A2
+          DIFF      #3,A3               ; nbargs - A2 + 1
+          ADJSTK    A3                  ; on nettoie
+          POP       A1                  ; la valeur de retour a l'envers
+;         on depile le nbargs
+          POP       A3                  ; nbargs
+          PLUS      #2,A3               ; pour les 2 parametres inutiles
+          ADJSTK    A3                  ; on nettoie
+;         Teste le code de Carization : 0=CDR 1=CAR+nreverse 2=CAR et basta
+          CNBEQ     A4,#2,MAP5          ; le cas ou il ne faut rien faire
+          JMP       NREVERSE            ; la construction se fait avec CONS
+MAP5      RETURN
+
+;         point de retour de FUNCALL quand on veut CONSer
+MAP6      LABEL
+          POP       A2                  ; la liste deja calculee
+          CONS      A1,A2               ; on CONSe
+          PUSH      A2                  ; on remet a sa place
+          BRA       MAP1                ; la suite classique
+;         point de retour de FUNCALL quand on veut NCONCer
+MAP7      LABEL
+          BFCONS    A1,MAP1             ; on ne fait rien si ce n'est un CONS
+          POP       A2                  ; la liste deja calculee
+          JCALL     NRECONC             ; on NCONC a l'envers
+          PUSH      A1                  ; on remet a sa place
+          BRA       MAP1                ; la suite classique
+;         point de retour de FUNCALL pour EVERY
+MAP8      LABEL
+          MOVXSP    A1,#0               ; sauve dans la pile
+          BFNIL     A1,MAP1             ; =/ NIL => on continue
+          BRA       MAP10               ; on s'arrete
+;         point de retour de FUNCALL pour ANY
+MAP9      LABEL
+          MOVXSP    A1,#0               ; sauve dans la pile.
+          BTNIL     A1,MAP1             ; NIL => on continue
+;         Arret en catastrophe pour EVERY ou ANY !
+MAP10     LABEL
+          ADJSTK    #1                  ; saute ex val de ret et nargs.
+          TOPST     A4                  ; le nombre d'arguments
+          PLUS      #3,A4               ; narg + les 2 parametres
+          ADJSTK    A4                  ; on nettoie
+          RETURN
+
+MAPER     MOV       A4,A1               ; le mauvais argument
+          JMP       ERRWNA              ; mauvais nb d'arguments.
+
+;         Duplication du code avec simplification pour les MAP
+;         a deux arguments qui prennent le CAR (Cas courant).
+
+ALLMAPUN  LABEL                         ; point d'entree des autres MAPUNxxx
+          POP       A4                  ; aiguillage de funcall
+          POP       A1                  ; type de CARization
+          POP       A2                  ; larg
+          XTOPST    A1                  ; //cariz
+          PUSH      A1                  ; //cariz/fnt
+          PUSH      A2                  ; //cariz/fnt/larg
+          PUSH      A4                  ; //cariz/fnt/larg/aiguill
+          PUSH      A3                  ; //cariz/fnt/larg/aiguill/value
+MAPUN1    LABEL                         ; la continuation simple
+          XSPMOV    #2,A2               ; l'argument suivant
+          BFCONS    A2,MAPUN4           ; on arrete tout ?
+          MOVXSP    CDR(A2),#2          ; on le remet bien sagement
+          XSPMOV    #1,A3               ; l'adresse de retour
+          XSPMOV    #3,A1               ; A1 <- la fonction
+          PUSH      A3                  ; on rempile adresse retour FFUNCALL
+          PUSH      CAR(A2)             ; on empile le CAR
+          MOV       #1,A4               ; A4 <- nb arguments du FFUNCALL
+          JMP       FFUNCALL            ; la pile, A1 et A4 sont ok
+MAPUN4    LABEL                         ; pour depiler ce qu'il  faut
+          POP       A1                  ; la valeur de retour a l'envers
+          ADJSTK    #3                  ; on nettoie
+          POP       A4                  ; le type de CARization
+          CNBEQ     A4,#2,MAPUN5        ; pas de NREVERSE a faire.
+          JMP       NREVERSE            ; car c'est a l'envers, helas !
+MAPUN5    RETURN
+
+;         point de retour de FUNCALL quand on veut CONSer
+MAPUN6    LABEL
+          POP       A2                  ; la liste deja calculee
+          CONS      A1,A2               ; on CONSe
+          PUSH      A2                  ; on remet a sa place
+          BRA       MAPUN1              ; la suite classique
+;         point de retour de FUNCALL quand on veut NCONCer
+MAPUN7    LABEL
+          BFCONS    A1,MAPUN1           ; on ne fait rien si ce n'est un CONS
+          POP       A2                  ; la liste deja calculee
+          JCALL     NRECONC             ; on NCONC a l'envers
+          PUSH      A1                  ; on remet a sa place
+          BRA       MAPUN1              ; la suite classique
+;         point de retour de FUNCALL pour EVERY
+MAPUN8    LABEL
+          MOVXSP    A1,#0               ; on le remplace dans la pile
+          BFNIL     A1,MAPUN1           ; Non, on continue
+          ADJSTK    #5                  ; on nettoie
+          RETURN
+;         point de retour de FUNCALL pour ANY
+MAPUN9    LABEL
+          BTNIL     A1,MAPUN1           ; NIL => on continue
+          ADJSTK    #5                  ; on nettoie
+          RETURN
+
+
+;  ----------------------------------------
+          FENTRY    MAPC,SUBRN
+;  ----------------------------------------
+          MOVNIL    A3                  ; la valeur de retour
+          PUSH      #1                  ; on indique que l'on CARise + nrevers
+          CNBNE     A4,#2,MAPCN         ; pas 2 arguments ?
+          PUSH      @MAPUN1             ; pour le retour du FUNCALL
+          BRA       ALLMAPUN
+MAPCN     LABEL
+          MOV       .MAPC,A2            ; le nom de la fonction si erreur
+          PUSH      @MAP1               ; pour le retour de FUNCALL
+          BRA       ALLMAP              ; on roule !
+
+;  ----------------------------------------
+          FENTRY    MAPLIST,SUBRN
+;  ----------------------------------------
+          MOVNIL    A3                  ; la valeur de retour
+          MOV       .MAPLIST,A2         ; le nom de la fonction si erreur
+          PUSH      #0                  ; on indique que l'on ne CARise pas
+          PUSH      @MAP6               ; pour le retour de FUNCALL
+          BRA       ALLMAP              ; on y va !
+
+;  ----------------------------------------
+          FENTRY    MAPCAR,SUBRN
+;  ----------------------------------------
+          MOVNIL    A3                  ; la valeur de retour
+          PUSH      #1                  ; on indique que l'on CARise + nrevers
+          CNBNE     A4,#2,MAPCARN       ; pas 2 arguments ?
+          PUSH      @MAPUN6             ; pour le retour du FUNCALL
+          BRA       ALLMAPUN
+MAPCARN   LABEL
+          MOV       .MAPCAR,A2          ; le nom de la fonction si erreur
+          PUSH      @MAP6               ; pour le retour de FUNCALL
+          BRA       ALLMAP              ; on y va !
+
+
+;  ----------------------------------------
+          FENTRY    MAPCON,SUBRN
+;  ----------------------------------------
+          MOV       .MAPCON,A2          ; le nom de la fonction si erreur
+          MOVNIL    A3                  ; la valeur de retour
+          PUSH      #0                  ; on indique que l'on ne CARise pas
+          PUSH      @MAP7               ; pour le retour de FUNCALL
+          BRA       ALLMAP              ; on y va !
+
+;  ----------------------------------------
+          FENTRY    MAPCAN,SUBRN
+;  ----------------------------------------
+          MOVNIL    A3                  ; la valeur de retour
+          PUSH      #1                  ; on indique que l'on CARise + nrevers
+          CNBNE     A4,#2,MAPCANN       ; pas 2 arguments ?
+          PUSH      @MAPUN7             ; pour le retour du FUNCALL
+          BRA       ALLMAPUN
+MAPCANN   LABEL
+          MOV       .MAPCAN,A2          ; le nom de la fonction si erreur
+          PUSH      @MAP7               ; pour le retour de FUNCALL
+          BRA       ALLMAP              ; on y va !
+
+;         EVERY/ANY   meme methode que MAPC
+;
+;  ----------------------------------------
+          FENTRY    FEVERY,SUBRN
+;  ----------------------------------------
+          MOV       .T,A3               ; la valeur de retour
+          PUSH      #2                  ; on indique que l'on CARise sans REV
+          CNBNE     A4,#2,FEVERYN       ; pas 2 arguments ?
+          PUSH      @MAPUN8             ; pour le retour du FUNCALL
+          BRA       ALLMAPUN
+FEVERYN   LABEL
+          MOV       .FEVERY,A2          ; le nom de la fonction si erreur
+          PUSH      @MAP8               ; pour le retour de FUNCALL
+          BRA       ALLMAP
+
+;  ----------------------------------------
+          FENTRY    FANY,SUBRN
+;  ----------------------------------------
+          MOVNIL    A3                  ; la valeur de retour
+          PUSH      #2                  ; on indique que l'on CARise sans REV
+          CNBNE     A4,#2,FANYN         ; pas 2 arguments ?
+          PUSH      @MAPUN9             ; pour le retour du FUNCALL
+          BRA       ALLMAPUN
+FANYN     LABEL
+          MOV       .FANY,A2            ; le nom de la fonction si erreur
+          PUSH      @MAP9               ; pour le retour de FUNCALL
+          BRA       ALLMAP
+
+;         (MAPVECTOR 'fnt vect)
+;         Applique fnt a tous les elements du vecteur, en commencant par 
+;         celui d'indice 0.
+;
+;  ----------------------------------------
+          FENTRY    MAPVECT,SUBR2
+;  ----------------------------------------
+          BFVECT    A2,MAPVECT9
+          MOV       #0,A3               ; l'indice de depart
+          HGSIZE    A2,A4               ; A4 <- la taille
+          BRA       MAPVECT8            ; la boucle
+MAPVECT1  LABEL
+          PUSH      A1
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          HPXMOV    A2,A3,A3            ; l'element
+          PUSH      @MAPVECT2           ; la continuation
+          PUSH      A3                  ; l'element du vecteur
+          MOV       #1,A4               ; 1 argument outre la fonction
+          JMP       FFUNCALL            ; on y va
+MAPVECT2  LABEL
+          POP       A4
+          POP       A3
+          POP       A2
+          POP       A1
+          INCR      A3                  ; l'indice
+MAPVECT8  LABEL
+          SOBGEZ    A4,MAPVECT1         ; on boucle
+          MOVNIL    A1
+          RETURN
+MAPVECT9  LABEL
+          MOV       A2,A1               ; la chose qui n'est pas un vecteur
+          MOV       .MAPVECT,A2         ; le nom de la fonction
+          JMP       ERRVEC
+;
+;         (MAPCOBLIST fnt)  retourne la liste des valeurs NCONCees
+;         Le code est commun a MAPCOBLIST,MAPLOBLIST,MAPOBLIST
+;
+;  ----------------------------------------
+          FENTRY    MAPCOBLIST,SUBR1
+;  ----------------------------------------
+
+          PUSH      @MAPCOBCO           ; la continuation apres FUNCALL
+ALLMAPOB  LABEL                         ; le point d'entree de tous
+          MOVNIL    A4                  ; prepare la liste resultat
+          HGSIZE    HASHTAB,A3          ; taille de la table de hachage
+          DECR      A3                  ; dernier indexe
+MAPCOB0   HPXMOV    HASHTAB,A3,A3       ; le bucket suivant
+          BRA       MAPCOB7             ; vers le test direct
+MAPCOB1   MOV       A3,A2               ; A3 = tete 3D
+          BTSTRG    PNAME(A2),MAPCOB3   ; symbole 2D
+MAPCOB2   MOV       PNAME(A2),A2        ; suivant 3D
+MAPCOB3   CABEQ     A2,.UNDEF,MAPCOB6   ; on saute le symbole UNDEF
+          PUSH      A1                  ; sauve la fonction
+          PUSH      A3                  ; et la tete 3D
+          PUSH      A2                  ; et le symbole
+          PUSH      A4                  ; meme le resultat
+          XSPMOV    #4,A4               ; la continuation du FUNCALL
+          PUSH      A4                  ; on l'empile
+          PUSH      A2                  ; l'argument
+          MOV       #1,A4               ; 1 argument autre que la fonction
+          JMP       FFUNCALL            ; et on applique
+MAPCOB5   POP       A4                  ; le resultat
+MAPCOB5A  LABEL
+          POP       A2                  ; la tete 3D
+MAPCOB5B  LABEL
+          POP       A3                  ; le bucket
+          POP       A1                  ; la fonction
+MAPCOB6   CABNE     A3,A2,MAPCOB2       ; il reste du 3D
+          MOV       ALINK(A3),A3        ; next atom
+MAPCOB7   BTSYMB    A3,MAPCOB1          ; il en reste
+MAPCOB8   SOBGEZ    A3,MAPCOB0          ; vers le bucket suivant.
+          POP       A1                  ; depile la continuation
+          MOV       A4,A1               ; le resultat
+          JMP       NREVERSE
+
+;         La continuation pour MAPLOBLIST : on fait un CONS si non-NIL
+MAPLOBCO  LABEL
+          BTNIL     A1,MAPCOB5          ; rien a accrocher
+          POP       A4                  ; A4 <- la liste resultat
+          POP       A2                  ; le symbole
+          CONS      A2,A4               ; A4 <- la nouvelle liste
+          BRA       MAPCOB5B
+
+;         La continuation pour MAPCOBLIST : on fait un NRECONC
+MAPCOBCO  LABEL
+          BFCONS    A1,MAPCOB5          ; rien a accrocher
+          POP       A2                  ; A2 <- la liste resultat
+          JCALL     NRECONC
+          MOV       A1,A4               ; A4 <- la liste resultat
+          BRA       MAPCOB5A
+
+;
+;         (MAPLOBLIST fnt)  retourne la liste des symboles
+;         si (fnt s) est vrai
+;
+;  ----------------------------------------
+          FENTRY    MAPLOBLIST,SUBR1
+;  ----------------------------------------
+          PUSH      @MAPLOBCO           ; la continuation
+          BRA       ALLMAPOB            ; au point d'entree standard
+;
+;         (MAPOBLIST fnt)  retourne ()
+;         applique la fonction 'fnt' a tous les symboles de l'OBLIST!
+;
+;  ----------------------------------------
+          FENTRY    MAPOBLIST,SUBR1
+;  ----------------------------------------
+          PUSH      @MAPCOB5            ; la continuation
+          BRA       ALLMAPOB            ; au point d'entree standard
+
+;  ----------------------------------------------------------------------
+;
+;          Autres fonctions interprete
+;
+;  ----------------------------------------------------------------------
+
+;
+;         (QUOTE s)   FSUBR *
+;         identique a CAR (mais sans test)
+;
+;  ----------------------------------------
+          FENTRY    QUOTE,SUBRF
+;  ----------------------------------------
+          MOV       CDR(A1),A2
+          BFNIL     A2,QUOTERR
+          MOV       CAR(A1),A1
+          RETURN
+QUOTERR   MOV       #1,A1               ; il faut 1 argument
+          MOV       .QUOTE,A2
+          JMP       ERRWNA
+
+;
+;         (LAMBDA svar e1 ... eN)   FSUBR
+;         (LAMBDA-NAMED name svar e1 ... eN)   FSUBR
+;         ramenent la forme elle-meme
+;
+;  ----------------------------------------
+          FENTRY    LAMBDA,SUBRF
+;  ----------------------------------------
+          CONS     .LAMBDA,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    FLAMBDA,SUBRF
+;  ----------------------------------------
+          CONS     .FLAMBDA,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    MLAMBDA,SUBRF
+;  ----------------------------------------
+          CONS     .MLAMBDA,A1
+          RETURN
+
+;
+;         (COMMENT  ... )
+;
+;  ----------------------------------------
+          FENTRY    COMMENT,SUBRF
+;  ----------------------------------------
+          MOV       .COMMENT,A1         ; retourne l'atome COMMENT
+          RETURN
+
+
+;
+;         (IDENTITY s)  la fonction identite
+;
+;  ----------------------------------------
+          FENTRY    LLIDENT,SUBR1
+;  ----------------------------------------
+;         Cette fonction sert egalement de test a l'entree
+;         de certaines fonctions compilees.
+          INTEST    
+          CHKSTK    MSTACK,ERRFS
+          RETURN                        ; car c'est une SUBR1
+
+;
+;         (PROGN e1 ... eN)   FSUBR
+;         (EPROGN l)   SUBR1
+;         Permet de traiter les fonctions tail-re'cursives
+;         ERRNAME doit e^tre charge' du nom de l'appelant.
+;
+
+PROGNA3   MOV       A3,A1               ; fonction (PROGN A3) interne
+          INTEST                        ; prote`ge toutes les boucles!
+          BFCONS    A1,PROGNA35         ; EVPROGN s'en charge.
+          MOV       CDR(A1),A2          ; le reste des clauses
+          BTNIL     A2,PROGNA36         ; yen a qu'un on va presque direct.
+PROGNA35  JMP       EVPROGN
+PROGNA36  JMP       EVALCAR
+
+;  ----------------------------------------
+          FENTRY    EPROGN,SUBR1        ; version SUBR1 du PROGN
+;  ----------------------------------------
+          MOV       .EPROGN,ERRNAME     ; si erreur
+          INTEST                        ; prote`ge toutes les boucles!
+          JMP       EVPROGN
+
+
+;  ----------------------------------------
+          FENTRY    PROGN,SUBRF
+;  ----------------------------------------
+          MOV       .PROGN,ERRNAME      ; si erreur
+IPROGN    INTEST                        ; prote`ge toutes les boucles!
+          JMP       EVPROGN
+
+;  ----------------------------------------
+          FENTRY    EXDEF,SUBRF
+;  ----------------------------------------
+;  equivalent to PROG1 in the interpreter.  Must branch so that they
+;  don't have the same fval, allowing error to report the correct name.
+	  BRA       PROG1
+;
+;         (PROG1 e1 ... eN)   FSUBR
+;         e'value une liste et retourne la 1e`re valeur
+;
+;  ----------------------------------------
+          FENTRY    PROG1,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,PROG1E           ; bizarre
+          PUSH      CDR(A1)             ; sauve le reste des e'le'ments
+          JCALL     EVALCAR             ; e'value le 1er
+          XTOPST    A1                  ; val du 1er <-> le reste
+          MOV       .PROG1,ERRNAME      ; si erreur
+          CALL      IPROGN              ; e'value tous les autres
+          POP       A1                  ; valeur de retour
+PROG1R    RETURN                        ; et voila`
+PROG1E    BTNIL     A1,PROG1R           ; (prog1)
+          MOV       .PROG1,A2
+          JMP       ERRBAL
+
+;
+;         (PROG2 e1 e2 ... eN)   FSUBR
+;         retourne la 2e`me valeur (a` la Maclisp)
+;
+;  ----------------------------------------
+          FENTRY    PROG2,SUBRF
+;  ----------------------------------------
+          BFCONS    A1,PROG2E           ; bizarre
+          PUSH      CDR(A1)             ; sauve le reste
+          JCALL     EVALCAR             ; e'value le 1er e'le'ment
+          POP       A1                  ; re'cupe`re le reste
+          BFCONS    A1,PROG2E           ; bizarre
+          PUSH      CDR(A1)             ; sauve le reste des e'le'ments
+          JCALL     EVALCAR             ; e'value le 2e`me
+          XTOPST    A1                  ; val du 2e`me <-> le reste
+          MOV       .PROG2,ERRNAME      ; si erreur
+          CALL      IPROGN              ; e'value tous les autres
+          POP       A1                  ; valeur de retour
+PROG2R    RETURN                        ; et voila`
+PROG2E    BTNIL     A1,PROG2R           ; (prog2) ou (prog2 x)
+          MOV       .PROG2,A2
+          JMP       ERRBAL
+
+
+          END
+
+

@@ -1,0 +1,50 @@
+defmodule #:display:windows
+include (
+	virstruct
+	virmacros
+)
+import  (
+	microceyx
+	win_def
+	wininit 
+	wincolor 
+	winbitma 
+	windraw 
+	wingraph
+	winwindo 
+	winevent 
+	winmenu 
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport
+()
+cpfunctions
+()
+cpimport
+()
+cpenv (
+abbrev
+defstruct
+microceyx
+win_def
+virutil
+winstruc
+wincolor
+virgraph
+wingraph
+virwindow
+winwindo
+winbitma
+virevent
+winevent
+wininit
+files
+vircolor
+virbit
+virmenu
+virinit
+windraw
+virdraw
+winmenu
+)

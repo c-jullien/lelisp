@@ -1,0 +1,7 @@
+LIBRARY   testdll
+
+DESCRIPTION 'Sample DLL for Le-Lisp'
+
+EXPORTS
+	LibMain                 @1
+	iabs			@2

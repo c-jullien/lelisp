@@ -1,0 +1,1 @@
+exec /nfs/lelisp15/work//sun4/lelispbin -stack 6 -code 800 -heap 1000 -vector 5 -string 10 -symbol 10 -cons 10 -r /nfs/lelisp15/work//ll2lm/ll2lm--sh.core $*

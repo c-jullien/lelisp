@@ -1,0 +1,112 @@
+          (test-serie "[READ-FROM-STRING test]" ())
+
+
+(rfs "()")                             ()
+(rfs "12")                             12
+(rfs "1.23")                           1.23
+(rfs "Hello")                          Hello
+(rfs "(1 2 3)")                         (1 2 3)
+(rfs """hello?""")                     "hello?"
+
+(rfs "8")                              8
+(rfs "   8")                           8
+(rfs "32767")                          32767
+(rfs "   32767")                       32767
+(rfs "32768")                          32768.
+(rfs " 8888.1111")                     8888.1111
+
+(setq a "8")                           "8"
+(setq b " 8888.1111")                  " 8888.1111"
+(setq c "i_am_a_symbol")               "i_am_a_symbol"
+(setq d "(i am a cons)")               "(i am a cons)"
+(setq e """i_am_a_string""")           """i_am_a_string"""
+(type-of (rfs a))                      fix
+(type-of (rfs b))                      float
+(type-of (rfs c))                      symbol
+(type-of (rfs d))                      cons
+(type-of (rfs e))                      string
+
+
+(progn
+(setq a (catenate "( "
+		  (duplstring 3000 "() ")
+		  ") "))  ())          ()
+
+(progn
+(setq r (rfs a)) ())                   ()
+(type-of r)                            cons
+(length r )                            3000
+
+(progn 
+  (setq a
+    (catenate """"
+    (makestring 1023 #/x)
+    """")) ())                         ()
+(setq b (read-from-string a))          #.(makestring 1023 #/x)
+
+(progn
+  (setq a "quejaimeafaireconnaitrecenombreutileauxsages")
+  (setq b (catenate "(" a " " a " " a " " a ")"))
+  (setq e (read-from-string b))
+  (setq c (catenate "(" b " " b " " b " " b " " b " " b ")" ))
+  (setq d (read-from-string c)) ())    ()
+(length (car (last d))))               #.(length e)
+
+(with-input-from-string
+	 "12 34"
+	 (list (read) 55 (read)))	(12 55 34)
+
+(progn
+  (makunbound 'a)
+  (makunbound 'b)
+  (makunbound 'c)
+  (makunbound 'd)
+  (makunbound 'e)
+  (makunbound 'r)
+  ())                                  ()
+
+          (test-serie "[PRINT-TO-STRING test]" ())
+
+(pts ())                               "()"
+(pts 12)                               "12"
+(pts 1.23)                             "1.23"
+(pts 'coucou)                          "coucou"
+(pts '(1 2 3))                         "(1 2 3)"
+(pts "hello?")                         "hello?"
+(rfs (pts biglist))		       #.biglist
+
+(with-output-to-string
+	(setq result (makestring 18 #\sp)) 0
+(catenate (prin (pts '(a b c d)))
+	 (prin (pts '(a b c d)))))     18
+result                                 "(a b c d)(a b c d)"
+
+(let ((s "foooo"))
+	(with-input-from-string s
+	(print-to-string "o"))
+	s)                             "foooo"
+
+(with-output-to-string 
+    (setq result (makestring 301 #\sp)) 0
+    (print biglist))                   301
+result                                 #.bigstring
+
+(with-output-to-string 
+    (setq result "----") 0 (print 0))  1
+
+result                                 "0---"
+
+(with-output-to-string 
+    (setq result "----")
+    1
+    (print 'a)
+    (print 'b))                        2
+result                                 "-ab-"
+
+(progn
+   (makunbound 'result)
+   ())                                 ()
+
+          (test-serie "[End of test]" ())
+()                                      ()
+

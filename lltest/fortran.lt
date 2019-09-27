@@ -1,0 +1,75 @@
+          (test-serie "Test sur les entiers fortran" ())
+(defextern _rfix1_ (rfix) fix)          _rfix1_     ; rfix ==> INTEGER*4
+(_rfix1_ 2)                             4
+(_rfix1_ -2)                            -4
+(_rfix1_ 0)                             0
+(_rfix1_ 16383)                         32766
+(_rfix1_ -16384)                        -32768
+(_rfix1_ -1)                            -2
+(_rfix1_ 1)                             2
+(_rfix1_ #$FFFF)                        -2
+
+          (test-serie "Test sur les flottants fortran"  ())
+(defextern _rflt1_ (rfloat) float)      _rflt1_  ; rfloat ==> REAL*8
+(_rflt1_ 0.0)                           0.0
+(_rflt1_ 0.5)                           1.0
+(_rflt1_ 1.2)                           2.4
+(_rflt1_ -300.0)                        -600.0
+
+          (test-serie "Test sur les entiers fortran, avec modification" ())
+
+(defextern _mfix_ (fixvector) )        _mfix_  ; fixvector ==> INTEGER*4
+;;; Pour recuperer le re'sultat de l'ope'ration fortran, on passe
+;;; un vecteur d'1 scalaire, lequel sera modifie' au retour.
+(setq a #[3])                           #[3]
+(progn (_mfix_ a) a)                    #[4]
+
+#-(featurep '64bitfloats)
+  (test-serie "Test sur les flottants fortran, avec modification" ())
+()
+#+(featurep '64bitfloats)
+  (test-serie "Pas de FLOATVECTOR en 64BITFLOATS" ())
+
+(defextern _mflt_ (floatvector)) 
+    #.(if (featurep '64bitfloats)
+	  '(errgen defextern "floatvector (64BITFLOATS)")
+	'_mflt_)
+
+(setq b #[2.3])                         #[2.3]
+#-(featurep '64bitfloats)
+  (progn (_mflt_ b)
+	 b)                             #-(featurep '64bitfloats)#[4.6]
+
+          (test-serie "Test sur les tableaux d'entiers fortran" ())
+
+(defextern _tabfix_ (rfix fixvector))   _tabfix_; rfix & fixvector=> INTEGER*4
+(setq c #[1 2 3 4 5 9])                 #[1 2 3 4 5 9]
+(progn (_tabfix_ 6 c)
+       c)                               #[2 3 4 5 6 10]
+(setq d #[1 2 -32767 4 5 9])            #[1 2 -32767 4 5 9]
+(progn (_tabfix_ 6 d)
+       d)                               #[2 3 -32766 5 6 10]
+
+#-(featurep '64bitfloats)
+  (test-serie "Test sur les tableaux de flottants fortran" ())
+()
+#+(featurep '64bitfloats)
+  (test-serie "Pas de FLOATVECTOR en 64BITFLOATS" ())
+
+(defextern _tabflt_ (rfix floatvector))
+    #.(if (featurep '64bitfloats)
+	  '(errgen defextern "floatvector (64BITFLOATS)")
+	'_tabflt_)
+(setq d #[1.2 4.0 9.9 .25])             #[1.2 4.0 9.9 .25]
+#-(featurep '64bitfloats)
+(progn (_tabflt_ 4 d)                        
+       d)                               #-(featurep '64bitfloats)
+                                          #[2.4 8.0 19.8 .5]
+
+          (test-serie "Test sur les tableaux d'entiers fortran" ())
+(defextern _fstrg_ (rfix string))        _fstrg_
+(setq s "asdfg" l (slen s) a 0)          0
+(progn (_fstrg_ l s) s)                  "ssdfg"
+
+          (test-serie "Fin du test" ())
+()                                      ()

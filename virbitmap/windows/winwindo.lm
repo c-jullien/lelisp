@@ -1,0 +1,189 @@
+defmodule #:display:windows
+files   (
+	winwindo.ll
+)
+include (
+	virstruct.ll
+	virmacros.ll
+)
+import  (
+	virutil   ; make
+	virwindow ; windowp
+	win_def
+	winstruc
+)
+export  (
+	:kill-window
+	:pop-window
+	:move-behind-window
+	:current-keyboard-focus-window
+	:uncurrent-keyboard-focus-window
+	:find-window
+	:map-window
+	#:image:rectangle:window:set-window-hints
+	#:image:rectangle:window:modify-window-hints
+	:make-top-extend
+	:make-opaque-extend
+	:create-window
+	:create-subwindow
+	:windows-create-subwindow
+	:make-transparent-extend
+	:windows-create-transparent-window
+	:calculate-top-opaque-father
+	:current-window
+	:uncurrent-window
+	:windows-create-graph-env
+	:windows-create-graph-env-for-transparent
+	:clear-graph-env
+	:transparent-clear-graph-env
+	:opaque-clear-graph-env
+	:transparent-set-clip-for-subwindows
+	:transparent-set-clip-for-window
+	:opaque-set-clip-for-subwindows
+	:current-clip
+	:set-clip-for-subwindows
+	:intersect
+	:modify-window
+	:window-map
+	:window-unmap
+	:window-unmap
+	:set-foreground-window
+	:window-transient
+	:window-toplevel
+	:update-window
+	:window-clear-region
+	:window-background
+	:window-border
+	:resize-window
+	:activate-window
+	:move-window
+	:move-resize-window
+	:window-events-list
+	:window-title
+	:window-state
+	:window-raise
+	:window-lower
+	:window-change-attributes
+	#:tclass:winwindow:transparent-window:is-visible
+	#:tclass:winwindow:is-visible
+	#:image:rectangle:window:woffset-x
+	#:image:rectangle:window:woffset-y
+	#:tclass:winwindow:woffset-x
+	#:tclass:winwindow:woffset-y
+	#:tclass:winwindow:transparent-window:woffset-x
+	#:tclass:winwindow:transparent-window:woffset-y
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:windows:kill-window subr2 ())
+(#:display:windows:pop-window subr2 ())
+(#:display:windows:move-behind-window subr3 ())
+(#:display:windows:current-keyboard-focus-window subr2 ())
+(#:display:windows:uncurrent-keyboard-focus-window subr2 ())
+(#:display:windows:find-window subr3 ())
+(#:display:windows:map-window nsubr ())
+(#:image:rectangle:window:set-window-hints subr1 ())
+(#:image:rectangle:window:modify-window-hints subr1 ())
+(#:display:windows:make-top-extend subr2 ())
+(#:display:windows:make-opaque-extend subr2 ())
+(#:display:windows:create-window subr2 ())
+(#:display:windows:windows-create-graph-env subr2 ())
+(#:display:windows:create-subwindow subr2 ())
+(#:display:windows:windows-create-subwindow subr2 ())
+(#:display:windows:windows-create-transparent-window subr2 ())
+(#:display:windows:make-transparent-extend subr2 ())
+(#:display:windows:calculate-top-opaque-father subr1 ())
+(#:display:windows:windows-create-graph-env-for-transparent subr2 ())
+(#:display:windows:transparent-set-clip-for-window subr2 ())
+(#:display:windows:intersect nsubr ())
+(#:display:windows:current-window subr2 ())
+(#:display:windows:uncurrent-window subr2 ())
+(#:display:windows:clear-graph-env subr2 ())
+(#:display:windows:opaque-clear-graph-env subr3 ())
+(#:display:windows:transparent-clear-graph-env subr3 ())
+(#:display:windows:transparent-set-clip-for-subwindows subr2 ())
+(#:display:windows:opaque-set-clip-for-subwindows nsubr ())
+(#:display:windows:set-clip-for-subwindows nsubr ())
+(#:display:windows:current-clip nsubr ())
+(#:display:windows:modify-window nsubr ())
+(#:display:windows:move-resize-window nsubr ())
+(#:display:windows:move-window nsubr ())
+(#:display:windows:resize-window nsubr ())
+(#:display:windows:window-border subr3 ())
+(#:display:windows:window-map subr2 ())
+(#:display:windows:window-unmap subr2 ())
+(#:display:windows:set-foreground-window subr2 ())
+(#:display:windows:window-transient subr2 ())
+(#:display:windows:window-toplevel subr2 ())
+(#:display:windows:update-window nsubr ())
+(#:display:windows:window-clear-region nsubr ())
+(#:display:windows:window-background subr3 ())
+(#:display:windows:activate-window subr2 ())
+(#:display:windows:window-events-list subr3 ())
+(#:display:windows:window-title subr3 ())
+(#:display:windows:window-state subr3 ())
+(#:display:windows:window-raise subr2 ())
+(#:display:windows:window-lower subr2 ())
+(#:display:windows:window-change-attributes nsubr ())
+(#:tclass:winwindow:transparent-window:is-visible subr2 ())
+(#:tclass:winwindow:is-visible subr2 ())
+(#:image:rectangle:window:woffset-x subr1 ())
+(#:image:rectangle:window:woffset-y subr1 ())
+(#:tclass:winwindow:woffset-x subr2 ())
+(#:tclass:winwindow:woffset-y subr2 ())
+(#:tclass:winwindow:transparent-window:woffset-x subr2 ())
+(#:tclass:winwindow:transparent-window:woffset-y subr2 ())
+)
+cpfunctions (
+(#:display:windows:transparent-set-current-clip subr2)
+(#:display:windows:update-subwindows subr2)
+)
+cpimport (
+(virwindow
+(windowp . subr1)
+)(winstruc
+(#:tclass:winwindow:opaque-window:top-window:make . subr0)
+(#:tclass:winwindow:opaque-window:make . subr0)
+(#:tclass:winwindow:transparent-window:make . subr0)
+)(virutil
+(#:graph-env:make . subr0)
+(#:image:rectangle:make . subr0)
+)(win_def
+(windows_kill_window . subr2)
+(windows_pop_window . subr1)
+(windows_move_behind_window . subr2)
+(windows_find_window . subr2)
+(windows_map_window . nsubr)
+(windows_create_window . nsubr)
+(windows_new_create_graph_env . nsubr)
+(windows_font_ascent . subr1)
+(windows_font_height . subr1)
+(windows_set_clip . nsubr)
+(windows_create_subwindow . nsubr)
+(windows_create_transwindow . nsubr)
+(windows_current_window . subr3)
+(windows_clear_window . nsubr)
+(windows_moveresize_window . nsubr)
+(windows_topmoveresize_window . nsubr)
+(windows_move_window . subr3)
+(windows_topmove_window . nsubr)
+(windows_resize_window . subr3)
+(windows_topresize_window . subr3)
+(windows_change_title . subr2)
+(windows_window_map . subr1)
+(windows_window_unmap . subr1)
+(windows_topchangewindow_border . subr2)
+(windows_set_foreground_window . subr1)
+(windows_window_transient . subr2)
+(windows_set_window_background . subr2)
+(windows_set_window_state . subr2)
+(windows_push_window . subr1)
+))
+cpenv (
+virutil
+virwindow
+win_def
+winstruc
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

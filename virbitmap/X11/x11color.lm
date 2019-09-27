@@ -1,0 +1,64 @@
+defmodule #:display:x11
+files (x11color.ll)
+include (
+virstruct.ll
+)
+import (
+virutil
+x11_def x11struct
+virgraph ; x-base-space
+)
+export (
+:make-color 
+:make-mutable-color 
+:make-named-color
+:kill-color  
+:red-component
+:green-component 
+:blue-component
+:init-color
+:name-to-rgb
+:get-rgb-values
+:get-default
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:x11:make-color nsubr ())
+(#:display:x11:make-mutable-color nsubr ())
+(#:display:x11:make-named-color subr3 ())
+(#:display:x11:kill-color subr2 ())
+(#:display:x11:red-component subr3 ())
+(#:display:x11:green-component subr3 ())
+(#:display:x11:blue-component subr3 ())
+(#:display:x11:init-color subr1 ())
+(#:display:x11:get-default subr2 ())
+(#:display:x11:name-to-rgb subr3 ())
+(#:display:x11:get-rgb-values subr3 ())
+)
+cpfunctions (
+(#:display:x11:do-color nsubr)
+(#:display:x11:compute-mask subr3)
+(#:display:x11:all-but-once subr1)
+)
+cpimport (
+(virutil
+(#:color:make . subr0)
+)(x11_def
+(x11_make_color . nsubr)
+(x11_make_mutable_color . nsubr)
+(x11_make_named_color . subr3)
+(x11_kill_color . subr2)
+(x11_color_component . nsubr)
+(x11_get_default . subr3)
+(x11_init_pixels . nsubr)
+(x11_lookup_named_color . nsubr)
+(x11_query_color . subr3)
+))
+cpenv (
+virutil
+x11_def
+x11struct
+virgraph
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

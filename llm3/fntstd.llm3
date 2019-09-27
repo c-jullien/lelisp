@@ -1,0 +1,1810 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "13/19" "fntstd.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 13 "Les fonctions standard"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/fntstd.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $ 
+
+          TITLE     FNTSTD              ; LLM3 : les fonctions standard.
+
+          XREFI     LLINIT,MSTACK       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,HASHTAB
+          XREFI     LLINIT,.UNDEF
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.VOID
+          XREFP     TOPERR,ERRFS        ; 2 - TOPERR
+          XREFP     TOPERR,ERRSYM
+          XREFP     TOPERR,ERRNIA
+          XREFP     TOPERR,ERRNLA
+          XREFP     TOPERR,ERRNVA
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRUDF
+          XREFP     TOPERR,ERRUDV
+          XREFP     TOPERR,ERROOB
+          XREFP     TOPERR,ERRILB
+          XREFP     TOPERR,ERRBPA
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFP     READ,ISTDSYM
+          XREFP     EVAL,EVALCAR        ; 8 - EVAL
+          XREFP     EVAL,EVALA1
+          XREFI     EVAL,SAVEA1
+          XREFI     EVAL,SAVEA2
+          XREFI     EVAL,SAVEA3
+          XREFI     EVAL,SAVEA4
+          XREFP     EVAL,APPLY
+          XREFI     CNTRL,TABTYPFN      ; 10  - CNTRL
+          XREFI     CNTRL,TABCODFN
+          XREFI     CNTRL,.QUOTE
+          XREFI     CNTRL,.PROGN
+          XREFI     CNTRL,.LAMBDA
+          XREFI     CNTRL,.FLAMBDA
+          XREFI     CNTRL,.MLAMBDA
+          XREFP     NUMBER,GAEQN        ; 14 - NUMBER
+          XREFP     STRING,STRINGA2     ; 16 - STRING
+          XREFP     STRING,STRGALLC
+          XREFP     STRING,MAKEVECT
+          XREFP     STRING,EQSTRGI
+          XREFP     STRING,EQVECTRI
+          XREFP     STRING,FFINDEX
+          XREFP     BLLSHT,LOC          ; 19 - BLLSHT
+          XREFP     BLLSHT,VAG
+
+          XDEFP     INI_STD
+
+          XDEFP     MEMBER
+          XDEFP     MEMQ
+          XDEFP     LIST
+          XDEFP     EQUAL
+          XDEFP     NREVERSE
+          XDEFP     DESET
+          XDEFP     LLLENGTH
+          XDEFP     DISPLACE
+          XDEFP     EVLIS
+          XDEFP     NRECONC
+          XDEFP     KWOTE
+          XDEFP     COPY
+
+          XDEFI     .LLCONS
+          XDEFI     .FNCONS
+          XDEFI     .MCONS
+          XDEFI     .LLNULL
+          XDEFI     .LIST
+          XDEFI     .NCONC
+          XDEFI     .APPEND
+          
+
+          PURE
+
+;
+;         Creation des symboles
+;         =====================
+;
+
+INI_STD   LABEL      
+          MAKFNT    TRUE,#4,"true" 
+          MAKFNT    FALSE,#5,"false" 
+          MAKFNT    LLNOT,#3,"not" 
+          MAKFNT    LLNULL,#4,"null" 
+          MAKFNT    ATOM,#4,"atom" 
+          MAKFNT    ATOMP,#5,"atomp" 
+          MAKFNT    SYMBOLP,#7,"symbolp" 
+          MAKFNT    VARIABLEP,#9,"variablep" 
+          MAKFNT    CONSTANTP,#9,"constantp" 
+          MAKFNT    VECTORP,#7,"vectorp" 
+          MAKFNT    STRINGP,#7,"stringp" 
+          MAKFNT    LISTP,#5,"listp" 
+          MAKFNT    NLISTP,#6,"nlistp" 
+          MAKFNT    CONSP,#5,"consp" 
+          MAKFNT    BOUNDP,#6,"boundp" 
+          MAKFNT    LLEQ,#2,"eq" 
+          MAKFNT    NEQ,#3,"neq" 
+          MAKFNT    EQUAL,#5,"equal" 
+          MAKFNT    NEQUAL,#6,"nequal" 
+          MAKFNT    MEMQ,#4,"memq" 
+          MAKFNT    MEMBER,#6,"member" 
+          MAKFNT    TAILP,#5,"tailp" 
+          MAKFNT    LAST,#4,"last" 
+          MAKFNT    NTHCDR,#6,"nthcdr" 
+          MAKFNT    NTH,#3,"nth" 
+          MAKFNT    LLLENGTH,#6,"length" 
+          MAKFNT    LLCONS,#4,"cons" 
+          MAKFNT    FXCONS,#5,"xcons" 
+          MAKFNT    FNCONS,#5,"ncons" 
+          MAKFNT    MCONS,#5,"mcons" 
+          MAKFNT    LIST,#4,"list" 
+          MAKFNT    EVLIS,#5,"evlis" 
+          MAKFNT    KWOTE,#5,"kwote" 
+          MAKFNT    MAKELIST,#8,"makelist" 
+          MAKFNT    REVERSE,#7,"reverse" 
+          MAKFNT    APPEND,#6,"append" 
+          MAKFNT    APPND1,#7,"append1" 
+          MAKFNT    REMQ,#4,"remq" 
+          MAKFNT    LLREMOVE,#6,"remove" 
+          MAKFNT    COPY,#4,"copy" 
+          MAKFNT    COPYLIST,#8,"copylist" 
+          MAKFNT    FIRSTN,#6,"firstn"
+          MAKFNT    LASTN,#5,"lastn"
+          MAKFNT    SUBST,#5,"subst" 
+          MAKFNT    OBLIST,#6,"oblist" 
+          MAKFNT    BOBLIST,#7,"boblist"
+          MAKFNT    LHOBLIST,#8,"lhoblist"
+          MAKFNT    RPLACA,#6,"rplaca" 
+          MAKFNT    RPLACD,#6,"rplacd" 
+          MAKFNT    RPLAC,#5,"rplac" 
+          MAKFNT    PLACDL,#6,"placdl" 
+          MAKFNT    DISPLACE,#8,"displace" 
+          MAKFNT    SETQ,#4,"setq" 
+          MAKFNT    FSET,#3,"set" 
+          MAKFNT    SETQQ,#5,"setqq" 
+          MAKFNT    PSETQ,#5,"psetq" 
+          MAKFNT    DESET,#5,"deset" 
+          MAKFNT    DESETQ,#6,"desetq" 
+          MAKFNT    CIRLIST,#7,"cirlist" 
+          MAKFNT    NREVERSE,#8,"nreverse" 
+          MAKFNT    NSUBST,#6,"nsubst"
+          MAKFNT    DELQ,#4,"delq"
+          MAKFNT    LLDELETE,#6,"delete"
+          MAKFNT    NRECONC,#7,"nreconc" 
+          MAKFNT    NEXTL,#5,"nextl" 
+          MAKFNT    NEWL,#4,"newl" 
+          MAKFNT    NEWR,#4,"newr" 
+          MAKFNT    NCONC,#5,"nconc" 
+          MAKFNT    NCONC1,#6,"nconc1" 
+          MAKFNT    ACONS,#5,"acons" 
+          MAKFNT    PAIRLIS,#7,"pairlis" 
+          MAKFNT    ASSQ,#4,"assq" 
+          MAKFNT    ASSOC,#5,"assoc" 
+          MAKFNT    CASSQ,#5,"cassq" 
+          MAKFNT    CASSOC,#6,"cassoc" 
+          MAKFNT    RASSQ,#5,"rassq" 
+          MAKFNT    RASSOC,#6,"rassoc" 
+          MAKFNT    SUBLIS,#6,"sublis" 
+
+          RETURN
+
+FNTRET    RETURN
+
+
+;
+;         Les Predicats de type simple
+;         ============================
+;
+
+;
+;         TRUE et FALSE
+;
+;  ----------------------------------------
+          FENTRY    TRUE,SUBRN
+;  ----------------------------------------
+          ADJSTK    A4                  ; sucre la pile
+          MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    FALSE,SUBRN
+;  ----------------------------------------
+          ADJSTK    A4                  ; sucre la pile
+          MOVNIL    A1                  ; local false
+          RETURN
+
+;
+;         LLNOT ATOM SYMBOLP VARIABLEP
+;         VECTORP STRINGP LISTP NLISTP CONSP BOUNDP : SUBR1
+;
+;
+
+
+;  ----------------------------------------
+          FENTRY    LLNULL,SUBR1
+;  ----------------------------------------
+          BTNIL     A1,LLNULLT
+          MOVNIL    A1
+          RETURN
+LLNULLT   MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLNOT,SUBR1
+;  ----------------------------------------
+          BTNIL     A1,LLNOTT
+          MOVNIL    A1
+          RETURN
+LLNOTT    MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    ATOM,SUBR1
+;  ----------------------------------------
+          BFCONS    A1,ATOMT
+          MOVNIL    A1
+          RETURN
+ATOMT     MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    ATOMP,SUBR1
+;  ----------------------------------------
+          BFCONS    A1,ATOMPT
+          MOVNIL    A1
+          RETURN
+ATOMPT    MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    SYMBOLP,SUBR1
+;  ----------------------------------------
+          BTSYMB    A1,SYMBOLPT
+          MOVNIL    A1
+          RETURN
+SYMBOLPT  MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    VARIABLEP,SUBR1
+;  ----------------------------------------
+          BTVAR     A1,VARPRET
+          MOVNIL    A1
+VARPRET   RETURN
+
+;  ----------------------------------------
+          FENTRY    CONSTANTP,SUBR1
+;  ----------------------------------------
+          BTFIX     A1,CONPT
+          BTFLOAT   A1,CONPT
+          BTSTRG    A1,CONPT
+          BTVECT    A1,CONPT
+          BTCONS    A1,CONPRET
+          BFVAR     A1,CONPT
+CONPRET   MOVNIL    A1
+          RETURN
+CONPT     MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    VECTORP,SUBR1
+;  ----------------------------------------
+          BTVECT    A1,VECTRET
+          MOVNIL    A1
+VECTRET   RETURN
+
+;  ----------------------------------------
+          FENTRY    STRINGP,SUBR1
+;  ----------------------------------------
+          BTSTRG    A1,STRGRET
+          MOVNIL    A1
+STRGRET   RETURN
+
+;  ----------------------------------------
+          FENTRY    LISTP,SUBR1
+;  ----------------------------------------
+          BTNIL     A1,LISTPT
+          BTCONS    A1,LISTPT
+          MOVNIL    A1
+          RETURN
+LISTPT    MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    NLISTP,SUBR1
+;  ----------------------------------------
+          BFCONS    A1,NLISTPR
+          MOVNIL    A1
+NLISTPR   RETURN
+
+;  ----------------------------------------
+          FENTRY    CONSP,SUBR1
+;  ----------------------------------------
+          BTCONS    A1,CONSPR
+          MOVNIL    A1
+CONSPR    RETURN
+
+;  ----------------------------------------
+          FENTRY    BOUNDP,SUBR1
+;  ----------------------------------------
+          BFSYMB    A1,BOUNDP1          ; au cas ou on ne sache rien dessus
+          MOV       CVAL(A1),A2
+          CABNE     A2,.UNDEF,BOUNDPT
+BOUNDP1   MOVNIL    A1
+          RETURN
+BOUNDPT   MOV       .T,A1
+          RETURN
+
+;
+;         EQ NEQ : SUBR2
+;
+
+;  ----------------------------------------
+          FENTRY    LLEQ,SUBR2
+;  ----------------------------------------
+          CABEQ     A1,A2,LLEQT
+          MOVNIL    A1
+          RETURN
+LLEQT     MOV       .T,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    NEQ,SUBR2
+;  ----------------------------------------
+          CABNE     A1,A2,NEQT
+          MOVNIL    A1
+          RETURN
+NEQT      MOV       .T,A1
+          RETURN
+
+;
+;         EQUAL NEQUAL : SUBR2
+;
+;  ----------------------------------------
+          FENTRY    NEQUAL,SUBR2
+;  ----------------------------------------
+          PUSH      @LLNOT              ; pour inverser le resultat
+          BRA       EQUAL               ; de EQUAL
+          NOP                           ; Foo!
+
+;  ----------------------------------------
+          FENTRY    EQUAL,SUBR2
+;  ----------------------------------------
+          STACK     A3                  ; pour les retours rapides
+          CALL      EQUAL2              ; test proprement dit
+          MOV       .T,A1               ; si on en revient retourne T
+          RETURN
+
+EQUALN    LABEL                         ;; retour faux rapide.
+          SSTACK    A3                  ; un EXIT tre`s rapide
+          MOVNIL    A1                  ; et retourne faux.
+          RETURN
+
+EQUALNT   LABEL                         ;; test et retour faux rapide
+          POP       A3                  ; la continuation fausse.
+          BFNIL     A1,EQUALNTR         ; le test est vrai, retour simple.
+          SSTACK    A3                  ; un EXIT tre`s rapide
+EQUALNTR  RETURN                        ; A1 = faux.
+
+
+EQUAL1    LABEL                         ; test 2 listes.
+          BFCONS    A2,EQUALN
+          PUSH      CDR(A1)             ; sauve les 2 CDRs
+          MOV       CAR(A1),A1
+          PUSH      CDR(A2)
+          MOV       CAR(A2),A2
+          INTEST
+          CABNE     A1,A2,EQUAL11       ; me^me pas EQ ..
+          POP       A2                  ; gagne', j'ite`re aussi surles CAR
+          POP       A1                  
+          BTCONS    A1,EQUAL1           ; je gagne la re'cursion
+          BRA       EQUAL2              ; c'est une fin de liste.
+EQUAL11   CHKSTK    MSTACK,ERRFS        ; toute re'cursion peut la faire sauter
+          CALL      EQUAL2              ; recursion sur les CARs
+          POP       A2
+          POP       A1                  ; ite`re sur les CDRs
+;         compare A1 et A2, A3 contient le STACK en cas de retour rapide!
+EQUAL2    LABEL                        
+          CABNE     A1,A2,EQUAL3        ; des fois que ca soit carrement EQ!
+          RETURN
+EQUAL3    BTCONS    A1,EQUAL1           ; iteration sur les CARs
+          BTSYMB    A1,EQUALN           ; EQ symb de'tecte' en EQUAL2
+          BTVECT    A1,EQUAL7           ; cas spe'cial vecteurs.
+          BTSTRG    A1,EQUAL8           ; cas spe'cial strings.
+          BFFIX     A2,EQUAL4           ; A1 = fix ou float, A2 = ?.
+          BTFIX     A1,EQUALN           ; EQ fix de'tecte' en EQUAL2
+          BRA       EQUAL5              ; cas special nombres.
+EQUAL4    BFFLOAT   A2,EQUALN           ; A2 n'est pas un nbre.
+                                        ; cas A1=fix|float, A2=fix|float.
+EQUAL5    PUSH      A3                  ; la continuation fausse.
+          PUSH      @EQUALNT            ; pre'pare le test 
+          JMP       GAEQN               ; c'est un nb : test EQN
+EQUAL7    BFVECT    A2,EQUALN           ; il faut 2 vecteurs
+          PUSH      A3                  ; la continuation fausse.
+          PUSH      @EQUALNT
+          JMP       EQVECTRI            ; test de vecteurs rapide.
+EQUAL8    BFSTRG    A2,EQUALN           ; il faut 2 chaines.
+          PUSH      A3                  ; la continuation fausse
+          PUSH      @EQUALNT
+          JMP       EQSTRGI             ; test de chaine rapide.
+
+
+;         La meme sauvegardant les registres sauf A2 et A3
+
+SAVEQUAL  PUSH      A2
+          PUSH      A3
+          CALL      EQUAL
+          POP       A3
+          POP       A2
+          RETURN
+
+;
+;         Les fonctions de recherche
+;         ==========================
+;
+
+;
+;         (MEMQ a l)   SUBR2
+;
+;  ----------------------------------------
+          FENTRY    MEMQ,SUBR2
+;  ----------------------------------------
+          BFCONS    A2,MEMQ2            ; rien a` faire.
+MEMQ1     MOV       CAR(A2),A3          ; A3 <- l'element suivant
+          CABEQ     A3,A1,MEMQ3         ; c'est le selecteur ?
+          MOV       CDR(A2),A2          ; nan : continue
+          BTCONS    A2,MEMQ1            ; la liste est vide
+MEMQ2     MOVNIL    A2                  ; pour etre sur d'une belle fin.
+MEMQ3     MOV       A2,A1               ; retourne le dernier CDR
+          RETURN
+
+;
+;         (MEMBER s l)   SUBR2
+;
+;  ----------------------------------------
+          FENTRY    MEMBER,SUBR2
+;  ----------------------------------------
+          BTCONS    A2,MEMB1            ; la liste n'est pas vide.
+          MOVNIL    A1
+          RETURN
+MEMB1     PUSH      A2                  ; sauve la liste en entier
+          PUSH      A1                  ; sauve le test
+          MOV       CAR(A2),A2          ; element suivant de la liste
+          CALL      EQUAL               ; alors ?
+          BFNIL     A1,MEMB3            ; c'est cui la
+          POP       A1                  ; recupere le test
+          POP       A2                  ; recup le reste
+          MOV       CDR(A2),A2          ; avance
+          BTCONS    A2,MEMB1            ; la liste est vide ?
+          MOVNIL    A1                  ; pour etre sur d'une belle fin.
+          RETURN
+MEMB3     ADJSTK    #1                  ; enleve le test
+          POP       A1                  ; retourne le reste de la liste
+          RETURN
+
+;
+;         (TAILP s l)  en avancant dans l
+;
+;  ----------------------------------------
+          FENTRY    TAILP,SUBR2
+;  ----------------------------------------
+          BRA       TAILP3              ; optimise la boucle de la fonction
+TAILP2    CABEQ     A1,A2,TAILP9        ; A1 est pret a etre retourne
+          MOV       CDR(A2),A2          ; coudering ze liste
+          INTEST
+TAILP3    BTCONS    A2,TAILP2           ; c'est encore possible
+          MOVNIL    A1                  ; retourne le faux
+TAILP9    RETURN
+
+;
+;         (LAST l)  SUBR1
+;         retourne le dernier doublet d'une liste
+;         2 instructions par element !
+;
+;  ----------------------------------------
+          FENTRY    LAST,SUBR1
+;  ----------------------------------------
+          BFCONS    A1,LASTRET          ; pas d'argument
+LAST1     MOV       CDR(A1),A2          ; avance dans la liste
+          BFCONS    A2,LASTRET          ; A1 est le dernier doublet
+          MOV       CDR(A2),A1          ; avance dans la liste
+          BTCONS    A1,LAST1            ; elle est encore longue
+          MOV       A2,A1               ; retourne le dernier doublet
+LASTRET   RETURN
+
+;
+;         (NTH n l)        SUBR2
+;         retourne le n-ie`me objet de la liste l
+;
+;  ----------------------------------------
+          FENTRY    NTH,SUBR2
+;  ----------------------------------------
+          BFFIX     A1,NTHERR           ; ce n'est pas un nombre entier
+          BRA       NTH2
+NTH1      MOV       CDR(A2),A2          ; avance dans la liste
+NTH2      BFCONS    A2,NTHF             ; elle est terminee = NIL
+          SOBGEZ    A1,NTH1             ; compte le nb de cons
+          MOV       CAR(A2),A1          ; retourne l'e'le'ment
+          RETURN
+NTHF      MOVNIL    A1
+          RETURN
+NTHERR    MOV       .NTH,A2             ; le nom de la fonction
+          JMP       ERRNIA
+
+;
+;         (NTHCDR n l)     SUBR2
+;         retourne le n-ie`me CDR de la liste l
+;         pas de INTEST car la boucle s'arre^te toujours.
+;
+;  ----------------------------------------
+          FENTRY    NTHCDR,SUBR2
+;  ----------------------------------------
+          BFFIX     A1,NTHCERR          ; ce n'est pas un nb entier
+          BRA       NTHC2
+NTHC1     MOV       CDR(A2),A2          ; avance dans la liste
+NTHC2     BFCONS    A2,NTHCF            ; elle est terminee = NIL
+          SOBGEZ    A1,NTHC1            ; compte le nb de cons
+          MOV       A2,A1               ; retourne la liste en l'etat
+          RETURN
+NTHCF     MOVNIL    A1
+          RETURN
+NTHCERR   MOV       .NTHCDR,A2          ; le nom de la fonction
+          JMP       ERRNIA              ; il fallait un nombre
+
+;
+;         (LENGTH l)   SUBR1
+;
+;  ----------------------------------------
+          FENTRY    LLLENGTH,SUBR1
+;  ----------------------------------------
+          MOV       #0,A2               ; raz le compteur
+          BFCONS    A1,LENGT2           ; rien a` faire.
+LENGT1    MOV       CDR(A1),A1          ; avance dans la liste
+          INCR      A2                  ; et compte
+          BTCONS    A1,LENGT1           ; la liste continue
+LENGT2    MOV       A2,A1               ; retourne la taille de la liste
+          RETURN
+
+;
+;         Creation d'objets
+;         =================
+;
+;
+;         (CONS s1 s2)   SUBR2
+;         (XCONS s1 s2)   SUBR2
+;         (NCONS s1)   SUBR1
+;
+;  ----------------------------------------
+          FENTRY    LLCONS,SUBR2
+;  ----------------------------------------
+          XCONS     A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    FXCONS,SUBR2
+;  ----------------------------------------
+          CONS      A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    FNCONS,SUBR1
+;  ----------------------------------------
+          NCONS     A1
+          RETURN
+
+
+;
+;         (MCONS e1 ... eN)   NSUBR
+;
+;  ----------------------------------------
+          FENTRY    MCONS,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#0,MCONSF        ; (MCONS) = NIL
+          POP       A1                  ; le dernier
+          BRA       MCONS2              ; au travail.
+MCONS1    POP       A2                  ; element suivant
+          CONS      A2,A1
+MCONS2    SOBGTZ    A4,MCONS1           ; pour tous les elements
+          RETURN
+MCONSF    MOVNIL    A1
+          RETURN
+
+
+;
+;         (LIST e1 ... eN)   NSUBR
+;
+;  ----------------------------------------
+          FENTRY    LIST,SUBRN
+;  ----------------------------------------
+          MOVNIL    A1                  ; l'element neutre
+          BRA       LISTS2              ; au travail
+LISTS1    POP       A2                  ; argument suivant
+          CONS      A2,A1               ; fabrique ce qu'il faut
+LISTS2    SOBGEZ    A4,LISTS1           ; pour tous
+          RETURN                        ; tout est dit
+
+;
+;         (EVLIS <l>)
+;
+;  ----------------------------------------
+          FENTRY    EVLIS,SUBR1
+;  ----------------------------------------
+          BFCONS    A1,FNTRET           ; ya rien a faire
+          PUSH      CDR(A1)             ; sauve le reste
+          JCALL     EVALCAR             ; evalue la 1ere valeur
+          POP       A3                  ; A3 <- le reste des valeurs
+          NCONS     A1                  ; (1ereval)
+          PUSH      A1                  ; sauve la 1ere tete
+LIST1     LABEL      
+          BFCONS    A3,LIST2            ; yen a pu
+          PUSH      A1                  ; sauve le dernier doublet cree
+          PUSH      CDR(A3)             ; sauve le reste des elements
+          MOV       CAR(A3),A1          ; A1 <- le 1er element suivant
+          JCALL     EVALA1              ; on l'evalue
+          POP       A3                  ; A3 <- le reste des elements
+          NCONS     A1                  ; fabrique (val)
+          POP       A2                  ; recup le dernier doublet cree
+          MOV       A1,CDR(A2)          ; accroche le nouveau doublet
+          BRA       LIST1               ; et on fait les autres.
+LIST2     POP       A1                  ; A1 <- adresse du 1er doublet cree
+          RETURN                        ; et c'est tout.
+
+;
+;         (KWOTE s)   SUBR1
+;
+;  ----------------------------------------
+          FENTRY    KWOTE,SUBR1
+;  ----------------------------------------
+          NCONS     A1                  ; (arg)
+          CONS      .QUOTE,A1           ; (QUOTE arg)
+          RETURN
+
+;
+;         (MAKELIST n obj)   SUBR2
+;         pas de INTEST car la boucle s'arre^te toujours.
+;
+;  ----------------------------------------
+          FENTRY    MAKELIST,SUBR2
+;  ----------------------------------------
+          BFFIX     A1,MAKELER          ; le 1er argument est un entier
+          MOVNIL    A3                  ; tete de liste
+          BRA       MAKEL3              ; au boulot
+MAKEL2    CONS      A2,A3
+MAKEL3    SOBGEZ    A1,MAKEL2           ; le compte demande'
+          MOV       A3,A1               ; la valeur de retour
+          RETURN                        ; et c'est marre
+MAKELER   MOV       .MAKELIST,A2        ; nom de la fonction
+          JMP       ERRNIA              ; il fallait un nombre.
+
+;
+;         (REVERSE l1)   SUBR1
+;
+;  ----------------------------------------
+          FENTRY    REVERSE,SUBR1
+;  ----------------------------------------
+          MOVNIL    A2                  ; la valeur de retour.
+          BRA       REV2
+REV1      MOV       CAR(A1),A3
+          MOV       CDR(A1),A1
+          CONS      A3,A2
+REV2      BTCONS    A1,REV1
+          MOV       A2,A1
+          RETURN
+
+
+;
+;         (APPEND l1 ... lN)   NSUBR
+;         (APPEND1 l a)    SUBR2
+;
+;  ----------------------------------------
+          FENTRY    APPND1,SUBR2
+;  ----------------------------------------
+          NCONS     A2                  ; (APPEND1 l a) = (APPEND l (CONS a))
+          PUSH      A1                  ; prepare une NSUBR
+          PUSH      A2
+          MOV       #2,A4               ; a 2 arguments.
+          BRA       APPEND              ;
+
+;         (de append2 (x y)
+;             (ifn (consp x)
+;                  y
+;                  (setq y (cons (car x) y))
+;                  (let ((y y))
+;                       (setq x (cdr x))
+;                       (while (consp x)
+;                              (rplacd y (cons (car x) (cdr y)))
+;                              (setq y (cdr y))
+;                              (setq x (cdr x))))
+;                  y))
+;
+;  ----------------------------------------
+          FENTRY    APPEND,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#0,APPENDF       ; (APPEND) == NIL
+          POP       A1                  ; on recupere le dernier
+          BRA       APPEND4
+APPEND1   LABEL                         ; Pile : x ; A1 : y
+          POP       A2                  ; A2 <- x
+          BFCONS    A2,APPEND4          ; pas un CONS, on garde A1 
+          CONS      CAR(A2),A1          ; on fabrique le 1er CONS
+          PUSH      A1                  ; on sauvegarde y
+          BRA       APPEND3
+APPEND2   LABEL
+          CONS      CAR(A2),CDR(A1)     ; (rplacd y (cons (car x) (cdr y)))
+          MOV       CDR(A1),A1          ; (setq y (cdr y))
+APPEND3   MOV       CDR(A2),A2          ; (setq x (cdr x))
+          INTEST
+          BTCONS    A2,APPEND2          ; on itere sur la liste A2
+          POP       A1                  ; la liste resultat
+APPEND4   SOBGTZ    A4,APPEND1          ; il reste des arguments a traiter
+          RETURN                        ; magnifique, A1 contient le resultat
+APPENDF   MOVNIL    A1
+          RETURN
+
+;
+;         (REMQ a l)   SUBR2
+;         actuellement recursif! (a iterativer)
+;
+;  ----------------------------------------
+          FENTRY    REMQ,SUBR2
+;  ----------------------------------------
+          BTCONS    A2,REMQ6            ; la liste est vide
+          MOV       A2,A1               ; peut etre un atome.
+          RETURN
+REMQ6     MOV       CAR(A2),A3          ; A3 <- element suivant de l
+          MOV       CDR(A2),A2
+          CABEQ     A3,A1,REMQ          ; c'est un element a ne pas copier.
+          INTEST
+          CHKSTK    MSTACK,ERRFS
+          PUSH      A3                  ; sauve l'element a CONSER
+          CALL      REMQ                ; recurse sur le reste de la liste!
+          POP       A3
+          CONS      A3,A1               ; CONS recursif en retour
+          RETURN
+
+;
+;         (REMOVE s l)   SUBR2
+;         actuellement recursif! (a iterativer)
+;
+;  ----------------------------------------
+          FENTRY    LLREMOVE,SUBR2
+;  ----------------------------------------
+          MOV       A2,A3               ; c'est plus pratique dans A3
+REMV1     LABEL
+          BTCONS    A3,REMV4            ; au travail
+          MOV       A3,A1               ; peut etre un atome.
+          RETURN
+REMV4     CHKSTK    MSTACK,ERRFS
+          PUSH      A1                  ;   itou
+          MOV       CAR(A3),A2          ; A2 <- element suivant de l
+          CALL      SAVEQUAL            ; alors ?
+          MOV       A1,A4               ; le temps du test
+          POP       A1                  ; l'element a tester
+          MOV       CDR(A3),A3
+          BFNIL     A4,REMV1
+          PUSH      A2                  ; sauve l'element a CONSER
+          CALL      REMV1               ; recurse sur le reste de la liste!
+          POP       A2
+          CONS      A2,A1               ; CONS recursif en retour
+          RETURN
+
+;
+;         (COPYLIST l)   SUBR1
+;         actuellement recursif! c'est beau mais pas tres
+;         efficace pour la pile (A iterativer sur les CDR)
+;
+;  ----------------------------------------
+          FENTRY    COPYLIST,SUBR1
+;  ----------------------------------------
+          BFCONS    A1,FNTRET           ; les atomes ne changent pas
+          INTEST
+          CHKSTK    MSTACK,ERRFS
+          PUSH      CDR(A1)             ; sauve le CDR
+          MOV       CAR(A1),A1
+          CALL      COPYLIST            ; recurse sur les CARs
+          XTOPST    A1
+          CALL      COPYLIST            ; et sur les CDRs!
+          POP       A2
+          CONS      A2,A1               ; et construit enfin le doublet
+          RETURN
+
+;
+;         (COPY l)   SUBR1
+;         copie TOUT!
+;         (DE COPY (s)
+;             (COND ((ATOM s)
+;                      (COND ((STRINGP s) (SUBSTRING s 0))
+;                            ((VECTORP s)
+;                               (LET ((v (MAKEVECTOR (VLENGTH s) ())))
+;                                    (TYPEVECT v (TYPEVECT s))
+;                                    (FOR (i 0 1 (1- (VLENGTH s)))
+;                                         (VSET v i (COPY (VREF s i))))))
+;                            (T s)))
+;                   ((TCONSP s) 
+;                      (TCONS (COPY (CAR s)) (COPY (CDR s))))
+;                   (T (CONS (COPY (CAR s)) (COPY (CDR s))))))
+;
+;         actuellement recursif! c'est beau mais pas tres
+;         efficace pour la pile (A iterativer sur les CDR)
+;
+;  ----------------------------------------
+          FENTRY    COPY,SUBR1
+;  ----------------------------------------
+          INTEST
+          CHKSTK    MSTACK,ERRFS
+          BFCONS    A1,COPY3            ; les atomes
+          PUSH      CDR(A1)             ; sauve le CDR
+          BTINVSBL  A1,COPY2            ; c'est un TCONS
+          MOV       CAR(A1),A1
+          CALL      COPY                ; recurse sur les CARs
+          XTOPST    A1
+          CALL      COPY                ; et sur les CDRs!?!?
+          POP       A2
+          CONS      A2,A1               ; et construit enfin le doublet
+          RETURN
+COPY2     MOV       CAR(A1),A1
+          CALL      COPY                ; recurse sur les CARs
+          XTOPST    A1
+          CALL      COPY                ; et sur les CDRs!
+          POP       A2
+          CONS      A2,A1               ; et construit enfin le doublet
+          STINVSBL  A1                  ;    etiquette!
+          RETURN
+COPY3     BFSTRG    A1,COPY4            ; c'est une chaine.
+          PUSH      A1                  ; le temps de l'allocation
+          HGSIZE    A1,A2               ; le nb de caracteres
+          JCALL     STRGALLC            ; bien allouee
+          POP       A3
+          MOV       TYP(A3),TYP(A1)     ; recopie du type de la chaine.
+          HBMOVM    A2,A3,#0,A1,#0      ; une belle chaine toute neuve.
+          RETURN
+COPY4     BFVECT    A1,FNTRET           ; plus rien a faire!
+          PUSH      A1                  ; le temps de l'allocation
+          HGSIZE    A1,A1               ; une belle taille
+          PUSH      A1                  ; j'ai encore besoin de la taille.
+          MOVNIL    A2                  ; valeur initiale.
+          JCALL     MAKEVECT            ; A1 <- l'objet
+          MOV       A1,A2               ; le vecteur destination
+          POP       A4                  ; la taille a copier
+          POP       A3                  ; le vecteur source.
+          MOV       TYP(A3),TYP(A1)     ; recopie du type du vecteur.
+          BRA       COPY6
+COPY5     PUSH      A4                  ; sauve le compteur
+          PUSH      A3                  ;       la source
+          PUSH      A2                  ;       la destination
+          HPXMOV    A3,A4,A1            ; element suivant
+          CALL      COPY                ; et ca recurse!
+          POP       A2                  ; recup la destination
+          POP       A3                  ;       la source
+          POP       A4                  ;       le compteur 
+          HPMOVX    A1,A2,A4
+COPY6     SOBGEZ    A4,COPY5
+          MOV       A2,A1               ; retourne le nouveau vecteur.
+          RETURN
+
+;         (FIRSTN n l)
+;         pas de INTEST car la boucle s'arre^te toujours.
+;  ----------------------------------------
+          FENTRY    FIRSTN,SUBR2
+;  ----------------------------------------
+          MOV       .FIRSTN,A4          ; le nom
+          BFFIX     A1,FIRSERR1         ; le nombre
+          BFCONS    A2,FIRSERR2         ; la liste
+          CNBLE     A1,#0,FIRSF         ; si on veut moins d'un
+          MOV       CAR(A2),A3          ; le premier e'le'ment
+          NCONS     A3
+          PUSH      A3                  ; sauvegarde le re'sultat
+          BRA       FIRS1
+FIRS0     MOV       CDR(A2),A2          ; on avance dans la liste
+          BFCONS    A2,FIRS3            ; si on est au bout fini.
+          MOV       CAR(A2),A3          ; l'e'le'ment suivant
+          NCONS     A3
+          MOV       A3,CDR(A4)          ; est concate'ne'
+FIRS1     MOV       A3,A4               ; A4 pointe sur last
+          SOBGTZ    A1,FIRS0            ; le compte demande'.
+FIRS3     POP       A1                  ; on re'cupe`re le re'sultat
+          RETURN
+FIRSF     MOVNIL    A1
+          RETURN
+FIRSERR1  MOV       A4,A2
+          JMP       ERRNIA
+FIRSERR2  MOV       A2,A1
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LASTN,SUBR2
+;  ----------------------------------------
+          MOV       .LASTN,A4           ; le nom
+          BFFIX     A1,FIRSERR1         ; le nombre doit en etre un
+          BFCONS    A2,FIRSERR2         ; pas une liste -> identite'
+          CNBLE     A1,#0,LASTNF        ; cas pathologique
+          MOV       A2,A3               ; le re'sultat
+LASTN0    MOV       CDR(A2),A2          ; on avance d'un cran le doigt 1
+          CNBEQ     #0,A1,LASTN1        ; si mon doigt 2 est assez en retard
+          DECR      A1
+          BRA       LASTN2
+LASTN1    MOV       CDR(A3),A3          ; on avance aussi le doigt 2
+LASTN2    BTCONS    A2,LASTN0           ; c'est le bout
+          PUSH      A3                  ; 1er arg le append
+          MOVNIL    A1                  ; 2me arg 
+          PUSH      A1                  ; pre'pare l'appel a` APPEND
+          MOV       #2,A4               ; deux arguments : A1 et ()
+          BRA       APPEND              ; et on copie le premier niveau.
+LASTNF    MOVNIL    A1
+          RETURN
+
+;
+;         (SUBST new old e)   SUBR3
+;         Le gros actuellement recursif. A iterativer
+;
+;  ----------------------------------------
+          FENTRY    SUBST,SUBR3
+;  ----------------------------------------
+          CHKSTK    MSTACK,ERRFS
+          PUSH      A1                  ; sauve new
+          MOV       A3,A1               ; change e et new
+          POP       A3                  ; A1 <- e, A2 <- old, A3 <- new
+SUBSTT2   PUSH      A1                  ; sauve e
+          CALL      SAVEQUAL            ; et test e::old
+          BTNIL     A1,SUBSTT4          ; ce n'est pas le meme
+          POP       A1                  ; enleve l'ancien e
+          MOV       A3,A1               ; et retourne new
+SUBSTT3   RETURN
+SUBSTT4   POP       A1                  ; restaure e
+          BFCONS    A1,SUBSTT3          ; l'arbre est termine
+          PUSH      A1                  ; l'ancien e pour le test final
+          PUSH      CDR(A1)             ; sauve le CDR
+          MOV       CAR(A1),A1          ; recurse sur les CARs
+          CALL      SUBSTT2
+          XTOPST    A1
+          CALL      SUBSTT2             ; et recurse sur les CDRs!
+          POP       A4                  ; le SUBST du CAR
+          XTOPST    A2                  ; l'ancien e <-> old
+          CABNE     CAR(A2),A4,SUBSTT8  ; rate il faut un CONS
+          CABNE     CDR(A2),A1,SUBSTT8  ;   itou!
+          MOV       A2,A1               ; je ne cons pas! bravo!
+          POP       A2                  ; l'ancien old
+          RETURN
+SUBSTT8   CONS      A4,A1               ; et enfin construit le doublet
+          POP       A2                  ; l'ancien old.
+          RETURN
+
+;
+;         (OBLIST pkgc/NIL pname/NIL)   NSUBR
+;         filtre le symbole et/ou le package
+;
+;  ----------------------------------------
+          FENTRY    OBLIST,SUBRN
+;  ----------------------------------------
+          MOVNIL    A1                  ; la liste a construire
+          MOVNIL    A2                  ; la package a filtrer
+          CNBEQ     A4,#0,OBLIST0       ; pas du tout () ()
+          POP       A2                  ; le dernier arg
+          CNBEQ     A4,#1,OBLIST0       ; il y en a un
+          POP       A3                  ; A3 le pkgc, A2 le nom
+          CNBEQ     A4,#2,OBLISP0       ; vers le filtre des symboles.
+          MOV       #2,A1               ; le vrai nb d'args
+          MOV       .OBLIST,A2
+          JMP       ERRWNA
+OBLIST0   LABEL
+          BFSYMB    A2,OBLISER1         ; car on fait des EQ sur le package
+          HGSIZE    HASHTAB,A4          ; taille de la table
+          DECR      A4
+OBLIST1   HPXMOV    HASHTAB,A4,A4       ; A4 symbole suivant
+          BRA       OBLIST8             ; vers le test
+OBLIST2   MOV       A4,A3               ; pour le test d'arret 3D
+          BTSTRG    PNAME(A4),OBLIST4   ; pas de lien 3D
+OBLIST3   MOV       PNAME(A4),A4        ; avance 3D
+OBLIST4   LABEL                         ; DO IT, le symbole est dans A4
+OBLIST5   BTNIL     A2,OBLIST6          ; on les veut tous
+          CABNE     PKGC(A4),A2,OBLIST7 ; que ceux du package A2
+OBLIST6   CONS      A4,A1               ; rajoute en tete
+OBLIST7   LABEL                         ; fin du boulot
+          CABNE     A4,A3,OBLIST3       ; boucle en 3D
+          MOV       ALINK(A4),A4        ; avance en 2D
+OBLIST8   BTSYMB    A4,OBLIST2          ; il y en a encore
+          SOBGEZ    A4,OBLIST1          ; bucket suivant
+          RETURN
+;         Filtre d'un nom (A2) et d'un pkgc opt A3
+OBLISP0   LABEL                         ; A2 le nom, A3 le pckg
+          BFSYMB    A2,OBLISER1         ; car on fait des EQ sur le package
+          BFSYMB    A3,OBLISER2         ; obligatoire avec l'oblist 3D
+          MOV       A2,A4               ; pour s'arreter
+          BTSTRG    PNAME(A4),OBLISP3   ; cas 1 seul symbole
+OBLISP2   MOV       PNAME(A4),A4        ; prend un coup d'avance puis 3D
+OBLISP3   BTNIL     A3,OBLISP4          ; pas de test
+          CABNE     PKGC(A4),A3,OBLISP5 ; pas le bon package
+OBLISP4   CONS      A4,A1               ; liste resultat
+OBLISP5   CABNE     A4,A2,OBLISP2       ; pas la fin.
+          RETURN
+OBLISER1  MOV       A2,A1               ; le mauvais argument
+          BRA       OBLISER3
+OBLISER2  MOV       A3,A1               ; le mauvais argument
+OBLISER3  MOV       .OBLIST,A2          ; la fonction
+          JMP       ERRSYM              ; il faut un symbole.
+
+;
+;         (BOBLIST [n])   NSUBR
+;         si [n] n'est pas present, retourne tous les buckets!
+;         retourne la 3D sous forme de sous-liste
+;
+;  ----------------------------------------
+          FENTRY    BOBLIST,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#1,BOBLON        ; il y a un argument
+          CNBEQ     A4,#0,BOBLIS1       ; pas du tout
+          MOV       #1,A1               ; le bon nombre
+          MOV       .BOBLIST,A2
+          JMP       ERRWNA
+BOBLIS1   MOVNIL    A4                  ; la liste des buckets.
+          HGSIZE    HASHTAB,A1          ; le nombre de buckets
+          BRA       BOBLIS9             ; vers le 1er bucket
+BOBLIS2   PUSH      A1                  ; le nume'ro
+          CALL      BOBLON2             ; le bucket
+          CONS      A1,A4               ; on le rajoute
+          POP       A1
+BOBLIS9   SOBGEZ    A1,BOBLIS2          ; s'il reste des buckets
+          MOV       A4,A1               ; c'est fini
+          RETURN
+
+BOBLON    LABEL                         ; il y a un argument, belle brune.
+          POP       A1                  ; un argument
+          BTFIX     A1,BOBLON1          ; ca roule
+BOBLOER   MOV       .BOBLIST,A2         ; l'appelant
+          JMP       ERRNIA
+BOBLOER2  MOV       .BOBLIST,A2         ; l'appelant
+          JMP       ERROOB
+BOBLON1   CNBLT     A1,#0,BOBLOER2      ; bizarre, indice < 0
+          HGSIZE    HASHTAB,A2          ; la taille de la table.
+          CNBGE     A1,A2,BOBLOER2      ; c'est trop grand ..
+BOBLON2   HPXMOV    HASHTAB,A1,A2       ; le bon bucket
+          MOVNIL    A1                  ; le resultat
+          BRA       BOBLON8
+BOBLON3   CABEQ     A2,.UNDEF,BOBLON7   ; a sauter toujours!
+          BTSTRG    PNAME(A2),BOBLON6   ; pas de lien 3D
+          PUSH      A4                  ; le temps de faire une sousliste 3D
+          MOVNIL    A4                  ; la sous-liste en question
+          MOV       A2,A3
+BOBLON4   MOV       PNAME(A3),A3        ; le lien 3D
+          CONS      A3,A4
+          CABNE     A3,A2,BOBLON4       ; on est pas au bout
+          CONS      A4,A1               ; la sous liste 3D
+          POP       A4                  ; clean
+          BRA       BOBLON7
+BOBLON6   CONS      A2,A1               ; element simple 3D
+BOBLON7   MOV       ALINK(A2),A2        ; symbole suivant
+BOBLON8   BTSYMB    A2,BOBLON3          ; il en reste
+          RETURN
+
+;
+;         (LHOBLIST strg)   SUBR1
+;         filtre l'oblist avec strg de type qui se coerce en string
+;
+;  ----------------------------------------
+          FENTRY    LHOBLIST,SUBR1
+;  ----------------------------------------
+          MOV       A1,A2               ; la string a fitrer dans A2
+          MOV       .LHOBLIST,SAVEA4    ; le nom de l'appelant
+          JCALL     STRINGA2            ; pour detecter les bad args
+          MOVNIL    A1                  ; la liste a construire
+          HGSIZE    HASHTAB,A4          ; taille de la table
+          DECR      A4
+LHOBLIST1 HPXMOV    HASHTAB,A4,A4       ; A4 symbole suivant
+          BRA       LHOBLIST8           ; vers le test
+LHOBLIST2 MOV       A4,A3               ; pour le test d'arret 3D
+          BTSTRG    PNAME(A4),LHOBLIST4 ; pas de lien 3D
+LHOBLIST3 MOV       PNAME(A4),A4        ; avance 3D
+LHOBLIST4 LABEL                         ; DO IT, le symbole est dans A4
+;; filtre
+          PUSH      A1                  ; protect
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          PUSH      @LHOBLIST5          ; l'adresse de retour
+          PUSH      A2                  ; le pname A4
+          PUSH      A4                  ; la chaine cherche'e dans A4
+          MOV       #2,A4               ; deux arguments
+          JMP       FFINDEX             ; cherche
+LHOBLIST5 POP       A4
+          POP       A3
+          POP       A2
+          BFNIL     A1,LHOBLIST6        ; On le garde ???
+          POP       A1
+          JMP       LHOBLIST7
+LHOBLIST6 POP       A1
+;; fin filtre
+          CONS      A4,A1               ; rajoute en tete
+LHOBLIST7 LABEL                         ; fin du boulot
+          CABNE     A4,A3,LHOBLIST3     ; boucle en 3D
+          MOV       ALINK(A4),A4        ; avance en 2D
+LHOBLIST8 BTSYMB    A4,LHOBLIST2        ; il y en a encore
+          SOBGEZ    A4,LHOBLIST1        ; bucket suivant
+          RETURN
+
+;
+;         Modification de listes (CONS)
+;         =============================
+;
+;         RPLACA RPLACD RPLAC PLACDL DISPLACE
+;         ne sont definies que sur les listes non vides!
+;
+
+;  ----------------------------------------
+          FENTRY    RPLACA,SUBR2
+;  ----------------------------------------
+          BFCONS    A1,RPLACA1          ; ce doit etre une liste
+          MOV       A2,CAR(A1)          ; force le CAR
+          RETURN
+RPLACA1   MOV       .RPLACA,A2          ; nom de la fonction qui
+          JMP       ERRNLA              ; provoque l'erreur
+
+;  ----------------------------------------
+          FENTRY    RPLACD,SUBR2
+;  ----------------------------------------
+          BFCONS    A1,RPLACD1          ; ce doit etre une liste
+          MOV       A2,CDR(A1)          ; force le CDR
+          RETURN
+RPLACD1   MOV       .RPLACD,A2          ; nom de la fonction qui
+          JMP       ERRNLA              ; provoque l'erreur
+
+;         (de rplac (l a d) (rplaca l a) (rplacd l d) l)
+;  ----------------------------------------
+          FENTRY    RPLAC,SUBR3
+;  ----------------------------------------
+          BFCONS    A1,RPLAC1           ; ce doit etre une liste
+          MOV       A2,CAR(A1)          ; force le CAR
+          MOV       A3,CDR(A1)          ; force le CDR
+          RETURN
+RPLAC1    MOV       .RPLAC,A2           ; nom de la fonction qui
+          JMP       ERRNLA              ; provoque l'erreur.
+
+;         (de displace (l1 l2)
+;             (unless (consp l1) (syserror ...
+;             (ifn (consp l2)
+;                  (rplac l1  'progn (ncons l2))
+;                  (rplac l1 (car l2) (cdr l2))
+;                  (when (tconsp l2) (tconsmk l1))
+;                  l1 ))
+;  ----------------------------------------
+          FENTRY    DISPLACE,SUBR2
+;  ----------------------------------------
+          BFCONS    A1,DISPL2           ; ce doit etre une liste
+          BTCONS    A2,DISPL1           ; le 2eme arg est pret
+          MOV       .PROGN,CAR(A1)      ; (progn ...
+          NCONS     A2                  ; (x)
+          MOV       A2,CDR(A1)          ; (progn x)
+          RETURN
+DISPL1    MOV       CAR(A2),CAR(A1)     ; force le CAR
+          MOV       CDR(A2),CDR(A1)     ; force le CDR
+          BFINVSBL  A2,DISPLRET
+          STINVSBL  A1                  ; le TCONS se propage
+DISPLRET  RETURN
+DISPL2    MOV       .DISPLACE,A2        ; nom de la fonction qui
+          JMP       ERRNLA              ; provoque l'erreur
+
+;         (de placdl (l e) (cdr (rplacd l (ncons e))))
+;  ----------------------------------------
+          FENTRY    PLACDL,SUBR2
+;  ----------------------------------------
+          BFCONS    A1,PLACD1           ; ce doit etre une liste
+          NCONS     A2                  ; fabrique (ncons e)
+          MOV       A2,CDR(A1)          ; force le CDR
+          MOV       A2,A1               ; qui est retourne.
+          RETURN
+PLACD1    MOV       .PLACDL,A2          ; nom de la fonction qui
+          JMP       ERRNLA              ; provoque l'erreur.
+
+;
+;         SETQ : FSUBR
+;         n'est definie que sur les variables
+;
+;  ----------------------------------------
+          FENTRY    SETQ,SUBRF
+;  ----------------------------------------
+          MOV       A1,A2               ; un bon pied.
+          BTCONS    A2,SETQ1            ; et c'est parti.
+          RETURN
+SETQ1     MOV       A2,A1
+          PUSH      CAR(A1)             ; sauve le nom de la variable
+          MOV       CDR(A1),A1          ; A1 <- (val var val ...
+          BFCONS    A1,SETQER2          ; pas de bons arguments
+          PUSH      CDR(A1)             ; sauve le reste
+          JCALL     EVALCAR             ; evalue la valeur
+          POP       A2                  ; recupere le reste de la liste
+          POP       A3                  ; recupere le nom de la variable
+          BFVAR     A3,SETQER1          ; il faut une variable
+          MOV       A1,CVAL(A3)         ; force la nouvelle CVAL
+          BTCONS    A2,SETQ1            ; il reste des couples
+          RETURN                        ; retourne la derniere valeur
+SETQER1   MOV       A3,A1               ; l'argment defectueux
+          MOV       .SETQ,A2            ; le nom de la fonction
+          JMP       ERRNVA              ; doit etre une variable
+SETQER2   MOV       #2,A1               ; le bon nb d'arguments
+          MOV       .SETQ,A2            ; le nom de la fonction
+          JMP       ERRWNA
+
+;
+;         SET : SUBR2
+;         n'est defini que sur des variables
+;
+;  ----------------------------------------
+          FENTRY    FSET,SUBR2
+;  ----------------------------------------
+          BFVAR     A1,SETERR           ; rate!
+          MOV       A2,CVAL(A1)         ; et voila!
+          MOV       A2,A1               ; retourne la valeur.
+          RETURN
+SETERR    MOV       .FSET,A2            ; le nom de la fonction
+          JMP       ERRNVA              ; doit etre une variable
+
+;
+;         SETQQ : FSUBR
+;         n'est definie que sur les variables
+;
+;  ----------------------------------------
+          FENTRY    SETQQ,SUBRF
+;  ----------------------------------------
+          MOVNIL    A3                  ; si (SETQQ) = ()
+          BRA       SETQQ3
+SETQQ1    MOV       CAR(A1),A2          ; A2 <- la variable
+          BFVAR     A2,SETQQER1         ; il faut une variable
+          MOV       CDR(A1),A1
+          BFCONS    A1,SETQQER2         ; mauvaise liste.
+          MOV       CAR(A1),A3          ; A1 <- la valeur
+          MOV       A3,CVAL(A2)         ; force la valeur
+          MOV       CDR(A1),A1          ; pret pour le couple suivant.
+SETQQ3    BTCONS    A1,SETQQ1           ; il reste des couples.
+          MOV       A3,A1               ; la valeur de retour.
+          RETURN                        ; qui est ramenee
+SETQQER1  MOV       A2,A1               ; la mauvaise variable
+          MOV       .SETQQ,A2           ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+SETQQER2  MOV       #2,A1               ; le bon nb
+          MOV       .SETQQ,A2
+          JMP       ERRWNA
+;
+;         PSETQ : FSUBR
+;         SETQ parallele sur n variables
+;
+;  ----------------------------------------
+          FENTRY    PSETQ,SUBRF
+;  ----------------------------------------
+          MOV       #0,A4               ; le nb de couples prepares en pile
+          BRA       PSETQ5              ; et c'est parti
+PSETQ2    MOV       CAR(A1),A2          ; la variable
+          BFVAR     A2,PSETQERR         ; le nom de la variable
+          PUSH      A2
+          MOV       CDR(A1),A1          ; (val1 nom2 val2 ...)
+          PUSH      A1                  ; empile (nom2 val2 ...)
+          PUSH      A4                  ; sauvetage du compteur
+          JCALL     EVALCAR             ; evalue la valeur
+          POP       A4                  ; car EVAL le bouzille.
+          XTOPST    A1                  ; exch la valeur et (nom val ...)
+          MOV       CDR(A1),A1          ; saute la valeur
+          INCR      A4                  ; le nombre de couples empiles
+PSETQ5    BTCONS    A1,PSETQ2           ; il en reste
+          BRA       PSETQ4              ; vers la liaison proprement dite
+PSETQ3    POP       A1                  ; recupere la valeur
+          POP       A2                  ; recupere le nom
+          MOV       A1,CVAL(A2)         ; force la nouvelle valeur
+PSETQ4    SOBGEZ    A4,PSETQ3           ; il en reste.
+          RETURN                        ; et retourne la derniere valeur.
+PSETQERR  MOV       A2,A1               ; la mauvaise variable
+          MOV       .PSETQ,A2           ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+
+;  ----------------------------------------
+          FENTRY    DESET,SUBR2
+;  ----------------------------------------
+          MOV       .DESET,A4           ; le nom de l'appelant
+DESET0    LABEL
+          MOV       A4,SAVEA4           ; histoire de bosser
+          CALL      DESET4
+          MOV       .T,A1               ; retourne toujours T!
+          RETURN
+
+DESET2    BFCONS    A2,DESET6           ; mauvaise liaison (valeurs non cons)
+          PUSH      CDR(A1)             ; le reste des noms
+          PUSH      CDR(A2)             ; le reste des valeurs
+          MOV       CAR(A1),A1          ; le nom
+          MOV       CAR(A2),A2          ; la valeur
+          CALL      DESET5              ; re'curse sur les CARs
+          POP       A2                  ; reste des valeurs
+          POP       A1                  ; reste des noms
+DESET4    BTNIL     A1,FNTRET           ; fin normale des noms
+DESET5    BTCONS    A1,DESET2           ; ite`re sur les CDRs
+          BTVAR     A1,DESET8           ; ok
+          MOV       SAVEA4,A2           ; l'appelant
+          JMP       ERRBPA              ; "bad parameter"
+DESET6    NCONS     A2                  ; (val)
+          XCONS     A2,A1               ; (var val)
+          MOV       SAVEA4,A2           ; l'appelant
+          JMP       ERRILB
+DESET8    MOV       A2,CVAL(A1)         ; et voila!
+          RETURN                        ; tout est dit
+
+ 
+;  ----------------------------------------
+          FENTRY    DESETQ,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; l'arbre des variables.
+          MOV       CDR(A1),A1          ; pointe sur (lval)
+          JCALL     EVALCAR             ; evalue lval
+          MOV       A1,A2               ; lval
+          POP       A1                  ; lvar
+          MOV       .DESETQ,A4          ; en cas d'erreur
+          BRA       DESET0              ; apres c'est pareil
+
+;  ----------------------------------------
+          FENTRY    CIRLIST,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#0,CIRLISTF      ; (CIRLIST) => ()
+          POP       A1                  ; le dernier argument
+          NCONS     A1                  ; prepare le dernier CONS
+          MOV       A1,A3               ; pour le RPLACD final
+          BRA       CIRLIST3
+CIRLIST2  POP       A2                  ; l'element suivant
+          CONS      A2,A1               ; toujours du neuf
+CIRLIST3  SOBGTZ    A4,CIRLIST2         ; il en reste
+          MOV       A1,CDR(A3)          ; CA BOUCLE!
+          RETURN
+CIRLISTF  MOVNIL    A1
+          RETURN
+
+;
+;         NRECONC : SUBR2
+;         optimise les transferts :
+;         3 instructions par doublets
+;
+;  ----------------------------------------
+          FENTRY    NRECONC,SUBR2
+;  ----------------------------------------
+          BRA       FREV2
+FREV1     MOV       CDR(A1),A3          ; avance dans la liste
+          MOV       A2,CDR(A1)          ; change le CDR
+          BFCONS    A3,FREVRET          ; la liste est terminee
+          MOV       CDR(A3),A2          ; avance dans la liste
+          MOV       A1,CDR(A3)          ; change le CDR
+          BFCONS    A2,FREV9            ; la liste est terminee
+          MOV       CDR(A2),A1          ; avance dans la liste
+          MOV       A3,CDR(A2)          ; change le CDR
+FREV2     BTCONS    A1,FREV1            ; la liste continue
+          MOV       A2,A1               ; retourne la nouvelle liste
+          RETURN
+FREV9     MOV       A3,A1               ; et la aussi.
+FREVRET   RETURN
+
+
+;  ----------------------------------------
+          FENTRY    NSUBST,SUBR3        ; (nsubst new old list)
+;  ----------------------------------------
+          MOV       A1,A4               ; new prote'ge' dans A4
+NSLOOP    CHKSTK    MSTACK,ERRFS        ; car on re'curse sur les CAR
+          PUSH      A3                  ; la liste pour le re'sultat
+          MOV       A3,A1
+          PUSH      A4
+          CALL      SAVEQUAL            ; old :: list sauve A2 et A3
+          POP       A4
+          BTNIL     A1,NSUB0            ; c'est pas e'gal, on descend
+          MOV       A4,A1               ; sinon le re'sultat est new
+          POP       A3                  ; on ajuste
+          RETURN                        ; et c'est fini
+NSUB2     MOV       CDR(A3),A3          ; sinon on avance d'un cran
+          INTEST                        ; car on va boucler
+NSUB0     BFCONS    A3,NSUBRET          ; des fois que on serait au bout
+          PUSH      A3                  ; on sauve la liste
+          MOV       CAR(A3),A3
+          CALL      NSLOOP              ; on re'curse sur le CAR
+          POP       A3                  ; on re'cupe`re la liste
+          MOV       A1,CAR(A3)          ; et on substitue
+NSUB1     MOV       CDR(A3),A1          ; ensuite le CDR
+          PUSH      A4
+          CALL      SAVEQUAL            ; on le compare a old
+          POP       A4
+          BTNIL     A1,NSUB2            ; on a pas le bon CDR : ca boucle
+NSUB3     MOV       A4,CDR(A3)          ; on substitue le CDR et c'est fini
+NSUBRET   POP       A1                  ; on re'cupe`re la liste
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    DELQ,SUBR2
+;  ----------------------------------------
+DELQ0     BFCONS    A2,DELQRET
+          CABNE     CAR(A2),A1,DELQ1    ; on cherche le de'but
+          MOV       CDR(A2),A2
+          BRA       DELQ0
+DELQ1     MOV       A2,A4               ; on prend A4 pour se de'placer
+DELQ2     MOV       A4,A3               ; A3 a un metro de retard
+DELQ3     MOV       CDR(A4),A4          ; on avance d'un cran
+          BFCONS    A4,DELQRET          ; on est au bout
+          CABNE     CAR(A4),A1,DELQ2    ; on saute l'e'le'ment ?
+          MOV       CDR(A4),CDR(A3)     ; si oui on raccroche au precedent
+          INTEST                        ; on va boucler
+          BRA       DELQ3
+DELQRET   MOV       A2,A1               ; le re'sultat e'tait dans A2
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    LLDELETE,SUBR2        ; le meme avec equal
+;  ----------------------------------------
+          BRA       DELE4
+DELE0     PUSH      A1			; le symbole
+          MOV       CAR(A2),A2          ; on prend le premier e'le'ment
+          CALL      EQUAL
+          BTNIL     A1,DELE1            ; on a trouve' le premier
+          POP       A1
+          POP       A2                  ; on re'cupe`re la liste
+          MOV       CDR(A2),A2          ; on avance d'un cran
+DELE4     PUSH      A2                  ; la liste
+          BTCONS    A2,DELE0            ; fini si au bout de la liste
+DELERET   POP       A1                  ; on recupere la tete de liste
+          RETURN
+DELE1     POP       A2                  ; le symbole reste la
+          TOPST     A4                  ; on prend A4 pour se de'placer
+DELE2     MOV       A4,A3               ; A3 a un me'tro de retard
+DELE3     MOV       CDR(A4),A4          ; on avance d'un cran
+          BFCONS    A4,DELERET          ; on est au bout
+          MOV       CAR(A4),A1          ; l'e'le'ment courant
+          PUSH      A4
+          CALL      SAVEQUAL            ; equal avec sauvegarde de A2-A3
+          POP       A4
+          BTNIL     A1,DELE2            ; c'en e'tait pas un
+          MOV       CDR(A4),CDR(A3)     ; on saute l'e'le'ment a` jeter
+          INTEST                        ; on va boucler
+          BRA       DELE3
+
+;
+;         NREVERSE : SUBR1
+;
+;  ----------------------------------------
+          FENTRY    NREVERSE,SUBR1
+;  ----------------------------------------
+          MOVNIL    A2                  ; le dernier CDR.
+          BFCONS    A1,NREV2            ; rien a` faire
+NREV1     MOV       CDR(A1),A3          ; avance dans la liste
+          MOV       A2,CDR(A1)          ; change le CDR
+          BFCONS    A3,NREV9            ; la liste est terminee
+          MOV       CDR(A3),A2          ; avance dans la liste
+          MOV       A1,CDR(A3)          ; change le CDR
+          BFCONS    A2,NREV3            ; la liste est terminee
+          MOV       CDR(A2),A1          ; avance dans la liste
+          MOV       A3,CDR(A2)          ; change le CDR
+          BTCONS    A1,NREV1            ; la liste continue
+NREV2     MOV       A2,A1               ; retourne la nouvelle liste
+          RETURN
+NREV3     MOV       A3,A1               ; et la aussi.
+NREV9     RETURN
+
+
+;
+;         NEXTL : FSUBR    (nextl var1 [var2])
+;         n'est definie que sur les variables
+;
+;  ----------------------------------------
+          FENTRY    NEXTL,SUBRF
+;  ----------------------------------------
+          MOV       CAR(A1),A2          ; A2 <- le nom du symbole
+          BFVAR     A2,NEXTLERR         ; il faut une variable
+          PUSH      CDR(A1)             ; qui sait
+          MOV       CVAL(A2),A3         ; A3 <- sa C-VAL
+          BTCONS    A3,NEXTL4           ; ca peut marcher
+          BTNIL     A3,NEXTL4           ;    la aussi
+          MOV       A2,A1               ; le nom du symbole.
+          MOV       .NEXTL,A2           ; le nom de la fonction
+          JMP       ERRNLA              ; "il fallait une liste"
+NEXTL4    MOV       CAR(A3),A1          ; A1 <- le CAR de la C-VAL
+          MOV       CDR(A3),A3          ; A3 <- le CDR de la C-VAL
+          MOV       A3,CVAL(A2)         ; force
+          POP       A2                  ; teste pour le 2eme argument
+          BFCONS    A2,NEXTL9           ; il n'y a qu'1 argument
+          MOV       CAR(A2),A2          ; A2 <- la variable
+          BFVAR     A2,NEXTLERR         ; la aussi il faut une variable
+          MOV       A1,CVAL(A2)         ; et voila.
+NEXTL9    RETURN     
+NEXTLERR  MOV       A2,A1               ; la mauvaise variable
+          MOV       .NEXTL,A2           ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+
+;
+;         (NEWL at s)   FSUBR   a gauche
+;         (NEWR at s)   FSUBR   a droite
+;
+;  ----------------------------------------
+          FENTRY    NEWL,SUBRF
+;  ----------------------------------------
+          PUSH      CAR(A1)             ; sauve le nom du symbole
+          MOV       CDR(A1),A1          ; (s)
+          JCALL     EVALCAR             ; evalue l'expression
+          POP       A2                  ; recupere le nom du symbole
+          BFVAR     A2,NEWLERR          ; il faut une variable
+          MOV       CVAL(A2),A3         ; A3 <- ancienne CVAL du symbole
+          CABEQ     A3,.UNDEF,NEWLERR1  ; la variable n'etait pas definie !
+          XCONS     A3,A1               ; fabrique la nouvelle valeur
+          MOV       A1,CVAL(A2)         ; force
+          RETURN
+NEWLERR   MOV       A2,A1               ; la mauvaise variable
+          MOV       .NEWL,A2            ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+NEWLERR1  MOV       A2,A1               ; la mauvaise variable
+          MOV       .NEWL,A2            ; le nom de la fonction
+          JMP       ERRUDV              ; la variable devait etre definie
+
+;  ----------------------------------------
+          FENTRY    NEWR,SUBRF
+;  ----------------------------------------
+          MOV       CAR(A1),A2          ; la variable
+          BFVAR     A2,NEWRERR          ; ca va pas!
+          PUSH      A2                  ; sauve le nom du symbole
+          MOV       CDR(A1),A1          ; (s)
+          JCALL     EVALCAR             ; evalue l'expression
+          POP       A2                  ; recupere le nom du symbole
+          MOV       CVAL(A2),A3         ; A3 <- ancienne CVAL du symbole
+          NCONS     A1                  ; (newval)
+          BTCONS    A3,NEWR3            ; c'est un CONS je fais le NCONC1
+          MOV       A1,CVAL(A2)         ; (SET var [(EVAL val)])
+          BRA       NEWR9               ; et c'est tout
+NEWR3     PUSH      A3                  ; la valeur de retour
+          BRA       NEWR6               ; vers la recherche
+NEWR4     MOV       A4,A3               
+NEWR6     MOV       CDR(A3),A4          ; juste pour le test
+          BTCONS    A4,NEWR4            ; ce n'est pas le dernier
+          MOV       A1,CDR(A3)          ; (NCONC1 var (EVAL val))
+          POP       A1                  ; la valeur de retour.
+NEWR9     RETURN     
+NEWRERR   MOV       A2,A1               ; le nom de la variable
+          MOV       .NEWR,A2            ; le nom de la fonction
+          JMP       ERRNVA              ; il fallait une variable
+
+;
+;         (NCONC l1 ... lN)  NSUBR
+;         (NCONC1 l1 l2) SUBR2
+;
+;  ----------------------------------------
+          FENTRY    NCONC1,SUBR2
+;  ----------------------------------------
+          NCONS     A2                  ; (NCONC1 l a) = (NCONC l (CONS a))
+          PUSH      A1                  ; prepare une NSUBR
+          PUSH      A2                  ; les arguments
+          MOV       #2,A4               ; a 2 arguments
+          BRA       NCONC
+          NOP                           ; Argh!
+
+;  ----------------------------------------
+          FENTRY    NCONC,SUBRN
+;  ----------------------------------------
+          CNBEQ     A4,#0,FNCONCF       ; (NCONC) == NIL
+          POP       A1                  ; le dernier argument
+          BRA       FNCONC4             ; La boucle generale
+FNCONC1   TOPST     A2                  ; on consulte l'argument precedent
+          BTCONS    A2,FNCONC3          ; un CONS!
+          POP       A2                  ; on oublie cet argument non liste
+          BRA       FNCONC4             ; au suivant
+FNCONC2   MOV       CDR(A2),A2          ;  ...   (nextl A2))
+          INTEST                        ; si la liste est circulaire
+FNCONC3   BTCONS    CDR(A2),FNCONC2     ; (while (consp (cdr A2)) ...
+          MOV       A1,CDR(A2)          ; (rplacd A2 A1)
+          POP       A1
+FNCONC4   SOBGTZ    A4,FNCONC1          ; on recommence
+          RETURN                        ; on retourne la liste
+FNCONCF   MOVNIL    A1
+          RETURN
+
+
+;
+;         Fonctions sur A-LISTES
+;         ======================
+;
+
+;
+;         (ACONS x y z)
+;
+;  ----------------------------------------
+          FENTRY    ACONS,SUBR3
+;  ----------------------------------------
+          PUSH      A3
+          XCONS     A2,A1
+          POP       A2
+          XCONS     A2,A1
+          RETURN
+
+;
+;         (PAIRLIS l1 l2 al)
+;
+;  ----------------------------------------
+          FENTRY    PAIRLIS,SUBR3
+;  ----------------------------------------
+          MOVNIL    A4                  ; la A-liste en construction.
+          NCONS     A4                  ; prepare l'accrochage de bords
+          PUSH      A4                  ; sauve la tete de la nouvelle
+          PUSH      A3                  ; sauve la derniere Aliste
+          BRA       PAIRLIS5
+PAIRLIS2  MOV       CAR(A2),A3          ; (cons (cons (car l1) (car l2))
+          CONS      CAR(A1),A3          ;       (pairlis (cdr l1) (cdr l2)
+          NCONS     A3                  ; ((clef . val))
+          MOV       A3,CDR(A4)          ; accroche le nouvel element
+          MOV       A3,A4               ; nouvelle queue.
+          MOV       CDR(A1),A1
+          MOV       CDR(A2),A2
+PAIRLIS5  BFCONS    A1,PAIRLIS8         ; (if (or (atom l1) (atom l2))
+          BTCONS    A2,PAIRLIS2         ;      al
+          BTNIL     A2,PAIRLIS2         ; () est ok aussi.
+          MOV       A2,A1               ; ce second arg est tres bizarre...
+          MOV       .PAIRLIS,A2         ; le nom de la fonction
+          JMP       ERRNLA              ; il fallait une liste
+PAIRLIS8  POP       A1                  ; la 1ere al
+          MOV       A1,CDR(A4)          ; accroche la derniere
+          POP       A1                  ; la 1ere tete de liste
+          MOV       CDR(A1),A1          ; les vrais elements.
+          RETURN     
+
+;
+;         (ASSQ at al)
+;
+;  ----------------------------------------
+          FENTRY    ASSQ,SUBR2
+;  ----------------------------------------
+          BFCONS    A2,ASSQ3            ; la liste est vide
+          MOV       A1,A3               ; prepare le retour
+ASSQ1     MOV       CAR(A2),A1          ; A1 <- 1er element
+          BFCONS    A1,ASSQ2            ; even paranoid people have ennemies
+          MOV       CAR(A1),A4          ; A4 <- la variable
+          CABEQ     A4,A3,ASSQRET       ; c'est le bon
+ASSQ2     MOV       CDR(A2),A2          ; element suivant
+          BTCONS    A2,ASSQ1            ; la liste n'est pas vide
+ASSQ3     MOVNIL    A1                  ; retourne NIL
+ASSQRET   RETURN
+
+;
+;         (ASSOC e al)
+;
+;  ----------------------------------------
+          FENTRY    ASSOC,SUBR2
+;  ----------------------------------------
+          BTCONS    A2,ASSO1            ; du vrai travail
+          MOVNIL    A1
+          RETURN
+ASSO1     MOV       CAR(A2),A3          ; A3 <- le couple suivant
+          BFCONS    A3,ASSO5            ; even paranoid people have ennemies
+          PUSH      A1                  ; sauve le test
+          PUSH      A2                  ; sauve la a-liste
+          MOV       CAR(A3),A2          ; A2 <- le selecteur
+          PUSH      A3                  ; le couple
+          CALL      EQUAL               ; on teste
+          BFNIL     A1,ASSO9            ; c'est ok!
+          ADJSTK    #1                  ; le couple
+          POP       A2                  ; la a-liste
+          POP       A1                  ; le teste
+ASSO5     MOV       CDR(A2),A2          ; element suivant
+          BTCONS    A2,ASSO1            ; la liste n'est pas vide
+          MOVNIL    A1                  ; retourne NIL
+          RETURN                        ; voila!
+ASSO9     LABEL
+          POP       A1                  ; l'ancien couple
+          ADJSTK    #2                  ; (le test, la a-liste)
+          RETURN
+
+;
+;         (CASSQ at al)
+;
+;  ----------------------------------------
+          FENTRY    CASSQ,SUBR2
+;  ----------------------------------------
+          BRA       CASSQ3              ; on y va
+CASSQ1    MOV       CAR(A2),A3          ; A1 <- 1er element
+          BFCONS    A3,CASSQ2           ; even paranoid people have ennemies
+          MOV       CAR(A3),A4          ; A4 <- la variable
+          CABEQ     A4,A1,CASSQ4        ; c'est le bon
+CASSQ2    MOV       CDR(A2),A2          ; element suivant
+CASSQ3    BTCONS    A2,CASSQ1           ; la liste n'est pas vide
+          MOVNIL    A1                  ; retourne NIL
+          RETURN
+CASSQ4    MOV       CDR(A3),A1          ; retourne le CDR de l'element
+          RETURN
+
+;
+;         (CASSOC e al)
+;
+;  ----------------------------------------
+          FENTRY    CASSOC,SUBR2
+;  ----------------------------------------
+          BRA       CASSO8
+CASSO1    MOV       CAR(A2),A3          ; A3 <- le couple suivant
+          BFCONS    A3,CASSO5           ; even paranoid people have ennemies
+          PUSH      A1                  ; sauve le test
+          PUSH      A2                  ; sauve la a-liste
+          MOV       CAR(A3),A2          ; A2 <- le selecteur
+          PUSH      A3                  ; le couple
+          CALL      EQUAL               ; on teste
+          BFNIL     A1,CASSO9           ; c'est ok!
+          ADJSTK    #1                  ; le couple
+          POP       A2                  ; la a-liste
+          POP       A1                  ; le teste
+CASSO5    MOV       CDR(A2),A2          ; element suivant
+CASSO8    BTCONS    A2,CASSO1           ; la liste n'est pas vide
+          MOVNIL    A1                  ; retourne NIL
+          RETURN                        ; voila!
+CASSO9    LABEL
+          POP       A1                  ; le couple
+          MOV       CDR(A1),A1          ; on ne retourne que la valeur
+          ADJSTK    #2                  ; (le test, la a-liste)
+          RETURN
+
+;
+;         (RASSQ at al)
+;         comme ASSQ mais teste le CDR
+;
+;  ----------------------------------------
+          FENTRY    RASSQ,SUBR2
+;  ----------------------------------------
+          BFCONS    A2,RASSQ3           ; la liste est vide
+          MOV       A1,A3               ; prepare le retour
+RASSQ1    MOV       CAR(A2),A1          ; A1 <- 1er element
+          BFCONS    A1,RASSQ2           ; even paranoid people have ennemies
+          MOV       CDR(A1),A4          ; A4 <- l'objet a tester
+          CABEQ     A4,A3,RASSQRET      ; c'est le bon
+RASSQ2    MOV       CDR(A2),A2          ; element suivant
+          BTCONS    A2,RASSQ1           ; la liste n'est pas vide
+RASSQ3    MOVNIL    A1                  ; retourne NIL
+RASSQRET  RETURN
+
+;
+;         (RASSOC e al)
+;         comme ASSOC mais teste le CDR
+;
+;  ----------------------------------------
+          FENTRY    RASSOC,SUBR2
+;  ----------------------------------------
+          BRA       RASSO8
+RASSO1    MOV       CAR(A2),A3          ; A3 <- le couple suivant
+          BFCONS    A3,RASSO5           ; even paranoid people have ennemies
+          PUSH      A1                  ; sauve le test
+          PUSH      A2                  ; sauve la a-liste
+          MOV       CDR(A3),A2          ; A2 <- l'objet a selecter
+          PUSH      A3                  ; le couple
+          CALL      EQUAL               ; on teste
+          BFNIL     A1,RASSO9           ; c'est ok!
+          ADJSTK    #1                  ; le couple
+          POP       A2                  ; la a-liste
+          POP       A1                  ; le teste
+RASSO5    MOV       CDR(A2),A2          ; element suivant
+RASSO8    BTCONS    A2,RASSO1           ; la liste n'est pas vide
+          MOVNIL    A1                  ; retourne NIL
+          RETURN                        ; voila!
+RASSO9    LABEL
+          POP       A1                  ; le couple
+          ADJSTK    #2                  ; (le test, la a-liste)
+          RETURN
+
+;
+;         (SUBLIS al s)
+;
+;         (de sublis (al s)
+;             (if (atom s) 
+;                 (let ((x (assq s al))) (if x (cdr x) s))
+;                 (let ((car (sublis al (car s)))
+;                       (cdr (sublis al (cdr s))) )
+;                      (if (and (eq car (car s)) (eq cdr (cdr s)))
+;                          s
+;                          (cons car cdr) ))))
+;         a iterativer un chouia sur les CDRs ?!?!
+;  ----------------------------------------
+          FENTRY    SUBLIS,SUBR2
+;  ----------------------------------------
+          BTCONS    A2,SUBLIS5
+          PUSH      A2                  ; s
+          MOV       A1,A2               ; al
+          TOPST     A1                  ; s
+          CALL      ASSQ
+          BTNIL     A1,SUBLIS2
+          POP       A2                  ; s
+          MOV       CDR(A1),A1          ; (cdr x)
+          RETURN     
+SUBLIS2   POP       A1                  ; s
+          RETURN     
+SUBLIS5   INTEST
+          CHKSTK    MSTACK,ERRFS        ; attention vraie recursion!
+          PUSH      A1                  ; al
+          PUSH      A2                  ; s
+          MOV       CAR(A2),A2          ; (car s)
+          CALL      SUBLIS              ; et oui ca recurse!
+          POP       A2                  ; s
+          XTOPST    A1                  ; al
+          PUSH      A2                  ; s
+          MOV       CDR(A2),A2          ; (cdr s)
+          CALL      SUBLIS              ; rebelotte dirait l'autre
+          POP       A3                  ; s
+          POP       A2                  ; sublis(car s)
+          CABNE     A1,CDR(A3),SUBLIS8  ; pas le meme CONS
+          CABNE     A2,CAR(A3),SUBLIS8  ; itou
+          MOV       A3,A1               ; s
+          RETURN     
+SUBLIS8   CONS      A2,A1
+          RETURN     
+
+          END
+

@@ -1,0 +1,21 @@
+defmodule
+	extrnlib
+
+files	(
+	extrnlib
+)
+export (
+	#:display:windows:ask-file
+	#:display:windows:ask-string
+	#:display:windows:ask-font
+	#:display:windows:ask-color
+	#:display:windows:message-box
+	#:display:windows:get-selection
+	#:display:windows:store-selection
+	#:display:windows:get-resources-info
+)
+import	(
+	callext
+)
+include
+        ()

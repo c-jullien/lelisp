@@ -1,0 +1,52 @@
+defmodule
+libcir
+files (
+libcir
+)
+export (
+cirprint
+cirprinflush
+cirprin
+cirnequal
+cirequal
+circopy
+#:libcir:double
+#:libcir:replace
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(cirprint subr1 ())
+(cirprin subr1 ())
+(cirprinflush subr1 ())
+(cirnequal subr2 ())
+(cirequal subr2 () () (#:libcir:seen1 #:libcir:seen2))
+(circopy subr1 () () (#:libcir:copied))
+(#:libcir:double subr0 ())
+(#:libcir:replace subr1 ())
+)
+cpfunctions (
+(#:libcir:sweep subr1)
+(#:libcir:unshared subr1)
+(#:libcir:prin subr1)
+(#:libcir:prin-sharp subr3)
+(#:libcir:prin-one subr1)
+(#:libcir:prin1 subr1)
+(#:libcir:prin-cdr subr1)
+(#:libcir:equal subr2)
+(#:libcir:copy subr1)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:libcir:old 't '#:complice:globalvar)
+)((putprop '#:libcir:new 't '#:complice:globalvar)
+)((putprop '#:libcir:seen 't '#:complice:globalvar)
+)((putprop '#:libcir:shared 't '#:complice:globalvar)
+)((putprop '#:libcir:shared-length 't '#:complice:globalvar)
+))

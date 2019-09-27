@@ -1,0 +1,16 @@
+
+../llyze/tt
+
+(define-rt-project ll2lm
+  root-directory #p"/nfs/lelisp15/work/ll2lm/"
+  directories ( #p"/nfs/lelisp15/work/ll2lm/"
+                #p"/nfs/lelisp15/work/llyze/")
+)
+
+(setq lf '(rtmsg rtprint kernellm readlm diagnostic ref printlm
+           parse syserror codewalker defrtprj make))
+
+(while (setq f (nextl lf))
+ (print "(sh-analyze -v " f " -p ll2lm -u ll2lm -o ""../ll2lm/" f ".lm"" -s)")
+  )
+

@@ -1,0 +1,396 @@
+
+
+
+LELISP(L)                LOCAL COMMANDS                 LELISP(L)
+
+
+
+NOM
+     lelisp, lelispX11, cmplc++  - lance le syste`me Le-Lisp
+
+SYNOPSIS
+     lelisp [ -r file ] [cons]
+
+DESCRIPTION
+     Lance le syste`me Le-Lisp. Apre`s impression d'une bannie`re
+     identifiant  le  syste`me,  on  se trouve sous une boucle de
+     dialogue,  caracte'rise'e  par  l'impression  du  caracte`re
+     d'invite "? ".  La fonction (END) termine la session Lisp et
+     retourne au shell.  La commande _l_e_l_i_s_p_X_1_1 est  identique  a`
+     _l_e_l_i_s_p  mais  lance  un  Lisp  ou`  les  librairies X11 sont
+     pre'charge'es, et le _B_i_t_m_a_p _V_i_r_t_u_e_l a e'te'  initialise'  a`
+     |X11|.   (voir  INIBITMAP du manuel de re'fe'rence Le-Lisp).
+     La commande _c_m_p_l_c++ est identique a` la commande  _l_e_l_i_s_p  au
+     compilateur  pre`s:  _l_e_l_i_s_p  inte`gre  le  petit compilateur
+     dynamique, alors que _c_m_p_l_c dispose du compilateur  modulaire
+     complice,  lequel  engendre  un  code  plus  efficace (cf le
+     manuel de re'fe'rence Le-Lisp et la  commande  _c_o_m_p_l_i_c_e(_l).)
+     De  plus, la commande _c_m_p_l_c++ est configure'e avec des zones
+     de donne'es lisp beaucoup plus grandes.
+
+     Sur certaines machines il  est  possible  de  fabriquer  des
+     images me'moires directement exe'cutables dites EXECORE.  Il
+     convient pour cela d'utiliser le Makefile Le-Lisp, en affec-
+     tant  la  variable  de  Makefile EXE avec exe de la manie`re
+     suivante:
+     % make lelisp EXE=exe
+     Les deux options de la  commande  _l_e_l_i_s_p  n'ont  pas  raison
+     d'e^tre en mode EXECORE.
+
+
+OPTIONS
+     -r  file
+          L'option -r permet de restaurer l'image me'moire de nom
+          file,  a`  l'entre'e  de  l'interpre`te Le-Lisp.  Cette
+          image doit avoir e'te' cre'e'e par  le  me^me  syste`me
+          Le-Lisp,  sinon  le message d'erreur _i_m_a_g_e _m_e'_m_o_i_r_e _n_o_n
+          _c_o_m_p_a_t_i_b_l_e   est   imprime'    et    Le-Lisp    termine
+          imme'diatement.
+
+
+     cons L'argument optionnel cons est un nombre  qui  pre'cise,
+          en  8Kcons,  la taille de la zone alloue'e aux cellules
+          de listes. La valeur par de'faut de cet argument est 4,
+          ce  qui correspond a` une zone de 32Kcons soit 256 Koc-
+          tets.
+
+
+
+
+
+
+
+Le-Lisp v15.2     Last change: 1 de'cembre 1993                 1
+
+
+
+
+
+
+LELISP(L)                LOCAL COMMANDS                 LELISP(L)
+
+
+
+FABRICATION
+     Il est possible de  re-fabriquer  les  images  me'moire  par
+     de'faut,  ou  d'en  fabriquer  d'autres. Cette ope'ration se
+     re'alise a` l'aide de  la  commande  make(1),  associe'e  au
+     fichier lelisp/<machine>/Makefile.
+
+     Un certain nombre de syste`mes sont  propose's  en  standard
+     dans  le  Makefile de la distribution Le-Lisp, tels que ceux
+     de'crits dans ce manuel, ou, pour certains  portages,  leurs
+     e'quivalents  avec  les flottants sur 64 bits au lieu des 31
+     bits par de'faut, ou  encore,  avec  d'autres  syste`mes  de
+     fene^trage   inte'gre's  toujours  selon  les  machines  sur
+     lesquelles est distribue' Le-Lisp. Consultez le Makefile  en
+     question,  ou le document d'installation fourni avec le sup-
+     port de distribution de Le-Lisp pour en savoir plus.
+
+     L'utilisateur a e'galement la possibilite' avec ce  Makefile
+     de se fabriquer ses propres syste`mes Le-Lisp, en re-cre'ant
+     un  binaire,  un  configurateur  et  finalement  une   image
+     me'moire.  C'est notamment le cas, de`s qu'il faut inte'grer
+     statiquement, des fichiers compile's issus d'autres langages
+     de programmation (C ou FORTRAN) dans une image Le-Lisp. Pour
+     cela il est conseille' a` l'utilisateur de cre'er son propre
+     Makefile  ge'rant  la  compilation de ses fichiers C ou FOR-
+     TRAN, lequel utilisera le Makefile Le-Lisp pour fabriquer un
+     nouveau   binaire  et  e'ventuellement  une  nouvelle  image
+     me'moire. Pour ce faire, le Makefile Le-Lisp offre  un  cer-
+     tain  nombre  de  _v_a_r_i_a_b_l_e_s  _d_e  _m_a_k_e_f_i_l_e  pre^tes  a` e^tre
+     rede'finies pour les besoins de l'utilisateur.  Cela  permet
+     d'exploiter  le  Makefile Le-Lisp sans avoir a` le modifier,
+     et donc rester inde'pendant des nouvelles  versions  de  le-
+     Lisp. Les variables suceptibles d'e^tre utilise'es sont:
+
+     USERCFILE
+          de'signe le chemin et le nom  d'un  fichier  source  C,
+          afin de le compiler avec les bonnes options de compila-
+          tion, et permettant ainsi de linker le  re'sultat  dans
+          un  binaire  Le-Lisp.  USEROFILE pour imposer le nom et
+          le chemin d'acce`s du fichier re'sultat de la  compila-
+          tion  de $(USERCFILE).  USERXCFILE idem USERCFILE, mais
+          avec les options de  compilation  pour  X11,  en  plus.
+          USERXOFILE  est  a` USERXCFILE, ce que USEROFILE est a`
+          USERCFILE.    USERCFLAGS   permet   a`    l'utilisateur
+          d'ajouter  ces  propres  options lors de la compilation
+          des fichiers $(USERCFILE)  ou  $(USERXCFILE).   USERBIN
+          permet de choisir un nouveau nom de binaire Le-Lisp.
+
+     USERXBIN
+          la me^me chose avec les librairies X11 en plus.
+
+     USERO
+          contient  la  liste  des  fichiers  ".o"  issus  de  la
+
+
+
+Le-Lisp v15.2     Last change: 1 de'cembre 1993                 2
+
+
+
+
+
+
+LELISP(L)                LOCAL COMMANDS                 LELISP(L)
+
+
+
+          compilation C ou FORTRAN.
+
+     USERFLAGS
+          permet a` l'utilisateur de spe'cifier des flags de com-
+          pilation supple'mentaires.
+
+     USERLELISP
+          permet  de  choisir  un  nom  pour   l'image   me'moire
+          engendre'e.  La  fabrication  de  cette  image me'moire
+          utilise par de'faut le nom du binaire  de'crit  par  la
+          variable  USERXBIN.  Pour  utiliser  un  autre binaire,
+          rede'finir la variable USERLELISPBIN.
+
+     USERLELISPBIN
+          permet de renommer le  binaire  Le-Lisp  utilise'  pour
+          fabriquer une image me'moire USERLELISP
+
+     USERCONF
+          permet de spe'cifier le fichier lelisp  qui  va  confi-
+          gurer  l'image  me'moire. En standard ces fichiers sont
+          dans le re'pertoire _l_e_l_i_s_p/<_m_a_c_h_i_n_e>/_c_o_n_f/*_c_o_n_f._l_l .
+
+     USERSIZE
+          contient la liste des tailles  des  zones  me'moire  de
+          Le-Lisp (cf manuel de re'fe'rence Le-Lisp). Par de'faut
+          ce sont les me^me tailles que  pour  une  image  _l_e_l_i_s_p
+          standard.
+
+
+
+EXAMPLES
+     Commencons par la fabrication d'images standard.
+     Engendrer une image _c_m_p_l_c sur une sun4:
+          % pwd
+          /usr/ilog/lelisp/sun4
+          % make cmplc
+          ; Le-Lisp (by INRIA) version 15.23  (14/Fev/90)  [sun4]
+          = (Version:  15.23)
+           ...
+          Que Le-Lisp soit avec vous
+          % ls lelisp
+          lelisp
+          %
+
+     Et une image avec flottant sur 64 bits et  processeur  flot-
+     tant MC68881 sur une sony:
+          % make lelisp64
+          ; Le-Lisp (by INRIA) version 15.23  (14/Fev/90)  [sony]
+          = (Version:  15.23)
+           ...
+          Que Le-Lisp soit avec vous
+          % ls lelisp64
+
+
+
+Le-Lisp v15.2     Last change: 1 de'cembre 1993                 3
+
+
+
+
+
+
+LELISP(L)                LOCAL COMMANDS                 LELISP(L)
+
+
+
+          lelisp64
+          %
+
+
+
+     Voyons maintenant un exemple d'utilisation des variables  de
+     Makefile.
+     Nous avons 2 fichiers C, _e_x_1._c et _e_x_2._c dans un  re'pertoire
+     /usr/home/  que  nous de'sirons inte'grer dans une image Le-
+     Lisp. Nous nommerons cette image _e_x_a_m_p_l_e_l_i_s_p, qui  utilisera
+     un  binaire  nomme'  _l_e_x_a_m_p_l_e_b_i_n  inte'grant  les fichiers C
+     compile's. Cette image est  de'crite  par  le  configurateur
+     _e_x_a_m_p_l_e_c_o_n_f._l_l  .  Les  tailles  utilise'es sont les tailles
+     standard.
+          % cd /usr/home
+          % cat makefile
+          DIR=/usr/home
+          LLDIR=/usr/ilog/lelisp
+          MACHINE=sun4
+
+          # la fabrication du core
+          examplelisp: lexamplebin exampleconf.ll
+               ( cd $(LLDIR)/$(MACHINE) ; \
+               $(MAKE) $(DIR)/examplelisp USERLELISP=$(DIR)/examplelisp \
+                    USERLELISPBIN=$(DIR)/lexamplebin \
+                    USERCONF=$(DIR)/exampleconf.ll \
+               )
+
+          # la fabrication du binaire
+          lexamplebin: ex1.o ex2.o
+               (cd $(LLDIR)/$(MACHINE) ; \
+               $(MAKE) $(DIR)/lexamplebin USERBIN=$(DIR)/lexamplebin \
+                    USERO="$(DIR)/ex1.o $(DIR)/ex2.o" \
+               )
+
+          # mes fichiers C
+          ex1.o: ex1.c
+               (cd $(LLDIR)/$(MACHINE) ; \
+               $(MAKE) $(DIR)/ex1.o \
+               USEROFILE=$(DIR)/ex1.o USERCFILE=$(DIR)/ex1.c \
+               USERCFLAGS="-Dex1_path=$(DIR)" \
+               )
+          ex2.o: ex2.c
+               (cd $(LLDIR)/$(MACHINE) ; \
+               $(MAKE) $(DIR)/ex1.o \
+               USEROFILE=$(DIR)/ex1.o USERCFILE=$(DIR)/ex1.c \
+               )
+
+          % cat exampleconf.ll
+          ; configuration du syste`me lexample
+          (progn
+            (load-stm #:system:name ; le nom du core
+
+
+
+Le-Lisp v15.2     Last change: 1 de'cembre 1993                 4
+
+
+
+
+
+
+LELISP(L)                LOCAL COMMANDS                 LELISP(L)
+
+
+
+                   t             ; environnemnet minimal
+                   ()            ; pas d'editeur dans cette image
+                   t             ; l'environnement standard
+                   t             ; le chargeur
+                   t             ; le compilateur standard
+            )
+            (add-feature (if (eq 0.0 0.0)
+                           '31BITFLOATS
+                           '64BITFLOATS))
+            )
+
+          % make examplelisp
+          cc -O -c ex1.c
+          cc -O -c ex2.c
+          (cd /nfs/current/lelisp/sun4 ; \
+          make /usr/home/lexamplebin USERBIN=/usr/home/lexamplebin \
+          USERO="/usr/home/ex1.o /usr/home/ex2.o" )
+
+          /bin/cc -O -sun4 -DNBSYST=35 -DBSD4x -DBSD42 -DTIMEUNIT=60. -DINRIA \
+          -DSUN4 -DSUNOS40 -Bstatic -DCLOAD -DFOREIGN -DFILEINI=\"../llib/startup.ll\"-I../common -DSYSNAME=\"Le-Lisp\" -o /usr/home/lexamplebin \
+          o/llmain.o o/llstdio.o o/llfloat.o o/llnumb.o o/lelisp.o lelisp31bin.o \
+          /usr/home/ex1.o /usr/home/ex2.o -z -x -lm -lc
+
+          ( cd /nfs/current/lelisp/sun4 ; \
+          make /usr/home/examplelisp USERLELISP=/usr/home/examplelisp \
+                  USERLELISPBIN=/usr/home/lexamplebin \
+                  USERCONF=/usr/home/exampleconf.ll )
+
+          /usr/home/exampleconf.ll -stack 6 -code 1500 -heap 256  \
+          -number 0 -vector 4 -string 5  -symbol 5 -cons 4 -float 0
+          ; Le-Lisp (by INRIA) version 15.23  (14/Fev/90)  [sun4]
+           ...
+          Que Le-Lisp soit avec vous.
+          %
+
+
+
+     Finalement, un exemple de syste`me EXECORE sur IBMRT:
+          % make lelisp EXE=exe
+                  /bin/cc -O -DNBSYST=26 -DS5 -DTIMEUNIT=60. -DIBMRT   -DNOCLOAD -DFOREIGN  -DFILEINI=\"../llib/startup.ll\" -I../common -DSYSNAME=\"Le-Lisp\" -DSTAMP=\"$$\" -DEXECORE -c ../common/lelisp.c
+                  mv lelisp.o o/lelispexe.o
+                  /bin/cc -O -DNBSYST=26 -DS5 -DTIMEUNIT=60. -DIBMRT   -DNOCLOAD -DFOREIGN  -DFILEINI=\"../llib/startup.ll\" -I../common -DSYSNAME=\"Le-Lisp\" -c execore.c
+                  /bin/cc -O -DNBSYST=26 -DS5 -DTIMEUNIT=60. -DIBMRT   -DNOCLOAD -DFOREIGN  -DFILEINI=\"../llib/startup.ll\" -I../common -DSYSNAME=\"Le-Lisp\" -z -x -o lelisp31exebin \
+                  o/llmain.o o/llstdio.o o/llfloat.o o/llnumb.o o/lelispexe.o execore.o  lelisp31bin.o \
+                  -lm -lc -lld
+                  ln lelisp31exebin lelispexebin
+               ./config lelisp lelispexebin lelispconf.ll -stack 6 -code 1500 -heap 256  -number 0 -vector 4 -string 5  -symbol 5 -cons 4 -float 0
+          ; Le-Lisp (by INRIA) version 15.23  (14/Fev/90)  [ibmrt]
+          = (Version:  15.23)
+            ...
+          Que Le-Lisp soit avec vous
+          %
+
+
+
+Le-Lisp v15.2     Last change: 1 de'cembre 1993                 5
+
+
+
+
+
+
+LELISP(L)                LOCAL COMMANDS                 LELISP(L)
+
+
+
+VOIR AUSSI
+     config(l), complice(l), make(1),
+     Le-Lisp V15.2, le manuel de re'fe'rence, Je'ro^me  Chailloux
+     et al., INRIA, Rocquencourt, 78153 Le Chesnay Cedex.
+
+
+FICHIERS
+     lelisp
+               script shell permettant de lancer le syste`me
+     lelisp/<machine>/llcore/lelisp.core
+               image me'moire associe'e a` la commande _l_e_l_i_s_p.
+     lelisp/<machine>/lelispbin
+               binaire Le-Lisp.
+     lelisp/<machine>/leX11bin
+               binaire Le-Lisp inte'grant les librairies _X_1_1.
+     lelisp/<machine>/Makefile
+               makefile Le-Lisp.
+
+
+     En mode EXECORE:
+     lelisp
+               image me'moire directement exe'cutable.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Le-Lisp v15.2     Last change: 1 de'cembre 1993                 6
+
+
+

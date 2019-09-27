@@ -1,0 +1,15 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule zar
+
+files (
+|zar.ll|
+)
+
+import ()
+
+export ()
+
+cpenv (
+((defabbrev a-zar #:zar:a-zar)
+))

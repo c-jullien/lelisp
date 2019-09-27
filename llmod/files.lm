@@ -1,0 +1,57 @@
+defmodule
+system
+files (
+files
+)
+export (
+probepathf
+probepathm
+probepatho
+search-in-path
+load
+loadfile
+libload
+libloadfile
+loadobjectfile
+autoload
+libautoload
+#:system:std-autoload
+featurep
+add-feature
+rem-feature
+list-features
+)
+import
+()
+include
+()
+cpexport (
+(probepathf subr1 ())
+(search-in-path subr2 ())
+(probepathm subr1 ())
+(probepatho subr1 ())
+(load fsubr ())
+(loadfile subr2 ())
+(libload fsubr ())
+(libloadfile subr2 ())
+(loadobjectfile subr1 ())
+(autoload fsubr ())
+(libautoload fsubr ())
+(#:system:std-autoload subr3 ())
+(featurep subr1 ())
+(add-feature subr1 ())
+(rem-feature subr1 ())
+(list-features subr0 ())
+)
+cpfunctions (
+(#:files:sip-string subr2)
+(#:files:sip-path subr2)
+(suffixe subr2)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:system:features-list 't '#:complice:globalvar)
+)((putprop '#:system:previous-def-flag 't '#:complice:globalvar)
+))

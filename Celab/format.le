@@ -1,0 +1,38 @@
+;;; GELL 15.26: elaboration file for the module: format
+;;;             translation done: "Wed June 16 93 18:01:57 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: format.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'format)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZformat" "Wed June 16 93 18:01:57 "
+
+'((prinf . nsubr) (format . nsubr))
+
+#[prinf #:llcp:errwna format "Format" pname princn t outchan #:format:r #:format:args (#:format:r #:format:args) #:format:l #:format:f (#:format:l #:format:f) lambda hat #:llcp:exit #:format:par-n #:format:colon #:format:at-sign #:format:par7 #:format:par6 #:format:par5 #:format:par4 #:format:par3 #:format:par2 #:format:par1 (#:format:par-n #:format:colon #:format:at-sign #:format:par7 #:format:par6 #:format:par5 #:format:par4 #:format:par3 #:format:par2 #:format:par1) nconc par concat symbol list |1+| "]" errfermant ";" "}" ")" ">" string >= |-| makelist #:format:colinc #:format:padchar #:format:side #:format:wide #:format:val (#:format:colinc #:format:padchar #:format:side #:format:wide #:format:val) <= #:system:print-for-read (#:system:print-for-read) explode (#:system:print-for-read) obase (#:system:print-for-read) (#:system:print-for-read) (#:system:print-for-read) (#:system:print-for-read) "~" "R" catenate errsxt (#:system:print-for-read) nth nconc1 asciip erroob "~@:C" = (35 92 100 101 108) append > (35 92 115 112) #:format:char-names < #:format:exp power .5 fix 10000. * #:format:arg (#:format:arg) numberp (#:format:par2 #:format:par1) float abs #:format:rr (#:format:f #:format:rr) log10 (#:format:exp) (#:format:par1) max (#:format:par2) |+| #:format:digits (#:format:digits) min zerop <> (#:format:par2 #:format:par1) (#:format:f #:format:rr) floor #:format:exp-r (#:format:par1 #:format:exp #:format:exp-r) #:format:r-length (#:format:r-length) (#:format:digits) |1-| (#:format:digits) (#:format:digits) (#:format:par2 #:format:par1) (#:format:par5 #:format:par4 #:format:par3 #:format:par2 #:format:par1) nreconc "~@:#\LF" typecn csep modulo "~@:*" nthcdr #:format:format (#:format:format) errnsa (#:format:f) (#:format:par-n #:format:colon #:format:at-sign #:format:par7 #:format:par6 #:format:par5 #:format:par4 #:format:par3 #:format:par2 #:format:par1) (#:format:args) listp errnla (#:format:l #:format:f) "~@:[" (#:format:f) (#:format:f) (#:format:f) "~[..." () #:format:format-cond #:format:iter-colon (#:format:iter-colon) #:format:iter-n-first #:format:iter-n (#:format:format #:format:f #:format:iter-n-first #:format:iter-n) colon-hat (#:format:l #:format:args) "~}" (#:format:par-n #:format:colon #:format:at-sign #:format:par7 #:format:par6 #:format:par5 #:format:par4 #:format:par3 #:format:par2 #:format:par1) #:format:sub-args (#:format:sub-args) (#:format:l #:format:args) (#:format:f) digitp implode makestring chrset #:gell-resetfn:function-name #:gell-resetfn:function-n]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'format)))
+(defvar #:sys-package:colon 'format)
+(add-feature 'format)
+(defcsetfn 'prinf "GZformat" 0)
+(defcsetfn 'format "GZformat" 1)
+(defvar #:format:char-names ())
+((lambda (i) (while (<= i 31) (newl #:format:char-names (cons i (concat 'control- (ascii (logor 64 i))))) (incr i 1))) 0)
+(setq #:format:char-names (cons '(0 . null) #:format:char-names))
+(setq #:format:char-names (cons '(7 . bell) #:format:char-names))
+(setq #:format:char-names (cons '(8 . back-space) #:format:char-names))
+(setq #:format:char-names (cons '(9 . tab) #:format:char-names))
+(setq #:format:char-names (cons '(10 . line-feed) #:format:char-names))
+(setq #:format:char-names (cons '(13 . return) #:format:char-names))
+(setq #:format:char-names (cons '(27 . escape) #:format:char-names))
+(setq #:format:char-names (cons '(32 . space) #:format:char-names))
+(setq #:format:char-names (cons '(127 . delete) #:format:char-names))
+(#:messages:put-message 'errfermant 'french '"hors contexte" 'defmessage)
+(#:messages:put-message 'errfermant 'english '"out of context" 'defmessage)
+'errfermant
+
+(defccheck '(chrset makestring implode digitp listp nthcdr modulo typecn nreconc |1-| floor <> zerop min |+| max log10 abs float numberp * fix power < > append = asciip nconc1 nth catenate obase explode <= makelist |-| >= string |1+| list symbol concat nconc #:llcp:exit outchan princn pname #:llcp:errwna))

@@ -1,0 +1,10 @@
+CC=icc
+DEBUG=/Ti+
+CFLAGS= $(DEBUG) /Sm /Ms -DNOMEM -C+ -DDIGITon32BITS -I..\h
+
+..\..\os2\kern.lib: ..\o\kern.obj llkern.obj
+	-@del ..\..\os2\kern.lib
+	@lib ..\..\os2\kern.lib + llkern.obj ..\o\kern.obj;
+
+llkern.obj: common\llkern.c
+	@$(CC) $(CFLAGS) common\llkern.c

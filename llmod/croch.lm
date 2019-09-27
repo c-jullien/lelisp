@@ -1,0 +1,25 @@
+defmodule
+croch
+files (
+croch
+)
+export (
+readbracket
+sequence
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(readbracket subr3 ())
+(sequence subr2 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv
+()

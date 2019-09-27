@@ -1,0 +1,35 @@
+defmodule complice
+   ; Deuxieme passe du compilateur : divers et traitement des modules
+   files  (cpmod2 peephole)
+   import (files module cpcommon)
+   export (pretty-lap makemodule-pass-two :generate-in-file :peephole)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(pretty-lap subr2 ())
+(makemodule-pass-two subr1 (#:messages:current-language))
+(#:complice:generate-in-file subr3 ())
+(#:complice:peephole subr1 ())
+)
+cpfunctions (
+(pretty-lap-lisp subr1)
+(pretty-lap-llm3 subr1)
+(prin-llm3-op subr1)
+(#:compiler:peephole subr1)
+)
+cpimport (
+(module
+(readdefmodule . subr1)
+(getdefmodule . subr2)
+)(cpcommon
+(#:complice:get-all-def-in-files . subr2)
+(#:complice:complement . subr2)
+))
+cpenv (
+files
+module
+cpcommon
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:compiler:no-jrst-hack 't '#:complice:globalvar)
+))

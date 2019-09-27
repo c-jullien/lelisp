@@ -1,0 +1,151 @@
+defmodule
+llcp
+files (
+cpmac
+llcp
+peephole
+)
+export (
+dont-compile
+compile
+compiler
+compilefiles
+compile-all-in-core
+defmacro-open
+make-macro-open
+macro-openp
+remove-macro-open
+#:compiler:peephole
+#:compiler:macroexpand
+#:compiler:macro-expand-error
+)
+import (
+files
+loader
+pretty
+messages
+toplevel
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(dont-compile fsubr ())
+(compile dmsubr ())
+(compiler nsubr () (#:llcp:xrefnt) (#:llcp:all-p #:llcp:talkp))
+(#:compiler:macroexpand subr1 ())
+(#:compiler:peephole subr1 ())
+(compilefiles subr2 () () (llist))
+(compile-all-in-core nsubr () () () (subr1) (()) (subr1) (()))
+(defmacro-open fsubr ())
+(make-macro-open subr2 ())
+(macro-openp subr1 ())
+(remove-macro-open subr1 ())
+(#:compiler:macro-expand-error subr1 ())
+)
+cpfunctions (
+(#:llcp:compileready subr0)
+(#:llcp:compilindic subr1)
+(#:llcp:compilindicaux subr3)
+(#:llcp:warning subr3)
+(#:llcp:compiledef subr1 () (aux1 aux2 aux3))
+(#:llcp:compilefnt nsubr () (#:llcp:gencount))
+(#:llcp:progn-last subr3)
+(#:llcp:progn subr3)
+(#:llcp:exp subr3 (l dest #:llcp:effectp))
+(#:llcp:dirop subr1)
+(#:llcp:diropreg subr1)
+(#:llcp:mov subr2)
+(#:llcp:cr subr2)
+(#:llcp:error nsubr)
+(#:llcp:app-lambda subr3)
+(#:llcp:add-code subr1)
+(#:llcp:push subr1)
+(#:llcp:expush subr2)
+(#:llcp:diroporany subr2)
+(#:compiler:macroexpand-internal subr2)
+(#:compiler:macroexpand-internal-open subr2)
+(#:compiler:macroexpand-internal-close subr2)
+(#:compiler:mc:cond subr1)
+(#:compiler:mc:dynamic-let subr1)
+(#:compiler:mc:dynamic subr1)
+(#:compiler:map subr3)
+(#:compiler:map-result subr3)
+(#:compiler:map-while subr3)
+(#:compiler:map-next-res subr3)
+(#:compiler:map-funcall subr2)
+(#:compiler:map-next-arg subr2)
+(#:compiler:mapvector subr1)
+(#:compiler:mc:catcherror subr1)
+(#:compiler:mc:errset subr1)
+(#:compiler:mc:eval-when subr1)
+(#:compiler:mc:time subr1)
+(#:llcp:cr-any-reg subr1)
+(#:llcp:movq subr2)
+(#:llcp:cr-all-nil subr0)
+(#:llcp:parano nsubr)
+(#:llcp:pushq subr1)
+(#:llcp:pred nsubr (l ind etiq dest))
+(#:llcp:quotep subr1)
+(#:llcp:pred-list subr2 (fnt larg))
+(#:llcp:cr-list subr0)
+(#:llcp:cr-intersect-list subr1)
+(#:llcp:cr-intersect subr1)
+(#:llcp:pred-list-aux2 subr2)
+(#:llcp:pred-list-aux3 subr2)
+(#:llcp:exp-2 subr3)
+(#:llcp:pop subr1)
+(#:llcp:selectq subr0)
+(#:llcp:eqp subr1)
+(#:llcp:diropordest subr2)
+(#:llcp:cr-forget subr1)
+(#:llcp:sup-eq subr2)
+(#:llcp:expsubr-open subr3)
+(#:llcp:exp-any subr3)
+(#:llcp:cr-forget-cons subr0)
+(#:llcp:exp-3 subr3)
+(#:llcp:specforminter subr2)
+(#:llcp:expsubr subr0)
+(#:llcp:call subr1)
+(#:llcp:compilefile-intrf subr1)
+(#:llcp:compilerout nsubr (#:llcp:xrefnt #:llcp:all-p #:llcp:talkp) () () (#:llcp:xrefnt))
+(#:llcp:rerror subr1)
+)
+cpimport (
+(messages
+(get-message . subr1)
+)(pretty
+(pprint . subr1)
+)(files
+(featurep . subr1)
+)(loader
+(loader . nsubr)
+))
+cpenv (
+files
+messages
+loader
+pretty
+toplevel
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:compiler:open-p 't '#:complice:globalvar)
+)((putprop '#:compiler:exported-env 't '#:complice:globalvar)
+)((putprop 'dynamic-flag 't '#:complice:globalvar)
+)((defun #:compiler:map-funcall (corps fnt) (cond ((not (consp fnt)) (mcons 'funcall fnt corps)) ((memq (car fnt) '(function quote)) (if (and (symbolp (cadr fnt)) (memq (typefn (cadr fnt)) '(() fexpr fsubr))) (mcons 'funcall fnt corps) (cons (cadr fnt) corps))) ((eq (car fnt) 'lambda) (cons fnt corps)) ((eq (car fnt) 'flambda) (cons (cons 'lambda (cdr fnt)) corps)) ((eq (car fnt) 'mlambda) (mcons 'funcall fnt corps)) (t (mcons 'funcall fnt corps))))
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:compiler:open-p 't '#:complice:globalvar)
+)((putprop '#:llcp:a1 't '#:complice:globalvar)
+)((putprop '#:llcp:a2 't '#:complice:globalvar)
+)((putprop '#:llcp:a3 't '#:complice:globalvar)
+)((putprop '#:llcp:a4 't '#:complice:globalvar)
+)((putprop '#:llcp:deep 't '#:complice:globalvar)
+)((putprop '#:llcp:lex 't '#:complice:globalvar)
+)((putprop '#:llcp:lap 't '#:complice:globalvar)
+)((putprop '#:ld:talkp 't '#:complice:globalvar)
+)((putprop '#:llcp:list-commutp 't '#:complice:globalvar)
+)((putprop '#:llcp:list-subr-open 't '#:complice:globalvar)
+)((putprop '#:llcp:fnt 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:compiler:no-jrst-hack 't '#:complice:globalvar)
+))

@@ -1,0 +1,220 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Chapter {3} {Le compilateur de modules}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Dans ce chapitre, nous verrons comment utiliser le re'sultat de
+l'{\em Analyseur de modules} avec le
+{\em compilateur}.
+Nous allons e'galement rappeler brie`vement le mode d'emploi du
+compilateur modulaire fourni avec \LeLisp\,: {\tt complice}. 
+
+
+%---------------------------------------------------------------------------
+\Section {Apre`s l'analyse, la compilation}
+%---------------------------------------------------------------------------
+Nous avons vu dans le chapitre pre'ce'dent, comment fabriquer des
+fichiers descripteurs de modules \LeLisp. 
+En re'alite', ces fichiers n'ont de raison d'e^tre que
+pour le compilateur {\tt complice} qui utilise les informations
+contenues dans ces fichiers descripteurs de modules pour compiler 
+le plus efficacement possible (cf Chapi^tre 13 du manuel de
+re'fe'rence \LeLisp ).\\
+
+%---------------------------------------------------------------------------
+\Section {Spe'cificite's de l'analyseur pour la compilation}
+%---------------------------------------------------------------------------
+Un certain nombre de clefs de \|define-rt-project| et une option de la
+commande d'analyse {\tt ll2lm} 
+concernent directement la compilation des modules. Nous de'taillons
+ces options ci-apre`s\,:
+
+\SSection {Option d'analyse de'die'e a` la compilation}
+%-----------------------------------------------------
+L'option de l'analyseur {\tt ll2lm} de'die'e a` la compilation est
+celle qui permet de 
+fabriquer le {\tt Makefile} de compilation\,:
+\begin{itemize}
+
+\item {\Large \|-makefile|}: cette option principale permet
+d'engendrer un {\tt Makefile} de compilation modulaire ({\tt cf
+complice}) de tous les modules du projet concerne' (cf option
+\|-project|). Par de'faut le fichier re'sultat de la compilation 
+d'un module, par {\tt complice} ({\tt
+.lo}) est range' dans le re'pertoire spe'cifie' par la clef {\tt
+ll-object-directory} s'il existe, ou sinon a` co^te' du fichier de
+description modulaire ({\tt .lm}). \\
+Ce {\tt Makefile} offre certaines entre'es pre'de'finies:
+\begin {enumerate}
+\item \|all| (de'faut)\ :\ 
+permet de mettre a` jour les compilations de tous les modules du projet.
+\item \|clean|\ :\ 
+permet d'effacer les fichiers objet ({\tt .lo}) de tous les
+modules du projet.
+\BeginLL
+	% make -f myproject.mk clean
+\EndLL
+\item \|i|\ :\ 
+permet d'entrer dans la boucle {\tt toplevel} interactive du
+compilateur, avec tous les flags de compilation charge's dans
+l'environnement. 
+\BeginLL
+	% make -f myproject.mk i
+\EndLL
+\end{enumerate}
+Voir e'galement l'option \|-dependency| pour jouer sur le niveau de
+de'pendance des entre'es du {\tt Makefile}.\\
+En me^me temps que le {\tt Makefile}, est ge'ne're' un fichier {\bf
+project.pth} contenant une de'finition de la variable {\tt
+\#:system:path} avec tous les chemins d'acce`s ne'cessaires a`
+l'execution des modules du project {\tt project>}.
+
+\end{itemize}
+
+Il est conseille' d'utiliser
+ce {\tt Makefile} dans la suite de la gestion du projet, afin de
+compiler l'ensemble des modules. Ce {\tt Makefile} sera utile pour
+re'aliser la premie`re se'rie de compilations (la premie`re fois pour
+l'ensemble des modules) mais e'galement par la suite, pour la 
+maintenance des modules. \\
+En ge'ne'ral, on se contentera de lancer le {\tt Makefile} pour mettre
+a` jour l'ensemble des modules modifie's et leurs de'pendances.
+Ces de'pendances varient en fonction de l'option d'analyse \|-dependency|
+utilise'e lors de la fabrication du {\tt Makefile} (cf chapi^tre 6).
+
+\SSection {Clefs de de'finition de projet de'die'es a` la compilation}
+%--------------------------------------------------------------------
+Les clefs de \|define-rt-project| concernant la compilation sont\,:
+\begin{itemize}
+
+\item {\Large \|ll-object-directory| {\em path}}: cette clef, si elle existe,
+doit de'signer le re'pertoire ou` seront range's tous les fichiers
+re'sultat de la compilation des modules ({\tt .lo}) par {\tt
+complice}. Cette
+valeur peut e^tre du type {\tt string} ou {\tt pathname}.  \\
+Par de'faut, ces fichiers seront
+range's dans le re'pertoire de'signe' par la clef
+\|ll-module-directory| ou, si cette clef n'existe pas non plus, ils
+seront range's dans le me^me re'pertoire que le fichier descripteur
+de module ({\tt .lm}).
+Cette clef est exploite'e par l'option \|-makefile| de
+l'{\em Analyseur de Modules}.
+
+\item {\Large \|make-file| {\em path}}: cette clef, si elle existe, doit
+de'signer le nom du {\tt Makefile} de compilation engendre' par l'analyseur
+de modules avec l'option \|-makefile|. Cette
+valeur peut e^tre du type {\tt string} ou {\tt pathname}. \\
+Par de'faut, le nom de ce {\tt Makefile} sera calcule' a`
+partir du nom du projet, suffixe' par l'extension {\tt ".mk"}, et
+range' dans le re'pertoire de'signe' par la clef \|system-directory|
+(ou sa valeur par de'faut s'il elle n'existe pas).
+Cette clef est exploite'e par l'option \|-makefile| de l'{\em Analyseur de
+Modules}.
+
+\item {\Large \|complice-options| {\em A-list}}: cette clef, si elle existe,
+contient une A-liste ou` le premier e'le'ment de chaque sous-liste est le
+nom d'un fichier descripteur de module, et le reste de la sous liste
+est une liste de chai^nes de caracte`res repre'sentant des options
+utilise'es lors de la compilation du module de'signe'. \\
+Par exemple, si {\tt mymod} doit e^tre
+compile' avec le flag de compilation \|-parano T|\, on e'crira\,:
+\BeginLL
+(define-rt-project myproject
+  ...
+  complice-options ((mymod "-parano T"))
+  ...
+)
+\EndLL
+Il est possible d'imposer des options de compilation pour tous les modules
+du projet en utilisant le mot clef {\em "all"} sous forme de {\it
+string} a` la place du nom d'un module\,:
+\BeginLL
+(define-rt-project myproject
+  ...
+  complice-options ((mymod1 "-parano T")
+                    ("all" "-o /tmp/"))
+  ...
+)
+\EndLL
+Le comportement de "all" dans la clef \|complice-options| est
+identique a` celui de "all" dans la clef \|analyzer-options|.
+
+Cette clef est exploite'e par l'option \|-makefile| de l'{\em Analyseur de
+Modules}.
+
+\end{itemize}
+
+
+%---------------------------------------------------------------------------
+\Section {Compilation d'un module}
+%---------------------------------------------------------------------------
+Il existe un certain nombre d'options du compilateur utilisables
+avec la commande {\tt complice}. Ces options peuvent e^tre utilise'es
+module par module, ou globalement, dans le {\tt Makefile} engendre'
+par l'{\em Analyseur de modules}, au 
+moyen du champ \|complice-options| de {\tt define-rt-project}.
+
+{\it Rappel: Sous Unix, ces options sont de'taille'es dans le manuel
+Unix fourni avec la bande de distribution: {\tt lelisp/manl/complice.l}}
+
+\begin{itemize}
+\item {\Large \|-callext flagp|} : permet de de'cider si on re'alise
+ou non les accesseurs aux symboles externes, en fonction de \|flagp|.
+Si \|flagp| est NIL (de'faut), alors les accesseurs sont rede'finis
+de fac,on a` ce qu'ils n'aient aucun effet durant la compilation : les
+fonctions {\tt getglobal} et {\tt defextern-cache} sont rede'finies de
+fac,on a` rester inope'rantes. Si \|flagp| est diffe'rent de NIL, ces
+fonctions continuent de fonctionner normalement durant la compilation:
+les symboles externes devront alors e^tre pre'sents dans l'image
+binaire du compilateur \|complice|.
+
+\item {\Large \|-cons n|} : permet d'e'tendre la zone des {\tt cons}
+a` une valeur e'gale a` {\tt \|n| * 8 Kcons}.
+
+\item {\Large \|-cmplc cmd|} : permet de spe'cifier une autre commande
+de lancement que l'image me'moire \|cmplc++| utilise'e par de'faut.
+
+\item {\Large \|-e S-expr|} : permet d'exe'cuter la forme \LeLisp\
+\|S-expr| dans l'environnement de compilation, avant de re'aliser la
+compilation modulaire.
+
+\item {\Large \|-g flagp|} : permet de faire afficher l'e'tat de la
+me'moire lisp a` l'aide de la commande (GC T), apre`s la compilation.
+
+\item {\Large \|-i|} : permet d'entrer sous le {\tt toplevel}
+interactif de \|complice|. Tre`s utile en phase de ``debug'', pour
+observer interactivement le comportement du compilateur. Cette option
+est active'e avec l'entre'e \|i| du {\tt Makefile} de compilation
+engendre' par l'{\em Analyseur de Modules}.
+
+\item {\Large \|-lldir path|} : permet d'aller chercher un core de
+compilation (par de'faut: \|cmplc++|) dans le re'pertoire de'crit par
+\|path|. 
+
+\item {\Large \|-o path|} : permet de spe'cifier le re'pertoire ou`
+sera range' le fichier re'sultat de la compilation modulaire ({\tt
+.lo}). Par de'faut, ces fichiers sont range's dans le re'pertoire
+courant. 
+
+\item {\Large \|-p path|} : permet d'ajouter le chemin \|path| dans la
+variable \|#:system:path| avant la compilation modulaire. 
+
+\item {\Large \|-parano flagp|} : permet de positionner la variable du
+compilateur \|#:complice:parano-flag| a` la valeur de \|flagp|. La
+valeur par de'faut est NIL. cf chapitre 13 du Manuel de Re'fe'rence
+\LeLisp\ pour plus de de'tails sur l'utilisation de cette variable.
+
+\item {\Large \|-r|} : permet de positionner la variable 
+\|#:system:read-case-flag| a` \|T|. Cette option est
+obligatoire si on de'sire influencer la valeur de 
+\|#:system:read-case-flag|; ne pas utiliser l'option \|-e| qui n'a pas
+d'effet dans ce cas.
+
+\item {\Large \|-v|} : permet d'afficher les formes \LeLisp\
+e'value'es dans l'environnement de compilation, avant la compilation
+modulaire.
+
+\item {\Large \|-w flagp|} : permet de positionner la variable 
+\|#:complice:warning-flag| a` la valeur de \|flagp|. cf chapitre 13 du
+{\em Manuel de Re'fe'rence} \LeLisp\ pour plus de de'tails sur l'utilisation
+de cette variable.
+\end{itemize}

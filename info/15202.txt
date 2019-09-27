@@ -1,0 +1,77 @@
+
+===================================================================
+
+Voici les principales corrections/extensions de la nouvelle
+diffusion de Le-Lisp version 15.2 date'e du 8 Mai 1987.
+
+Portages :
+==========
+
+Le-Lisp 15.2 a e'te' porte' sur les nouvelles machines :
+        PYRAMYD, SEQUENT, IBM/RT.
+
+Interpre`te :
+=============
+
+- correction de la bogue des fonctions ANY/EVERY qui,
+sous l'interpre`te, re'alisaient une e'valuation
+supple'mentaire.
+
+- correction de la bogue de de'liaison en cas de
+de'structuration complexe.
+
+- fixe la reprise en cas d'erreur de type ERRUDF pour les
+fonctions APPLY/FUNCALL
+
+- les fonctions de de'finition (DE/DF/DM/DMD/DS) testent si
+les parame`tres sont bien uniques
+
+- WITH : re'alise un test de syntaxe.
+
+- ASCII : fixe le bug du cache.
+
+- correction de l'argument de l'erreur ERRWNA dans de
+nombreuses fonctions. L'argument retourne' est le nombre
+attendu d'arguments.
+
+- changement de la forme de l'ente^te standard.
+
+- changement de la fonction de fabrication d'une
+image-standard ; SAVE-STD.
+
+Imprimeur :
+===========
+
+- fixe l'impression de #( () . foo)
+
+Compilateurs et chargeurs :
+===========================
+
+- LAPxxx : rajout de l'ope'rande FVALQ
+
+- le source du compilateur LLCP est disponible (LLCP, CPMAC
+et PEEPHOLE).
+
+- le compilateur Complice est alle'ge' des bogues signale'es.
+
+Bibliothe`que standard (LLIB) :
+================================
+
+- PRETTY : ne perd plus d'informations (dans les LET) et
+resort toutes les paires pointe'es.
+
+- nouveaux outils de mise au point revus (DEBUG et TRACE)
+
+- nouvelle bibliothe`que "cstruct.ll" qui permet de
+manipuler les structures en C
+
+- CSTRUCT : bibliothe`que de manioulation en Lisp de
+structures cre'e'es par C.
+
+- EDIT/MACEDIT/EDITOR/MACEDITOR : kit de fabrication
+d'e'diteurs de caracte`res.
+
+- MEME : un nouvel e'diteur pleine page (super PEPE)
+
+- le bitmap virtuel supporte les sous-fene^tres.
+

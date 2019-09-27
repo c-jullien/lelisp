@@ -1,0 +1,38 @@
+defmodule
+abbrev
+files (abbrev)
+export (
+defabbrev
+put-abbrev
+rem-abbrev
+get-abbrev
+abbrevp
+has-an-abbrev
+#:symbol:prin
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(defabbrev dmsubr ())
+(put-abbrev subr2 ())
+(rem-abbrev subr1 ())
+(get-abbrev subr1 ())
+(abbrevp subr1 ())
+(has-an-abbrev subr1 ())
+(#:symbol:prin subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:system:abbrevs-alist 't '#:complice:globalvar)
+)((dmc |}| () (error '|}| '#:abbrev:errsxtclosingacc ()))
+(dmc |{| () (let ((l (read-delimited-list 125))) (until (and (consp l) (symbolp (car l)) (null (cdr l))) (setq l (error '|{| '#:abbrev:errsxtacc l))) (setq l (get-abbrev (car l))) (reread (if l (explode l) '(124 124)))) (with ((typecn 58 'cpkgc)) (read)))
+)((putprop '#:system:print-with-abbrev-flag 't '#:complice:globalvar)
+))

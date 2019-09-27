@@ -1,0 +1,66 @@
+
+
+
+NEWDIR(L)                LOCAL COMMANDS                 NEWDIR(L)
+
+
+
+NAME
+     newdir - updates absolute path names in the LeLisp system
+
+SYNOPSIS
+     /usr/local/lelisp/vax/newdir [path]
+
+DESCRIPTION
+     Updates the absolute path names  defined  in  the  following
+     files    of    the    standard   distribution   of   LeLisp:
+     llib/startup.ll, <machine>/complice, <machine>/config.
+
+     This command should be called from the  <machine>  directory
+     of  the standard distribution of LeLisp.  This directory has
+     the same name as the machine in use, such as vaxunix,  sony,
+     sun,  etc.  The option _p_a_t_h makes it possible to install the
+     software in a directory other than the one indicated by  the
+     command _p_w_d. This _p_a_t_h should be an absolute path name up to
+     the <machine> subdirectory of the  LeLisp  directory.   This
+     feature is particularly useful during an installation across
+     symbolic links.
+
+     It is necessary to use the command once and  only  once  for
+     every  installation  of LeLisp in a new directory other than
+     that  specified  in  the  installation  guide  (by  default,
+     "/usr/ilog/lelisp/").
+
+     This command requires write access to the files that must be
+     updated.
+
+
+SEE ALSO
+     complice(l),
+     Le_Lisp V15.2, the Reference Manual, Je'ro^me  Chailloux  et
+     al., INRIA, Rocquencourt, 78153 Le Chesnay Cedex.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Le_Lisp v15.2    Last change: 30 September 1990                 1
+
+
+

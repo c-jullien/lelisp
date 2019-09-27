@@ -1,0 +1,21 @@
+defmodule
+#:menu:llmenu
+files (
+llmenu
+)
+export (
+#:bitmap:create-menu
+#:menu:llmenu:kill-menu
+#:menu:llmenu:activate-menu
+#:menu:llmenu:menu-insert-item
+#:menu:llmenu:menu-insert-item-list
+#:menu:llmenu:menu-delete-item
+#:menu:llmenu:menu-delete-item-list
+#:menu:llmenu:menu-modify-item
+#:menu:llmenu:menu-modify-item-list
+)
+import (
+virbitmap
+)
+include
+()

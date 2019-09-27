@@ -1,0 +1,54 @@
+defmodule
+messages
+files (
+messages
+)
+export (
+record-language
+remove-language
+message-languages
+current-language
+get-message-p
+get-message
+put-message
+#:messages:put-message
+remove-message
+get-all-messages
+defmessage
+#:sharp:m
+default-language
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(record-language subr1 ())
+(remove-language subr1 () () (subr1) (()))
+(message-languages subr0 ())
+(current-language nsubr ())
+(get-message-p subr1 ())
+(get-message subr1 ())
+(put-message subr3 ())
+(#:messages:put-message nsubr ())
+(remove-message subr2 ())
+(get-all-messages subr1 () () (subr1) (()))
+(defmessage dmsubr ())
+(#:sharp:m subr0 ())
+(default-language nsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:messages:list-of-languages 't '#:complice:globalvar)
+)((putprop '#:messages:current-language 't '#:complice:globalvar)
+)((putprop '#:messages:default-language 't '#:complice:globalvar)
+)((putprop '#:messages:list-of-notremovable-language 't '#:complice:globalvar)
+)((putprop '#:messages:working-language 't '#:complice:globalvar)
+)((putprop '#:system:fatal-errors 't '#:complice:globalvar)
+))

@@ -1,0 +1,42 @@
+(load-cpl ()   ; core
+          t    ; minimal env
+          t    ; editor
+          t    ; standard env
+          t    ; loader
+          t    ; compiler
+)
+(let ( (date (date)) )
+    (libload date)
+    (gc)
+    (save-core (catenate #:system:core-directory 
+                         #:system:name
+                         #:system:core-extension))
+    (unless
+           (let ( (file (getenv "CPCMDFILE")) )
+                (when file
+                      (loadfile file t)
+                      t )))
+    (herald)
+    (print "; Complice  -  " date)
+    (initty)
+    (inibitmap)
+    #.(selectq (system)
+          (#.unix
+            '(let ((f (catenate (getenv "HOME") "/.lelisp")))
+                  (when (probefile f)
+                        (loadfile f t))))
+           (vaxvms
+            '(let ((f "sys$login:startup.ll"))
+                  (when (probefile f)
+                        (loadfile  f t))))
+           (multics
+             '(let ((f (catenate (getenv "HOME") ">start_up.ll")))
+                   (when (probefile f)
+                         (loadfile f t))))
+           (t ()))
+    (catcherror () (loadfile "lelisp.ini" t)))
+)
+(end)
+
+
+

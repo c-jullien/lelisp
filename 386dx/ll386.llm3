@@ -1,0 +1,1772 @@
+; .Entete "Le_Lisp Version 15.2" " " "Interfaces 386"
+; .sp 2
+; .SuperTitre "les interfaces 386"
+; .Auteur "Eligis"
+
+; .Centre "*****************************************************************"
+; .Centre " Ce fichier est en lecture seule hors du projet Le-Lisp 386      "
+; .Centre "*****************************************************************"
+
+
+          TITLE     LLSTART
+
+; Les variables globales Le_Lisp/C
+     IFNE UNDERSCORED
+
+          XREFI     LELISP,BCODE
+          XREFI     LELISP,ECODE
+
+          XREFI     LELISP,BHEAP
+          XREFI     LELISP,CHEAP
+          XREFI     LELISP,EHEAP
+
+          XREFI     LELISP,BNUMB
+          XREFI     LELISP,CNUMB
+
+          XREFI     LELISP,BFLOAT
+          XREFI     LELISP,CFLOAT
+
+          XREFI     LELISP,BVECT
+          XREFI     LELISP,CVECT
+
+          XREFI     LELISP,BSTRG
+          XREFI     LELISP,CSTRG
+
+          XREFI     LELISP,CSYMB
+          XREFI     LELISP,CCONS
+
+          XREFI     LELISP,BSTACK
+          XREFI     LELISP,MSTACK1
+          XREFI     LELISP,MSTACK2
+          XREFI     LELISP,ESTACK
+
+          XREFI     LELISP,FILIN
+          XREFI     LELISP,FILIZ
+          XREFI     LELISP,FILIT
+          XREFI     LELISP,NBSYST
+          XREFI     LELISP,MAXCHAN
+          XREFI     LELISP,LLBAN
+     ENDC
+
+          XREFI     LLINIT,BCODE
+          XREFI     LLINIT,CCODE
+          XREFI     LLINIT,ECODE
+    
+          XREFI     LLINIT,BHEAP
+          XREFI     LLINIT,CHEAP
+          XREFI     LLINIT,EHEAP
+    
+          XREFI     LLINIT,BNUMB
+          XREFI     LLINIT,CNUMB
+    
+          XREFI     LLINIT,BFLOAT
+          XREFI     LLINIT,CFLOAT
+    
+          XREFI     LLINIT,BVECT
+          XREFI     LLINIT,CVECT
+    
+          XREFI     LLINIT,BSTRG
+          XREFI     LLINIT,CSTRG
+    
+          XREFI     LLINIT,BSYMB
+          XREFI     LLINIT,CSYMB
+    
+          XREFI     LLINIT,BVAR
+
+          XREFI     LLINIT,BCONS
+          XREFI     LLINIT,CCONS
+    
+          XREFI     LLINIT,BOLD
+          XREFI     LLINIT,EOLD
+
+          XREFI     LLINIT,BSTACK
+          XREFI     LLINIT,MSTACK1
+          XREFI     LLINIT,MSTACK2
+          XREFI     LLINIT,ESTACK
+    
+          XREFI     LLINIT,FILIN
+          XREFI     LLINIT,FILIZ
+          XREFI     LLINIT,FILIT
+          XREFI     LLINIT,NBSYST
+          XREFI     LLINIT,MAXCHAN
+          XREFI     LLINIT,LLBAN
+
+          XREFI     LLINIT,ITCOUNT
+          XREFI     LLINIT,ITSTATE
+
+          XREFI     LELISP,_BTBIN
+          XREFI     LELISP,_BTBGC
+
+          XREFI     TOPERR,.PRTMSGS
+
+; Initialisation des variables globales Le_Lisp
+
+      
+; le vrai point d'entree
+
+
+          XREFP     LLINIT,LLINIT
+     IFEQ UNDERSCORED
+          XREFP     LELISP,_INTON
+          XDEFP     _LLSTART
+     ENDC
+     IFNE UNDERSCORED
+          XREFP     LELISP,INTON
+          XDEFP     LLSTART
+     ENDC
+
+          PURE
+
+          ; les fonctions flottantes pour le chargeur
+          ; Elles devraient etre juste avant la zone IMPURE
+          ; mais un bug dans bllsht.llm3 empeche le calcul
+          ; correct des adresses.
+
+	  XDEFP	    CFADD
+CFADD	  LABEL
+          FPLUS     FARG1,FARG2
+          RETURN
+
+	  XDEFP	    CFSUB
+CFSUB	  LABEL
+          FDIFF     FARG1,FARG2
+          RETURN
+
+	  XDEFP	    CFMUL
+CFMUL	  LABEL
+          FTIMES    FARG1,FARG2
+ 	  RETURN
+
+	  XDEFP	    CFDIV
+CFDIV	  LABEL
+          FQUO      FARG1,FARG2
+          RETURN
+
+CRET1     RETURN
+
+	  XDEFP	    CFEQN
+CFEQN	  LABEL
+          CFBEQ     FARG1,FARG2,CRET1
+          MOVNIL    FARG2
+          RETURN
+
+	  XDEFP	    CFNEQN
+CFNEQN	  LABEL
+          CFBNE     FARG1,FARG2,CRET1
+          MOVNIL    FARG2
+          RETURN
+
+	  XDEFP	    CFGT
+CFGT	  LABEL
+          CFBGT     FARG1,FARG2,CRET1
+          MOVNIL    FARG2
+          RETURN
+
+	  XDEFP	    CFGE
+CFGE	  LABEL
+          CFBGE     FARG1,FARG2,CRET1
+          MOVNIL    FARG2
+          RETURN
+
+	  XDEFP	    CFLT
+CFLT	  LABEL
+          CFBLT     FARG1,FARG2,CRET1
+          MOVNIL    FARG2
+          RETURN
+
+	  XDEFP	    CFLE
+CFLE	  LABEL
+          CFBLE     FARG1,FARG2,CRET1
+          MOVNIL    FARG2
+          RETURN
+
+;;
+;;        Teste les appels de l'ABI en mode debug.
+;;        Cette fonction est appelee depuis C avec un protocol d'appeel Lisp
+;;        Elle fait ensuite deux appels a TTYMSG (logiquement ttyout en C)
+;;        puis retourne vers l'appelant qui doit etre C.
+;;
+     IFNE DEBUG
+     IFEQ UNDERSCORED
+          XDEFP     _TESTABI
+          FENTRY    _TESTABI,SUBR0
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     TESTABI
+          FENTRY    TESTABI,SUBR0
+     ENDC
+          TTYMSG    #11," TESTABI1  "
+          TTYMSG    #11," TESTABI2  "
+          RETURN
+     ENDC
+
+     IFEQ UNDERSCORED
+          FENTRY    _LLSTART,SUBR0
+     ENDC
+     IFNE UNDERSCORED
+          FENTRY    LLSTART,SUBR0
+     ENDC
+     IFNE DEBUG
+          TTYMSG    #9," LLSTART "
+     ENDC
+          REG_SAV                       ; sauve les registres
+          STACK     SPEXT
+
+          MOV       #0,ITSTATE
+          MOV       #0,ITCOUNT
+          MOV       #0,BRKCNT
+          MOV       #0,_MOUSCNT
+          MOV       #0,CLKCNT
+
+     IFEQ UNDERSCORED
+          MOV       _BCODE,BCODE
+          MOV       _CCODE,CCODE
+          MOV       _ECODE,ECODE
+
+          MOV       _BHEAP,BHEAP
+          MOV       _CHEAP,CHEAP
+          MOV       _EHEAP,EHEAP
+
+          MOV       _BNUMB,BNUMB
+          MOV       _CNUMB,CNUMB
+
+          MOV       _BFLOAT,BFLOAT
+          MOV       _CFLOAT,CFLOAT
+
+          MOV       _BVECT,BVECT
+          MOV       _CVECT,CVECT
+
+          MOV       _BSTRG,BSTRG
+          MOV       _CSTRG,CSTRG
+
+     ENDC
+          MOV       _BSYMB,BSYMB
+     IFEQ UNDERSCORED
+          MOV       _CSYMB,CSYMB
+
+     ENDC
+          MOV       _BCONS,BCONS
+     IFEQ UNDERSCORED
+          MOV       _CCONS,CCONS
+
+     ENDC
+          MOV       _BCONS,BOLD
+     IFEQ UNDERSCORED
+
+          MOV       _BSTACK,BSTACK
+          MOV       _MSTACK1,MSTACK1
+          MOV       _MSTACK2,MSTACK2
+          MOV       _ESTACK,ESTACK
+          MOV       _MAXCHAN,MAXCHAN
+          MOV       _NBSYST,NBSYST
+          MOV       _FILIT,FILIT
+          MOV       _FILIZ,FILIZ
+          MOV       _FILIN,FILIN
+          MOV       _LLBAN,LLBAN
+          MOV       _ECONS,ECONS
+          MOV       _BTBIN,BTBIN
+          MOV       _BTBGC,BTBGC
+; buggy   MOV	    .PRTMSGS,_PRTMSGS
+	  MOV	    %ZPRTMSGS,_PRTMSGS  ; ok mais risque cf MAKCST
+
+	  JCALL     _INTON		; l'initialisation
+     ENDC
+     IFNE UNDERSCORED
+; buggy   MOV	    .PRTMSGS,PRTMSGS
+	  MOV	    %ZPRTMSGS,PRTMSGS   ; ok mais risque cf MAKCST
+
+	  JCALL     INTON		; l'initialisation
+     ENDC
+
+          ; Pour SWPCONS
+	  MOV       BCONS,RWORK
+	  ASS       "	sub	ebp,dword ptr[bnumb]" ; DIFF      BNUMB,RWORK
+	  ASS       "	shr	ebp,3"  ; divise rwork par 8
+	  MOV       RWORK,DELTA_CONS
+
+          ; Pour le coprocesseur
+     IFNE MATH387
+	  ASS       "	finit"
+;         ASS       "	fstcw	word ptr [fpecw]"
+;         ASS       "	fstcw	word ptr [fpecw+2]"
+;         ASS       "	fwait"
+;         ASS       "	or	word ptr [fpecw],0008h" ; set cw to no overflow
+;         ASS       "	fldcw	word ptr [fpecw]"
+
+;         ASS       "	fld1"
+;         ASS       "	fldl2e"
+;         ASS       "	fdiv"        ; ce devrait etre fdivr : bug masm
+;         ASS       "	fstp	qword ptr [log2e1]" ; 1/Log2(e)
+;         ASS       "	fld1"
+;         ASS       "	fldl2t"
+;         ASS       "	fdiv"        ; ce devrait etre fdivr : bug masm
+;         ASS       "	fstp	qword ptr [log2t1]" ; 1/Log2(10)
+     ENDC
+
+          MOV       #1,STATE            ; en rentre en lisp
+
+          JMP       LLINIT              ; On y va !
+
+
+
+
+;**********************************************************************
+;                                                      
+;      L e   L i s p    :   les interfaces unix
+;                                                      
+;**********************************************************************
+
+     IFEQ SAVEDSTACK
+;
+;         unsigned int getbstack( int sstack, int CSTACK );
+;
+;         Get the current bstack pointer, and allocate the lisp stack from
+;         current C stack to estack
+;
+
+     IFEQ UNDERSCORED
+          XDEFP     _GETBSTACK
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     GETBSTACK
+     ENDC
+
+     IFEQ UNDERSCORED
+_GETBSTACK LABEL
+     ENDC
+     IFNE UNDERSCORED
+GETBSTACK LABEL
+     ENDC
+
+
+          ASS	"	push	ebp"		; C prologue
+          ASS	"	mov	ebp,esp"	; set stack frame for arguments
+          ASS	"	push	ebx"		; save ebx
+          ASS	"	push	ecx"		; save ecx
+          ASS	"	mov	ebx,esp"	; set current esp to ebx
+          ASS	"	and	ebx,0fffff000h"	; align
+          ASS	"	sub	ebx,[ebp+12]"	; reserve the C stack
+          ASS	"	mov	eax,ebx"	; set bstack
+          ASS	"	mov	ecx,[ebp+8]"	; set ecx to estack
+          ASS	"	sub	ebx,ecx"	; set ebx to estack
+          ASS	"getbstack2	label	near"
+          ASS	"	push	0"		; push dummy value until estack
+          ASS	"	cmp	esp,ebx"	; equal estack ?
+          ASS	"	ja	short getbstack2"	; loop
+          ASS	"	pop	ecx"		; restore ecx
+          ASS	"	pop	ebx"		; restore ebx
+          ASS	"	mov	esp,ebp"	; reset stack to old frame
+          ASS	"	leave"			; C epilogue
+
+     IFEQ RETN
+          RETURN
+     ENDC
+     IFNE RETN
+          ASS       "	ret	8"              ; args = int, int
+     ENDC
+
+     ENDC
+
+;
+;      ll_corsav  :  sauve une image memoire dans le fichier
+;                  de nom AUX0 cc = DUX0
+;
+;  Appele  corsav (nom)
+;  Doit positionner les 4 variables externes
+;   bllm3, ellm3 : limites impure llm3
+;   llucode      : fin zone code utilise'e (CCODE)
+;   lluheap      : fin zone HEAP utilise'e (CHEAP)
+
+          XDEFP     LL_CORSAV
+     IFEQ UNDERSCORED
+          XREFP     LELISP,_CORSAV
+     ENDC
+     IFNE UNDERSCORED
+          XREFP     LELISP,CORSAV
+     ENDC
+
+          IMPURE
+NAME      ADR       0
+          PURE
+
+     IFEQ UNDERSCORED
+          XREFI     LELISP,_BLLM3
+          XREFI     LELISP,_ELLM3
+          XREFI     LELISP,_LLUCODE
+          XREFI     LELISP,_LLUHEAP
+     ENDC
+     IFNE UNDERSCORED
+          XREFI     LELISP,BLLM3
+          XREFI     LELISP,ELLM3
+          XREFI     LELISP,LLUCODE
+          XREFI     LELISP,LLUHEAP
+     ENDC
+
+          XREFI     BLLSHT,EIMPUR
+          XREFI     LLINIT,CCODE
+          XREFI     LLINIT,CHEAP
+          XREFP     GC,HGC
+
+LL_CORSAV MOV       RWORK,NAME           ; Eh oui Jerome!
+          CABEQ     BCONS,_BCONS,LL_SAV1 ; pour le Stop & Copy
+          PUSH      DUX0
+          JCALL     HGC
+          POP       DUX0
+LL_SAV1	  LABEL
+;	   REG_SAV                       ; sauve les registres A2B
+     IFEQ UNDERSCORED
+          STACK     _SAVSP               ; pour restore-core
+          MOV       %BSAVE,_BLLM3
+          MOV       %EIMPUR,_ELLM3
+          MOV       CCODE,_LLUCODE
+          MOV       CHEAP,_LLUHEAP
+     ENDC
+     IFNE UNDERSCORED
+          STACK     SAVSP               ; pour restore-core
+          MOV       %BSAVE,BLLM3
+          MOV       %EIMPUR,ELLM3
+          MOV       CCODE,LLUCODE
+          MOV       CHEAP,LLUHEAP
+     ENDC
+          SSTACK    SPEXT               ; passe sur la pile externe
+          MOV       #2,STATE
+          PUSH      NAME
+     IFEQ UNDERSCORED
+          JCALL     _CORSAV
+     ENDC
+     IFNE UNDERSCORED
+          JCALL     CORSAV
+     ENDC
+	  MOV	    A1,RWORK		; retour CC
+     IFEQ RETN
+          ADJSTK    #1
+     ENDC
+     IFEQ UNDERSCORED
+          SSTACK    _SAVSP              ; on re'cupere les registres sauve's
+     ENDC
+     IFNE UNDERSCORED
+          SSTACK    SAVSP              ; on re'cupere les registres sauve's
+     ENDC
+          MOV       #1,STATE            ; repasse en Lisp
+;          REG_RES			; A2B
+          RETURN
+
+;
+;      ll_corest  :  restaure une image memoire dans le fichier AUX0
+;
+; Appelle  corest(nom)
+; Doit positionner BLLM3 (debut zone impure llm3)
+; le code retour de -1 indique une erreur rattrapable.
+
+          XDEFP     LL_COREST
+     IFEQ UNDERSCORED
+          XREFP     LELISP,_COREST
+     ENDC
+     IFNE UNDERSCORED
+          XREFP     LELISP,COREST
+     ENDC
+
+LL_COREST STACK    SAVSP1		; en cas d'erreur
+          MOV       RWORK,NAME          ; Eh oui Jerome!
+;          REG_SAV			; A2B
+     IFEQ UNDERSCORED
+          STACK    _SAVSP
+     ENDC
+     IFNE UNDERSCORED
+          STACK    SAVSP
+     ENDC
+          SSTACK    SPEXT               ; TMPSTACK pourrait e^tre trop petit
+          MOV       #2,STATE            ; passe en externe ?
+     IFEQ UNDERSCORED
+          MOV       %BSAVE,_BLLM3
+     ENDC
+     IFNE UNDERSCORED
+          MOV       %BSAVE,BLLM3
+     ENDC
+          PUSH	    NAME		;A2B
+     IFEQ UNDERSCORED
+	  JCALL      _COREST		;A2B
+     ENDC
+     IFNE UNDERSCORED
+	  JCALL      COREST		;A2B
+     ENDC
+	  CNBEQ     A1,#0,LL_CREST	; si pas erreur, ok
+          MOV       #1,STATE            ; en Lisp
+	  SSTACK    SAVSP1		; sinon
+	  BRA       LL_CORRET		; going home
+LL_CREST  MOV	    A1,RWORK		; retour CC
+     IFEQ UNDERSCORED
+          SSTACK    _SAVSP              ; sauve' par save-core
+     ENDC
+     IFNE UNDERSCORED
+          SSTACK    SAVSP              ; sauve' par save-core
+     ENDC
+          MOV       #1,STATE            ; en Lisp
+;          REG_RES                       ; les registres du save-core	A2B
+          MOVXSP    NIL,#1              ; le vrai resultat
+LL_CORRET RETURN
+
+;
+;      ll_corgo  : lancement d'une image me'moire EXECORE
+;
+
+     IFEQ UNDERSCORED
+          XDEFP     _LLCORGO
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     LLCORGO
+     ENDC
+
+     IFEQ UNDERSCORED
+_LLCORGO  LABEL
+     ENDC
+     IFNE UNDERSCORED
+LLCORGO  LABEL
+     ENDC
+     IFEQ UNDERSCORED
+          MOV       _ECONS,ECONS        ; >> remise a jour
+          MOV       _BTBIN,BTBIN        ; >> remise a jour
+          MOV       _BTBGC,BTBGC        ; >> remise a jour
+     ENDC
+          STACK     SPEXT
+          MOV       #1,STATE            ; en Lisp
+     IFEQ UNDERSCORED
+          SSTACK    _SAVSP              ; sauve' par save-core
+     ENDC
+     IFNE UNDERSCORED
+          SSTACK    SAVSP               ; sauve' par save-core
+     ENDC
+          MOV       _BSYMB,BSYMB
+          MOV       _BCONS,BCONS
+          MOVNIL    A1                  ; to signal a return from restore
+          ADJSTK    #2
+          RETURN
+
+
+;
+;        ll_exit            retour au systeme hote
+;
+
+
+     IFEQ UNDERSCORED
+;	  XDEFP	    _LL_EXIT
+          XREFP     LELISP,_OUTNER		;NORMAL EXIT
+     ENDC
+; _LL_EXIT  LABEL
+     IFNE UNDERSCORED
+          XREFP     LELISP,OUTNER		;NORMAL EXIT
+     ENDC
+	  XDEFP	    LL_EXIT
+LL_EXIT   LABEL
+
+           SSTACK    SPEXT
+;          ASS       "	fclex"                  ; clear exception
+;          ASS       "	fldcw	word ptr [fpecw+2]" ; reset CW to default mode
+     IFEQ UNDERSCORED
+          JMP       _OUTNER
+     ENDC
+     IFNE UNDERSCORED
+          JMP       OUTNER
+     ENDC
+
+
+           XDEFP    EXWER
+     IFEQ UNDERSCORED
+           XREFP    LELISP,_OUTWER
+     ENDC
+     IFNE UNDERSCORED
+           XREFP    LELISP,OUTWER
+     ENDC
+
+EXWER     LABEL
+          SSTACK    SPEXT
+;          ASS       "	fclex"                  ; clear exception
+;          ASS       "	fldcw	word ptr [fpecw+2]"
+     IFEQ UNDERSCORED
+          JMP      _OUTWER                     ;EXIT WITH ERROR STATUS
+     ENDC
+     IFNE UNDERSCORED
+          JMP      OUTWER                     ;EXIT WITH ERROR STATUS
+     ENDC
+
+;**********************************************************************
+;
+;      L e   L i s p    :   les interfaces systeme
+;
+;**********************************************************************
+
+;
+;         ll_break  le break interne
+;
+     IFEQ UNDERSCORED
+          XDEFP     _LL_BREAK
+          XREFP     LELISP,_SETALARM
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     LL_BREAK
+          XREFP     LELISP,SETALARM
+     ENDC
+          XREFP     TOPERR,LLPANIC
+          XREFP     EVAL,SYSPROT
+
+     IFEQ UNDERSCORED
+_LL_BREAK LABEL                         ; d'abord l'alarme et le signal
+     ENDC
+     IFNE UNDERSCORED
+LL_BREAK LABEL                          ; d'abord l'alarme et le signal
+     ENDC
+          INCR      BRKCNT              ; un BREAK de plus
+          INCR      ITCOUNT             ; une it de plus
+
+     IFNE SIGBLOCK
+     IFEQ UNDERSCORED
+          JCALL     _INTON              ; on re'arme les IT
+     ENDC
+     IFNE UNDERSCORED
+          JCALL     INTON               ; on re'arme les IT
+     ENDC
+     ENDC
+
+          CNBGE     BRKCNT,#4,LL_PANIC  ; IT sauvage on force!
+LL_BREAR  LABEL
+     IFEQ RETN
+          RETURN
+     ENDC
+     IFNE RETN
+          ASS       "	ret	4"
+     ENDC
+
+LL_PANIC  CNBEQ     ITSTATE,#0,LL_BREAR ; rien a faire !
+          CNBEQ     STATE,#0,LLPANICC   ; dans du C ?
+          CNBEQ     STATE,#1,LLPANICL   ; dans du Lisp ?
+          BRA       LLPANICE            ; dans une routine externe ?
+
+;  BREAK panique dans du C
+
+LLPANICC  LABEL
+          SSTACK    SPLISP              ; retour sur la pile Lisp
+          MOV       #1,STATE            ; Lisp
+          REG_RES                       ; restaure les registres
+          CALL      GOPANIC             ; traitement
+          MOV       #$FFFF,RWORK        ; code -1  (a verifier ???)
+     IFEQ RETN
+          RETURN                        ; retour de l'interruption
+     ENDC
+     IFNE RETN
+          ASS       "	ret	4"      ; retour de l'interruption
+     ENDC
+
+;  BREAK dans du LISP
+
+LLPANICL  LABEL
+          MOV       SPEXT,SPEXT1        ; pour travailler
+          INIT_LBREAK                   ; break en Lisp
+          CALL      RESTORE             ; parano
+          PUSH      A1                  ; sauve les registres
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          PUSH      SPEXT1              ; la pile externe
+          CALL      PANICL1             ; traitement
+          ADJSTK    #1                  ; ajuste (pour spext)
+          POP       A4                  ; restaure les registres
+          POP       A3
+          POP       A2
+          POP       A1
+          RET_LBREAK                    ; retour de l'interruption
+
+PANICL1   LABEL
+          MOV       @GOPANIC,A3         ; ou on va
+          JCALL     SYSPROT             ; protege
+          POP       A1                  ; le resultat
+          MOV       &1,SPEXT            ; la pile externe
+          BRI       A3                  ; back
+
+
+;  BREAK dans une routine externe
+
+LLPANICE  LABEL
+          REG_SAV                       ; sauve les registres
+          PUSH      SPLISP              ; pointeur lisp
+          PUSH      SPARG               ; pointeur arguments
+          PUSH      SPEXT               ; pointeur externe
+          STACK     SPEXT               ; le nouveau
+          SSTACK    SPARG               ; pass sur la pile Lisp
+          MOV       #1,STATE
+          CALL      PANICE1             ; traitement
+          SSTACK    SPEXT1              ; reprend la pile externe
+          MOV       #2,STATE
+          ADJSTK    #3                  ; ajuste
+          REG_RES                       ; restaure les registres
+     IFEQ RETN
+          RETURN
+     ENDC
+     IFNE RETN
+          ASS       "	ret	4"
+     ENDC
+
+; traitement en Lisp
+
+PANICE1   LABEL
+          CALL      RESTORE             ; a ne pas oublier !
+          MOV       @GOPANIC,A3         ; pour la suite
+          JCALL     SYSPROT             ; protege
+          POP       A1                  ; resultat
+          MOV       SPEXT,SPEXT1        ; echange
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; l'ancien pointeur
+          POPR      A4,SPARG            ; les arguments
+          POPR      A4,SPLISP           ; pointeur lisp
+          BRI       A3                  ; back
+
+; la partie commune du traitement du break panique
+
+GOPANIC   LABEL
+
+     IFEQ SIGBLOCK
+          JCALL    INTON              ; rearme les IT
+     ENDC
+
+          CALL      RESTORE             ; recupere les registres
+          DIFF      BRKCNT,ITCOUNT      ; en moins
+          MOV       #0,BRKCNT           ; plus de break
+          MOV       @GOPANIC1,A3        ; pour la suite
+          JCALL     SYSPROT
+          POP       A1                  ; le resultat
+          MOV       #1,ITSTATE          ; re'autorise les IT
+          BRI       A3                  ; back
+
+GOPANIC1  MOV       #0,ITSTATE          ; pas d'IT dans IT
+          JMP       LLPANIC             ; on y va
+
+;
+; remise en e'tat des registres constants de Lisp
+; inutile pour le 386 seulement bsymb et bcons sont des registres machines
+; et sont restaures par LispToC et CToLisp.
+;
+
+RESTORE   LABEL
+          MOV       _BSYMB,BSYMB
+          MOV       _BCONS,BCONS
+          RETURN
+
+;
+; L'interruption CLOCK
+;
+     IFEQ UNDERSCORED
+          XDEFP     _LL_CLOCK
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     LL_CLOCK
+     ENDC
+
+     IFEQ UNDERSCORED
+_LL_CLOCK LABEL
+     ENDC
+     IFNE UNDERSCORED
+LL_CLOCK LABEL
+     ENDC
+          CNBEQ     CLKCNT,#1,LLCLK1    ; deja une ?
+          MOV       #1,CLKCNT           ; une clock
+          INCR      ITCOUNT             ; une IT de plus
+LLCLK1    LABEL
+     IFNE SIGBLOCK
+          REG_SAV
+     IFEQ UNDERSCORED
+          JCALL     _INTON              ; on re'arme les IT
+     ENDC
+     IFNE UNDERSCORED
+          JCALL     INTON               ; on re'arme les IT
+     ENDC
+          REG_RES
+     ENDC
+     IFEQ RETN
+          RETURN                        ; et c'est fini !
+     ENDC
+     IFNE RETN
+          ASS       "	ret	4"      ; et c'est fini !
+     ENDC
+
+; ithard
+;
+; Traitement des interruptions en attente
+;
+;  BRKCNT   : (0, 1) il y a un  BREAK en attente
+;  _MOUSCNT : (0, 1) il y a une souris en attente
+;  CLKCNT   : (0, 1) la pendule a sonne
+;
+;  ITCOUNT=BRKCNT+_MOUSCNT+CLKCNT
+
+          XDEFP     ITHARD
+          XREFP     TOPERR,LLBREAK
+          XREFP     TOPERR,LLMOUSE
+          XREFP     TOPERR,LLCLOCK
+	  XREFP     EVAL,SYSPROT
+
+ITHARD	  CNBEQ     ITSTATE,#0,ITHARDR  ; rien a faire
+          PUSH	    A1			; pousse les accus
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          CALL      ITHARDD             ; traitement
+          POP       A4                  ; recupere les accus
+          POP       A3
+          POP       A2
+          POP       A1
+          RETURN
+
+ITHARDD   MOV	    @ITHARD0,A3 	; ce que l'on veut faire
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat
+          MOV       #1,ITSTATE          ; re'autorise les IT
+          BRI       A3                  ; back
+
+ITHARD0   MOV       #0,ITSTATE          ; pas d'IT dans IT
+          CNBEQ     BRKCNT,#0,ITHARD1   ; ce n'est pas un break
+	  DIFF	    BRKCNT,ITCOUNT	; plus de BREAK
+	  MOV	    #0,BRKCNT		;	  en attente
+          JCALL     LLBREAK             ; break IT
+ITHARD1   CNBNE     _MOUSCNT,#1,ITHARD2	; pas de mouse
+	  ; l'inhibition IT doit etre fait par un (#:mouse:read-event t)
+	  DECR      ITCOUNT		  ; plus de mouse
+          MOV       #0,_MOUSCNT          ;         en attente
+	  JCALL     LLMOUSE		; mouse IT
+ITHARD2   CNBEQ     CLKCNT,#0,ITHARDR	; pas de clock
+          MOV       #0,ITCOUNT          ; plus d'IT
+          MOV       #0,CLKCNT           ; plus de CLOCK
+          JCALL     LLCLOCK             ; clock it!
+ITHARDR   RETURN                        ; retour du INTEST
+
+
+;
+;      ll_merror interne : erreur machine!
+;
+     IFEQ UNDERSCORED
+          XDEFP     _LL_MERRO
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     LL_MERRO
+     ENDC
+          XREFP     TOPERR,LLMERRO
+
+     IFEQ UNDERSCORED
+_LL_MERRO LABEL
+     ENDC
+     IFNE UNDERSCORED
+LL_MERRO LABEL
+     ENDC
+	  MOV	    &1,SIGNUM
+     IFEQ UNDERSCORED
+          JCALL     _INTON              ; avant tout !
+     ENDC
+     IFNE UNDERSCORED
+          JCALL     INTON               ; avant tout !
+     ENDC
+          CNBEQ     STATE,#0,LLMERROC   ; dans du C ?
+          CNBEQ     STATE,#1,LLMERROL   ; dans du Lisp ?
+          BRA       LLMERROE            ; dans une routine externe ?
+
+;  MERRO dans du C
+
+LLMERROC  LABEL
+	  SSTACK    SPLISP
+          MOV       #1,STATE            ; Lisp
+          REG_RES                       ; restaure les registres
+          CALL      RESTORE             ; des fois que ...
+          MOV       SIGNUM,A2           ; le numero
+          JCALL     LLMERRO             ; DO IT
+          MOV       #$FFFF,RWORK        ; code -1 (erreur probable)
+     IFEQ RETN
+          RETURN                        ; retour de l'erreur
+     ENDC
+     IFNE RETN
+          ASS       "	ret	4"      ; retour de l'erreur
+     ENDC
+
+;  MERRO dans du LISP
+
+LLMERROL  LABEL
+          INIT_LMERRO                   ; nettoie la pile
+          CALL      RESTORE             ; recupere les registres
+          MOV       SIGNUM,A2           ; le numero
+          JCALL     LLMERRO             ; DO IT
+          RET_LMERRO                    ; clean !
+
+; MERRO dans une routine Externe
+
+LLMERROE  LABEL
+          SSTACK    SPLISP              ; passe sur la pile lisp
+          MOV       #1,STATE
+          CALL      RESTORE             ; remet les registres
+MERROE1   MOV       SIGNUM,A2           ; le code dans A2
+          JCALL     LLMERRO             ; LLMERRO
+          BRA       MERROE1             ; on ne revient que par exit
+
+; Appel de routine externe
+; pile:  sommet de pile               -->               fond de pile
+;        retour, nbarg, adresse, type res, arg1, typ1, arg2, typ2, ...
+
+           XREFP     GC,GCFLOAT
+           XREFI     LLINIT,FFLOAT
+           XDEFP     LL_CALLG
+
+LL_CALLG  LABEL                         ; c'est ici l'entree
+          MOV       CALLSP,CALLSP1      ; on sauvegarde callsp
+          STACK     CALLSP              ; le sp a l'entre'e (pour les arg)
+          MOV       &1,CALLNARG         ; le nombre d'arguments
+          PUSH      A1                  ; sauve les accumulateurs
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          MOV       CALLSP,A4           ; pointeur sur l'appel
+          PUSH      CALLSP1             ; il faut le sauvegarder BIM
+          ADJSTKR   A4,CALLNARG         ; vers le type du resultat
+          TOPSTR    A4,CALLTYPR         ; je le prend
+          PUSH      CALLTYPR            ; pour le proteger
+          PUSH      SPLISP              ; sauve spLisp
+          CALL      CALL_C1             ; fait ce qu'il faut
+          ADJSTK    #3                  ; nettoie la pile (3 et non 2 BIM)
+          POP       A4                  ; restaure les accumulateurs
+          POP       A3
+          POP       A2
+          POP       A1
+;          MOV       BCONS,RBCONS        ; s'il y a eu un GC ? Inutile en 386
+          MOV       CALLTYPR,AUX0       ; le type du re'sultat
+          MOV       CALLREG0,DUX0       ; le re'sultat 0
+          MOV       CALLREG1,DUX1       ; le re'sultat 1
+     IFEQ FLOATSTACK
+          CNBNE     AUX0,#2,LL_CALLG0   ; flottant ? patch GS
+          ASS       "	fstp	qword ptr [callreg0]" ; patch GS
+LL_CALLG0 LABEL
+     ENDC
+          JCALL     LL_BUILD            ; Construit le re'sultat en lisp
+          POP       A3                  ; l'adresse de retour
+          POP       A4                  ; le nombre d'arguments
+	  MOV	    _BSYMB,BSYMB        ; recupere BSYMB BIM
+	  MOV       _BCONS,BCONS        ; recupere BCONS BIM
+          BRI       A3                  ; et on rentre
+
+
+; la routine qui fait tout dans le sys-protect
+CALL_C1   LABEL
+          MOV       @CALL_C2,A3         ; la routine prote'ge'e
+          JCALL     SYSPROT             ; protection syste`me!
+          MOV       EXTVFLAG,A1         ; flag si vecteur externe
+          BTNIL     A1,NOEXTV           ; on continu si pas de vecteur externe
+          CALL      EXTVREST            ; on restore si vecteur externe
+NOEXTV    POP       A1                  ; le re'sultat
+          MOV       &1,SPLISP           ; restaure le spLisp et
+          MOV       &2,CALLTYPR         ; le type du resultat
+          MOV       &3,CALLSP           ; et le pointeur sur les arg (BIM)
+          BRI       A3                  ; la continuation
+
+CALL_C2   STACK     SPLISP              ; le nouveau spLisp
+          STACK     SPARG               ; ptr sur arguments de lispcall
+          MOV       #2,STATE            ; passe dans l'externe !
+          SSTACK    SPEXT               ; change de pile
+
+;!!!!!!!! Cette partie de code n'est pas dans Lisp  !!!!!!!!
+
+; Appelle la routine externe et met le re'sultat dans CALLREG0/1
+
+          MOV       CALLSP,A4           ; sauvegarde de la pile d'appel
+          ADJSTKR   A4,#2               ; ajuste sur le premier type
+          MOV       CALLNARG,A3         ; le nombre d'arguments empiles
+;!?!? plus simple: ADJSTKR A4,#1/POP A3  !?!?
+; Convertir et stocker les arguments dans la table CALLGARG
+
+          JCALL     LL_CONVE            ; Tranformations des arguments
+          POPR      A4,CALLTYPR         ; le type du re'sultat!?!?deja fait?!
+          POPR      A4,CALLGADR         ; l'adresse ou on va
+          STACK     SPEXT1              ; pour de'piler pratiquement
+          ONSTACK   %CALLTARG,AUX1      ; recopie les arguments dans la pile
+          PUSH      @CALL_C5            ; le retour de la routine externe
+          MOV       CALLGADR,A3         ; l'adresse ou aller
+          BRI       A3                  ; c'est le JCALLI
+; ATTENTION: depart pour C
+;     On ne doit pas utiliser de globale au retour de C (recursion oblige)
+CALL_C5   SSTACK    SPEXT1              ; de'pile les arguments externes
+          MOV       A1,CALLREG0       	; le premier re'sultat (EAX).
+          MOV       A4,CALLREG1       	; le second re'sultat (EDX)
+
+;!!!!!!!! Fin de la partie de code hors de Lisp !!!!!!!!
+
+          SSTACK    SPLISP              ; reprend la pile Lisp
+          MOV       #1,STATE            ; retour a Lisp
+          CALL      RESTORE             ; parano
+          RETURN                        ; retour du sys-protect
+
+
+; EXTVREST
+; Restauration des arguments de type vecteurs au format Le-Lisp.
+; Tous les parametres de type FIXVECTOR, ou FLOATVECTOR, qui
+;  ont donc ete tranforme's lors de passage LL->Ext, doivent etre
+;  retabli au format LL apres evaluation du code Ext.
+; CALLSP  pointe tjrs sur la liste des parametres et leurs types
+; A1, AUX0, AUX1, DUX0, DUX1  sont libres.
+EXTVREST  LABEL
+          MOV       CALLSP,A1           ; la pile d'appel
+          ADJSTKR   A1,#1               ; ajuste sur le premier type
+          POPR      A1,AUX1             ; le nbre d'arguments
+          BRA       EXTV1               ; test de boucle
+EXTV2     POPR      A1,DUX0             ; le type du prochain argument
+          CNBNE     DUX0,#7,EXTV3       ; type 7 = fixvector
+          POPR      A1,AUX0             ; le fixvector en question
+          FIXV_X_LL                     ; fixvect-ext. -> fixvect-ll
+          BRA       EXTV1               ; suite
+EXTV3     CNBNE     DUX0,#8,EXTV4       ; type 8 = floatvector
+          POPR      A1,AUX0             ; le floatvector en question
+          FLTV_X_LL                     ; fltvect-ext. -> fltvect-ll
+          BRA       EXTV1               ; suite
+EXTV4     ADJSTKR   A1,#1               ; pour preparer le prochain POPR
+EXTV1     DECR      AUX1                ; -1 (pour la valeur)
+          SOBGTZ    AUX1,EXTV2          ; il en reste?
+          RETURN
+;
+; LL_CONVE
+;
+; Conversion des arguments Lisp pour une routine Externe
+; Stockage dans le tableau CALLBARG-CALLEARG
+;; registres initialise':
+; A3 = nombre d'arguments empile's
+; A4 = pointeur de pile auxilliaire: typeN parametreN typeN-1 parametreN-1 ...
+; AUX1 = taille en pointeurs des convertis
+; registres utilise's
+; A1 = pile des resultats
+;  A2 = pile des resultats reference's (RFIX & RFLOAT)
+;  AUX0 = argument courant modifie'
+;  DUX0 = type de l'argument courant & auxiliaire
+;  DUX1 = auxiliaire
+
+           XDEFP     LL_CONVE
+LL_CONVE  LABEL
+          MOV       %CALLTARG,A1        ; la table des arguments (fin)
+          MOV       %CALLRARG,A2        ; la table des refe'rences (fin)
+          MOVNIL    EXTVFLAG            ; efface le flag de [fix|float]vector
+          DIFF      #2,A3               ; moins typr adr
+          MOV       #0,AUX1             ; compte
+          BRA       LL_CONVL
+LL_CONV0  DECR      A3                  ; decompte un argument
+          INCR      AUX1                ; compte un pointeur
+          POPR      A4,DUX0             ; le type du prochain argument
+          POPR      A4,AUX0             ; l'argument en question
+;!?!? plus simple: POPR A4,DUX1/POPR A4,DUX0  evite les MOV AUX0,DUX0!?!?
+LL_CONV1  LABEL
+          CNBNE     DUX0,#1,LL_CONV2    ; type 1 = entier
+          MOV       AUX0,DUX0
+          FIX_LL_C                      ; conversion:DUX0(llfix)-> DUX0(cfix)
+          PUSHR     A1,DUX0             ; empile
+          BRA       LL_CONVL
+LL_CONV2  CNBNE     DUX0,#2,LL_CONV3    ; type 2 = float
+          FLT_LL_C                      ; conversion:DUX0(llflt)-> DUX0/DUX1
+	  PUSHR	    A1,DUX1		; empile poids faible (aux0 + 4)
+	  PUSHR     A1,DUX0		; empile poids fort (aux0)
+	  INCR	    AUX1
+          BRA       LL_CONVL
+LL_CONV3  CNBNE     DUX0,#3,LL_CONV4    ; type 3 = string
+          STRG_LL_C AUX0                ; conversion: AUX0(llstr) -> AUX0
+          PUSHR     A1,AUX0             ; empile
+          BRA       LL_CONVL
+LL_CONV4  CNBNE     DUX0,#4,LL_CONV5    ; type 4 = vecteur
+          VECT_LL_C AUX0                ; conversion: AUX0(llvect) -> AUX0
+          PUSHR     A1,AUX0             ; empile
+          BRA       LL_CONVL
+LL_CONV5  CNBNE     DUX0,#5,LL_CONV6    ; type 5=rfix (entier par reference)
+          MOV       AUX0,DUX0
+          RFIX_LL_X A2                  ; conversion:DUX0(llfix)-> A2(ffix)
+          PUSHR     A1,A2               ; empile le pointeur
+          BRA       LL_CONVL
+LL_CONV6  CNBNE     DUX0,#6,LL_CONV7    ; type 6=rfloat(flottant par reference)
+          RFLT_LL_X A2                  ; conversion:AUX0(llflt)-> A2(fflt)
+          PUSHR     A1,A2               ; empile le pointeur
+          BRA       LL_CONVL
+LL_CONV7  CNBNE     DUX0,#7,LL_CONV8    ; type 7 = fixvector
+          FIXV_LL_X                     ; conversion: llfixvect -> extfixvect
+          PUSHR     A1,AUX0             ; empile le pointeur
+          MOV       #0,EXTVFLAG         ; positionne le flag
+          BRA       LL_CONVL
+LL_CONV8  CNBNE     DUX0,#8,LL_CONV9    ; type 8 = floatvector
+          FLTV_LL_X                     ; conversion: llfltvect -> extfltvect
+          PUSHR     A1,AUX0             ; empile
+          MOV       #0,EXTVFLAG         ; positionne le flag
+          BRA       LL_CONVL
+LL_CONV9  PUSHR     A1,AUX0             ; type t = pointeur
+LL_CONVL  SOBGTZ    A3,LL_CONV0         ; il en reste ?
+          RETURN
+
+;
+; Construction du re'sultat de l'appel externe
+;
+; DUX0 ou DUX0/DUX1 = objet issu de C
+; AUX0 = type du re'sultat                  re'sultat LeLisp dans RWORK
+;
+          XDEFP     LL_BUILD
+
+LL_BUILD  LABEL
+LL_BUIL1  LABEL
+          CNBNE     AUX0,#1,LL_BUIL2    ; type 1 = entier
+          FIX_C_LL                      ; conversion: DUX0(cfix)->RWORK
+;          MOV       DUX0,AUX0           ; Inutile en 386
+          RETURN
+LL_BUIL2  CNBNE     AUX0,#2,LL_BUIL3    ; type 2 = float
+          FLT_C_LL                      ; conversion:DUX0/DUX1 (val)-> [RWORK]
+          RETURN
+LL_BUIL3  CNBNE     AUX0,#3,LL_BUIL4    ; type 3 = string
+          STRG_C_LL DUX0,RWORK,DUX0     ; conversion:DUX0(adr str) -> RWORK
+          RETURN
+LL_BUIL4  CNBNE     AUX0,#4,LL_BUIL5    ; type 4 = vector
+          VECT_C_LL DUX0,RWORK,DUX0     ; conversion !?!?! #0 -> RWORK  ?!?!?
+          RETURN
+LL_BUIL5  MOV       DUX0,RWORK		; autre  type.
+          RETURN
+
+;
+; symbol *getsym (s) char *s;
+;
+; Recherche de l'adresse d'un symbole Lisp
+;
+; pile (C): retour, chaine
+
+     IFEQ UNDERSCORED
+          XDEFP     _GETSYM
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     GETSYM
+     ENDC
+          XREFP     READ,TRYSYMB
+
+     IFEQ UNDERSCORED
+_GETSYM   MOV       RWORK,SAURWORK      ; patch GS: sauvegarde EBP pour le C.
+     ENDC
+     IFNE UNDERSCORED
+GETSYM    MOV       RWORK,SAURWORK      ; patch GS: sauvegarde EBP pour le C.
+     ENDC
+          MOV       &1,CALLREG0         ; l'argument
+          MOV       SAURWORK,RWORK      ; patch GS
+          REG_SAV                       ; sauve le contexte externe
+;;; on note le passage a Lisp
+          PUSH      SPLISP     ; pour la pile LL d'avant le dernier callextern
+          PUSH      SPEXT               ; l'ancien pointeur
+          STACK     SPEXT               ; le nouveau
+          SSTACK    SPARG               ; passe sur la pile Lisp
+          MOV       #1,STATE
+;;;
+          CALL      GETSYM1             ; execute
+;;; on note le retour a C (2eme partie)
+          SSTACK    A4                  ; repasse en externe, pile a jour
+          MOV       #2,STATE
+;;;
+          REG_RES                       ; restaure les registres
+          MOV       CALLREG0,EAX        ; le resultat patch GS
+     IFEQ RETN
+          RETURN                        ; back home
+     ENDC
+     IFNE RETN
+          ASS       "	ret	4"      ; back home
+     ENDC
+
+;!!!!!!!! cette partie du code est dans Lisp !!!!!!!!
+
+GETSYM1   LABEL
+          CALL      RESTORE             ; parano
+          MOV       @GETSYM2,A3         ; la routine
+          JCALL     SYSPROT             ; protege
+          POP       A1                  ; le resultat
+;;; on note le retour a C (1ere partie)
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; l'ancien pointeur pile ext
+          POPR      A4,SPLISP           ; restaure l'ancien pointeur pile ll
+;;;
+          BRI       A3                  ; back
+
+;!!!!!!!! cette partie du code est dans Lisp !!!!!!!!
+
+GETSYM2   LABEL
+          PUSH      BCONS               ; patch GS: sauve BCONS
+          MOV       CALLREG0,DUX0       ; l'argument
+          STRG_C_LL DUX0,A2,A1          ; conversion de la chaine
+	  POP       BCONS               ; patch GS: restaure BCONS
+          JCALL     TRYSYMB             ; recherche le symbole
+          MOV       A1,CALLREG0         ; cache le resultat
+          RETURN                        ; fini
+
+
+;
+; pusharg (type, val) int type; void *val;
+;
+; Conversion/Empilage d'un argument C dans la pile Lisp
+; pile (C): retour, type, valeur
+
+     IFEQ UNDERSCORED
+          XDEFP     _PUSHARG
+          XDEFP     _PUSHARGD
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     PUSHARG
+          XDEFP     PUSHARGD
+     ENDC
+
+     IFEQ UNDERSCORED
+_PUSHARGD LABEL
+_PUSHARG  MOV       RWORK,SAURWORK      ; patch GS: sauve EBP
+     ENDC
+     IFNE UNDERSCORED
+PUSHARGD  LABEL
+PUSHARG   MOV       RWORK,SAURWORK      ; patch GS: sauve EBP
+     ENDC
+          MOV       &3,CALLREG1         ; val1
+          MOV       &2,CALLREG0         ; val0
+          MOV       &1,CALLTYPR         ; le type
+          REG_SAV                       ; sauve les registres
+;;; on note le passage a Lisp
+          PUSH      SPLISP     ; pour la pile LL d'avant le dernier callextern
+          PUSH      SPEXT               ; l'ancien pointeur
+          STACK     SPEXT               ; le nouveau
+          SSTACK    SPARG               ; passe sur la pile Lisp
+          MOV       #1,STATE
+	  CALL      RESTORE             ; parano
+;;;
+          MOV       CALLREG0,DUX0
+          MOV       CALLREG1,DUX1
+          MOV       CALLTYPR,AUX0
+          JCALL     LL_BUILD            ; converti
+;;;          MOV       SPARG,A1            ; pointeur de pile Lisp PATCH GS
+;;;          PUSHR     A1,RWORK            ; Fancy pushr !         PATCH GS
+;;;          MOV       A1,SPARG            ; c'est fait            PATCH GS
+          PUSH      RWORK               ; Un push sur la pile courante PATCH GS
+          STACK     SPARG               ; evite des problemes lors des PATCH GS
+                                        ; changements de contexte.     PATCH GS
+;;; on note le retour a C
+          MOV       SPEXT,SPEXT1        ; echange
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; restaure l'ancien pointeur pile ext
+          POPR      A4,SPLISP           ; restaure l'ancien pointeur pile ll
+          SSTACK    A4                  ; repasse en externe, pile a jour
+          MOV       #2,STATE
+;;;
+          REG_RES                       ; restaure les registres
+          MOV       SAURWORK,RWORK      ; retaure EBP
+     IFEQ RETN
+          RETURN                        ; back home
+     ENDC
+     IFNE RETN
+          ASS       "	ret	8"      ; back home
+     ENDC
+
+;
+; void *lispcall (type, narg, symbol) int type, narg; SYMBOL *symbol;
+;
+; Appel de routines Lisp depuis C
+; Pile: retour, type, narg, symbol
+
+     IFEQ UNDERSCORED
+          XDEFP     _LISPCALL
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     LISPCALL
+     ENDC
+          XREFP     EVAL,FFUNCALL
+
+     IFEQ UNDERSCORED
+_LISPCALL LABEL
+     ENDC
+     IFNE UNDERSCORED
+LISPCALL LABEL
+     ENDC
+	  MOV       RWORK,SAURWORK      ; patch GS: sauve EBP pour le C
+          MOV       &1,CALLTYPR         ; le type du resultat
+          MOV       &2,CALLNARG         ; nombre d'arguments empile's
+          MOV       &3,CALLSYMB         ; la fonction a` appeler
+	  MOV       SAURWORK,RWORK      ; patch GS: recupere EBP pour le C
+          REG_SAV                       ; moveml <a1-a6,d2-d7>,sp@-
+          PUSH      CALLTYPR            ; sauve le type
+          PUSH      SPLISP              ; a cause du troisieme larron
+          PUSH      SPEXT               ; empile l'ancien spext
+          STACK     SPEXT               ; le nouveau spext
+          SSTACK    SPARG               ; on est dans Lisp
+          MOV       #1,STATE
+          CALL      CALL_L1             ; la routine prote'geuse
+          MOV       CALLTYPR,AUX0       ; le type dans AUX0
+          CALL      LL_RESL             ; conversion du resultat
+          MOV       DUX0,CALLREG0       ; sauvegarde 0
+          MOV       DUX1,CALLREG1       ; sauvegarde 1
+          SSTACK    SPEXT1              ; retour a` la routine externe
+          MOV       #2,STATE
+          ADJSTK    #3                  ; ajuste (pour sp/type)
+          MOV       SPLISP,SPARG        ; RAZ la pile
+          REG_RES                       ; re'cupe're les registres C
+          MOV       CALLREG0,EAX        ; le resultat 0
+          MOV       CALLREG1,EDX        ; le resultat 1
+     IFEQ RETN
+          RETURN                        ; back
+     ENDC
+     IFNE RETN
+          ASS       "	ret	12"     ; back
+     ENDC
+
+
+; !!!!!!! Cette partie de code est dans l'environnement Lisp !!!!!!!!
+
+CALL_L1   LABEL
+          CALL      RESTORE             ; parano !
+          MOV       @CALL_L2,A3         ; la routine prote'ge'e
+          JCALL     SYSPROT             ; protect it
+          POP       CALLREG0            ; le re'sultat Lisp
+          MOV       SPEXT,SPEXT1        ; echange
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; l'ancien pointeur
+          POPR      A4,SPLISP           ; splisp
+          TOPSTR    A4,CALLTYPR         ; le type
+          BRI       A3                  ; retour
+
+CALL_L2   MOV       SPARG,A4            ; argument pointer
+          ADJSTKR   A4,CALLNARG         ; les arguments
+          ONSTACK   A4,CALLNARG         ; recopie les arguments
+          MOV       CALLSYMB,A1         ; la fonction a appeler
+          MOV       CALLNARG,A4         ; les arguments empile's
+          JMP       FFUNCALL            ; appelle la fonction Lisp !
+
+; !!!!!!!! Fin du code dans l'environnement Lisp !!!!!!!!
+
+; Conversion du resultat Lisp (dans CALLREG0) -> Externe (dans DUX0)
+
+LL_RESL   LABEL
+LL_RES1   CNBNE     #1,AUX0,LL_RES2       ; type 1 = entier
+          MOV       CALLREG0,DUX0         ; le re'sultat Lisp dans DUX0
+          FIX_LL_C                        ; conversion
+          RETURN
+LL_RES2   CNBNE     #2,AUX0,LL_RES3       ; type 2 = flottant
+          MOV       CALLREG0,DUX0         ; le re'sultat Lisp dans DUX0
+          FLT_LL_C                        ; conversion
+          RETURN
+LL_RES3   CNBNE     #3,AUX0,LL_RES4       ; type 3 = chaine
+          MOV       CALLREG0,AUX0         ; le re'sultat Lisp dans AUX0
+          STRG_LL_C AUX0                  ; conversion
+          MOV       AUX0,DUX0             ; remet dans DUX0
+          RETURN
+LL_RES4   CNBNE     #4,AUX0,LL_RES5       ; type 4 = vecteur
+          MOV       CALLREG0,AUX0         ; le re'sultat Lisp dans AUX0
+          VECT_LL_C AUX0                  ; conversion
+          MOV       AUX0,DUX0             ; remet dans DUX0
+          RETURN
+LL_RES5   MOV       CALLREG0,DUX0         ; le re'sultat Lisp dans DUX0
+          RETURN                          ; les autres
+
+     IFEQ UNDERSCORED
+          XDEFP     _CFLOAT_TO_LFLOAT
+;;; Convertion double C -> flottant lisp
+
+_CFLOAT_TO_LFLOAT   LABEL
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     CFLOAT_TO_LFLOAT
+;;; Convertion double C -> flottant lisp
+
+CFLOAT_TO_LFLOAT    LABEL
+     ENDC
+
+          MOV       RWORK,SAURWORK      ; patch GS: sauve EBP
+          MOV       &2,CALLREG1         ; val1
+          MOV       &1,CALLREG0         ; val0
+          MOV       SAURWORK,RWORK      ; patch GS: recupere EBP
+          REG_SAV                       ; sauve les registres
+;;; on note le passage a Lisp
+          PUSH      SPLISP     ; pour la pile LL d'avant le dernier callextern
+          PUSH      SPEXT               ; l'ancien pointeur
+          STACK     SPEXT               ; le nouveau
+          SSTACK    SPARG               ; passe sur la pile Lisp
+          MOV       #1,STATE
+          CALL      RESTORE             ; parano
+;;;
+          MOV       CALLREG0,DUX0
+          MOV       CALLREG1,DUX1
+;; convert
+          FLT_C_LL                      ; conversion: DUX0/DUX1 -> RWORK
+          MOV       RWORK,CALLREG0      ; pour le resultat [ELIGIS]
+;;; on note le retour a C
+          MOV       SPEXT,SPEXT1        ; echange
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; restaure l'ancien pointeur pile ext
+          POPR      A4,SPLISP           ; restaure l'ancien pointeur pile ll
+          SSTACK    A4                  ; repasse en externe, pile a jour
+          MOV       #2,STATE
+;;;
+          REG_RES                       ; restaure les registres
+          MOV       CALLREG0,EAX        ; le resultat 0 [ELIGIS]
+          RETURN                        ; back home
+    
+
+     IFEQ UNDERSCORED
+          XDEFP     _LFLOAT_TO_CFLOAT
+;;; Convertion flottant lisp -> double C
+
+_LFLOAT_TO_CFLOAT   LABEL
+     ENDC
+     IFNE UNDERSCORED
+          XDEFP     LFLOAT_TO_CFLOAT
+;;; Convertion flottant lisp -> double C
+
+LFLOAT_TO_CFLOAT    LABEL
+     ENDC
+;;        MOV       &1,DUX0   ; la valeur a convertir
+          CVTFLT_LL_C         ; convertion
+          RETURN              ; back to C
+
+
+;      Les  donnees  qu'il ne faut pas sauver par save core
+;
+
+          IMPURE
+
+; Les pointeurs de pile Lisp et de pile Externe
+
+          XDEFI     SPLISP
+SPLISP    ADR       0
+SAVSP1    ADR       0
+SPARG     ADR       0
+SPEXT     ADR       0
+SPEXT1    ADR       0
+
+     IFEQ UNDERSCORED
+          XDEFI    _ECONS
+_ECONS    ADR      0
+     ENDC
+          XDEFI    ECONS
+ECONS     ADR      0
+     IFEQ UNDERSCORED
+          XDEFI    BTBIN
+BTBIN     ADR      0
+          XDEFI    BTBGC
+BTBGC     ADR      0
+     ENDC
+
+;
+;      Debut de la zone a sauver par SAV-xxx
+;
+
+
+BSAVE 	LABEL
+     IFEQ SAVEDSTACK
+     IFEQ UNDERSCORED
+          XDEFI     _SAVSP
+     ENDC
+     IFNE UNDERSCORED
+          XDEFI     SAVSP
+     ENDC
+     ENDC
+     IFEQ UNDERSCORED
+_SAVSP     ADR       0
+     ENDC
+     IFNE UNDERSCORED
+SAVSP     ADR       0
+     ENDC
+
+     IFEQ UNDERSCORED
+          XDEFI     _PRTMSGS
+_PRTMSGS  ADR       0
+     ENDC
+     IFNE UNDERSCORED
+          XDEFI     PRTMSGS
+PRTMSGS  ADR       0
+     ENDC
+
+     IFEQ UNDERSCORED
+          XDEFI     _BCODE
+_BCODE    ADR       0
+          XDEFI     _CCODE
+_CCODE    ADR       0
+          XDEFI     _ECODE
+_ECODE    ADR       0
+          XDEFI     _BHEAP
+_BHEAP    ADR       0
+          XDEFI     _CHEAP
+_CHEAP    ADR       0
+          XDEFI     _EHEAP
+_EHEAP    ADR       0
+          XDEFI     _BNUMB
+_BNUMB    ADR       0
+          XDEFI     _CNUMB
+_CNUMB    ADR       0
+          XDEFI     _BFLOAT
+_BFLOAT    ADR      0
+          XDEFI     _CFLOAT
+_CFLOAT    ADR      0
+          XDEFI     _BVECT
+_BVECT    ADR       0
+          XDEFI     _CVECT
+_CVECT    ADR       0
+          XDEFI     _BSTRG
+_BSTRG    ADR       0
+          XDEFI     _CSTRG
+_CSTRG    ADR       0
+     ENDC
+          XDEFI     _BSYMB
+_BSYMB    ADR       0
+     IFEQ UNDERSCORED
+          XDEFI     _CSYMB
+_CSYMB    ADR       0
+     ENDC
+          XDEFI     _BCONS
+_BCONS    ADR       0
+     IFEQ UNDERSCORED
+          XDEFI     _CCONS
+_CCONS    ADR       0
+    
+          XDEFI     _BSTACK
+_BSTACK   ADR       0
+          XDEFI     _MSTACK1
+_MSTACK1  ADR       0
+          XDEFI     _MSTACK2
+_MSTACK2  ADR       0
+          XDEFI     _ESTACK
+_ESTACK   ADR       0
+
+          XDEFI     _FILIN
+_FILIN    ADR       0
+          XDEFI     _FILIZ
+_FILIZ    ADR       0
+          XDEFI     _FILIT
+_FILIT    ADR       0
+          XDEFI     _NBSYST
+_NBSYST   ADR       0
+          XDEFI     _MAXCHAN
+_MAXCHAN  ADR       0
+          XDEFI     _LLBAN
+_LLBAN    ADR       0
+
+;;;
+;;; ATTENTION DUX1 doit obligatoire suivre ACCUSINGLE2, l'expanseur s'y attend
+;;;
+          XDEFI     _ACCUSINGLE1        ; Les accus flottants simple
+          XDEFI     _ACCUSINGLE2        ; precision pour C.
+          XDEFI     _ACCUDOUBLE1        ; Les accus flottants double
+          XDEFI     _ACCUDOUBLE2        ; precision pour C.
+_ACCUDOUBLE1 ADR    0
+             ADR    0
+_ACCUDOUBLE2 ADR    0
+             ADR    0
+_ACCUSINGLE1 ADR    0
+_ACCUSINGLE2 ADR    0
+     ENDC
+     IFNE UNDERSCORED
+          XDEFI     ACCUDOUBLE1         ; Les accus flottants double
+          XDEFI     ACCUDOUBLE2         ; precision pour C.
+          XDEFI     ACCUSINGLE1         ; Les accus flottants simple
+          XDEFI     ACCUSINGLE2         ; precision pour C.
+ACCUDOUBLE1 ADR    0
+            ADR    0
+ACCUDOUBLE2 ADR    0
+            ADR    0
+ACCUSINGLE1 ADR    0
+ACCUSINGLE2 ADR    0
+     ENDC
+
+; les symboles utilises par le callg (AP)
+; les registres auxiliaires utilises par le save-core et restore-core (AP)
+;	AUX0 = BSYMB (ESI), DUX0 = BCONS (EDI)
+
+	XDEFI	DUX1
+DUX1	ADR	0                      ; doit etre derriere accusingle2
+ 	
+	XDEFI	AUX1
+AUX1	ADR	0
+
+	XDEFI	SAURWORK
+SAURWORK	ADR	0
+        XDEFI   CRWORK
+CRWORK          ADR     0               ; Future valeur pour RWORK
+
+          XDEFI     STATE
+STATE     ADR       0                   ; 0 = C, 1 = Lisp, 2 = External
+
+CALLSP    ADR       0                   ; SP du callg
+CALLSP1   ADR       0
+CALLGADR  ADR       0                   ; adresse de lancement CALLG
+CALLTYPR  ADR       0                   ; type de retour CALLG
+CALLREG0  ADR       0                   ; le re'sultat du CALLG
+CALLREG1  ADR       0                   ; le re'sultat du CALLG
+CALLNARG  ADR       0                   ; nombre d'argument
+CALLSYMB  ADR       0                   ; fonction appele'e
+;; pour 32 arguments+reference
+CALLBARG  ADR       0                   ; 32eme argument
+          ADR       0                   ; 32eme argument ou reference
+          ADR       0                   ; 31eme argument
+          ADR       0                   ; 31eme argument ou reference
+          ADR       0                   ; ...
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+CALLEARG  ADR       0                   ; fin du tableau des arguments du CALLG
+          XDEFI     CALLTARG            ; pointeur sur la fin du tableau
+CALLTARG  LABEL
+
+CALRBARG  ADR       0                   ; table des references des arguments
+          ADR       0                   ;  pour ranger 32 * 64 bits max.
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+CALREARG  ADR       0                   ; fin du tableau des references
+          XDEFI     CALLRARG            ; pointeur sur la fin du tableau
+CALLRARG  LABEL
+EXTVFLAG  ADR       0                   ; flag de presence de [fix|float]vector
+
+; Les variables des IT pour INTEST
+          XDEFI     _MOUSCNT
+
+BRKCNT    ADR       0                   ; nb de breaks en attente
+CLKCNT    ADR       0                   ; il y a eu une clock
+_MOUSCNT  ADR       0                   ; il y a eu une souris
+
+; Le lieu de l'interruption MOUSE
+
+          XDEFI     INMOUSE
+INMOUSE   ADR       0                   ; 0/1 (1 = dans It MOUSE)
+
+     IFEQ UNDERSCORED
+          XDEFI     _ALARM_ON           ; pour C
+_ALARM_ON ADR       0
+     ENDC
+     IFNE UNDERSCORED
+          XDEFI     ALARM_ON           ; pour C
+ALARM_ON  ADR       0
+     ENDC
+
+SIGNUM    ADR       0
+
+	  XDEFI	    DELTA_CONS			; BCONS/8
+DELTA_CONS ADR	    0				; cf SWPCONS
+
+     IFNE MATH387
+	  XDEFI	    LOG2E1			; 1/Log2(e)
+	  XDEFI	    LOG2T1			; 1/Log2(10)
+LOG2E1    ADR       0
+          ADR       0
+LOG2T1    ADR       0
+          ADR       0
+
+     ENDC
+
+	  XDEFI	     FARG1
+FARG1	  ADR	     0		      ; 1er  arg appel flottant loader
+	  XDEFI	     FARG2
+FARG2	  ADR	     0		      ; 2eme arg appel flottant loader
+
+          ; Pour le coprocesseur
+;     IFNE MATH387
+;FPECW     ADR        0                ; Sauvegarde du mot de controle initial.
+;     ENDC
+
+          END

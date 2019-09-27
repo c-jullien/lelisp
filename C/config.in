@@ -1,0 +1,93 @@
+#!/bin/sh
+# Checking usage
+
+usage="usage: config name binary configurator [llcore [sizes]]"
+
+case $# in
+   0|1|2) echo $usage
+          exit 1;;
+   *) cnom=$1; bin=$2; conf=$3; shift; shift; shift;;
+esac
+
+# The given name must be simple and pathless
+nom=`echo $cnom | sed -e 's-.*/\(.*\)$-\1-'`
+
+# Is the configuration file an absolute
+# or a relative path ?
+case $conf in
+        /?*) ;;
+        *)  conf=conf/$conf ;;
+esac
+
+# Is the configuration file present ?
+if test ! -f $conf
+then
+	 echo "config: file $conf does not exist"
+	  exit 1
+fi
+
+LLDIR=@SOURCE@
+SYSDIR=$LLDIR/C
+
+# The system directory of the machine used
+if test ! -d $SYSDIR
+then
+	echo "config: directory $SYSDIR does not exist"
+	 echo $usage
+	 exit 1
+fi
+
+# The directory for cores
+case "$1" in
+        "") llcore=$SYSDIR/llcore ;;
+        -*) llcore=$SYSDIR/llcore ;;
+        *)  llcore=$1; shift ;;
+esac
+
+# Testing the write access to this directory
+TEST=lltouch$$
+touch $llcore/$TEST 2> /dev/null
+if test ! -f $llcore/$TEST
+then
+	echo "config: impossible to write in directory $llcore"
+	 exit 1
+fi
+rm $llcore/$TEST
+
+# Is the binary file an absolute
+# or a relative path ?
+case $bin in
+        /?*) ;;
+        *)  bin=$SYSDIR/$bin ;;
+esac
+
+# Is the binary file present ?
+if test ! -f $bin
+then
+	 echo "config: binary file $bin does not exist"
+	  exit 1
+fi
+
+# Creation of the command script shell
+llcmd=/tmp/ll$$
+#trap "rm -f $llcmd;exit 1" 1 2 3 15
+
+echo exec $bin $* -r $llcore/$nom.core \$\* > $llcmd
+
+chmod +x $llcmd
+
+#  Creation of the core image
+#  For not loading one's .lelisp file during core creation
+HOME=qwerty
+
+$llcmd $SYSDIR/../llib/startup.ll <<EOF
+(setq #:system:name (quote |$nom|))
+(setq #:system:core-directory "$llcore/")
+
+`cat $conf`
+(end)
+EOF
+
+cp $llcmd $cnom
+rm $llcmd
+

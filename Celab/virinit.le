@@ -1,0 +1,161 @@
+;;; GELL 15.26: elaboration file for the module: virinit
+;;;             translation done: "Tue Aug  24 93 10:49:16 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: virinit.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'virinit)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZvirinit" "Tue Aug  24 93 10:49:16 "
+
+'((inibitmap . nsubr) (bitprologue . nsubr) (#:display:bitprologue . nsubr) (bitmap-save . nsubr) (bitmap-restore . subr1) (bitepilogue . nsubr) (#:display:bitepilogue . nsubr) (bitmap-refresh . nsubr) (#:display:bitmap-refresh . nsubr) (bitmap-flush . nsubr) (#:display:bitmap-flush . nsubr) (bitmap-sync . nsubr) (#:display:bitmap-sync . nsubr) (standard-roman-font . nsubr) (#:display:standard-roman-font . nsubr) (standard-bold-font . nsubr) (#:display:standard-bold-font . nsubr) (large-roman-font . nsubr) (#:display:large-roman-font . nsubr) (small-roman-font . nsubr) (#:display:small-roman-font . nsubr) (standard-foreground-pattern . nsubr) (#:display:standard-foreground-pattern . nsubr) (standard-background-pattern . nsubr) (#:display:standard-background-pattern . nsubr) (standard-medium-gray-pattern . nsubr) (#:display:standard-medium-gray-pattern . nsubr) (standard-light-gray-pattern . nsubr) (#:display:standard-light-gray-pattern . nsubr) (standard-dark-gray-pattern . nsubr) (#:display:standard-dark-gray-pattern . nsubr) (standard-lelisp-cursor . nsubr) (#:display:standard-lelisp-cursor . nsubr) (standard-gc-cursor . nsubr) (#:display:standard-gc-cursor . nsubr) (standard-busy-cursor . nsubr) (#:display:standard-busy-cursor . nsubr) (bitxmax . nsubr) (bitymax . nsubr) (root-window . nsubr) (standard-foreground . subr0) (standard-background . subr0) (#:display:bitmap-save . subr1) (#:display:bitmap-restore . subr1) (#:display:prin . subr1) (#:display:current-display . subr1) (display-store-selection . subr2) (display-get-selection . subr1) (#:display:store-selection . subr2) (#:display:get-selection . subr1) (display-depth . subr1) (#:display:display-depth . nsubr) (display-synchronize . nsubr) (#:display:synchronize . nsubr) (default-window-type . nsubr) (#:display:default-window-type . nsubr))
+
+#["BITMAP" getenv #:display:default-bitmap symbol #:bitmap:name #:display:all-bitmaps #:system:virbitmap-directory #:system:lelisp-extension catenate probefile t loadfile errfile inibitmap #:sys-package:bitmap acons make getfn1 display subtypep new bitprologue send #:display:all-displays #:display:current-display current-display #:display:not-yet-inplemented list listp errnla bitmap-save typep #:display:errnotadisplay append #:bitmap:bytes saved-display delq check-window-position standard-roman-font font-name standard-bold-font large-roman-font small-roman-font current-window flush-event vector bitmap-restore tty #:sys-package:tty (#:sys-package:tty) lambda #:display:errnotasaveddisplay root-window standard-foreground standard-background #:system:error-flag (#:system:error-flag) #:system:error-tag make-named-color make-mutable-color make-color "Error for color" restore-core (#:system:error-flag) create-bytemap type-of #:bitmap:bytemap create-bitmap bitblit kill-bitmap "Error for bitmap" (#:system:error-flag) create-stipple "Error for stipple" (#:system:error-flag) load-font "Error for font" (#:system:error-flag) make-pattern "Error for pattern" (#:system:error-flag) make-cursor "Error for cursor" (#:system:error-flag) make-named-cursor "Error for named cursor" (#:system:error-flag) "Error for one window of " (#:system:error-flag) "Error for one menu of " current-keyboard-focus-window event-mode windowp append1 "impossible error 1" #:display:recreate-windows make-window current-font current-line-style current-pattern current-mode current-foreground current-background current-clip current-cursor window-bitmap exchvector create-menu reverse menu-insert-item-list menu-insert-item #:display:no-current-display bitepilogue bitmap-refresh bitmap-flush bitmap-sync standard-foreground-pattern standard-background-pattern standard-medium-gray-pattern standard-light-gray-pattern standard-dark-gray-pattern standard-lelisp-cursor standard-gc-cursor standard-busy-cursor bitxmax bitymax princn prin xmax getsymb ymax #:window:prologuep #:window:all-windows #:window:current-window #:graph-env:main-graph-env #:graph-env:current-graph-env #:window:current-keyboard-focus-window display-store-selection errnsa store-selection display-get-selection get-selection display-depth display-synchronize #:llcp:errwna synchronize default-window-type transparent #:gell-resetfn:function-name #:gell-resetfn:function-n #:display:bitprologue #:gell-resetfn:function-1 #:display:bitepilogue #:display:bitmap-refresh #:display:bitmap-flush #:display:bitmap-sync #:display:standard-roman-font #:display:standard-bold-font #:display:large-roman-font #:display:small-roman-font #:display:standard-foreground-pattern #:display:standard-background-pattern #:display:standard-medium-gray-pattern #:display:standard-light-gray-pattern #:display:standard-dark-gray-pattern #:display:standard-lelisp-cursor #:display:standard-gc-cursor #:display:standard-busy-cursor #:gell-resetfn:function-0 #:display:bitmap-save #:display:bitmap-restore #:display:prin #:gell-resetfn:function-2 #:display:store-selection #:display:get-selection #:display:display-depth #:display:synchronize #:display:default-window-type]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'virbitmap)))
+(add-feature 'virbitmap)
+(setq #:sys-package:colon 'display)
+(#:messages:put-message '#:display:errnotadisplay 'french '"n'est pas un dispositif d'affichage" 'defmessage)
+(#:messages:put-message '#:display:errnotadisplay 'english '"not a display" 'defmessage)
+'#:display:errnotadisplay
+(#:messages:put-message '#:display:not-a-color-display 'french '"ce n'est pas un dispositif d'affichage couleur" 'defmessage)
+(#:messages:put-message '#:display:not-a-color-display 'english '"not a color display" 'defmessage)
+'#:display:not-a-color-display
+(#:messages:put-message '#:display:errnotawindow 'french '"l'argument n'est pas une fene^tre" 'defmessage)
+(#:messages:put-message '#:display:errnotawindow 'english '"not a window" 'defmessage)
+'#:display:errnotawindow
+(#:messages:put-message '#:display:errnotawindowtype 'french '"l'argument n'est pas un type de fene^tre" 'defmessage)
+(#:messages:put-message '#:display:errnotawindowtype 'english '"not a window type" 'defmessage)
+'#:display:errnotawindowtype
+(#:messages:put-message '#:display:errnotabitmap 'french '"l'argument n'est pas un bitmap" 'defmessage)
+(#:messages:put-message '#:display:errnotabitmap 'english '"not a bitmap" 'defmessage)
+'#:display:errnotabitmap
+(#:messages:put-message '#:display:errnotamenu 'french '"l'argument n'est pas un menu" 'defmessage)
+(#:messages:put-message '#:display:errnotamenu 'english '"not a menu" 'defmessage)
+'#:display:errnotamenu
+(#:messages:put-message '#:display:errnotacolor 'french '"l'argument n'est pas une couleur" 'defmessage)
+(#:messages:put-message '#:display:errnotacolor 'english '"not a color" 'defmessage)
+'#:display:errnotacolor
+(#:messages:put-message '#:display:err-not-a-valid-pattern 'french '"l'argument n'est pas un motif" 'defmessage)
+(#:messages:put-message '#:display:err-not-a-valid-pattern 'english '"not a pattern" 'defmessage)
+'#:display:err-not-a-valid-pattern
+(#:messages:put-message '#:display:err-not-a-valid-mode 'french '"l'argument n'est pas un mode valide" 'defmessage)
+(#:messages:put-message '#:display:err-not-a-valid-mode 'english '"not a valid function" 'defmessage)
+'#:display:err-not-a-valid-mode
+(#:messages:put-message '#:display:err-not-a-line-style 'french '"l'argument n'est pas un style de ligne valide" 'defmessage)
+(#:messages:put-message '#:display:err-not-a-line-style 'english '"not a valid line style" 'defmessage)
+'#:display:err-not-a-line-style
+(#:messages:put-message '#:display:err-not-a-valid-cursor 'french '"l'argument n'est pas un curseur valide" 'defmessage)
+(#:messages:put-message '#:display:err-not-a-valid-cursor 'english '"not a valid cursor" 'defmessage)
+'#:display:err-not-a-valid-cursor
+(#:messages:put-message '#:display:err-not-a-valid-graph-env 'french '"l'argument n'est pas un environnement graphique valide" 'defmessage)
+(#:messages:put-message '#:display:err-not-a-valid-graph-env 'english '"not a valid graphic environment" 'defmessage)
+'#:display:err-not-a-valid-graph-env
+(#:messages:put-message '#:display:errnotafont 'french '"l'argument n'est pas un nume'ro de police de caracte`res" 'defmessage)
+(#:messages:put-message '#:display:errnotafont 'english '"not a valid font number" 'defmessage)
+'#:display:errnotafont
+(#:messages:put-message '#:display:err-not-a-font-name 'french '"l'argument n'est pas un nom de police de caracte`res" 'defmessage)
+(#:messages:put-message '#:display:err-not-a-font-name 'english '"not a valid font name" 'defmessage)
+'#:display:err-not-a-font-name
+(#:messages:put-message '#:display:errnotamutable 'french '"l'argument n'est pas une couleur modifiable" 'defmessage)
+(#:messages:put-message '#:display:errnotamutable 'english '"not a mutable color" 'defmessage)
+'#:display:errnotamutable
+(#:messages:put-message '#:display:errbitmapinuse 'french '"pattern utilise' comme motif ou curseur" 'defmessage)
+(#:messages:put-message '#:display:errbitmapinuse 'english '"bitmap used as a pattern or a cursor" 'defmessage)
+'#:display:errbitmapinuse
+(#:messages:put-message '#:display:errnotasaveddisplay 'french '"pas un display sauve' par BITMAP-SAVE" 'defmessage)
+(#:messages:put-message '#:display:errnotasaveddisplay 'english '"not a display saved by BITMAP-SAVE" 'defmessage)
+'#:display:errnotasaveddisplay
+(#:messages:put-message '#:display:not-yet-implemented 'french '"fonction non implemente'e" 'defmessage)
+(#:messages:put-message '#:display:not-yet-implemented 'english '"not implemented" 'defmessage)
+'#:display:not-yet-implemented
+(#:messages:put-message '#:display:not-a-valid-argument 'french '"parame`tre incorrect" 'defmessage)
+(#:messages:put-message '#:display:not-a-valid-argument 'english '"not a valid argument" 'defmessage)
+'#:display:not-a-valid-argument
+(#:messages:put-message '#:display:no-current-display 'french '"pas de dispositif d'affichage courant" 'defmessage)
+(#:messages:put-message '#:display:no-current-display 'english '"no current display" 'defmessage)
+'#:display:no-current-display
+(#:messages:put-message '#:display:no-current-window 'french '"pas de fene^tre courante" 'defmessage)
+(#:messages:put-message '#:display:no-current-window 'english '"no current window" 'defmessage)
+'#:display:no-current-window
+(#:messages:put-message '#:display:err-diff-display 'french '"les dispositifs d'affichage sont diffe'rents" 'defmessage)
+(#:messages:put-message '#:display:err-diff-display 'english '"displays are different" 'defmessage)
+'#:display:err-diff-display
+(#:messages:put-message '#:display:err-not-a-cursor-name 'french '"l'argument n'est pas un nom de curseur" 'defmessage)
+(#:messages:put-message '#:display:err-not-a-cursor-name 'english '"not a cursor name" 'defmessage)
+'#:display:err-not-a-cursor-name
+(defvar #:sys-package:bitmap (when (boundp '#:sys-package:bitmap) #:sys-package:bitmap))
+(defvar #:bitmap:name (when (boundp '#:bitmap:name) #:bitmap:name))
+(defvar #:display:default-bitmap 'bvtty)
+(defvar #:display:all-bitmaps (when (boundp '#:display:all-bitmaps) #:display:all-bitmaps))
+(defvar #:display:all-displays (when (boundp '#:display:all-displays) #:display:all-displays))
+(defvar #:window:prologuep (when (boundp '#:window:prologuep) #:window:prologuep))
+(defvar #:graph-env:main-graph-env (when (boundp '#:graph-env:main-graph-env) #:graph-env:main-graph-env))
+(defvar #:mode:set 3)
+(defvar #:mode:or 7)
+(defvar #:mode:xor 6)
+(defvar #:mode:not 12)
+(defcsetfn 'inibitmap "GZvirinit" 0)
+(defcsetfn 'bitprologue "GZvirinit" 1)
+(defcsetfn '#:display:bitprologue "GZvirinit" 2)
+(defcsetfn 'bitmap-save "GZvirinit" 3)
+(defcsetfn 'bitmap-restore "GZvirinit" 4)
+(defcsetfn 'bitepilogue "GZvirinit" 5)
+(defcsetfn '#:display:bitepilogue "GZvirinit" 6)
+(defcsetfn 'bitmap-refresh "GZvirinit" 7)
+(defcsetfn '#:display:bitmap-refresh "GZvirinit" 8)
+(defcsetfn 'bitmap-flush "GZvirinit" 9)
+(defcsetfn '#:display:bitmap-flush "GZvirinit" 10)
+(defcsetfn 'bitmap-sync "GZvirinit" 11)
+(defcsetfn '#:display:bitmap-sync "GZvirinit" 12)
+(defcsetfn 'standard-roman-font "GZvirinit" 13)
+(defcsetfn '#:display:standard-roman-font "GZvirinit" 14)
+(defcsetfn 'standard-bold-font "GZvirinit" 15)
+(defcsetfn '#:display:standard-bold-font "GZvirinit" 16)
+(defcsetfn 'large-roman-font "GZvirinit" 17)
+(defcsetfn '#:display:large-roman-font "GZvirinit" 18)
+(defcsetfn 'small-roman-font "GZvirinit" 19)
+(defcsetfn '#:display:small-roman-font "GZvirinit" 20)
+(defcsetfn 'standard-foreground-pattern "GZvirinit" 21)
+(defcsetfn '#:display:standard-foreground-pattern "GZvirinit" 22)
+(defcsetfn 'standard-background-pattern "GZvirinit" 23)
+(defcsetfn '#:display:standard-background-pattern "GZvirinit" 24)
+(defcsetfn 'standard-medium-gray-pattern "GZvirinit" 25)
+(defcsetfn '#:display:standard-medium-gray-pattern "GZvirinit" 26)
+(defcsetfn 'standard-light-gray-pattern "GZvirinit" 27)
+(defcsetfn '#:display:standard-light-gray-pattern "GZvirinit" 28)
+(defcsetfn 'standard-dark-gray-pattern "GZvirinit" 29)
+(defcsetfn '#:display:standard-dark-gray-pattern "GZvirinit" 30)
+(defcsetfn 'standard-lelisp-cursor "GZvirinit" 31)
+(defcsetfn '#:display:standard-lelisp-cursor "GZvirinit" 32)
+(defcsetfn 'standard-gc-cursor "GZvirinit" 33)
+(defcsetfn '#:display:standard-gc-cursor "GZvirinit" 34)
+(defcsetfn 'standard-busy-cursor "GZvirinit" 35)
+(defcsetfn '#:display:standard-busy-cursor "GZvirinit" 36)
+(defcsetfn 'bitxmax "GZvirinit" 37)
+(defcsetfn 'bitymax "GZvirinit" 38)
+(defcsetfn 'root-window "GZvirinit" 39)
+(defcsetfn 'standard-foreground "GZvirinit" 40)
+(defcsetfn 'standard-background "GZvirinit" 41)
+(defvar #:graph-env:current-graph-env (when (boundp '#:graph-env:current-graph-env) #:graph-env:current-graph-env))
+(defvar #:graph-env:main-graph-env (when (boundp '#:graph-env:main-graph-env) #:graph-env:main-graph-env))
+(defvar #:window:prologuep (when (boundp '#:window:prologuep) #:window:prologuep))
+(defcsetfn '#:display:bitmap-save "GZvirinit" 42)
+(defcsetfn '#:display:bitmap-restore "GZvirinit" 43)
+(defcsetfn '#:display:prin "GZvirinit" 44)
+(defcsetfn '#:display:current-display "GZvirinit" 45)
+(defcsetfn 'display-store-selection "GZvirinit" 46)
+(defcsetfn 'display-get-selection "GZvirinit" 47)
+(defcsetfn '#:display:store-selection "GZvirinit" 48)
+(defcsetfn '#:display:get-selection "GZvirinit" 49)
+(defcsetfn 'display-depth "GZvirinit" 50)
+(defcsetfn '#:display:display-depth "GZvirinit" 51)
+(defcsetfn 'display-synchronize "GZvirinit" 52)
+(defcsetfn '#:display:synchronize "GZvirinit" 53)
+(defcsetfn 'default-window-type "GZvirinit" 54)
+(defcsetfn '#:display:default-window-type "GZvirinit" 55)
+
+(defccheck '(#:llcp:errwna getsymb prin princn menu-insert-item menu-insert-item-list reverse create-menu exchvector window-bitmap current-cursor current-clip current-background current-foreground current-mode current-pattern current-line-style current-font make-window append1 windowp event-mode current-keyboard-focus-window make-named-cursor make-cursor make-pattern load-font create-stipple kill-bitmap bitblit create-bitmap type-of create-bytemap make-color make-mutable-color make-named-color standard-background standard-foreground root-window vector flush-event current-window small-roman-font large-roman-font standard-bold-font font-name standard-roman-font check-window-position delq #:bitmap:bytes append typep listp list current-display send new subtypep getfn1 acons loadfile probefile catenate symbol getenv))

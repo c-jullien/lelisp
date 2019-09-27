@@ -1,0 +1,68 @@
+SYSDIR=${SYSDIR:=/usr/ilog/lelisp/linux}
+BIN=cmplc++
+case $# in
+        0)      exec $SYSDIR/$BIN;;
+esac
+CPCMDFILE="/tmp/cp$$"
+files="" 
+trap "rm -f $CPCMDFILE; exit" 0 1 2 3 15
+CMDPA="(defvar #:complice:parano-flag "
+FLGPA="nil"
+CMDWN="(defvar #:complice:warning-flag "
+FLGWN="t"
+DEST=""
+LLPATH=""
+while test x$1 != x
+        do
+                case $1 in
+                        -parano) FLGPA=$2; shift;;
+                        -w)     FLGWN=$2; shift;;
+                        -v)     FLGPR="t";;
+                        -o)     DEST=$2; shift;;
+                        -p)     LLPATH="$LLPATH $2"; shift;;
+                        -i)     shift; exec $SYSDIR/$BIN $*;;
+                        -e)     echo $2 >> $CPCMDFILE; shift;;
+                        *)      files="$files $1" ;;
+                esac
+                shift
+        done
+echo $CMDPA $FLGPA ")" >> $CPCMDFILE
+echo $CMDWN $FLGWN ")" >> $CPCMDFILE
+echo "(setq #:system:path (append '(" $LLPATH ") #:system:path))" >>$CPCMDFILE
+echo "(defun #:complice:declareglobalvar (s)" >>$CPCMDFILE
+echo "   (putprop s 't '#:complice:globalvar) )" >>$CPCMDFILE
+echo "(defun compilemoduleext (m)" >>$CPCMDFILE
+echo "   (mapc" >>$CPCMDFILE
+echo "      (lambda (f)" >>$CPCMDFILE
+echo "         (unless (eq f 'compiler)" >>$CPCMDFILE
+echo "            (packagecell f 'dont-touch-me) ))" >>$CPCMDFILE
+echo "      (getdefmodule (readdefmodule m) 'export) )" >>$CPCMDFILE
+echo "   (compilemodule m))" >>$CPCMDFILE
+echo "(de user-interrupt () (end 2))" >> $CPCMDFILE
+echo "(de syserror (f m b)" >> $CPCMDFILE
+echo "   (print \" ** \" f \" : \" m \" : \" b) (end 1))" >> $CPCMDFILE
+for i in $files
+        do
+        echo "(compilemoduleext '" $i ")" >> $CPCMDFILE
+        done
+echo "(end ())" >> $CPCMDFILE
+case $FLGPR in
+        t)      cat $CPCMDFILE;;
+esac
+export CPCMDFILE
+if $SYSDIR/$BIN
+	then
+		status=0
+		if test x$DEST != x
+		        then
+                		for i in $files
+	                        do
+	                        mv $i.lo $DEST/$i.lo
+	                        done
+		fi
+	else
+		status=1
+fi
+cat $CPCMDFILE
+rm -f $CPCMDFILE
+exit $status

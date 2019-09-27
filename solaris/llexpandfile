@@ -1,0 +1,8 @@
+lelisp+ -r ../llcore/expdibm.core <<EOI
+(with ((inchan (openi "$1"))
+       (outchan (openo "$2")))
+   (let ((#:status:print-flag t)(genlab-counter 0)(in-if-stack '(t))
+         (flag-pseudo ()) )
+      (#:llm3:process-one-file '#:expand:apply-ins)))
+(end)
+EOI

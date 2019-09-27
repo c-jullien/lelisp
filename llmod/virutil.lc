@@ -1,0 +1,27 @@
+defmodule
+virutil
+files (
+|virstruct.ll|
+|virutil.ll|
+)
+export (
+current-display
+#:image:rectangle:make
+#:image:rectangle:window:make
+#:menu:make
+#:menu:item:make
+#:menu:itemlist:make
+#:graph-env:make
+#:color:make
+#:bitmap:make
+#:bitmap:stipple:make
+#:bitmap:bytemap:make
+#:window:background
+#:font-info:make
+#:event:make
+)
+import
+()
+include (
+|virmacros.ll|
+)

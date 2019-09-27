@@ -1,0 +1,18 @@
+This is TeX, C Version 3.14t3 (format=lplain 93.4.28)  1 DEC 1993 18:32
+**&lplain ll2lm
+(ll2lm
+LaTeX Version 2.09 <7 Dec 1989>
+! You can't use `macro parameter character #' in vertical mode.
+l.1 #
+     !/bin/sh
+? x
+ 
+Here is how much of TeX's memory you used:
+ 3 strings out of 4463
+ 19 string characters out of 63221
+ 22848 words of memory out of 262141
+ 1972 multiletter control sequences out of 9500
+ 18996 words of font info for 72 fonts, out of 72000 for 255
+ 14 hyphenation exceptions out of 607
+ 4i,0n,1p,27b,7s stack positions out of 300i,40n,60p,3000b,4000s
+No pages of output.

@@ -1,0 +1,4386 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+
+
+ INRIA
+ Domaine de Voluceau
+ Rocquencourt
+ 78153 Le Chesnay Cedex
+
+
+
+
+
+
+                       Programmer en Ceyx
+
+
+
+                        Ceyx - Version 15
+
+
+
+
+                        Jean-Marie Hullot
+
+                            Ete' 1984
+
+
+
+
+
+
+Re'sume': _C_e_y_x _e_s_t _u_n _e_n_s_e_m_b_l_e _d'_o_u_t_i_l_s _p_e_r_m_e_t_t_a_n_t _d_e _f_a_c_i_l_i_t_e_r  _l_a
+_t_a^_c_h_e  _d_e_s  _p_r_o_g_r_a_m_m_e_u_r_s  _L_i_s_p  _p_o_u_r  _d_e'_f_i_n_i_r  _e_t  _m_a_n_i_p_u_l_e_r  _d_e_s
+_s_t_r_u_c_t_u_r_e_s _a_r_b_i_t_r_a_i_r_e_s. _A_u_x  _s_t_r_u_c_t_u_r_e_s  _d_e'_f_i_n_i_e_s  _e_n  _C_e_y_x  _s_o_n_t
+_a_s_s_o_c_i_e'_e_s  _d_e_s  _e_s_p_a_c_e_s  _s_e'_m_a_n_t_i_q_u_e_s, _o_r_g_a_n_i_s_e'_s _h_i_e'_r_a_r_c_h_i_q_u_e_m_e_n_t,
+_d_a_n_s _l_e_s_q_u_e_l_s _s_o_n_t _r_a_n_g_e'_e_s _l_e_s _f_o_n_c_t_i_o_n_s _d_e _m_a_n_i_p_u_l_a_t_i_o_n  _p_r_o_p_r_e_s
+_a`  _c_e_s _s_t_r_u_c_t_u_r_e_s. _U_n _s_t_y_l_e _d_e _p_r_o_g_r_a_m_m_a_t_i_o_n _o_r_i_e_n_t_e'_e _o_b_j_e_t_s _a` _l_a
+_S_m_a_l_l_T_a_l_k _e_s_t _a_i_n_s_i _r_e_n_d_u _p_o_s_s_i_b_l_e.
+
+_C_e_y_x _e_s_t  _i_m_p_l_e'_m_e_n_t_e'  _e_n  _L_e__L_i_s_p  _e_t  _f_o_n_c_t_i_o_n_n_e  _d_o_n_c  _s_u_r  _l_e_s
+_n_o_m_b_r_e_u_s_e_s  _m_a_c_h_i_n_e_s  _o_u`  _c_e _s_y_s_t_e`_m_e _e_s_t _i_m_p_l_a_n_t_e'. _N_o_n _c_o_m_p_i_l_e' _i_l
+_o_c_c_u_p_e _3_0_0_0 _c_e_l_l_u_l_e_s _c_o_n_s _d_a_n_s _s_a _v_e_r_s_i_o_n _m_i_n_i_m_a_l_e _e_t  _8_0_0_0  _d_a_n_s
+_s_a   _v_e_r_s_i_o_n   _c_o_m_p_l_e`_t_e   _a_v_e_c  _l_a  _b_i_l_i_o_t_h_e`_q_u_e  _i_n_i_t_i_a_l_e  _e_t  _l_e
+_p_r_e'_c_o_m_p_i_l_a_t_e_u_r.
+
+                                2         Mercredi 3 Octobre 1984
+
+
+
+
+
+_C_e _d_o_c_u_m_e_n_t _e_s_t _l_e _m_a_n_u_e_l _p_r_o_g_r_a_m_m_e_u_r _C_e_y_x. _T_o_u_t_e_s _l_e_s  _f_o_n_c_t_i_o_n_s
+_d_u  _s_y_t_e`_m_e  _y  _s_o_n_t  _d_o_c_u_m_e_n_t_e'_e_s  _e_t  _d_e _n_o_m_b_r_e_u_x _p_r_o_g_r_a_m_m_e_s _s_o_n_t
+_p_r_e'_s_e_n_t_e'_s _e_n _a_n_n_e_x_e.
+
+Mots Clefs: _L_i_s_p, _L_e__L_i_s_p.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                3         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                4         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+_V_o_u_l_o_i_r _t_e_n_i_r _u_n_e _c_o_u_p_e _e_t _l'_e_m_p_l_i_r _p_l_u_s _q_u'_a` _r_a_s _b_o_r_d,
+                                    _c'_e_s_t _p_e_i_n_e _p_e_r_d_u_e.
+       _V_o_u_l_o_i_r _m_a_n_i_e_r _u_n _o_u_t_i_l _e_t _s_a_n_s _c_e_s_s_e _l'_a_f_f_i_l_e_r,
+                       _c_e_l_a _n_e _s_a_u_r_a_i_t _d_u_r_e_r _l_o_n_g_t_e_m_p_s.
+
+                                               Lao Tseu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                5         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                6         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+                          Avertissement
+
+
+
+
+
+Ce document constitue le manuel programmeur Ceyx.  Si  vous  e^tes
+de'butant  en  Ceyx,  consultez  d'abord  le manuel d'initiation a`
+Ceyx, disponible comme rapport INRIA:
+
+o+ _C_e_y_x: _U_n_e _I_n_i_t_i_a_t_i_o_n, (J.-M. Hullot).
+
+Programmer en Ceyx, c'est d'abord programmer en  Lisp.  Ceyx  est
+e'crit  en Le_Lisp, il serait donc bon aussi que vous ayez sous la
+main le manuel Le_Lisp, e'galement disponible comme rapport INRIA:
+
+o+ _L_e__L_i_s_p _d_e _l'_I_N_R_I_A, _L_e _M_a_n_u_e_l _d_e _R_e'_f_e'_r_e_n_c_e, (J. Chailloux).
+
+Enfin, vous trouverez dans les rapports suivants la documentation
+de processeurs spe'cialise's Ceyx:
+
+o+ _V_p_r_i_n_t, _L_e _C_o_m_p_o_s_e_u_r _C_e_y_x, (G. Berry, J.-M. Hullot),
+
+o+ _C_X_Y_A_C_C _e_t _L_E_X-_K_I_T, (G. Berry, B.Serlet).
+
+
+
+
+
+
+
+
+
+
+
+
+                                7         Mercredi 3 Octobre 1984
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                8         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+
+
+                       C H A P I T R E  1
+
+
+                           Les Mode`les
+
+
+
+
+                        _J_e_a_n-_M_a_r_i_e _H_u_l_l_o_t
+
+
+
+
+1.1  Introduction
+
+Les structures de donne'es fournies par une incarnation du langage
+Lisp telle que Le_Lisp peuvent e^tre groupe'es en deux familles:
+
+ o+ les structures atomiques: symbol, fix, float, string;
+ o+ les structures composites: cons, vector.
+
+Le but premier de Ceyx est de:
+
+ o+ cre'er de nouvelles structures de donne'es  par  composition  de
+ces structures primitives, et de leur associer un nom;
+ o+  de'finir  automatiquement  des  fonctions  Lisp  de   cre'ation
+d'instances de ces structures,
+ o+ de'finir automatiquement des fonctions d'acce`s en lecture et en
+e'criture aux composantes des instances.
+
+Associer a` un  nom  struct  une  de'finition  de  mode`le  consiste
+essentiellement a` associer a` ce nom un _m_o_d_e`_l_e _d_e _s_t_r_u_c_t_u_r_e, c'est
+a` dire une information telle que:
+
+
+(defmodel struct (Cons symbol (Vector fix fix cons)))
+
+
+
+
+                                9         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+pour dire que toutes les instances de ce mode`le sont une  cellule
+cons  dont le car est un symbole, le cdr un vecteur de longueur 3
+dont la premie`re composante est  un  petit  entier  (fixnum),  la
+seconde un petit entier, et la troisie`me une cellule cons.
+
+Le proble`me qui apparait rapidement losqu'on  utilise  ainsi  des
+structures  de  donne'es  ba^ties a` partir de structures primitives
+est un proble`me d'acce`s aux diffe'rentes composantes des instances
+de  ces  structures.  Au  fur  et  a` mesure que la complexite' des
+structures croi^t, la longueur des chai^nes d'acce`s en car/cdr/vref
+croi^t  et  la  lisibilite' de'croi^t. Pour re'soudre ce proble`me Ceyx
+donne la possibilite'  de  nommer  les  composantes  auquelles  on
+de'sire acce'der lors de la de'finition du mode`le:
+
+
+(defmodel struct
+     (Cons (Field nom symbol)
+           (Vector (Field x fix)
+                   (Field y fix)
+                   (Field obj cons))))
+
+Une fonction Lisp de nom 'mkstruct' a` 3 arguments  x,  y  et  obj
+permettant  d'engendrer  des  instances du mode`le struct dont les
+champs x y et obj ont des valeurs donne'es est de'finie par:
+
+
+(defmake struct mkstruct (x y obj))
+
+Les  fonctions   d'acce`s   en   lecture/e'criture   aux   diverses
+composantes des instances sont de'finies par
+
+
+(defaccess struct)
+
+Ces fonctions portent les noms des divers champs du  mode`le  mais
+sont interne'es dans l'espace de noms (package) associe' au symbole
+struct
+
+
+#:struct:nom
+#:struct:x
+
+                               10         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+#:struct:y
+#:struct:obj
+
+Ces fonctions prennent toutes un ou deux arguments; dans  le  cas
+d'un  seul  argument  elles  permettent de consulter la valeur du
+champ voulu de l'objet passe' en argument; dans  le  cas  de  deux
+elles  permettent  de  remplacer  la valeur stocke'e dans le champ
+voulu de  l'objet  premier  argument  par  la  valeur  passe'e  en
+deuxie`me argument.
+
+Exemples
+
+? (setq x (mkstruct 1 2 '(a . b)))
+= (() . #[1 2 (a . b)])
+? (#:struct:nom x 'toto)
+= (toto . #[1 2 (a . b)])
+? (#:struct:nom x)
+= toto
+? (#:struct:x x)
+= 1
+? (#:struct:y x)
+= 2
+
+
+
+
+1.2  Le Langage de Description de Mode`les
+
+
+1.2.1  Syntaxe
+
+Nous dirons qu'un symbole <symbol> _a _u_n_e _v_a_l_e_u_r _d_e _m_o_d_e`_l_e  si  et
+seulement si <symbol> a e'te' de'clare' par:
+
+
+(defmodel <symbol> <model>)
+
+Nous appelons _m_o_d_e`_l_e toute s-sexpression de la forme:
+
+<model> =   <modelname>
+            |<field>
+
+                               11         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+            |(Predicate <symbol> <sexpr>)
+            |(List <model>)
+            |(Cons <model>1 <model>2)
+            |(Vector <model>1 ... <model>n)
+            |<modelx>
+
+<modelname> = <symbol> ayant une valeur de mode`le
+
+<field> =   (Field <symbol> <model> <sexpr>)
+            |(Field <symbol> <model>)
+            |(Field <symbol>)
+
+ou` <modelx> de'signe les macromode`les qui seront de'finis plus loin
+et <sexpr> les s-expressions Lisp de'finies par:
+
+<sexpr> =   (<sexpr>1 . <sexpr>2)
+            |#[<sexpr>1 ... <sexpr>n]
+            |<symbol>
+            |<string>
+            |<fix>
+            |<float>
+
+Exemples
+
+? (defmodel symbol   (Predicate symbolp 'nil))
+= symbol
+? (defmodel cons     (Cons (Field car) (Field cdr)))
+= cons
+? (defmodel number   (Predicate numberp 0))
+= number
+? (defmodel lnumber  (List number))
+= lnumber
+? (defmodel point    (Cons (Field x number 0) (Field y number 0)))
+= point
+? (defmodel segment  (Vector
+                         (Field org
+                                (Cons (Field xorg number 0)
+                                      (Field yorg number 0)))
+                         (Field ext
+                                (Cons (Field xext number 0)
+                                      (Field yext number 0))))
+
+                               12         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+= segment
+
+
+1.2.2  Se'mantique
+
+
+1.2.2.1  Discrimination
+
+Les mode`les sont d'abord des  _s_c_h_e'_m_a_s  _d_e  _f_i_l_t_r_a_g_e  de  <sexpr>.
+Ainsi nous dirons que le mode`le
+
+
+(Predicate symbolp ())
+
+_f_i_l_t_r_e toutes les <sexpr> telles que
+
+
+(symbolp <sexpr>) =/ ()
+
+et que le mode`le
+
+
+(Cons symbol (Vector cons symbol))
+
+_f_i_l_t_r_e toutes les <sexpr> de la forme
+
+
+(<symbol> . #[(<sexpr> . <sexpr>) <symbol>])
+
+Plus ge'ne'ralement, nous dirons qu'un mode`le model _f_i_l_t_r_e  une  s-
+expression  sexpr  ou,  de manie`re e'quivalente, que sexpr _e_s_t _u_n_e
+_i_n_s_t_a_n_c_e de model si et seulement si:
+
+
+
+
+
+
+
+
+
+
+                               13         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+   ___________________________________________________________
+                       model _f_i_l_t_r_e sexpr
+              model                       condition
+   ______________________________________________________________________________________________________________________
+    modelname
+
+                                 la valeur de  mode`le  de
+                                 modelname _f_i_l_t_r_e sexpr
+   ___________________________________________________________
+    (Field symbol)
+   ___________________________________________________________
+    (Field symbol model1 ...)    model1 _f_i_l_t_r_e sexpr
+   ___________________________________________________________
+    (Predicate fun init)         (funcall fun sexpr) =/ ()
+   ___________________________________________________________
+    (List model1)
+
+                                 sexpr = (sexpr1 ... sexprn)
+                                 model1 _f_i_l_t_r_e sexpri
+   ___________________________________________________________
+    (Cons model1 model2)
+
+                                 sexpr = (sexpr1 . sexpr2)
+                                 model1 _f_i_l_t_r_e sexpr1
+                                 model2 _f_i_l_t_r_e sexpr2
+   ___________________________________________________________
+    (Vector model1 ... modeln)
+
+                                 sexpr = #[sexpr1 ... sexprn]
+                                 modeli _f_i_l_t_r_e sexpri
+   ___________________________________________________________
+
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+  |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+                              |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+                                                             |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Exemples
+
+symbol    _f_i_l_t_r_e   car
+cons      _f_i_l_t_r_e   (1 . 2)
+lnumber   _f_i_l_t_r_e   (1 2 3 4)
+point     _f_i_l_t_r_e   (1 . 2)
+segment   _f_i_l_t_r_e   #[(0 . 0) (10 . 90)]
+
+A cette relation de filtrage,  nous  associons  une  construction
+Lisp:
+
+
+
+
+
+
+
+
+                               14         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+(omatchq <modelname> <sexpr>)
+
+   Cette fonction, qui n'e'value pas son premier argument, renvoie
+   une  valeur  diffe'rente  de  () si et seulement si <modelname>
+   _f_i_l_t_r_e <sexpr>.
+
+
+Exemples
+
+
+? (omatchq symbol 'car)
+= t
+? (omatchq number 'car)
+= ()
+? (omatchq number 1)
+= 1
+? (omatchq lnumber '(1 2 3 4))
+= t
+? (omatchq lnumber '(1 2 a 3))
+= ()
+? (omatchq point '(1 . 2))
+= 2
+? (omatchq point 'a)
+= ()
+? (omatchq segment '#[(0 . 0) (10 . 90)])
+= t
+? (omatchq segment '#[(0 . 1) (a . 0)])
+= ()
+? (de always-true (x) t)
+= always-true
+? (defmodel * (Predicate always-true ()))
+= *
+? (omatchq * '(1 #[1 (2 . 3)]))
+= t
+
+
+
+
+
+
+
+
+                               15         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+1.2.2.2  De'structuration
+
+Les mode`les  sont  ensuite  des  _s_c_h_e'_m_a_s  _d_e  _d_e'_s_t_r_u_c_t_u_r_a_t_i_o_n  de
+<sexpr>.   Nous  dirons  que  symbol  _e_s_t _u_n _c_h_a_m_p de model si et
+seulement si:
+
+ _______________________________________________________________
+                  symbol _e_s_t _u_n _c_h_a_m_p de model
+            model                         condition
+ ______________________________________________________________________________________________________________________________
+  modelname
+
+                               symbol _e_s_t _u_n _c_h_a_m_p de la
+                               valeur   de   mode`le   de
+                               modelname
+ _______________________________________________________________
+  (Field symbol1)              (eq symbol symbol1)
+ _______________________________________________________________
+  (Field symbol1 model1 ...)
+
+                               ou (eq symbol symbol1)
+                               ou symbol _e_s_t _u_n _c_h_a_m_p de model1
+ _______________________________________________________________
+  (Cons model1 model2)
+
+                               ou symbol _e_s_t _u_n _c_h_a_m_p de model1
+                               ou symbol _e_s_t _u_n _c_h_a_m_p de model2
+ _______________________________________________________________
+  (Vector model1 ... modeln)
+
+                               ou symbol _e_s_t _u_n _c_h_a_m_p de model1
+                                     ...
+                               ou symbol _e_s_t _u_n _c_h_a_m_p de modeln
+ _______________________________________________________________
+
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+                                                               |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Dans les cas ou` modeli est un nom de  mode`le  modelname,  on  ne
+descend pas dans la valeur de mode`le de modelname.
+
+Exemples
+
+car    _e_s_t _u_n _c_h_a_m_p   de cons
+x      _e_s_t _u_n _c_h_a_m_p   de point
+org    _e_s_t _u_n _c_h_a_m_p   de segment
+xext   _e_s_t _u_n _c_h_a_m_p   de segment
+
+Dans le cas ou` une s-expression <sexpr> _e_s_t  _i_n_s_t_a_n_c_e  du  mode`le
+<model> et ou` le symbole <symbol> _e_s_t _u_n _c_h_a_m_p du mode`le <model>,
+nous de'finissons  la  valeur  du  champ  <symbol>  de  l'instance
+
+                               16         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+<sexpr>:
+
+_______________________________________________________________________________________________
+                          valeur d'un champ = f (model symbol sexpr)
+           model                        condition                          valeur
+______________________________________________________________________________________________________________________________________________________________________________________________
+ modelname
+
+                                                              f (valeur de mode`le de model1
+                                                                       symbol
+                                                                       sexpr)
+_______________________________________________________________________________________________
+ (Field symbol1 ...)          (eq symbol symbol1)             sexpr
+_______________________________________________________________________________________________
+ (Field symbol1 model1 ...)   (neq symbol symbol1)            f (model1 symbol sexpr)
+_______________________________________________________________________________________________
+ (Cons model1 model2)         symbol _e_s_t _u_n _c_h_a_m_p de model1   (car f (model1 symbol sexpr))
+_______________________________________________________________________________________________
+ (Cons model1 model2)         symbol _e_s_t _u_n _c_h_a_m_p de model2   (cdr f (model1 symbol sexpr))
+_______________________________________________________________________________________________
+ (Vector model1 ... modeln)   symbol _e_s_t _u_n _c_h_a_m_p de modeli   (vref i f (modeli symbol sexpr))
+_______________________________________________________________________________________________
+
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+                           |
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+                                                           |
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+                                                                                              |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ou` car,cdr et vref sont  les  constructions  Lisp  permettant  de
+de'structurer les cellules cons et les cellules vectors.
+
+Nous donnons des constructions Lisp permettant de consulter ou de
+modifier des valeurs de champs.
+
+(ogetq <modelname> <fieldname> <sexpr>)
+
+   Les deux premiers arguments ne sont pas e'value's,  <sexpr>  _e_s_t
+   _i_n_s_t_a_n_c_e  de  <modelname>  et  <fieldname>  _e_s_t  _u_n  _c_h_a_m_p  de
+   <modelname>. Cette construction rame`ne en valeur la valeur  du
+   champ <fieldname> de l'instance <sexpr>.
+
+(oputq <modelname> <fieldname> <sexpr> <val>)
+
+   Les deux premiers arguments ne sont pas e'value's,  <sexpr>  _e_s_t
+   _i_n_s_t_a_n_c_e  de  <modelname>  et  <fieldname>  _e_s_t  _u_n  _c_h_a_m_p  de
+   <modelname>. Cette construction met dans la  valeur  du  champ
+   <fieldname>  de l'instance <sexpr> la s-expression <val>. Ceci
+   est re'alise' par les fonctions idoines de modification physique
+
+                               17         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+   rplaca, rplacd et vset.
+
+
+Exemples
+
+
+? (setq p '(1 . 2))
+= (1 . 2)
+? (ogetq point x p)
+= 1
+? (oputq point y p 25)
+= (1 . 25)
+? (ogetq point y p)
+= 25
+? (setq p1 '(10 . 10))
+= (10 . 10)
+? (setq seg (vector p p1))
+= #[(1 . 25) (10 . 10)]
+? (ogetq segment org seg)
+= (1 . 25)
+? (ogetq segment xorg seg)
+= 1
+? (oputq segment xorg seg 22)
+= (22 . 25)
+? seg
+= #[(22 . 25) (10 . 10)]
+? (ogetq segment ext seg)
+= (10 . 10)
+
+
+
+1.2.2.3  Instantiation
+
+
+Les mode`les sont enfin des _s_c_h_e'_m_a_s  _d_e  _c_o_n_s_t_r_u_c_t_i_o_n  des  sexpr.
+Nous de'finissons la valeur par de'faut d'un mode`le:
+
+
+
+
+
+
+                               18         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+____________________________________________________________________________
+                               de'faut (model)
+            model                                 valeur
+________________________________________________________________________________________________________________________________________________________
+ modelname                     de'faut (valeur de mode`le de modelname)
+____________________________________________________________________________
+ (Field symbol)                ()
+____________________________________________________________________________
+ (Field symbol model1)         de'faut (model1)
+____________________________________________________________________________
+ (Field symbol model1 sexpr)   (eval sexpr)
+____________________________________________________________________________
+ (Predicate fun init)          (eval init)
+____________________________________________________________________________
+ (List model1)                 ()
+____________________________________________________________________________
+ (Cons model1 model2)          (cons de'faut (model1) de'faut (model2))
+____________________________________________________________________________
+ (Vector model1 ... modeln)    (vector de'faut (model1) ... de'faut (modeln))
+____________________________________________________________________________
+
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+                            |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+                                                                           |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ sauf dans le cas ou` modeli est un  nom  de  mode`le,  auquel  cas
+cette valeur par de'faut vaut ().
+
+ou` cons et vector sont les fonctions Lisp de cre'ation de cellules
+cons et de vectors.
+
+
+Exemples
+
+de'faut (symbol)    =   nil
+de'faut (cons)      =   (())
+de'faut (number)    =   0
+de'faut (lnumber)   =   ()
+de'faut (point)     =   (0 . 0)
+de'faut (vector)    =   #[(0 . 0) . (0 . 0)]
+
+
+Nous de'finissons une construction Lisp permettant  de  cre'er  des
+instances de mode`les.
+
+
+                               19         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+
+(omakeq  <modelname>  <fieldname>1  <sexpr>1   ...   <fieldname>n
+   <sexpr>n)
+
+   Ni <modelname>, ni les <fieldname>i  ne  sont  e'value's.  Cette
+   fonction  rame`ne en valeur une instance de <modelname> qui est
+   une copie de de'faut (<modelname>) dont les champs <fieldname>i
+   ont e'te' mis aux valeurs <sexpr>i.
+
+Nous de'finissons e'galement une version restreint qui  e'value  son
+argument:
+
+(omake <modelname>)
+
+   Cette fonction rame`ne en valeur une  instance  de  <modelname>
+   qui est une copie de de'faut (<modelname>).
+
+   Exemples
+
+
+   ? (omakeq symbol)
+   = nil
+   ? (omakeq number)
+   = 0
+   ? (omakeq segment)
+   = #[(0 . 0) (0 . 0)]
+   ? (omake 'segment)
+   = #[(0 . 0) (0 . 0)]
+   ? (setq seg (omakeq segment xorg 10 yorg 20 xext 30 yext 40))
+   = #[(10 . 20) (30 . 40)]
+   ? (ogetq segment org seg)
+   = (10 . 20)
+   ? (setq seg1 (omakeq segment org (omakeq point x 0 y 0)
+   ?                            xext 3 yext 4)))
+   = #[(0 . 0) (3 . 4)]
+
+
+
+
+
+
+
+                               20         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+1.2.3  Les Macro Mode`les
+
+
+Nous de'finissons des nouvelles expressions de  notre  langage  de
+mode`les: les macro mode`les <modelx>.
+
+<modelx> =
+
+             (Alter <model>
+                    <fieldname>1 <model>1
+                         ...
+                    <fieldname>n <model>n)
+             (Include <modelname>)
+
+
+             (Extend <model>
+                     <fieldname>1 (Vector <model>11 ... <model>p1)
+                         ...
+                     <fieldname>n (Vector <model>1n ... <model>pn))
+
+Ces mode`les portent le nom de _m_a_c_r_o mode`les  car,  avant  de  les
+interpre'ter,  Ceyx  leur applique une expansion, c'est a` dire une
+transformation de ces expressions dans le langage de  mode`les  de
+base.  Leur  se'mantique sera donc parfaitement de'fini lorsque que
+nous aurons de'crit la re`gle d'expansion.
+
+Dans ce qui suit, les <fieldname>i  _s_o_n_t  _d_e_s  _c_h_a_m_p_s  du  mode`le
+<model>.
+
+_________________________________________________________________________________________
+                               Expansion des Macro Mode`les
+                   Mode`le                                      Expansion
+__________________________________________________________________________________________________________________________________________________________________________________
+
+
+ (Alter <model>
+        <fieldname>1 <model>1
+             ...
+        <fieldname>n <model>n)
+
+
+
+
+                                               <model> ou` (Field <fieldname>i ...)
+                                               est remplace' par <model>i
+
+
+_________________________________________________________________________________________
+ (Include <modelname>)                         valeur de mode`le de <modelname>
+_________________________________________________________________________________________
+
+
+
+
+
+
+                               21         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+
+
+ (Extend <model>
+         <fieldname>1
+           (Vector <model>11 ... <model>p1)
+             ...
+         <fieldname>n
+           (Vector <model>1n ... <model>qn))
+
+
+
+
+
+
+                                               <model> ou`
+                                               (Field <fieldname>i
+                                                      (Vector <model>1i' ... <model>ri')
+                                                      ...)
+                                               est remplace' par
+                                               (Field <fieldname>i
+                                                      (Vector <model>1i' ... <model>ri'
+                                                              <model>1i  ... <model>mi))
+_________________________________________________________________________________________
+
+
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+                                            |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+                                                                                        |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+On notera que pour la construction Extend, l'expansion ne peut se
+faire que si les champs a` e'tendre sont de'ja` des vectors.
+
+On  comprendra  ces  constructions  sans  difficulte's   sur   des
+exemples.
+
+Exemples
+
+
+? (defmodel bipoint
+?           (Alter point
+?                  x (Field org
+?                           (Alter point
+?                                  x (Field xorg number 0)
+?                                  y (Field yorg number 0)))
+?                  y (Field ext
+?                           (Alter point
+?                                  x (Field xext number 0)
+?                                  y (Field yext number 0)))))
+= bipoint
+? (setq bipoint (omakeq bipoint xorg 1 yorg 2 ext (omakeq point)))
+= ((1 . 2) 0 . 0)
+? (oputq bipoint xext bipoint 4)
+= (4 . 0)
+? (ogetq bipoint org bipoint)
+= (1 . 2)
+? (defmodel named-point
+?           (Cons (Field name) (Field point (Include point))))
+= named-point
+? (omakeq named-point name 'p x 1 y 2)
+= (p 1 . 2)
+
+                               22         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+? (defmodel A (Field attributs (Vector)))
+= A
+? (omakeq A)
+= #[]
+? (defmodel A1
+?           (Extend A
+?                   attributs (Vector (Field a1))))
+= A1
+? (omakeq A1 a1 1)
+= #[1]
+? (omatchq A (omakeq A1))
+= t
+? (omatchq A1 (omakeq A))
+= ()
+? (defmodel A3
+?           (Extend A1
+?                   attributs (Vector (Field a2) (Field a3))))
+= A3
+? (setq a (omakeq A3 a1 1 a2 2 a3 3))
+= #[1 2 3]
+? (ogetq A3 a1 a)
+= 1
+? (omatchq A1 a)
+= t
+? (ogetq A1 a1 a)
+= 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                               23         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+1.3  De'finition de Mode`les
+
+
+Nous de'finissons  dans  cette  partie  trois  constructions  Lisp
+fondamentales   pour   le   programmeur   Ceyx.   Il  s'agit  des
+constructions:
+
+o+ defmodel, qui associe a`  un  symbole  Lisp  une  de'finition  de
+mode`le;
+
+o+ defaccess, qui de'finit des fonctions Lisp permettant  d'acce'der
+en  lecture/e'criture  aux  valeurs  des champs des instances d'un
+mode`le.  Pour  des  commodite's  d'e'criture,  il  est   pre'fe'rable
+d'utiliser ces fonctions que les constructions ge'ne'rales ogetq et
+oputq;
+
+o+ defmake, qui de'finit une fonction Lisp de cre'ation  d'instances
+d'un  mode`le, prenant comme argument un sous-ensemble se'lectionne'
+de ses champs. Encore une fois il est pre'fe'rable  d'utiliser  des
+fonctions de cre'ation ainsi de'finies que la construction ge'ne'rale
+omakeq.
+
+
+1.3.1  La Construction defmodel
+
+
+Nous avons de'ja` rencontre' et utilise'  la  construction  defmodel,
+qui  est  en  quelque  sorte  la  primitive d'affectation dans le
+langage  de  mode`les.  Nous  la  de'finissons  ici  en  tant   que
+construction Lisp.
+
+(defmodel <name> <model>)
+
+   Cette fonction, qui n'e'value aucun de ses  arguments,  associe
+   au symbole <name> une valeur de mode`le <model>.
+    De manie`re interne une certaine repre'sentation de <model> est
+   place'e dans le champ objval de <name>.
+
+
+
+
+
+                               24         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+Nous avons de'ja` donne' de nombreux exemples d'utilisation de cette
+construction dans les sections pre'ce'dentes.
+
+Exemples
+
+
+? (defmodel fiche
+?           (Cons
+?              (Cons (Field nom symbol)
+?                    (Field prenom symbol))
+?              (Cons (Field adresse string)
+?                    (Field attributs (Vector)))))
+= fiche
+? (setq fiche-monsieur (omakeq fiche nom 'Jacquemart prenom 'Marcel))
+= ((Jacquemart . Marcel) () . #[])
+
+
+
+1.3.2  La Construction defaccess
+
+
+(defaccess <modelname> <fieldname>1 ... <fieldname>n)
+
+   Aucun argument n'est e'value'. Cette  construction  ame`ne  a`  la
+   de'finition     des     n     fonctions    d'acce`s    de    nom
+   #:<modelname>:<fieldname>i, i.e. <fieldname>i dans l'espace de
+   noms   (package)   <modelname>.   Ces  fonctions  prennent  un
+   (lecture)  ou  deux  (e'criture)  arguments,  elles  permettent
+   d'acce'der  en  lecture/e'criture  aux  valeurs  des  champs  de
+   l'instance de <modelname> passe'e en argument.
+    Dans le cas ou` n=0 (pas de nom de champ passe'  en  argument),
+   les  fonctions  d'acce`s  a` tous les champs de <modelname> sont
+   engendre'es.
+
+
+
+Exemples
+
+
+? fiche-monsieur
+= ((Jacquemart . Marcel) () . #[])
+
+                               25         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+? (defaccess fiche nom prenom adresse)
+= fiche
+? ; Les fonctions de'finies par cet appel sont:
+? ;
+? ; #:fiche:nom
+? ; #:fiche:prenom
+? ; #:fiche:adresse
+? ({fiche}:nom fiche-monsieur)
+= Jacquemart
+? ({fiche}:prenom fiche-monsieur)
+= Marcel
+? ({fiche}:adresse fiche-monsieur "Sans domicile fixe")
+= (Sans domicile fixe . #[])
+? ({fiche}:adresse fiche-monsieur)
+= Sans domicile fixe
+? fiche-monsieur
+= ((Jacquemart . Marcel) Sans domicile fixe . #[])
+? (defmodel point (Cons (Field x number 0) (Field y number 0)))
+= point
+? (defaccess point)
+= point
+? ; Les fonctions de'finies par cet appel sont:
+? ;
+? ; #:point:x
+? ; #:point:y
+
+
+
+1.3.3  La Construction defmake
+
+
+(defmake <modelname> <mkname> (<fieldname>1 ... <fieldname>n))
+
+(defmake <modelname> <mkname>)
+
+   Aucun argument  n'est  e'value'.  Dans  le  premier  cas,  cette
+   construction  de'finit  une  fonction de nom <mkname> prenant n
+   arguments <arg>i  et  renvoyant  en  valeur  une  instance  de
+   <modelname>  dont  les  champs  <fieldname>i  ont pour valeurs
+   <arg>i.
+    De me^me que pour la fonction de, il est  possible  de  passer
+
+                               26         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+   les arguments sous forme d'arbre.
+    Dans le second cas, aucune fonction n'est engendre'e, mais  la
+   fonction  de  nom  <mkname>  est  de'clare'e  comme  fonction de
+   construction du  mode`le  <modelname>.  Cette  information  est
+   utilise'e par la construction describe.
+
+
+
+Exemples
+
+
+? (defmake fiche fiche (nom prenom))
+= fiche
+? (pretty fiche)
+(de fiche (nom prenom) (cons (cons nom prenom) (copy '(() . #[]))))
+
+= ()
+? (setq fiche-madame (fiche 'Dugland 'Yvette))
+= ((Dugland . Yvette) () . #[])
+? (defmake point mkpoint (x y))
+= mkpoint
+? (pretty mkpoint)
+(de mkpoint (x y) (cons x y))
+
+= ()
+? (mkpoint 1 2)
+= (1 . 2)
+? (defmodel liste-nommee
+?           (Cons (Field nom symbol)
+?                 (Field liste (List *))))
+= liste-nommee
+? (defmake liste-nommee liste-nommee (nom . liste))
+= liste-nommee
+? (pretty liste-nommee)
+(de liste-nommee (nom . liste) (cons nom liste))
+
+= ()
+? (liste-nommee 'toto 'a 'b 'c)
+= (toto a b c)
+? (defmake liste-nommee faire-liste-nommee liste)
+= faire-liste-nommee
+
+                               27         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+? (pretty faire-liste-nommee)
+(de faire-liste-nommee liste (cons () liste))
+
+= ()
+? (faire-liste-nommee 1 2 3)
+= (() 1 2 3)
+
+
+
+1.3.4  Les Mode`les Pre'de'finis
+
+Un certain nombre de mode`les sont de'finis a`  l'initialisation  de
+Ceyx,  nous  les  de'crivons ci-dessous. Tout d'abord le mode`le *,
+qui filtre toutes les s-expressions Lisp
+
+
+(defmodel * (Predicate always-true ()))
+(de always-true (x) t)
+
+
+puis les types primitifs Lisp:
+
+
+(defmodel null (Predicate null ()))
+(defmodel symbol (Predicate symbolp 'nil))
+(defmodel fix (Predicate fixp 0))
+(defmodel float (Predicate floatp 0.))
+(defmodel number (Predicate numberp 0))
+(defmodel string (Predicate stringp ""))
+(defmodel atom (Predicate atomp nil))
+(defmodel cons (Cons (Field car) (Field cdr)))
+(defmodel vector (Predicate vectorp #[]))
+(defmodel integer (Predicate numberp 0))
+
+
+
+
+
+
+
+
+
+                               28         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+1.4  Les Espaces Se'mantiques
+
+
+1.4.1  Les Espaces de Noms
+
+L'espace  des  symboles  en  Le_Lisp  est  organise'  de   manie`re
+arborescente.  Ainsi quand le lecteur Lisp voit
+
+
+stop
+
+il s'agit pour lui du symbole de _p_n_a_m_e "stop"  dans  l'espace  de
+nom (package) global ||.  Quand il voit
+
+
+#:compilateur:stop
+
+il sagit du symbole de _p_n_a_m_e "stop" dans l'espace de nom   appele'
+compilateur.  Hie'rarchiser  ainsi  l'espace  des  symboles permet
+classiquement de se pre'server des conflits  de  noms  entre  deux
+programmes.  Ainsi  stop  est-il  le  symbole  stop  habituel  et
+#:compilateur:stop est-il le symbole stop du compilateur.
+
+Nous de'finissons une construction permettant de de'terminer si  un
+symbole est dans l'espace de nom d'un autre symbole.
+
+(<=p <symbol>1 <symbol>2)
+
+   Cette fonction rame`ne une  valeur  diffe'rente  de  (),  si  et
+   seulement  si  si  <symbol>1  posse'de dans ses espaces de noms
+   parents <symbol>2.
+    Cette fonction peut e^tre de'finie en Lisp par:
+
+
+   (de <=p (pkg1 pkg2)
+       (if (eq pkg1 pkg2) t
+           (if (eq pkg1 '||) nil
+               (<=p (packagecell pkg1) pkg2))))
+
+
+
+
+                               29         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+
+Exemples
+
+
+? (<=p '#:toto:tata:titi:tutu '#:toto:tata)
+= t
+
+Le proble`me qui se pose tre`s  vite  quand  on  veut  utiliser  de
+manie`re  intensive  la  hie'rarchie  des  packages est un proble`me
+d'e'criture: il devient vite  pe'nible  d'e'crire  de  tros  longues
+chai^nes d'acce`s
+
+
+#:toto:tata:titi:tutu:tete:tyty:mafonction
+
+
+Pour aider re'soudre ce  proble`me,  nous  introduisons  la  notion
+d'abbre'viation.
+
+(defabbrev <full-name> <abbrev>)
+
+   Cette fonction qui  n'e'value  ses  arguments  stocke  dans  la
+   pliste de <abbrev> le symbole <full-name>, information qui est
+   accessible a` l'utilisateur par la fonction plink.  Le  symbole
+   <abbrev> est appele' une abbre'viation de <full-name>.
+
+   Les abbre'viations  sont  utilise'es  par  le  lecteur  Lisp  en
+   conjonction avec les accolades {} qui sont donc de ce fait des
+   caracte`res re'serve's: {<abbrev>} est lu  comme  <full-name>  si
+   <abbrev> est une abbre'viation de <full-name> et comme <abbrev>
+   dans le cas contraire.
+
+
+(plink <abbrev>)
+
+   L'argument  <abbrev>  est  e'value',  sa  valeur  doit  e^tre  un
+   symbole.   Si  la  valeur  de <abbrev> a e'te' de'finie comme une
+   abbre'viation de <full-name>, ce dernier est renvoye' en valeur,
+   sinon la valeur de <abbrev> est renvoye'e.
+
+   Exemples
+
+                               30         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+
+   ? '{toto}
+   = toto
+   ? '{toto}:a
+   = #:toto:a
+   ? (defabbrev #:t:o:t:o toto)
+   = #:t:o:t:o
+   ? '{toto}
+   = #:t:o:t:o
+   ? (plink 'toto)
+   = #:t:o:t:o
+   ? '{toto}:ah:la:la
+   = #:t:o:t:o:ah:la:la
+
+Nous e'tendons la construction defmodel de manie`re a`  ge'ne'rer  une
+abbre'viation a` la demande.
+
+(defmodel (<name> <abbrev>) <model>)
+
+   Cette construction est e'quivalente a`:
+
+     (defmodel <name> <model>)
+     (defabbrev <name> <abbrev>)
+
+
+Exemples
+
+
+? (defmodel (#:toto:tata:titi titi)
+?           (Cons (Field a) (Field b)))
+= #:toto:tata:titi
+? '{titi}
+= #:toto:tata:titi
+? (defmake {titi} titi (a b))
+= titi
+? (setq x (titi 1 2))
+= (1 . 2)
+? '({titi}:a x)
+= (#:toto:tata:titi:a x)
+? ({titi}:a x)
+** eval : fonction indefinie : #:toto:tata:titi:a
+
+                               31         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+   [stack 3]    (lock ...)
+   [stack 2]    (tag #:system:error-tag ...)
+   [stack 1]    (itsoft ...)
+? (defaccess {titi})
+= #:toto:tata:titi
+? ({titi}:a x)
+= 1
+? ; une utilisation pour faire du franglais
+? (defmodel (Book Livre)
+?           (Vector
+?              (Field chapters (Field chapitres))
+?              (Field title (Field titre))))
+= Book
+? (defaccess Book)
+= Book
+? (defmake Book Book (chapters title))
+= Book
+? (defmake {Livre} Livre (chapitres titre))
+= Livre
+? (setq b (Book '(1 2 3) "Paris by Night"))
+= #[(1 2 3) Paris by Night]
+? ({Livre}:titre b)
+= Paris by Night
+? ({Livre}:chapters b)
+= (1 2 3)
+
+
+1.4.2  Les Proprie'te's Se'mantiques des Mode`les
+
+Nous avons de'ja vu comment la construction defaccess produit  des
+fonctions  d'acce`s  aux instances d'un mode`le, dont les noms sont
+des symboles interne's dans l'espace de noms canoniquement associe'
+au mode`le.  Ainsi, pour le mode`le fiche, les fonctions d'acce`s
+
+
+#:fiche:nom
+#:fiche:prenom
+#:fiche:adresse
+
+
+
+
+                               32         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+sont elles de'finies.
+
+Nous ge'ne'ralisons cette situation en de'finissant  les  _p_r_o_p_r_i_e'_t_e'_s
+_s_e'_m_a_n_t_i_q_u_e_s  d'un  mode`le  comme  e'tant  l'ensemble des fonctions
+de'finies dans l'espace de  noms  du  mode`le.  Ainsi  de'finir  une
+proprie'te'  se'mantique  du  mode`le  model revient-il a` de'finir une
+fonction Lisp classique dans l'espace de nom du mode`le.
+
+Exemples
+
+
+? (de #:fiche:imprime (fiche)
+?     (print "Nom: " (#:fiche:nom fiche))
+?     (print "Prenom: " (#:fiche:prenom fiche))
+?     (when (#:fiche:adresse fiche)
+?           (print "Adresse: " (#:fiche:adresse fiche)))
+?     (#:fiche:nom fiche))
+= #:fiche:imprime
+? (#:fiche:imprime fiche-monsieur)
+Nom: Jacquemart
+Prenom: Marcel
+Adresse: Sans domicile fixe
+= Jacquemart
+? (#:fiche:imprime fiche-madame)
+Nom: Dugland
+Prenom: Yvette
+= Dugland
+
+
+Les _p_r_o_p_r_i_e'_t_e'_s _s_e'_m_a_n_t_i_q_u_e_s d'un  mode`le  constituent  en  quelque
+sorte   son   _m_o_d_e  _d'_e_m_p_l_o_i:  comment  acce`der  aux  champs  des
+instances, comment imprimer ces instances, comment  les   e'diter,
+etc...
+
+_I_l _e_s_t _d_e _b_o_n _t_o_n _e_n _C_e_y_x _d_e _c_o_n_s_i_d_e'_r_e_r _q_u_e _l_e  _p_r_e_m_i_e_r  _a_r_g_u_m_e_n_t
+_d'_u_n_e  _p_r_o_p_r_i_e'_t_e' _s_e'_m_a_n_t_i_q_u_e _e_s_t _u_n_e _i_n_s_t_a_n_c_e _d_u _m_o_d_e`_l_e _s_u_r _l_e_q_u_e_l
+_o_n _d_e'_f_i_n_i_t _c_e_t_t_e _p_r_o_p_r_i_e'_t_e' _s_e'_m_a_n_t_i_q_u_e. _L_a  _r_a_i_s_o_n  _e_n  _a_p_p_a_r_a_i^_t_r_a
+_c_l_a_i_r_e_m_e_n_t  _l_o_r_s  _d_e  _l'_i_n_t_r_o_d_u_c_t_i_o_n  _d_e  _l_a _c_o_n_s_t_r_u_c_t_i_o_n _s_e_n_d _a_u
+_c_h_a_p_i_t_r_e _s_u_i_v_a_n_t.
+
+
+
+                               33         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+1.4.3  Re'cupe'ration Fonctionnelle Hie'rarchique
+
+Nous avons vu plus haut que les  espaces  de  noms  Le_Lisp  sont
+organise's  de  manie`re  arborescente. Ceci se traduit en Ceyx par
+une organisation hie'rarchique des  espaces  se'mantiques  associe's
+aux mode`les.  Reprenons l'exemple du mode`le fiche de'fini par
+
+
+? (defmodel fiche
+?           (Cons
+?              (Cons (Field nom symbol)
+?                    (Field prenom symbol))
+?              (Cons (Field adresse string)
+?                    (Field attributs (Vector)))))
+= fiche
+
+
+et de'finissons maintenant une fiche spe'ciale qui  est  celle  que
+voudrait utiliser un cordonnier:
+
+
+? (defmodel {fiche}:fiche-cordonnier
+?           (Extend fiche
+?                   attributs (Vector (Field pointure fix))))
+= #:fiche:fiche-cordonnier
+
+
+Toutes les instances de ce nouveau mode`le  posse`dent  les  champs
+nom,  pre'nom, adresse, attributs du mode`le fiche et les fonctions
+d'acce`s de'finies sur fiche par  la  construction  defaccess  sont
+applicables  aux  instances  du  mode`le #:fiche:fiche-cordonnier.
+Plus ge'ne'ralement, toutes les  proprie'te's  se'mantiques  de  fiche
+sont   applicables   aux   instances   du  mode`le  #:fiche:fiche-
+cordonnier.  Nous  dirons  que  ce  nouveau  mode`le  _h_e'_r_i_t_e   des
+proprie'te's se'mantiques du mode`le fiche.
+
+La fonction Le_Lisp getfn permet de de'terminer si  une  proprie'te'
+se'mantique  est  de'finie dans un espace de noms ou bien dans l'un
+de ses ance^tres:
+
+
+
+                               34         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+(getfn <pkg> <sym> <lastpkg>)
+
+(getfn <pkg> <sym>)
+
+   Cette fonction cherche si le symbole de nom <sym> posse`de  une
+   de'finition  de  fonction  dans  le package <pkg> et, s'il n'en
+   existe pas, dans ses packages pe`res jusqu'au package <lastpkg>
+   exclus.  Dans  le  cas  ou`  <lastpkg>  n'est  pas spe'cifie', on
+   remonte jusqu'au package global || inclus. Cette  construction
+   rame`ne le nom de la fonction si elle existe et () autrement.
+
+En Ceyx, nous utiliserons une version  spe'ciale  de  la  fonction
+getfn:
+
+({Ceyx}:getfn <pkg> <sym>)
+
+   Cette fonction a un comportement analogue a` getfn,  sinon  que
+   la  recherche  est  effectue'e  dans  un premier temps jusuq'au
+   package || exclus puis en cas d'e'chec dans  le  package  *  et
+   enfin  dans le package ||. Cette fonction peut e^tre de'crite en
+   Lisp par:
+
+   (de #:Ceyx:getfn (package fun)
+       (or (getfn package fun '||)
+           (getfn '* fun)))
+
+
+Pour faciliter l'usage de cette  construction,  nous  de'finissons
+les constructions semcall et hfuncall.
+
+(hfuncall <pkg> <sym> <arg>1 ... <arg>n)
+
+   Tous les arguments sont e'value's, cette construction peut  e^tre
+   de'finie en Lisp par:
+
+   (de hfuncall (pkg sym . args)
+       (apply ({Ceyx}:getfn pkg sym) args))
+
+
+
+
+
+                               35         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+(semcall <pkg> <sym> <arg>1 ... <arg>n)
+
+   Analogue a` la pre'ce'dente sinon qu'on passe  par  le  plink  de
+   <pkg>.
+
+   (de semcall (pkg sym . args)
+       (apply ({Ceyx}:getfn (plink pkg) sym) args))
+
+
+La re'cupe'ration fonctionnelle hie'rarchique est  surtout  utilise'e
+en  conjugaison  avec  les  objets auto-type's de'finis au chapitre
+suivant.
+
+
+
+
+1.5  Description de Mode`les
+
+
+Nous  donnons   ici   des   fonctions   permettant   de   de'crire
+interactivement un mode`le, c'est a` dire tant sa structure que son
+espace se'mantique.
+
+(mdescribe <modelname> [<prof>])
+
+   Cette fonction, qui n'e'value pas ses arguments imprime sur  le
+   terminal  la  description du mode`le <modelname> et de tous ses
+   sous-mode`les  jusqu'a`  la  profondeur  <prof>.  Si  l'argument
+   optionnel  <prof>  n'est  pas donne' on ne de'crit que le mode`le
+   lui-me^me.
+
+(tbl-describe <modelname>)
+
+   L'argument  n'est  pas  e'value'.  Une  description  du   mode`le
+   <modelname>  est  imprime'e sur le terminal sous la forme d'une
+   spe'cification   pour   troff/tbl.   Tre`s   utile   pour    les
+   documentations quand on travaille sous Unix.
+
+
+
+
+
+                               36         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+(apropos <package>)
+
+   Liste toutes les fonctions de l'espace de nom package.
+
+(describe <object> [<modelname>])
+
+   Les arguments sont e'value's et une description de <object>  est
+   imprime'e  sur le terminal. Dans le cas ou` l'argument optionnel
+   n'est pas donne', l'objet est de'crit  suivant  son  type  (voir
+   chapitre  suivant), sinon il est de'crit en supposant qu'il est
+   une instance de <modelname>.
+
+
+Exemples
+
+
+: (defmodel toto (Cons (Field a symbol) (Field b number)))
+= toto
+: (mdescribe toto)
+
+          Modele: toto
+
+Champs:
+     a ~ symbol
+     b ~ number
+
+= ()
+: (defaccess toto)
+= toto
+: (mdescribe toto)
+
+          Modele: toto
+
+Champs:
+     a ~ symbol
+     b ~ number
+
+Proprietes Semantiques:
+     a obj
+     b obj
+
+
+                               37         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+= ()
+: (defmake toto mktoto (a b))
+= mktoto
+: (mdescribe toto)
+
+          Modele: toto
+
+Fonctions de Cre'ation:
+     mktoto (a b)
+
+Champs:
+     a ~ symbol
+     b ~ number
+
+Proprietes Semantiques:
+     a obj
+     b obj
+
+= ()
+: (de {toto}:print (x)
+:     (print "a: " ({toto}:a x))
+:     (print "b " ({toto}:b x)))
+= #:toto:print
+: (mdescribe toto)
+
+          Modele: toto
+
+Fonctions de Cre'ation:
+     mktoto (a b)
+
+Champs:
+     a ~ symbol
+     b ~ number
+
+Proprietes Semantiques:
+     a obj
+     b obj
+     print (x)
+
+= ()
+: (defmodel ({toto}:tata tata)
+
+                               38         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+:           (Alter toto a (Cons (Field a1) (Field a2))))
+= #:toto:tata
+: (defaccess {tata})
+= #:toto:tata
+: (mdescribe toto)
+
+          Modele: toto
+
+Fonctions de Cre'ation:
+     mktoto (a b)
+
+Champs:
+     a ~ symbol
+     b ~ number
+
+Proprietes Semantiques:
+     a obj
+     b obj
+     print (x)
+
+Sous Modeles:
+     tata
+
+= ()
+: (mdescribe {tata})
+
+          Modele: #:toto:tata
+
+Abreviations:
+     tata
+
+Champs:
+     a ~ (Cons ...)
+     a1 ~ *
+     a2 ~ *
+     b ~ number
+
+Proprietes Semantiques:
+     a obj
+     a1 obj
+     a2 obj
+
+                               39         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                 1: Les Mode`les
+
+     b obj
+
+= ()
+: (tbl-describe toto)
+
+                    ________________________
+
+
+                        Le Mode`le: toto
+
+                   ________________________
+                   ________________________
+                     Fonction de Cre'ation
+                    mktoto   (a b)
+                   ________________________
+                            Champs
+                    a        symbol
+                    b        number
+                   ________________________
+                    Proprie'te's Se'mantiques
+                    a        obj
+                    b        obj
+                    print    (x)
+                   ________________________
+                         Sous Mode`le
+                    tata
+                   ________________________
+
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+                  |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+                                          |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+: (describe (mktoto 1 2) 'toto)
+(1 . 2) est une instance du modele toto
+Ses diffe'rents champs valent:
+a: 1
+b: 2
+= t
+
+
+
+
+
+
+
+
+
+                               40         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+
+
+                       C H A P I T R E  2
+
+
+                            Les Types
+
+
+
+
+                        _J_e_a_n-_M_a_r_i_e _H_u_l_l_o_t
+
+
+Ceyx permet un  style  de  programmation  oriente'e  objets  a`  la
+SmallTalk.   On  peut  re'sumer le principe de fonctionnement d'un
+tel langage de la manie`re suivante:
+
+o+ a` chaque type est associe' un espace se'mantique, c'est a` dire un
+ensemble  de fonctions de manipulations spe'cifiques aux instances
+de ce type,
+
+o+ les types sont organise's de manie`re hie'rarchique, un sous  type
+he'ritant des espaces se'mantiques de ses parents,
+
+o+ tous les objets manipule's sont auto-type's,
+
+o+ pour appliquer une fonction de manipulation a` une instance,  on
+lui  envoie  en  message  le nom de la fonction et ses arguments.
+L'objet, qui connait son type, n'a donc plus qu'a`  chercher  dans
+l'espace se'mantique associe' a` ce type la fonction voulue.
+
+Le chapitre  pre'ce'dent  a  montre'  comment  de'finir  des  espaces
+se'mantiques   hie'rarchiques,  nous  introduisons  maintenant  les
+notions de type, d'objets auto-type's et d'envoi de message.
+
+On de'finit un type en Ceyx de la me^me manie`re  qu'on  de'finit  un
+mode`le,  mais  en  utilisant  la  construction deftype en lieu et
+place de defmodel. Nous pouvons de'finir le type Point par:
+
+
+? (deftype Point (Cons (Field x fix 0) (Field y fix 0)))
+
+                               41         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+= Point
+
+La seule et unique diffe'rence entre mode`les et types est que  les
+instances des seconds sont e'tiquette'es par le nom du type qui les
+a engendre'es. Cet  e'tiquettage  est  re'alise'e  en  utilisant  des
+cellules  cons spe'ciales (tcons) qui s'imprime sous la forme #( .
+) au lieu de ( . ).
+
+
+? (defmake Point mkpoint (x y))
+= mkpoint
+? (setq p (mkpoint 5 6))
+= #(Point 5 . 6)
+
+Le type d'un objet est soit son type Lisp (symbol,  cons,  vector
+...), s'il n'est pas une cellule e'tiquette'e, soit le car de cette
+cellule e'tiquette'e:
+
+
+? (type 1)
+= fix
+? (type '(1 . 2))
+= cons
+? (type p)
+= Point
+
+Un des avantages essentiels des objets auto-type's est qu'a` partir
+du  nom  du  type  qui  les a engendre's, ils ont acce`s a` l'espace
+se'mantique associe' a` ce nom. Ainsi si on envoie a` une instance de
+Point  le  _m_e_s_s_a_g_e  translate  avec  les argument dx et dy, cette
+instance est a` me^me de de'couvrir elle-me^me qu'il  faut  appliquer
+la  fonction  #:Point:translate,  si toutefois elle existe. C'est
+l'objet de la construction send.
+
+
+? (defaccess Point)
+= Point
+? (de {Point}:translate (point dx dy)
+?     (send 'x point (+ dx (send 'x point)))
+?     (send 'y point (+ dy (send 'y point)))
+?     point)
+
+                               42         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+= #:Point:translate
+? (send 'translate p 3 4)
+= #(Point 8 . 10)
+
+
+
+
+2.1  Les Types Lisp
+
+Les types Lisp de base  correspondent  aux  diverses  formes  que
+peuvent  avoir  les s-expressions. Lisp est a` me^me de reconnai^tre
+les types:
+
+ - symbol,
+ - fix,
+ - float,
+ - string,
+ - cons,
+ - vector,
+
+a` l'aide des pre'dicats symbolp, fixp, floatp, stringp,  consp  et
+vectorp.  Dans la suite nous conside'rons que () est de type null,
+reconnu par le pre'dicat null.
+
+Nous avons  vu  au  chapitre  pre'ce'dent  comment  construire  des
+mode`les.  Par exemple  nous avons de'fini le mode`le Coord par:
+
+
+(defmodel Coord
+          (Cons (Field x fix 0) (Field y fix 0)))
+
+et une fonction de cre'ation de ce mode`le par:
+
+
+(defmake Coord Coord (x y))
+
+Si nous construisons maintenant une instance du mode`le Coord:
+
+
+? (setq c (Coord 3 4))
+= (3 . 4)
+
+                               43         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+
+
+Cette instance c  est  de  type  cons,  et  nous  n'avons  aucune
+information  sur  le fait que c est une instance du mode`le Coord.
+Notre but dans ce chapitre est de donner une extension au langage
+de  mode`les  permettant  de  de'finir des objets Lisp portant leur
+marque de fabrique, c'est a` dire gardant trace du mode`le dont ils
+sont instances.
+
+
+
+
+2.2  Les Types Ceyx
+
+
+2.2.1  Les Objets
+
+
+Nous de'finissons les "objets" par  extension  du  langage  de  s-
+expressions:
+
+<object> =   <object>
+             |#(<symbol> . <object>)
+
+Nous de'finissons une fonction de construction Lisp associe'e:
+
+(tcons <symbol> <sexpr>)
+
+   Cette fonction est en tout point analogue au cons,  sinon  que
+   les  paires  pointe'es  construites sont e'tiquette'es, i.e. sont
+   reconnaissables par le pre'dicat tconsp.
+
+   ? (tcons 'a 'b)
+   = #(a . b)
+   ? (cons 'a 'b)
+   = (a . b)
+
+
+
+
+
+
+                               44         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+(tconsp <obj>)
+
+   Cette fonction renvoie une  valeur  diffe'rente  de  ()  si  et
+   seulement si <obj> est une cellule e'tiquette'e.
+
+   ? (tconsp (tcons 'a 'b))
+   = #(a . b)
+   ? (tconsp (cons 'a 'b))
+   = ()
+
+
+Dans une incarnation  du  langage  Lisp  telle  que  Le_Lisp,  la
+construction tcons a e'te' introduite dans le noyau du langage pour
+les besoins de Ceyx.  La construction tcons peut e^tre imple'mente'e
+de   manie`re   efficace  sur  ZetaLisp,  en  utilisant  une  zone
+d'allocation  spe'ciale  pour  les  cellules   e'tiquette'es.   Dans
+d'autres  syte`mes  Lisp  (MacLisp,  FranzLisp,  ...),  une  bonne
+imple'mentation est difficile a` re'aliser.
+
+
+
+2.2.2  La Contruction deftype
+
+Paralle`lement a` cette extension du langage de s-expressions, nous
+e'tendons le langage de mode`les en introduisant le mode`le Tcons:
+
+<model> = ... | (Tcons <symbol> <object>)
+
+Ce nouveau mode`le joue un ro^le tre`s particulier  en  Ceyx,  c'est
+pourquoi  il  n'est  introduit  dans le langage de mode`les que de
+manie`re  interne  et  n'est  utilisable  en  standard   que   par
+l'interme'diaire de la construction deftype.  Le mode`le Tcons  est
+utilise' pour  de'crire des mode`les particuliers que nous  appelons
+_t_y_p_e_s,  dont  la  particularite'  est  que  les instances sont des
+cellules tcons, dont la partie gauche contient le nom  du  mode`le
+dont  l'objet  est  instance et dont la partie droite contient la
+repre'sentation de cette instance.
+
+Nous introduisons la construction deftype qui permet  de  de'finir
+des types Ceyx ou mode`les auto-type's.
+
+
+                               45         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+(deftype <name> <model>)
+
+(deftype (<name> <abbrev>) <model>)
+
+   Cette fonction, qui n'e'value aucun de ses  arguments,  associe
+   au  symbole  <name>  une  valeur de mode`le obtenue de la fac,on
+   suivante:
+
+       si <model> = (Tcons <symbol> <model>1)
+          alors (Tcons <name> <model>1)
+          sinon (Tcons <name> <model>)
+    Comme pour defmodel, on peut donner une abbre'viation <abbrev>
+   pour le type <name>.
+
+
+Exemples
+
+? (deftype Art (Cons (Field x fix 0) (Field y fix 0)))
+= Art
+? (defmake Art Art (x y))
+= Art
+? (setq x (Art 1 2))
+= #(Art 1 . 2)
+
+La se'mantique du Mode`le Tcons  sera  parfaitement  de'finie  quand
+nous aurons dit comment il re'agit a` la construction omatchq:
+
+(omatchq <type> <object>) =/ ()   ssi   (tconsp <object>)
+                                       et (<=p (tcar <object>) <type>)
+
+c'est a` dire qu'un objet <object> est instance d'un  type  <type>
+si  et  seulement  si  <object>  est  un tcons dont le car est un
+symbole infe'rieur au sens de la hie'rarchie des packages a` <type>.
+
+
+Exemples
+
+
+? (deftype fiche
+?          (Cons
+?             (Cons (Field nom) (Field prenom))
+
+                               46         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+?             (Field caracteristiques (Vector))))
+= fiche
+? (defaccess fiche)
+= fiche
+? (defmake fiche fiche (nom prenom))
+= fiche
+? (deftype ({fiche}:fiche-cordonnier fiche-cordonnier)
+?          (Extend fiche
+?                  caracteristiques
+?                     (Vector (Field adresse)
+?                             (Field pointure))))
+= fiche-cordonnier
+? (defaccess {fiche-cordonnier} adresse pointure)
+= #:fiche:fiche-cordonnier
+? (defmake {fiche-cordonnier} fiche-cordonnier (nom prenom adresse pointure))
+= fiche-cordonnier
+? (setq x (fiche-cordonnier 'Jacquemart 'Marcel "Inconnue" 48))
+= #(#:fiche:fiche-cordonnier (Jacquemart . Marcel) . #[Inconnue 48])
+? (omatchq fiche-cordonnier x)
+= t
+? (omatchq fiche x)
+= t
+? (omatchq fiche-cordonnier (fiche 'Dugland 'Yvette))
+= ()
+
+
+2.2.3  La Fonction type
+
+
+Nous introduisons une fonction ramenant en valeur le type au sens
+Ceyx de n'importe quel objet.
+
+(type <object>)
+
+   Rame`ne en valeur le  type  de  l'argument  <object>,  qui  est
+   e'value'.  Cette fonction peut e^tre de'finie en Lisp par:
+
+   (de type (object)
+       (cond
+         ((null object) 'null)
+         ((tconsp object) (car object))
+
+                               47         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+         ((symbolp object) 'symbol)
+         ((fixp object) 'fix)
+         ((floatp object) 'float)
+         ((stringp object) 'string)
+         ((consp object) 'cons)
+         ((vectorp object) 'vector))))
+
+
+
+
+
+2.3  La Construction send
+
+
+(send <msg> <obj> <arg>1 ... <arg>n)
+
+   Tous les arguments sont e'value's. Cette construction  recherche
+   si  le  symbole  <msg>  existe  et  posse`de  une de'finition de
+   fonction dans l'espace de noms associe' a` (type <obj>)  d'abord
+   et  dans  ses  parents  ensuite,  ceci jusqu'a` l'espace de nom
+   racine || exclu.  Si la recherche aboutit  on  applique  cette
+   fonction  a`  la  liste  d'arguments (<obj> <arg>1 ... <arg>n).
+   Sinon on effectue la  me^me  recherche  dans  l'espace  de  nom
+   associe'  au  symbole  * puis dans l'espace de nom racine et on
+   continue comme pre'ce'demment en  cas  de  re'ussite,  sinon  une
+   erreur est de'clenche'e.
+
+
+En Le_Lisp, la construction send a e'te' introduite dans  le  noyau
+du  langage pour les besoins de Ceyx. Dans d'autres syte`mes, elle
+peur e^tre de'finie en Lisp par:
+
+
+(de send (msg args)
+   (apply (#:Ceyx:getfn (type (car args)) msg) args))
+
+(de #:Ceyx:getfn (package fun)
+    (or (getfn package fun '||)
+        (getfn '* fun)))
+
+
+
+                               48         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+(sendq <msg> <obj> <arg>1 ... <arg>n)
+
+   Cette construction est  e'quivalente  a`  la  pre'ce'dente,  sinon
+   qu'elle n'e'value pas son premier argument <msg>.
+
+
+Exemples
+
+
+? (deftype Point (Field coord (Include Coord)))
+= Point
+? (defmake Point mkpoint (x y))
+= mkpoint
+? (defaccess Point)
+= Point
+? (setq p (Point 1 2))
+** eval : fonction indefinie : Point
+   [stack 3]    (lock ...)
+   [stack 2]    (tag #:system:error-tag ...)
+   [stack 1]    (itsoft ...)
+? (setq p (mkpoint 1 2))
+= #(Point 1 . 2)
+? (send 'x p)
+= 1
+? (send 'y p 10)
+= (1 . 10)
+? p
+= #(Point 1 . 10)
+? (deftype Vector (Field vect (Include Vect)))
+= Vector
+? (defaccess Vector)
+= Vector
+? (defmake Vector mkvector (xorg yorg xext yext))
+= mkvector
+? (setq v (mkvector 0 0 10 25))
+= #(Vector (0 . 0) 10 . 25)
+? (de {Vector}:translate (vector dx dy)
+?     ({Vector}:xorg vector (+ dx ({Vector}:xorg vector)))
+?     ({Vector}:yorg vector (+ dy ({Vector}:yorg vector)))
+?     ({Vector}:xext vector (+ dx ({Vector}:xext vector)))
+?     ({Vector}:yext vector (+ dy ({Vector}:yext vector)))
+
+                               49         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                                   2: Les Types
+
+?     vector)
+= #:Vector:translate
+? (sendq translate v 5 5)
+= #(Vector (5 . 5) 15 . 30)
+? (de {fiche}:imprime (fiche)
+?     (print "Nom: " (sendq nom fiche))
+?     (print "Prenom: " (sendq prenom fiche))
+?     t)
+= #:fiche:imprime
+? x
+= #(#:fiche:fiche-cordonnier (Jacquemart . Marcel) . #[Inconnue 48])
+? (sendq imprime x)
+Nom: Jacquemart
+Prenom: Marcel
+= t
+? (de {fiche-cordonnier}:imprime (fiche)
+?     ({fiche}:imprime fiche)
+?     (print "Adresse: " (sendq adresse fiche))
+?     (print "Pointure: " (sendq pointure fiche))
+?     t)
+= #:fiche:fiche-cordonnier:imprime
+? (sendq imprime x)
+Nom: Jacquemart
+Prenom: Marcel
+Adresse: Inconnue
+Pointure: 48
+= t
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                               50         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                           3: Le Pre'compilateur
+
+
+
+                       C H A P I T R E  3
+
+
+                        Le Pre'compilateur
+
+
+
+
+                         _B_e_r_t_r_a_n_d _S_e_r_l_e_t
+
+
+
+
+
+3.1  Objectifs
+
+
+Tous les programmes Ceyx  sont  compilables  par  le  compilateur
+standard  Le_Lisp, mais pour obtenir une efficacite' maximale lors
+de  l'exe'cution  il  est  pre'fe'rable  de  leur  faire  subir   un
+pre'traitement.   Ce  pre'traitement  se  fait gra^ce au compilateur
+Ceyx,  appele'  cxcp,  conc,u  comme  une  couche  au   dessus   du
+compilateur  Le_Lisp.   Cxcp  permet  aussi le de'couplage avec le
+compilateur Le_Lisp, d'ou` une re'partition des ta^ches.
+
+Ce pre'traitemant consiste actuellement:
+- a` compiler de fac,on spe'ciale les acce`s aux  champs  des  objets
+Ceyx;
+-  a`  expanser  a`  la  demande  certaines  fonctions  comme  s'il
+s'agissait de macros;
+- a` optimiser la compilation de certains send.
+
+
+
+
+
+
+
+
+
+                               51         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                           3: Le Pre'compilateur
+
+3.1.1  Compilation des acce`s aux champs
+
+
+Contrairement aux versions pre'ce'dentes  de  Ceyx,  les  fonctions
+d'acce`s  aux  champs sont maintenant de'finies comme des fonctions
+standards (par _d_e) et  non  plus  comme  des  macros.  L'avantage
+e'norme  de  ce  changement  est  d'autoriser  l'utilisation de la
+construction send pour acce'der aux champs. Cela permet  aussi  de
+rendre  la  mise au point plus facile puisque l'on peut pister ou
+profiler (par _t_r_a_c_e  ou  _t_i_m_e_t_r_a_c_e)  les  appels.  Il  est  aussi
+possible  de  faire dynamiquement des ve'rifications de type, lors
+de la mise au point, en modifiant la de'finition de ces fonctions.
+Malheureusement  ces  nouvelles possibilite's ont un prix: on perd
+un appel fonctionnel (en fait deux) et une construction de _c_o_n_s a`
+chaque  appel  (car  les fonctions d'acce`s ont un nombre variable
+d'arguments). Cette perte d'efficacite', supportable  lors  de  la
+mise  au  point,  est intole'rable en compile'.  Cxcp remplace tous
+les appels explicites a`  des  fonctions  d'acce`s  par  la  chai^ne
+d'acce`s  elle-me^me.  Une fois le code compile', tout se passe donc
+comme dans les versions ante'rieures, et les  programmes  compile's
+restent aussi efficaces.
+
+
+: (defmodel test (Record (Field a) (Field b)))
+= test
+: (defaccess test)
+= test
+: (de testfun (x) (+ (#:test:a x) (#:test:b x))))
+= testfun
+: (pretty #:test:a)
+(de #:test:a obj (#:Ceyx:system:g138 obj))
+
+= ()
+: (compile testfun () t)
+testfun se compile.
+(de testfun (x) (+ (#:test:a x) (#:test:b x)))
+
+((fentry testfun subr1)
+ (mov '(testfun x) a4)
+ (call $cbind1)
+ (mov nil a2)
+
+                               52         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                           3: Le Pre'compilateur
+
+ (call cons)
+ (call #:test:a)
+ (push a1)
+ (mov (cvalq x) a1)
+ (mov nil a2)
+ (call cons)
+ (call #:test:b)
+ (mov a1 a2)
+ (pop a1)
+ (plus a2 a1)
+ (return))
+= ((2 . -12430))
+: (de testfun (x) (+ (#:test:a x) (#:test:b x)))
+** de : fonction redefinie : testfun
+= testfun
+: (cxcp testfun () t)
+testfun se compile.
+(de testfun (x) (+ (#:test:a x) (#:test:b x)))
+
+((fentry testfun subr1)
+ (mov '(testfun x) a4)
+ (call $cbind1)
+ (mov (car a1) a1)
+ (mov (cvalq x) a2)
+ (cdr a2)
+ (plus a2 a1)
+ (return))
+= ()
+
+
+3.1.2  Expansion a` la demande de fonctions
+
+
+Il  est  parfois  ne'cessaire  pour  des  sections  de  programmes
+critiques en temps de transformer de petites fonctions en macros,
+afin d'y gagner  un  appel  fonctionnel.  La  me'thode  habituelle
+consiste a` e'crire d'abord la fonction sous forme de _d_e, puis a` la
+saupoudrer de quelques caracte`res bizarres (` , ,. ,@ !).
+
+
+(de test (x y) (+ x y 1)) -> (dmd test (x y) `(+ ,x ,y 1))
+
+                               53         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                           3: Le Pre'compilateur
+
+; ou, si l'on n'aime pas la backquote:
+(dmd test (x y) (list '+ x y 1))
+
+Mais attention, la transformation en  macro  cache  le  pie`ge  de
+double e'valuation des variables:
+
+
+(de test (x) (+ x x 1)) -> (dmd test (x) `(+ ,x ,x 1))
+; est faux, par exemple sur l'appel:
+(test (nextl l) (nextl l))
+
+Dans cet exemple, une protection correcte  en  double  e'valuation
+peut se faire par:
+
+(dmd test (x)
+     (if (atomp x)
+         `(+ ,x ,x 1)
+         (let ((var (gensym))) `(let ((,var ,x)) (+ ,var ,var 1)))))
+
+Cxcp permet d'e'viter  la  transformation  en  macro  a`  la  main.
+L'utilisateur  choisit  explicitement les fonctions expanse'es, et
+pre'cise, toujours explicitement,  les  variables  a`  prote'ger  en
+double e'valuation.
+
+
+3.1.3  Compilation des send
+
+
+Send est la fonction de  base  pour  le  style  de  programmation
+oriente'  objet.  Malheureusement cette fonction cou^te cher, moins
+cher en Le_Lisp (ou` elle fait partie  de  l'interpre`te)  que  sur
+d'autres  dialectes  Lisp,  mais  elle est toujours plus cou^teuse
+qu'un simple appel fonctionnel.  Or il  apparai^t  a`  l'usage  que
+pour  bon  nombre  de se'mantiques, les appels a` send peuvent e^tre
+optimise's en un _s_e_l_e_c_t_q aiguillant suivant le type de l'objet sur
+un  appel fonctionnel direct.  Pour que cxcp sache quels sont les
+types d'objets  les  plus  fre'quents,  l'utilisateur  fournit  au
+compilateur   une   expression   Lisp   a`  e'valuer,  en  comptant
+(conceptuellement) lors de cette phase d'e'valuation, la fre'quence
+des  apparitions.   Lors  de la phase de compilation cxcp utilise
+cette information pour ge'ne'rer des selectq optimaux.
+
+                               54         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                           3: Le Pre'compilateur
+
+
+
+
+3.2  Utilisation du pre'-compilateur
+
+
+
+3.2.1  Appel du Compilateur
+
+(cxcp)
+
+   De me^me que la  fonction  Le_Lisp  compile-all-in-core,  cette
+   fonction  compile  toutes  les  fonctions  de l'oblist en leur
+   faisant pre'alablement  subir les traitements propres a` cxcp.
+
+(cxcp <fun> [ind1 [ind2 [ind3]]])
+
+(cxcp (<fun>1 ... <fun>k)  [ind1 [ind2 [ind3]]])
+
+   Les <fun>i ne sont pas e'value'es.  Compile une fonction ou  une
+   liste  de  fonctions  en  leur faisant subir pre'alablement les
+   traitements propres a` cxcp. Les indicateurs  optionnels  ind1,
+   ind2  et  ind3  ont la me^me signification que dans la fonction
+   compiler du compilateur Le_Lisp.
+
+(cxcp-package <pckg> [ind1 [ind2 [ind3]]])
+
+(cxcp-package (<pkg>1 ... <pkg>n) [ind1 [ind2 [ind3]]])
+
+   La me^me chose que la pre'ce'dente sur toutes les fonctions  d'un
+   package ou d'une liste de packages.
+
+
+
+
+
+
+
+
+
+
+
+                               55         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                           3: Le Pre'compilateur
+
+3.3  Expansion a` la Demande
+
+
+L'expansion a` la demande de fonctions Lisp est  re'alise'e  par  la
+construction cxcp-inline.
+
+(cxcp-inline <fundescr>1 ... <fundescr>n)
+
+   Les <fundescri>, qui ne sont pas e'value's sont:
+    - soit des noms de fonctions,
+    - soit des listes (<fun> <arg>1 ... <argn>), ou` <fun> est  un
+   nom  de  fonction  et les <arg>j le nom des arguments de <fun>
+   qu'on veut prote'ger contre le phe'nome`ne de double e'valuation.
+
+Remarque: le compilateur refuse de transformer  des  fonctions  a`
+nombre    variable    d'arguments    en   e'mettant   un   message
+d'avertissement.
+
+Attention: Aucune ve'rification n'est faite  sur  la  validite'  de
+l'expansion inline. Des cas triviaux ou` l'expansion inline simple
+peut ne pas e^tre suffisante sont:
+- les cas de double e'valuation
+- les cas d'appels avec effets de bords.
+- les cas d'appel de FSUBR.
+
+Un exemple typique est la fonction xcons:
+
+(de xcons (a b) (cons b a))
+
+   Pour cette fonction, l'expansion inline est fausse si  l'ordre
+   des effets de bord des arguments d'appel importe.
+
+   Un autre cas difficile:
+
+   (de foo () (omakeq foo foo))
+
+qui devrait engendrer:
+
+(dmd foo () `(omakeq foo ,foo))
+
+
+
+                               56         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                           3: Le Pre'compilateur
+
+Ce cas difficile est en fait re'solu par l'application  du  macro-
+expanseur avant tout traitement.
+
+
+
+
+3.4  Expansion des send guide'e par une e'valuation
+
+
+La construction pre'sente'e dans cette partie est  un  premier  pas
+vers  la compilation personnalise'e de type "execute and compile",
+puisqu'elle  est  guide'e  par  une  premie`re  exe'cution  sur   le
+programme de l'utilisateur.
+
+(ecxcp <expr>)
+
+(ecxcp <expr> <fun> [ind1 [ind2 [ind3]]])
+
+(ecxcp <expr> (<fun>1 ... <fun>k)  [ind1 [ind2 [ind3]]])
+
+   Les <fun>i ne sont pas e'value's.  Avant d'appeler  la  fonction
+   cxcp  standard,  avec les <fun>i (non e'value's comme pour cxcp)
+   et e'ventuellement les  indicateurs,  l'expression  <expr>  est
+   e'value'e  dans  un environnement ou` tous les appels a` send dans
+   les fonctions a` compiler sont  dynamiquement  e'tendus  en  des
+   selectq  sur  tous les types des objets successifs auxquels ce
+   send envoie des messages. La dernie`re clause du selectq est de
+   la forme:
+
+        (t (send ...))
+   Cet appel a` send garantit l'extensibilite'.  De`s que le  nombre
+   de  clauses de'passe la valeur de la variable #:cxcp:ecxcp, qui
+   vaut 5 par de'faut, l'expansion est annule'e au profit d'un send
+   classique.
+
+
+
+
+
+
+
+
+                               57         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+
+
+                       C H A P I T R E  4
+
+
+                    La Bibliothe`que Initiale
+
+
+
+
+                        _J_e_a_n-_M_a_r_i_e _H_u_l_l_o_t
+
+
+Nous  pre'sentons  dans  ce  chapitre   un   certain   nombre   de
+constructions  qui  ont e'te' de'clare'es d'utilite' publique au cours
+du temps.
+
+
+
+4.1  Les Records
+
+Il s'agit ici de de'finir des mode`les qui sont des arbres binaires
+e'quilibre's de Cons dont les feuilles sont des Fields, a` partir de
+la liste de ces  Fields.  Pour  cela,  nous  avons  introduit  un
+nouveau macromode`le de nom Record dans le langage de mode`les:
+
+(Record <model>1 ... <model>n)
+
+qui est interpre'te' comme un arbre binaire e'quilibre' de Cons:
+
+(Cons (Cons ... (Cons <model>1 <model>2) ...)
+      (Cons ... (Cons <model>n-1 <model>n) ...))
+
+Exemples
+
+
+? (defmodel toto (Record (Field a) (Field b) (Field c) (Field d)))
+= toto
+? ;est e'quivalent a`
+? (defmodel toto (Cons (Cons (Field a) (Field b))
+?                      (Cons (Field c) (Field d))))
+
+                               58         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+= toto
+
+Nous donnons une construction permettant de de'finir  des  records
+avec  une  syntaxe alle'ge'e. Pour cela nous de'finissons d'abord ce
+qu'est un descripteur de champ <fielddescr>:
+
+<fielddescr> =   <symbol>
+                 |<symbol>~<model>
+                 |(<symbol> <object>)
+                 |(<symbol>~<model> <object>)
+
+Dans  le  contexte  des  constructions   defrecord,   deftrecord,
+defclass  et deftclass de'finies ci-apre`s, les <fielddescr> seront
+respectivement interpre'te's comme:
+
+ (Field <symbol>)
+ (Field <symbol> <model>)
+ (Field <symbol> * <object>)
+ (Field <symbol> <model> <object>)
+
+(defrecord <name> <fielddescr>1 ... <fielddescr>n)
+
+(defrecord (<name> <abbrev>) ...)
+
+   Aucun argument n'est e'value'. Dans le cas ou <abbrev> n'est pas
+   fourni,  on  le  prend e'gal au pname de <name> dans le package
+   global Le_Lisp ||. _A_t_t_e_n_t_i_o_n, _c_e_c_i _n'_e_s_t _p_a_s _d_u  _t_o_u_t  _l_e  _c_a_s
+   _p_o_u_r   _l_a   _c_o_n_s_t_r_u_c_t_i_o_n   _d_e_f_m_o_d_e_l.  Cette  construction  est
+   e'quivalente a`:
+
+     (defmodel (<name> <abbrev>) (Record <fielddescr>1 ... <fielddescr>n))
+     (defaccess <name>)
+
+
+Exemples
+
+
+? (defrecord toto a (b~string "") c~fix)
+= toto
+? (defmake toto toto (a b c))
+= toto
+
+                               59         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+? (setq x (toto 1 "ahlala" 3))
+= (1 "ahlala" . 3)
+? ({toto}:a x)
+= 1
+? ; mais attention a` l'exportation par de'faut dans ||
+? (defrecord #:toto:tata a b c)
+= #:toto:tata
+? '{tata}
+= #:toto:tata
+? (defrecord Coord (x~fix 0) (y~fix 0))
+= Coord
+? (defmake Coord Coord (x y))
+= Coord
+
+(deftrecord <name> <fielddescr>1 ... <fielddescr>n)
+
+(deftrecord (<name> <abbrev>) ...)
+
+   Cette construction est  e'quivalente  a`  la  pre'ce'dente,  sinon
+   qu'on engendre un type au lieu d'engendrer un mode`le.
+
+
+Exemples
+
+
+? (deftrecord Point coord~(Include Coord)))
+= Point
+? (defmake Point mkpoint (x y))
+= mkpoint
+? (defmake Point Point coord)
+= Point
+? (mkpoint 1 2)
+= #(Point 1 . 2)
+? (Point (Coord 1 2))
+= #(Point (1 . 2))
+
+
+
+
+
+
+
+                               60         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+4.2  Les Classes
+
+Il s'agit ici de donner des facilite's pour  de'crire  des  mode`les
+toujours extensibles: on les de'finit comme des Vectors de mode`les
+qui sont donc toujours extensibles par  la  droite.  Ces  mode`les
+sont appele's des classes et, pour eux, la hie'rarchie structurelle
+coincide avec la hie'rarchie des espaces se'mantiques.   En  effet,
+le  nom  d'une  sous-classe est toujours interne' dans l'espace de
+noms de la classe me`re.
+
+Pour de'finir les classes, nous commenc,ons par de'finir une  classe
+initiale:
+
+
+? (defmodel Class (Field class-attributes (Vector)))
+= Class
+
+et pour les classes qui sont des types, une Tclasse initiale:
+
+
+? (deftype Tclass (Field class-attributes (Vector)))
+= Tclass
+
+Le principe de la construction des  classes  consiste  a`  e'tendre
+re'pe'titivement  ces  classes  au champ class-attributes. Ceci est
+re'alise' par les constructions defclass et deftclass.
+
+(defclass <name> <fielddescr>1 ... <fielddescr>n)
+
+(defclass (<name> <abbrev>) ...)
+
+   Aucun argument n'est e'value'. Dans le cas ou <abbrev> n'est pas
+   fourni,  on  prend  pour  abbre'viation de <name> le symbole du
+   package global || Le_Lisp dont le pname  est  ||.   _A_t_t_e_n_t_i_o_n,
+   _c_e_c_i  _n'_e_s_t  _p_a_s _d_u _t_o_u_t _l_e _c_a_s _p_o_u_r _l_a _c_o_n_s_t_r_u_c_t_i_o_n _d_e_f_m_o_d_e_l.
+   Le symbole <name>  doit  avoir  pour  packagecell  un  symbole
+   <supername>  qui  posse`de  une  de'finition  de  classe.  Cette
+   construction est alors e'quivalente a`:
+
+     (defmodel (<name> <abbrev>)
+               (Extend <supername>
+
+                               61         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+                       class-attributes (Vector <fielddescr>1 ... <fielddescr>n))
+     (defaccess <name> <fieldname>1 ... <fieldname>i)
+
+   _A_t_t_e_n_t_i_o_n _q_u_e _p_o_u_r _l_e_s _c_l_a_s_s_e_s, _l_e _d_e_f_a_c_c_e_s_s  _n'_e_s_t  _f_a_i_t  _q_u_e
+   _s_u_r _l_e_s _n_o_u_v_e_a_u_x _c_h_a_m_p_s.
+
+(deftclass <name> <fielddescr>1 ... <fielddescr>n)
+
+(deftclass (<name> <abbrev>) ...)
+
+   Cette construction est  e'quivalente  a`  la  pre'ce'dente,  sinon
+   qu'on  engendre  un  type au lieu d'engendrer un mode`le et uqe
+   les Tclasses  sont  des  extensions  de  la  Tclasse  initiale
+   Tclass.
+
+
+Exemples
+
+
+? (deftclass fiche nom prenom)
+= #:Tclass:fiche
+? (defmake {fiche} fiche (nom prenom))
+= fiche
+? (setq fiche (fiche 'Jacquemart 'Marcel))
+= #(#:Tclass:fiche . #[Jacquemart Marcel])
+? (deftclass {fiche}:fiche-client adresse~string)
+= #:Tclass:fiche:fiche-client
+? (deftclass {fiche-client}:fiche-cordonnier pointure~fix)
+= #:Tclass:fiche:fiche-client:fiche-cordonnier
+? (defmake {fiche-cordonnier} fiche-cordonnier
+?                              (nom prenom adresse pointure))
+= fiche-cordonnier
+? (setq fiche (fiche-cordonnier 'Jacquemart
+?                               'Marcel
+?                               "Inconnue"
+?                               48))
+= #(#:Tclass:fiche:fiche-client:fiche-cordonnier . #[Jacquemart Marcel
+Inconnue 48])
+? ; sacre'e pointure!
+? (deftclass {fiche}:fiche-police condamnations~string)
+= #:Tclass:fiche:fiche-police
+
+                               62         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+? (defmake {fiche-police} fiche-police (nom prenom condamnations))
+= fiche-police
+? (fiche-police 'Jacquemart 'Marcel "Vol de Chaussures")
+= #(#:Tclass:fiche:fiche-police . #[Jacquemart Marcel Vol de Chaussures])
+? ; pour une fois qu'il en avait trouve' a` sa taille!
+
+
+
+
+4.3  Les Arbres
+
+Les arbres sont des types construits a`  partir  d'un  type  arbre
+initial:
+
+
+(deftype Tree (Cons (Field sons)
+                    (Field tree-attributes (Vector))))
+
+Par un principe tout a` fait analogue a`  celui  utilise'  pour  les
+classes, les extensions successives se font en e'tendant le Vector
+du champ tree-attributes. Ceci est re'alise'  par  la  construction
+deftree:
+
+(deftree <name> <fielddescr>1 ... <fielddescrn>)
+
+(deftree (<name> <abbrev>)) <fielddescr>1 ,,, <fielddescr>n)
+
+   Cette contruction est analogue a` deftclass sinon qu'on e'tend a`
+   partir du type Tree au lieu du type Tclass.
+
+   La nouveaute' des arbres par rapport aux classes re'side dans la
+   possibilite'  de  de'finir  des "constructeurs", par exemple les
+   ope'rateurs  du  langage  quand  on  utilise  les  arbres  pour
+   construire la syntaxe abstraite d'un langage de programmation.
+   Il s'agit donc, e'tant donne' un  arbre  posse'dant  un  certains
+   nombres  d'attributs, de spe'cifier comment sont structure's ses
+   fils.
+
+
+
+
+
+                               63         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+(defcons <name> <sonsdescr> <fielddescr>1 ... <fielddescr>n)
+
+(defcons (<name> <abbrev>) <sonsdescr> ...)
+
+   Comme pour les classes et les arbres, <name>  est  un  symbole
+   dont  le  packagecell  <supername>  doit  avoir une de'finition
+   d'arbre et <abbrev> s'il est omis est pris e'gal a` (symbol  '||
+   <name>).   Les  <fielddescr>i  sont  interpre'te's comme pour le
+   deftree, i.e.  ce sont des champs qui sont ajoute's en queue de
+   tree-attributes.   <sonsdescr>  est  soit un fielddescr auquel
+   cas le champ sons a pour mode`le <fielddescr>, soit  une  liste
+   de  <fielddescr>  auquel  cas  le  champ sons a pour mode`le le
+   Vector contruit a` partir de cette liste.
+    De plus une fontion de nom <abbrev> de cre'ation du  type  est
+   engendre'e prenant un nombre variable d'argument dans le cas ou
+   <sonsdescr> est un <fielddescr> et un nombre d'arguments  e'gal
+   a`   la  longueur  de  <fielddescr>  autrement.  Ces  arguments
+   permettent de construire le champ  sons  des  instances  (voir
+   exemples).
+    Enfin un defaccess est fait sur tous les nouveaux  champs  et
+   tous les champs spe'ciaux que sont les fils.
+
+
+Exemples
+
+Nous  pre'sentons  en  exemple  l'imple'mentation   d'une   syntaxe
+abstraite  pour  un  sous  ensemble  du langage de description de
+transparents Flip de  G.  Kahn.  Il  s'agit  d'un  petit  langage
+ge'ome'trique permettant de de'couper le plan en bandes horizontales
+(l'ope'rateur horiz a`  nombre  variable  d'arguments),  en  bandes
+verticales (l'ope'rateur vertic a` nombre variable d'arguments), en
+re'gions rectangulaires atomiques contenant du texte  (l'ope'rateur
+aligner  a` nombre variable de chai^nes de caracte`res arguments) et
+en re'gions rectangulaires atomiques contenant une diagonale d'une
+certaine  couleur  (l'ope'rateur  diag a` un argument, sa couleur).
+Chaque bande ou re'gion  posse`de  une  proportion  qui  permet  de
+calculer  sa  taille  propre  dans  sa bande me`re, elle peut e^tre
+encadre'e d'une certaine couleur, peinte d'une  certaine  couleur,
+le texte peut y e^tre e'crit d'une certaine couleur.
+
+Tous ces  attributs  communs  a`  tous  les  objets  Flip,  seront
+
+                               64         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+stocke'es dans une structure Flip de'finie par:
+
+
+? (deftree Flip
+?          (proportion~fix 1)
+?          cadre
+?          texte
+?          peinture
+= #:Tree:Flip
+
+
+Nous de'finissons les diffe'rents ope'rateurs du langage:
+
+
+? (defcons {Flip}:horiz sons~(List Flip))
+= #:Tree:Flip:horiz
+? (defcons {Flip}:vertic sons~(List Flip))
+= #:Tree:Flip:vertic
+? (defcons {Flip}:aligner sons~(List string))
+= #:Tree:Flip:aligner
+? (defcons {Flip}:diag (color~color))
+= #:Tree:Flip:diag
+
+et nous  illustrons  par  des  exemples  les  diverses  fonctions
+engendre'es:
+
+
+? (setq flip (diag 'rouge))
+= #(#:Tree:Flip:diag #[rouge] . #[1 () () ()])
+? ({Tree}:sons flip)
+= #[rouge]
+? ({diag}:color flip)
+= rouge
+? ({diag}:sons flip)
+** eval : fonction indefinie : #:Tree:Flip:diag:sons
+   [stack 3]    (lock ...)
+   [stack 2]    (tag #:system:error-tag ...)
+   [stack 1]    (itsoft ...)
+? (setq flip (aligner "toto" "tutu" "titi"))
+= #(#:Tree:Flip:aligner (toto tutu titi) . #[1 () () ()])
+? ({aligner}:sons flip)
+
+                               65         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+= (toto tutu titi)
+? (setq flip (horiz (diag 'vert) (diag 'bleu)))
+= #(#:Tree:Flip:horiz (#(#:Tree:Flip:diag #[vert] . #[1 () () ()]) #(#:Tree:
+Flip:diag #[bleu] . #[1 () () ()])) . #[1 () () ()])
+? (sendq proportion flip)
+= 1
+? ({Flip}:cadre flip 'bleu)
+= bleu
+? (sendq cadre flip)
+= bleu
+
+L'imple'mentation comple`te de Flip est donne'e en Annexe IV.
+
+
+
+4.4  Les Re`gles
+
+
+Nous avons vu comment la construction send  donne  un  ro^le  tout
+particulier  a` son premier argument, puisque c'est sur lui qu'est
+fait le de'codage de type permettant de trouver la fonction  qu'il
+faut  appliquer.  Parfois  il serait agre'able de pouvoir faire la
+recherche  de  la  fonction  a`   appliquer   en   profitant   des
+informations  de  types sur plusieurs arguments. Ceyx propose une
+constrution permettant de le faire dans le cas de deux arguments,
+elle sera e'tendue ulte'rieurement au cas de n arguments type's.
+
+Nous expliquons cette construction  sur un exemple.  Nous voulons
+de'finir  une ope'ration d'addition sur les re'els et les complexes.
+Pour cela, nous  de'finissons  tout  d'abord  les  types  Reel  et
+Complexe:
+
+
+? (deftype Reel (Field val number 0))
+= Reel
+? (defmake Reel reel (val))
+= reel
+? (defaccess Reel)
+= Reel
+? (deftype Complexe (Cons (Field reelle number 0)
+?                         (Field imaginaire number 0)))
+
+                               66         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+= Complexe
+? (defmake Complexe complexe (reelle imaginaire))
+= complexe
+? (defaccess Complexe)
+= Complexe
+
+Il nous est assez difficile d'exprimer en Ceyx une loi d'addition
+sans  de'finir une se'mantique + sur chacun des deux types envoyant
+des se'mantiques relais +reel ou +complexe a` la liste  d'arguments
+renverse'e.  Le  but de la construction defrule est de vous e'viter
+toute cette salade.
+
+Ce qu'il faut savoir, c'est qu'au moment du send la recherche  de
+la fonction a` appliquer sera faite en tenant compte des types des
+deux premiers arguments en ordre lexicographique pour la remonte'e
+hie'rarchique.  Dans  le  cas  de  type  A2 <=p A1 pour le premier
+argument  et  B2  <=p  B1  pour  le   deuxie`me   argument,   nous
+inspecterons donc successivement A2xB2, A2xB1, A1xB2, A1xB1.
+
+
+? (defrule + (x~Reel y~Reel)
+?            (reel (+ ({Reel}:val x) ({Reel}:val y))))
+= +
+? (sendq + (reel 1) (reel 2)))
+= #(Reel . 3)
+? (sendq + (reel 1) (complexe 2 3))
+** + : l'argument n'est pas un nombre : #(Complexe 2 . 3)
+   [stack 4]    (#:Reel:+ ...)
+   [stack 3]    (lock ...)
+   [stack 2]    (tag #:system:error-tag ...)
+   [stack 1]    (itsoft ...)
+? ; et oui puisqu'on ne trouve pas de cas ReelxComplexe, on remonte
+? ; jusqu'au package global, ou on trouve la fonction Lisp +
+? ; classique, qui provoque l'erreur puisque le type de l'argument
+? ; n'est pas le bon.
+? (defrule + (x~Reel y~Complexe)
+?            (complexe (+ ({Reel}:val x) ({Complexe}:reelle y))
+?                      ({Complexe}:imaginaire y)))
+= +
+? ; et cette fois-ci on peut faire
+? (sendq + (reel 1) (complexe 2 3))
+
+                               67         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+= #(Complexe 3 . 3)
+? (defrule + (x~Complexe y~Complexe)
+?         (complexe (+ ({Complexe}:reelle x) ({Complexe}:reelle y))
+?                   (+ ({Complexe}:imaginaire x)
+?                      ({Complexe}:imaginaire y))))
+= +
+? (sendq + (complexe 1 2) (complexe 3 4))
+= #(Complexe 4 . 6)
+
+(defrule  <name>  (<arg>1~<type>1  <arg>2~<type>2  .  <args>)   .
+   <body>)
+
+   De'finit  la  re`gle  de  nom  name  sur  le  produit  carte'sien
+   <type>1x<type>2.   On  notera  qu'un  re`gle  prend  donc  deux
+   arguments type's et autant d'arguments Lisp standards qu'on  le
+   de'sire.
+
+(undefrule <name>)
+
+   Enle`ve toute trace de la re`gle de  nom  <name>.   Apre`s  cette
+   ope'ration la re`gle <name> n'existe litte'ralement plus.
+
+
+
+
+4.5  De'structuration
+
+Il   s'agit   de   constructions   permettant   de   de'structurer
+automatiquement un objet dans les variables locales d'un let.
+
+(olet (<modelname> <dfields> <obj>) . <body>)
+
+   <dfields>= (<dfield>1 ... <dfield>n) ou <dfield> est  soit  un
+   nom  de  champ  de  <modelname>,  soit une liste (<fieldname>i
+   <symbol>i).
+    Cette construction se macroge'ne`re en
+
+       (let (<exp>1 ... <expn>) . <body>))
+   ou`
+       <exp>i = (<fieldname>i (ogetq <modelname> <fieldname>i <object>))
+       ou
+
+                               68         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+       <exp>i = (<symbol>i (ogetq <modelname> <fieldname>i <object>)).
+
+Exemples:
+
+
+? (defmake toto toto (a b c))
+= toto
+? (olet (toto (a c) (toto 1 2 3)) (print a) (print c))))
+1
+3
+= 3
+2
+3
+= 3
+
+
+(demethod <name> (<obj> . <args>) <dfields> . <body>)
+
+   Cette  construction  permet   de   de'structurer   des   champs
+   se'lectionne's  de son premier argument <obj> dans des variables
+   locales de la fonction. Elle est e'quivalente a`:
+
+    (de <name> <args> (olet ((packagecell <name>) <dfields> <obj>) . <body>))
+
+Exemples
+
+
+? (demethod {toto}:print (x) (a b c)
+?      (print "a: " a)
+?      (print "b: " b)
+?      (print "c: " c)
+?      t)
+= #:toto:print
+? (pretty #:toto:print)
+(de #:toto:print (x)
+    (olet (toto (a b c) x)
+          (print "a: " a) (print "b: " b) (print "c: " c) t))
+= ()
+
+
+
+
+                               69         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+(unde <name>)
+
+   Enle`ve la de'finition de fonction du symbole <name>.
+
+
+
+
+4.6  O..Q
+
+
+(ochangeq  <modelname>  <object>  <field>1  <val>1  ...  <field>n
+   <val>n)
+
+   <modelname> et les <field>i  qui  doivent  e^tre  des  noms  de
+   champs ne sont pas e'value's, <object> doit e^tre une instance de
+   <modelname>, ses champs <field>i prennent les  valeurs  <val>i
+   et <object> est ramene' en valeur.
+
+(ofunq <modelname> <field> <object> <fun> . <args>)
+
+   <modelname> et <field> et <fun> ne sont pas e'value's,  <object>
+   doit  e^tre  une  instance  de <modelname>, son champ field est
+   remplace, par
+
+         (apply <fun> (cons (ogetq <modelname> <field> <object>) <args>))
+
+
+Un cas particulier:
+
+(oconsq <modelname> <field> <object> <val>)
+
+   <modelname> et <field> ne sont pas e'value's, <object> doit e^tre
+   une  instance  de  <modelname>, son champ <field> est remplace'
+   par
+
+         (cons <val> (ogetq <modelname> <field> <object>))
+
+
+Cette construction peut e^tre de'finie en Lisp par:
+
+(defmacro oconsq (model field obj val)
+
+                               70         Mercredi 3 Octobre 1984
+
+
+
+Programmer en Ceyx                    4: La Bibliothe`que Initiale
+
+    `(ofunq ,model ,field ,obj xcons ,val))
+
+
+Exemples
+
+
+? (setq x (tata 1 2))
+= #(tata 1 . 2)
+? (ochangeq tata x a () b 0)
+= #(tata () . 0)
+? (ofunq tata b x + 1)
+= #(tata () . 1)
+? (oconsq tata a x 'aa)
+= #(tata (aa) . 1)
+? (oconsq tata a x 'bb)
+= #(tata (bb aa) . 1)
+
+
+
+
+
+4.7  Me'canisme de Trace
+
+
+(tracesems <msg>1 ... <msg>n)
+
+   Les arguments ne sont pas e'value's.  Permet de tracer  au  sens
+   Lisp,  toutes les proprie'te's se'mantiques de pname <msg>1, ...,
+   <msg>n.
+
+
+
+
+
+
+
+
+
+
+
+
+
+                               71         Mercredi 3 Octobre 1984
+
+
+
+                       Table des matie`res
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+                       Table des matie`res
+
+                       Table des matie`res
+
+
+
+1 Les Mode`les
+1.1 Introduction.........................................9
+1.2 Le Langage de Description de Mode`les................11
+1.2.1 Syntaxe...........................................11
+1.2.2 Se'mantique........................................13
+1.2.2.1 Discrimination..................................13
+1.2.2.2 De'structuration.................................16
+1.2.2.3 Instantiation...................................18
+1.2.3 Les Macro Mode`les.................................21
+1.3 De'finition de Mode`les...............................24
+1.3.1 La Construction defmodel..........................24
+1.3.2 La Construction defaccess.........................25
+1.3.3 La Construction defmake...........................26
+1.3.4 Les Mode`les Pre'de'finis............................28
+1.4 Les Espaces Se'mantiques.............................29
+1.4.1 Les Espaces de Noms...............................29
+1.4.2 Les Proprie'te's Se'mantiques des Mode`les............32
+1.4.3 Re'cupe'ration Fonctionnelle Hie'rarchique...........34
+1.5 Description de Mode`les..............................36
+
+2 Les Types
+2.1 Les Types Lisp......................................43
+2.2 Les Types Ceyx......................................44
+2.2.1 Les Objets........................................44
+2.2.2 La Contruction deftype............................45
+2.2.3 La Fonction type..................................47
+2.3 La Construction send................................48
+
+3 Le Pre'compilateur
+3.1 Objectifs...........................................51
+3.1.1 Compilation des acce`s aux champs..................52
+3.1.2 Expansion a` la demande de fonctions...............53
+3.1.3 Compilation des send..............................54
+3.2 Utilisation du pre'-compilateur......................55
+3.2.1 Appel du Compilateur..............................55
+3.3 Expansion a` la Demande..............................56
+3.4 Expansion des send guide'e par une e'valuation........57
+
+                                2         Mercredi 3 Octobre 1984
+
+
+
+                       Table des matie`res
+
+
+4 La Bibliothe`que Initiale
+4.1 Les Records.........................................58
+4.2 Les Classes.........................................61
+4.3 Les Arbres..........................................63
+4.4 Les Re`gles..........................................66
+4.5 De'structuration.....................................68
+4.6 O..Q................................................70
+4.7 Me'canisme de Trace..................................71
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                3         Mercredi 3 Octobre 1984
+
+
+
+                    Index des fonctions Lisp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                1         Mercredi 3 Octobre 1984
+
+
+
+                    Index des fonctions Lisp
+
+
+                    Index des fonctions Lisp
+
+
+(<=p <symbol>1 <symbol>2) ..............................29
+(apropos <package>) ....................................37
+(cxcp (<fun>1 ... <fun>k) [ind1 [ind2 [ind3]]]) ........55
+(cxcp <fun> [ind1 [ind2 [ind3]]]) ......................55
+(cxcp) .................................................55
+(cxcp-inline <fundescr>1 ... <fundescr>n) ..............56
+(cxcp-package (<pkg>1 ... <pkg>n) [ind1 [ind2 [ind3]]]) 55
+(cxcp-package <pckg> [ind1 [ind2 [ind3]]]) .............55
+(defabbrev <full-name> <abbrev>) .......................30
+(defaccess <modelname> <fieldname>1 ... <fieldname>n) ..25
+(defclass (<name> <abbrev>) ...) .......................61
+(defclass <name> <fielddescr>1 ... <fielddescr>n) ......61
+(defcons (<name> <abbrev>) <sonsdescr> ...) ............64
+(defcons <name> <sonsdescr> <fielddescr>1 ... <fielddescr>n) 64
+(defmake <modelname> <mkname> (<fieldname>1 ... <fieldname>n)) 26
+(defmake <modelname> <mkname>) .........................26
+(defmodel (<name> <abbrev>) <model>) ...................31
+(defmodel <name> <model>) ..............................24
+(defrecord (<name> <abbrev>) ...) ......................59
+(defrecord <name> <fielddescr>1 ... <fielddescr>n) .....59
+(defrule <name> (<arg>1~<type>1 <arg>2~<type>2 . <args>) . <body>) 68
+(deftclass (<name> <abbrev>) ...) ......................62
+(deftclass <name> <fielddescr>1 ... <fielddescr>n) .....62
+(deftrecord (<name> <abbrev>) ...) .....................60
+(deftrecord <name> <fielddescr>1 ... <fielddescr>n) ....60
+(deftree (<name> <abbrev>)) <fielddescr>1 ,,, <fielddescr>n) 63
+(deftree <name> <fielddescr>1 ... <fielddescrn>) .......63
+(deftype (<name> <abbrev>) <model>) ....................46
+(deftype <name> <model>) ...............................46
+(demethod <name> (<obj> . <args>) <dfields> . <body>) ..69
+(describe <object> [<modelname>]) ......................37
+(ecxcp <expr> (<fun>1 ... <fun>k) [ind1 [ind2 [ind3]]]) 57
+(ecxcp <expr> <fun> [ind1 [ind2 [ind3]]]) ..............57
+(ecxcp <expr>) .........................................57
+(getfn <pkg> <sym> <lastpkg>) ..........................35
+(getfn <pkg> <sym>) ....................................35
+(hfuncall <pkg> <sym> <arg>1 ... <arg>n) ...............35
+
+                                2         Mercredi 3 Octobre 1984
+
+
+
+                    Index des fonctions Lisp
+
+(mdescribe <modelname> [<prof>]) .......................36
+(ochangeq <modelname> <object> <field>1 <val>1 ... <field>n <val>n) 70
+(oconsq <modelname> <field> <object> <val>) ............70
+(ofunq <modelname> <field> <object> <fun> . <args>) ....70
+(ogetq <modelname> <fieldname> <sexpr>) ................17
+(olet (<modelname> <dfields> <obj>) . <body>) ..........68
+(omake <modelname>) ....................................20
+(omakeq <modelname> <fieldname>1 <sexpr>1 ... <fieldname>n <sexpr>n) 20
+(omatchq <modelname> <sexpr>) ..........................15
+(oputq <modelname> <fieldname> <sexpr> <val>) ..........17
+(plink <abbrev>) .......................................30
+(semcall <pkg> <sym> <arg>1 ... <arg>n) ................36
+(send <msg> <obj> <arg>1 ... <arg>n) ...................48
+(sendq <msg> <obj> <arg>1 ... <arg>n) ..................49
+(tbl-describe <modelname>) .............................36
+(tcons <symbol> <sexpr>) ...............................44
+(tconsp <obj>) .........................................45
+(tracesems <msg>1 ... <msg>n) ..........................71
+(type <object>) ........................................47
+(unde <name>) ..........................................70
+(undefrule <name>) .....................................68
+({Ceyx}:getfn <pkg> <sym>) .............................35
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                3         Mercredi 3 Octobre 1984
+
+

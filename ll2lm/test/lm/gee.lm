@@ -1,0 +1,49 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule gee
+
+files (
+|gee.ll|
+)
+
+import (
+
+; ;;; Imports which seem necessary
+bar
+zee
+)
+
+export (
+
+; ;;; Functions unused unless exported
+m-bar3-f-gee11
+m-bar4-f-gee12
+f-gee22
+f-gee1
+f-gee32
+f-gee41
+m-gee42
+f-gee51
+f-gee53
+
+; ;;; Not exported because only internally used
+; f-gee21
+; f-gee31
+; m-gee4
+; f-gee52
+
+; ;;; Not defined but export required by user
+m-gee13
+)
+
+cpenv (
+((defbar3 f-gee11)
+)((defbar4 f-gee12)
+)((defvar xxx 0)
+(when xxx (defun f-gee31 ()) (defun f-gee32 ()))
+))
+
+include (
+bar
+|zoo.lhh|
+)

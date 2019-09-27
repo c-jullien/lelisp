@@ -1,0 +1,128 @@
+defmodule
+tty
+files (
+virtty
+)
+export (
+tyod
+#:tty:tyod
+typrologue
+tyepilogue
+tycleol
+tycleos
+tybeep
+tyinsch
+tydelch
+tyinscn
+tydelcn
+#:tty:tyinscn
+#:tty:tydelcn
+tyinsln
+tydelln
+tyattrib
+tybs
+tycr
+tyshowcursor
+tyname
+tyxmax
+tyymax
+tyupkey
+tydownkey
+tyleftkey
+tyrightkey
+#:tty:typrologue
+#:tty:tyepilogue
+#:tty:tycleol
+#:tty:tycleos
+#:tty:tybeep
+#:tty:tyinsch
+#:tty:tydelch
+#:tty:tyinsln
+#:tty:tydelln
+#:tty:tyattrib
+#:tty:tybs
+#:tty:tycr
+#:tty:tyshowcursor
+tyco
+tycot
+initty
+#:tty:tyerror
+tyerror
+to-tty
+get-tty
+)
+import (
+files
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(tyod subr2 ())
+(#:tty:tyod subr2 ())
+(typrologue subr0 ())
+(tyepilogue subr0 ())
+(tycleol subr0 ())
+(tycleos subr0 ())
+(tybeep subr0 ())
+(tyinsch subr1 ())
+(tydelch subr0 ())
+(tyinscn subr1 ())
+(tydelcn subr1 ())
+(#:tty:tyinscn subr1 ())
+(tyerror subr1 ())
+(#:tty:tydelcn subr1 ())
+(tyinsln subr0 ())
+(tydelln subr0 ())
+(tyattrib nsubr ())
+(tybs subr1 ())
+(tycr subr0 ())
+(tyshowcursor nsubr ())
+(tyname subr0 ())
+(tyxmax subr0 ())
+(tyymax subr0 ())
+(tyupkey subr0 ())
+(tydownkey subr0 ())
+(tyleftkey subr0 ())
+(tyrightkey subr0 ())
+(#:tty:typrologue subr0 ())
+(#:tty:tyepilogue subr0 ())
+(#:tty:tycleol subr0 ())
+(#:tty:tycleos subr0 ())
+(#:tty:tybeep subr0 ())
+(#:tty:tyinsch subr1 ())
+(#:tty:tydelch subr0 ())
+(#:tty:tyinsln subr0 ())
+(#:tty:tydelln subr0 ())
+(#:tty:tyattrib subr1 ())
+(#:tty:tybs subr1 ())
+(#:tty:tycr subr0 ())
+(#:tty:tyshowcursor subr1 ())
+(tyco nsubr ())
+(tycot nsubr ())
+(initty nsubr ())
+(#:tty:tyerror subr1 ())
+(to-tty dmsubr ())
+(get-tty dmsubr ())
+)
+cpfunctions
+()
+cpimport (
+(files
+(loadfile . subr2)
+(libload . fsubr)
+))
+cpenv (
+files
+((putprop '#:sys-package:tty 't '#:complice:globalvar)
+)((putprop '#:tty:tyattrib 't '#:complice:globalvar)
+)((putprop '#:tty:tyshowcursor 't '#:complice:globalvar)
+)((putprop '#:tty:name 't '#:complice:globalvar)
+)((putprop '#:tty:xmax 't '#:complice:globalvar)
+)((putprop '#:tty:ymax 't '#:complice:globalvar)
+)((putprop '#:tty:up 't '#:complice:globalvar)
+)((putprop '#:tty:down 't '#:complice:globalvar)
+)((putprop '#:tty:left 't '#:complice:globalvar)
+)((putprop '#:tty:right 't '#:complice:globalvar)
+))

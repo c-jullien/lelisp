@@ -1,0 +1,32 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	mstack:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	hashtab:dword
+	extrn	zundef:dword
+	extrn	zt:dword
+	extrn	zvoid:dword
+	extrn	zquote:dword
+	extrn	tabtypfn:dword
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

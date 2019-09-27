@@ -1,0 +1,194 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	bstack:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	mstack:dword
+	extrn	estack:dword
+	extrn	bstrg:dword
+	extrn	fstrg:dword
+	extrn	bcode:dword
+	extrn	ccode:dword
+	extrn	ecode:dword
+	extrn	bvect:dword
+	extrn	fvect:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	fnumb:dword
+	extrn	cnumb:dword
+	extrn	bfloat:dword
+	extrn	ffloat:dword
+	extrn	fsymb:dword
+	extrn	hashtab:dword
+	extrn	zvoid:dword
+	extrn	zt:dword
+	extrn	zundef:dword
+	extrn	zitsoft:dword
+	extrn	zllsystem:dword
+	extrn	cstsyste:dword
+	extrn	itstate:dword
+	extrn	zsyserror:dword
+	extrn	curprmpt:dword
+	extrn	tabchan:dword
+	extrn	cntrlc:dword
+	extrn	bufch:dword
+	extrn	rubstrg:dword
+	extrn	asymb:dword
+	extrn	impld:dword
+	extrn	ringur:dword
+	extrn	tabch:dword
+	extrn	cachch:dword
+	extrn	bufat:dword
+	extrn	curread:dword
+	extrn	cpkgc:dword
+	extrn	impli:dword
+	extrn	tabctyp:dword
+	extrn	tabccod:dword
+	extrn	bufpn:dword
+	extrn	iexpld:dword
+	extrn	lexpld:dword
+	extrn	llink:dword
+	extrn	evalst:dword
+	extrn	forme:dword
+	extrn	funct:dword
+	extrn	savea1:dword
+	extrn	savea2:dword
+	extrn	savea3:dword
+	extrn	savea4:dword
+	extrn	errname:dword
+	extrn	intret:dword
+	extrn	intllink:dword
+	extrn	tabtypfn:dword
+	extrn	tabcodfn:dword
+	extrn	zllcons:dword
+	extrn	zllnull:dword
+	extrn	zllfloat:dword
+	extrn	zllfix:dword
+	extrn	fzero:dword
+	extrn	fltun:dword
+	extrn	fltmun:dword
+	extrn	fltimax:dword
+	extrn	fltimin:dword
+	extrn	zstring000:dword
+	extrn	zvector:dword
+	extrn	zffsymbol:dword
+	extrn	bufstrg:dword
+ngccons	dd	0
+ngcsymb	dd	0
+ngcstrg	dd	0
+ngcvect	dd	0
+ngcfloat	dd	0
+ngcnumb	dd	0
+ngch	dd	0
+ngcuser	dd	0
+freenu	dd	0
+freenm	dd	0
+freefu	dd	0
+freefm	dd	0
+freevu	dd	0
+freevm	dd	0
+freesu	dd	0
+freesm	dd	0
+freeyu	dd	0
+freeym	dd	0
+freelu	dd	0
+freelm	dd	0
+swheap	dd	0
+cpheap	dd	0
+oswheap	dd	0
+pnmac1111	db	'gc'
+	even
+pnmac1112	db	'gcalarm'
+	even
+pnmac1113	db	'gc-before-alarm'
+	even
+pnmac1114	db	'gcinfo'
+	even
+zsizecd	dd	0
+pnmac1115	db	'code'
+	even
+zsizehp	dd	0
+pnmac1116	db	'heap'
+	even
+pnmac1117	db	'tconscl'
+	even
+pnmac1118	db	'tconsmk'
+	even
+pnmac1119	db	'tcons'
+	even
+pnmac1120	db	'tconsp'
+	even
+pnmac1121	db	'freecons'
+	even
+pnmac1122	db	'freetree'
+	even
+pnmac1123	db	'type-of'
+	even
+pnmac1124	db	'subtypep'
+	even
+pnmac1125	db	'typep'
+	even
+pnmac1126	db	'send'
+	even
+pnmac1127	db	'send-super'
+	even
+pnmac1128	db	'csend'
+	even
+pnmac1129	db	'send2'
+	even
+pnmac1130	db	'send-error'
+	even
+pnmac1131	db	'structaccess'
+	even
+zbigtype	dd	0
+pnmac1132	db	'bignum-type'
+	even
+pnmac1133	db	'mapallvector'
+	even
+pnmac1134	db	'mapallstring'
+	even
+zfnalzeff	dd	0
+pnmac1135	db	'finalize-flag'
+	even
+pnmac1136	db	'finalize-function'
+	even
+	extrn	btbgc:dword
+lab_m__1  db '* HEAP-OVNI *'
+	even
+	extrn	delta_cons:dword
+	extrn	_bsymb:dword
+	extrn	_bcons:dword
+zgcuser	dd	0
+zgcalarb	dd	0
+zgcalarm	dd	0
+zfnalzefn	dd	0
+lab_m__4  db 'Calling #:system:finalize-function'
+	even
+zgcinfo	dd	0
+ztcons	dd	0
+	extrn	btbin:dword
+ztconsmk	dd	0
+ztconscl	dd	0
+ztconsp	dd	0
+zfrcons	dd	0
+zfrtree	dd	0
+zgettype	dd	0
+ztypep	dd	0
+zsubtypep	dd	0
+zllsend	dd	0
+zsenderro	dd	0
+zcsend	dd	0
+zsupsend	dd	0
+zsendbi	dd	0
+zstrctacc	dd	0
+zsmpvect	dd	0
+zsmpstrg	dd	0
+	extrn	cfloat:dword
+	extrn	cvect:dword
+	extrn	cstrg:dword
+	extrn	csymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	crwork:dword
+_DATA	ends

@@ -1,0 +1,36 @@
+;;; GELL 15.26: elaboration file for the module: x11bitmap
+;;;             translation done: "Tue Aug  24 93 10:48:17 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: x11bitmap.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'x11bitmap)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZx11bitmap" "Tue Aug  24 93 10:48:17 "
+
+'((#:display:x11:create-bitmap . subr2) (#:display:x11:kill-bitmap . subr2) (#:display:x11:get-bit-line . nsubr) (#:display:x11:set-bit-line . nsubr) (#:display:x11:bmref . nsubr) (#:display:x11:bmset . nsubr) (#:display:x11:get-byte-line . nsubr) (#:display:x11:set-byte-line . nsubr) (#:display:x11:byteref . nsubr) (#:display:x11:byteset . nsubr) (#:display:x11:bitblit . nsubr) (#:display:x11:create-window-bitmap . subr3) (#:display:x11:subst-colors . subr3) (#:display:x11:create-stipple . subr3) (#:display:x11:kill-stipple . subr2))
+
+#[#:x11:bitmap:make x11_create_bitmap x11_default_gc x11_set_background x11_set_foreground x11_kill_bitmap #:display:x11:get-bit-line #:llcp:errwna transparent x11_get_bit_line #:display:x11:set-bit-line x11_set_bit_line #:display:x11:bmref x11_bmref #:display:x11:bmset x11_bmset #:display:x11:get-byte-line x11_get_byte_line #:display:x11:set-byte-line x11_set_byte_line #:display:x11:byteref x11_byteref #:display:x11:byteset x11_byteset <= |+| #:display:x11:bit-reverse-vector #:display:x11:bitblit x11_bitblit makevector x11_subst_colors x11_create_stipple #:display:x11:create-bitmap #:gell-resetfn:function-name #:gell-resetfn:function-2 #:display:x11:kill-bitmap #:gell-resetfn:function-n #:display:x11:create-window-bitmap #:gell-resetfn:function-3 #:display:x11:subst-colors #:display:x11:create-stipple #:display:x11:kill-stipple]
+)
+
+(defvar #:sys-package:colon '#:display:x11)
+(if (not (boundp '#:display:x11:bit-reverse-vector)) (progn (defvar #:display:x11:bit-reverse-vector)))
+(defcsetfn '#:display:x11:create-bitmap "GZx11bitmap" 0)
+(defcsetfn '#:display:x11:kill-bitmap "GZx11bitmap" 1)
+(defcsetfn '#:display:x11:get-bit-line "GZx11bitmap" 2)
+(defcsetfn '#:display:x11:set-bit-line "GZx11bitmap" 3)
+(defcsetfn '#:display:x11:bmref "GZx11bitmap" 4)
+(defcsetfn '#:display:x11:bmset "GZx11bitmap" 5)
+(defcsetfn '#:display:x11:get-byte-line "GZx11bitmap" 6)
+(defcsetfn '#:display:x11:set-byte-line "GZx11bitmap" 7)
+(defcsetfn '#:display:x11:byteref "GZx11bitmap" 8)
+(defcsetfn '#:display:x11:byteset "GZx11bitmap" 9)
+(defcsetfn '#:display:x11:bitblit "GZx11bitmap" 10)
+(defcsetfn '#:display:x11:create-window-bitmap "GZx11bitmap" 11)
+(defcsetfn '#:display:x11:subst-colors "GZx11bitmap" 12)
+(defcsetfn '#:display:x11:create-stipple "GZx11bitmap" 13)
+(defcsetfn '#:display:x11:kill-stipple "GZx11bitmap" 14)
+
+(defccheck '(x11_create_stipple x11_subst_colors makevector x11_bitblit |+| <= x11_byteset x11_byteref x11_set_byte_line x11_get_byte_line x11_bmset x11_bmref x11_set_bit_line x11_get_bit_line #:llcp:errwna x11_kill_bitmap x11_set_foreground x11_set_background x11_default_gc x11_create_bitmap #:x11:bitmap:make))

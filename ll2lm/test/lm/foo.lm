@@ -1,0 +1,120 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule foo
+
+files (
+|foo.lh|
+|foo.ll|
+)
+
+import (
+
+; ;;; Imports which seem necessary
+fee
+bar
+too
+hash
+yar
+zar
+fur
+)
+
+export (
+
+; ;;; Functions unused unless exported
+f-bar5
+f-foo0
+m-foo0
+f-foo1
+f-foo1-10
+f-foo2-11
+f-foo4-13
+m-bar1-f-foo-14
+m-bar1-f-foo-15
+m-goo1-m-bar-2f-foo-16
+m-bar1-f-foo-17
+f-foo23
+f-foo24
+f-foo26
+f-foo27
+f-foo28
+f-foo3
+f-foo31
+#:foo1:f-foo4
+#:foo1:f-foo41
+#:foo1:f-foo42
+#:foo1:asd:f-foo43
+f-foo6
+f-foo61
+f-foo71
+f-foo72
+f-foo73
+f-foo74
+f-foo75
+f-foo76
+f-foo81
+f-foo82
+f-foo83
+f-foo91
+f-foo91
+f-fooa1
+f-fooa2
+f-fooa5
+(structure #:s-fii:s-fooa5)
+(structure #:s-zuu:s-fooa6)
+(structure #:s-fii:s-fooa4)
+(structure #:s-fee2:s-foo3)
+(structure #:s-fee:s-fooa3)
+(structure #:bar:a-bar3:s-foo3)
+(structure #:tclass:t-foo)
+(structure s-foo)
+(foostruct s-foo3-12)
+
+; ;;; Not exported because only internally used
+; unknow-foo6
+; f-too99
+; #:bar:a-bar1:asd:f-bar2
+; deffoo1
+; deffoo3
+; deffoo4
+; f-foo20
+; f-foo200
+; f-foo21
+; f-foo22
+; f-foo25
+; f-foo29
+
+; ;;; Not defined but export required by user
+#:bar:a-bar2:asd:f-foo6
+#:bar:a-bar2:f-foo51
+#:bar:a-bar2:f-foo5
+)
+
+cpenv (
+((de f-bar5 ())
+(defmacro unknow-foo6 (x) (list 'eval-when '(load eval compile) x))
+)((defmacro deffoo1 (n) (list 'defun (concat 'f-foo1- n) () n))
+)((defmacro deffoo2 (n) (list 'defun (concat 'f-foo2- n) () n))
+)((defmacro deffoo3 (n . l) (list 'exportable-definition (list 'quote (concat 
+'s-foo3- n)) ''foostruct () (mcons 'de (concat 'f-foo3- n) () l)))
+)((defbar1 "f-foo-17")
+)((defbar1 "f-foo-18")
+)((defabbrev a-foo1 foo1)
+)((de f-foo6 (x) x)
+)((f-foo6 0)
+)((f-foo6 1)
+)((f-foo6 2)
+)((f-foo6 3)
+)((f-foo6 4)
+)(5
+)((defsharp @ () (let ((x (read))) (ncons (list 'cons x x))))
+)((setq #:system:defstruct-all-access-flag t)
+(defstruct #:s-fee:s-fooa3 c)
+(defstruct #:s-fee2:s-foo3 c)
+)((setq #:system:defstruct-all-access-flag ())
+(defstruct #:s-fii:s-fooa4 c)
+)((defstruct #:s-zuu:s-fooa6 c)
+)((defabbrev s-fii s-fii)
+)((defstruct #:s-fii:s-fooa5 c d)
+)((defvar v-foo2 (make-hash-table-eq))
+))

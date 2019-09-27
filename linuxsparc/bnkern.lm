@@ -1,0 +1,18 @@
+defmodule bnkern
+files (bnkern.ll)
+
+;;; Added automatically, don't type beyond this line.
+cpexport
+()
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop 'bn_digit_size 't '#:complice:globalvar)
+)((putprop 'bn_word_size 't '#:complice:globalvar)
+)((putprop '#:kern:no_byte_in_digit 't '#:complice:globalvar)
+)((putprop '#:kern:tampon 't '#:complice:globalvar)
+)((putprop '#:kern:hight_to_low_index 't '#:complice:globalvar)
+))

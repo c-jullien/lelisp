@@ -1,0 +1,110 @@
+This is TeX, C Version 3.14t3 (format=lplain 93.4.28)  13 OCT 1994 17:01
+**&lplain maintenance
+(maintenance.tex
+LaTeX Version 2.09 <7 Dec 1989>
+(/nfs/ishare/lib/TEX3.14/localinputs/ibook.sty
+(/nfs/ishare/lib/TEX3.14/inputs/book.sty
+Document Style `book' <24 Nov 89>.
+(/nfs/ishare/lib/TEX3.14/inputs/bk11.sty)
+\descriptionmargin=\dimen99
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/verbatim.sty
+Style-Option: `verbatim' v1.4i <92/01/20> (RmS)
+English Documentation          <91/12/18> (RmS)
+\every@verbatim=\toks11
+\verbatim@line=\toks12
+\every@smallverbatim=\toks13
+\smallverbatim@line=\toks14
+) (/nfs/ishare/lib/TEX3.14/localinputs/cartouche.sty
+\circthick=\dimen100
+\cartouter=\dimen101
+\cartinner=\dimen102
+\normbskip=\skip41
+\normpskip=\skip42
+\normlskip=\skip43
+\lskip=\skip44
+\rskip=\skip45
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/oldverb.sty)
+(/nfs/ishare/lib/TEX3.14/localinputs/compat.sty
+Compatibilite' Ilogtex
+(/nfs/ishare/lib/TEX3.14/localinputs/epsf.tex
+\epsffilein=\read0
+\epsfxsize=\dimen103
+\epsfysize=\dimen104
+\epsftsize=\dimen105
+\epsfrsize=\dimen106
+\epsftmp=\dimen107
+\pspoints=\dimen108
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/oldfunc.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/common.sty
+Common macros
+\c@CodeLine=\count88
+\epsftranslate=\dimen109
+\chgbarwidth=\dimen110
+\chgbarsep=\dimen111
+\@chgbarbegin=\dimen112
+(/nfs/ishare/lib/TEX3.14/localinputs/versions.sty)
+\@functiontranslate=\dimen113
+)
+(/nfs/ishare/lib/TEX3.14/localinputs/ilonames.sty)
+(/nfs/ishare/lib/TEX3.14/localinputs/skycompat.sty
+Compatibilite' SkyStyle
+\MyLength=\skip46
+\MarginBox=\box25
+\DescBox=\box26
+\c@CaptionCounter=\count89
+\c@LineNumber=\count90
+) (/nfs/ishare/lib/TEX3.14/localinputs/nilog.sty
+\@translate=\dimen114
+\@headertranslate=\dimen115
+\@nilogbox=\dimen116
+
+(/nfs/ishare/lib/TEX3.14/localinputs/longcode.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/ilogindex.sty indexing version 2.2,
+\initialskipamount=\skip47
+
+Writing index file maintenance.ix 
+\ixindfile=\write3
+) (/nfs/ishare/lib/TEX3.14/localinputs/nindex.sty))
+(/nfs/ishare/lib/TEX3.14/localinputs/fr.sty)
+(/nfs/ishare/lib/TEX3.14/inputs/verbatimfiles.sty
+\c@lineno=\count91
+) (maintenance.aux)
+LaTeX Warning: No \sf typeface in this size, using \rm.
+[1
+
+
+] [2
+
+]
+Chapitre 1.
+[3] [4]
+Chapitre 2.
+[5
+
+] [6
+
+]
+Chapitre 3.
+[7] [8] (maintenance.aux) ) 
+Here is how much of TeX's memory you used:
+ 912 strings out of 4463
+ 9181 string characters out of 63221
+ 55517 words of memory out of 262141
+ 2807 multiletter control sequences out of 9500
+ 19605 words of font info for 74 fonts, out of 72000 for 255
+ 14 hyphenation exceptions out of 607
+ 14i,6n,17p,217b,215s stack positions out of 300i,40n,60p,3000b,4000s
+
+Output written on maintenance.dvi (8 pages, 9008 bytes).

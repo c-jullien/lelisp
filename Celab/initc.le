@@ -1,0 +1,39 @@
+;;; GELL 15.26: elaboration file for the module: initc
+;;;             translation done: "Wed June 16 93 18:00:24 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: initc.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'initc)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZinitc" "Wed June 16 93 18:00:24 "
+
+'((llrt_set_trace_fval_p . subr3) (defcelaborate . nsubr) (defcsetfn . subr3) (defccheck . subr1) (check-for-unresolved-references . subr0) (gell-clean-core-image . subr0) (#:gell-clean-core-image:g104 . subr1) (gell-save-core . subr3) (gell-save-std . nsubr))
+
+#["" gell-prefix-added-by-c eqstring catenate gell-getglobal-special-cache cassoc getglobal outchan "***** GELL 15.26: " " " print eof #:llcp:exit defcelaborate #:llcp:errwna #:defC:module-table-name "defCelaborate: the name of the module is not a string:" #:defC:module-date "defCelaborate: the date is not a string:" "defClit: the literal table is not a vector:" "defCelaborate: module C not linked:" #:defC:list-module-table-adr #:defC:module-table-adr list #:defC:init-module-list typefn #:system:loaded-from-file remprop autoload gell-silent-elaboration-p ";;  function    redefined: " ", old:" " new:" "defCsetfn: bad symbo name:" "defCsetfn: bad module table name:" subr0 subr1 subr2 subr3 nsubr fsubr msubr dmsubr t #:defC:unresolved-symbols defccheck (gell-silent-elaboration-p) lambda ";;; function not resolved: " ", current type: " nreconc #:gell-clean-core-image:g104 mapoblist gell-clean-core-image gc date featurep #:system:save-std-date save-core end #:system:initty-after-restore-flag #:system:inibitmap-after-restore-flag funcall gell-save-std ";; Wait, I am saving : " core-init-std #:system:core-directory #:system:core-extension llrt_set_trace_fval_p #:gell-resetfn:function-name #:gell-resetfn:function-3 #:gell-resetfn:function-n defcsetfn #:gell-resetfn:function-1 check-for-unresolved-references #:gell-resetfn:function-0 gell-save-core]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'initc)))
+(defvar #:sys-package:colon 'defC)
+(if (not (boundp 'gell-silent-elaboration-p)) (progn (defvar gell-silent-elaboration-p ())))
+(if (not (boundp 'gell-prefix-added-by-c)) (progn (defvar gell-prefix-added-by-c "")))
+(defcsetfn 'llrt_set_trace_fval_p "GZinitc" 0)
+(if (not (boundp 'gell-getglobal-special-cache)) (progn (defvar gell-getglobal-special-cache ())))
+(if (not (boundp '#:defC:module-table-name)) (progn (defvar #:defC:module-table-name ())))
+(if (not (boundp '#:defC:module-table-adr)) (progn (defvar #:defC:module-table-adr ())))
+(if (not (boundp '#:defC:list-module-table-adr)) (progn (defvar #:defC:list-module-table-adr ())))
+(if (not (boundp '#:defC:module-date)) (progn (defvar #:defC:module-date ())))
+(defcsetfn 'defcelaborate "GZinitc" 1)
+(defcsetfn 'defcsetfn "GZinitc" 2)
+(if (not (boundp '#:defC:init-module-list)) (progn (defvar #:defC:init-module-list ())))
+(if (not (boundp '#:defC:unresolved-symbols)) (progn (defvar #:defC:unresolved-symbols ())))
+(defcsetfn 'defccheck "GZinitc" 3)
+(defcsetfn 'check-for-unresolved-references "GZinitc" 4)
+(defcsetfn 'gell-clean-core-image "GZinitc" 5)
+(defcsetfn '#:gell-clean-core-image:g104 "GZinitc" 6)
+(defcsetfn 'gell-save-core "GZinitc" 7)
+(defcsetfn 'gell-save-std "GZinitc" 8)
+
+(defccheck '(funcall end save-core date featurep gc gell-clean-core-image mapoblist nreconc remprop typefn list #:llcp:errwna #:llcp:exit print outchan getglobal cassoc catenate eqstring))

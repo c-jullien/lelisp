@@ -1,0 +1,33 @@
+        (test-serie "Tests des variables globales llm3 de llinit.llm3" () )
+
+
+(if (and (neq 0 (getglobal "bcode"))
+         (neq 0 (getglobal "ccode"))
+         (neq 0 (getglobal "ecode"))
+         (neq 0 (getglobal "bheap"))
+         (neq 0 (getglobal "cheap"))
+         (neq 0 (getglobal "eheap"))
+         (neq 0 (getglobal "bnumb"))
+         (neq 0 (getglobal "cnumb"))
+         (neq 0 (getglobal "bfloat"))
+         (neq 0 (getglobal "cfloat"))
+         (neq 0 (getglobal "bvect"))
+         (neq 0 (getglobal "cvect"))
+         (neq 0 (getglobal "bstrg"))
+         (neq 0 (getglobal "cstrg"))
+         (neq 0 (getglobal "bsymb"))
+         (neq 0 (getglobal "csymb"))
+         (neq 0 (getglobal "bvar"))
+         (neq 0 (getglobal "bcons"))
+         (neq 0 (getglobal "ccons"))
+         (neq 0 (getglobal "bold"))
+         (neq 0 (getglobal "eold")))
+;                             ^
+;                             |
+; si ce sous ensemble de la table des symbols de'finis dans le fichier
+; llinit.llm3 est accessible par la fonction getglobal
+
+; alors OK
+     t
+; sinon NIL
+     () ))                                   t

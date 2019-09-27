@@ -1,0 +1,61 @@
+
+#!/bin/sh
+set -x
+
+# Recette officielle de Le-Lisp standard modulaire avec core.
+date
+cd ..
+# pour ne pas charger son .lelisp
+HOME=qwerty
+
+rm -f /tmp/savecore /tmp/restcore
+
+make letestextbin
+date
+ ./letestextbin -stack 6 -code 750 -heap 300 -number 0 -vector 4 -string 8  -symbol 7 -cons 24 -float 0 \
+	../llib/startup.ll << EOI
+(load-stm () t t t t t)
+(setq testcore (catenate #:system:core-directory
+	                        "testcore"
+	                       #:system:core-extension))
+
+(progn
+  (if (setq flag (save-core testcore))
+      (with ((outchan (openo "/tmp/restcore")))
+        (print "*" "* restauration anormale de l'image me'moire"))
+    (with ((outchan (openo "/tmp/savecore")))
+      (print "*" "* sauvegarde anormale de l'image me'moire"))
+    )
+  flag)
+(end)
+EOI
+
+if [ -f /tmp/savecore ]
+then
+cat /tmp/savecore
+echo "** SAVE-CORE: mauvais re'sultat rendu: NIL"
+fi
+rm -f /tmp/savecore /tmp/restcore
+
+ ./letestextbin -stack 6 -code 750 -heap 300 -number 0 -vector 4 -string 8  -symbol 7 -cons 24 -float 0 \
+	../llib/startup.ll << EOI
+(setq testcore (catenate #:system:core-directory
+	                        "testcore"
+	                       #:system:core-extension))
+
+(restore-core testcore)
+
+(libload "recette")
+EOI
+
+if [ -f /tmp/restcore ]
+then
+cat /tmp/restcore
+echo "** RESTORE-CORE: mauvais re'sultat rendu: T"
+fi
+rm -f llcore/testcore.core
+
+date
+
+date
+

@@ -1,0 +1,51 @@
+defmodule product
+;;; 
+;;; The product info database
+;;; 
+;;; Initial author : A. Meller
+;;; Ilog SA. All rights reserved.
+;;; $Header: /usr/cvs/lelisp/llmod/product.lc,v 1.1 2006/12/09 11:22:13 jullien Exp $
+;;;
+
+files ( product.ll )
+export (
+	;; construct and set product info
+	product-build-info
+	    ;; (NAME &optionnal KEY1 VALUE1 KEY2 VALUE2...)
+	    ;; NAME : product name
+	    ;; KEY? : among (id date version subversion comment)
+            ;; VALUE? : the value setting of corresponding key (see
+	    ;; the 'set-... functions for allowed values.
+            ;; ==> NAME
+	;; Access and update of product info
+	product-id
+	    ;; (NAME)  ==> ID (product id = protection key)
+	set-product-id
+	    ;; (NAME ID:integer) ==> ID
+	product-date
+	    ;; (NAME)      ==> <#:date> (a structure 'date')
+	set-product-date
+	    ;; (NAME DATE:<#:date>) ==> DATE
+	product-version
+	    ;; (NAME) ==> VERSION
+	set-product-version
+            ;; (NAME VERSION:number) ==> VERSION
+	product-subversion
+	    ;; (NAME) ==> SUBVERSION
+	set-product-subversion
+            ;; (NAME SUBVERSION:number) ==> SUBVERSION
+	product-comment
+	    ;; (NAME) ==> COMMENT
+	set-product-comment
+	    ;; (NAME COMMENT:list_of_string) ==> COMMENT
+	;; returns all products
+	product-all-names
+	    ;; () ==> list_of_NAMEs
+	;; simple printing
+	product-print
+	    ;; (NAME) ==> t
+	)
+
+import (hash date)
+
+testfile (product.lt)

@@ -1,0 +1,14 @@
+;;; utiliser ce module pour corriger les erreurs introduites dans foo.ll
+
+(eval-when (load eval compile)
+;(defabbrev a-bar2 #:far:a-bar2)
+(de f-bar5 ())
+(defmacro unknow-foo6 (x) `(eval-when(load eval compile) ,x))
+)
+
+(de f-too99 ())
+(de {a-bar1}:asd:f-bar2 (x)x)
+
+
+
+

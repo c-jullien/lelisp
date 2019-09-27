@@ -1,0 +1,40 @@
+defmodule
+multiple-value
+files (
+mvalues
+)
+export (
+values
+values-list
+multiple-value-list
+multiple-value-call
+multiple-value-prog1
+multiple-value-bind
+multiple-value-setq
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(values nsubr ())
+(values-list subr1 ())
+(multiple-value-list dmsubr ())
+(multiple-value-call fsubr ())
+(multiple-value-prog1 fsubr ())
+(multiple-value-bind dmsubr ())
+(multiple-value-setq dmsubr ())
+)
+cpfunctions (
+(#:multiple-value:values-aux subr3)
+)
+cpimport
+()
+cpenv (
+((putprop '#:multiple-value:limit 't '#:complice:globalvar)
+)((putprop '#:multiple-value:values 't '#:complice:globalvar)
+)((putprop '#:multiple-value:number 't '#:complice:globalvar)
+)((putprop '#:multiple-value:bullshit 't '#:complice:globalvar)
+))

@@ -1,0 +1,256 @@
+%=========================================================================
+\Chapter {4} {Analysis Messages}
+%=========================================================================
+
+We have seen in the analysis options that it is possible to choose a {\it message level} (\|-verbose| option).  The idea is to permit the user to not find him/herself overwhelmed by information at times when he/she doesn't expect to.  This idea also tries to offer to the user maximum amount of information when he/she asks for it.
+The 3 available levels are (in ascending order by quantity of information):
+\begin{itemize}
+\item {\Large {\bf -v 0}}\,: the "{\bf corrections}" level:  the "quietest" level:  only the messages needing an intervention from the programmer are displayed.  They are all preceded by a {\em double star}:  {\tt **}
+\item {\Large {\bf -v 1}}\,: the level of {\bf warnings}:  the Module Analyzer displays a message for each operation done (loading of a file, search for an unknown file, starting an importation, etc.).  These messages are all preceded by a {\em double point}:  {\tt ..}  
+\item {\Large {\bf -v 2}}\,: the level of {\bf diagnostics}:  the {\em Module Analyzer} displays a complete diagnostic concerning the performed analysis.
+\end{itemize}
+
+The most important messages are those at the "corrections" level.  They are easily identifiable (and even parsable) by their {\em double star}.
+The most important messages are numbered to be easily identified and better documented.
+
+These important messages can appear in two different fashions:  {\tt warning} ({\bf W.xxx}) or {\tt error} ({\bf E.xxx}).  This does not modify the significance:  a {\tt warning} means that the analysis can continue without a problem but that a manual intervention will most likely be necessary to correct it.  An {\tt error} means that the analyzer was forced to interrupt the analysis in part or in whole.
+
+\begin{Longcode*}
+Exemple:
+** W.102 : unknown abbrev : I can't find it anywhere : myabbrev
+** W.101 : unknown function : I can't find it anywhere : turlututu
+\end{Longcode*}
+
+An {\tt error} means that the analysis hasn't been able to completely be performed on the concerned form.  Most likely this error refers to a {\tt toplevel-form}: a manual intervention should correct this so you can restart the analysis.  In general, an {\tt error} is followed by a warning similar to the following:  
+\begin{Longcode*}
+** <Error Label LL> : unrecoverable error; skip expression : <S-expr>
+
+Example:
+** E.101 : unknown function : I can't find it anywhere : mydefun
+** undefined function : unrecoverable error; skip expression : (mydefun foo)
+\end{Longcode*}
+
+At the end of an analysis, a message that recaps all the warnings and errors encountered during the analysis appears in the following form:  
+\begin{itemize}
+\item {\tt "** <module> : **! There were warnings during the analyzis : (W.n ..)"}
+If there have been warnings encountered and the verbose mode is superior to 0, the list of warnings encountered during the analysis is displayed.
+\item {\tt "** <module> : **! There were errors during the analyzis : (E.n ..)"}
+If there have been error messages encountered, the list of errors encountered during the analysis is displayed. 
+\end{itemize}
+These 2 messages serve in easing the "hunt" for erroneous modules in a large list of messages that concern numerous modules.
+All the messages that follow are displayed in English by default but also exist in French (see {\tt current-language}).  Here is the exhaustive list of important messages and their meaning:
+\begin{itemize}
+\item {\Large {\bf 100}}\,: {\tt  more than one analysis in a session may
+give incorrect results : {\em module}} \\
+This message is displayed if two analyses are done one after the other in the same session.  We strongly suggest that you {\it do not} run one analysis after the other because the first analysis will have effects in the session (definitions of functions, loading of files, etc.) that will cut off the following analysis.\\
+{\bf Correction}\,: start two analyses in two distinct sessions or use, systematically, {\tt ll2lm}.
+
+\item {\Large {\bf 101}}\ : {\tt unknown function: I can't find it anywhere
+: {\em function}}\\
+This message appears each time that the {\em Module Analyzer} encounters a function for which it does not know the definition.  In general, as soon as it encounters an unknown function, it looks for the module that defines this function and starts its importation.  If none of the modules present in the reference file define this function (exported or not), the message {\tt 101} is displayed.\\
+{\bf Correction}\,: the module defining the function in question has probably not yet been analyzed.  The message will disappear with the following analysis.  If not, force the importation of the module in question either via the \|-import| analysis option or by adding this module in the importation list of {\tt .lm} or of the {\tt .lc} in \|update| mode.
+
+\item {\Large {\bf 102}}\ : {\tt  unknown abbrev: I can't find it anywhere :
+{\em abbrev} }\\
+Idem {\tt 101}, but for the unknown abbreviations
+
+\item {\Large {\bf 103}}\ : {\tt unknown sharp macro: I can't find it
+anywhere : {\em sharp}}\\
+Idem {\tt 101}, but for the unknown {\tt sharp-macro}s
+
+\item {\Large {\bf 104}}\ : {\tt parent structure package {\em symbol} not found
+for : {\em struct}}\\
+Idem {\tt 101},  but for the unknown "parent" structures
+
+\item {\Large {\bf 105}}\ : {\tt unknown exported user function(s) : {\em function}}\\
+This message appears when the user has required an exportation of functions that the analyzer does not know.  It is possible that a function definition stays hidden from the analyzer:  the user will use the \|-export| analysis option or require this exportation via the \|export| key directly in the {\tt .lm} or the {\tt .lc} in \|-update| mode.
+This warning is displayed so that the user can verify that this function must be exported.  If this is not the case, {\tt complice} will display the warning 6.\\
+{\bf Correction}\,: This is either a case of a function definition that is not recognized by the analyzer (in which case we'll keep the {\tt W.105}) or a case of an "abusive" export (in which case, the user should remove this function from the exportations list of the {\tt .lm} or {\tt .lc} or delete the corresponding \|-export| analysis option).
+
+\item {\Large {\bf 106}}\ : {\tt structure {\em struct} not found when
+running : {\em form}}\\
+Idem {\tt 101},  but for the unknown abbreviations.  (More specifically for the objects that have produced an {\tt
+errnotarecordoratclass} error of the {\tt microceyx} module.)
+
+\item {\Large {\bf 109}}\ : {\tt the module {\em module} appears in several
+project directories : ({\em dir1} {\em dir2} ...)}\\
+This message appears at the creation of the analysis {\tt Makefile} (\|-init| option) when the analyzer has found two files of the same name in two different directories.  This phase of analysis {\tt Makefile} creation must automatically calculate the module names from filenames found in the project directories.  It is recommended that the programmer resolves this conflict and restart this step.  If not, the analyzer will only save a single name in the module list and the file used will be the first file found in function of the project directories (key:  {\tt directories}).\\
+{\bf Correction}\,: erase or rename one of the two files
+
+\item {\Large {\bf 110}}\ : {\tt the projects {\em project} and {\em project} share
+a module name : {\em module}}\\
+This message appears at the time of reference file loading of a project (either directly or via the {\tt required-projects} key) when the same module name appears in the two projects.\\
+{\bf Correction}\,: the programmer must fix this error and rename one of the two modules in a project.  If not,
+the last loaded project will impose its module.
+
+\item {\Large {\bf 111}}\ : {\tt function {\em function} must be defined inside
+an EVAL-WHEN(COMPILE) in module : {\em module}}\\
+This message appears at the time of the evaluation of an unknown {\tt
+toplevel-form}.  As for the message {\tt 101}, the unknown function is "looked for" in the analysis environment.  Its status in the ({\tt
+toplevel-form}) file dictates that it must be completely evaluated.  This function must be defined at the interior of a {\tt (eval-when
+(compile ...) ...)} because the compiler will have the same problem:  evaluating this form before compiling it.
+{\bf Correction}\,: include this definition in a {\tt (eval-when
+(compile ...) ...)} in the file that defines it or restart the analysis with the \|-includeflag| option that is going to force the loading of the file where the definition is found. 
+
+\item {\Large {\bf 112}}\ : {\tt abbreviation {\em abbrev} must be defined
+inside an EVAL-WHEN(COMPILE) in module : {\em module}}\\
+idem {\tt 111} but the error appears at the reading of the abbreviation.
+
+\item {\Large {\bf 113}}\ : {\tt sharp macro {\em sharp} must be defined inside
+an EVAL-WHEN(COMPILE) in module : {\em module}}\\
+idem {\tt 111} but the error appears at the reading of a {\tt sharp-macro}.
+
+\item {\Large {\bf 114}}\ : {\tt structure {\em struct} must be defined inside
+an EVAL-WHEN(COMPILE) in module : {\em module}}\\
+idem {\tt 111} but the error appears at the reading of a heritage structure. 
+
+\begin{Side}{Note}
+It's possible that this message will be inconsistent or unclear.
+In effect, if the analyzer sees a stucture of which the name 
+itself is packaged, it is going to "believe" that the name 
+is a heritage structure and is going to attempt 
+to start the importation of the module that defines 
+the parent structure (when, in fact, there is none).  
+There are several possible corrections for this problem:
+\begin{itemize}
+\item Because the heritage structures are only considered 
+with the system variable 
+{\tt \#:system:defstruct-all-access-flag} to {\tt
+T}, you can set this value to {\tt NIL}.
+See chapter 5 of the \LeLisp\ {\em Reference Manual}.
+\item An internal variable of the analyzer contains the list 
+of package names that are not parent structures:  {\tt
+\#:crunch:not-parent-structures}.  This list contains the {\tt
+tclass} by default.
+\end{itemize}
+\end{Side}
+
+\item {\Large {\bf 115}}\ : {\tt this module seems to have been modified; you
+must analyze it from scratch : {\em module}}\\
+This message appears when a source file has been modified without being reanalyzed.  The analysis environment and the project reference file in particular are not up to date.\\
+{\bf Correction}\,: restart the modified module analysis.
+If the {\tt 115} message appears during the modified module analysis, it's sufficient to restart the analysis with the \|-defmodule| option (after having erased this module from the reference file [see analysis option \|-delete|]).
+
+\item {\Large {\bf 116}}\ : {\tt function {\em function} is not in an
+EVAL-WHEN(COMPILE); putting module in INCLUDE key : {\em module}}\\
+This message appears in the same case as the {\tt 111} message and replaces it if the \|-includeflag| analysis option is set.  
+
+\item {\Large {\bf 117}}\ : {\tt abbrev {\em abbrev} is not in an
+EVAL-WHEN(COMPILE); putting module in INCLUDE key : {\em module}}\\
+idem {\tt 116} but for the abbreviations
+
+\item {\Large {\bf 118}}\ : {\tt sharp macro {\em sharp} is not in an
+EVAL-WHEN(COMPILE); putting module in INCLUDE key : {\em module}}\\
+idem {\tt 116} but for the {\tt sharp-macro}s
+
+\item {\Large {\bf 119}}\ : {\tt structure {\em struct} is not in an
+EVAL-WHEN(COMPILE); putting module in INCLUDE key : {\em module}}\\
+idem {\tt 116} but for the heritage structures
+
+\item {\Large {\bf 120}}\ : {\tt Error during recursive analysis. You must
+reanalyze this module : {\em module}}\\
+This message appears when you've used the \|-r| analysis option and a recursive analysis has not gone as planned.
+With the \|-r| option, the {\em Module Analyzer} can start a recursive analysis on the modules that define the internal functions (that must be exported for the needs of the modules that are being analyzed).
+{\bf Correction}\,: the programmer must restart the analysis on the modules designated by this message before restarting the analyis that is in progress.
+
+\item {\Large {\bf 121}}\ : {\tt Circular dependancy between modules. Please
+redesign. : ({\em module} ...)}\\
+This message appears when the {\em Module Analyzer} detects a circular dependency between several modules that import themselves.  This won't stop the analysis from continuing but it is strongly recommended that you correct this problem before the {\tt complice} compilation phase (see {\tt Warning 10} of complice, Chapter 13 of the \LeLisp\ documentation).\\ 
+{\bf Correction}\,: create a new module dependency tree.
+If there are no other solutions, you break a dependency by creating one or several dynamic calls (see also \|-dynamic|) with the help of a form such as {\tt
+funcall}:
+
+\begin{Longcode*}
+replace:  (foo 1 2 3)
+by: (funcall 'foo 1 2 3)
+\end{Longcode*}
+
+\item {\Large {\bf 122}}\ : {\tt error in {\em module} during recoverable read
+error - only partial analysis of module : {\em error}}\\
+The {\em Module Analyzer} displays this message when a certain type of error is generated when already in the process of trying to correct a "read" error (i.e., unknown abbreviation, macro-character, etc.).  To correct a "read" error, the {\em Module Analyzer} looks in the modules of its environment for the definition that will allow it to recover this read error.  To do this, the {\em Module Analyzer} loads either the {\tt CPENV} of these modules or the source (see the analysis options \|-includeflag| or \|-include|).
+
+The error types that produce the {\bf 122} message come either during the evaluation of a {\tt CPENV} or during the loading of a source file.  It is important to note that the analysis is stopped in the file reading at the exact spot where the initial read error was started.  The rest of the analysis will only be done on this first part of the file.  It is sufficient to restart this analysis after the error is corrected.\\
+{\bf Correction}\,: If this is an error that occurred during the evaluation of the {\tt CPENV}, it will be necessary to update the execution environment (\|required-projets| key or analysis option \|-import|).  If this is an error that occured at the time of the loading of the file, verify the execution environment and/or the presence of the file or the access paths (according to the nature of the error).  
+
+\item {\Large {\bf 123}}\ : {\tt function {\em function}\,: unknown
+function type\,: {\em typ}}\\ 
+The {\em Module Analyzer} displays this message when it encounters an unknown function type (see {\tt typefn}) or when it doesn't know how to treat this analysis context.\\
+{\bf Correction}\,: None. This error is equivalent to the Warning 3 of
+{\tt complice} (see Chapter 13 of the \LeLisp\ {\em Reference Manual}).
+
+\item {\Large {\bf 124}}\ : {\tt bad construction in {\em function} : {\em error}}\\
+The {\em Module Analyzer} displays this message when it encounters a special form ({\tt lock}, {\tt letv}) not supported by {\tt
+complice} or when it encounters a problem in the macro-expansion of a macro.\\ 
+{\bf Correction}\,: None.
+
+\item {\Large {\bf 125}}\ : {\tt several modules ({\em module} ...) define :
+{\em form}}\\
+This message appears when the {\em Module Analyzer} has encountered an unknown form (function, abbreviation, . . .) for which it has found the definition in several modules.  If none of these modules that were found were already imported (via the \|-import| analysis option or already present in the \|import| field of the analysis module), the {\em Module Analyzer} displays the {\tt 125} message.\\
+{\bf Correction}\,: choose which module, among all those found, must be used to furnish the correct definition of the unknown form.  Restart the analysis with the \|-import
+<nom_du_module_choisi>| option or, if you are in \|-update| mode, add the name of the chosen module in the {\tt import} field of the analyzed module.
+
+\item {\Large {\bf 126}}\ : {\tt module not found; check the analysis
+environment : {\em module}}\\
+This message appears when the {\em Module Analyzer} needs to load the modular description of the module cited and when this file stays "unfindable" in the environment furnished.\\
+{\bf Correction}\,: verify the \|directories| key in the project definition of the project (i.e., ({\tt define-rt-project}) and add to it the directory containing the "unfindable" modular description file before restarting the analysis.)
+
+\item {\Large {\bf 127}}\ : {\tt file not found; check analysis environment
+and project definition : {\em file}}\\
+This message appears when the {\em Module Analyzer} verifies if all the source files appearing in the \|files| field of the module being analyzed are accessible in the analysis environment.  This message can be due either to an error on the part of the programmer (having initialized this module) or, if you use the analysis {\tt Makefile} (see the \|-init| option), this message might also be due to a lack of precision in the project definition ({\tt define-rt-project}).  Verify in particular the \|extensions-list| and \|modules-files| keys that influence the contents of the \|files| field at the time of automatic module generation.  It is also possible that this message is due to an updating problem in the \|directories| key.\\    
+{\bf Correction}\,:  review the project definition if you use the analysis {\tt Makefile}.  Review the \|files| field of the modular description of the concerned module.  Verify the \|directories| key of the project definition in all cases. 
+\item {\Large {\bf 128}}\ : {\tt module {\em module} uses unexported definitions
+from : {\em module}}\\
+This message appears when the {\em Module Analyzer} has found a definition that was looked for but, in fact, is not exported by this module (i.e., it is an internal function).  In addition, this module is not part of the project that is currently being analyzed but, rather, a required project (see \|required-projects|).\\
+{\bf Correction}\,: use another definition or review the required project and force the exportation of the definition.
+
+\item {\Large {\bf 131}}\ : {\tt several modules ({\em module} ...) define
+function : {\em function}}\\
+This message indicates that several modules define the same function.\\
+{\bf Correction}\,: refine the concerned modules so that the definition is unique. 
+
+\item {\Large {\bf 132}}\ : {\tt several modules ({\em module} ...) define
+abbrev : {\em abbrev}}\\
+Idem {\tt 131}, but for the abbreviations.
+
+\item {\Large {\bf 133}}\ : {\tt several modules ({\em module} ...) define
+sharp-macro : {\em sharp}}\\
+Idem {\tt 131}, but for the sharp-macros.
+
+\item {\Large {\bf 134}}\ : {\tt several modules ({\em module} ...) define
+structure : {\em struct}}\\
+Idem {\tt 131}, but for the structures
+
+\item {\Large {\bf 135}}\ : {\tt ({\em file} ...) are module files and are not
+included in environment (see doc.); module : {\em module}}\\
+This message concerns the files declared under the \|include| key of the module being analyzed.  Only those source files not appearing in any \|files| field of the project modules will be loaded.  If a source file appearing in the \|files| field of another module of the same project is cited in the \|include| field of the module being analyzed, this file the {\tt Warning} {\bf 135} will be displayed.\\  
+{\bf Correction}\,: do not use the source files quoted in the \|files| field under the \|include| key.  
+
+\item {\Large {\bf 136}}\ : {\tt FILES field empty for the module: {\em module}}\\
+This message appears at the start of the analysis when the analyzer "notices" that there are not source files that correspond to this module.\\
+{\bf Correction}\,: update the source file list of this module either with the help of the \|-files| analysis option or by editing the {\tt .lm} or the {\tt .lc} if we are in \|update| mode. 
+
+\end{itemize}
+
+Other warnings or error messages can appear at the time of an analysis.  These other messages are more classic (i.e., system errors) or more timely and contextual.  For example, if you make a mistake in the analysis arguments:
+
+\begin{Longcode*}
+unix% ll2lm -defmodule foo -update foo.lm
+**
+** sh-analyze : exclusive options : (-update -defmodule)
+**
+ ...
+\end{Longcode*}
+or even\,:
+\begin{Longcode*}
+unix% ll2lm -load test.prj -p test
+**
+** sh-analyze : nothing to do! one of this options must be specified : (
+-defmodule -update -files -makefile -meta -delete -merge -init)
+**
+ ...
+\end{Longcode*}
+or even\,:
+\begin{Longcode*}
+unix% ll2lm -load tets.prj -p test
+** loadfile : unknown file : tets.prj
+\end{Longcode*}

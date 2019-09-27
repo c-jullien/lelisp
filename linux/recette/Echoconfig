@@ -1,0 +1,14 @@
+#!/bin/sh
+
+UNIX=Linux
+
+echo You are running on Intel
+if [ -f /bin/uname ]
+then
+echo with Unix system $UNIX: `/bin/uname -s` version `/bin/uname -r`_`/bin/uname -v`
+echo based on hardware : `/bin/uname -m`
+else
+echo with Unix system $UNIX: LINUX 2.x
+echo based on processor 386 compatible
+fi
+

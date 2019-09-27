@@ -1,0 +1,21 @@
+defmodule
+module
+files (
+module
+)
+export (
+readdefmodule
+getdefmodule
+setdefmodule
+printdefmodule
+#:module:bol
+loadmodule
+autoloadmodule
+#:module:std-autoload
+autoloadp
+)
+import (
+files
+)
+include
+()

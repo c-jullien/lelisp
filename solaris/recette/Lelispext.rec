@@ -1,0 +1,8 @@
+
+#!/bin/sh
+set -x
+
+# Recette du CLOAD + defextern sur SOLARIS
+
+echo "**** CLOAD : not yet implemented on this system :" SOLARIS
+

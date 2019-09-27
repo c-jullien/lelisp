@@ -1,0 +1,23 @@
+defmodule	finalize
+files		(finalize)
+export		(#:finalize:add-class
+		 #:finalize:rem-class
+		 #:finalize:print-infos)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:finalize:add-class subr2 ())
+(#:finalize:rem-class subr1 ())
+(#:finalize:print-infos subr0 ())
+)
+cpfunctions (
+(#:finalize:check-all subr1)
+(#:finalize:check-function subr2)
+(#:finalize:check-class subr2)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:finalize:list-of-finalized-classes 't '#:complice:globalvar)
+))

@@ -1,0 +1,22 @@
+defmodule
+	longname
+files
+	(longname.ll)
+import
+	(callext)
+export
+	(long-filename)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(long-filename nsubr ())
+)
+cpfunctions (
+(set_long_filename subr1)
+)
+cpimport
+()
+cpenv (
+sort
+callext
+)

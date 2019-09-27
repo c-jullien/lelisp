@@ -1,0 +1,33 @@
+(loadfile "exp386.ll" t)
+;; (debug t)
+(defun core-expand-std (msg)
+   (let ((batch (getenv "EXPFILE")))
+        (cond
+	      ((null batch)
+	       (expand-files))
+	      (t
+	       (loadfile batch t)
+	       (cond
+		     (expand-all
+		      (expandn)
+		      (if unix-as-flag
+			  (translate-all)))
+		     (t
+		      (mapc #'(lambda (file)
+				 (funcall 'expand1 file)
+				 (when unix-as-flag
+				       (funcall 'translate file)))
+			    expand-file-list)))
+	       (end ())))))
+
+(unless (save-core (catenate (selectq (system)
+                                (msdos     "msdos")
+                                (os2       "os2")
+                                (nt386     "nt386")
+                                (win32     "win32")
+                                (win64     "win64")
+                                (win95     "win95")
+                                (t         "unix"))
+                             "/llexpand.cor"))
+        (core-expand-std "Expanseur"))
+(end ())

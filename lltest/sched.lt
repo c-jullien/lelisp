@@ -1,0 +1,11 @@
+                 (test-serie "[Tests du scheduler]" ())
+
+(testpprv)                     (f z 9 10)
+(lsign 50)                     positif
+(lsign -50)                    negatif
+(sign 50)                      positif
+(sign -50)                     negatif
+(fib 15)                       #.(nfib 15)
+(testb)                        ()
+
+                 (test-serie "[fin des tests du scheduler]" ())

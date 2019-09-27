@@ -1,0 +1,64 @@
+%% PostScript setscreen library: supports LeLisp VB area fill
+
+/setuserscreendict 22 dict def
+setuserscreendict begin
+ /tempctm matrix def
+ /tempscale matrix def
+ /resmatrix matrix def
+
+ /findresolution
+ { 72 0 resmatrix defaultmatrix dtransform
+   dup mul exch dup mul add sqrt
+ } def % findresolution
+end % setuserscreendict
+
+/setpatterndict 18 dict def
+setpatterndict begin
+ /bitison % xbit ybit bitison -> true or false
+ { /ybit exch def /xbit exch def
+    bstring ybit bwidth mul xbit 8 idiv add get
+    1 7 xbit 8 mod sub bitshift
+    and 0 ne
+ } def % bitison
+end % setpatterndict
+   
+/setpattern % bpside bstring setpattern ->
+{ setpatterndict begin
+  /bstring exch def
+  dup
+  /bpside exch def
+  /bwidth exch 7 add 8 idiv def
+  /onbits 0 def
+  /offbits 0 def
+  72 300 32 div div setuserscreen
+  {} settransfer
+  offbits dup onbits add div setgray
+  end % setpatterndict
+} def % setpattern
+
+/setuserscreen % cellsize setuserscreen ->
+{ setuserscreendict begin
+  /cellsize exch def
+
+  /spotfunction % x y spotfcn -> 0 or 1
+  { setpatterndict begin
+    1 add 2 div bpside mul cvi % y -> ybit
+    exch
+    1 add 2 div bpside mul cvi % x -> xbit
+    exch
+    bitison { /onbits onbits 1 add def 1}
+            { /offbits offbits 1 add def 0}
+            ifelse
+    end % setpatterndict
+  } def % spotfunction
+
+  /m tempctm currentmatrix def
+  /sm cellsize dup tempscale scale def
+
+  sm m m concatmatrix pop  % sm * m -> m
+  1 0 m dtransform
+  dup mul exch dup mul add sqrt
+  findresolution exch div
+  0 /spotfunction load setscreen
+  end % setuserscreendict
+} def % setuserscreen

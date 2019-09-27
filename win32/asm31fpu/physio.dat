@@ -1,0 +1,234 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	zundef:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zitsoft:dword
+	extrn	maxchan:dword
+	extrn	zllsystem:dword
+	extrn	zsyspkgc:dword
+	extrn	zstinread:dword
+	extrn	ringur:dword
+	extrn	curread:dword
+	extrn	cpkgc:dword
+	extrn	bufout:dword
+	extrn	pocour:dword
+	extrn	nbleft:dword
+	extrn	nbrig:dword
+	extrn	maxpocou:dword
+	extrn	savea4:dword
+pnmac494	db	'tyi'
+	even
+pnmac495	db	'tys'
+	even
+pnmac496	db	'tyinstring'
+	even
+pnmac497	db	'tyo'
+	even
+pnmac498	db	'tyflush'
+	even
+pnmac499	db	'tyback'
+	even
+pnmac500	db	'tynewline'
+	even
+pnmac501	db	'tycn'
+	even
+pnmac502	db	'tystring'
+	even
+pnmac503	db	'tycursor'
+	even
+pnmac504	db	'tycls'
+	even
+pnmac505	db	'redisplayscreen'
+	even
+ztty	dd	0
+pnmac506	db	'tty'
+	even
+pnmac507	db	'tyi'
+	even
+pnmac508	db	'tys'
+	even
+pnmac509	db	'tyinstring'
+	even
+pnmac510	db	'tyo'
+	even
+pnmac511	db	'tyflush'
+	even
+pnmac512	db	'tyback'
+	even
+pnmac513	db	'tynewline'
+	even
+pnmac514	db	'tycn'
+	even
+pnmac515	db	'tystring'
+	even
+pnmac516	db	'tycursor'
+	even
+pnmac517	db	'tycls'
+	even
+pnmac518	db	'redisplayscreen'
+	even
+zsyspktty	dd	0
+pnmac519	db	'tty'
+	even
+ztyco	dd	0
+pnmac520	db	'tyco'
+	even
+pnmac521	db	'bol'
+	even
+pnmac522	db	'inmax'
+	even
+pnmac523	db	'inpos'
+	even
+pnmac524	db	'inbuf'
+	even
+pnmac525	db	'eof'
+	even
+pnmac526	db	'prompt'
+	even
+zstdprmpt	dd	0
+pnmac527	db	'? '
+	even
+zrealterm	dd	0
+pnmac528	db	'real-terminal-flag'
+	even
+zlinemode	dd	0
+pnmac529	db	'line-mode-flag'
+	even
+pnmac530	db	'openi'
+	even
+pnmac531	db	'openo'
+	even
+pnmac532	db	'opena'
+	even
+pnmac533	db	'openib'
+	even
+pnmac534	db	'openob'
+	even
+pnmac535	db	'openab'
+	even
+pnmac536	db	'input'
+	even
+pnmac537	db	'inchan'
+	even
+pnmac538	db	'outchan'
+	even
+pnmac539	db	'channel'
+	even
+pnmac540	db	'output'
+	even
+pnmac541	db	'close'
+	even
+pnmac542	db	'deletefile'
+	even
+pnmac543	db	'renamefile'
+	even
+pnmac544	db	'copyfile'
+	even
+pnmac545	db	'probefile'
+	even
+pnmac546	db	'save-core'
+	even
+pnmac547	db	'restore-core'
+	even
+pnmac548	db	'coerce-namestring'
+	even
+pnmac549	db	'create-directory'
+	even
+pnmac550	db	'delete-directory'
+	even
+ztyi	dd	0
+ztys	dd	0
+ztyinstrg	dd	0
+ztyflush	dd	0
+ztyo	dd	0
+ztyback	dd	0
+ztynewln	dd	0
+ztycn	dd	0
+ztystrg	dd	0
+ztycursor	dd	0
+ztycls	dd	0
+ztyrdspl	dd	0
+zttytyi	dd	0
+	extrn	itstate:dword
+	extrn	itcount:dword
+	extrn	_itloop:dword
+zttytys	dd	0
+	extrn	dux1:dword
+zttytyist	dd	0
+zttytyo	dd	0
+zttytyflu	dd	0
+zttytybac	dd	0
+zttytynew	dd	0
+zttytycn	dd	0
+zttytystr	dd	0
+zttytycur	dd	0
+zttytycls	dd	0
+zttytyrds	dd	0
+zbol	dd	0
+zfinmax	dd	0
+zfinpos	dd	0
+zfinbuf	dd	0
+zlleof	dd	0
+zprompt	dd	0
+zcoercns	dd	0
+zopeni	dd	0
+zopeno	dd	0
+zopena	dd	0
+zopenib	dd	0
+zopenob	dd	0
+zopenab	dd	0
+zinput	dd	0
+zoutput	dd	0
+zinchan	dd	0
+zoutchan	dd	0
+zfchannel	dd	0
+zlclose	dd	0
+zdeletfi	dd	0
+zrenamfi	dd	0
+zcopyfi	dd	0
+zmakdir	dd	0
+zremdir	dd	0
+zprobefi	dd	0
+zsavecor	dd	0
+	extrn	ccode:dword
+	extrn	_ccode:dword
+	extrn	cheap:dword
+	extrn	_cheap:dword
+zrestcor	dd	0
+	extrn	filiz:dword
+istream	dd	0
+ostream	dd	0
+tabchan	dd	0
+curinch	dd	0
+curoutch	dd	0
+lgbuffer	dd	0
+cntrlc	dd	0
+bufch	dd	0
+rubstrg	dd	0
+curprmpt	dd	0
+ligne	dd	0
+polig	dd	0
+inmax	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	mstack:dword
+	extrn	crwork:dword
+_DATA	ends

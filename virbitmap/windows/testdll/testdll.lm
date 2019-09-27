@@ -1,0 +1,32 @@
+defmodule testdll
+
+files	(
+	testdll
+)
+export (
+	dllfloat
+	dllstring
+	dllabs
+	dllminus1
+)
+import	(
+	callext
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(dllfloat subr2 ())
+(dllstring subr2 ())
+(dllabs subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+sort
+callext
+((putprop 'testdll 't '#:complice:globalvar)
+))

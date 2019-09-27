@@ -1,0 +1,19 @@
+# Toutes ces variables de makefile sont indispensables, car se
+#  redefinissent  d'un syste`me a` l'autre.
+
+# Pour la compilation Lisp
+
+CMDDIR=.
+COMPILER=$(CMDDIR)\complice
+CMPLCFLAGS=-parano nil -w t -p "..\llib\" -p "..\llmod\" -p ".\"
+
+all: loader.lo
+
+loader.lo: loader.ll loader.lm 
+	$(COMPILER)  $(CMPLCFLAGS) -e "(de getglobal (s) 1)" loader
+
+path.lo: path.ll path.lm 
+	$(COMPILER)  $(CMPLCFLAGS) -e "(de getglobal (s) 1)" path
+
+longname.lo: longname.ll longname.lm
+	$(COMPILER)  $(CMPLCFLAGS) -e "(de getglobal (s) 1)" longname

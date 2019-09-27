@@ -1,0 +1,25 @@
+; The Le-Lisp Benchmarks (12) : deriv
+
+defmodule     deriv
+files        (deriv)
+export       (check-deriv meter-deriv test-deriv)
+import       (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-deriv subr0 ())
+(meter-deriv subr0 ())
+(test-deriv subr1 ())
+)
+cpfunctions (
+(deriv-run subr0)
+(deriv subr1)
+(deriv-aux subr1)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+)

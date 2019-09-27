@@ -1,0 +1,70 @@
+\contentsline {chapter}{\numberline {1}Introduction to the modular management of the application}{5}
+\contentsline {section}{\numberline {1.1}Le-Lisp Application and modules}{5}
+\contentsline {subsection}{\numberline {1.1.1}About the application}{5}
+\contentsline {subsubsection}{Adapting interpreted files}{5}
+\contentsline {subsubsection}{Availability of the modular compiler}{5}
+\contentsline {subsubsection}{Principles of modular compilation}{6}
+\contentsline {subsection}{\numberline {1.1.2}Modules}{6}
+\contentsline {subsubsection}{Interpreted Modules}{6}
+\contentsline {subsubsection}{Imports}{7}
+\contentsline {subsubsection}{Compiled modules}{8}
+\contentsline {section}{\numberline {1.2}Introduction to module analysis}{8}
+\contentsline {subsection}{\numberline {1.2.1}The Module Analyzer: Beginning notions}{9}
+\contentsline {subsubsection}{Using the Module Analyzer}{9}
+\contentsline {subsubsection}{Starting with the analyzer}{9}
+\contentsline {subsection}{\numberline {1.2.2}Projects}{10}
+\contentsline {subsubsection}{Project Notions}{10}
+\contentsline {subsubsection}{Projects and Products}{11}
+\contentsline {subsection}{\numberline {1.2.3}Preparing your application environment }{12}
+\contentsline {subsubsection}{Separating source and modules}{12}
+\contentsline {subsubsection}{Analysis Directory}{12}
+\contentsline {subsubsection}{Summary}{13}
+\contentsline {section}{\numberline {1.3}Methodology\pcomma : Analysis to Compilation in Six Steps}{13}
+\contentsline {subsection}{\numberline {1.3.1}Step 1: Project Description}{14}
+\contentsline {subsection}{\numberline {1.3.2}Step 2: Start-up analysis}{14}
+\contentsline {subsubsection}{Creation of the Analysis Makefile for Start-up}{15}
+\contentsline {subsubsection}{Start-up analysis}{15}
+\contentsline {subsection}{\numberline {1.3.3}Third step: Creation of the current analysis script}{16}
+\contentsline {subsection}{\numberline {1.3.4}Fourth Step: Current analysis}{16}
+\contentsline {subsection}{\numberline {1.3.5}Fifth step: Creation of the compilation script}{17}
+\contentsline {subsection}{\numberline {1.3.6}Sixth step: Compilation}{17}
+\contentsline {section}{\numberline {1.4}Installation and configuration of the analyzer}{18}
+\contentsline {chapter}{\numberline {2}The Module Analyzer}{21}
+\contentsline {section}{\numberline {2.1}The Module Analyzer: How it works}{21}
+\contentsline {section}{\numberline {2.2}Project Definition}{21}
+\contentsline {subsection}{\numberline {2.2.1}The principal keys of a project definition}{22}
+\contentsline {subsection}{\numberline {2.2.2}Examples}{25}
+\contentsline {section}{\numberline {2.3}The Analysis Command}{28}
+\contentsline {subsection}{\numberline {2.3.1}Principal Analysis Options}{29}
+\contentsline {section}{\numberline {2.4}The analysis process}{32}
+\contentsline {subsection}{\numberline {2.4.1}Analysis Context}{32}
+\contentsline {subsection}{\numberline {2.4.2}Analysis of a module}{33}
+\contentsline {subsection}{\numberline {2.4.3}Diagnostics}{34}
+\contentsline {subsubsection}{Module importation}{35}
+\contentsline {subsubsection}{Exporting Functions}{36}
+\contentsline {subsubsection}{Restrictions}{38}
+\contentsline {subsection}{\numberline {2.4.4}Updating a module file descriptor}{38}
+\contentsline {chapter}{\numberline {3}The Module Compiler}{39}
+\contentsline {section}{\numberline {3.1}After the analysis: The compilation}{39}
+\contentsline {section}{\numberline {3.2}The compilation: Analyzer specifics}{39}
+\contentsline {subsection}{\numberline {3.2.1}The Analysis Option dedicated to the compilation}{39}
+\contentsline {subsection}{\numberline {3.2.2}Project definition keys dedicated to the compilation}{40}
+\contentsline {section}{\numberline {3.3}Compiling a module}{41}
+\contentsline {chapter}{\numberline {4}Analysis Messages}{43}
+\contentsline {chapter}{\numberline {5}Reference Manual}{51}
+\contentsline {section}{\numberline {5.1}DEFINE-RT-PROJECT}{51}
+\contentsline {section}{\numberline {5.2}LL2LM}{58}
+\contentsline {chapter}{\numberline {6}Extensions And Advanced Use}{63}
+\contentsline {section}{\numberline {6.1}How to directly analyze in a Le-Lisp session}{63}
+\contentsline {section}{\numberline {6.2}Project Management}{64}
+\contentsline {section}{\numberline {6.3}Analyzer Extensions}{67}
+\contentsline {chapter}{\numberline {A}A Complete Example}{71}
+\contentsline {chapter}{\numberline {B}Limitations and Known Difficulties}{83}
+\contentsline {section}{\numberline {B.1}Restrictions}{83}
+\contentsline {section}{\numberline {B.2}Known Problems}{83}
+\contentsline {subsection}{\numberline {B.2.1}Hashing of symbols that are too long}{83}
+\contentsline {subsection}{\numberline {B.2.2}Structure Heritage}{84}
+\contentsline {subsection}{\numberline {B.2.3}Abbreviations}{85}
+\contentsline {subsection}{\numberline {B.2.4}Conflicts among module names}{85}
+\contentsline {subsection}{\numberline {B.2.5}Generation of the compilation {\ptt Makefile}}{86}
+\contentsline {chapter}{\numberline {C}List of functions}{87}

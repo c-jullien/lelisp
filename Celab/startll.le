@@ -1,0 +1,41 @@
+;;; GELL 15.26: elaboration file for the module: startll
+;;;             translation done: "Wed Jul  28 93 17:58:11 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: startll.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'startll)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZstartll" "Wed Jul  28 93 17:58:11 "
+
+'((subversion . subr0) (herald . subr0) (explodech . subr1) (implodech . subr1) (lhoblist . subr1) (#:lhoblist:g104 . subr1) (#:llcp:nlist . subr0) (#:llcp:errwna . subr2) (core-init-std . subr1) (save-std . nsubr) (#:llcp:ext-not-resolved . subr0) (defmacro-open . fsubr) (make-macro-open . subr2) (macro-openp . subr1) (remove-macro-open . subr1) (compiler . nsubr) (compile-all-in-core . nsubr) (loader . nsubr))
+
+#[outchan "; Le-Lisp (by INRIA) version 15.25 " "(07/Jul/93)   [" system "]" print explode ascii cascii implode s (s) index #:lhoblist:g104 maploblist errwna #:system:initty-after-restore-flag initty #:system:inibitmap-after-restore-flag inibitmap herald "HOME" getenv "/.lelisp" catenate probefile t loadfile "; " " : " #:system:save-std-date list-features sortl save-std #:llcp:errwna "Attendez, je sauve : " date featurep module loadmodule ("date") libload gc gcinfo #:system:save-std-gcinfo-list #:system:real-terminal-flag #:system:line-mode-flag |? | prompt core-init-std #:system:core-directory #:system:core-extension save-core funcall " look at defCcheck " #:llcp:ext-not-resolved macro-open symbol expr setfn getfn1 getsymb1 remob ";GELL 15.26 warning,  call to (compiler ...)" ";GELL 15.26 warning,  call to (compile-all-in-core ...)" ";GELL 15.26 warning,  call to (loader ...)" subversion #:gell-resetfn:function-name #:gell-resetfn:function-0 explodech #:gell-resetfn:function-1 implodech lhoblist #:llcp:nlist #:gell-resetfn:function-2 #:gell-resetfn:function-n defmacro-open #:gell-resetfn:function-f make-macro-open macro-openp remove-macro-open compiler compile-all-in-core loader]
+)
+
+(defcsetfn 'subversion "GZstartll" 0)
+(defcsetfn 'herald "GZstartll" 1)
+(defcsetfn 'explodech "GZstartll" 2)
+(defcsetfn 'implodech "GZstartll" 3)
+(defcsetfn 'lhoblist "GZstartll" 4)
+(defcsetfn '#:lhoblist:g104 "GZstartll" 5)
+(defcsetfn '#:llcp:nlist "GZstartll" 6)
+(defcsetfn '#:llcp:errwna "GZstartll" 7)
+(defvar #:system:initty-after-restore-flag t)
+(defvar #:system:inibitmap-after-restore-flag t)
+(defcsetfn 'core-init-std "GZstartll" 8)
+(defvar #:system:save-std-gcinfo-list (list (cons 'initial (gcinfo t))))
+(defvar #:system:save-std-date ())
+(defcsetfn 'save-std "GZstartll" 9)
+(defcsetfn '#:llcp:ext-not-resolved "GZstartll" 10)
+(defcsetfn 'defmacro-open "GZstartll" 11)
+(defcsetfn 'make-macro-open "GZstartll" 12)
+(defcsetfn 'macro-openp "GZstartll" 13)
+(defcsetfn 'remove-macro-open "GZstartll" 14)
+(defcsetfn 'compiler "GZstartll" 15)
+(defcsetfn 'compile-all-in-core "GZstartll" 16)
+(defcsetfn 'loader "GZstartll" 17)
+
+(defccheck '(remob getsymb1 getfn1 setfn symbol funcall save-core prompt gcinfo gc date libload loadmodule featurep #:llcp:errwna sortl list-features loadfile probefile catenate getenv herald inibitmap initty maploblist index implode cascii ascii explode print system outchan))

@@ -1,0 +1,43 @@
+; The Le-Lisp Benchmarks (17) : puzzle
+
+defmodule     puzzle
+files        (puzzle)
+export       (check-puzzle meter-puzzle test-puzzle)
+import       (checkmet setf format)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-puzzle subr0 ())
+(meter-puzzle subr0 ())
+(test-puzzle subr1 ())
+)
+cpfunctions (
+(puzzle-start subr0)
+(definepiece nsubr)
+(fit subr2)
+(place subr2)
+(trial subr1)
+(puzzle-remove subr2)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+)(format
+(format . nsubr)
+))
+cpenv (
+checkmet
+setf
+format
+((putprop 'puzzle-size 't '#:complice:globalvar)
+)((putprop 'puzzle-classmax 't '#:complice:globalvar)
+)((putprop 'puzzle-typemax 't '#:complice:globalvar)
+)((putprop 'iii 't '#:complice:globalvar)
+)((putprop 'kount 't '#:complice:globalvar)
+)((putprop 'puzzle-d 't '#:complice:globalvar)
+)((putprop 'piececount 't '#:complice:globalvar)
+)((putprop 'puzzle-class 't '#:complice:globalvar)
+)((putprop 'piecemax 't '#:complice:globalvar)
+)((putprop 'puzzle 't '#:complice:globalvar)
+)((putprop 'puzzle-p 't '#:complice:globalvar)
+))

@@ -1,0 +1,14 @@
+defmodule meta
+files (meta)
+import (
+defrtprj
+diagnostic
+printlm
+ref
+rtmsg
+rtprint
+)
+
+export (
+#:rtproject:build-meta
+)

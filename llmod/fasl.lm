@@ -1,0 +1,33 @@
+defmodule
+fasl
+files (
+fasl
+)
+export (
+#:fasl:fasl-write-block
+#:fasl:fasl-memo-eval-block
+#:fasl:fasl-record-fentry
+#:fasl:fasl-record-literal-reference
+#:fasl:fasl-record-symbol-reference
+#:fasl:fasl-emit-title-block
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:fasl:fasl-write-block subr0 ())
+(#:fasl:fasl-memo-eval-block subr1 ())
+(#:fasl:fasl-record-fentry subr2 ())
+(#:fasl:fasl-record-literal-reference subr1 ())
+(#:fasl:fasl-record-symbol-reference nsubr ())
+(#:fasl:fasl-emit-title-block subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv
+()

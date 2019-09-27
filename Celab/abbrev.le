@@ -1,0 +1,42 @@
+;;; GELL 15.26: elaboration file for the module: abbrev
+;;;             translation done: "Wed June 16 93 18:01:13 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: abbrev.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'abbrev)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZabbrev" "Wed June 16 93 18:01:13 "
+
+'((defabbrev . dmsubr) (put-abbrev . subr2) (rem-abbrev . subr1) (get-abbrev . subr1) (abbrevp . subr1) (has-an-abbrev . subr1) (#:symbol:prin . subr1))
+
+#[put-abbrev quote list errsym #:system:abbrevs-alist acons rem-abbrev delq abbrevp #:abbrev:errnotanabbrev get-abbrev t #:system:print-with-abbrev-flag has-an-abbrev #:system:print-for-read (#:system:print-for-read) lambda |{| pratom (#:system:print-for-read) |}:| #:system:print-package-flag (#:system:print-package-flag) defabbrev #:gell-resetfn:function-name #:gell-resetfn:function-1 #:gell-resetfn:function-2 #:symbol:prin]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'abbrev)))
+(add-feature 'abbrev)
+(defvar #:sys-package:colon 'abbrev)
+(defvar #:system:abbrevs-alist (when (boundp '#:system:abbrevs-alist) #:system:abbrevs-alist))
+(#:messages:put-message '#:abbrev:errsxtacc 'french '"mauvaise abre'viation {}" 'defmessage)
+(#:messages:put-message '#:abbrev:errsxtacc 'english '"bad {} abbreviation" 'defmessage)
+'#:abbrev:errsxtacc
+(#:messages:put-message '#:abbrev:errsxtclosingacc 'french '"} en dehors d'une abre'viation {}" 'defmessage)
+(#:messages:put-message '#:abbrev:errsxtclosingacc 'english '"} not within {}" 'defmessage)
+'#:abbrev:errsxtclosingacc
+(#:messages:put-message '#:abbrev:errnotanabbrev 'french '"l'argument n'est pas une abre'viation" 'defmessage)
+(#:messages:put-message '#:abbrev:errnotanabbrev 'english '"not an abbreviation" 'defmessage)
+'#:abbrev:errnotanabbrev
+(defcsetfn 'defabbrev "GZabbrev" 0)
+(defcsetfn 'put-abbrev "GZabbrev" 1)
+(defcsetfn 'rem-abbrev "GZabbrev" 2)
+(defcsetfn 'get-abbrev "GZabbrev" 3)
+(defcsetfn 'abbrevp "GZabbrev" 4)
+(defcsetfn 'has-an-abbrev "GZabbrev" 5)
+(dmc |}| () (error '|}| '#:abbrev:errsxtclosingacc ()))
+(dmc |{| () (let ((l (read-delimited-list 125))) (until (and (consp l) (symbolp (car l)) (null (cdr l))) (setq l (error '|{| '#:abbrev:errsxtacc l))) (setq l (get-abbrev (car l))) (reread (if l (explode l) '(124 124)))) (with ((typecn 58 'cpkgc)) (read)))
+(defvar #:system:print-with-abbrev-flag (if (boundp '#:system:print-with-abbrev-flag) #:system:print-with-abbrev-flag t))
+(defcsetfn '#:symbol:prin "GZabbrev" 6)
+
+(defccheck '(pratom has-an-abbrev abbrevp delq acons list))

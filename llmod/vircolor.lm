@@ -1,0 +1,50 @@
+defmodule
+color
+files (
+|vircolor.ll|
+)
+export (
+#:color:prin
+make-color
+make-mutable-color
+make-named-color
+kill-color
+red-component
+blue-component
+green-component
+all-colors
+name-to-rgb
+get-rgb-values
+)
+import (
+virutil
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:color:prin subr1 ())
+(make-color subr3 ())
+(make-mutable-color subr3 ())
+(make-named-color subr1 ())
+(kill-color subr1 ())
+(red-component nsubr ())
+(blue-component nsubr ())
+(green-component nsubr ())
+(all-colors nsubr ())
+(name-to-rgb subr1 ())
+(get-rgb-values subr1 ())
+)
+cpfunctions
+()
+cpimport (
+(virutil
+(#:color:make . subr0)
+))
+cpenv (
+virutil
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

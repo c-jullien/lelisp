@@ -1,0 +1,126 @@
+defmodule #:display:windows
+files   (
+	wininit.ll
+)
+include (
+	virmacros
+	virstruct
+)
+import (
+	virutil ;  make
+	win_def
+	winstruc
+	wincolor
+	wingraph
+	winbitma
+	winwindo
+	winevent
+)
+export  (
+	:bitprologue
+	:bitepilogue 
+	:bitmap-save 
+	:bitmap-restore 
+	:bitmap-refresh
+	:bitmap-flush 
+	:bitmap-sync 
+	:standard-roman-font 
+	:standard-bold-font 
+	:large-roman-font 
+	:small-roman-font
+	:standard-background-pattern 
+	:standard-foreground-pattern 
+	:standard-medium-gray-pattern 
+	:standard-light-gray-pattern
+	:standard-dark-gray-pattern 
+	:standard-lelisp-cursor 
+	:standard-gc-cursor 
+	:standard-busy-cursor 
+	:display-depth
+	:synchronize
+	at-end
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:windows:bitprologue subr1 ())
+(#:display:windows:bitepilogue subr1 ())
+(#:display:windows:bitmap-save subr1 ())
+(#:display:windows:bitmap-restore subr1 ())
+(#:display:windows:bitmap-refresh subr1 ())
+(#:display:windows:bitmap-flush subr1 ())
+(#:display:windows:bitmap-sync subr1 ())
+(#:display:windows:standard-roman-font subr1 ())
+(#:display:windows:standard-bold-font subr1 ())
+(#:display:windows:large-roman-font subr1 ())
+(#:display:windows:small-roman-font subr1 ())
+(#:display:windows:standard-background-pattern subr1 ())
+(#:display:windows:standard-foreground-pattern subr1 ())
+(#:display:windows:standard-medium-gray-pattern subr1 ())
+(#:display:windows:standard-light-gray-pattern subr1 ())
+(#:display:windows:standard-dark-gray-pattern subr1 ())
+(#:display:windows:standard-lelisp-cursor subr1 ())
+(#:display:windows:standard-gc-cursor subr1 ())
+(#:display:windows:standard-busy-cursor subr1 ())
+(#:display:windows:display-depth subr1 ())
+(#:display:windows:synchronize nsubr ())
+(at-end nsubr ())
+)
+cpfunctions (
+(#:display:windows:init-mode subr1)
+(#:display:windows:init-line-style subr1)
+(#:display:windows:init-color subr1)
+(#:display:windows:init-pattern subr1)
+(#:display:windows:add-a-pattern nsubr)
+(#:display:windows:init-font subr1)
+(#:display:windows:add-a-font subr2)
+(#:display:windows:init-cursor subr1)
+(#:display:windows:init-window subr1)
+(#:display:windows:event-mask subr1)
+(#:display:windows:initialize-event-responses subr1)
+)
+cpimport (
+(wincolor
+(#:display:windows:make-color . nsubr)
+)(wingraph
+(#:display:windows:make-pattern . subr2)
+(#:display:windows:load-font . subr2)
+)(winstruc
+(#:tclass:winwindow:make . subr0)
+)(winwindo
+(#:display:windows:windows-create-graph-env . subr2)
+)(winevent
+(#:display:windows:flush-event . subr1)
+)(winbitma
+(#:display:windows:create-bitmap . subr2)
+(#:display:windows:kill-bitmap . subr2)
+)(win_def
+(winversion . subr0)
+(windows_bitprologue . subr3)
+(windows_init_table_color . subr0)
+(windows_get_fonts . subr2)
+(windows_named_cursor . subr1)
+(windows_root_window . subr1)
+(windows_kill_color . subr1)
+(windows_bitepilogue . subr1)
+)(virutil
+(#:graph-env:make . subr0)
+(#:color:make . subr0)
+(#:bitmap:make . subr0)
+(#:image:rectangle:window:make . subr0)
+(current-display . nsubr)
+))
+cpenv (
+virutil
+win_def
+winstruc
+wincolor
+virgraph
+wingraph
+virwindow
+winwindo
+winbitma
+virevent
+winevent
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))

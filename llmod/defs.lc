@@ -1,0 +1,31 @@
+defmodule system
+files (defs)
+import (cpmac)
+include ()
+
+export (
+macroexpand
+macroexpand1
+with
+resetfn
+de
+df
+dm
+dmd
+defmacro
+defun
+ds
+letn
+slet
+for
+ifor
+ffor
+closure
+prog
+prog*
+do
+do*
+backtrack
+catch-all-but
+dynamic
+)

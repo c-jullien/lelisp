@@ -1,0 +1,78 @@
+;;;; replaces standard fortran.lt for Win32 distributions.
+;;;; Christian Jullien, Eligis (c) - 1998/10/02
+
+          (test-serie "Test sur les entiers fortran" ())
+(defextern |RFIX1| (rfix) fix)          |RFIX1|     ; rfix ==> INTEGER*4
+(|RFIX1| 2)                             4
+(|RFIX1| -2)                            -4
+(|RFIX1| 0)                             0
+(|RFIX1| 16383)                         32766
+(|RFIX1| -16384)                        -32768
+(|RFIX1| -1)                            -2
+(|RFIX1| 1)                             2
+(|RFIX1| #$FFFF)                        -2
+
+          (test-serie "Test sur les flottants fortran"  ())
+(defextern |RFLT1| (rfloat) float)      |RFLT1|  ; rfloat ==> REAL*8
+(|RFLT1| 0.0)                           0.0
+(|RFLT1| 0.5)                           1.0
+(|RFLT1| 1.2)                           2.4
+(|RFLT1| -300.0)                        -600.0
+
+          (test-serie "Test sur les entiers fortran, avec modification" ())
+
+(defextern |MFIX| (fixvector) )        |MFIX|  ; fixvector ==> INTEGER*4
+;;; Pour recuperer le re'sultat de l'ope'ration fortran, on passe
+;;; un vecteur d'1 scalaire, lequel sera modifie' au retour.
+(setq a #[3])                           #[3]
+(progn (|MFIX| a) a)                    #[4]
+
+#-(featurep '64bitfloats)
+  (test-serie "Test sur les flottants fortran, avec modification" ())
+()
+#+(featurep '64bitfloats)
+  (test-serie "Pas de FLOATVECTOR en 64BITFLOATS" ())
+
+(defextern |MFLT| (floatvector)) 
+    #.(if (featurep '64bitfloats)
+	  '(errgen defextern "floatvector (64BITFLOATS)")
+	'|MFLT|)
+
+(setq b #[2.3])                         #[2.3]
+#-(featurep '64bitfloats)
+  (progn (|MFLT| b)
+	 b)                             #-(featurep '64bitfloats)#[4.6]
+
+          (test-serie "Test sur les tableaux d'entiers fortran" ())
+
+(defextern |TABFIX| (rfix fixvector))   |TABFIX|; rfix & fixvector=> INTEGER*4
+(setq c #[1 2 3 4 5 9])                 #[1 2 3 4 5 9]
+(progn (|TABFIX| 6 c)
+       c)                               #[2 3 4 5 6 10]
+(setq d #[1 2 -32767 4 5 9])            #[1 2 -32767 4 5 9]
+(progn (|TABFIX| 6 d)
+       d)                               #[2 3 -32766 5 6 10]
+
+#-(featurep '64bitfloats)
+  (test-serie "Test sur les tableaux de flottants fortran" ())
+()
+#+(featurep '64bitfloats)
+  (test-serie "Pas de FLOATVECTOR en 64BITFLOATS" ())
+
+(defextern |TABFLT| (rfix floatvector))
+    #.(if (featurep '64bitfloats)
+	  '(errgen defextern "floatvector (64BITFLOATS)")
+	'|TABFLT|)
+(setq d #[1.2 4.0 9.9 .25])             #[1.2 4.0 9.9 .25]
+#-(featurep '64bitfloats)
+(progn (|TABFLT| 4 d)                        
+       d)                               #-(featurep '64bitfloats)
+                                          #[2.4 8.0 19.8 .5]
+
+          (test-serie "Test sur les tableaux d'entiers fortran" ())
+(defextern |FSTRG| (rfix string))        |FSTRG|
+(setq s "asdfg" l (slen s) a 0)          0
+(progn (|FSTRG| l s) s)                  "ssdfg"
+
+          (test-serie "Fin du test" ())
+()                                      ()

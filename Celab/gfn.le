@@ -1,0 +1,10 @@
+;;; GELL 15.26: elaboration file for the module: gfn
+(eq strg (copy strg))Tue      24 93 16f26(17u"
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: gfn.le|(equal strg (copy strg))|
+(equal strg (copy strg))
+	|(eq vect vect)|
+|(eq vect (copy vect))|gfn(eq vect vect)
+(eq vect (copy vect))
+

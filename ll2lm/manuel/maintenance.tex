@@ -1,0 +1,171 @@
+\documentstyle[11pt,fr,verbatimfiles]{ibook}
+
+\Begin
+
+\Frontmatter{Le-Lisp}
+{Guide de maintenance de l'analyseur de modules \\
+{\sf version 15.26}} 
+{Juin 1994}
+
+\Chapter {1} {fichiers - structure de LL2LM}
+LL2LM fait partie de la distribution \LeLisp\ et se trouve
+int\'{e}gralement dans le r\'{e}pertoire {\tt ll2lm} de \LeLisp .
+
+LL2LM se d\'{e}compose comme suit:
+\begin{itemize}
+
+\item{\bf noyau}
+\begin{itemize}
+\item{\tt crunch.ll}
+d\'{e}finition de l'interface utilisateur\,: options de \|ll2lm|,
+d\'{e}finition de \|sh-analyze|. C'est ici qu'on met \`{a} jour
+l'environnement d'analyse (maj path, \'{e}valuation des include, cpenv ...).
+\item{\tt codewalker.ll}
+interface entre l'interface utilisateur et le parseur (h\'{e}ritage de
+l'ancien cruncheur!).
+\item{\tt defvar.ll}
+liste des \|defvar| du syst\'{e}me.
+\item{\tt kernellm.ll}
+quelques fonctions utilis\'{e}es par tous.
+\end{itemize}
+
+\item{\bf analyse : le c\oe ur du syst\`{e}me}
+\begin{itemize}
+\item{\tt parse.ll}
+le parseur de \|complice| adapt\'{e} au cruncher.
+\item{\tt syserror.ll}
+la vraie m\'{e}canique: r\'{e}cup\'{e}ration des erreurs. Tr\`{e}s li\'{e} \`{a} {\tt parse.ll}.
+\item{\tt diagnostic.ll}
+affichage d\'{e}taill\'{e} d'une analyse.
+\item{\tt rtmsg.ll}
+liste des messages d'erreurs (fran\c{c}ais, anglais)
+\end{itemize}
+
+\item{\bf gestion de projet}
+\begin{itemize}
+\item{\tt defrtprj.ll}
+structure ``projet{''}. Interface utilisateur de gestion d'un projet.
+\end{itemize}
+
+\item{\bf gestion de la base des r\'{e}f\'{e}rences + -build}
+\begin{itemize}
+\item{\tt ref.ll}
+structure de la base. Gestion interne de la base.
+\item{\tt build.ll}
+option \|-build|.
+\end{itemize}
+
+\item{\bf gestion des modules}
+\begin{itemize}
+\item{\tt readlm.ll}
+lecture des modules \|*.lm|.
+\item{\tt printlm.ll}
+\'{e}criture des modules \|*.lm|.
+\end{itemize}
+
+\item{\bf -init}
+\begin{itemize}
+\item{\tt create.ll}
+fabrication du makefile d'analyse.
+\end{itemize}
+
+\item{\bf -makefile}
+\begin{itemize}
+\item{\tt make.ll}
+fabrication du makefile de compilation.
+\end{itemize}
+
+\item{\bf -merge}
+\begin{itemize}
+\item{\tt merge.ll}
+pour merger 2 bases.
+\end{itemize}
+
+\item{\bf -delete}
+\begin{itemize}
+\item{\tt delete.ll}
+pour effacer un module dans une base.
+\end{itemize}
+
+\end{itemize}
+
+
+\Chapter {2} {maintenance}
+\Section{re-compilation}
+pour mettre \`{a} jour les modules composant \|ll2lm|, il existe un
+makefile dans le r\'{e}pertoire {\tt ll2lm} de \LeLisp : {\tt
+ll2lm/ll2lm.mk}.
+
+\Section{Documentation}
+Les 6 chapitres et les 2 annexes en francais sont dans le r\'{e}pertoire
+{\tt ll2lm/manuel/mfrench}. Pour le sortir: utiliser le Makefile.
+
+Les 6 chapitres et les 2 annexes en anglais sont dans le r\'{e}pertoire
+{\tt ll2lm/manuel/menglish}. Pour le sortir, voir E. Mazeran.
+
+Le pr\'{e}sent document est en {\tt ll2lm/manuel/maintenance.ftex}.
+
+\Chapter {3} {tests}
+Il existe 2 r\'{e}pertoires de tests de \|ll2lm| : 
+\begin{itemize}
+\item{\tt ll2lm/test/} \\
+pour tester une structure de projet o\`{u} tous les fichiers sont rang\'{e}s
+dans un r\'{e}pertoires diff\'{e}rents selon leur type (*.ll, *.lm, *.lo);\\
+pour tester les clefs de projet \|make-file|, \|exclude-modules|,
+\|modules-list|, \|extensions-list|, et optionnellement les
+meta-projets;\\
+pour tester {\tt defdefiner} (cf guu.ll:m-guu1,zyy.ll:mydef);\\
+pour tester la clef \|-include| (cf gee.ll: f-gee1,f-gee53);\\
+bar.ll);\\
+pour tester l'analyse r\'{e}cursive (-r) (cf bar.ll);\\
+pour tester {\tt synonymq} (cf bar.ll);\\
+pour tester le d\'{e}clenchement d'importation sur l'h\'{e}ritage d'une
+structure (cf foo.ll: \#:s-fee:s-fooa3, fee.ll,fii.ll);\\
+pour tester le d\'{e}clenchement d'importation (cf foo.ll: f-foo1,
+bar.ll: f-bar1);\\ 
+pour tester le d\'{e}clenchement d'importation pour les abbrevs (cf
+pour tester les exportations simples (cf foo.ll: f-foo0);\\
+pour tester la non exportation de fcts utilis\'{e}es en interne (cf
+foo.ll: f-foo2*);\\
+pour tester les exportations de macros dans {\tt eval-when(load)}(cf
+foo.ll: deffoo1);\\
+pour tester {\tt exportable-definition}(cf foo.ll: deffoo3);\\
+pour tester les toplevel-form (cf foo.ll:
+deffoo*,defbar*,f-foo61);\\ 
+pour tester les toplevel-form dans un {\tt progn} (cf gee.ll: f-gee2*);\\
+pour tester les toplevel-form dans un {\tt if} (cf gee.ll: f-gee3*);\\
+pour tester les structures en tout genre (cf foo.ll:s-foo,t-foo);\\
+pour tester des abbrev inconnues (cf foo: {a-bar2}:f-foo5,f-foo6);\\
+pour tester des toplevel-form inconnues(cf foo.ll: unknow-foo6);\\
+pour tester les appels dynamiques simples (cf foo.ll: f-foo7*);\\
+pour tester {\tt synonymq} (cf foo.ll: f-foo8*);\\
+pour tester les definitions multiples (cf foo.ll: f-foo91);\\
+pour tester les sharp-caracteres (cf foo.ll: f-fooa*);\\
+pour tester {\tt omakeq} (cf foo.ll: f-fooa5, too.ll);\\
+pour tester le module HASH (cf foo.ll: v-foo*);\\
+pour tester l'utilisation d'une fct interne \`{a} un autre projet (cf
+zuu.ll: {a-zoo1}:f-zoo1);\\
+pour tester (optionnellement) les cycles de d\'{e}pendance des modules
+(cf zoo.ll: f-zoo2);\\
+
+\item{\tt ll2lm/test2/}\\
+pour tester une structure de projet o\`{u} les fichiers sont r\'{e}partis
+sur plusieurs directories, qqsoit leur type;\\
+pour tester les majuscules dans les noms de directories et de
+fichiers;\\
+pour tester l'utilisation de {\tt \#:system:read-case-flag};\\
+pour tester les fichiers sources r\'{e}partis dans plusieurs directories;\\
+pour tester les clefs de projet \|required-project|, \|directories|,
+\|exclude-modules|, \|modules-files|, \|extentions-list|,
+\|module-extension|, \|analyzer-options|;\\
+pour tester les sharp-characters (cf fii.ll,fuu.ll);\\
+pour tester {\tt \#:system:system:defstruct-all-access-flag} (cf
+zyy.ll).\\
+
+\end{itemize}
+
+Dans chacun de ces repertoires, on a les projets en version DOS
+\'{e}galement ({\tt test/testdos.prj}, {\tt test2/test2dos.prj})
+pour faire les m\^{e}mes tests sous DOS.
+
+\End

@@ -1,0 +1,56 @@
+;;; GELL 15.26: elaboration file for the module: defs
+;;;             translation done: "Wed June 16 93 18:00:40 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: defs.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'defs)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZdefs" "Wed June 16 93 18:00:40 "
+
+'((macroexpand . subr1) (macroexpand1 . subr1) (with . dmsubr) (resetfn . subr3) (de . fsubr) (df . fsubr) (dm . fsubr) (dmd . fsubr) (defmacro . fsubr) (defun . fsubr) (ds . fsubr) (letn . dmsubr) (slet . dmsubr) (dynamic . fsubr) (for . dmsubr) (prog . dmsubr) (prog* . dmsubr) (do . dmsubr) (do* . dmsubr) (backtrack . dmsubr) (catch-all-but . dmsubr) (closure . subr2))
+
+#[#:system:x (#:system:x) typefn macro valfn lambda apply macroexpand dmacro msubr call dmsubr quote #:system:l (#:system:l) (#:system:x) #:system:body (#:system:l #:system:body) "arg" |1+| concat with symbol #:system:var (#:system:var) let (#:system:l #:system:var) |1-| firstn errsxt list protect append progn reverse (#:system:l #:system:var) append1 mcons errnla errbdf #:system:redef-flag #:system:errtwicedef printerror #:trace:trace untrace eval #:system:previous-def-flag getdef #:system:previous-def putprop #:system:loaded-from-file lpar (lpar) t errbpa fentry fsubr push subr1 subr2 subr3 (push a1) (push a2) (push a3) mov (a1) nsubr subr0 (a4) (jmp apply) (jmp #:llcp:ffuncall) (end) loader featurep expr variablep last #:system:bidon setfn resetfn fexpr flambda autoload getprop #:system:errnocomp compiler macro-openp remove-macro-open (#:system:l) de (#:system:l) df (#:system:l) dm (#:system:l) dmd (#:system:l) defmacro (#:system:l) defun (#:system:l) ds #:system:name #:system:larg (#:system:name #:system:larg #:system:body) flet (#:system:body) lets init step end cond > (0) while <= incr < (0) >= ((t (error 'for '#:system:errnulinc 0))) res (#:system:var init step #:system:body res end end) errnva for numberp #:system:errnulinc #:system:for:arg2 #:system:for:arg1 (#:system:body) tagbody (#:system:l #:system:body) ok block (#:system:body) return return-from #:llcp:exit (#:system:l) (#:system:l) let* #:system:lvar #:system:test #:system:result (#:system:lvar #:system:test #:system:result #:system:body) until nreconc (#:system:x) psetq (#:system:lvar #:system:test #:system:result #:system:body) (#:system:x) setq (#:system:name #:system:lvar #:system:body) errnaa backtrack tag ((exit backtrack)) #:system:backtrack ((exit backtrack)) desetq (#:system:backtrack) (#:system:body) lock (tag val) ((null tag) val) memq ((evexit tag val)) ((t (error 'catch-all-but errudt tag))) #:system:f (#:system:f) (#:system:body #:system:lvar) (#:system:var) rplaca cdr #:gell-resetfn:function-name #:gell-resetfn:function-1 macroexpand1 #:gell-resetfn:function-3 #:gell-resetfn:function-f letn slet dynamic prog prog* do do* catch-all-but closure #:gell-resetfn:function-2]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'defs)))
+(defvar #:sys-package:colon 'system)
+(defvar #:system:redef-flag t)
+(#:messages:put-message '#:system:errtwicedef 'french '"fonction rede'finie" 'defmessage)
+(#:messages:put-message '#:system:errtwicedef 'english '"redefined function" 'defmessage)
+'#:system:errtwicedef
+(#:messages:put-message '#:system:errnocomp 'french '"fonction incompatible" 'defmessage)
+(#:messages:put-message '#:system:errnocomp 'english '"incompatible function" 'defmessage)
+'#:system:errnocomp
+(#:messages:put-message '#:system:errnulinc 'french '"incre'ment nul" 'defmessage)
+(#:messages:put-message '#:system:errnulinc 'english '"null increment" 'defmessage)
+'#:system:errnulinc
+(defcsetfn 'macroexpand "GZdefs" 0)
+(defcsetfn 'macroexpand1 "GZdefs" 1)
+(defcsetfn 'with "GZdefs" 2)
+(defcsetfn 'resetfn "GZdefs" 3)
+(defcsetfn 'de "GZdefs" 4)
+(defcsetfn 'df "GZdefs" 5)
+(defcsetfn 'dm "GZdefs" 6)
+(defcsetfn 'dmd "GZdefs" 7)
+(defcsetfn 'defmacro "GZdefs" 8)
+(defcsetfn 'defun "GZdefs" 9)
+(defcsetfn 'ds "GZdefs" 10)
+(defcsetfn 'letn "GZdefs" 11)
+(defcsetfn 'slet "GZdefs" 12)
+(synonym 'lets 'slet)
+(synonym 'let* 'slet)
+(synonym 'dynamic-let 'let)
+(defcsetfn 'dynamic "GZdefs" 13)
+(defcsetfn 'for "GZdefs" 14)
+(defcsetfn 'prog "GZdefs" 15)
+(defcsetfn 'prog* "GZdefs" 16)
+(defcsetfn 'do "GZdefs" 17)
+(defcsetfn 'do* "GZdefs" 18)
+(defcsetfn 'backtrack "GZdefs" 19)
+(defcsetfn 'catch-all-but "GZdefs" 20)
+(defcsetfn 'closure "GZdefs" 21)
+
+(defccheck '(nreconc #:llcp:exit < > numberp resetfn remove-macro-open macro-openp getprop setfn last variablep featurep loader putprop getdef eval printerror mcons append1 reverse append list firstn |1-| symbol concat |1+| call macroexpand apply valfn typefn))

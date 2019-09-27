@@ -1,0 +1,24 @@
+
+# Run the gabriel benchmarks in a cmplc on NetBSD
+# usage: cd recette; sh Bench
+
+logdate="log"
+date '+%d-%m-%y'  >/dev/null 2> /dev/null && logdate=`date '+%d-%m-%y'`
+
+cd ..
+log=recette/log/bench.$logdate
+echo "Resultats dans $log."
+
+recette/Echoconfig |tee $log
+
+make lelispbin
+ ./lelispbin -stack 6 -code 300 -heap 200 -number 0 -vector 2 -string 6 -symbol 4 -cons 36 -float 0 \
+	../llib/startup.ll >> $log << Eoi
+
+(load-cpl () () () () t t)
+
+../benchmarks/benchmarks
+(do-test)
+(end)
+Eoi
+

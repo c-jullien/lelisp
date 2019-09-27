@@ -1,0 +1,8 @@
+
+#!/bin/sh
+set -x
+
+# Recette du CLOAD + defextern sur X86MACOS
+
+echo "**** CLOAD : not yet implemented on this system :" X86MACOS
+

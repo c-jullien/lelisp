@@ -1,0 +1,39 @@
+;;; GELL 15.26: elaboration file for the module: product
+;;;             translation done: "Wed June 16 93 18:03:04 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: product.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'product)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZproduct" "Wed June 16 93 18:03:04 "
+
+'((product-build-info . nsubr) (product-id . subr1) (set-product-id . subr2) (product-date . subr1) (set-product-date . subr2) (product-version . subr1) (set-product-version . subr2) (product-subversion . subr1) (set-product-subversion . subr2) (product-comment . subr1) (set-product-comment . subr2) (product-all-names . subr0) (product-print . subr1))
+
+#[product-build-info #:llcp:errwna #:product:*product-database-holder* make-hash-table-eq vector #:product:product errsym puthash name id errnia date datep errbpa version subversion comment listp t errnsa unknown-product product-access gethash product-id set-product-id product-date set-product-date product-version set-product-version product-subversion set-product-subversion product-comment set-product-comment nconc product-print "name       : " print "date       : " "version    : " "subversion : " "comment    : " #:gell-resetfn:function-name #:gell-resetfn:function-n #:gell-resetfn:function-1 #:gell-resetfn:function-2 product-all-names #:gell-resetfn:function-0]
+)
+
+(setq #:sys-package:colon 'product)
+(if (not (featurep 'product)) (progn (add-feature 'product)))
+(defvar #:product:*product-database-holder*)
+(defcsetfn 'product-build-info "GZproduct" 0)
+(defcsetfn 'product-id "GZproduct" 1)
+(defcsetfn 'set-product-id "GZproduct" 2)
+(defcsetfn 'product-date "GZproduct" 3)
+(defcsetfn 'set-product-date "GZproduct" 4)
+(defcsetfn 'product-version "GZproduct" 5)
+(defcsetfn 'set-product-version "GZproduct" 6)
+(defcsetfn 'product-subversion "GZproduct" 7)
+(defcsetfn 'set-product-subversion "GZproduct" 8)
+(defcsetfn 'product-comment "GZproduct" 9)
+(defcsetfn 'set-product-comment "GZproduct" 10)
+(defcsetfn 'product-all-names "GZproduct" 11)
+(defcsetfn 'product-print "GZproduct" 12)
+(#:messages:put-message 'unknown-product 'french '"nom de produit inconnu" 'defmessage)
+(#:messages:put-message 'unknown-product 'english '"unknown product name" 'defmessage)
+'unknown-product
+(product-build-info 'lelisp 'version (version) 'subversion (eval '(subversion)) 'id 0 'date #:date:#[91 11 17 10 50 27 0 7])
+
+(defccheck '(print nconc gethash listp datep puthash vector make-hash-table-eq #:llcp:errwna))

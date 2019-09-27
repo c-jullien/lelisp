@@ -1,0 +1,162 @@
+defmodule #:display:x11
+files (x11init.ll)
+include (
+virmacros.ll
+virstruct.ll
+)
+import (
+virutil
+virbit ; pour le #* et #B
+x11_def x11struct x11color x11graph x11bitmap x11window virwindow
+x11event ; compute-event-mask
+)
+export (
+:get-xdisplay
+:bitprologue
+:bitepilogue 
+:bitmap-save 
+:bitmap-restore 
+:bitmap-refresh
+:bitmap-flush 
+:bitmap-sync 
+:standard-roman-font 
+:standard-bold-font 
+:large-roman-font 
+:small-roman-font
+:standard-background-pattern 
+:standard-foreground-pattern 
+:standard-medium-gray-pattern 
+:standard-light-gray-pattern
+:standard-dark-gray-pattern 
+:standard-lelisp-cursor 
+:standard-gc-cursor 
+:standard-busy-cursor 
+:synchronize
+:xerror 
+:xioerror
+:store-selection
+:get-selection
+:display-depth
+;; to be patched :
+:init-pattern
+:add-a-pattern
+:init-cursor
+:init-font
+:add-a-font
+:init-line-style
+;; for lispcall
+current-application-name
+current-application-class
+#:display:x11:get-app-name
+#:display:x11:get-app-class
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:x11:get-xdisplay subr1 ())
+(#:display:x11:bitprologue subr1 ())
+(#:display:x11:init-cursor subr1 ())
+(#:display:x11:init-font subr1 ())
+(#:display:x11:add-a-font subr3 ())
+(#:display:x11:init-line-style subr1 ())
+(#:display:x11:init-pattern subr1 ())
+(#:display:x11:add-a-pattern nsubr ())
+(#:display:x11:synchronize nsubr ())
+(#:display:x11:bitepilogue subr1 ())
+(#:display:x11:bitmap-save subr1 ())
+(#:display:x11:bitmap-restore subr1 ())
+(#:display:x11:bitmap-refresh subr1 ())
+(#:display:x11:bitmap-flush subr1 ())
+(#:display:x11:bitmap-sync subr1 ())
+(#:display:x11:standard-roman-font subr1 ())
+(#:display:x11:standard-bold-font subr1 ())
+(#:display:x11:large-roman-font subr1 ())
+(#:display:x11:small-roman-font subr1 ())
+(#:display:x11:standard-background-pattern subr1 ())
+(#:display:x11:standard-foreground-pattern subr1 ())
+(#:display:x11:standard-medium-gray-pattern subr1 ())
+(#:display:x11:standard-light-gray-pattern subr1 ())
+(#:display:x11:standard-dark-gray-pattern subr1 ())
+(#:display:x11:standard-lelisp-cursor subr1 ())
+(#:display:x11:standard-gc-cursor subr1 ())
+(#:display:x11:standard-busy-cursor subr1 ())
+(#:display:x11:xerror subr2 ())
+(#:display:x11:xioerror subr0 ())
+(#:display:x11:store-selection subr2 ())
+(#:display:x11:get-selection subr1 ())
+(#:display:x11:display-depth subr1 ())
+(current-application-name nsubr ())
+(current-application-class nsubr ())
+(#:display:x11:get-app-name subr0 ())
+(#:display:x11:get-app-class subr0 ())
+)
+cpfunctions (
+(#:display:x11:initialise subr1)
+(#:display:x11:event-mask subr1)
+(#:display:x11:init-display nsubr)
+(#:display:x11:initialize-event-responses subr1)
+(#:display:x11:init-window subr1)
+)
+cpimport (
+(x11event
+(#:display:x11:compute-event-mask . subr1)
+)(x11color
+(#:display:x11:init-color . subr1)
+(#:display:x11:get-default . subr2)
+)(x11bitmap
+(#:display:x11:create-bitmap . subr2)
+)(virbit
+(#:bitmap:bits . nsubr)
+)(x11graph
+(#:display:x11:load-font . subr2)
+(#:display:x11:make-pattern . subr2)
+)(x11struct
+(#:tclass:x11window:make . subr0)
+)(x11window
+(#:display:x11:x11-create-graph-env . subr2)
+)(virutil
+(#:bitmap:make . subr0)
+(#:image:rectangle:window:make . subr0)
+(current-display . nsubr)
+)(x11_def
+(x11_xdisplay . subr1)
+(x11_initialise . subr3)
+(x11_depth . subr1)
+(x11_x_version . subr1)
+(x11_x_release . subr1)
+(x11_x_revision . subr1)
+(x11_create_cursor . subr2)
+(x11_bitmapbitorder . subr1)
+(x11_root_window . subr1)
+(x11_graph_subwindow_mode . subr3)
+(x11_synchronize . subr2)
+(x11_free_cursor . subr2)
+(x11_kill_bitmap . subr2)
+(x11_bitepilogue . subr1)
+(x11_bitmap_refresh . subr2)
+(x11_bitmap_flush . subr1)
+(x11_bitmap_sync . subr1)
+(x11_store_bytes . subr3)
+(x11_fetch_bytes . subr2)
+(x11_bytes_to_llstring . subr3)
+(x11_setappname . subr1)
+(x11_setappclass . subr1)
+))
+cpenv (
+virutil
+vircolor
+virbit
+x11_def
+x11struct
+virgraph
+x11color
+x11graph
+x11bitmap
+x11event
+x11window
+virwindow
+((putprop '#:sys-package:bitmap 't '#:complice:globalvar)
+)((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:all-bitmaps 't '#:complice:globalvar)
+)((putprop '#:display:x11:default-cursors 't '#:complice:globalvar)
+))

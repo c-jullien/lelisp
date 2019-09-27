@@ -1,0 +1,7 @@
+\contentsline {section}{\numberline {1}Version "15.26"}{1}
+\contentsline {section}{\numberline {2}Contenu de cette diffusion}{1}
+\contentsline {section}{\numberline {3}Features {\accent 18 a} prendre en compte pour la 15.26}{3}
+\contentsline {subsection}{\numberline {3.1}Portages natifs: suppression de GELL}{3}
+\contentsline {subsection}{\numberline {3.2}Cruncher et G{\accent 19 e}n{\accent 19 e}rateur de RunTime}{3}
+\contentsline {subsection}{\numberline {3.3}plombage de la 15.26}{3}
+\contentsline {section}{\numberline {4}liste des principales corrections}{4}

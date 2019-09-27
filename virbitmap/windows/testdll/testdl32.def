@@ -1,0 +1,11 @@
+LIBRARY   testdll
+
+DESCRIPTION 'Sample DLL for Le-Lisp'
+
+EXPORTS
+	LibMain                 @1
+	dllstring		@2
+	dllfloat		@3
+	dllabs			@4
+	dllminus1		@5
+	dllsquarefloat		@6

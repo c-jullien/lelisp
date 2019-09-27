@@ -1,0 +1,28 @@
+defmodule #:display:x11
+files (
+x11menu.ll
+)
+include (
+virstruct.ll
+)
+import (
+x11_def x11struct
+virdraw ; draw-string
+virgraph ; current-mode
+virevent ; eventp
+virwindow ; make-window
+virinit ; bitxmax
+virutil ; #:event:make
+)
+export (
+:create-menu 
+:kill-menu 
+:activate-menu 
+:menu-insert-item 
+:menu-insert-item-list 
+:menu-delete-item-list 
+:menu-delete-item 
+:menu-modify-item-list 
+:menu-modify-item
+)
+

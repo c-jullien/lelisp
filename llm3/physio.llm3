@@ -1,0 +1,1447 @@
+;;; .EnTete "Le-Lisp (c) version 15.2" "4/19" "physio.llm3"
+;;; .EnPied " " "%" " "
+;;; .Chapitre 4 "I/O physiques et fichiers"
+
+;;; .Centre "*****************************************************************"
+;;; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+;;; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+;;; .Centre "*****************************************************************"
+
+; $Header: /usr/cvs/lelisp/llm3/physio.llm3,v 1.2 2016/05/21 09:16:57 jullien Exp $
+
+          TITLE     PHYSIO              ; LLM3 : les I/O physiques
+
+          XREFI     LLINIT,.UNDEF       ; 1 - LLINIT
+          XREFI     LLINIT,FCONS
+          XREFI     LLINIT,BVAR
+          XREFI     LLINIT,.T
+          XREFI     LLINIT,.ITSOFT
+          XREFP     LLINIT,ITSOFT
+          XREFI     LLINIT,MAXCHAN
+          XREFI     LLINIT,.LLSYSTEM
+          XREFI     LLINIT,.SYSPKGC
+          XREFP     TOPERR,ERRNIA       ; 2 - TOPERR
+          XREFP     TOPERR,ERRNAA
+          XREFP     TOPERR,ERRIOS
+          XREFP     TOPERR,ERRWNA
+          XREFP     TOPERR,ERRUDF
+          XREFP     TOPERR,ERRNSA
+          XREFP     TOPERR,GETSETN
+          XREFP     GC,GCCONS           ; 3 - GC
+          XREFP     GC,GCFLOAT
+          XREFP     GC,GCNUMB
+          XREFP     READ,INISYMB        ; 5 - READ
+          XREFP     READ,INICST
+          XREFI     READ,.STINREAD
+          XREFI     READ,RINGUR
+          XREFI     READ,CURREAD
+          XREFI     READ,CPKGC
+          XREFP     READ,ERLEC11
+          XREFI     PRINT,BUFOUT        ; 7 - PRINT
+          XREFI     PRINT,POCOUR
+          XREFI     PRINT,NBLEFT
+          XREFI     PRINT,NBRIG
+          XREFI     PRINT,MAXPOCOU
+          XREFP     PRINT,OUTCH
+          XREFP     PRINT,FLULIN
+          XREFP     EVAL,FINDTAG        ; 8 - EVAL
+          XREFP     EVAL,SYSPROT
+          XREFP     EVAL,FFUNCALL
+          XREFI     EVAL,SAVEA4
+          XREFP     SYMBS,GETFNS        ; 12 - SYMBS
+          XREFP     FNTSTD,COPY         ; 13 - FNTSTD
+          XREFP     STRING,STRINGA1     ; 15 - STRING
+          XREFP     STRING,STRINGA2
+          XREFP     STRING,MAKESTRG
+          XREFP     STRING,MAKEVECT
+          XREFP     STRING,STRGALLC
+          XREFP     STRING,RDPSCRN
+
+          XDEFP     INI_PIO
+          XDEFI     POLIG
+          XDEFI     INMAX               ; pour TEREAD dans read
+          XDEFI     TABCHAN             ; [GC]  donnes du multi-fichier
+          XDEFI     BUFCH               ; [GC]
+          XDEFI     RUBSTRG             ; [GC]
+          XDEFI     CNTRLC              ; [GC]
+          XDEFI     ISTREAM
+          XDEFI     OSTREAM
+          XDEFP     INPHY
+          XDEFI     CURPRMPT
+          XDEFP     INPUT
+          XDEFP     RESTCORI
+          XDEFP     TYO
+          XDEFP     TYCURSOR
+          XDEFP     TYSTRG
+          XDEFP     TYNEWLN
+          XDEFI     CUROUTCH
+          XDEFI     .TYRDSPL
+          XDEFI     .OUTCHAN
+          XDEFI     LGBUFFER
+          XDEFP     PHYTRUE
+
+          PURE
+
+;
+;         Initialise les I/O physiques
+;         ============================
+;
+
+INI_PIO   LABEL      
+
+          MOV       MAXCHAN,A1          ; construit la table des descripteurs
+          MOVNIL    A2                  ; initialise a` ()
+          JCALL     MAKEVECT
+          MOV       A1,TABCHAN          ; dans la table
+
+          DIFF      #3,MAXCHAN
+
+          MOV       MAXCHAN,A2          ; canal max+1 = clavier
+          PLUS      #1,A2               ; le nume'ro
+          MOVNIL    A1                  ; il n'a pas de nom
+          MOV       #1,A3               ; type lecture texte
+          MOV       #1024,LGBUFFER      ; la longueur des tampons d'E/S
+          CALL      INCHINI
+          MOVNIL    A1
+          CALL      INOPEN              ; c'est l'entree standard
+
+          MOV       MAXCHAN,A2          ; canal max = ecran avec marges
+          MOVNIL    A1                  ; sans nom
+          MOV       #2,A3               ; type ecriture texte
+          CALL      OUTCHINI
+          MOV       MAXCHAN,A1
+          CALL      OUTOPEN             ; c'est la sortie standard
+
+          MOV       MAXCHAN,A2          ; canal max+2 = ecran sans marges (TY)
+          PLUS      #2,A2               ; son nume'ro
+          MOVNIL    A1                  ; sans nom
+          MOV       #2,A3               ; type ecriture texte
+          CALL      OUTCHINI
+
+          MOV       MAXCHAN,A1
+          PLUS      #2,A1               ; max+2 c'est le tyo
+          CALL      OUTCHANI            ; (OUTCHAN 'ty)
+          HGSIZE    BUFOUT,A1           ; taille de la ligne
+          MOV       A1,MAXPOCOU         ; position maxi avant flush
+          INCR      A1
+          MOV       A1,NBRIG            ; marge droite
+
+          MOV       MAXCHAN,A1          ; (OUTCHAN ())
+          CALL      OUTCHANI
+
+          MOV       #1,A1               ; taille du tampon de caractere
+          MOV       #0,A2               ; le fill character 0=fin de ligne
+          JCALL     MAKESTRG
+          MOV       A1,BUFCH
+
+          MOV       #2,A1               ; taille de la notation ^
+          MOV       #/^,A2              ; le fill character ^^
+          JCALL     MAKESTRG
+          MOV       A1,CNTRLC
+
+          MOV       #3,A1               ; taille du BS-SP-BS
+          MOV       #8,A2               ; des BS partout!
+          JCALL     MAKESTRG         
+          MOV       A1,RUBSTRG          ; pour effacer un caractere
+          HBMOVX    #/ ,RUBSTRG,#1      ; force l'espace.
+
+;                                       Creation des symboles
+          MAKFNT    TYI,#3,"tyi"        ; Les fonctions TTY standard
+          MAKFNT    TYS,#3,"tys" 
+          MAKFNT    TYINSTRG,#10,"tyinstring"
+          MAKFNT    TYO,#3,"tyo"
+          MAKFNT    TYFLUSH,#7,"tyflush" 
+          MAKFNT    TYBACK,#6,"tyback"  ; effacement et recul
+          MAKFNT    TYNEWLN,#9,"tynewline"; nouvelle ligne (CRLF)
+          MAKFNT    TYCN,#4,"tycn"      ; la sortie physique caracte`re
+          MAKFNT    TYSTRG,#8,"tystring";  ...               chai^ne
+          MAKFNT    TYCURSOR,#8,"tycursor"; positionne le curseur
+          MAKFNT    TYCLS,#5,"tycls"    ; efface et tycursor(0,0)
+          MAKFNT    TYRDSPL,#15,"redisplayscreen"    ; redisplayscreen
+
+          MAKCST    TTY,#3,"tty"        ; Le package tty
+          MOV       .TTY,CPKGC
+          MAKFNT    TTYTYI,#3,"tyi"     ; Les fonctions TTY du pkg tty
+          MAKFNT    TTYTYS,#3,"tys" 
+          MAKFNT    TTYTYIST,#10,"tyinstring"
+          MAKFNT    TTYTYO,#3,"tyo" 
+          MAKFNT    TTYTYFLU,#7,"tyflush" 
+          MAKFNT    TTYTYBAC,#6,"tyback"
+          MAKFNT    TTYTYNEW,#9,"tynewline"
+          MAKFNT    TTYTYCN,#4,"tycn"
+          MAKFNT    TTYTYSTR,#8,"tystring"
+          MAKFNT    TTYTYCUR,#8,"tycursor"
+          MAKFNT    TTYTYCLS,#5,"tycls"   
+          MAKFNT    TTYTYRDS,#15,"redisplayscreen"
+
+          MOV       .SYSPKGC,CPKGC      ; le package sys-package
+          MAKCST    SYSPKTTY,#3,"tty"
+          MOV       .TTY,CVAL(A1)       ; (setq #:sys-package:tty 'tty)
+
+          MOVNIL    CPKGC               ; retour au package ||
+
+          MAKCST    TYCO,#4,"tyco" 
+          MAKFNT    BOL,#3,"bol" 
+          MAKFNT    FINMAX,#5,"inmax" 
+          MAKFNT    FINPOS,#5,"inpos" 
+          MAKFNT    FINBUF,#5,"inbuf" 
+          MAKFNT    LLEOF,#3,"eof" 
+          MAKFNT    PROMPT,#6,"prompt" 
+          MAKCST    STDPRMPT,#2,"? " 
+;         pas d'indirection 3D car c'est toujours dans la 2D
+          MOV       PNAME(A1),CURPRMPT
+
+          MOV       .LLSYSTEM,CPKGC     ; le package system
+          MAKCST    REALTERM,#18,"real-terminal-flag" ; lisp-echo
+          MOV       .T,CVAL(A1)
+          MAKCST    LINEMODE,#14,"line-mode-flag"     ; line-mode
+          MOVNIL    CVAL(A1)
+
+          MOVNIL    CPKGC               ; le package ||
+          MAKFNT    OPENI,#5,"openi" 
+          MAKFNT    OPENO,#5,"openo" 
+          MAKFNT    OPENA,#5,"opena"
+          MAKFNT    OPENIB,#6,"openib" 
+          MAKFNT    OPENOB,#6,"openob" 
+          MAKFNT    OPENAB,#6,"openab"
+          MAKFNT    INPUT,#5,"input" 
+          MAKFNT    INCHAN,#6,"inchan" 
+          MAKFNT    OUTCHAN,#7,"outchan" 
+          MAKFNT    FCHANNEL,#7,"channel" 
+          MAKFNT    OUTPUT,#6,"output" 
+          MAKFNT    LCLOSE,#5,"close" 
+          MAKFNT    DELETFI,#10,"deletefile" 
+          MAKFNT    RENAMFI,#10,"renamefile"
+          MAKFNT    COPYFI,#8,"copyfile" 
+          MAKFNT    PROBEFI,#9,"probefile" 
+          MAKFNT    SAVECOR,#9,"save-core" 
+          MAKFNT    RESTCOR,#12,"restore-core" 
+          MAKFNT    COERCNS,#17,"coerce-namestring"
+          MAKFNT    MAKDIR,#16,"create-directory"
+          MAKFNT    REMDIR,#16,"delete-directory"
+          RETURN
+
+;
+;         relais pour le LINK du SM90
+;
+
+PHYTRUE   MOV       .T,A1
+          RETURN
+
+;
+;         Fonctions sur le canal terminal
+;         ===============================
+;
+;  Les fonctions ge'ne'rales
+;   (de tyxxx l (to-tty 'tyxxx . l))
+; 
+;----------------------------------------
+          FENTRY    TYI,SUBR0
+;----------------------------------------
+          MOV       .TYI,A1
+          BRA       TOTTY0
+
+;----------------------------------------
+          FENTRY    TYS,SUBR0
+;----------------------------------------
+          MOV       .TYS,A1
+          BRA       TOTTY0
+
+;----------------------------------------
+          FENTRY    TYINSTRG,SUBR1
+;----------------------------------------
+          PUSH      A1
+          MOV       #1,A4
+          MOV       .TYINSTRG,A1
+          BRA       TOTTY
+
+;----------------------------------------
+          FENTRY    TYFLUSH,SUBR0
+;----------------------------------------
+          MOV       .TYFLUSH,A1
+          BRA       TOTTY0
+
+;----------------------------------------
+          FENTRY    TYO,SUBRN
+;----------------------------------------
+          MOV       .TYO,A1
+          BRA       TOTTY
+
+;----------------------------------------
+          FENTRY    TYBACK,SUBR1
+;----------------------------------------
+          PUSH      A1
+          MOV       #1,A4
+          MOV       .TYBACK,A1
+          BRA       TOTTY
+
+;----------------------------------------
+          FENTRY    TYNEWLN,SUBR0
+;----------------------------------------
+          MOV       .TYNEWLN,A1
+          BRA       TOTTY0
+
+;----------------------------------------
+          FENTRY    TYCN,SUBR1
+;----------------------------------------
+          PUSH      A1
+          MOV       #1,A4
+          MOV       .TYCN,A1
+          BRA       TOTTY
+
+;----------------------------------------
+          FENTRY    TYSTRG,SUBR2
+;----------------------------------------
+          PUSH      A1
+          PUSH      A2
+          MOV       #2,A4
+          MOV       .TYSTRG,A1
+          BRA       TOTTY
+
+;----------------------------------------
+          FENTRY    TYCURSOR,SUBR2
+;----------------------------------------
+          PUSH      A1
+          PUSH      A2
+          MOV       #2,A4
+          MOV       .TYCURSOR,A1
+          BRA       TOTTY
+
+;----------------------------------------
+          FENTRY    TYCLS,SUBR0
+;----------------------------------------
+          MOV       .TYCLS,A1
+          BRA       TOTTY0
+
+;----------------------------------------
+          FENTRY    TYRDSPL,SUBRN
+;----------------------------------------
+          MOV       .TYRDSPL,A1
+          BRA       TOTTY
+
+TOTTY0    MOV       #0,A4               ; pt d'entre pour fcts 0-aires
+TOTTY     LABEL
+          PUSH      A4                  ; nbre d'argument de TYxx
+          MOV       A1,A2               ; la me'thode recherche'e
+          MOV       .SYSPKTTY,A1        ; #:sys-package:tty
+          MOV       CVAL(A1),A1         ; C'est sa valeur qui compte
+          MOVNIL    A3                  ; le package d'arre^t
+          PUSH      A2                  ; sauvegarde la fonction cherche'e
+          JCALL     GETFNS              ; cherche la fonction associe'e
+          POP       A2                  ; re'cupe`re la fonction pour l'erreur
+          BTNIL     A1,TOTTYER          ; inde'finie!
+          POP       A4                  ; le nombre d'arguments de TYO
+          JMP       FFUNCALL            ; call it!
+
+TOTTYER   LABEL
+          MOV       .SYSPKTTY,A1        ; #:sys-package:tty
+          MOV       CVAL(A1),A1         ; C'est sa valeur qui compte
+          JMP       ERRUDF              ; fonction inde'finie!
+
+; ----------------------------------------
+          FENTRY    TTYTYI,SUBR0
+; ----------------------------------------
+          CALL      TYFLUSH             ; a tout hasard
+          TTYIN     A1                  ; lit le car.
+          RETURN
+
+; ----------------------------------------
+          FENTRY    TTYTYS,SUBR0
+; ----------------------------------------
+          CALL      TYFLUSH             ; a tout hasard
+          TTYIS     A1,A2               ; essaie de lire le car.
+          CNBEQ     A2,#0,TYS9          ; il est bon
+          MOVNIL    A1                  ; rien n'est pret
+TYS9      RETURN
+
+;----------------------------------------
+          FENTRY    TTYTYIST,SUBR1
+;----------------------------------------
+          BFSTRG    A1,TTYINR           ; il faut une chai^ne
+          PUSH      A1
+          CALL      TYFLUSH             ; a tout hasard
+          POP       A1
+          TTYINSTR  A1,A1               ; A1 la chai^ne, A1 nbre de car lus.
+          RETURN
+TTYINR    MOV       .TTYTYIST,A2        ; la fonction qui provoque l'erreur
+          JMP       ERRNSA              ; pas une chaine
+
+; ----------------------------------------
+          FENTRY    TTYTYO,SUBRN
+; ----------------------------------------
+          CNBEQ     A4,#0,TTYTYO9       ; rien a` faire
+          PUSH      A4                  ; pour le ADJSTK
+          INCR      A4                  ; a cause du PUSH!
+          BRA       TTYTYO2             ; la boucle generale
+TTYTYO1   XSPMOV    A4,A1               ; l'objet suivant
+          BTNIL     A1,TTYTYO2          ; rien a` faire pour ()
+          PUSH      A4                  ; sauve le compteur
+          CALL      TTYTYOI             ; envoi ce caractere
+          POP       A4                  ; recupere le compteur
+TTYTYO2   SOBGTZ    A4,TTYTYO1          ; ca roule
+          POP       A4                  ; le nombre d'elements a depiler
+          ADJSTK    A4
+          RETURN
+TTYTYO9   MOVNIL    A1
+          RETURN
+;
+;         le TTYTYO interne qui ne traite qu'1 element (dans A1)
+;
+; rend A1 en valeur
+; 
+TTYTYOI   PUSH      OSTREAM             ; le canal de sortie courant
+          PUSH      A1                  ; l'argument
+          MOV       MAXCHAN,A1
+          PLUS      #2,A1               ; le canal tty
+          CALL      OUTCHANI            ; OUTCHAN interne
+          POP       A1                  ; re'cupere l'argument
+          MOV       @TTYTYOI1,A3        ; la routine
+TTYTYOI0  JCALL     SYSPROT             ; protege'e
+          POP       A1                  ; le re'sultat
+          XTOPST    A1                  ; e'change re'sultat et ancien canal 
+          PUSH      A3                  ; la continuation
+          PUSH      A2                  ; le tag
+          CALL      OUTCHANI            ; repositionne le canal
+          POP       A2                  ; le tag
+          POP       A3                  ; re'cupere la continuation
+          POP       A1                  ; et le re'sultat
+          BRI       A3                  ; on rentre
+
+TTYTYOI1  LABEL                         ; fait le travail
+          BTFIX     A1,TTYTYOF          ; un fix
+          BTCONS    A1,TTYTYOC          ; un cons
+          BTSTRG    A1,TTYTYOS          ; une chaine
+TTYTYOER  MOV       .TTYTYO,A2          ; la fonction qui de'clenche
+          JMP       ERRNIA              ; pas un fix!
+
+TTYTYOF   MOV       A1,A4               ; do it
+          PUSH      A1                  ; sauve le caractere
+          JCALL     OUTCH               ; l'e'crit
+          POP       A1
+          RETURN                        ; done
+
+TTYTYOC   PUSH      A1                  ; sauve la liste
+TTYTYOC1  PUSH      CDR(A1)             ; sauve le reste
+          MOV       CAR(A1),A4          ; le premier caractere
+          JCALL     OUTCH               ; le stocke
+          POP       A1
+          BTCONS    A1,TTYTYOC1         ; pour le reste     
+          BFNIL     A1,TTYTYOER         ; pas une belle liste
+          POP       A1                  ; la liste
+          RETURN                        ; fini!
+
+TTYTYOS   HGSIZE    A1,A2               ; taille de la chai^ne
+          PLUS      POCOUR,A2           ; plus la position courante
+          CNBLT     A2,MAXPOCOU,TTYTYOS1; ne de'borde pas
+          JCALL     FLULIN              ; flush it (itsoft 'flush)
+TTYTYOS1  HGSIZE    A1,A2               ; reprend la taille
+          HBMOVM    A2,A1,#0,BUFOUT,POCOUR; blit it
+          PLUS      A2,POCOUR
+          RETURN
+
+; ----------------------------------------
+          FENTRY    TTYTYFLU,SUBR0
+; ----------------------------------------
+          MOV       MAXCHAN,A1          ; y a-t-il qque chose a faire?
+          PLUS      #2,A1               ; le canal tyo
+          HPXMOV    TABCHAN,A1,A1       ; son descripteur
+          HPXMOV    A1,#3,A1            ; la position courante
+          CNBNE     A1,#0,TTYTYFL1      ; he'las oui
+          RETURN                        ; non!
+
+TTYTYFL1  PUSH      OSTREAM             ; le canal de sortie courant
+          MOV       MAXCHAN,A1
+          PLUS      #2,A1               ; le canal tty
+          CALL      OUTCHANI            ; OUTCHAN interne
+          MOV       @FLULIN,A3          ; flush it
+          BRA       TTYTYOI0            ; puis comme TTYTYOI
+
+;----------------------------------------
+          FENTRY    TTYTYBAC,SUBR1
+;----------------------------------------
+          MOV       RUBSTRG,A1          ; (#:tty:tystring "\bs\sp\bs" 3)
+          MOV       #3,A2
+          BRA       TTYTYSTR
+
+;----------------------------------------
+          FENTRY    TTYTYNEW,SUBR0
+;----------------------------------------
+          TTYCRLF
+          RETURN
+
+;----------------------------------------
+          FENTRY    TTYTYCN,SUBR1
+;----------------------------------------
+          MOV       BUFCH,A2
+          HBMOVX    A1,A2,#0
+          TTYSTRG   #1,A2
+          RETURN
+
+;----------------------------------------
+          FENTRY    TTYTYSTR,SUBR2      ; (#:tty:tystring s l)
+;----------------------------------------
+          BFSTRG    A1,TYSTRERS         ; Pas une chai^ne.
+          BFFIX     A2,TYSTRERN         ; Pas un entier.
+          HGSIZE    A1,A3               ; la taille de la chai^ne
+          CNBLT     A2,#0,TTYTYST0      ; il faut tjrs > 0
+          CNBLT     A2,A3,TTYTYST1      ; ok
+TTYTYST0  MOV       A3,A2               ; pas plus de la longueur!
+TTYTYST1  TTYSTRG   A2,A1               ; longueur, chai^ne
+          RETURN
+TYSTRERS  MOV       .TYSTRG,A2          ; Le nom de la fonction ge'ne'rique.
+          JMP       ERRNSA              ; Pas une chai^ne.
+TYSTRERN  MOV       A2,A1               ; Le mauvais garnement.
+          MOV       .TYSTRG,A2          ; Le nom de la fonction ge'ne'rique.
+          JMP       ERRNIA              ; Pas un fix.
+
+;----------------------------------------
+          FENTRY    TTYTYCUR,SUBR2
+;----------------------------------------
+          RETURN
+
+;----------------------------------------
+          FENTRY    TTYTYCLS,SUBR0
+;----------------------------------------
+          RETURN
+
+;----------------------------------------
+          FENTRY    TTYTYRDS,SUBRN
+;----------------------------------------
+          JMP       RDPSCRN             ; dans string.llm3
+
+;============================================================
+;
+;         Gestion du tampon d'entree
+;
+;============================================================
+
+;
+;         (BOL)  recharge une nouvelle ligne
+;
+; ----------------------------------------
+          FENTRY    BOL,SUBR0
+; ----------------------------------------
+          CALL      INPHYL              ; la lecture standard
+          MOVNIL    A1                  ; retourne toujours NIL
+          RETURN
+
+;
+;         (INMAX [n]) get/set la taille max du tampon d'entree
+;
+; ----------------------------------------
+          FENTRY    FINMAX,SUBRN
+; ----------------------------------------
+          PUSH      #0                  ; le min
+          HGSIZE    LIGNE,A2            ; la taille du tampon
+          PUSH      A2                  ; le max
+          MOV       .FINMAX,A2          ; l'appelant
+          MOV       INMAX,A3            ; l'ancienne valeur
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,INMAX            ; la nouvelle valeur
+          RETURN
+
+;
+;         (INPOS [val])
+;         accede/charge la valeur du pointeur courant d'entree
+;
+; ----------------------------------------
+          FENTRY    FINPOS,SUBRN
+; ----------------------------------------
+          PUSH      #0                  ; le min
+          HGSIZE    LIGNE,A2            ; taille du tampon
+          PUSH      A2                  ; le max
+          MOV       .FINPOS,A2          ; l'appelant
+          MOV       POLIG,A3            ; l'ancienne valeur
+          JCALL     GETSETN             ; vers le GET/SET numerique
+          MOV       A1,POLIG            ; la nouvelle valeur
+          RETURN
+
+;
+;         (INBUF n [val])
+;         accede/charge directement le tampon d'entree
+;
+; ----------------------------------------
+          FENTRY    FINBUF,SUBRN
+; ----------------------------------------
+          CNBNE     A4,#0,INBU1         ; au - 1 arg!
+          MOV       LIGNE,A1            ;   retourne la ligne
+          RETURN                        ;   elle meme.
+INBU1     MOV       .FINBUF,A2          ; en cas d'erreur
+          CNBEQ     A4,#1,INBU2         ; vers le GET
+          CNBEQ     A4,#2,INBU5         ; vers le SET
+          MOV       #2,A1               ; le bon nb
+          MOV       .FINBUF,A2
+          JMP       ERRWNA
+INBU2     POP       A1
+          BTFIX     A1,INBU3
+          JMP       ERRNIA
+INBU3     HBXMOV    LIGNE,A1,A1         ; on lit
+          RETURN
+INBU5     POP       A2
+          POP       A1
+          BTFIX     A1,INBU6            ; il faut un nb
+          JMP       ERRNIA
+INBU6     HBMOVX    A2,LIGNE,A1         ; on charge
+          MOV       A2,A1
+          RETURN
+ 
+;
+;         Routines internes
+;         INPHY  : retourne dans A4 le caracte`re suivant
+;         INPHYL : relit une nouvelle ligne
+;
+
+INPHY     LABEL      
+          CNBGE     POLIG,INMAX,INPH2   ; le tampon d'entre'e est vide
+          HBXMOV    LIGNE,POLIG,A4      ; A4 <- le caracte`re
+          INCR      POLIG               ; actualise le pointeur de ligne
+          RETURN                        ; rapide non ?
+
+INPH2     LABEL
+          INTEST                        ; a` chaque lecture de ligne.
+          PUSH      A1                  ; doit tout sauver pour l'ITSOFT
+          PUSH      A2
+          PUSH      A4
+          MOV       .BOL,A1
+          MOVNIL    A2
+          JCALL     ITSOFT              ; (ITSOFT 'BOL ())
+          POP       A4
+          POP       A2
+          POP       A1
+          MOV       #0,POLIG            ; je repart en de'but de ligne.
+          BRA       INPHY               ; et retourne dans A4 la car suivant.
+
+;         Lecture d'une nouvelle ligne
+
+INPHYL    LABEL      
+          PUSH      A2                  ; pour travailler
+          PUSH      A4                  ;   encore,
+          PUSH      A1                  ;   et encore...
+          PUSH      #0                  ; alloc pour caractere lu
+          PUSH      #0                  ; alloc pour index ligne
+INPHYL0   BTFIX     ISTREAM,INCHF       ; lecture d'un fichier
+INPHY1    LABEL
+          MOV       CURPRMPT,A1         ; le prompt
+          HGSIZE    A1,A2               ; la taille du prompt
+          CALL      TYSTRG              ; (tystring (prmpt) (slngth (prmpt)))
+          MOV       #0,A4               ; index sur la ligne
+          MOV       .LINEMODE,A3        ; #:system:line-mode-flag
+          BFNIL     CVAL(A3),INPHLN     ; lecture en mode ligne
+          MOV       .REALTERM,A3        ; terminal normal ?
+          MOV       CVAL(A3),A3  
+          BTNIL     A3,INPHP3           ; non l'echo est fait!
+INPHY3    CALL      TYI                 ; lit un caractere
+          MOV       A1,&1               ; sauve le caractere lu
+          CNBEQ     A1,#^H,INPHY6       ; back-space ?
+          CNBEQ     A1,#127,INPHY6      ; rub-out ?
+          CNBEQ     A1,#^X,INPHY8       ; ctrl X (delete line)
+          CNBEQ     A1,#^U,INPHY8       ; ctrl U (delete line too!)
+          CNBEQ     A1,#^M,INPHY9       ; return (fin de ligne)
+          CNBEQ     A1,#^J,INPHY9       ; line-feed (fin de ligne)
+          CNBLT     A1,#/ ,INPHY5       ; car control (echo a la dec)
+          CALL      TYCN                ; e'cho par TYCN
+INPHY4    MOV       &1,A1               ; recupere le caractere lu
+          MOV       &0,A4               ; recup la position courante
+          HBMOVX    A1,LIGNE,A4         ; charge le car dans la ligne
+          INCR      A4                  ; incremente l'index
+          MOV       A4,&0               ; sauve l'index
+          HGSIZE    LIGNE,A1            ; prend la taille
+          CNBLT     A4,A1,INPHY3        ; des fois que ca sorte!
+          BRA       INPHYD              ; ca coince...
+
+; Echo d'un caractere de contro^le a la Dec
+INPHY5    PLUS      #64,A1              ; conversion en lettre capitale
+          HBMOVX    A1,CNTRLC,#1        ; range la capitale
+          MOV       CNTRLC,A1
+          MOV       #2,A2
+          CALL      TYSTRG              ; imprime ^<caractere>
+          BRA       INPHY4              ; vers le chargement normal
+
+; Effacement du caractere precedent
+INPHY6    MOV       &0,A4               ; l'index courant
+          CNBEQ     A4,#0,INPHY3        ; on est deja en debut de ligne !
+          DECR      A4                  ; m.a.j. index sur la ligne
+          MOV       A4,&0               ; resauve
+          CALL      INPHY60             ; va effacer
+          BRA       INPHY3              ; la suite
+
+; Routine d'effacement du caractere d'index A4 dans LIGNE
+INPHY60   HBXMOV    LIGNE,A4,A1         ; A1 <- le car precedent
+          CNBGE     A1,#/ ,INPHY61      ; pas un controle
+          PLUS      #64,A1              ; la majuscule correspondante
+          CALL      TYBACK              ; efface le caractere
+          MOV       #/^,A1              ; puis le chapeau
+INPHY61   BRA       TYBACK              ; efface le caractere
+
+; Efface toute la ligne
+INPHY8    MOV       &0,A4               ; recupere l'index
+          CNBEQ     A4,#0,INPHY3        ; rien a` faire
+          BRA       INPHY81             ; on y va!
+INPHY80   MOV       A4,&0               ; sauvegarde
+          CALL      INPHY60             ; efface le caractere
+          MOV       &0,A4               ; restaure
+INPHY81   SOBGEZ    A4,INPHY80          ; il en reste
+          MOV       #0,&0               ; r.a.z. index
+          BRA       INPHY3              ; lit une ligne
+
+; Fin de la ligne lue
+INPHY9    CALL      TYNEWLN             ; Une ligne propre
+INPHYC    MOV       &0,A4               ; recupere l'index
+          HBMOVX    #^M,LIGNE,A4        ; stocke un return
+          INCR      A4                  ; actualise l'index
+          HBMOVX    #^J,LIGNE,A4        ; stocke un line-feed
+          INCR      A4
+INPHYD    MOV       A4,INMAX            ; nb max de caracteres charges
+          ADJSTK    #2                  ; recup place pile
+          POP       A1
+          POP       A4                  ; restaure les 3 registres
+          POP       A2                  ; et encore.
+          RETURN                        ; That's all folks
+
+;         Lecture d'une ligne sur un terminal aveugle
+
+INPHP2    MOV       &0,A4               ; l'index
+          HBMOVX    A1,LIGNE,A4         ; charge le car dans la ligne
+          INCR      A4                  ; incremente l'index
+          MOV       A4,&0               ; l'index est sauve'
+INPHP3    CALL      TYI                 ; lit le caractere
+          CNBEQ     A1,#^J,INPHYC       ; line-feed (fin de ligne)
+          CNBNE     A1,#^M,INPHP2       ; return (fin de ligne)
+          BRA       INPHYC              ; apres c'est pareil.
+
+;         Lecture d'une ligne en mode ligne, on ne fait jamais l'echo?
+INPHLN    MOV       LIGNE,A1            ; la chai^ne ou` l'on lit
+          CALL      TYINSTRG            ; read it
+          MOV       A1,&0               ; nombre de caracte`res lus
+          BRA       INPHYC              ; vers la fin
+
+;         Lecture d'une ligne sur fichier
+
+INCHF     LABEL      
+          HPXMOV    CURINCH,#1,A3       ; eviter les trous noirs!
+          CNBEQ     A3,#1,INCHF00       ; lecture texte
+          CNBNE     A3,#3,INCHF0        ; pb pas binaire!
+          INBFB     ISTREAM,LIGNE,A4,A3 ; lecture binaire
+          MOV       A4,&0               ; sauve l'index
+          CNBLT     A3,#0,INCHF1        ; erreur systeme
+          CNBEQ     A3,#1,INCHF3        ; EOF
+          BRA       INPHYD
+
+INCHF00   INBF      ISTREAM,LIGNE,A4,A3 ; lecture nouvelle ligne
+          MOV       A4,&0               ; sauve l'index
+          CNBLT     A3,#0,INCHF1        ; code < 0 : erreur lecture systeme
+          CNBEQ     #0,A3,INPHYC        ; OK
+          CNBEQ     #1,A3,INCHF3        ; EOF
+          BRA       INPHYD              ; ligne incomplete
+
+INCHF0    MOVNIL    A1                  ; (INCHAN ())
+          CALL      INCHANI
+          MOV       #-4,A1              ; -4  canal non ouvert
+          MOV       .INCHAN,A2          ; par inchan
+          JMP       ERRIOS
+
+INCHF1    MOVNIL    A1                  ; (INCHAN ())
+          CALL      INCHANI
+          MOV       A3,A1               ; Le code d'erreur systeme
+          MOV       .INCHAN,A2          ; par inchan
+          JMP       ERRIOS
+
+INCHF3    PUSH      A1                  ; Fin de fichier
+          PUSH      A2                  ; doit tout sauver pour l'ITSOFT
+          PUSH      A3
+          PUSH      A4
+          MOV       .LLEOF,A1
+          MOV       ISTREAM,A2
+          NCONS     A2
+          JCALL     ITSOFT              ; (APPLY 'EOF [(INCHAN)])
+          POP       A4
+          POP       A3
+          POP       A2
+          POP       A1
+          BRA       INPHYL0             ; vers la relecture d'une ligne.
+
+;
+;         (de eof (chan)
+;             (close chan)
+;             (inchan ())
+;             (ifn #:system:in-read-flag
+;                  (exit eof)
+;                  (syserror 'read "EOF dans un READ" chan))
+; ----------------------------------------
+          FENTRY    LLEOF,SUBR1
+; ----------------------------------------
+          BTNIL     A1,LLEOF1           ; on ferme le canal TTY ?!
+          PUSH      A1                  ; Sauve le nume'ro du canal
+          FCLOS     A1,A2               ; il faut fermer dans le runtime
+          MOVNIL    A2                  ; on nettoie la table des canaux..
+          HPMOVX    A2,TABCHAN,A1       ; ..en virant le descripteur
+          MOVNIL    A1                  ; et voila le (INCHAN ())
+          CALL      INCHANI
+          POP       A1                  ; re'cupere le nume'ro du canal
+LLEOF1    MOV       .STINREAD,A2        ; le nom de STATUS-IN-READ
+          BTNIL     CVAL(A2),LLEOF2     ; c'est ok
+          JMP       ERLEC11             ; erreur "EOF durant un READ"
+LLEOF2    MOV       .LLEOF,A2           ; le nom de l'echappement.
+          JMP       FINDTAG             ; et voila on s'echappe.
+                    
+; ----------------------------------------
+          FENTRY    PROMPT,SUBRN
+; ----------------------------------------
+          CNBEQ     A4,#0,PROMPT2       ; vers le GET
+          CNBEQ     A4,#1,PROMPT1       ; vers le SET
+          MOV       #2,A1               ; le bon nb
+          MOV       .PROMPT,A2
+          JMP       ERRWNA
+PROMPT1   POP       A1
+          MOV       .PROMPT,SAVEA4      ; le nom de l'appelant
+          JCALL     STRINGA1
+          MOV       A1,CURPRMPT         ; c'est le nouveau prompt
+PROMPT2   MOV       CURPRMPT,A1         ; retourne le courant
+          RETURN
+PROMPTER  MOV       .PROMPT,A2          ; le nom de la fonction
+          JMP       ERRNAA              ; il fallait un atome.
+
+;----------------------------------------
+          FENTRY    COERCNS,SUBR1
+;----------------------------------------
+          RETURN
+COERCI    PUSH      A1                        ; coerce-namestring-internal
+          MOV       .COERCNS,A1                ; coerce-namestring
+          MOV       #1,A4                ;  indirection
+          JMP       FFUNCALL                ;  FVAL du symbole
+
+;
+;         Fonctions sur les fichiers
+;         --------------------------
+;
+
+;         CHANALLOC : allocation d'un canal, ne touche pas a A1
+;         retourne -2 s'il n'y a plus de canaux.
+
+CHANALLOC MOV       MAXCHAN,A2
+          BRA       CHANAL4
+CHANAL3   HPXMOV    TABCHAN,A2,A3       ; l'etat du canal
+          BTNIL     A3,CHANAL9          ; il est libre
+CHANAL4   SOBGEZ    A2,CHANAL3          ; il en reste
+          MOV       #-2,A2              ; code -2 :  plus de cauax
+CHANAL9   RETURN
+
+
+;         Cree le descripteur d'un canal d'entree
+;
+; A1 = nom du fichier, A2 = numero du canal, A3 = type du canal
+; doit preserver A2.
+; Les descripteurs de canaux d'entree sont des vecteurs de taille 7:
+;                        #[name status ligne polig inmax curread ringur]
+;
+
+INCHINI   PUSH      A2                  ; le numero du canal
+          PUSH      A1                  ; le nom du fichier
+          PUSH      A3                  ; le type du canal
+          MOV       #7,A1               ; la taille
+          MOVNIL    A2                  ; le fill
+          JCALL     MAKEVECT            ; cree le vecteur
+
+          PUSH      A1                  ; le temps du MAKESTRG
+          MOV       LGBUFFER,A1         ; la taille du tampon
+          MOV       #0,A2               ; le fill charactere
+          JCALL     MAKESTRG            ; cree le tampon
+
+          POP       A2                  ; recupere le vecteur
+          HPMOVX    A1,A2,#2            ; INIT le tampon
+          POP       A3                  ; recupere le type du canal
+          HPMOVX    A3,A2,#1            ; type canal
+          POP       A1                  ; le nom du fichier
+          HPMOVX    A1,A2,#0
+          HPMOVX    #0,A2,#3            ; RAZ INPOS
+          HPMOVX    #0,A2,#4            ; RAZ INMAX
+          MOVNIL    A1
+          HPMOVX    A1,A2,#5            ; RAZ CURREAD
+          HPMOVX    A1,A2,#6            ; RAZ RINGUR
+          POP       A1                  ; le numero du canal
+          HPMOVX    A2,TABCHAN,A1       ; stocke le descripteur
+          RETURN
+
+;         Cree le descripteur d'un canal de sortie (canal A2, nom A1)
+;
+; Les descripteurs de canaux d'entree sont des vecteurs de taille 7:
+;                   #[name status outbuf pocour lmargin rmargin maxpocour]
+;
+
+OUTCHINI  PUSH      A2                  ; le canal
+          PUSH      A1                  ; le nom
+          PUSH      A3                  ; le type
+          MOV       #7,A1               ; la taille
+          MOVNIL    A2                  ; le fill
+          JCALL     MAKEVECT            ; cree le vecteur
+
+          PUSH      A1                  ; le vecteur
+          MOV       LGBUFFER,A1         ; la taille du tampon
+          MOV       #/ ,A2              ; le fill charactere
+          JCALL     MAKESTRG            ; cree le tampon
+
+          POP       A2                  ; recupere le vecteur
+          HPMOVX    A1,A2,#2            ; INIT le tampon
+          POP       A3                  ; le type
+          HPMOVX    A3,A2,#1            ; le type
+          POP       A3                  ; le nom
+          HPMOVX    A3,A2,#0
+          HPMOVX    #0,A2,#3            ; RAZ pocour
+          HPMOVX    NBLEFT,A2,#4        ; LMARGIN courante
+          HPMOVX    NBRIG,A2,#5         ; RMARGIN courante
+          HPMOVX    MAXPOCOU,A2,#6      ; MAXPOCOU courant (min NBRIG BUFLEN)
+          POP       A1                  ; le numero du canal
+          HPMOVX    A2,TABCHAN,A1       ; stocke le descripteur
+          RETURN
+
+
+OPENR1    MOV       A2,A1               ; le code d'erreur
+OPENR2    MOV       SAVEA4,A2           ; la fct
+          JMP       ERRIOS
+
+; ----------------------------------------
+          FENTRY    OPENI,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .OPENI,SAVEA4       ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la chaine du nom
+          CALL      CHANALLOC           ; alloue un canal dans A2
+          CNBEQ     A2,#-2,OPENR1       ; plus de canaux.
+          INFILE    A2,A1,A3            ; ouverture canal A2
+          CNBNE     A3,#0,OPENR2        ; ya une erreur
+          MOV       #1,A3               ; type lecture texte
+          BRA       INCHINI             ; init (A1 = nom, A2 = num canal)
+
+; ----------------------------------------
+          FENTRY    OPENO,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .OPENO,SAVEA4       ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la chaine du nom
+          CALL      CHANALLOC           ; alloue un canal dans A2
+          CNBEQ     A2,#-2,OPENR1       ; plus de canaux.
+          OUFILE    A2,A1,A4            ; ouverture canal A2
+          CNBNE     A4,#0,OPENR2        ; ya une erreur
+          MOV       #2,A3               ; ecriture texte
+          BRA       OUTCHINI            ; init le canal A2
+
+; ----------------------------------------
+          FENTRY    OPENA,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .OPENA,SAVEA4       ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la chaine du nom
+          CALL      CHANALLOC           ; alloue un canal dans A2
+          CNBEQ     A2,#-2,OPENR1       ; plus de canaux.
+          APFILE    A2,A1,A4            ; ouverture canal A2
+          CNBNE     A4,#0,OPENR2        ; ya une erreur
+          MOV       #2,A3               ; type ecriture texte
+          BRA       OUTCHINI            ; init le canal A2
+          
+; ----------------------------------------
+          FENTRY    OPENIB,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .OPENIB,SAVEA4      ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la chaine du nom
+          CALL      CHANALLOC           ; alloue un canal dans A2
+          CNBEQ     A2,#-2,OPENR1       ; plus de canaux.
+          INFILEB   A2,A1,A3            ; ouverture canal A2
+          CNBNE     A3,#0,OPENR2        ; ya une erreur
+          MOV       #3,A3               ; type lecture binaire
+          BRA       INCHINI             ; init (A1 = nom, A2 = num canal)
+
+; ----------------------------------------
+          FENTRY    OPENOB,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .OPENOB,SAVEA4      ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la chaine du nom
+          CALL      CHANALLOC           ; alloue un canal dans A2
+          CNBEQ     A2,#-2,OPENR1       ; plus de canaux.
+          OUFILEB   A2,A1,A3            ; ouverture canal A2
+          CNBNE     A3,#0,OPENR2        ; ya une erreur
+          MOV       #4,A3               ; ecriture bianire
+          BRA       OUTCHINI            ; init (A1 = nom, A2 = num canal)
+
+; ----------------------------------------
+          FENTRY    OPENAB,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .OPENAB,SAVEA4      ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la chaine du nom
+          CALL      CHANALLOC           ; alloue un canal dans A2
+          CNBEQ     A2,#-2,OPENR1       ; plus de canaux.
+          APFILEB   A2,A1,A3            ; ouverture canal A2
+          CNBNE     A3,#0,OPENR2        ; ya une erreur
+          MOV       #4,A3               ; ecriture bianire
+          BRA       OUTCHINI            ; init (A1 = nom, A2 = num canal)
+
+
+;
+;     (INPUT file)   SUBR1
+;
+; (de input (f)
+;     (when (fixp (inchan)) (close (inchan)))
+;     (ifn f
+;          (inchan ())
+;          (inchan (openi f))))
+;
+; ----------------------------------------
+          FENTRY    INPUT,SUBR1
+; ----------------------------------------
+          BTNIL     ISTREAM,INPUTI      ; si ce n'est pas deja un fichier
+          PUSH      A1                  ; le temps du close
+          MOV       ISTREAM,A1          ; le veut CLOSEINT
+          CALL      CLOSEINT            ; tout est ferme
+          POP       A1                  ; recupere le nom.
+;
+;         Entree pour l'ouverture du fichier initial
+;
+INPUTI    LABEL      
+          BTNIL     A1,INPUT2           ; c'est la console
+          CALL      OPENI               ; ouvre le fichier
+INPUT2    CALL      INCHANI             ; selectionne le canal
+          BRA       PHYTRUE
+
+;
+;         (OUTPUT file)  SUBR1
+;
+; (de output (f)
+;     (when (symbolp (outchan)) (close (outchan)))
+;     (ifn f
+;          (outchan ())
+;          (outchan (openo f))))
+;
+; ----------------------------------------
+          FENTRY    OUTPUT,SUBR1
+; ----------------------------------------
+          CNBGE     OSTREAM,MAXCHAN,OUPUT1 ; si ce n'est pas deja un fichier
+          PUSH      A1                  ; le temps du close
+          MOV       OSTREAM,A1          ; le veut CLOSEINT
+          CALL      CLOSEINT            ; tout est ferme
+          POP       A1                  ; recupere le nom.
+OUPUT1    BTNIL     A1,OUPUT2           ; c'est la console
+          CABNE     A1,.T,OUPUT3        ; c'est pas le tty
+          MOV       MAXCHAN,A1
+          PLUS      #2,A1
+          BRA       OUPUT4
+OUPUT2    MOV       MAXCHAN,A1
+          BRA       OUPUT4
+OUPUT3    CALL      OPENO               ; ouvre le fichier
+OUPUT4    CALL      OUTCHANI            ; le se'lectionne
+          BRA       PHYTRUE             ; et rend T
+
+;
+;         Fonctions sur les canaux
+;         ------------------------
+
+;
+;         (INCHAN [ch])
+;         retourne le canal d'entree courant
+; ----------------------------------------
+          FENTRY    INCHAN,SUBRN
+; ----------------------------------------
+          CNBEQ     A4,#0,INCHGET
+          CNBEQ     A4,#1,INCHSET
+          MOV       #1,A1
+          MOV       .INCHAN,A2
+          JMP       ERRWNA
+INCHGET   MOV       ISTREAM,A1          ; le canal d'entree courant
+          RETURN
+INCHSET   POP       A1
+          BTFIX     A1,INCHST2
+          BTNIL     A1,INCHST3
+INCHERR1  MOV       #-3,A1              ; -3 mauvais numero de canal
+INCHERR2  MOV       .INCHAN,A2
+          JMP       ERRIOS
+INCHST2   CNBLT     A1,#0,INCHERR1
+          CNBGE     A1,MAXCHAN,INCHERR1
+          HPXMOV    TABCHAN,A1,A2       ; pour le test d'etat
+          BTNIL     A2,INCHERR3         ; pas ouvert !
+          HPXMOV    A2,#1,A2            ; le status
+          CNBEQ     A2,#1,INCHANI       ; il doit etre ouvert en entree
+          CNBNE     A2,#3,INCHERR3      ; text ou binaire!
+INCHST3   BRA       INCHANI             ; vers le INCHAN interne
+INCHERR3  MOV       #-4,A1              ; -4 canal non ouvert
+          BRA       INCHERR2
+
+; INCHAN interne (utilise A2, ne modifie pas A1)
+; Sauvegarde l'e'tat des tampons du canal courant
+; et restaure l'e'tat du canal dans A1
+
+INCHANI   LABEL
+          PUSH      A1                  ; sauve le canal
+          CALL      INCLOSE             ; ferme le canal courant
+          POP       A1                  ; recupere
+;                                       ; tombe dans INOPEN
+INOPEN    LABEL
+          MOV       A1,ISTREAM          ; installe le canal
+          BFNIL     A1,INCHANI3         ; c'est la console
+          MOV       MAXCHAN,A2          ; entree console =  MAX+1
+          INCR      A2
+          BRA       INCHANI4
+INCHANI3  MOV       A1,A2               ; pour ne pas modifier A1
+INCHANI4  HPXMOV    TABCHAN,A2,A2       ; descripteur dans A2
+          HPXMOV    A2,#2,LIGNE         ; sauvegarde le tampon..
+          HPXMOV    A2,#3,POLIG         ; la position courante..
+          HPXMOV    A2,#4,INMAX         ; la taille..
+          HPXMOV    A2,#5,CURREAD       ; le CURREAD..
+          HPXMOV    A2,#6,RINGUR        ; le RINGUR.
+          MOV       A2,CURINCH          ; le descripteur d'entree courant
+          RETURN
+
+; sauve le descripteur du canal courant, sans toucher a A1
+INCLOSE   LABEL
+          MOV       ISTREAM,A2
+          BFNIL     A2,INCHANI1         ; c'est la console
+          MOV       MAXCHAN,A2
+          INCR      A2
+INCHANI1  HPXMOV    TABCHAN,A2,A2       ; descripteur dans A2
+          BTNIL     A2,INCHANI2         ; ce canal est ferme
+          HPMOVX    LIGNE,A2,#2         ; sauvegarde le tampon..
+          HPMOVX    POLIG,A2,#3         ; la position courante..
+          HPMOVX    INMAX,A2,#4         ; la taille..
+          HPMOVX    CURREAD,A2,#5       ; le CURREAD..
+          HPMOVX    RINGUR,A2,#6        ; le RINGUR.
+INCHANI2  RETURN
+
+
+
+
+;         (OUTCHAN [n])
+;         retourne ou positionne le canal de sortie courant
+; ----------------------------------------
+          FENTRY    OUTCHAN,SUBRN
+; ----------------------------------------
+          CNBEQ     A4,#0,OUCHGET
+          CNBEQ     A4,#1,OUCHSET
+          MOV       #1,A1
+          MOV       .OUTCHAN,A2
+          JMP       ERRWNA
+OUCHGET   MOV       OSTREAM,A1          ; le canal d'entree courant
+          MOV       MAXCHAN,A2          ; pour les comparaisons
+          CNBLT     A1,A2,OUCHGET2      ; bien un fichier
+          CNBEQ     A1,A2,OUCHGET1      ; est-ce la console?
+          MOV       .T,A1               ; c'est donc le tty!
+          RETURN
+OUCHGET1  MOVNIL    A1                  ; () pour la console
+OUCHGET2  RETURN
+
+OUCHSET   TOPST     A1
+          BTFIX     A1,OUCHST2
+          BTNIL     A1,OUCHST1
+          CABNE     A1,.T,OUCHERR1
+          MOV       MAXCHAN,A1
+          PLUS      #2,A1               ; le tty
+          BRA       OUCHST3             ; le tronc commun
+
+OUCHST1   MOV       MAXCHAN,A1          ; la console
+          BRA       OUCHST3             ; le tronc commun
+
+OUCHST2   CNBLT     A1,#0,OUCHERR1
+          CNBGE     A1,MAXCHAN,OUCHERR1
+          HPXMOV    TABCHAN,A1,A2       ; pour le test d'etat
+          BTNIL     A2,OUCHERR3         ; pas ouvert
+          HPXMOV    A2,#1,A2
+          CNBEQ     A2,#4,OUCHST3       ; c'est binaire sortie
+          CNBNE     A2,#2,OUCHERR3      ; il doit etre ouvert en sortie
+OUCHST3   CALL      OUTCHANI            ; ouverture normale
+          POP       A1                  ; rend le canal en valeur
+          RETURN
+
+OUCHERR3  MOV       #-4,A1              ; -4 canal non ouvert
+          BRA       OUCHERR2
+OUCHERR1  MOV       #-3,A1              ; -3 mauvais numero de canal
+OUCHERR2  MOV       .OUTCHAN,A2
+          JMP       ERRIOS
+
+; OUTCHAN interne. (modifie A2, touche pas a A1)
+; Sauvegarde l'e'tat des tampons du canal de sortie courant
+; et restaure l'e'tat du canal de sortie A1
+
+OUTCHANI  CALL      OUTCLOSE            ; sauve le canal de sortie
+;                                       ; tombe dans OUTOPEN          
+OUTOPEN   LABEL
+          MOV       A1,OSTREAM          ; le canal de sortie
+OUTCHAI3  MOV       A1,A2               ; pour ne pas modifier A1
+OUTCHAI4  HPXMOV    TABCHAN,A2,A2       ; le descripteur
+          HPXMOV    A2,#2,BUFOUT        ; le buffer..
+          HPXMOV    A2,#3,POCOUR        ; la position courante..
+          HPXMOV    A2,#4,NBLEFT        ; LMARGIN..
+          HPXMOV    A2,#5,NBRIG         ; RMARGIN..
+          HPXMOV    A2,#6,MAXPOCOU      ; MAXPOCOU
+          MOV       A2,CUROUTCH         ; dans le descripteur courant
+          RETURN
+
+OUTCLOSE  LABEL
+          MOV       OSTREAM,A2
+OUTCHAI1  HPXMOV    TABCHAN,A2,A2       ; le descripteur
+          BTNIL     A2,OUTCHAI2         ; le canal est ferme
+          HPMOVX    BUFOUT,A2,#2        ; le buffer..
+          HPMOVX    POCOUR,A2,#3        ; la position courante..
+          HPMOVX    NBLEFT,A2,#4        ; LMARGIN..
+          HPMOVX    NBRIG,A2,#5         ; RMARGIN..
+          HPMOVX    MAXPOCOU,A2,#6      ; MAXPOCOU
+OUTCHAI2  RETURN
+
+
+;
+;         (CHANNEL [n])
+;         retourne le descriptif de tous les canaux
+;  (CHANNEL T) rend (une copie de) TABCHAN
+; ----------------------------------------
+          FENTRY    FCHANNEL,SUBRN
+; ----------------------------------------
+          CNBEQ     A4,#0,FCHAN5        ; sans argument
+          CNBEQ     A4,#1,FCHAN1
+          MOV       #1,A1
+          MOV       .FCHANNEL,A2
+          JMP       ERRWNA              ; mauvais nb d'argument
+FCHAN1    POP       A1
+          BTFIX     A1,FCHAN2           ; ca peut marcher
+          CABEQ     A1,.T,FCHAN8        ; (channel t)
+          MOV       .FCHANNEL,A2
+          JMP       ERRNIA              ; c'est au moins un nb
+FCHAN2    CNBLT     A1,#0,FCHAN4
+          CNBGE     A1,MAXCHAN,FCHAN4   ; erreur itou
+FCHAN21   HPXMOV    TABCHAN,A1,A1       ; le descripteur
+          BTNIL     A1,FCHAN3           ; pas ouvert
+          HPXMOV    A1,#0,A2            ; le nom
+          NCONS     A2
+          HPXMOV    A1,#1,A1            ; l'etat
+          XCONS     A2,A1
+          RETURN
+FCHAN3    MOVNIL    A2
+          NCONS     A2                  ; ferme --> (0 ())
+          MOV       #0,A1
+          XCONS     A2,A1
+          RETURN
+FCHAN4    MOV       #-3,A1              ; -3 mauvais no de canal
+          MOV       .FCHANNEL,A2
+          JMP       ERRIOS
+FCHAN5    MOVNIL    A3                  ; la valeur retournee
+          MOV       MAXCHAN,A4
+          BRA       FCHAN7
+FCHAN6    MOV       A4,A1               ; le numero du canal
+          CALL      FCHAN21             ; le suivant
+          CONS      A1,A3               ; rajoute en tete
+FCHAN7    SOBGEZ    A4,FCHAN6           ; il en reste
+          MOV       MAXCHAN,A4
+          MOV       A3,A1
+          RETURN
+FCHAN8    MOV       TABCHAN,A1          ; la table a` copier
+          JMP       COPY                ; recopie la table
+
+;
+;         Fonctions de manipulation des fichiers
+;         --------------------------------------
+
+;
+;         (CLOSE [n]) 
+;  (CLOSE) --> ferme tous les canaux et reouvre la console
+;  (CLOSE n) -> ferme le canal n
+; ----------------------------------------
+          FENTRY    LCLOSE,SUBRN
+; ----------------------------------------
+          CNBEQ     A4,#1,LCLOSE8       ; un argument
+          CNBNE     A4,#0,CLOSER1       ; mauvais nombre d'arguments
+          MOVNIL    A4                  ; on ferme tous les canaux
+          MOV       MAXCHAN,A1
+          MOV       TABCHAN,A2
+          DECR      A1
+LCLOSE1   HPXMOV    A2,A1,A3
+          BTNIL     A3,LCLOSE2
+          HPMOVX    A4,A2,A1            ; canal libre!
+          FCLOS     A1,A3               ; A2 code d'erreur
+          CNBNE     A3,#0,CLOSER0
+LCLOSE2   SOBGEZ    A1,LCLOSE1          ; more ?
+          MOV       MAXCHAN,A1
+          CALL      OUTCHANI
+          BRA       PHYTRUE
+
+LCLOSE8   POP       A1                  ; ferme un seul canal
+          BFFIX     A1,CLOSER4          ; pas un nombre
+          CNBLT     A1,#0,CLOSER2       ; pas un bon canal
+          CNBGE     A1,MAXCHAN,CLOSER2  ;     itou
+          HPXMOV    TABCHAN,A1,A2       ; l'etat du canal
+          BFNIL     A2,CLOSEINT         ; il est ok
+CLOSER0   MOV       #-4,A1              ; erreur -4 canal non ouvert.
+          BRA       CLOSER3
+CLOSER1   MOV       .LCLOSE,A2          ; il fallait 0 ou 1 argument
+          MOV       #1,A1
+          JMP       ERRWNA
+CLOSER2   MOV       #-3,A1              ; -3 mauvais numero de canal
+CLOSER3   MOV       .LCLOSE,A2
+          JMP       ERRIOS
+CLOSER4   MOV       .LCLOSE,A2
+          JMP       ERRNIA
+
+;         Close interne (INPUT, OUTPUT ...)
+;         numero de canal dans A1
+CLOSEINT  LABEL      
+          MOVNIL    A2
+          HPMOVX    A2,TABCHAN,A1       ; canal libre!
+          FCLOS     A1,A2               ; A2 code d'erreur
+          CNBEQ     A2,#0,PHYTRUE
+          MOV       .LCLOSE,A2          ; la fonction
+          JMP       ERRIOS              ; erreur I/O
+
+;
+;         (DELETEFILE file)
+;
+; ----------------------------------------
+          FENTRY    DELETFI,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .DELETFI,SAVEA4     ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la vraie chaine
+          FDELE     A1,A1
+          CNBEQ     A1,#0,PHYTRUE
+          MOV       .DELETFI,A2         ;           la fonction
+          JMP       ERRIOS              ;           erreur I/O
+
+;
+;         (RENAMEFILE old new)
+;
+; ----------------------------------------
+          FENTRY    RENAMFI,SUBR2
+; ----------------------------------------
+          PUSH      A2                  ; protection du 2eme argument
+          CALL      COERCI              ; coerce-namestring
+          XTOPST    A1                  ; on range le 1er, on recup le 2nd
+          CALL      COERCI              ; coerce-namestring
+          MOV       A1,A2               ; 2eme arg. coerce dans A2
+          POP       A1                  ; 1er arg. coerce dans A1
+          MOV       .RENAMFI,SAVEA4     ; le nom de l'appelant
+          JCALL     STRINGA1            ; A1 <- le 1er old
+          JCALL     STRINGA2            ; A2 <- le nom new
+          FRENA     A1,A2,A1
+          CNBEQ     A1,#0,PHYTRUE
+          MOV       .RENAMFI,A2         ;           la fonction
+          JMP       ERRIOS              ;           erreur I/O
+
+;
+;         (COPYFILE file newfile)
+;
+; ----------------------------------------
+          FENTRY    COPYFI,SUBR2
+; ----------------------------------------
+          PUSH      A2                  ; protection du 2eme argument
+          CALL      COERCI              ; coerce-namestring
+          XTOPST    A1                  ; on range le 1er, on recup le 2nd
+          CALL      COERCI              ; coerce-namestring
+          MOV       A1,A2               ; 2eme arg. coerce dans A2
+          POP       A1                  ; 1er arg. coerce dans A1
+          MOV       .COPYFI,SAVEA4      ; le nom de l'appelant
+          JCALL     STRINGA1            ; A1 <- le 1er old
+          JCALL     STRINGA2            ; A2 <- le nom new
+          FCOPY     A1,A2,A1
+          CNBEQ     A1,#0,PHYTRUE
+          MOV       .COPYFI,A2          ;           la fonction
+          JMP       ERRIOS              ;           erreur I/O
+
+;
+;         (CREATE-DIRECTORY path)
+;
+; ----------------------------------------
+          FENTRY    MAKDIR,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .MAKDIR,SAVEA4      ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la vraie chaine
+          MKDIR     A1,A1
+          CNBEQ     A1,#0,PHYTRUE
+          MOV       .MAKDIR,A2          ;           la fonction
+          JMP       ERRIOS              ;           erreur I/O
+
+;
+;         (DELETE-DIRECTORY path)
+;
+; ----------------------------------------
+          FENTRY    REMDIR,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .REMDIR,SAVEA4      ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la vraie chaine
+          RMDIR     A1,A1
+          CNBEQ     A1,#0,PHYTRUE
+          MOV       .REMDIR,A2          ;           la fonction
+          JMP       ERRIOS              ;           erreur I/O
+
+
+;
+;         (PROBEFILE file)
+;
+; ----------------------------------------
+          FENTRY    PROBEFI,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .PROBEFI,SAVEA4     ; l'appelant
+          JCALL     STRINGA1            ; A1 <- la vraie chaine
+          FPROBE    A1,A1
+          CNBEQ     A1,#0,PHYTRUE
+          MOVNIL    A1
+          RETURN
+
+;
+;         Fonctions de gestion de l'image memoire
+;
+;
+;         (SAVE-CORE filename)
+;
+; ----------------------------------------
+          FENTRY    SAVECOR,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .SAVECOR,SAVEA4     ; l'appelant
+          JCALL     STRINGA1            ; A1 <- le vrai nom
+          PUSH      .T
+          CORSAV    A1,A1               ; retourne le CC
+          CNBEQ     A1,#0,CORRES        ; tout va bien
+          MOV       .SAVECOR,A2         ; la fonction
+          JMP       ERRIOS              ; erreur
+CORRES    POP       A1                  ; resultat restore-core?
+          RETURN
+
+;
+;         (RESTORE-CORE filename)
+;
+; ----------------------------------------
+          FENTRY    RESTCOR,SUBR1
+; ----------------------------------------
+          CALL      COERCI              ; coerce-namestring
+          MOV       .RESTCOR,SAVEA4     ; l'appelant
+          JCALL     STRINGA1            ; A1 <- le vrai nom
+RESTCORI  LABEL                         ; appel interne direct (LLINIT)
+          COREST    A1,A1               ; retourne le CC
+          CNBEQ     A1,#0,RESTRES       ; on ne revient jamais mais si ...
+          MOV       .RESTCOR,A2         ; la fonction
+          JMP       ERRIOS              ; erreur I/O
+RESTRES   POP       A1                  ; l'ancien .T
+          MOVNIL    A1                  ; c'est RESTCOR et non SAVECOR
+          RETURN
+
+          IMPURE
+
+ISTREAM   ADR       0           ; NIL si entree console, sinon <inchan>
+OSTREAM   ADR       0           ; NIL si sortie console, sinon <ouchan>
+
+TABCHAN   ADR       0           ; [GC] donne'es du multi-fichier
+CURINCH   ADR       0           ; le descripteur du canal d'entree courant
+CUROUTCH  ADR       0           ; le descripteur du canal de sortie courant
+LGBUFFER  ADR       0           ; la longueur des tampons d'E/S des canaux
+
+CNTRLC    ADR       0           ; [GC] chaine ^X  pour editer les caracteres ^
+BUFCH     ADR       0           ; [GC] un mini-tampon pour un seul caractere
+RUBSTRG   ADR       0           ; [GC] un effaceur de caractere bs-sp-bs
+
+CURPRMPT  ADR       0           ; [GC] le symbole prompt courant!
+
+LIGNE     ADR       0           ; ligne en entree (STRING)
+POLIG     ADR       0           ; pointeur sur cette ligne (FIX)
+INMAX     ADR       0           ; nb de caracteres de cette ligne (FIX)
+
+          END
+

@@ -1,0 +1,34 @@
+defmodule crunch
+files (crunch)
+import (
+sets
+defvar
+rtprint
+rtmsg
+syserror
+ref
+defrtprj
+codewalker
+diagnostic
+printlm
+make
+meta
+delete
+create
+build
+)
+
+export (
+sh-analyze
+analyze
+#:llmodule:display-usage
+#:llmodule:step1
+#:llmodule:makefile:step2
+#:llmodule:meta:step2
+#:llmodule:init:step2
+#:llmodule:lisp-dir
+; #:llmodule:aida-dir
+all-ll-dirs
+; all-aida-dirs
+)
+

@@ -1,0 +1,107 @@
+defmodule
+#:edit:editor
+files (
+lleditor
+)
+export (
+trap-editor
+init-editor
+bind-to-key
+bind-to-ekey
+bind-to-xkey
+local-bind-to-key
+local-bind-to-ekey
+local-bind-to-xkey
+edit-command-redisplay
+#:edit:editor:edit-query
+#:edit:editor:edit-redisplaystring
+#:edit:editor:edit-redisplaycleol
+#:edit:editor:edit-drawcursor
+#:edit:editor:prin
+#:edit:editor:make
+#:edit:editor:bol
+#:edit:editor:eol
+#:edit:editor:syserror
+edit-print-query
+#:edit-print-query:eol
+edit-eval-redisplay
+)
+import (
+lledit
+)
+include (
+macedit
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(trap-editor subr3 ())
+(edit-command-redisplay subr2 ())
+(edit-print-query subr2 ())
+(init-editor nsubr ())
+(bind-to-key subr2 ())
+(bind-to-ekey subr2 ())
+(bind-to-xkey subr2 ())
+(local-bind-to-key subr3 ())
+(local-bind-to-ekey subr3 ())
+(local-bind-to-xkey subr3 ())
+(#:edit:editor:edit-query subr3 ())
+(#:edit:editor:edit-redisplaystring nsubr ())
+(#:edit:editor:edit-redisplaycleol nsubr ())
+(#:edit:editor:edit-drawcursor nsubr ())
+(#:edit:editor:prin subr1 ())
+(#:edit:editor:make subr0 ())
+(#:edit:editor:bol subr0 ())
+(#:edit:editor:eol subr0 ())
+(#:edit:editor:syserror subr3 ())
+(#:edit-print-query:eol subr0 ())
+(edit-eval-redisplay dmsubr ())
+)
+cpfunctions (
+(#:edit:editor:win-clear subr1)
+(#:edit:editor:win-right subr1)
+(#:edit:editor:win-left subr1)
+(#:edit:editor:win-down subr1)
+(#:edit:editor:win-up subr1)
+(#:edit:editor:win-next subr1)
+(#:edit:editor:win-previous subr1)
+(#:edit:editor:win-cur-top subr1)
+(#:edit:editor:win-ygoto subr2)
+(#:edit:editor:win-xgoto subr2)
+(#:edit:editor:cur-win-top subr1)
+(#:edit:editor:cur-win-buttom subr1)
+(#:edit:editor:cur-win-ygoto subr2)
+(#:edit:editor:cur-win-xgoto subr2)
+(#:edit:editor:query-readfile subr1)
+(#:edit:editor:query-writefile subr1)
+(#:edit:editor:writefile2 subr2)
+(#:edit:editor:query-insertfile subr1)
+(#:edit:editor:query-search subr1)
+(#:edit:editor:query-rsearch subr1)
+(#:edit:editor:savefile subr1)
+(#:edit:editor:query-goto-line-number subr1)
+(#:edit:editor:exp-eval subr1)
+(edit-command subr2)
+(#:edit:editor:edit-simple-command subr2)
+(#:edit:editor:edit-all-command subr2)
+(#:edit:editor:add-charp subr1)
+(#:edit:editor:edit-escape-command subr2)
+(#:edit:editor:edit-extend-command subr2)
+(#:edit:editor:win-check subr1)
+(edit-redisplay subr1)
+(#:edit:editor:edit-redisplayscreen nsubr)
+(#:edit:editor:exp-eval-print subr1)
+)
+cpimport (
+(lledit
+(trap-edit . subr3)
+(#:buffer:make . subr0)
+))
+cpenv (
+lledit
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop 'editor-simple-command 't '#:complice:globalvar)
+)((putprop 'editor-escape-command 't '#:complice:globalvar)
+)((putprop 'editor-extend-command 't '#:complice:globalvar)
+)((putprop '#:edit:editor:cure 't '#:complice:globalvar)
+))

@@ -1,0 +1,14 @@
+cygwin/llcygwin.llm3
+cygwin/macsol.ll
+cygwin/LISEZMOI
+cygwin/PortFILES
+cygwin/kern.o
+cygwin/Makeport
+cygwin/recette/lelispstat
+cygwin/recette/log/?*.log
+cygwin/recette/log/?*.err
+cygwin/recette/log/?*.*-*-*
+cygwin/extend.llm3
+cygwin/makellm3
+cygwin/faire.llexpand
+cygwin/llexpand

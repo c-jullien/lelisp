@@ -1,0 +1,23 @@
+;;; GELL 15.26: elaboration file for the module: array
+;;;             translation done: "Wed June 16 93 18:01:49 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: array.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'array)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZarray" "Wed June 16 93 18:01:49 "
+
+'((makearray . nsubr) (aref . dmsubr) (aset . dmsubr))
+
+#[makearray #:llcp:errwna #:system:larg (#:system:larg) makevector |1-| <= apply |+| (#:system:larg) errwna aref vref reverse mcons last list (#:system:larg) aset vset #:gell-resetfn:function-name #:gell-resetfn:function-n #:gell-resetfn:function-1]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'array)))
+(defcsetfn 'makearray "GZarray" 0)
+(defcsetfn 'aref "GZarray" 1)
+(defcsetfn 'aset "GZarray" 2)
+
+(defccheck '(list last mcons reverse |+| apply <= |1-| makevector #:llcp:errwna))

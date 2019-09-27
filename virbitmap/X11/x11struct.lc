@@ -1,0 +1,24 @@
+defmodule #:display:x11
+files (x11struct.ll)
+include (virstruct.ll)
+export (
+(structure #:display:x11)
+;(structure #:x11:bitmap)
+;(structure #:x11:menu)
+;(structure #:image:rectangle:window:menu-window)
+;(structure #:tclass:x11window)
+;(structure #:tclass:x11window:opaque-window)
+;(structure #:tclass:x11window:opaque-window:top-window)
+;(structure #:tclass:x11window:transparent-window)
+
+;;;;#:display:x11:make
+#:x11:bitmap:make
+#:x11:menu:make
+#:image:rectangle:window:menu-window:make
+#:tclass:x11window:make
+#:tclass:x11window:opaque-window:make
+#:tclass:x11window:opaque-window:top-window:make
+#:tclass:x11window:transparent-window:make
+:top-opaque-window
+)
+

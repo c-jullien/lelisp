@@ -1,0 +1,165 @@
+virbitmap/X11/x11.c.old
+-----------------------
+			...
+char *string;
+int w;{
+        XImage *getimage;
+        int i;
+        int mask;
+
+        if (w > 0){
+                mask = 0;
+                getimage = XGetImage (dpy->display, pixmap, x, y, w, 1, 1,
+                                      XYPixmap);
+                if (dpy->ForePixel == 0) mask = 0xff;
+                for (i = 0; i < ((w+15)/16)*2; i++)
+                        string [i] = mask ^ getimage->data [i];
+                XDestroyImage (getimage);
+        }
+}
+
+int bmref (dpy, pixmap, x, y)
+struct LLDisplay *dpy;
+Drawable pixmap;
+int x, y;{
+        XImage *getimage;
+        int bit;
+
+        getimage = XGetImage (dpy->display, pixmap, x, y, 1, 1, 1, XYPixmap);
+        bit = XGetPixel (getimage, 0, 0);
+        if (dpy->ForePixel == 0)
+                bit = !bit;
+        XDestroyImage (getimage);
+        return (bit);
+}
+		...
+-----------------------est a remplacer par----------------------------
+virbitmap/X11/x11.c
+-------------------
+		...
+char *string;
+int w;{
+        XImage *getimage;
+        int i;
+        int comb;
+        int plane;
+        int mask;
+
+        comb= dpy->ForePixel ^ dpy->BackPixel;
+        for (i = 0 ; i < dpy->depth ; i++)
+                if ( comb & 1<<i ) plane= 1<<i;
+        if (w > 0){
+                mask = 0;
+                getimage = XGetImage (dpy->display, pixmap, x, y, w, 1, plane,
+                                      XYPixmap);
+                if (plane ^ dpy->ForePixel ) mask = 0xff;
+                for (i = 0; i < ((w+15)/16)*2; i++)
+                        string [i] = mask ^ getimage->data [i];
+                XDestroyImage (getimage);
+        }
+}
+
+int bmref (dpy, pixmap, x, y)
+struct LLDisplay *dpy;
+Drawable pixmap;
+int x, y;{
+        XImage *getimage;
+        int bit;
+        int comb;
+        int plane;
+        int i;
+
+        comb= dpy->ForePixel ^ dpy->BackPixel;
+        for (i = 0 ; i < dpy->depth ; i++)
+                if ( comb & 1<<i ) plane= 1<<i;
+        getimage = XGetImage (dpy->display, pixmap, x, y, 1, 1, plane
+                              , XYPixmap);
+        bit = XGetPixel (getimage, 0, 0);
+        if (plane ^ dpy->ForePixel)
+                bit = !bit;
+        XDestroyImage (getimage);
+        return (bit);
+}
+		...
+
+=======================================================================
+virbitmap/X11/x11.ll.old
+------------------------
+		...
+(de :activate-menu (display menu x y)
+	...
+         (let ((ev ()) (new ()) (events ()))
+            (while (progn
+                     (setq ev (read-event))
+                     (neq (#:event:code ev) 'kill-window-event))
+              (setq new (makevector (vlength ev) ()))
+              (bltvector new 0 ev 0)
+              (newr events new))
+            (setq new (makevector (vlength ev) ()))
+            (bltvector new 0 ev 0)
+            (newr events new)
+            (while events (add-event (nextl events))))
+	...
+----------------------est a remplacer par-----------------------------
+virbitmap/X11/x11.ll
+--------------------
+	...
+(de :activate-menu (display menu x y)
+	...
+          (let ((ev ()) (new ()) (events ()))
+            (while (eventp)
+              (setq ev (read-event))
+              (setq new (makevector (vlength ev) ()))
+              (bltvector new 0 ev 0)
+              (newr events new))
+            (while events (add-event (nextl events))))
+	...
+
+% diff virbitmap/X11/x11.c virbitmap/X11/x11.old
+1099,1100d1098
+< 	int comb;
+< 	int plane;
+1103,1105d1100
+< 	comb= dpy->ForePixel ^ dpy->BackPixel;
+< 	for (i = 0 ; i < dpy->depth ; i++)
+< 		if ( comb & 1<<i ) plane= 1<<i;
+1108c1103
+<  		getimage = XGetImage (dpy->display, pixmap, x, y, w, 1, plane,
+---
+>  		getimage = XGetImage (dpy->display, pixmap, x, y, w, 1, 1,
+1110c1105
+< 		if (plane ^ dpy->ForePixel ) mask = 0xff;  
+---
+> 		if (dpy->ForePixel == 0) mask = 0xff;  
+1116a1112
+> 
+1123,1131c1119,1120
+< 	int comb;
+< 	int plane;
+< 	int i;
+< 
+< 	comb= dpy->ForePixel ^ dpy->BackPixel;
+< 	for (i = 0 ; i < dpy->depth ; i++)
+< 		if ( comb & 1<<i ) plane= 1<<i;
+< 	getimage = XGetImage (dpy->display, pixmap, x, y, 1, 1, plane
+< 			      , XYPixmap);
+---
+> 	
+> 	getimage = XGetImage (dpy->display, pixmap, x, y, 1, 1, 1, XYPixmap);
+1133c1122
+< 	if (plane ^ dpy->ForePixel)
+---
+> 	if (dpy->ForePixel == 0)
+------------------------------------------------------------------------------
+% diff virbitmap/X11/x11.ll virbitmap/X11/x11.old
+1417,1418c1417,1419
+<             (while (eventp)
+< 	      (setq ev (read-event))
+---
+>             (while (progn
+>                      (setq ev (read-event))
+>                      (neq (#:event:code ev) 'kill-window-event))
+1421a1423,1425
+>             (setq new (makevector (vlength ev) ()))
+>             (bltvector new 0 ev 0)
+>             (newr events new)

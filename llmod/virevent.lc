@@ -1,0 +1,44 @@
+defmodule
+mouse
+files (
+|virevent.ll|
+)
+export (
+which-window
+event-mode
+eventp
+read-event
+peek-event
+local-read-event
+flush-event
+add-event
+grab-event
+ungrab-event
+itsoft-event
+read-mouse
+allow-event
+disallow-event
+allowed-event-p
+#:display:event-mode
+#:display:eventp
+#:display:read-event
+#:display:peek-event
+#:display:flush-event
+#:display:read-event
+#:display:add-event
+#:display:grab-event
+#:display:ungrab-event
+#:display:isoft-event
+#:display:allow-event
+#:display:disallow-event
+#:display:allowed-event-p
+#:display:read-mouse
+)
+import (
+virutil
+virwindow
+)
+include (
+|virstruct.ll|
+|virmacros.ll|
+)

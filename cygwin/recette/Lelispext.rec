@@ -1,0 +1,7 @@
+#!/bin/sh
+set -x
+
+# Recette du CLOAD + defextern sur cygwin
+
+echo "**** CLOAD : not yet implemented on this system :" cygwin
+

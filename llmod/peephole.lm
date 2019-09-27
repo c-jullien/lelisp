@@ -1,0 +1,25 @@
+defmodule
+compiler
+files (
+peephole
+)
+export (
+#:compiler:peephole
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:compiler:peephole subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:compiler:no-jrst-hack 't '#:complice:globalvar)
+))

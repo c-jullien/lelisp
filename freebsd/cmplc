@@ -1,0 +1,1 @@
+exec /home/jullien/lelisp-opensource-2017-08-15/freebsd/lelispbin -stack 12 -code 600 -heap 256 -number 0 -vector 4 -string 5 -symbol 5 -cons 4 -float 0 -r /home/jullien/lelisp-opensource-2017-08-15/freebsd/llcore/cmplc.core $*

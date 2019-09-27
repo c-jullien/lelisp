@@ -1,0 +1,120 @@
+defmodule #:display:windows
+files   (
+	winevent.ll
+)
+include (
+	virstruct.ll
+	virmacros.ll
+)
+import  (
+	virutil	 ; make
+	win_def
+	winstruc
+	winwindo
+	virwindow
+	virevent
+	virgraph
+)
+export  (
+	:event-mode 
+	:flush-event 
+	:eventp 
+	:read-event
+	:peek-event 
+	:read-mouse 
+	:add-event 
+	:grab-event
+	:ungrab-event
+	:itsoft-event
+	:parse-event
+	:allow-event
+	:disallow-event
+	:allowed-event-p
+	:doubleclick-flag
+
+;;;; Function for events code
+
+	:default-event-code
+;	:reparent-notify-code
+;	:visibility-change-code
+;	:client-message-code
+	:map-window-code
+	:unmap-window-code
+	:modify-window-event-code
+	:kill-window-event-code
+	:repaint-window-event-code
+	:keyboard-focus-event-code
+	:leavewindow-event-code
+	:enterwindow-event-code
+	:up-event-code
+	:down-event-code
+	:doubleclick-event-code
+	:functionkey-event-code
+	:ascii-event-code
+	:drag-event-code
+	:move-event-code
+	:command-event-code
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:windows:event-mode subr2 ())
+(#:display:windows:flush-event subr1 ())
+(#:display:windows:eventp subr1 ())
+(#:display:windows:read-event subr2 ())
+(#:display:windows:parse-event subr3 ())
+(#:display:windows:peek-event subr2 ())
+(#:display:windows:read-mouse subr2 ())
+(#:display:windows:add-event subr2 ())
+(#:display:windows:grab-event subr2 ())
+(#:display:windows:ungrab-event subr1 ())
+(#:display:windows:itsoft-event subr1 ())
+(#:display:windows:allow-event subr2 ())
+(#:display:windows:disallow-event subr2 ())
+(#:display:windows:allowed-event-p subr2 ())
+(#:display:windows:doubleclick-flag nsubr ())
+(#:display:windows:default-event-code subr2 ())
+(#:display:windows:map-window-code subr2 ())
+(#:display:windows:unmap-window-code subr2 ())
+(#:display:windows:modify-window-event-code subr2 ())
+(#:display:windows:kill-window-event-code subr2 ())
+(#:display:windows:repaint-window-event-code subr2 ())
+(#:display:windows:keyboard-focus-event-code subr2 ())
+(#:display:windows:leavewindow-event-code subr2 ())
+(#:display:windows:enterwindow-event-code subr2 ())
+(#:display:windows:up-event-code subr2 ())
+(#:display:windows:down-event-code subr2 ())
+(#:display:windows:doubleclick-event-code subr2 ())
+(#:display:windows:functionkey-event-code subr2 ())
+(#:display:windows:ascii-event-code subr2 ())
+(#:display:windows:drag-event-code subr2 ())
+(#:display:windows:move-event-code subr2 ())
+(#:display:windows:command-event-code subr2 ())
+)
+cpfunctions (
+(#:display:windows:event-grab subr2)
+)
+cpimport (
+(virwindow
+(windowp . subr1)
+)(virutil
+(#:event:make . subr0)
+)(win_def
+(windows_flush_event . subr0)
+(windows_eventp . subr0)
+(windows_read_event . subr1)
+(windows_peek_event . subr1)
+(windows_read_mouse . subr1)
+(windows_dblclks_flag . subr1)
+))
+cpenv (
+virutil
+win_def
+winstruc
+virwindow
+winwindo
+virevent
+virgraph
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:windows:doubleclick-flag 't '#:complice:globalvar)
+))

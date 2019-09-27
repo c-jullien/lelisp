@@ -1,0 +1,25 @@
+defmodule
+libdate
+files (
+libdate
+)
+export (
+long-string-date
+number-to-date
+date-to-number
+eqdate =date
+<date
+<=date
+>date
+>=date
+/=date
+date-of-file
+)
+import (
+date
+messages
+path
+callext
+)
+include
+()

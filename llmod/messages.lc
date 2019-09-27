@@ -1,0 +1,24 @@
+defmodule
+messages
+files (
+messages
+)
+export (
+record-language
+remove-language
+message-languages
+current-language
+get-message-p
+get-message
+put-message
+#:messages:put-message
+remove-message
+get-all-messages
+defmessage
+#:sharp:m
+default-language
+)
+import
+()
+include
+()

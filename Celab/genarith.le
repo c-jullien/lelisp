@@ -1,0 +1,32 @@
+;;; GELL 15.26: elaboration file for the module: genarith
+;;;             translation done: "Wed June 16 93 18:00:49 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: genarith.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'genarith)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZgenarith" "Wed June 16 93 18:00:49 "
+
+'((#:genarith:|+| . subr2) (#:genarith:|-| . subr2) (#:genarith:|0-| . subr1) (#:genarith:* . subr2) (#:genarith:/ . subr2) (#:genarith:1/ . subr1) (#:genarith:quomod . subr2) (floor . subr1) (ceiling . subr1) (round . subr2))
+
+#[float |+| |-| 0. |0-| * list err0dv / 1/ 1. abs floor #:ex:mod < errnna numberp truncate > round = quotient #:genarith:|+| #:gell-resetfn:function-name #:gell-resetfn:function-2 #:genarith:|-| #:genarith:|0-| #:gell-resetfn:function-1 #:genarith:* #:genarith:/ #:genarith:1/ #:genarith:quomod ceiling]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'genarith)))
+(defcsetfn '#:genarith:|+| "GZgenarith" 0)
+(defcsetfn '#:genarith:|-| "GZgenarith" 1)
+(defcsetfn '#:genarith:|0-| "GZgenarith" 2)
+(defcsetfn '#:genarith:* "GZgenarith" 3)
+(defcsetfn '#:genarith:/ "GZgenarith" 4)
+(defcsetfn '#:genarith:1/ "GZgenarith" 5)
+(defvar #:ex:mod 0)
+(defcsetfn '#:genarith:quomod "GZgenarith" 6)
+(defvar #:sys-package:genarith 'genarith)
+(defcsetfn 'floor "GZgenarith" 7)
+(defcsetfn 'ceiling "GZgenarith" 8)
+(defcsetfn 'round "GZgenarith" 9)
+
+(defccheck '(quotient = round |0-| |+| > truncate numberp < |-| * floor / abs list float))

@@ -1,0 +1,60 @@
+defmodule build
+files (build)
+import (
+sets
+ref
+defrtprj
+create
+rtmsg
+parse
+)
+
+export (
+#:llmodulereferences:build-ref-from-lm
+#:llmodulereferences:retrieve-definer
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:llmodulereferences:build-ref-from-lm subr1 ())
+(#:llmodulereferences:retrieve-definer subr1 ())
+)
+cpfunctions (
+(#:llmodulereferences:set-ref subr2)
+(#:llmodulereferences:fill-modules-references subr2)
+(#:llmodulereferences:retrieve-definers subr1)
+)
+cpimport (
+(create
+(#:rtproject:all-files . nsubr)
+)(ref
+(#:llmodulereferences:write-to-file . subr2)
+(standardmodulereferences . nsubr)
+)(sets
+(union . nsubr)
+)(parse
+(#:llmodule:definerp . subr1)
+))
+cpenv (
+sets
+files
+pretty
+format
+module
+defvar
+rtmsg
+sort
+callext
+defstruct
+path
+kernellm
+rtprint
+readlm
+diagnostic
+ref
+defrtprj
+make
+create
+syserror
+parse
+)

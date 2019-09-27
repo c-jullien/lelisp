@@ -1,0 +1,22 @@
+;;; GELL 15.26: elaboration file for the module: takr
+;;;             translation done: "Thu Mar  11 93 15:55:37 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: takr.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'takr)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZtakr" "Thu Mar  11 93 15:55:37 "
+
+'((check-takr . subr0) (meter-takr . subr0) (test-takr . subr1))
+
+#[(test-takr 1) check-value (count-calls-init) eval (count-calls-stop) t check-takr #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-takr test-takr #:gell-resetfn:function-1]
+)
+
+(defcsetfn 'check-takr "GZtakr" 0)
+(defcsetfn 'meter-takr "GZtakr" 1)
+(defcsetfn 'test-takr "GZtakr" 2)
+
+(defccheck '(eval check-value))

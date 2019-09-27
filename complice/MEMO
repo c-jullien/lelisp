@@ -1,0 +1,353 @@
+[20/01/87]
+	Erreur grave (E0) si a la fois un &nobind et une fonction paranoiaque
+	Signale' par J. Chambon (Thompson).
+	Reperable par (defun foo &nobind (apply (arg 0) ()))
+	Correction dans complice.lo
+		au point d'entree (entry #:complice:parse-lambda)
+	 ... (btnil a1 101) (jcall flatt) ...
+	 -> ... (btnil a1 101) (cabeq a1 '&nobind 101) (jcall flatt) ...
+
+[17/02/87]
+	Mauvaise compilation pour les expressions de la forme :
+		(<primop> <var1> (setq <var1> <var2>))
+	Signale' par M. DANA (Enst)
+	Reperable par
+		(defun foo (a b) (flush) (cons (add a (setq a b)) a))
+	Correction dans cpfnt.ll et cppred.ll aux appels des
+	fonctions pop2 et pop3.
+
+[17/02/87]
+	Le message "I cant do that" de la compilation des modules
+	inter-re'fe'rence' est remplace' par un warning et
+	la compilation des modules est faites en deux passes.
+	Modification de cperror cpmod1 (:make-list-of-module)
+
+[17/02/87]
+	Le deuxie`me argument de compilemodule est pris en compte!
+	la fonction makemodule ramene la liste des modules a` compiler.
+	Modification de cp cpmod1 et cpmod2
+
+[07/04/87]
+	Inverse les arguments du warning 6 comme specifie' dans la doc.
+	N'evalue les expressions lues dans les fichiers sources que si
+	le fichier n'a jamais ete charge'.
+	Modification de cpmod1 et de cp0
+
+[08/04/87]
+	Impression des instructions lap dans les fichiers *.lo ligne
+	a` ligne, avec une rmargin de 300. Evite ainsi les erreurs
+	de type #:a^M:b et les strings de plus de 80 caracte`res.
+	Modification de cpmod2
+
+[21/04/87]
+	L'extension #:SYSTEM:OBJ-EXTENSION est syste'matiquement rajoute'e
+	aux fichiers de code LAP pour les fonctions COMPILEFILES et
+	COMPILEMODULE. (Voir CL (KCL) qui ont une bonne manie`re pour
+	ce genre de chose)
+
+[22/04/87]
+	On branche le peephole optimiseur de Jerome.
+	Modification de cp2
+
+[24/04/87]
+	la macroexpansion passe par un relai (:macroexpand) pour
+	que la fonction #:compiler:macroexpand ne soit pas exporte'.
+	Modification de cp0, cp1 et cp2.
+
+[29/04/87]
+	Evtag est corrige'e, il manque un increment dans la pile.
+	Modification de cpfnt.
+
+[04/05/87]
+	Change les ((push (@ lab)) ... lab (return)) en
+	((push (@ lab)) ... lab (nop) (return)) pour que le
+	peephole ne fasse pas son dur labeur.
+	Modification de cpfnt et cp2 (grep peephole-bug)
+
+[06/05/87]
+	Erreur grave (erreur de la machine) si funarg avec un &nobind.
+	Signale' par G. Assayag (ACT).
+	Reperable dans (de foo () (funcall (lambda &nobind)))
+	sauve  la variable :&nobind dans le cas d'un funarg
+	Modification de cpfnt.
+
+[19/05/87]
+	Erreur grave (erreur de la machine) pour le chargement des litteraux.
+	GC error.. Pour la compilation en memoire, on prend la technique
+	standard qui consiste a ne faire qu'une seule liste de litteraux.
+	Donc pour (compile foo) ou (compile-all-in-core) les litteraux ne
+	seront plus sur la plist des symboles (ici 'foo).
+	Modification de cp.
+
+[20/05/87]
+	Erreur grave (erreur du chargeur: etiquette non resolue), du
+	a` l'optimiseur.
+	Signale par Paul Zimmermann (X)
+	Reperable par (defun foo (a b c d) (while a)) puis
+	(de bar (x z y j) x)
+	Modification de cp2
+
+[22/05/87]
+	Bug du compilo signale' par J. Chambon (Thompson).
+	Reperable par (defun foo (x) (let ((x 0)) (setq x (add1 x))) x)
+	Rend toujours 1....
+	modification de cpenv
+
+[02/06/87]
+	Bug du compilo signale' par J. Vuillemin (Inria).
+	Repearable par (defun foo (s) (cons (slen s) s))
+        (foo "foo") -> (3 . 3)
+	modification de cpfnt
+	patch dans complice.lo
+	(loader '((entry #:complice:cpfnt-open subr2)
+	...
+	(cabeq a1 'vlength 120)
+	(cabne a1 'slen 119)
+	...
+	(mov nil a1)				; A rajouter
+	(mov (cvalq #:complice:return?) a2)	; A rajouter
+	(call #:complice:write-op)		; A rajouter
+	122
+	(mov (cvalq #:complice:return?) a1)
+	(bfnil a1 124)
+	(mov 't a1)
+	124
+	(adjstk '1)
+	(return)
+	119
+
+[03/06/87]
+	Buf de compilation signale par R Ducournau (Inria-Sema Metra)
+	reparable par:
+        (defun foo &nobind
+           (let ( (x (flush)) (n (arg 0)) (y (flush)) )
+              n ))
+        (foo 9 8 7) -> 8
+	modification de cpfnt et cp2
+
+[04/06/87]
+	feature de compilation signale par R Ducournau (Inria-Sema Metra)
+	les tests de bon nombre d'arguments (errwna) etaient faits
+	pour les fonctions internes des modules mais n'etaient pas faits
+	pour les fonctions exportees.
+
+[23/06/87]
+	feature de compilation signale par M Devin (Ilog)
+	les noms de fonctions generes par les lambda anonymes (closure)
+	ne sont pas uniques car la fonction gensym peut donner le meme
+	atome entre deux appels differents de Complice (compilation modulaire)
+	Reperable par
+	(defun foo () (lambda (x) x)))          ; in module M1
+	(defun #:bar:foo () (lambda (x y) y)))  ; in module M2
+	Modification de cpfnt et cp1
+
+[15/09/87]
+	Erreur de compilation signale par T Banel (CEDIAG)
+	Mauvaise compilation de la recursivite terminale des Nsubrs faisant
+	une liaison d'arbre.
+	Reperable par :
+	(defun foo ((a . b) c d e)
+           (when b
+              (flush)
+              (f b c d e)))
+        (foo '(1 2) 3 4 5) -> Erreur de la machine
+	Modification de cp2.
+
+[17/09/87]
+	feature signale par M Devin (ILOG)
+	On ne signale les fonctions externes au module si la fonction
+	est une macro du compilateur (macro-openp <f>). Ceci evite
+	d'avoir une longue liste de message lors des defstructs...
+
+[21/09/87]
+	On ne charge les includes qu'une seule fois.
+
+[23/09/87]
+	Erreur de compilation signale par F Morain (INRIA)
+	Mauvaise allocation des registres pour la fonction REPEAT
+	Reperable par:
+	(defun foo (a b)
+	   (repeat 0 (setq b (cons 1 1)))
+	   b )
+	qui ramene la valeur de a.
+	Modification de cpfnt
+
+[14/10/87]
+	Mauvaise macroexpansion de NEWR signale' par P. Parquier (CEDIAG)
+	Le deuxie`me argument doit e^tre evalue' avant la variable
+	comme dans l'interpre`te.
+	Modification de ~/llib/cpmac.ll par ILOG
+
+[28/10/87]
+	Bug signale par F. Morain [INRIA]
+	'time' etait filtree par la premiere passe du compilateur
+	alors qu'elle est une macro du compilateur.
+	Modification de cp1.ll
+
+[28/10/87]
+	bug signale pas P. Robert [ECRC]
+	Mauvaise compilation de SETQ dans certains cas.
+	Reperable par
+	(defun foo (v n)
+	   (flush)
+	   (setq n (vref (vref v n) n))
+           n )
+	Setq passe maintenant toujours par un registre intermediaire.
+	Modification de cpfnt.ll
+
+[05/01/88]
+	Les impressions des messages d'erreur se font sur le canal de sortie
+	qui est positionne' avant la compilation.
+	L'itsoft "complice" est 'conse'.
+	(identity <exp>) est equivalent a`
+	(prog1 <exp> (precompile () '(jcall identity)))
+	pour tester les interruptions a` la main..
+
+[02/02/88]
+	Bug signale par Eugen Neidl [ILOG]
+	Non compilation de letv. Reperable par l'exemple donnne dans la doc.
+	Patch dans complice.lo:
+...
+(loader'((entry #:complice:cpfnt:letv subr1)
+(mov (cdr a1) a4)
+(mov (car a1) a1)
+(mov (cdr a4) a3)
+(mov (car a4) a4)
+(push a4)
+(push a3)
+(bfcons a1 6789)		; remplace (bfcons a1 101)
+(cabeq (car a1) 'quote 101)	; remplace (cabne (car a1) 'quote 101)
+6789				; nouvelle etiquette
+(adjstk '2)
+(jmp #:complice:set-error)
+101
+
+[31/03/88]
+	Mauvaise compilation de (repeat) et (setq (car l) ..) signale'e
+	par Parquier (Cediag) et Duthen (Ircam).
+	Le cas (repeat) est pris en compte et ramene simplement 't
+	Setq provoque une erreur si largument n'est pas une variable.
+	Modification de cpfnt.ll et cperror.ll
+
+[23/06/88]
+	Traitement des stars Ilog.
+
+	Enleve le parsing des arguments de synonymq, cela generer des W0s
+	un peu incomprehensibles.
+
+	Test si l'extension ".lo" n'existe pas deja dans le fichier de sortie
+	de compilefiles.
+
+	Appel syste'matique au macroexpandeur pour toutes les ToplevelForms.
+	Marche ainsi pour les macros qui generent des `progn' de macros.
+
+	Enleve les optimisations de registres pour les appels a` `cons' et
+	`last'. GARDE TOUT DE MEME CELLE DE IDENTITY. Ceux qui
+	trace identity sont morts.
+
+	rajout du warning 11 qui traite les fonctions deja defini dans
+	un module importe. Dans ce cas on ignore la definition importee.
+
+[05/07/88]
+	Bug de compilation de until qui ne protege'e pas son pre'dicat.
+	(de foo () (let ((a ()) (b (flush))) (until a (setq b b)))
+	Ne bouclait pas.
+
+[07/10/88]
+	Prise en compte des eval-when et des exportations de definition
+	de structure.
+
+[07/07/89]
+	Toutes les fonctions exporte'es et non documente'es sont maintenant
+	package'es dans `complice`. Le module cp2 est plus petit pour passer
+	sur les 80286. la rmargin passe a` (add1 (slen (outbuf))). Le
+	langage des messages est decide' a load-time (les #+ et #- sont
+	remplace's par un if).
+
+[08/08/89]
+	rat ILOG.
+	Copie systematique des expressions des 'cpenv' pour eviter que les
+	formes soient 'macroexpanser'.
+	Rajout des messages polyglotes.
+
+[16/08/89]
+	#:compiler:peephole passe par le relai de #:complice:peephole
+	pour ne pas exporter de fonction 'compiler' ce qui perturbe
+	la compilation de llcp.
+	Modification du contenu de la cle' cpenv des modules. Maintenant
+	elle contient, en plus des formes E* definies par des
+	(eval-when (.. compile ..) E*) locales a ce module, la liste des
+	nom de modules ou il faut chercher un environnement de compilation.
+	La fermeture transitive est faite a` la vole'e.
+
+[01/02/90]
+	Affiche un avertissement pour les fonctions exporte'es non
+	pre'sente dans le module (mais pre'sente dans l'envirronement
+	de compilation). Dans ce cas (et comme avant) la fonction
+	n'est pas mise dans le fichier objet (.lo).
+
+[12/12/90]
+	affecte syste'matiquement le champ 'cpenv' des modules pour e'viter
+	de laisser des expressions obsole`tes. (un test en moins dans
+	la fonction :make-single-module dans cpmod1.ll)
+	positionne #:system:print-with-abbrev-flag a` () durant la compilation
+	d'un module ou d'un fichier (un let en plus dans compilemodule et
+	compilefiles dans cp.ll)
+	On se de'finit un syste`me de de'claration de variable globale
+	au dessus du systeme defvar/defun.. Les defvar sont parse's en lecture
+	de fichier, positionnent le flag :globalvar et mettent dans 'cpenv'
+	l'indication (:declareglobalvar 'symb).
+	Refonte totale de la compilation de lock pour tenir compte des
+	return-from
+
+[18/12/90]
+	On change le nouveau systeme de 'defvar' qui ne convenait pas
+	pour les "(unless (boundp 'kop) (defvar kop ...))". On rede'fini
+	defvar dans complice pour forcer les putprops. On parse comme me^me
+	pour pouvoir etendre le 'cpenv'; cela implique que si le
+	defvar n'est pas en ToplevelForm alors le cpenv n'est pas e'tendu.
+
+[14/01/91]
+	Correction de la ge'ne'ration en "dur" de l'e'tiquette 0 pour le
+	test des nsubrs (:check-nsubr dans cp2.ll).
+	On ouvre les fonctions typevector et typestring.
+
+[14/04/91]
+	On traite les cas de'ge'ne're's de (and) et (or).
+	On fait sauvegarde les (cvalq x) protege's pour chaque call ou jump.
+	Correction d'un bug d'allocation de registre dans (arg <expr>).
+
+[15/10/91]
+	On tient compte de SYNONYM en toplevelform
+	COMPILE-ALL-IN-CORE ne compile pas les dont-compiles
+
+[10/03/92]
+	Corrections pour J. Chambon: Pbs dans interde'pendance de modules.
+	 Ordre de chargement des fichiers non respecte'.
+	 La fonction :make-single-module1 fait des effets de bord sur
+	  le cache :list-of-loaded-file au troisie`me appel (i.e. la
+	  copie n'e'tait faite qu'une seule fois).
+         cpenv &co ne sont pas respecte' (revoir list-of-loaded-file)...
+
+[23/03/92]
+	On avait oublie' le warning 5 pour l'appel des SUBR0s....
+
+[21/04/92]
+	Correction pour (memq x '()).
+	Pas de registres qui contiennent ce ?? bizarre.
+
+[05/07/93]
+	Correction pour (selectq E ... () ...)
+
+[06/07/93]
+	Enleve les error et warnings inutiles.
+	(loadmodule ? NIL) pour les macros.
+	On fait une copie des instructions LAP dans le cas du precompile.
+	Double e'valuation dans cpmac.ll pour le catcherror.
+	macro-expand-error vire' de cpmac.ll.
+	
+[02/12/93]
+	Correction pour la fausse tail-rec des nsubrs via une fermeture:
+          (de f1 (a . b) (mon-mapc (lambda (x) (f1 x)) a))
+	On rajoute une globale :funarg? qui specifie si on compile une
+        fermeture..

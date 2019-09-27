@@ -1,0 +1,158 @@
+defmodule
+pathname
+files (path)
+export (
+pathnamep
+namestring
+pathname
+equal-pathname
+copy-pathname
+user-homedir-pathname
+control-file-pathname
+temporary-file-pathname
+portable-pathname-p
+pathname-host
+pathname-device
+pathname-directory
+pathname-name
+pathname-type
+pathname-version
+set-pathname-host
+set-pathname-device
+set-pathname-directory
+set-pathname-name
+set-pathname-type
+set-pathname-version
+#:pathname:make
+make-pathname
+file-namestring
+directory-namestring
+host-namestring
+merge-pathnames
+combine-pathnames
+enough-namestring
+device-namestring
+#:pathname:prin
+true-pathname
+current-directory
+directoryp
+expand-pathname
+map-expand-pathname
+wildcard
+coerce-namestring
+;(pathname path)
+;#:pathname:assert
+#:unix:pathname       ; obligatoire pour #u
+;#:unix:namestring
+;#:vaxvms:pathname
+;#:vaxvms:namestring
+)
+import (
+callext
+defstruct
+)
+include
+(files)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(pathnamep subr1 ())
+(namestring subr1 ())
+(pathname subr1 ())
+(equal-pathname subr2 ())
+(copy-pathname subr1 ())
+(pathname-directory subr1 ())
+(set-pathname-directory subr2 ())
+(user-homedir-pathname subr0 ())
+(control-file-pathname nsubr ())
+(merge-pathnames subr2 ())
+(temporary-file-pathname subr1 ())
+(portable-pathname-p subr1 ())
+(pathname-host subr1 ())
+(pathname-device subr1 ())
+(pathname-name subr1 ())
+(pathname-type subr1 ())
+(pathname-version subr1 ())
+(set-pathname-host subr2 ())
+(set-pathname-device subr2 ())
+(set-pathname-name subr2 ())
+(set-pathname-type subr2 ())
+(set-pathname-version subr2 ())
+(#:pathname:make subr0 ())
+(make-pathname nsubr ())
+(file-namestring subr1 ())
+(directory-namestring subr1 ())
+(host-namestring subr1 ())
+(combine-pathnames subr2 ())
+(enough-namestring nsubr ())
+(device-namestring subr1 ())
+(#:pathname:prin subr1 ())
+(true-pathname subr1 ())
+(current-directory nsubr ())
+(directoryp subr1 ())
+(expand-pathname subr1 ())
+(map-expand-pathname subr2 ())
+(wildcard subr1 ())
+(coerce-namestring subr1 ())
+(#:unix:pathname subr1 ())
+)
+cpfunctions (
+(#:dos:namestring subr1)
+(#:dos:device-namestring subr1)
+(#:dos:directory-namestring subr1)
+(#:dos:file-namestring subr1)
+(#:dos:pathname subr1)
+(#:pathname:lastindex subr2)
+(#:pathname:name* subr2)
+(#:pathname:type* subr2)
+(#:pathname:c-pathname subr1)
+(#:dos:user-homedir-pathname subr0)
+(#:dos:control-file-pathname subr1)
+(#:dos:temporary-file-pathname subr1)
+(#:vms:pathname-check subr1)
+(#:bsd:pathname-check subr1)
+(#:sys5:pathname-check subr1)
+(#:aegis:pathname-check subr1)
+(#:dos:pathname-check subr1)
+(#:dos:host-namestring subr1)
+(#:dos:true-pathname subr1)
+(#:dos:current-directory subr1)
+(llgetwd subr2)
+(cchdir subr1)
+(#:dos:directoryp subr1)
+(lldirectoryp subr1)
+(#:dos:wild subr1)
+(file-in-pattern subr1)
+(#:c-wild:match-compile subr1)
+(#:c-wild:expand-tree subr1)
+(#:c-wild:wild-tree subr2)
+(#:c-wild:get-directories subr2)
+(llopendir subr1)
+(llreaddir subr1)
+(#:c-wild:match-step subr3)
+(#:c-wild:match-sweep-string subr3)
+(llclosedir subr1)
+(#:c-wild:get-entries subr3)
+(#:dos:map-wild subr2)
+)
+cpimport (
+(defstruct
+(new . subr1)
+))
+cpenv (
+sort
+callext
+defstruct
+((putprop '#:pathname:wild-string 't '#:complice:globalvar)
+)((putprop '#:pathname:wild-length 't '#:complice:globalvar)
+)((putprop '#:pathname:one-char-string 't '#:complice:globalvar)
+)((putprop '#:pathname:one-char-length 't '#:complice:globalvar)
+)((putprop '#:pathname:root-string 't '#:complice:globalvar)
+)((putprop '#:pathname:dot 't '#:complice:globalvar)
+)((putprop '#:pathname:slash 't '#:complice:globalvar)
+)((putprop '#:pathname:up-string 't '#:complice:globalvar)
+)((putprop '#:pathname:colon 't '#:complice:globalvar)
+)((putprop '#:pathname:backslash 't '#:complice:globalvar)
+)((putprop '*default-pathname-defaults* 't '#:complice:globalvar)
+)((putprop '*portable-pathname* 't '#:complice:globalvar)
+))

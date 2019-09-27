@@ -1,0 +1,149 @@
+
+;;.EnTete "Le_Lisp V15" "CPERROR.LL" "Tronc commun du compilateur"
+;;.sp 4
+;;.SuperTitre "Le Compilateur Le_Lisp"
+;;.Titre "Le traitement des erreurs"
+;;.Auteur "Bernard Serpette"
+
+;;.Section "CPERROR.LL"
+;;.SSection "Contenu"
+
+;;.SSection "Les variables globales"
+; Le package du compilateur
+(defvar #:sys-package:colon 'complice)
+
+;; En attendant que cela soit standard...........................
+;; Bonjour la bricole..................
+(defmacro defmessage (msg . ldef)
+   `(progn
+      ,@(mapcar
+         (lambda (def)
+            `(putprop ',msg ',(cadr def) ',(car def)))
+         ldef )))
+
+(defun get-message (msg)
+   ;; returns a message
+       (or (getprop msg #:messages:current-language)
+	   (string msg)))
+
+; Le tableau des erreurs.
+;;.TS
+;;l l.
+(defmessage :error
+   (english
+      #[
+         "Internal Error"			; 0
+         "Function computed"			; 1
+         "Application of an mlambda"		; 2
+         "Error during macro expansion"		; 3
+         "function not defined"			; 4
+         "Cannot compile an flet"		; 5
+         ""		; 6
+         "Cannot compile a letv"		; 7
+         "Argument not a variable"		; 8
+         "Bad selectq clause"			; 9
+      ])
+   (french
+      #[
+         "Erreur interne"			; 0
+         "Fonction calculee"			; 1
+         "Application d'une mlambda"		; 2
+         "Erreur durant macroexpansion"		; 3
+         "Fonction non definie"			; 4
+         "Ne peut pas compiler un flet"		; 5
+         ""					; 6
+         "Ne peut pas compiler un letv"		; 7
+         "L'argument n'est pas une variable"	; 8
+         "Mauvaise clause de selectq"		; 9
+      ] ))
+
+(defmessage :warning
+   (english
+      #[
+         "Undeclared global variable"		; 0
+         ""			; 1
+         "Unused function"			; 2
+         "Wrong function type"			; 3
+         "External function"			; 4
+         "Wrong number of arguments"		; 5
+         "Function external to module"		; 6
+         "Calculated function"			; 7
+         "Explicit call to evaluator"		; 8
+         "Function external to file"		; 9
+         "Module Interdependence"		; 10
+         "Function redefined in module"		; 11
+      ])
+   (french
+      #[
+         "Variable globale non declaree"	; 0
+         ""		; 1
+         "Fonction non utilisee"		; 2
+         "Fonction de mauvais type"		; 3
+         "Fonction externe"			; 4
+         "Mauvais nombre d'arguments"		; 5
+         "Fonction externe au module"		; 6
+         "Fonction calculee"			; 7
+         "Appel explicite a l'evaluateur"	; 8
+         "Fonction externe au fichier"		; 9
+         "Interdependance de modules"		; 10
+         "Fonction deja definie dans le module"	; 11
+      ] ))
+
+; Pour ne pas charger en cas d'erreurs.
+(defvar :error-occured ())
+
+; Si on veut les warnings et lesquels.
+(unless (boundp ':warning-flag)
+   (defvar :warning-flag t) )
+(unless (boundp ':no-warning)
+   (defvar :no-warning '(7 8)) )
+
+; Pour le debugging.
+(defvar :debug? ())
+
+; Le canal de sortie avant la compilation.
+(defvar :outchan ())
+
+;;.SSection "Les appels principaux"
+;;.SSSection ":ERROR  -  :ERRORF"
+(de :error (n arg) (:errorf :f n arg))
+
+(de :errorf (f n arg)
+   (:set-error)
+   (:1ligne "E" n f (vref (get-message ':error) n) arg) )
+
+;;.SSSection ":WARNING  -  :WARNINGF"
+(de :warning (n arg) (:warningf :f n arg))
+
+(de :warningf (f n arg)
+   (when (and :warning-flag (not (memq n :no-warning)))
+      (:1ligne "W" n f (vref (get-message ':warning) n) arg) ))
+
+;;.SSSection ":MACRO-EXPAND-ERROR"
+(de #:compiler:macro-expand-error (f)
+   (:error 3 f) )
+
+;;.SSSection ":IERROR  -  :SET-ERROR"
+(de :ierror (msg arg)
+   (:set-error)
+   (when :debug?
+      (:1ligne "I" 0 :f msg arg) ))
+
+(de :set-error () (setq :error-occured t))
+
+;;.SSSection ":1LIGNE"
+(de :1ligne (type n fnt msg arg)
+   (with ( (outchan :outchan) )
+      (let ( (#:system:print-for-read ()) (#:sys-package:itsoft ':error) )
+         (tag eol (print type "." n "." fnt ".." msg ":"))
+         (tag eol (print "     " arg)) )))
+
+;;.SSection "Les interruptions du compilateur."
+;;.SSSection ":EOL"
+(de :error:eol ()
+   (exit eol (eol)) )
+
+;;.SSSection ":SYSERROR"
+(de :syserror (f m b)
+   (when :debug? (funcall 'syserror f m b))
+   (exit #:system:error-tag (:error 0 (list f m b)) ()) )

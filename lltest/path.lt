@@ -1,0 +1,480 @@
+        (test-serie "[Make-pathname function]")
+(setq *default-pathname-defaults* #p"")	#:pathname:#[ () () () () () () ]
+(make-pathname () () () () () ())	#:pathname:#[ () () () () () () ]
+(make-pathname () () () "a" () ())	#:pathname:#[ () () () "a" () () ]
+(make-pathname () () () 'a () ())	(errpathbadname make-pathname a)
+(make-pathname () () () '#:pathname:wild () ())
+		#:pathname:#[ () () () #:pathname:wild () () ]
+(setq apathname (make-pathname () () '("usr" "spool" "uucp") "test"  "ll"))
+                #u"/usr/spool/uucp/test.ll"
+
+
+        (test-serie "[Pathnamep function]" ())
+(pathnamep apathname)			t
+(pathnamep "dsaf")			()
+(pathnamep 'adfdsa)			()
+(pathnamep ())				()
+
+
+
+        (test-serie "[Namestring function]" ())
+(namestring "abc")		"abc"
+(namestring 'abc)		"abc"
+(namestring '(a b))		(errbpa namestring (a b))
+(namestring 4)			(errbpa namestring 4)
+(namestring #u"abc")		"abc"
+(namestring #u"/ab/c")		#.(cond
+				   (#:system:unixp "/ab/c")
+				   ((eq (system) 'vaxvms) "[ab]c")
+				   (#:system:dosp "\ab\c"))
+
+        (test-serie "[#u function]" ())
+#u"/"	     #.(if (eq (system) 'vaxvms)
+		#:pathname:#[ () () ("000000") () () () ]
+		#:pathname:#[ () () ("") () () () ])
+
+#u""		#:pathname:#[ () () () () () () ]
+#u"./"		#:pathname:#[ () () (#:pathname:current) () () () ]
+#u"../"		#:pathname:#[ () () (#:pathname:up) () () () ]
+#u"abc"		#:pathname:#[ () () () "abc" () () ]
+
+#u"/abc"     #.(if (eq (system) 'vaxvms)
+		#:pathname:#[ () () ("000000") "abc" () () ]
+		#:pathname:#[ () () ("") "abc" () () ])
+
+#u"abc/"	#:pathname:#[ () () (#:pathname:current "abc") () () () ]
+#u"/abc/"	#:pathname:#[ () () ("abc") () () () ]
+#u"./abc"	#:pathname:#[ () () (#:pathname:current) "abc" () () ]
+#u"./abc/"	#:pathname:#[ () () (#:pathname:current "abc") () () () ]
+
+#u"/././"    #.(if (eq (system) 'vaxvms)
+		#:pathname:#[ () () ("000000") () () () ]
+		#:pathname:#[ () () ("") () () () ])
+
+#u"*"		#:pathname:#[ () () () #:pathname:wild () () ]
+
+#u"/*"	     #.(if (eq (system) 'vaxvms)
+		#:pathname:#[ () () ("000000") #:pathname:wild () () ]
+		#:pathname:#[ () () ("") #:pathname:wild () () ])
+
+#u"/*."	     #.(if (eq (system) 'vaxvms)
+		#:pathname:#[ () () ("000000") #:pathname:wild "" () ]
+		#:pathname:#[ () () ("") #:pathname:wild "" () ])
+
+#u"//foo/a/b"   #. (if (eq (system) 'apollo)
+		       #:pathname:#[ () "foo" ("a") "b" () () ]
+		       #.(if (eq (system) 'vaxvms)
+		       		#:pathname:#[ () () ("" "foo" "a") "b" () () ]
+				#:pathname:#[ () () ("foo" "a") "b" () () ]))
+
+#u"/a//b"    #.(if (eq (system) 'vaxvms)
+		#:pathname:#[ () () ("a" "") "b" () () ]
+		#:pathname:#[ () () ("a") "b" () () ])
+
+(equal #u"/./" #u"/")		t
+(equal #u"/../" #u"/")		t
+(equal #u"/a//b" #u"/a/b")	t
+
+        (test-serie "[Pathname function]" ())
+(pathname '(a b))               (errbpa pathname (a b))
+
+(pathname "/../a")       #.(if (eq (system) 'vaxvms)      	
+			    	#:pathname:#[ () () () "/" "./a" () ]
+				#:pathname:#[ () () ("") "a" () () ])
+
+(pathname "/../../a")    #.(if (eq (system) 'vaxvms) 
+			    	#:pathname:#[ () () () "/" "./../a" () ]
+	    		    	#:pathname:#[ () () ("") "a" () () ])
+
+(pathname 'toto)              	#:pathname:#[ () () () "toto" () () ]
+(pathname #u"toto")             #:pathname:#[ () () () "toto" () () ]
+(pathname #u"toto")             #:pathname:#[ () () () "toto" () () ]
+(pathname #u"toto.ll")          #:pathname:#[ () () () "toto" "ll" () ]
+(pathname #u"toto.45")          #:pathname:#[ () () () "toto" "45" () ]
+(pathname #u"toto.ll.45")       #:pathname:#[ () () () "toto" "ll" 45 ]
+(pathname #u".toto")            #:pathname:#[ () () () "" "toto" () ]
+(pathname #u".toto.ll")         #:pathname:#[ () () () ".toto" "ll" () ]
+(pathname #u".toto.ll.45")      #:pathname:#[ () () () ".toto" "ll" 45 ]
+(pathname #u".toto.*")
+       #:pathname:#[ () () () "" "toto" #:pathname:wild]
+(pathname #u".toto.ll.*")
+       #:pathname:#[ () () () ".toto" "ll" #:pathname:wild]
+(pathname #u".toto.*.3")
+       #:pathname:#[ () () () ".toto" #:pathname:wild 3 ]
+(pathname #u".toto.*.xy")
+       #:pathname:#[ () () () ".toto.*" "xy" () ]
+(pathname #u".toto.ll.*")
+       #:pathname:#[ () () () ".toto" "ll" #:pathname:wild]
+(pathname #u"*.ll")
+       #:pathname:#[ () () () #:pathname:wild "ll" () ]
+(pathname #u"*.*")
+       #:pathname:#[ () () () #:pathname:wild #:pathname:wild () ]
+(pathname #u"*.*.*")
+       #:pathname:#[ () () () #:pathname:wild #:pathname:wild #:pathname:wild]
+(pathname #u"...toto.ll.45")
+       #:pathname:#[ () () () "...toto" "ll" 45 ]
+(pathname #u"...toto..ll..45.a33.999")
+       #:pathname:#[ () () () "...toto..ll..45" "a33" 999 ]
+(pathname #u"...toto..ll..45.a33")
+       #:pathname:#[ () () () "...toto..ll..45" "a33" () ]
+(pathname #u"foo/bar/toto.ll.jj.88")
+       #:pathname:#[ () () (#:pathname:current "foo" "bar") "toto.ll" "jj" 88 ]
+; le cas des extentions vides est bizare mais on fait comme C-Shell!
+(pathname #u"toto..foo")  #:pathname:#[ () () () "toto." "foo" () ]
+(pathname #u"toto..45")   #:pathname:#[ () () () "toto" "" 45 ]
+(pathname #u"...")        #:pathname:#[ () () () ".." "" () ]
+(pathname #u"toto..*")    #:pathname:#[ () () () "toto" "" #:pathname:wild ]
+
+
+        (test-serie "[Equal-pathname function]" ())
+(equal-pathname "a" #u"abc/")	(errpathnotpath equal-pathname "a")
+(equal-pathname #u"a" "abc")	(errpathnotpath equal-pathname "abc")
+
+(equal-pathname #u"./abc/" #u"abc/")		t
+(equal-pathname #u"a/../abc" #u"./abc")		()
+(equal-pathname #u"a/./abc" #u"a/abc")		t
+(equal-pathname #u"a/b/../abc" #u"a/abc")	()
+(equal-pathname #u"a/b/./abc" #u"a/b/abc")	t
+(equal-pathname #u"./../" #u".././")		t
+(equal-pathname #u"/abc/../" #u"/")		()
+(equal-pathname #u"abc/../" #u"./")		()
+(equal-pathname #u"/abc/./" #u"/abc/")		t
+(equal-pathname #u"abc/./" #u"abc/")		t
+
+(equal-pathname #u"./abc" #u"abc")		()
+(equal-pathname #u"../abc" #u"abc")		()
+(equal-pathname #u"." #u"./")			()
+(equal-pathname #u".." #u"../")			()
+
+
+        (test-serie "[Portable-pathname-p function]" ())
+(portable-pathname-p #u"../foo/bar.gee")          	    t
+
+(let ((#:system:error-flag ()))
+ (portable-pathname-p (make-pathname "host" ()() ()()())))   ()
+(let ((#:system:error-flag ()))
+ (portable-pathname-p (make-pathname () "device" () ()()())))()
+(portable-pathname-p #u"/foo/")                             t
+(portable-pathname-p (make-pathname ()()() "foo" ()()))     t
+(portable-pathname-p (make-pathname ()()() () "ll" ()))     t
+(let ((#:system:error-flag ()))
+ (portable-pathname-p (make-pathname ()()() ()() 3)))        ()
+
+
+	(test-serie "[Fields access function]" ())
+(pathname-host apathname)               ()
+(set-pathname-host () 'toto)		(errpathnotpath set-pathname-host ())
+(set-pathname-host apathname 'toto)	(errnsa set-pathname-host toto)
+(set-pathname-host apathname "toto")	"toto"
+(set-pathname-host apathname ())	()
+
+(pathname-device apathname)             ()
+(set-pathname-device 'a 'tutu)		(errpathnotpath set-pathname-device a)
+(set-pathname-device apathname 'tutu)	(errnsa set-pathname-device tutu)
+(set-pathname-device apathname "tutu")	"tutu"
+(set-pathname-device apathname ())	()
+
+(pathname-directory apathname)          ("usr" "spool" "uucp")
+(set-pathname-directory "da" '("a" "b"))
+				  (errpathnotpath set-pathname-directory "da")
+(set-pathname-directory apathname '("a" "b"))
+					("a" "b")
+(set-pathname-directory apathname 'tutu)
+					(errnla set-pathname-directory tutu)
+(set-pathname-directory apathname '(tutu))
+					(errbpa set-pathname-directory tutu)
+(set-pathname-directory apathname '("" tutu))
+					(errbpa set-pathname-directory tutu)
+(set-pathname-directory apathname '("" 0))
+					(errbpa set-pathname-directory 0)
+(set-pathname-directory apathname '("usr" "spool" "uucp"))
+					("usr" "spool" "uucp")
+
+(set-pathname-name 4 "fasd")		(errpathnotpath set-pathname-name 4)
+(set-pathname-name apathname "fasd")	"fasd"
+(pathname-name apathname)               "fasd"
+(set-pathname-name apathname ())	()
+(set-pathname-name apathname 'dfa)	(errpathbadname set-pathname-name dfa)
+(set-pathname-name apathname '#:pathname:wild)
+					#:pathname:wild
+(set-pathname-name apathname "test")    "test"
+
+(set-pathname-type apathname "fsa")	"fsa"
+(pathname-type apathname)               "fsa"
+(set-pathname-type apathname 'fsa)	(errnsa set-pathname-type fsa)
+(set-pathname-type 3.14 "test")		(errpathnotpath set-pathname-type 3.14)
+(set-pathname-type apathname "ll")	"ll"
+
+(set-pathname-version 0 4)		(errpathnotpath set-pathname-version 0)
+(set-pathname-version apathname 4)	4
+(pathname-version apathname)            4
+(set-pathname-version apathname ())     ()
+(set-pathname-version apathname 'foo) (errpathversion set-pathname-version foo)
+
+
+	(test-serie "[creation and modification functions]" ())
+(setq *default-pathname-defaults* #u"/usr/spool/uucp/") #u"/usr/spool/uucp/"
+(make-pathname () () () "test" "ll")    #u"/usr/spool/uucp/test.ll"
+
+(pathname (enough-namestring apathname))   #u"test.ll"
+
+
+
+	(test-serie "[Merge-pathnames function]" ())
+(merge-pathnames "af" #u"fdsaf")
+				(errpathnotpath merge-pathnames "af")
+(merge-pathnames #u"af" "fdsaf")
+				(errpathnotpath merge-pathnames "fdsaf")
+(merge-pathnames #u"test.ll" #u"/usr/spool/uucp/") #u"/usr/spool/uucp/test.ll"
+
+
+
+	(test-serie "[Combine-pathnames function]" ())
+(combine-pathnames "af" #u"fdsaf")
+				(errpathnotpath combine-pathnames "af")
+(combine-pathnames #u"af" "fdsaf")
+				(errpathnotpath combine-pathnames "fdsaf")
+(combine-pathnames #u"/a/b/" #u"../c")		#u"/a/c"
+(combine-pathnames #u"/abc/" #u"cd")		#u"/abc/cd"
+(combine-pathnames #u"/" #u"cd")		#u"/cd"
+(combine-pathnames #u"/" #u"./cd")		#u"/cd"
+(combine-pathnames #u"/" #u"cd/")		#u"/cd/"
+(combine-pathnames #u"/" #u"/cd")		#u"/cd"
+(combine-pathnames #u"/" #u"/cd/")		#u"/cd/"
+(combine-pathnames #u"/abc/" #u"cd/")		#u"/abc/cd/"
+(combine-pathnames #u"/abc/" #u"../a")		#u"/a"
+(combine-pathnames #u"/abc/" #u"../../a")	#u"/a"
+(combine-pathnames #u"/abc/" #u"./a")		#u"/abc/a"
+(combine-pathnames #u"abc/" #u"./a")		#u"abc/a"
+(combine-pathnames #u"abc/" #u"../a")		#u"./a"
+(combine-pathnames #u"abc/" #u"../../a")	#u"../a"
+(combine-pathnames #u"abc/" #u"../../../a")	#u"../../a"
+(combine-pathnames #u"./" #u"a")		#u"./a"
+(combine-pathnames #u"./" #u"./a")		#u"./a"
+(combine-pathnames #u"./" #u"../a")		#u"../a"
+(combine-pathnames #u"./" #u"../../a")		#u"../../a"
+(combine-pathnames #u"../" #u"a")		#u"../a"
+(combine-pathnames #u"../" #u"../a")		#u"../../a"
+(combine-pathnames #u"../" #u"/a")		#u"/a"
+(combine-pathnames #u"../" #u"/a/b/c")		#u"/a/b/c"
+(combine-pathnames #u"/a/b/c" #u"../d/")	#u"/a/d/"
+(combine-pathnames #:pathname:#[ "h1" "d1" ("") "n1" "t1" "v1" ]
+		   #:pathname:#[ "h2" "d2" ("") "n2" "t2" "v2" ])
+				#:pathname:#[ "h2" "d2" ("") "n2" "t2" "v2" ]
+(combine-pathnames #:pathname:#[ "h1" "d1" ("") "n1" "t1" "v1" ]
+		   #:pathname:#[ () "d2" ("") "n2" "t2" "v2" ])
+				#:pathname:#[ "h1" "d2" ("") "n2" "t2" "v2" ]
+(combine-pathnames #:pathname:#[ "h1" "d1" ("") "n1" "t1" "v1" ]
+		   #:pathname:#[ "h2" ()   ("") "n2" "t2" "v2" ])
+				#:pathname:#[ "h2" "d1" ("") "n2" "t2" "v2" ]
+(combine-pathnames #:pathname:#[ "h1" "d1" ("") "n1" "t1" "v1" ]
+                   #:pathname:#[ "h2" "d2" ("")  ()  "t2" "v2" ])
+                                #:pathname:#[ "h2" "d2" ("") () "t2" "v2" ]
+(combine-pathnames #:pathname:#[ "h1" "d1" ("") "n1" "t1" "v1" ]
+		   #:pathname:#[ "h2" "d2" ("") "n2" ()   "v2" ])
+				#:pathname:#[ "h2" "d2" ("") "n2" () "v2" ]
+(combine-pathnames #:pathname:#[ "h1" "d1" ("") "n1" "t1" "v1" ]
+		   #:pathname:#[ "h2" "d2" ("") "n2" "t2" () ])
+				#:pathname:#[ "h2" "d2" ("") "n2" "t2" () ]
+
+
+        (test-serie "[Control-file-pathname function]" ())
+
+(unless (typefn 'save-user-homedir-pathname)
+	(synonymq save-user-homedir-pathname user-homedir-pathname)
+	(de user-homedir-pathname () (pathname "/usr/ilog/lelisp/"))
+	())  ()
+
+(file-namestring
+ (control-file-pathname 'the-product #p"the-init-file"))       "the-init-file"
+
+#+ (or #:system:unixp (eq (system) 'vaxvms))
+(equal-pathname (control-file-pathname 'aida)
+		#u"/usr/ilog/lelisp/.aida") 
+                                #+ (or #:system:unixp (eq (system) 'vaxvms))
+                                t
+
+#+ #:system:dosp
+(equal-pathname (control-file-pathname 'aida)
+		#u"/usr/ilog/lelisp/aida.ini")
+                                #+ #:system:dosp
+                                t
+
+(file-namestring
+ (control-file-pathname 'the-product))
+                                "the-init-file"
+
+(control-file-pathname)         (errwna control-file-pathname 0)
+(control-file-pathname 'a 'b 'c)(errwna control-file-pathname 3)
+(control-file-pathname 'foo 2)  (errpathnotpath control-file-pathname 2)
+
+(progn
+  (synonymq user-homedir-pathname save-user-homedir-pathname)
+  (remob 'save-user-homedir-pathname)
+  ())  ()
+
+        (test-serie "[directory]" ())
+(progn
+ (setq a (current-directory))
+ (setq b (temporary-file-pathname "test4"))
+ (setq c (directory-namestring b))
+ ())                                     ()
+
+(progn
+ (current-directory c)
+ (with ((outchan (openo b)))
+	(print "coucou")
+	(close (outchan)))
+ ())                                     ()            
+(probefile b)                            t
+(deletefile b)                           t
+
+(progn
+ (current-directory a)
+ (equal (current-directory) a))          t
+
+(directoryp a)                           #.(namestring(pathname(current-directory)))
+#+ (or #:system:unixp #:system:dosp)
+(sref (namestring (directoryp a)) (1- (slen (namestring (directoryp a)))))
+#+ (or #:system:unixp #:system:dosp)
+#.(cond (#:system:unixp                  #//)
+	(#:system:dosp                   #/\))
+(setq d (substring (namestring (directoryp a))
+		   0
+		   (sub1 (slen (namestring (directoryp a)))))
+      e ())                              ()
+#+ (or #:system:unixp #:system:dosp)
+(sref (namestring (directoryp d)) (1- (slen (namestring (directoryp d)))))
+#.(cond (#:system:unixp                  #//)
+	( #:system:dosp                  #/\))
+(directoryp b)                           ()
+(not (directoryp c))                     ()
+(directoryp #u"/whoualou/")              ()
+
+#+ (or #:system:unixp #:system:dosp)
+(with ((current-directory "/"))
+      (directoryp "tmp"))                
+#. (cond (#:system:unixp                 "./tmp/")
+	( #:system:dosp           ".\tmp\"))
+
+#+ (or #:system:unixp #:system:dosp)
+(with ((current-directory "/"))
+      (directoryp #p"tmp"))            
+#. (cond (#:system:unixp                 #p"./tmp/")
+	 ( #:system:dosp          #p".\tmp\"))
+
+
+	(test-serie "[Expand-pathname tests]" ())
+
+(progn
+(setq a (temporary-file-pathname "test2"))
+(setq b (temporary-file-pathname "test3"))
+(with ((outchan (openo a)))
+(print "coucou")
+(close (outchan)))
+())                                     ()
+(probefile a)                            t
+
+(let ((pwd (current-directory)))
+(current-directory (catenate (host-namestring      a)
+			     (device-namestring    a)
+			     (directory-namestring a)))
+(protect (if (>= (length (expand-pathname "test*")) 1) t ())
+(current-directory pwd)))
+t
+
+(let ((pwd (current-directory)))
+(current-directory (catenate (host-namestring      a)
+(device-namestring    a)
+(directory-namestring a)))
+(protect (if (>= (length (expand-pathname "../*/test*")) 1) t ())
+(current-directory pwd)))
+t
+
+(let ((p (copy-pathname a)))
+(set-pathname-name p ())
+(setq p (merge-pathnames p #p"*"))
+(if (>= (length (expand-pathname (namestring p))) 1) t ()))
+t
+
+(setq l () mapl ())
+()
+(de #:verif:map-expand-pathname (l1 l2)
+(tag kop
+(mapc (lambda(p)
+(if (member p l2)
+(setq l2 (delete p l2))
+(exit kop)))
+l1)
+t))
+#:verif:map-expand-pathname
+
+(let ((pwd (current-directory)))
+(current-directory (catenate (host-namestring      a)
+(device-namestring    a)
+(directory-namestring a)))
+(protect 0
+(setq l (expand-pathname "test*"))
+(map-expand-pathname #'(lambda(p) (newl mapl p)) "test*")
+(current-directory pwd)))
+0
+
+(#:verif:map-expand-pathname l mapl)
+t
+
+(setq l () mapl ())
+()
+(let ((pwd (current-directory)))
+(current-directory (catenate (host-namestring      a)
+(device-namestring    a)
+(directory-namestring a)))
+(protect 0
+(setq l (mapcar 'directoryp (expand-pathname "../*")))
+(map-expand-pathname #'(lambda(p) (newl mapl (directoryp p)))
+"../*")
+(current-directory pwd)))
+0
+;; ce test n'est pas operationel
+;;(#:verif:map-expand-pathname l mapl)
+;;t
+
+#+ (or #:system:unixp #:system:dosp)
+(expand-pathname #u"./")
+#+ (or #:system:unixp #:system:dosp)
+#. (cond (#:system:unixp                 '(#p"./"))
+(#:system:dosp                  '(#p".\")))
+
+(not (consp (expand-pathname "/tm*/")))   ()           
+
+(test-serie "[Files functions tests]" ())
+
+(when (probefile b)
+(deletefile b)
+())                                    ()
+(setq pwd (current-directory) foo 0)   0
+(progn (current-directory (catenate (host-namestring      a)
+(device-namestring    a)
+(directory-namestring a))) 0) 0
+(probefile b)                            ()
+(renamefile a b)                         t
+(probefile a)                            ()
+(probefile b)                            t
+(copyfile b a)                           t
+(probefile a)                            t
+(let ((#:system:print-msgs 0))
+	(copyfile a a))                  (ERRIOS copyfile 5)
+(let (s)
+  (with ((inchan (openi a)))
+         (setq s (read))
+	(close (inchan)))
+ s)                                      coucou
+(deletefile a)                           t
+(deletefile b)                           t
+#+ (or #:system:unixp #:system:dosp)
+(expand-pathname "*hj.klz")              ()
+(progn (current-directory pwd) 0)        0
+
+(setq *default-pathname-defaults* #p"")	#:pathname:#[ () () () () () () ]
+
+        (test-serie "[End of test]")
+()                                       ()

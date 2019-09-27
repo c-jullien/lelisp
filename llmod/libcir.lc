@@ -1,0 +1,19 @@
+defmodule
+libcir
+files (
+libcir
+)
+export (
+cirprint
+cirprinflush
+cirprin
+cirnequal
+cirequal
+circopy
+#:libcir:double
+#:libcir:replace
+)
+import
+()
+include
+()

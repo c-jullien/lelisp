@@ -1,0 +1,29 @@
+
+#!/bin/sh
+set -x
+
+# Recette of defextern to shared libraries on Linux sparc
+
+cd ..
+rm -f lelispbin
+make lelispbin
+
+# pour tester avec C
+ ./lelispbin -stack 6 -code 1700 -heap 300 -number 0 -vector 4 -string 8  -symbol 7 -cons 24 -float 0 ../llib/startup.ll << Eoi
+(load-stm ()()()'(callext) t)
+(loadfile "../lltest/testextern.ll" t)
+(end)
+Eoi
+
+# pour tester avec FORTRAN
+if [ -f /bin/f77 ]
+then
+
+ ./lelispbin -stack 6 -code 1700 -heap 300 -number 0 -vector 4 -string 8  -symbol 7 -cons 24 -float 0 ../llib/startup.ll << Eoi
+(load-stm ()()()'(callext) t)
+(loadfile "../lltest/testfortran.ll" t)
+(end)
+Eoi
+
+fi
+

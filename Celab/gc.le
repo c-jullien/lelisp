@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: gc
+;;;             translation done: "Wed June 30 93 17:33:45 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: gc.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'gc)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZgc" "Wed June 30 93 17:33:45 "
+
+'((gc . nsubr) (gc-before-alarm . subr0) (gcalarm . subr0) (gcinfo . nsubr) (tcons . subr2) (tconsmk . subr1) (tconscl . subr1) (tconsp . subr1) (freecons . subr1) (freetree . subr1) (type-of . subr1) (typep . subr2) (subtypep . subr2) (send . nsubr) (send-error . subr2) (csend . nsubr) (send-super . nsubr) (send2 . nsubr) (structaccess . nsubr) (mapallvector . subr1) (mapallstring . subr1))
+
+#[gc #:gell-resetfn:function-name #:gell-resetfn:function-n gc-before-alarm #:gell-resetfn:function-0 gcalarm gcinfo tcons #:gell-resetfn:function-2 tconsmk #:gell-resetfn:function-1 tconscl tconsp freecons freetree type-of typep subtypep send send-error csend send-super send2 structaccess mapallvector mapallstring]
+)
+
+
+(defccheck '())

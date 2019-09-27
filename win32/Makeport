@@ -1,0 +1,82 @@
+#  Le Makefile du syste`me Le_Lisp [386]
+###################################################################
+#  Ce makefile exploite  ../386dx/makefile pour
+#  obtenir les fichiers d'assembleur: $(s)
+###################################################################
+# Il y a des appels recursifs a` ce makfile, et on utilise l'option 
+#  -e afin de garantir que le meme LeLisp sera utiliser pour les 
+# expansions (cf. BOOTLISP), ainsi que pour transmettre le HOSTIDS
+###################################################################
+
+# La machine a base de 386dx: par defaut: NT  [cf ../386dx/makefile]
+# C'est aussi: lelisp/$(SYSTEM)
+
+SYSTEM		= win32
+CC		= cl
+LD		= link
+DEBUG		= # -Zi
+
+# Le porteur choisi la technique de plombage de son choix, sinon
+# c'est le lltool/plombe.c passant qui est pris
+
+PLOMBE		= ..\lltool
+C_FLAGS		= -nologo -Gs -Di386=1 -D_X86_=1 -c -I..\common -DLLDOS -DLLPOSIX
+
+LDTFLAGS	= -subsystem:console -entry:mainCRTStartup
+LDTLIBS		= kernel32.lib
+
+all:	o\plombe.obj nlist.exe
+
+o\plombe.obj: $(PLOMBE)\plombe.c
+	@$(CC) -nologo -c -O2 $(PLOMBE)\plombe.c -Foo\plombe.obj
+
+nlist.exe: ..\386dx\nlist.c
+	@$(CC) $(C_FLAGS) ..\386dx\nlist.c
+	@$(LD) $(LDTFLAGS) -out:$*.exe $*.obj $(LDTLIBS)
+	@del nlist.obj
+
+# Use generated .asm files
+bootstrap:
+	@newdir
+	@$(MAKE) -f Makeport distclean
+	@-mkdir o 2> nul
+	@del nlist.exe o31fpu\*.obj o64fpu\*.obj 2> :nul
+	@$(MAKE) -f Makellm3 DEBUG=$(DEBUG) llm31 llm64
+	@$(MAKE) -nologo -f Makefile cleano
+	@$(MAKE) -nologo -f Makefile cleantools
+	@$(MAKE) -nologo -f Makeport DEBUG=$(DEBUG) o\plombe.obj
+	@$(MAKE) -nologo -f Makeport DEBUG=$(DEBUG) nlist.exe
+	@cd ..\bignum
+	@$(MAKE) -nologo -f makefile.$(SYSTEM) cleano
+	@$(MAKE) -nologo -f makefile.$(SYSTEM)
+	@cd ..\$(SYSTEM)
+	@$(MAKE) -nologo -f Makefile DEBUG=$(DEBUG) tools
+	@$(MAKE) -nologo -f Makefile DEBUG=$(DEBUG) allbin cmplc++
+	@$(MAKE) -nologo -f Makefile DEBUG=$(DEBUG)
+	@cd ..\virbitmap\windows\wlook
+	@$(MAKE) -nologo -f Makefile.$(SYSTEM) DEBUG=$(DEBUG)
+	@cd ..\..\..\$(SYSTEM)
+
+world:
+	@newdir
+	@del nlist.exe
+	@$(MAKE) -f Makellm3 DEBUG=$(DEBUG) expand
+	@$(MAKE) -nologo -f Makefile cleano
+	@$(MAKE) -nologo -f Makefile cleantools
+	@$(MAKE) -nologo -f Makeport DEBUG=$(DEBUG) o\plombe.obj
+	@$(MAKE) -nologo -f Makeport DEBUG=$(DEBUG) nlist.exe
+	@cd ..\bignum
+	@$(MAKE) -nologo -f makefile.$(SYSTEM) cleano
+	@$(MAKE) -nologo -f makefile.$(SYSTEM)
+	@cd ..\$(SYSTEM)
+	@$(MAKE) -nologo -f Makefile DEBUG=$(DEBUG) tools
+	@$(MAKE) -nologo -f Makefile DEBUG=$(DEBUG) allbin cmplc++
+	@$(MAKE) -nologo -f Makefile DEBUG=$(DEBUG)
+	@cd ..\virbitmap\windows\wlook
+	@$(MAKE) -nologo -f Makefile.$(SYSTEM) DEBUG=$(DEBUG)
+	@cd ..\..\..\$(SYSTEM)
+
+distclean:
+	@del nlist.exe lelisp*.exe *.obj *.lib *.dll *.xml *.ilk *.exp /s/q
+	@del recette\log\*.20* recette\log\*.err
+

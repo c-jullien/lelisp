@@ -1,0 +1,320 @@
+\documentstyle[11pt,fr]{iarticle}
+
+\begin{document}
+\frenchspacing
+\setlength{\parindent}{0in}
+\setlength{\parskip}{3ex}
+\raggedbottom
+
+\Title {Diffusion Le-Lisp}
+\SuperTitle {Le-Lisp de l'INRIA version 15.26}
+
+\Author {de'cembre 1993}
+\bigskip
+
+\Section {Version "15.26"}
+Voici les corrections et les extensions de la nouvelle diffusion de
+\LeLisp\ version 15.26 date'e du 1 de'cembre 1993.
+
+Une fois par an, l'INRIA et ILOG livrent aux porteurs une nouvelle
+version de Le-Lisp comprenant des ame'liorations, extensions et
+corrections.  Seule cette diffusion annuelle contient des changements
+a` la souche de Le-Lisp e'crite en LLM3, et au manuel de l'utilisateur.
+
+\Section {Contenu de cette diffusion}
+
+La bande de diffusion contient les 4 fichiers suivant au format {\tt tar}
+compresse' :
+\begin{itemize}
+\item \|ll_port.tar.Z| : l'ensemble des fichiers communs a` tous
+les portages, uniquement destine's aux porteurs,
+\item \|ll_user.tar.Z| : l'ensemble des fichiers communs a` tous
+les portages, distribue's aux utilisateurs,
+\item \|sun_port.tar.Z| : l'ensemble des fichiers spe'cifiques au
+portage {\tt SUN 3}, uniquement destine's aux porteurs,
+\item \|sun_user.tar.Z| : l'ensemble des fichiers spe'cifiques au
+portage {\tt SUN 3}, distribue's aux utilisateurs.
+\end{itemize}
+
+La bande de diffusion se de'compose selon les re'pertoires suivants:
+
+\begin {itemize}
+\item	68k : l'expanseur commun a` tous les 680x0;
+\item	benchmarks : pour re'aliser des mesures de performances des syste`mes Le-Lisp;
+\item	benchmarks/Results : les re'sultats de ces mesures de performances;
+\item   bignum : le module BIGNUM de DEC/INRIA;
+\item   bignum/l : l'interface des bignum avec Le-Lisp;
+\item	common : les fichiers C communs a` tous les portages utilisant C;
+\item	info : ce fichier;
+\item   ll2lm : l'analyseur de modules;
+\item	llib : la librairie Le-Lisp;
+\item	llm3 : le noyau de l'interpre`te Le-Lisp;
+\item	llmod : la description modulaire de tous les fichiers des
+librairies Le-Lisp;
+\item	llobj : le re'sultat de la compilation modulaire de tous les
+fichiers des librairies Le-Lisp;
+\item	lltest : les jeux de tests pour tester, verifier, recetter Le-Lisp;
+\item	lltool : quelques outils utiles aux porteurs;
+\item	llub : une librairie supple'mentaire, remplie par les
+utilisateurs, non maintenue;
+\item   manl : un manuel UNIX des principales commandes pour Le-Lisp;
+\item	manuel : le manuel de re'fe'rence en francais, au format {\tt
+tcomp};
+\item   modana : les fichiers engendre's par l'analyseur de modules;
+\item	sun : le syste`me Sun3;
+\item	sun/C : les fichiers C spe'cifiques a` Sun3;
+\item	sun/conf : les configurateurs d'images Le-Lisp spe'cifiques a` Sun3;
+\item	sun/recette : les commandes permettant de lancer les recettes
+sur Sun3;
+\item	virbitmap : les incarnations de BV et leurs chargeurs;
+\item	virbitmap/bvtty : l'incarnation du BV sur un {\tt tty}
+alphanume'rique simple;
+\item	virbitmap/X11 : l'incarnation du BV sur X11;
+\item	virtty : les descriptions de {\tt tty} de'ja` rencontre's par
+le-Lisp. 
+\end {itemize}
+
+Le contenu exact de la bande de diffusion est explicite'e dans les
+fichiers {\tt LLUSERFILES}, {\tt LLPORTFILES} et {\tt LLPORTMJFILES}
+ainsi que dans les fichiers {\tt UserFILES} et {\tt PortFILES} dans
+les re'pertoires des machines.
+
+\Section{Features a` prendre en compte pour la 15.26}
+Nous allons e'nume'rer les points inte'gre's en 15.26 :
+
+\SSection{Portages natifs: suppression de GELL}
+Il est ge'ne'ralement admis qu'un portage natif est plus performant
+dans tous les sens du terme qu'un portage GELL. Il est donc de'cide'
+d'abandonner les portages GELL.
+
+Les proble`mes souleve's par cette de'cision sont\ : 
+
+Que faire des clients ne connaissant aujourd'hui que les portages
+GELL\ ? \\
+Il existe en effet des clients n'ayant jamais utilise' de portage
+natif. Ces clients ont bien souvent souffert de l'installation GELL,
+et seraient me'contents d'avoir a` se refabriquer une chai^ne de
+production, me^me si celle-ci est plus simple. En ge'ne'ral ces clients
+utilisent le GRT pour fabriquer leurs applis. Il revient a` Ilog de
+fournir l'effort ne'cessaire pour que l'utilisation du GRT sous
+LL15.25.4 en natif, puis en 15.26 ne soit pas incompatible avec l'utilisation
+actuelle qu'en font les clients sous GELL. Cette ta^che sera
+e'galement facilite'e par la re'daction d'une documentation de passage
+de GELL vers NATIF sur HP9700.
+
+\SSection{Cruncher et Ge'ne'rateur de RunTime}
+L'ide'e consiste a` harmoniser la chai^ne de production de code, pour
+l'ensemble des produits de la ligne LL. Tous les produits devront
+utiliser le cruncher de LL ({/tt ll2lm}) et le GRT en conse'quence.
+
+Les proble`mes souleve's par cette de'cision sont: \\
+
+De quoi est compose' le GRT et que doit passer dans LL\ ? \\
+On conside'rera d'une part le {\it cruncher} qui fabrique des modules
+({\tt .lm}) et un {\it Makefile} permettant de {\it complicer} ces
+modules, d'autre part le ge'ne'rateur de runtime qui permet d'avoir
+une chaine de production engendrant une application (un core LL) de
+fac,on automatique. Une troisie`me partie due a` GELL (gestion des .o,
+fabrication des binaires, etc) devient obsole`te avec la disparition de
+GELL. Seule la 1ere partie : {\bf ll2lm}, passe dans \LeLisp\ .
+La partie, {\it ge'ne'rateur de runtime} reste un module \Aida\ .
+
+\SSection{plombage de la 15.26}
+Un nouveau type de plombeur, de'veloppe' en interne a` Ilog, est
+installe' dans la 15.26 distribue'e par Ilog. L'ancien plombeur,
+attache' au hostid des 
+machines, et ne permettant que des licences type machine, est
+remplace' par un plombeur de type serveur de jetons, sur un re'seau de
+machines. La possibilite' de plomber sur le hostid des machines avec le
+nouveau plombeur est e'galement possible afin de fonctionner sur les machines
+ne disposant pas de re'seau (msdos, standalone,...). \\
+Au niveau du code, l'interface d'utilisation a e'te' modifie'e puisque
+la fonction C {\tt tryaccess(int)} a e'te' remplace'e par {\tt
+lmaccess(char *)}, et la fonction {\tt lmalive(char *)} a e'te'
+ajoute'e.
+Le code \LeLisp\ change en conse'quence dans {\tt llib/llpboot.ll}: \\
+\BeginLL
+(defextern lmaccess(string fix))
+(defextern lmalive(string))
+\EndLL
+
+\Section{liste des principales corrections}
+
+\begin {itemize}
+
+\item Interventions sur LLIB :\\
+\begin{enumerate}
+\item
+Reprise de tous les commentaires en anglais.
+
+\item
+Encore des bugs sur le module PATHNAME (cf rats) ainsi que qq
+optimisations a` faire.
+
+\item 
+Optimisation du module FORMAT.
+
+\item
+Quelques rats concernant LLIB (voir section RATS).
+\end{enumerate}
+
+\item Intervention sur les codes C et assembleur :\\
+
+\begin {itemize}
+
+\item
+Utilisation de {\bf ANSI C}  et de {\bf POSIX}.
+Cela devient de + en + indispensable avec des syste`mes comme Solaris
+et SVR4 plus ge'ne'ralement. Mais aussi parce que de + en + de clients
+utilisent ANSI C (intervention dans nos .h au minimun, recompilation
+possible dans leur environnement).
+
+\item
+Ame'lioration de la gestion des de'tections d'anomalies dans les clefs
+d'acce`s du plombage. En particulier, le {\it warning} affiche' en pre'vention
+d'expiration de date n'apparait plus que pour le produit teste' et lui
+seul. De plus le message affiche' est plus explicite (nume'ro de clef
+et nom de produit sont indique's).
+
+\item
+Affichage du {\it hostid} et de sa {\it checksum}.
+
+\item 
+Introduction de la gestion des re'pertoires en \LeLisp\ , au travers
+de fonctionnalite'es telles que {\tt create-directory}, {\tt
+remove-directory}.
+
+\item 
+Introduction d'un processus fanto^me a` la {\tt lelispgo} permettant
+de re'aliser des appels syste`mes sans exploser en encombrement
+me'moire, sur les machines ne disposant pas de VFORK. Ce processus
+est lance' de`s le de'marrage de \LeLisp\ , et c'est lui qui est
+utiliser pour {\it forker} lors d'appels syste`me tels que
+COMLINE. Cette possibilite'e de'pend du flag de compilation {\tt
+LLGHOSTPROC} et n'est pas ope'rationnelle sur tous les portages.
+
+\end {itemize}
+
+\item Interventions sur le code LLM3:
+
+\begin{itemize}
+
+\item Optimisations diverses d'algorithmes LLM3.
+
+\item Ame'lioration de la gestion des entiers en vue d'un passage
+ulte'rieur e'ventuel en entiers d'un format supe'rieur a` 16bits.
+Pour cela, ajoput des fonctions (MOST-POSITIVE-FIXNUM),
+(MOST-NEGATIVE-FIXNUM) et (MINUS-0-FIXNUM).
+
+\item Correction du SELECTQ en interpre'te' en cas de listes EQ.
+
+\item Renomage de pas mal de symboles internes LLM3 afin d'e'viter
+toute collision de nommage avec des symboles externes (C, ...).
+
+\item Harmonisation des messages d'erreur sur les nombres d'arguments
+entre fonctions compile'es et fonctions interpre'te'es.
+
+\item LHOBLIST, EXPLODECH, IMPLODECH passent de startup.ll a`
+fntstd.llm3. 
+
+\item Ajout d'un {\it finalizer} permettant de lancer une fonction a`
+chaque fois que le GC re'cupe`re un vecteur LL.
+
+\item Modification de l'affichage des zones par  (GC T) afin d'e^tre
+plus pre'cis. A noter qu'on reste compatible avec les codes exploitant
+ce re'sultat.
+
+\item Introduction de la macro LLM3 HOVNI qui lance un bout de code C
+permettant d'afficher l'e'tat de la me'moire.
+
+\item Introduction de l'itsoft AT-END pour ``faire des choses'' avant
+de sortir avec la fonction (END).
+
+\item Ajout des fonctions (CREATE-DIRECTORY {\tt path}) et
+(DELETE-DIRECTORY {\tt path}).
+
+\item Ajout de la fonction (SHOW-STACK) qui montre le nombre d'octets
+utilise's sur la pile LL pour l'exe'cution d'une forme donne'e.
+
+\item Ajout de la variable {\tt \#:system:line-length-max} de'signant
+la longueur maximale d'un buffer d'impression. Cette valeur est
+syste`me de'pendante. On utilisera principalement {\tt
+\#:system:line-length-max} avec {\tt rmargin}.
+
+\end{itemize}
+\item Corrections propres a` COMPLICE:
+\begin{itemize}
+\item [10/03/92]
+	Corrections pour J. Chambon: Pbs dans interde'pendance de modules.
+	 Ordre de chargement des fichiers non respecte'.
+	 La fonction :make-single-module1 fait des effets de bord sur
+	  le cache :list-of-loaded-file au troisie`me appel (i.e. la
+	  copie n'e'tait faite qu'une seule fois).
+         cpenv \&co ne sont pas respecte's (revoir list-of-loaded-file)...
+
+\item [23/03/92]
+	On avait oublie' le warning 5 pour l'appel des SUBR0s....
+
+\item [21/04/92]
+	Correction pour (memq x '()).
+	Pas de registres qui contiennent ce ?? bizarre.
+
+\item [05/07/93]
+	Correction pour (selectq E ... () ...)
+
+\item [06/07/93]
+	Enle`ve les error et warnings inutiles.
+	(loadmodule ? NIL) pour les macros.
+	On fait une copie des instructions LAP dans le cas du precompile.
+	Double e'valuation dans cpmac.ll pour le catcherror.
+	macro-expand-error vire' de cpmac.ll.
+	
+\item [02/12/93]
+	Correction pour la fausse tail-rec des nsubrs via une fermeture:
+          (de f1 (a . b) (mon-mapc (lambda (x) (f1 x)) a))
+	On rajoute une globale :funarg? qui spe'cifie si on compile une
+        fermeture..
+
+\item {\tt rmargin}
+	Par de'faut, {\tt rmargin} prend la valeur maximale autorise'e sur
+le syste`me ho^te. 
+\item Nouvelles options de la commande {\tt complice}:
+\begin{itemize}
+\item option {\bf -h}
+	Pour brancher la me'moire cache des fichiers de description
+des modules: si cette option est utilise'e, chaque fichier de
+description modulaire ne sera charge' qu'une seule fois par sessions
+et stocke' en 
+me'moire. Les autres consultations se feront sur les donne'es
+stocke'es.
+\item option {\bf -callext}
+	Dore'navant, {\tt complice} n'exe'cute plus les {\tt
+callextern} par de'faut. Cela permet de compiler les modules contenant
+des {\tt defextern} sans se soucier de la pre'sence du code C
+correspondant. Cette de'cision peut e^tre de'connecte'e gra^ce a`
+l'option {\tt -callext}. Si cette option est utilise'e, {\tt complice}
+exe'cutera les {\tt defextern} et autres {\tt getglobal} normalement.
+
+\end{itemize}
+\end{itemize}
+
+\item Intervention sur la technologie de portage:
+
+\begin {itemize}
+
+\item 
+Introduction de nouvelles recettes, en particulier pour tester le
+{\it Makefile} et ses entre'es ge'ne'riques.
+
+\end {itemize}
+
+\end {itemize}
+
+\newpage
+\tableofcontents
+
+\end{document}
+
+
+
+

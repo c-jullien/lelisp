@@ -1,0 +1,27 @@
+; The Le-Lisp Benchmarks (3) : stak
+
+defmodule     stak
+files        (stak)
+export       (check-stak meter-stak test-stak)
+import       (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-stak subr0 ())
+(meter-stak subr0 ())
+(test-stak subr1 ())
+)
+cpfunctions (
+(stak subr3)
+(stak-aux subr0)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+((putprop 'stak-x 't '#:complice:globalvar)
+)((putprop 'stak-y 't '#:complice:globalvar)
+)((putprop 'stak-z 't '#:complice:globalvar)
+))

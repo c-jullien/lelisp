@@ -1,0 +1,82 @@
+defmodule
+#:r:q
+files (
+bnq
+)
+export (
+numerator
+denominator
+#:fix:1/
+#:fix:/
+#:r:q:quomod
+#:r:q:rationalp
+#:r:q:n:1/
+#:r:q:z:1/
+#:r:q:/:integerp
+#:r:q:/:1/
+#:r:q:/:|0-|
+#:r:q:/:abs
+#:r:q:/:floor
+#:r:q:/:truncate
+#:r:q:/:float
+#:r:q:/:<?>
+#:r:q:/:|+|
+#:r:q:/:*
+#:r:q:/:sqrt
+#:r:q:/:prin
+)
+import (
+bngen
+bnz
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(numerator subr1 ())
+(denominator subr1 ())
+(#:fix:1/ subr1 ())
+(#:fix:/ subr2 ())
+(#:r:q:quomod subr2 ())
+(#:r:q:rationalp subr1 ())
+(#:r:q:n:1/ subr1 ())
+(#:r:q:z:1/ subr1 ())
+(#:r:q:/:integerp subr1 ())
+(#:r:q:/:1/ subr1 ())
+(#:r:q:/:|0-| subr1 ())
+(#:r:q:/:abs subr1 ())
+(#:r:q:/:floor subr1 ())
+(#:r:q:/:truncate subr1 ())
+(#:r:q:/:float subr1 ())
+(#:r:q:/:<?> subr2 ())
+(#:r:q:/:|+| subr2 ())
+(#:r:q:/:* subr2 ())
+(#:r:q:/:sqrt subr1 ())
+(#:r:q:/:prin subr1 () (q))
+)
+cpfunctions (
+(qx subr2)
+(#:r:q:/x subr2)
+(#:r:q:/:make subr0)
+(#:r:q:/:q+z subr2)
+(#:r:q:/:q*z subr2)
+(ecrit-fc nsubr)
+(division- subr2)
+(ecrit-10 nsubr)
+)
+cpimport (
+(bnz
+(pgcd . subr2)
+)(bngen
+(#:r:error . subr3)
+(#:r:quomod . subr2)
+(precision . nsubr)
+(round . subr2)
+))
+cpenv (
+bngen
+bnkern
+bnn
+bnz
+)

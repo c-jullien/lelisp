@@ -1,0 +1,52 @@
+; ;;; This module descriptor was updated by Analyser
+
+defmodule bar
+
+files (
+|bar.ll|
+)
+
+import (
+
+; ;;; Imports which seem necessary
+zoo
+)
+
+export (
+
+; ;;; Functions unused unless exported
+defbar1
+defbar2
+defbar5
+m-bar3-f-bar20
+m-bar4-f-bar20
+f-bar1
+#:bar:a-bar1:f-bar1
+f-bar11
+#:zoo:a-zoo1:f-bar12
+#:zoo:a-zoo2:f-bar13
+#:bar:a-bar1:f-bar2
+#:bar:a-bar2:f-bar2
+f-bar3
+f-bar41
+f-bar42
+f-bar43
+f-bar5
+
+; ;;; Exports required by other modules
+defbar3
+defbar4
+f-bar2
+f-bar20
+
+; ;;; Not exported because only internally used
+; f-bar21
+)
+
+cpenv (
+((defabbrev a-bar1 #:bar:a-bar1)
+(defabbrev a-bar3 #:bar:a-bar3)
+)((defmacro defbar1 (x) (list 'defun (concat 'm-bar1- x) () (list 'quote x)))
+)((defmacro defbar2 (x) (list 'defgoo1 (concat 'm-bar-2 x)))
+)((defmacro defbar3 (x) (list 'defun (concat 'm-bar3- x) () (list 'quote x)))
+))

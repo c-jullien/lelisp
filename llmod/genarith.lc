@@ -1,0 +1,22 @@
+defmodule
+genarith
+files (
+genarith
+)
+export (
+#:genarith:|+|
+#:genarith:|-|
+#:genarith:*
+#:genarith:/
+#:genarith:quomod
+floor
+#:genarith:|0-|
+#:genarith:1/
+ceiling
+round
+floor
+)
+import
+()
+include
+()

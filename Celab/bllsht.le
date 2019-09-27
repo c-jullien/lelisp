@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: bllsht
+;;;             translation done: "Wed June 30 93 17:35:06 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: bllsht.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'bllsht)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZbllsht" "Wed June 30 93 17:35:06 "
+
+'((loc . subr1) (locint . subr1) (vag . subr1) (addadr . subr2) (incradr . subr2) (subadr . subr2) (gtadr . subr2) (ccode . nsubr) (ecode . subr0) (memory . nsubr) (bltmemory . subr3) (precompile . fsubr) (call . nsubr) (calln . subr2))
+
+#[loc #:gell-resetfn:function-name #:gell-resetfn:function-1 locint vag addadr #:gell-resetfn:function-2 incradr subadr gtadr ccode #:gell-resetfn:function-n ecode #:gell-resetfn:function-0 memory bltmemory #:gell-resetfn:function-3 precompile #:gell-resetfn:function-f call calln]
+)
+
+
+(defccheck '())

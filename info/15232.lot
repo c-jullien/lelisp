@@ -1,0 +1,69 @@
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {table}{{\large \tt (display-store-selection}{\normalsize \tt \ display buffer}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} deux arguments\/}{\small \rm ]}}{2-12}
+\contentsline {table}{{\large \tt (display-get-selection}{\normalsize \tt \ display}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un argument\/}{\small \rm ]}}{2-13}
+\contentsline {table}{{\large \tt (display-depth}{\normalsize \tt \ display}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un argument\/}{\small \rm ]}}{2-13}
+\contentsline {table}{{\large \tt (bitmap-sync}{\normalsize \tt \ display}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} argument optionnel\/}{\small \rm ]}}{2-13}
+\contentsline {table}{{\large \tt (display-synchronize}{\normalsize \tt \ display flag}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un ou deux arguments\/}{\small \rm ]}}{2-13}
+\contentsline {table}{{\large \tt (standard-light-gray-pattern}{\normalsize \tt \ display}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} argument optionnel\/}{\small \rm ]}}{2-13}
+\contentsline {table}{{\large \tt (standard-medium-gray-pattern}{\normalsize \tt \ display}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} argument optionnel\/}{\small \rm ]}}{2-14}
+\contentsline {table}{{\large \tt (standard-dark-gray-pattern}{\normalsize \tt \ display}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} argument optionnel\/}{\small \rm ]}}{2-14}
+\contentsline {table}{{\large \tt (draw-arc}{\normalsize \tt \ x y w h angle1 angle2}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} six arguments\/}{\small \rm ]}}{2-14}
+\contentsline {table}{{\large \tt (fill-arc}{\normalsize \tt \ x y w h angle1 angle2}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} six arguments\/}{\small \rm ]}}{2-14}
+\contentsline {table}{{\large \tt (draw-segments}{\normalsize \tt \ n vx1 vy1 vbx2 vy2}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} cinq arguments\/}{\small \rm ]}}{2-14}
+\contentsline {table}{{\large \tt (make-named-cursor}{\normalsize \tt \ name}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un argument\/}{\small \rm ]}}{2-15}
+\contentsline {table}{{\large \tt (cursor-name}{\normalsize \tt \ num}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un argument\/}{\small \rm ]}}{2-16}
+\contentsline {table}{{\large \tt (make-line-style}{\normalsize \tt \ width style}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un argument\/}{\small \rm ]}}{2-16}
+\contentsline {table}{{\large \tt (display-get-font-names}{\normalsize \tt \ display maxnames pattern}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} deux ou trois arguments\/}{\small \rm ]}}{2-16}
+\contentsline {table}{{\large \tt (display-get-font-info}{\normalsize \tt \ display font-name font-info}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} deux ou trois arguments\/}{\small \rm ]}}{2-16}
+\contentsline {table}{{\large \tt (move-window}{\normalsize \tt \ window x y}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} trois arguments\/}{\small \rm ]}}{2-17}
+\contentsline {table}{{\large \tt (resize-window}{\normalsize \tt \ window w h}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} trois arguments\/}{\small \rm ]}}{2-17}
+\contentsline {table}{{\large \tt (move-resize-window}{\normalsize \tt \ window x y w h}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} cinq arguments\/}{\small \rm ]}}{2-17}
+\contentsline {table}{{\large \tt (window-events-list}{\normalsize \tt \ window events}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un ou deux arguments\/}{\small \rm ]}}{2-17}
+\contentsline {table}{{\large \tt (window-title}{\normalsize \tt \ window title}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un ou deux arguments\/}{\small \rm ]}}{2-18}
+\contentsline {table}{{\large \tt (window-state}{\normalsize \tt \ window state}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un ou deux arguments\/}{\small \rm ]}}{2-18}
+\contentsline {table}{{\large \tt (window-background}{\normalsize \tt \ window color}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un ou deux arguments\/}{\small \rm ]}}{2-18}
+\contentsline {table}{{\large \tt (window-border}{\normalsize \tt \ window border}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un ou deux arguments\/}{\small \rm ]}}{2-18}
+\contentsline {table}{{\large \tt (window-clear-region}{\normalsize \tt \ window x y w h}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} cinq arguments\/}{\small \rm ]}}{2-18}
+\contentsline {table}{{\large \tt (subst-colors}{\normalsize \tt \ bytetmap l}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} deux arguments\/}{\small \rm ]}}{2-19}
+\contentsline {table}{{\large \tt (name-to-rgb}{\normalsize \tt \ name}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un argument\/}{\small \rm ]}}{2-19}
+\contentsline {table}{{\large \tt (get-rgb-values}{\normalsize \tt \ pixel}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} un argument\/}{\small \rm ]}}{2-19}
+\contentsline {table}{{\large \tt (allow-event}{\normalsize \tt \ display event}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} deux arguments\/}{\small \rm ]}}{2-19}
+\contentsline {table}{{\large \tt (disallow-event}{\normalsize \tt \ display event}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} deux arguments\/}{\small \rm ]}}{2-20}
+\contentsline {table}{{\large \tt (allowed-event-p}{\normalsize \tt \ display event}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} deux arguments\/}{\small \rm ]}}{2-20}
+\contentsline {table}{{\large \tt (inibitmap}{\normalsize \tt \ name}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} argument optionnel\/}{\small \rm ]}}{2-20}
+\contentsline {table}{{\large \tt (current-clip}{\normalsize \tt \ x y w h}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} 0 ou quatre arguments\/}{\small \rm ]}}{2-20}
+\addvspace {10pt}
+\contentsline {table}{{\large \tt (remove-language}{\normalsize \tt \ lang}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 1 argument\/}{\small \rm ]}}{3-31}
+\contentsline {table}{{\large \tt (default-language}{\normalsize \tt \ lang}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 0 ou 1 argument\/}{\small \rm ]}}{3-31}
+\addvspace {10pt}
+\contentsline {table}{{\large \tt (namestring}{\normalsize \tt \ path}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 1 argument\/}{\small \rm ]}}{4-33}
+\contentsline {table}{{\large \tt (pathname}{\normalsize \tt \ x}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 1 argument\/}{\small \rm ]}}{4-33}
+\contentsline {table}{{\large \tt (equal-pathname}{\normalsize \tt \ path1 path2}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 2 arguments\/}{\small \rm ]}}{4-33}
+\contentsline {table}{{\large \tt (set-pathname-host}{\normalsize \tt \ path host}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 2 arguments\/}{\small \rm ]}}{4-34}
+\contentsline {table}{{\large \tt (set-pathname-device}{\normalsize \tt \ path device}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 2 arguments\/}{\small \rm ]}}{4-34}
+\contentsline {table}{{\large \tt (set-pathname-directory}{\normalsize \tt \ path dir}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 2 arguments\/}{\small \rm ]}}{4-34}
+\contentsline {table}{{\large \tt (set-pathname-name}{\normalsize \tt \ path name}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 2 arguments\/}{\small \rm ]}}{4-34}
+\contentsline {table}{{\large \tt (set-pathname-type}{\normalsize \tt \ path type}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 2 arguments\/}{\small \rm ]}}{4-35}
+\contentsline {table}{{\large \tt (set-pathname-version}{\normalsize \tt \ path version}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 2 arguments\/}{\small \rm ]}}{4-35}
+\contentsline {table}{{\large \tt (combine-pathnames}{\normalsize \tt \ path1 path2}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 2 arguments\/}{\small \rm ]}}{4-35}
+\addvspace {10pt}
+\addvspace {10pt}
+\contentsline {table}{{\large \tt (evloop-init}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR sans argument\/}{\small \rm ]}}{6-44}
+\contentsline {table}{{\large \tt (evloop-stop}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR sans argument\/}{\small \rm ]}}{6-44}
+\contentsline {table}{{\large \tt (evloop-restart}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR sans argument\/}{\small \rm ]}}{6-44}
+\contentsline {table}{{\large \tt (evloop-disallow-tty-input}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR sans argument\/}{\small \rm ]}}{6-44}
+\contentsline {table}{{\large \tt (evloop-allow-tty-input}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR sans argument\/}{\small \rm ]}}{6-44}
+\contentsline {table}{{\large \tt (evloop-add-input}{\normalsize \tt \ fd manage-function arg-to-use}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 3 arguments\/}{\small \rm ]}}{6-44}
+\contentsline {table}{{\large \tt (evloop-remove-input}{\normalsize \tt \ fd}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 1 argument\/}{\small \rm ]}}{6-44}
+\contentsline {table}{{\large \tt (evloop-change-manage-function}{\normalsize \tt \ fd new-manage-function new-arg-to-use}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 3 arguments\/}{\small \rm ]}}{6-45}
+\contentsline {table}{{\large \tt (evloop-select}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR sans arguments\/}{\small \rm ]}}{6-45}
+\contentsline {table}{{\large \tt (evloop-readp}{\normalsize \tt \ fd}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR sans arguments\/}{\small \rm ]}}{6-45}
+\contentsline {table}{{\large \tt (evloop-input-managedp}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR {\accent 18 a} 1 argument\/}{\small \rm ]}}{6-45}
+\contentsline {table}{{\large \tt (evloop-initialized-p}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/SUBR sans arguments\/}{\small \rm ]}}{6-45}
+\contentsline {table}{{\large \tt (evloop-wait}{\normalsize \tt }{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction sans arguments\/}{\small \rm ]}}{6-45}
+\contentsline {table}{{\large \tt (evloop-set-timeout}{\normalsize \tt \ secs millisecs}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} 2 arguments\/}{\small \rm ]}}{6-46}
+\contentsline {table}{{\large \tt (evloop-set-timeout-handler}{\normalsize \tt \ handler}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} 1 argument\/}{\small \rm ]}}{6-46}
+\contentsline {table}{{\large \tt (evloop-add-output}{\normalsize \tt \ fd manage-function arg-to-use}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} 3 arguments\/}{\small \rm ]}}{6-46}
+\contentsline {table}{{\large \tt (evloop-remove-output}{\normalsize \tt \ fd}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} 1 argument\/}{\small \rm ]}}{6-46}
+\contentsline {table}{{\large \tt (evloop-change-output-manage-function}{\normalsize \tt \ fd new-manage-function new-arg-to-use}{\large \tt )}\ \ \ {\small \rm [}{\small \em \/fonction {\accent 18 a} 3 arguments\/}{\small \rm ]}}{6-47}

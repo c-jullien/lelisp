@@ -1,0 +1,148 @@
+defmodule #:r:q
+   files  (bnz)
+   import (bnkern bngen bnn)
+   export (
+           ;; Ge'ne'rales de'finies par le package BigNum
+           bzcopy bznegate bzabs bzsign bzcompare bzadd bzsubtract bzmultiply
+           bzdiv bzdivide bzmod bnconvert
+           ;; Ge'ne'rique sur fix
+           #:fix:+ #:fix:- #:fix:* #:fix:quomod
+           ;; Ge'ne'rique sur #:r:q
+           :integerp :truncate
+           ;; Ge'ne'rique sur #:r:q:n
+           :n:abs :n:0- :n:float :n:<?> :n:+ :n:- :n:* :n:quomod
+           ;; Ge'ne'rique sur #:r:q:z
+           :z:abs :z:0- :z:float :z:<?> :z:+ :z:- :z:* :z:quomod
+           ;; Reste
+           pgcd gcd fib fact even? ** nfact nfib
+           :n:prin :z:prin :boot
+            entretampon #:sharp:|{|
+          )
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(bzcopy subr1 ())
+(bznegate subr1 ())
+(bzabs subr1 ())
+(bzsign subr1 ())
+(bzcompare subr2 ())
+(bzadd subr2 ())
+(bzsubtract subr2 ())
+(bzmultiply subr2 ())
+(bzdiv subr2 ())
+(bzdivide subr2 ())
+(bzmod subr2 ())
+(bnconvert subr3 ())
+(#:fix:|+| subr2 ())
+(#:fix:|-| subr2 ())
+(#:fix:* subr2 ())
+(#:fix:quomod subr2 ())
+(#:r:q:integerp subr1 ())
+(#:r:q:truncate subr1 ())
+(#:r:q:n:abs subr1 ())
+(#:r:q:n:|0-| subr1 ())
+(#:r:q:n:float subr1 ())
+(#:r:q:n:<?> subr2 ())
+(#:r:q:n:|+| subr2 ())
+(#:r:q:n:|-| subr2 ())
+(#:r:q:n:* subr2 ())
+(#:r:q:n:quomod subr2 ())
+(entretampon subr3 ())
+(#:r:q:z:abs subr1 ())
+(#:r:q:z:|0-| subr1 ())
+(#:r:q:z:float subr1 ())
+(#:r:q:z:<?> subr2 ())
+(#:r:q:z:|+| subr2 ())
+(#:r:q:z:|-| subr2 ())
+(#:r:q:z:* subr2 ())
+(#:r:q:z:quomod subr2 ())
+(pgcd subr2 ())
+(gcd nsubr ())
+(fib subr1 ())
+(nfib subr1 () () () (fn) (fn+1) (f2n) (f2n+1) (fl) (f2l) (sv))
+(fact subr1 ())
+(nfact subr1 ())
+(even? subr1 ())
+(** subr2 ())
+(#:r:q:n:prin subr1 ())
+(#:r:q:z:prin subr1 ())
+(#:r:q:boot subr0 ())
+(#:sharp:|{| subr0 ())
+)
+cpfunctions (
+(zcopy subr2)
+(0-n subr1)
+(z+z nsubr)
+(z-z nsubr)
+(z*z nsubr)
+(zfloat subr1)
+(z?z nsubr)
+(#:r:q:n:nquomodn subr2)
+(-cquoc subr2)
+(-cquo-c subr2)
+(#:fix:pgcd subr2)
+(fixpgcdfix subr2)
+(fixpgcd subr2)
+(#:r:q:z:pgcd subr2)
+(#:r:q:n:pgcd subr2)
+(bngcd nsubr)
+(fibexp subr1)
+(#:r:q:**n subr3)
+(nprin subr1)
+(makeobase**k subr1)
+(c2string nsubr)
+(makeibase**k subr1)
+(#:r:q:reversebuf nsubr)
+(#:r:q:stringtodigit nsubr)
+)
+cpimport (
+(bngen
+(#:r:quomod . subr2)
+(#:r:error . subr3)
+)(bnn
+(bniszero . subr3)
+(bnmultiply . nsubr)
+(bncompare . nsubr)
+(bndivide . nsubr)
+)(bnkern
+(bnnumdigits . subr3)
+(bngetsize . subr1)
+(bncreate . subr2)
+(bnassign . nsubr)
+(bngettype . subr1)
+(bnsettype . subr2)
+(bndoesdigitfitinword . subr2)
+(bngetdigit . subr2)
+(bnsetdigit . subr3)
+(bnadd . nsubr)
+(bnsubtract . nsubr)
+(bnisdigitzero . subr2)
+(bncomplement . subr3)
+(bnaddcarry . nsubr)
+(bnmultiplydigit . nsubr)
+(bncomparedigits . nsubr)
+(bnsettozero . subr3)
+(bnisdigitodd . subr2)
+(bndividedigit . nsubr)
+))
+cpenv (
+bnkern
+bngen
+bnn
+((putprop '#:r:q:ikmax 't '#:complice:globalvar)
+)((putprop '#:r:q:ikmaxp 't '#:complice:globalvar)
+)((putprop '#:r:q:ibase**k 't '#:complice:globalvar)
+)((putprop '#:r:q:rtt 't '#:complice:globalvar)
+)((putprop '#:r:q:okmax 't '#:complice:globalvar)
+)((putprop '#:r:q:okmaxp 't '#:complice:globalvar)
+)((putprop '#:r:q:obase**k 't '#:complice:globalvar)
+)((putprop '#:r:q:printampon 't '#:complice:globalvar)
+)((putprop '#:r:q:strgsize 't '#:complice:globalvar)
+)((putprop '#:r:q:strgtampon 't '#:complice:globalvar)
+)((putprop 'ntampon 't '#:complice:globalvar)
+)((putprop '#:r:q:fix 't '#:complice:globalvar)
+)((putprop '#:r:q:fdiv 't '#:complice:globalvar)
+)((putprop '#:r:q:longueur-sommes 't '#:complice:globalvar)
+)((putprop '#:r:q:fixtocn 't '#:complice:globalvar)
+)((putprop 'tablefib 't '#:complice:globalvar)
+))

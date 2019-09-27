@@ -1,0 +1,153 @@
+;;;
+;;; msgs.lt:  test file for the multi-language messages
+;;;
+;;; $Source: /usr/cvs/lelisp/lltest/msgs.lt,v $
+;;; $Date: 2016/05/22 05:38:15 $
+;;; $Revision: 1.2 $
+;;;
+;;; ------------------------------------------------------------
+;;; This file is part of Le-Lisp version 15, developped by INRIA
+;;;
+;;;
+;;;                   lelisp@ilog.fr
+;;;
+;;; (c) 1987-1993  Le-Lisp is a trademark of INRIA.
+;;; ------------------------------------------------------------
+
+
+        (test-serie "[Test of multi-language messages]" ())
+
+
+;;; assumes that nothing is loaded (only the file "messages.ll")
+
+
+(record-language)            (errwna record-language 1)
+(record-language 'polish)    polish
+(message-languages)          (polish english french)
+(record-language 20)         (error-wrong-language record-language 20)
+(record-language 'polish)    ()
+(message-languages)          (polish english french)
+(message-languages 10)       (errwna message-languages 0)
+(remove-language 'polish)    polish
+(message-languages)          (english french)
+(remove-language 'polish)  (error-not-recorded-language remove-language polish)
+(message-languages)          (english french)
+(remove-language 10)         (error-wrong-language remove-language 10)
+
+(progn (current-language 'french)1) 1
+(current-language)           french
+(current-language 'english)  english
+(current-language)           english
+(current-language 'foo 10)   (errwna current-language 0)
+(current-language 10)        (error-wrong-language current-language 10)
+(current-language 'zipfoo)   (error-not-recorded-language current-language zipfoo)
+
+(defmessage msg1
+    (french  "Fmsg1")
+    (english "Emsg1"))           msg1
+
+(current-language 'english)      english
+(get-message 'msg1)              "Emsg1"
+(get-message-p 'msg1)            "Emsg1"
+(get-message 'msg2)              "msg2"
+(get-message-p 'msg2)            ()
+
+(current-language 'french)       french
+#Mmsg1                           "Fmsg1"
+#mmsg1                           "Fmsg1"
+
+(remove-message 'msg1 'french)   msg1
+(get-message 'msg1)              "Emsg1"
+
+(defmessage :msg1
+    (french  "F--msg1")
+    (english "E--msg1"))         :msg1
+(current-language 'english)      english
+(get-message ':msg1)             "E--msg1"
+(current-language 'french)       french
+#M:msg1                          "F--msg1"
+#m:msg1                          "F--msg1"
+
+
+(defmessage 11
+    (french  "Fmsgs")
+    (english "Emsg1"))   (error-wrong-message defmessage 11)
+
+(defmessage wrong
+    (ffrench  "Fmsg1")
+    (english "Emsg1"))   (error-not-recorded-language defmessage ffrench)
+
+(defmessage wrong
+    (12  "Fmsg1")
+    (english "Emsg1"))   (error-wrong-language defmessage 12)
+
+(defmessage wrong
+    (french  10)
+    (english "Emsg1"))   (error-not-string-message defmessage 10)
+
+
+(put-message 'msgn 'english "foo")   msgn
+(put-message 'msgn 10 "foo")     (error-wrong-language put-message 10)
+(put-message 'msgn 'zob "foo")   (error-not-recorded-language put-message zob)
+(put-message 10 'english "foo")  (error-wrong-message put-message 10)
+(put-message 'msgn 'english 2)   (error-not-string-message put-message 2)
+
+(remove-language 'french)    french
+(remove-language 'french)     french
+(current-language 'english)   english
+(record-language 'french)    ()
+(record-language 'french)    ()
+
+(default-language)           english
+(default-language 'foo)      (error-not-recorded-language
+                              default-language foo)
+(default-language 'english)  english
+(default-language)           english
+(current-language 'french)   french
+(defmessage msg1
+  (french "F++msg1")
+  (english "E++msg1"))         msg1
+(defmessage msg2
+  (english "E++msg2"))         msg2
+(record-language 'polish)     polish
+(defmessage msg3
+  (polish "P++msg3"))          msg3
+(defmessage msg5
+  (french "F++msg5")
+  (english "E++msg5"))         msg5
+
+
+(get-message 'msg1)           "F++msg1"
+(get-message 'msg2)           "E++msg2"
+(get-message 'msg3)           "msg3"
+(get-message 'msg4)           "msg4"
+
+(default-language 'french)    french
+#mmsg1                        "F++msg1"
+#Mmsg2                        "msg2"
+#Mmsg3                        "msg3"
+#Mmsg4                        "msg4"
+#Mmsg5                        "F++msg5"
+(default-language 'english)   english
+(remove-message 'msg1
+                'french)      msg1
+(get-message 'msg1)           "E++msg1"
+(get-message 'msg2)           "E++msg2"
+(remove-message 'msg2 'english)    msg2
+(remove-message 'msg1 'english)    msg1
+(remove-message 'msg5 'english)    msg5
+(get-message 'msg1)           "msg1"
+(get-message 'msg2)           "msg2"
+(get-message 'msg3)           "msg3"
+(remove-language 'polish)     polish
+(current-language 'english)   english
+(default-language ())         (error-not-recorded-language default-language ())
+(default-language 'english)   english
+(get-message-p 'msg1)         ()
+(get-message-p 'msg2)         ()
+(get-message-p 'msg5)         ()
+
+
+        (test-serie "[End of test]" ()) 
+
+

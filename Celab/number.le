@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: number
+;;;             translation done: "Wed June 30 93 17:34:48 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: number.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'number)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZnumber" "Wed June 30 93 17:34:48 "
+
+'((numberp . subr1) (integerp . subr1) (rationalp . subr1) (float . subr1) (truncate . subr1) (fix . subr1) (|1+| . subr1) (|1-| . subr1) (abs . subr1) (|+| . nsubr) (* . nsubr) (|0-| . subr1) (|-| . nsubr) (1/ . subr1) (// . nsubr) (quo . subr2) (modulo . subr2) (<?> . subr2) (zerop . subr1) (minusp . subr1) (plusp . subr1) (= . nsubr) (<> . subr2) (> . nsubr) (>= . nsubr) (< . nsubr) (<= . nsubr) (min . nsubr) (max . nsubr) (sin . subr1) (cos . subr1) (asin . subr1) (acos . subr1) (atan . subr1) (exp . subr1) (log . subr1) (log10 . subr1) (power . subr2) (sqrt . subr1))
+
+#[numberp #:gell-resetfn:function-name #:gell-resetfn:function-1 integerp rationalp float truncate fix |1+| |1-| abs |+| #:gell-resetfn:function-n * |0-| |-| 1/ // quo #:gell-resetfn:function-2 modulo <?> zerop minusp plusp = <> > >= < <= min max sin cos asin acos atan exp log log10 power sqrt]
+)
+
+
+(defccheck '())

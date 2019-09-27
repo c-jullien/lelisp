@@ -1,0 +1,48 @@
+defmodule
+pretty
+files (pretty)
+export (
+pretty
+pprint
+pprin
+prettyf
+prettyend
+#:pretty:eol
+)
+import (
+files
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(pretty fsubr ())
+(pprint subr1 () () () (#:pretty:sizeline))
+(pprin subr1 () () (#:pretty:sizeline))
+(prettyf fsubr ())
+(prettyend subr0 ())
+(#:pretty:eol subr0 ())
+)
+cpfunctions (
+(#:pretty:p subr1 () () () () () (f l))
+(#:pretty:inlinep subr1)
+(#:pretty:progn subr0)
+(#:pretty:lmargin subr1)
+(#:pretty:p1 subr0)
+(#:pretty:cond subr0 () () (l f))
+(#:pretty:pdot subr0)
+(#:pretty:tagbody subr0)
+(#:pretty:get-plist-def subr2)
+)
+cpimport (
+(files
+(rem-feature . subr1)
+(libautoload . fsubr)
+))
+cpenv (
+files
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:pretty:quotelevel 't '#:complice:globalvar)
+)((putprop '#:pretty:quotelength 't '#:complice:globalvar)
+))

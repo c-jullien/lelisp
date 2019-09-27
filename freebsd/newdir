@@ -1,0 +1,54 @@
+
+#!/bin/sh
+# ' Change les paths absolus du directory d installation de Le_Lisp '
+# ''
+# ' Exemple: newdir /usr/ilog/lelisp/Isystem '
+
+case $1 in
+  /?*/?*)
+  sysdir="$1"
+  dir=`echo $sysdir | sed 's-\(.*\)/.*$-\1-'` ;;
+  "")
+  sysdir=`pwd`
+  cd ..
+  dir=`pwd`
+  cd $sysdir ;;
+  *)
+	echo "Usage: $0 [complete_path_of_machine_s_directory]" ; exit 1;;
+esac
+
+########################
+# revision COMPLICE
+chmod 775 complice
+ed complice <<!
+/LLDIR=/s|=.*\$|=$dir|p
+w
+!
+chmod 775 complice
+
+########################
+# revision ./config
+chmod 775 ./config
+ed ./config <<!
+/LLDIR=/s|=.*\$|=$dir|p
+w
+!
+chmod 775 ./config
+
+########################
+# revision du STARTUP.LL
+chmod 664 ../llib/startup.ll
+ed ../llib/startup.ll <<!
+/(defvar #:system:directory/s|".*"|"$dir/"|p
+w
+!
+chmod 664 ../llib/startup.ll
+
+########################
+# on efface tous les cores
+if `which -s gmake`
+then
+  gmake cleancore
+else
+  make cleancore
+fi

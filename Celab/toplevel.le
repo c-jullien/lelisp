@@ -1,0 +1,235 @@
+;;; GELL 15.26: elaboration file for the module: toplevel
+;;;             translation done: "Wed June 16 93 18:00:30 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: toplevel.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'toplevel)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZtoplevel" "Wed June 16 93 18:00:30 "
+
+'((catcherror . fsubr) (errset . dmsubr) (err . dmsubr) (break . subr0) (syserror . subr3) (toplevel . subr0) (printerror . subr3))
+
+#[#:system:error-flag #:system:l (#:system:error-flag #:system:l) eval (#:system:error-flag) lambda #:system:print-msgs #:system:debug (#:system:debug #:system:print-msgs) #:system:error-tag eprogn #:system:|e| #:system:i (#:system:|e| #:system:i) catcherror list (#:system:l) exit mcons #:llcp:exit #:system:b #:system:m #:system:f (#:system:b #:system:m #:system:f) teread tyflush outchan printerror break funcall #:system:toplevel-tag t #:toplevel:read #:toplevel:cread read errudt toplevel #:toplevel:eval #:toplevel:status princn print (#:system:b #:system:m #:system:f) "** " " : " get-message-p boundp errsxt numberp > < errsxt1 errsxt2 errsxt3 errsxt4 errsxt5 errsxt6 errsxt7 errsxt9 errsxt10 errsxt11 errsxt12 get-message #:system:unixp errmac errmac4 errmac8 errmac10 errmac11 #:gell-resetfn:function-name #:gell-resetfn:function-f errset #:gell-resetfn:function-1 err #:gell-resetfn:function-0 syserror #:gell-resetfn:function-3]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'toplevel)))
+(defvar #:sys-package:itsoft ())
+(defvar #:system:debug ())
+(defvar #:trace:trace ())
+(defvar #:system:print-msgs 1)
+(defvar #:system:error-flag ())
+(defcsetfn 'catcherror "GZtoplevel" 0)
+(defcsetfn 'errset "GZtoplevel" 1)
+(defcsetfn 'err "GZtoplevel" 2)
+(defcsetfn 'break "GZtoplevel" 3)
+(defvar #:system:f ())
+(defvar #:system:m ())
+(defvar #:system:b ())
+(defcsetfn 'syserror "GZtoplevel" 4)
+(defvar #:toplevel:status t)
+(defvar #:toplevel:read ())
+(defvar #:toplevel:cread ())
+(defvar #:toplevel:print ())
+(defvar #:toplevel:eval ())
+(defcsetfn 'toplevel "GZtoplevel" 5)
+(printline 5000)
+(if (not (featurep 'messages)) (progn (loadmodule 'messages)))
+(defvar #:system:fatal-errors '(errfstk errfsgc errfpgc errfsud errfstr errfvec errfsym errfcns errfflt errffix errfhep errfcod))
+(#:messages:put-message 'errfstk 'french '"***** Erreur fatale : pile pleine." 'defmessage)
+(#:messages:put-message 'errfstk 'english '"***** Fatal error : stack overflow." 'defmessage)
+'errfstk
+(#:messages:put-message 'errfsgc 'french '"***** Erreur fatale : pile pleine durant un GC." 'defmessage)
+(#:messages:put-message 'errfsgc 'english '"***** Fatal error : stack overflow during GC." 'defmessage)
+'errfsgc
+(#:messages:put-message 'errfpgc 'french '"***** Erreur fatale : pile pleine durant un PRINT." 'defmessage)
+(#:messages:put-message 'errfpgc 'english '"***** Fatal error : stack overflow during PRINT." 'defmessage)
+'errfpgc
+(#:messages:put-message 'errfsud 'french '"***** Erreur fatale : pile vide." 'defmessage)
+(#:messages:put-message 'errfsud 'english '"***** Fatal error : stack underflow." 'defmessage)
+'errfsud
+(#:messages:put-message 'errfstr 'french '"***** Erreur fatale : zone des chaines pleine." 'defmessage)
+(#:messages:put-message 'errfstr 'english '"***** Fatal error : no room for strings." 'defmessage)
+'errfstr
+(#:messages:put-message 'errfvec 'french '"***** Erreur fatale : zone des vecteurs pleine." 'defmessage)
+(#:messages:put-message 'errfvec 'english '"***** Fatal error : no room for vectors." 'defmessage)
+'errfvec
+(#:messages:put-message 'errfsym 'french '"***** Erreur fatale : zone des symboles pleine." 'defmessage)
+(#:messages:put-message 'errfsym 'english '"***** Fatal error : no room for symbols." 'defmessage)
+'errfsym
+(#:messages:put-message 'errfcns 'french '"***** Erreur fatale : zone des listes pleine." 'defmessage)
+(#:messages:put-message 'errfcns 'english '"***** Fatal error : no room for lists." 'defmessage)
+'errfcns
+(#:messages:put-message 'errfflt 'french '"***** Erreur fatale : zone des flottants pleine." 'defmessage)
+(#:messages:put-message 'errfflt 'english '"***** Fatal error : no room for floats." 'defmessage)
+'errfflt
+(#:messages:put-message 'errffix 'french '"***** Erreur fatale : zone des entiers pleine." 'defmessage)
+(#:messages:put-message 'errffix 'english '"***** Fatal error : no room for fixnums." 'defmessage)
+'errffix
+(#:messages:put-message 'errfhep 'french '"***** Erreur fatale : zone du tas pleine." 'defmessage)
+(#:messages:put-message 'errfhep 'english '"***** Fatal error : heap overflow." 'defmessage)
+'errfhep
+(#:messages:put-message 'errfcod 'french '"***** Erreur fatale : zone du code pleine." 'defmessage)
+(#:messages:put-message 'errfcod 'english '"***** Fatal error : no room for code." 'defmessage)
+'errfcod
+(defvar errfstk (get-message 'errfstk))
+(defvar errfsgc (get-message 'errfsgc))
+(defvar errfpgc (get-message 'errfpgc))
+(defvar errfsud (get-message 'errfsud))
+(defvar errfstr (get-message 'errfstr))
+(defvar errfvec (get-message 'errfvec))
+(defvar errfsym (get-message 'errfsym))
+(defvar errfcns (get-message 'errfcns))
+(defvar errfflt (get-message 'errfflt))
+(defvar errffix (get-message 'errffix))
+(defvar errfhep (get-message 'errfhep))
+(defvar errfcod (get-message 'errfcod))
+(#:messages:put-message 'errmac 'french '"erreur de la machine" 'defmessage)
+(#:messages:put-message 'errmac 'english '"machine error" 'defmessage)
+'errmac
+(#:messages:put-message 'errudv 'french '"variable indefinie" 'defmessage)
+(#:messages:put-message 'errudv 'english '"undefined variable" 'defmessage)
+'errudv
+(#:messages:put-message 'errudf 'french '"fonction indefinie" 'defmessage)
+(#:messages:put-message 'errudf 'english '"undefined function" 'defmessage)
+'errudf
+(#:messages:put-message 'errudm 'french '"methode indefinie" 'defmessage)
+(#:messages:put-message 'errudm 'english '"undefined method" 'defmessage)
+'errudm
+(#:messages:put-message 'errudt 'french '"echappement indefini" 'defmessage)
+(#:messages:put-message 'errudt 'english '"undefined escape" 'defmessage)
+'errudt
+(#:messages:put-message 'errbdf 'french '"mauvaise definition" 'defmessage)
+(#:messages:put-message 'errbdf 'english '"bad definition" 'defmessage)
+'errbdf
+(#:messages:put-message 'errwna 'french '"mauvais nombre d'arguments" 'defmessage)
+(#:messages:put-message 'errwna 'english '"wrong number of arguments" 'defmessage)
+'errwna
+(#:messages:put-message 'errbpa 'french '"mauvais parametre" 'defmessage)
+(#:messages:put-message 'errbpa 'english '"bad parameter" 'defmessage)
+'errbpa
+(#:messages:put-message 'errilb 'french '"liaison illegale" 'defmessage)
+(#:messages:put-message 'errilb 'english '"illegal binding" 'defmessage)
+'errilb
+(#:messages:put-message 'errbal 'french '"mauvaise liste d'arguments" 'defmessage)
+(#:messages:put-message 'errbal 'english '"bad argument list" 'defmessage)
+'errbal
+(#:messages:put-message 'errnab 'french '"pas de portee lexicale" 'defmessage)
+(#:messages:put-message 'errnab 'english '"no lexical scope" 'defmessage)
+'errnab
+(#:messages:put-message 'errxia 'french '"bloc lexical perime" 'defmessage)
+(#:messages:put-message 'errxia 'english '"inactive lexical scope" 'defmessage)
+'errxia
+(#:messages:put-message 'errsxt 'french '"erreur de syntaxe" 'defmessage)
+(#:messages:put-message 'errsxt 'english '"syntax error" 'defmessage)
+'errsxt
+(#:messages:put-message 'errios 'french '"erreur d'entree/sortie" 'defmessage)
+(#:messages:put-message 'errios 'english '"I/O error" 'defmessage)
+'errios
+(#:messages:put-message 'err0dv 'french '"division par 0" 'defmessage)
+(#:messages:put-message 'err0dv 'english '"division by zero" 'defmessage)
+'err0dv
+(#:messages:put-message 'errnna 'french '"l'argument n'est pas un nombre" 'defmessage)
+(#:messages:put-message 'errnna 'english '"not a number" 'defmessage)
+'errnna
+(#:messages:put-message 'errnia 'french '"l'argument n'est pas un entier" 'defmessage)
+(#:messages:put-message 'errnia 'english '"not a fixnum" 'defmessage)
+'errnia
+(#:messages:put-message 'errnfa 'french '"l'argument n'est pas un flottant" 'defmessage)
+(#:messages:put-message 'errnfa 'english '"non float argument" 'defmessage)
+'errnfa
+(#:messages:put-message 'errnsa 'french '"l'argument n'est pas une chaine" 'defmessage)
+(#:messages:put-message 'errnsa 'english '"non string argument" 'defmessage)
+'errnsa
+(#:messages:put-message 'errnaa 'french '"l'argument n'est pas un atome" 'defmessage)
+(#:messages:put-message 'errnaa 'english '"not an atom" 'defmessage)
+'errnaa
+(#:messages:put-message 'errnla 'french '"l'argument n'est pas une liste" 'defmessage)
+(#:messages:put-message 'errnla 'english '"not a list" 'defmessage)
+'errnla
+(#:messages:put-message 'errnva 'french '"l'argument n'est pas une variable" 'defmessage)
+(#:messages:put-message 'errnva 'english '"not a variable" 'defmessage)
+'errnva
+(#:messages:put-message 'errvec 'french '"l'argument n'est pas un vecteur" 'defmessage)
+(#:messages:put-message 'errvec 'english '"not a vector" 'defmessage)
+'errvec
+(#:messages:put-message 'errsym 'french '"l'argument n'est pas un symbole" 'defmessage)
+(#:messages:put-message 'errsym 'english '"not a symbol" 'defmessage)
+'errsym
+(#:messages:put-message 'errnda 'french '"l'argument n'est pas une adresse" 'defmessage)
+(#:messages:put-message 'errnda 'english '"not an address" 'defmessage)
+'errnda
+(#:messages:put-message 'errstc 'french '"l'argument n'est pas une structure" 'defmessage)
+(#:messages:put-message 'errstc 'english '"not a structure" 'defmessage)
+'errstc
+(#:messages:put-message 'erroob 'french '"argument hors limite" 'defmessage)
+(#:messages:put-message 'erroob 'english '"argument out of bounds" 'defmessage)
+'erroob
+(#:messages:put-message 'errstl 'french '"chaine trop longue" 'defmessage)
+(#:messages:put-message 'errstl 'english '"string too long" 'defmessage)
+'errstl
+(#:messages:put-message 'errgen 'french '"ne sait pas calculer" 'defmessage)
+(#:messages:put-message 'errgen 'english '"can't compute" 'defmessage)
+'errgen
+(#:messages:put-message 'errvirtty 'french '"terminal inconnu" 'defmessage)
+(#:messages:put-message 'errvirtty 'english '"unknown terminal type" 'defmessage)
+'errvirtty
+(#:messages:put-message 'errfile 'french '"fichier inconnu" 'defmessage)
+(#:messages:put-message 'errfile 'english '"unknown file" 'defmessage)
+'errfile
+(#:messages:put-message 'erricf 'french '"fichier incompatible" 'defmessage)
+(#:messages:put-message 'erricf 'english '"incompatible file" 'defmessage)
+'erricf
+(#:messages:put-message 'errunk 'french '"je ne connais pas" 'defmessage)
+(#:messages:put-message 'errunk 'english '"I don't know" 'defmessage)
+'errunk
+(#:messages:put-message 'errsxt1 'french '"liste trop courte" 'defmessage)
+(#:messages:put-message 'errsxt1 'english '"list too short" 'defmessage)
+'errsxt1
+(#:messages:put-message 'errsxt2 'french '"chaine trop longue" 'defmessage)
+(#:messages:put-message 'errsxt2 'english '"string too long" 'defmessage)
+'errsxt2
+(#:messages:put-message 'errsxt3 'french '"symbole trop long" 'defmessage)
+(#:messages:put-message 'errsxt3 'english '"symbol too long" 'defmessage)
+'errsxt3
+(#:messages:put-message 'errsxt4 'french '"mauvais debut d'expression" 'defmessage)
+(#:messages:put-message 'errsxt4 'english '"bad beginning of expression" 'defmessage)
+'errsxt4
+(#:messages:put-message 'errsxt5 'french '"symbole special trop long" 'defmessage)
+(#:messages:put-message 'errsxt5 'english '"special symbol too long" 'defmessage)
+'errsxt5
+(#:messages:put-message 'errsxt6 'french '"mauvais package" 'defmessage)
+(#:messages:put-message 'errsxt6 'english '"bad package" 'defmessage)
+'errsxt6
+(#:messages:put-message 'errsxt7 'french '"mauvaise construction pointee" 'defmessage)
+(#:messages:put-message 'errsxt7 'english '"bad dotted pair construction" 'defmessage)
+'errsxt7
+(#:messages:put-message 'errsxt9 'french '"mauvaise liste arguments" 'defmessage)
+(#:messages:put-message 'errsxt9 'english '"bad argument list" 'defmessage)
+'errsxt9
+(#:messages:put-message 'errsxt10 'french '"mauvaise valeur de splice-macro" 'defmessage)
+(#:messages:put-message 'errsxt10 'english '"bad splice-macro" 'defmessage)
+'errsxt10
+(#:messages:put-message 'errsxt11 'french '"EOF durant un READ" 'defmessage)
+(#:messages:put-message 'errsxt11 'english '"EOF during READ" 'defmessage)
+'errsxt11
+(#:messages:put-message 'errsxt12 'french '"mauvaise utilisation du BACKQUOTE" 'defmessage)
+(#:messages:put-message 'errsxt12 'english '"bad use of BACKQUOTE" 'defmessage)
+'errsxt12
+(#:messages:put-message 'errmac4 'french '"instruction illegale" 'defmessage)
+(#:messages:put-message 'errmac4 'english '"illegal instruction" 'defmessage)
+'errmac4
+(#:messages:put-message 'errmac8 'french '"exception flottante" 'defmessage)
+(#:messages:put-message 'errmac8 'english '"floating point exception" 'defmessage)
+'errmac8
+(#:messages:put-message 'errmac10 'french '"erreur de bus" 'defmessage)
+(#:messages:put-message 'errmac10 'english '"bus error" 'defmessage)
+'errmac10
+(#:messages:put-message 'errmac11 'french '"violation de segment" 'defmessage)
+(#:messages:put-message 'errmac11 'english '"segmentation fault" 'defmessage)
+'errmac11
+(defcsetfn 'printerror "GZtoplevel" 6)
+
+(defccheck '(get-message < > numberp boundp get-message-p print princn read funcall printerror outchan tyflush teread #:llcp:exit mcons list eprogn eval))

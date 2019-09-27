@@ -1,0 +1,39 @@
+;;; GELL 15.26: elaboration file for the module: files
+;;;             translation done: "Wed June 16 93 18:00:33 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: files.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'files)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZfiles" "Wed June 16 93 18:00:33 "
+
+'((featurep . subr1) (add-feature . subr1) (rem-feature . subr1) (list-features . subr0) (probepathf . subr1) (probepathm . subr1) (probepatho . subr1) (search-in-path . subr2) (load . fsubr) (loadfile . subr2) (libload . fsubr) (libloadfile . subr2) (loadobjectfile . subr1) (autoload . fsubr) (libautoload . fsubr) (#:system:std-autoload . subr3))
+
+#[#:system:features-list featurep delq copy coerce-namestring #:system:path #:system:lelisp-extension search-in-path #:system:mod-extension #:system:obj-extension index slength catenate pathnamep errbpa pathname combine-pathnames probefile namestring loadfile errfile #:sys-package:colon inchan #:system:in-read-flag #:system:redef-flag #:system:loaded-from-file (#:system:in-read-flag #:system:redef-flag #:system:loaded-from-file #:sys-package:colon) lambda openi eof read eval close libloadfile probepathf probepatho loadobjectfile #:system:read-case-flag t #:system:b #:system:std-autoload quote list (#:system:b 'loadfile) mcons fexpr setfn autoload putprop (#:system:b 'libloadfile) #:system:load-fct #:system:f (#:system:load-fct #:system:b #:system:f) valfn typefn getprop #:system:autoload-file #:system:ot #:system:of (#:system:autoload-file #:system:ot #:system:of) #:system:error-flag (#:system:error-flag) #:system:error-tag funcall remprop errudf #:gell-resetfn:function-name #:gell-resetfn:function-1 add-feature rem-feature list-features #:gell-resetfn:function-0 probepathm #:gell-resetfn:function-2 load #:gell-resetfn:function-f libload libautoload #:gell-resetfn:function-3]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'files)))
+(defvar #:sys-package:colon 'system)
+(defvar #:system:features-list (when (boundp '#:system:features-list) #:system:features-list))
+(defcsetfn 'featurep "GZfiles" 0)
+(defcsetfn 'add-feature "GZfiles" 1)
+(defcsetfn 'rem-feature "GZfiles" 2)
+(defcsetfn 'list-features "GZfiles" 3)
+(defvar #:system:previous-def-flag (when (boundp '#:system:previous-def-flag) #:system:previous-def-flag))
+(defcsetfn 'probepathf "GZfiles" 4)
+(defcsetfn 'probepathm "GZfiles" 5)
+(defcsetfn 'probepatho "GZfiles" 6)
+(defcsetfn 'search-in-path "GZfiles" 7)
+(defcsetfn 'load "GZfiles" 8)
+(defcsetfn 'loadfile "GZfiles" 9)
+(defcsetfn 'libload "GZfiles" 10)
+(defcsetfn 'libloadfile "GZfiles" 11)
+(defcsetfn 'loadobjectfile "GZfiles" 12)
+(defcsetfn 'autoload "GZfiles" 13)
+(defcsetfn 'libautoload "GZfiles" 14)
+(defcsetfn '#:system:std-autoload "GZfiles" 15)
+
+(defccheck '(remprop funcall getprop typefn valfn putprop setfn mcons list probepatho probepathf libloadfile close eval read openi inchan loadfile namestring probefile combine-pathnames pathname pathnamep catenate slength index search-in-path coerce-namestring copy delq featurep))

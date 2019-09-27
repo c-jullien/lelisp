@@ -1,0 +1,3960 @@
+;;;
+;;; FN.LT:  The test suite for regular Le-Lisp functions
+;;;
+;;; $Source: /usr/cvs/lelisp/lltest/fn.lt,v $
+;;; $Date: 2016/05/22 05:38:14 $
+;;; $Revision: 1.2 $
+;;;
+;;; ------------------------------------------------------------
+;;; This file is part of Le-Lisp version 15, developped by INRIA
+;;;
+;;;
+;;; (c) 1987-1993  Le-Lisp is a trademark of INRIA.
+;;; ------------------------------------------------------------
+
+
+; (setq ?speaki t)                      t
+
+(version)                               15.26
+(herald)                                ()
+(terpri)                                t
+ 
+(setq :FIXMAX (most-positive-fixnum))	#.(most-positive-fixnum)  ; #$7FFF 32767
+(setq :FIXMIN (most-negative-fixnum))	#.(most-negative-fixnum)  ; #$8001 -32767
+(setq :MINUS0 (minus-0-fixnum))		#.(minus-0-fixnum)        ; #$8000
+
+(setq #:system:gensym-counter 100)      100
+(gensym)                                g101
+
+ ; Test calls of the GENARITH Interruption.
+
+(setq #:tescomm:genarith #:sys-package:genarith
+      #:sys-package:genarith ())        ()
+
+        (test-serie "[Conversions Upper/Lower]" ())
+
+(defun test-read ()
+    (car (catcherror t (read))))        test-read
+
+(setq #:save:read-case-flag #:system:read-case-flag a ())       ()
+(setq #:system:read-case-flag ())       ()
+(test-read)             |abcdefg|       abcdefg         
+(test-read)             |abcdefg|       abcdefg
+
+(setq #:system:read-case-flag t)        t
+(test-read)             |abcdefg|       abcdefg         
+(test-read)             |ABCDEFG|       ABCDEFG         
+
+(setq #:system:read-case-flag ())       ()
+
+        (test-serie "[Evaluator EVAL/APPLY/FUNCALL]" ())
+
+()                                      ()
+nil                                     ()
+t                                       t
+abcdefghjklmnopqrst                     (ERRUDV eval abcdefghjklmnopqrst)
+(symeval 'abcdefghij)                   (ERRUDV symeval abcdefghij)
+(ffffyyyyyyeeeee)                       (ERRUDF eval ffffyyyyyyeeeee)
+(apply 'qqqwww ())                      (ERRUDF apply qqqwww)
+(apply 3 ())                            (ERRUDF apply 3)
+(apply "car" ())                        (ERRUDF apply "car")
+(apply '+ 1 . 2)                        (ERRBAL apply 2)
+(apply '+ 10)                           (ERRBAL + 10)
+(apply '+ 10 20 30)                     (ERRBAL + 30)
+(funcall 'qqqwww)                       (ERRUDF funcall qqqwww)
+(funcall 3)                             (ERRUDF funcall 3)
+(funcall "car")                         (ERRUDF funcall "car")
+
+ ; Call of SUBR 0/1/2/3/N : EVAL/APPLY/FUNCALL
+
+(version)                               15.26
+(version t)                             (ERRWNA version 0)
+(version . 1)                           (ERRBAL version 1)
+(car)                                   (ERRWNA car 1)
+(car '(a))                              a
+(car '(a) '(b))                         (ERRWNA car 1)
+(car . t)                               (ERRBAL car t)
+(car '(a) . t)                          (ERRBAL car t)
+(cons)                                  (ERRWNA cons 2)
+(cons 'a)                               (ERRWNA cons 2)
+(cons 'a 'b)                            (a . b)
+(cons 'a 'b 'c)                         (ERRWNA cons 2)
+(cons . t)                              (ERRBAL cons t)
+(cons 1 . t)                            (ERRBAL cons t)
+(cons 1 2 . t)                          (ERRBAL cons t)
+(putprop)                               (ERRWNA putprop 3)
+(putprop 'a)                            (ERRWNA putprop 3)
+(putprop 'a 'b)                         (ERRWNA putprop 3)
+(putprop 'a 'b 'c)                      b
+(putprop 'a 'b 'c 'd)                   (ERRWNA putprop 3)
+(putprop . t)                           (ERRBAL putprop t)
+(putprop 'a . t)                        (ERRBAL putprop t)
+(putprop 'a 'b . t)                     (ERRBAL putprop t)
+(putprop 'a 'b 'c . t)                  (ERRBAL putprop t)
+(list 1 2)                              (1 2)
+(list . 1)                              (ERRBAL list 1)
+(list 1 . 2)                            (ERRBAL list 2)
+(list 1 2 . 3)                          (ERRBAL list 3)
+(list 1 2 3 . 4)                        (ERRBAL list 4)
+
+(apply 'version ())                     15.26
+(apply 'version '(t))                   (ERRWNA version 0)
+(apply 'version 1)                      (ERRBAL version 1)
+(apply '1+ ())                          (ERRWNA 1+ 1)
+(apply 'car '((a)))                     a
+(apply 'car '((a) (b)))                 (ERRWNA car 1)
+(apply 'car 1)                          (ERRBAL car 1)
+(apply 'car '((a) . 2))                 (ERRBAL car 2)
+(apply 'cons ())                        (ERRWNA cons 2)
+(apply 'cons '(a))                      (ERRWNA cons 2)
+(apply 'cons '(a b))                    (a . b)
+(apply 'cons 'a '(b))                   (a . b)
+(apply 'cons '(a b c))                  (ERRWNA cons 2)
+(apply 'cons 'a '(b c))                 (ERRWNA cons 2)
+(apply 'cons 1)                         (ERRBAL cons 1)
+(apply 'cons '(a . 2))                  (ERRBAL cons 2)
+(apply 'cons '(a b . 3))                (ERRBAL cons 3)
+(apply 'putprop ())                     (ERRWNA putprop 3)
+(apply 'putprop '(a))                   (ERRWNA putprop 3)
+(apply 'putprop '(a b))                 (ERRWNA putprop 3)
+(apply 'putprop 'a '(b c))              b
+(apply 'putprop 'a 'b '(c))             b
+(apply 'putprop '(a b c))               b
+(apply 'putprop '(a b c d))             (ERRWNA putprop 3)
+(apply 'putprop 'a 'b '(c d))           (ERRWNA putprop 3)
+(apply 'putprop 1)                      (ERRBAL putprop 1)
+(apply 'putprop '(a . 2))               (ERRBAL putprop 2)
+(apply 'putprop '(a b . 3))             (ERRBAL putprop 3)
+(apply 'putprop '(a b c . 4))           (ERRBAL putprop 4)
+(apply 'list 1 2 3 '(4 5))              (1 2 3 4 5)
+(apply 'list 1)                         (ERRBAL list 1)
+(apply 'list '(1 . 2))                  (ERRBAL list 2)
+(apply 'list '(1 2 . 3))                (ERRBAL list 3)
+(apply 'list 1 2 3 4)                   (ERRBAL list 4)
+
+(funcall 'version)                      15.26
+(funcall 'version t)                    (ERRWNA version 0)
+(funcall 'car)                          (ERRWNA car 1)
+(funcall 'car '(a))                     a
+(funcall 'car '(a) '(b))                (ERRWNA car 1)
+(funcall 'cons)                         (ERRWNA cons 2)
+(funcall 'cons 'a)                      (ERRWNA cons 2)
+(funcall 'cons 'a 'b)                   (a . b)
+(funcall 'cons 'a 'b 'c)                (ERRWNA cons 2)
+(funcall 'putprop)                      (ERRWNA putprop 3)
+(funcall 'putprop 'a)                   (ERRWNA putprop 3)
+(funcall 'putprop 'a 'b)                (ERRWNA putprop 3)
+(funcall 'putprop 'a 'b 'c)             b
+(funcall 'putprop 'a 'b 'c 'd)          (ERRWNA putprop 3)
+(funcall 'list 1 2 3 '(4 5))            (1 2 3 (4 5))
+(setq v #[1 2 3 4])                     #[1 2 3 4]
+(funcall 'vref v 2)                     3
+(funcall 'vset v 2 33)                  33
+(funcall 'aset v 2 333)                 333
+
+ ; Call of LAMBDA/FLAMBDA
+
+(setq x 1000 y 1001 z 1002)                     1002
+((lambda (x y) (list x y)) (1+ 1) (1+ 2))       (2 3)
+(list x y z)                                    (1000 1001 1002)
+((lambda (x . y) (list x y)) (1+ 1) (1+ 2))     (2 (3))
+(list x y z)                                    (1000 1001 1002)
+((lambda x x) (1+ 1) 2 3)                       (2 2 3)
+(list x y z)                                    (1000 1001 1002)
+((lambda ((x)) x) '(1))                         1
+(list x y z)                                    (1000 1001 1002)
+((lambda (x (y . z)) (list x y z)) (1+ 1) (cons 3 4))   (2 3 4)
+(list x y z)                                    (1000 1001 1002)
+((lambda ((x . y)) (list x y)) ())              (() ())
+(list x y z)                                    (1000 1001 1002)
+(setq x 10 y 11 z 12 u 13 v 14 w 15)            15
+((lambda ((x . y)) (list x y))))                (ERRWNA lambda 1)
+((lambda (x y z) ()) 1)                         (ERRWNA lambda 3)
+
+((lambda ((x))) 1)                              (ERRILB lambda ((x) 1))
+(list x y z u v w)                              (10 11 12 13 14 15)
+
+((lambda (x (y))) 1 2)                          (ERRILB lambda ((y) 2))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x (y) z)) 1 2 3)                      (ERRILB lambda ((y) 2))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y (z))) 1 2 3)                      (ERRILB lambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda ((x) y (z))) '(1) 2 3)                 (ERRILB lambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y (z) u)) 1 2 3 4)                  (ERRILB lambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y (z) u v)) 1 2 3 4 5)              (ERRILB lambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+
+((lambda (x y ((z)))) 1 2 '(3))                 (ERRILB lambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda ((x) y ((z)))) '(1) 2 '(3))            (ERRILB lambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y ((z)) u)) 1 2 '(3) 4)             (ERRILB lambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y ((z)) u v)) 1 2 '(3) 4 5)         (ERRILB lambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y (z (w)))) 1 2 '(3 4))             (ERRILB lambda ((w) 4))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y (z (w)) u)) 1 2 '(3 4) 5)         (ERRILB lambda ((w) 4))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y ((z (w))) u v)) 1 2 '((3 4)) 5 6) (ERRILB lambda ((w) 4))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y z) ()) 1 2 3 4)                   (ERRWNA lambda 3)
+((lambda (t) ()) 1)                             (ERRBPA lambda t)
+((lambda (x (y . t)) ()) 1)                     (ERRBPA lambda t)
+((lambda (x (() . y)) ()) 1)                    (ERRBPA lambda ())
+((lambda (()) ()) 1)                            (ERRBPA lambda ())
+((lambda (x) x) 10 . 100)                       (ERRBAL lambda 100)
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x (y (z . u) . v) . w) (list x y z u v w))
+         1 '(2 (3 . 4) . 5) 6)                  (1 2 3 4 5 (6))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda ((x) ((y . z) u . v) . w) (list x y z u v w))
+        '(1) '((2 . 3) 4 . 5) 6)                (1 2 3 4 5 (6))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (((x) . y)) (list x y)) '((1) . 2))    (1 2)
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y) (+ x y)) 1 2 3 4 5)              (ERRWNA lambda 2)
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y u v) ()) 1)                       (ERRWNA lambda 4)
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y u v) ()) 1 2)                     (ERRWNA lambda 4)
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y u v) ()) 1 2 3)                   (ERRWNA lambda 4)
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y u . v) ()) 1)                     (ERRWNA lambda 3)
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x y u . v) ()) 1 2)                   (ERRWNA lambda 3)
+(list x y z u v w)                              (10 11 12 13 14 15)
+
+((lambda (x) (+ x x)) 1 2 3 4 5)                (ERRWNA lambda 1)
+(list x y z u v w)                              (10 11 12 13 14 15)
+((lambda (x) ()))                               (ERRWNA lambda 1)
+(list x y z u v w)                              (10 11 12 13 14 15)
+
+(funcall (lambda (x) (+ x x)) 1 2 3 4 5)        (ERRWNA lambda 1)
+(apply (lambda (x) (+ x x)) '(1 2 3 4 5))       (ERRWNA lambda 1)
+(list x y z u v w)                              (10 11 12 13 14 15)
+(funcall (lambda (x) ()))                       (ERRWNA lambda 1)
+(apply (lambda (x) ()) ())                      (ERRWNA lambda 1)
+(list x y z u v w)                              (10 11 12 13 14 15)
+
+(let ((x 10)) (let (((y z) '(1 2))) (list y z)))(1 2)
+(let ((x 10)) (let (((y z) '(1 2))) x))         10
+
+(dynamic-let () 3)                                                   3
+(setq dynx 4)                                                        4
+(dynamic-let () dynx)                                                4
+(dynamic-let ((dynx 3)) (dynamic dynx))                              3
+(dynamic-let ((dynx 'x) (dyny 'y)) (list dynx dyny))                 (x y)
+(defun dynfoo () (dynamic dynz))                                     dynfoo 
+(dynamic-let ((dynz 'z)) (dynfoo))                                   z
+;; this case makes sense, but...
+(let ((dynz 3)) (dynamic-let ((dynz 4)) (dynamic dynz)))             4 
+;; in 15.23 a dynamic is pervasive!
+(let ((dynz 3))  (dynamic-let ((dynz 4)) dynz))                      4 
+;; also a bit surprising!
+(dynamic-let ((dynz 'dynval)) (let ((dynz 'lexval)) (dynamic dynz))) lexval 
+(dynamic-let ((dynz 'dynval)) (let ((dynz 'lexval)) dynz))           lexval 
+
+((flambda (x y) (list x y)) (1+ 1) (1+ 2))      ((1+ 1) (1+ 2))
+((flambda (x . y) (list x y)) (1+ 1) (1+ 2))    ((1+ 1) ((1+ 2)))
+((flambda x x) (1+ 1) 2 3)                      ((1+ 1) 2 3)
+((flambda (x (y . z)) (list x y z)) 1 (2 . 3))  (1 2 3)
+((flambda (x (y (z))) (list x y z)) 1 (2 (3)))  (1 2 3)
+(list x y z u v w)                              (10 11 12 13 14 15)
+
+((flambda (x (y)) (list x y)) 1 2)              (ERRILB flambda ((y) 2))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((flambda ((x) (y)) (list x y)) (1) 2)          (ERRILB flambda ((y) 2))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((flambda (x (y (z))) (list x y)) 1 2)          (ERRILB flambda ((y (z)) 2))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((flambda (x (y z)) (list x y z)) 1 (2 . 3))    (ERRILB flambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((flambda (x (y (z))) (list x y z)) 1 (2 . 3))  (ERRILB flambda (((z)) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((flambda ((x) (y z)) (list x y z)) (1)(2 . 3)) (ERRILB flambda ((z) 3))
+(list x y z u v w)                              (10 11 12 13 14 15)
+((flambda (t) t) 1)                             (ERRBPA flambda t)
+((flambda (x y) (list x y)) 1)                  (ERRWNA flambda 2)
+((flambda (x y) (list x y)) 1 2 3)              (ERRWNA flambda 2)
+(apply (flambda (x y) (list x y)) '(1))         (ERRWNA flambda 2)
+(apply (flambda (x y) (list x y)) '(1 2 3))     (ERRWNA flambda 2)
+(funcall (flambda (x y) (list x y)) 1)          (ERRWNA flambda 2)
+(funcall (flambda (x y) (list x y)) 1 2 3)      (ERRWNA flambda 2)
+
+
+ ; Call of EXPRs FEXPs MACROs DMACROs
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun faa () 'ok)                         faa
+(faa)                                   ok)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(faa 1)                                 (ERRWNA faa 0)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(faa 1 2)                               (ERRWNA faa 0)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(faa 1 2 3)                             (ERRWNA faa 0)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(faa . 1)                               (ERRBAL faa 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(faa 1 . 2)                             (ERRBAL faa 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(faa 1 2 . 3)                           (ERRBAL faa 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun fuu (x) (list x))                   fuu
+(fuu)                                   (ERRWNA fuu 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fuu 1)                                 (1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fuu 1 2)                               (ERRWNA fuu 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fuu 1 2 3)                             (ERRWNA fuu 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fuu . 1)                               (ERRBAL fuu 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fuu 1 . 2)                             (ERRBAL fuu 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fuu 1 2 . 3)                           (ERRBAL fuu 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun gee (x  y) (list x y))              gee
+(gee)                                   (ERRWNA gee 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gee 1)                                 (ERRWNA gee 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gee 1 2)                               (1 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gee 1 2 3)                             (ERRWNA gee 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gee . 1)                               (ERRBAL gee 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gee 1 . 2)                             (ERRBAL gee 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gee 1 2 . 3)                           (ERRBAL gee 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun gaa (x y z) (list x y z))           gaa
+(gaa)                                   (ERRWNA gaa 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gaa 1)                                 (ERRWNA gaa 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gaa 1 2)                               (ERRWNA gaa 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gaa 1 2 3)                             (1 2 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gaa 1 2 3 4)                           (ERRWNA gaa 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gaa . 1)                               (ERRBAL gaa 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gaa 1 . 2)                             (ERRBAL gaa 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(gaa 1 2 . 3)                           (ERRBAL gaa 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun foo0 (x . y) (list x y))            foo0
+(foo0 ())                               (() ())
+(foo0)                                  (ERRWNA foo0 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(foo0 1)                                (1 ())
+(foo0 1 2)                              (1 (2))
+(foo0 1 2 3)                            (1 (2 3))
+(foo0 . 1)                              (ERRBAL foo0 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(foo0 1 . 2)                            (ERRBAL foo0 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(foo0 1 2 . 3)                          (ERRBAL foo0 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(foo0 1 2 3 . 4)                        (ERRBAL foo0 4)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun fee (x y . z) (list x y z))         fee
+(fee)                                   (ERRWNA fee 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fee 1)                                 (ERRWNA fee 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fee 1 2)                               (1 2 ())
+(fee 1 2 3)                             (1 2 (3))
+(fee 1 2 3 4)                           (1 2 (3 4))
+(fee . 1)                               (ERRBAL fee 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fee 1 . 2)                             (ERRBAL fee 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fee 1 2 . 3)                           (ERRBAL fee 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(fee 1 2 3 . 4)                         (ERRBAL fee 4)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun buc ((x y)) (cons x y))             buc
+(buc)                                   (ERRWNA buc 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(buc 1)                                 (ERRILB buc ((x y) 1))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(buc 1 2)                               (ERRILB buc ((x y) 1))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(buc '(1 2))                            (1 . 2)
+(buc '(1))                              (1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(buc . 1)                               (ERRBAL buc 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(buc 1 . 2)                             (ERRBAL buc 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(buc 1 2 . 3)                           (ERRBAL buc 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun bic ((x (y)) z) (list x y z))       bic
+(bic)                                   (ERRWNA bic 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bic 1)                                 (ERRILB bic ((x (y)) 1))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bic 1 2)                               (ERRILB bic ((x (y)) 1))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bic '(1 2) 3)                          (ERRILB bic ((y) 2))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bic '(1 . 2) 3)                        (ERRILB bic (((y)) 2))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bic '(1 (2)) 3)                        (1 2 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bic . 1)                               (ERRBAL bic 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bic 1 . 2)                             (ERRBAL bic 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bic 1 2 . 3)                           (ERRBAL bic 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun boc ((x y) z) (list x y z))         boc
+(boc)                                   (ERRWNA boc 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(boc 1)                                 (ERRILB boc ((x y) 1))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(boc 1 2)                               (ERRILB boc ((x y) 1))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(boc '(1 2) 3)                          (1 2 3)
+(boc '(1) 3)                            (1 () 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(boc . 1)                               (ERRBAL boc 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(boc 1 . 2)                             (ERRBAL boc 2)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(boc 1 2 . 3)                           (ERRBAL boc 3)
+(list x y z u v w)                      (10 11 12 13 14 15)
+
+(setq x 10 y 11 z 12 u 13 v 14 w 15)    15
+(defun bar ((x . y)) (list x y))           bar
+(bar ())                                (() ())
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bar '(100 101))                        (100 (101))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bar 1)                                 (ERRILB bar ((x . y) 1))
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bar '(1))                              (1 ())
+(bar)                                   (ERRWNA bar 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bar '(1 . 2) '(2 . 3))                 (ERRWNA bar 1)
+(list x y z u v w)                      (10 11 12 13 14 15)
+(bar 1 . 2)                             (ERRBAL bar 2)
+
+(defun foo1 &nobind 
+    (list (arg) (arg 0) (arg 1)))       foo1
+
+(foo1 1 2)                              (2 1 2)
+(foo1 1 2 3 4 5)                        (5 1 2)
+(foo1 1)                                (1 1 1)
+
+(defun foo2 &nobind
+    (if (gt (arg) 2)
+        "FOO2 pas en GET/SET"
+        (let ((arg1 (if (lt (arg) 1) 'default1 (arg 0)))
+              (arg2 (if (lt (arg) 2) 'default2 (arg 1))))
+             (list arg1 arg2))))        foo2
+
+(foo2)                                  (default1 default2)
+(foo2 1)                                (1 default2)
+(foo2 1 2)                              (1 2)
+(foo2 1 2 3)                            "FOO2 pas en GET/SET"
+
+(dm macr (call a b c) `(+ ,a ,b ,c))    macr
+(macr 1 2 3)                            6
+(apply 'macr '(1 2 3))                  6
+(funcall 'macr 1 2 3)                   6
+(apply 'macr '(1 2))                    (ERRWNA macr 4)
+(apply 'macr '(1 2 3 4 5))              (ERRWNA macr 4)
+(funcall 'macr 1 2)                     (ERRWNA macr 4)
+(funcall 'macr 1 2 3 4 5)               (ERRWNA macr 4)
+
+(dmd dmacr (a b c) `(+ ,a ,b ,c))  dmacr
+(dmacr 1 2 3)                           6
+(apply 'dmacr '(1 2 3))                 6
+(funcall 'dmacr 1 2 3)                  6
+(apply 'dmacr '(1 2))                   (ERRWNA dmacr 3)
+(apply 'dmacr '(1 2 3 4 5))             (ERRWNA dmacr 3)
+(funcall 'dmacr 1 2)                    (ERRWNA dmacr 3)
+(funcall 'dmacr 1 2 3 4 5)              (ERRWNA dmacr 3)
+
+         (test-serie "[Evaluation functions]" ())
+ 
+(eval '(1+ 55))                         56
+(eval (list '+ 8 '(1+ 3)))              12
+(eval (list (car '(cdr)) ''(a b c)))    (b c)
+(setq #:system:gensym-counter 100)      100
+(eval (gensym))                         (ERRUDV eval g101)
+ 
+(evlis '((1+ 4)(1+ 5)(1+ 6)))           (5 6 7)
+ 
+(eprogn '(1 2 3))                       3
+(eprogn '(1 2 . 3))                     (ERRBAL eprogn 3)
+(eprogn 2)                              (ERRBAL eprogn 2)
+ 
+(prog1)                                 ()
+(prog1 (1- 10))                         9
+(prog1 (1+ 1) (1+ 2) (1+ 3))            2
+(prog1 . 1)                             (ERRBAL prog1 1)
+(prog1 1 . 2)                           (ERRBAL prog1 2)
+(prog1 1 2 . 3)                         (ERRBAL prog1 3)
+ 
+(prog2)                                 ()
+(prog2 1)                               ()
+(prog2 1 2)                             2
+(prog2 1 2 3)                           2
+(prog2 1 2 3 4)                         2
+(prog2 . 1)                             (ERRBAL prog2 1)
+(prog2 1 . 2)                           (ERRBAL prog2 2)
+(prog2 1 2 . 3)                         (ERRBAL prog2 3)
+(prog2 1 2 3 . 4)                       (ERRBAL prog2 4)
+
+(progn)                                 ()
+(progn . a)                             (ERRBAL progn a)
+(progn 1 . 2)                           (ERRBAL progn 2)
+(progn 1 2 3 . 4)                       (ERRBAL progn 4)
+(progn 1)                               1
+(progn 1 2 3)                           3
+ 
+'a                                      a
+''a                                     'a
+'''a                                    ''a
+'(quote a b)                            (quote a b)
+'(quote . 2)                            (quote . 2)
+(quote a b)                             (ERRWNA quote  1)
+(cons 'quote 'a)                        (quote . a)
+ 
+(identity (1+ 3))                       4
+
+(comment)                               comment
+(comment 2)                             comment
+
+(precompile (car '(a)) ((mov 'a a1)) () a1)      a
+
+         (test-serie "[Application functions]" ())
+
+(setq a '#:intest:uniquesymbolfortestlhoblist)
+                             #:intest:uniquesymbolfortestlhoblist
+(lhoblist "esymbolf")
+                           (#:intest:uniquesymbolfortestlhoblist)
+(lhoblist #[])                          (ERRNSA lhoblist #[])
+
+(lambda (x) x)                          (lambda (x) x)
+(flambda (x) x)                         (flambda (x) x)
+(mlambda (x) x)                         (mlambda (x) x)
+
+(apply '1+ '(2))                        3
+(apply 'cons '(a b))                    (a . b)
+(apply 'scale '(1000 1000 1000))        1000
+(apply '+ '(2 3 4 5))                   14
+(apply '+ '(1 2 3 . 4))                 (ERRBAL + 4)
+(apply '+ 1 2 3)                        (ERRBAL + 3)
+(setq x 100)                            100
+(apply 'incr '(x (1+ 5)))               106
+ x                                      106
+(apply (lambda (x y) (+ x y)) '(1 2))   3
+(apply (flambda (x y) (cons x y)) '((1+ 1) (1- 2)))     ((1+ 1) 1- 2)
+ 
+(funcall 'version)                      15.26    ;  tester of a SUBR0
+(funcall '1+ 2)                         3
+(funcall 'cons 'a 'b)                   (a . b)
+(funcall 'scale 1000 1000 1000)         1000
+(funcall '+)                            0
+(funcall '+ 10)                         10
+(funcall '+ 10 20)                      30
+(funcall '+ 2 3 4 5)                    14
+(setq x 200)                            200
+(funcall 'incr 'x '(1+ 5))              206
+ x                                      206
+(funcall 'if)                           ()
+(funcall 'if 1)                         ()
+(funcall 'if 1 2)                       2
+(dmd foo (x) `(1+ ,x))                  foo
+(funcall 'foo 3)                        4
+(apply 'foo '(3))                       4
+(dm foom (call x) `(1+ ,x))             foom
+(funcall 'foom 3)                       4
+(apply 'foom '(3))                       4
+(funcall (lambda (x y) (cons x y)) 'A 'B)       (a . b)
+(funcall (lambda &nobind (arg)) 8 8 8)) 3
+(setq kons 'cons)                       cons
+(funcall kons (1+ 1) (1+ 2))            (2 . 3)
+
+(call (valfn 'car) '(a) () ())          a
+(calln (valfn 'list) '(a b c))          (a b c)
+ 
+(setq l ())                             ()
+(mapl (lambda (x) (newl l x)) '(a (b c) d))              ()
+l                                       ((d) ((b c) d) (a (b c) d))
+(setq l ())                             ()
+(map (lambda (x) (newl l x)) '(a (b c) d))               ()
+l                                       ((d) ((b c) d) (a (b c) d))
+(setq l ())                             ()
+(mapc (lambda (x) (newl l x)) '(a (b c) d))              ()
+l                                       (d (b c) a)
+(let ( (n 0) )
+   (map (lambda (l) (rplacd l (cddr l)) (incr n)) '(0 1 2 3))
+    n )                                 4
+(maplist 'length '(a b c d))            (4 3 2 1)
+(mapcar 'cons '(a b c) '(1 2 3))        ((a . 1) (b . 2) (c . 3))
+(mapcar 'list '(a b c d e f) (cirlist 1 2))
+                                        ((a 1)(b 2)(c 1)(d 2)(e 1)(f 2))
+(mapcon 'list '(1 2 3) '(4 5 6))        ((1 2 3) (4 5 6) (2 3) (5 6) (3) (6))
+(mapcon (lambda (x) (list (car (last x))))
+                        '(a b c))                 (c c c)
+(mapcan 'list '(1 2 3) '(4 5 6))        (1 4 2 5 3 6)
+(mapcan 'list '(a b c d) (cirlist 1 2) '(w x y z) (cirlist 0))
+                                        (a 1 w 0 b 2 x 0 c 1 y 0 d 2 z 0)
+(mapcan (lambda (x y) (list (1+ x) (1- y)))
+           '(1 2 3) '(1 2 3))           (2 0 3 1 4 2) 
+
+(every 'consp '((1) (2) (3)))           (3)
+(every 'eq '(1 2 3) '(1 2 3))           t
+(every 'eq '(1 2) '(1 2 3))             t
+(every 'eq '(1 2) '(1 3))               ()
+(every 'consp ())                       t
+(setq x 1 y 2 z 3 w 4)                  4
+(every (lambda (s v) (set s v))
+    '(x y z w) '(10 () 20 30))          ()
+x                                       10
+y                                       ()
+z                                       3
+w                                       4
+(any 'consp '(1 "ddd" (1) 10))          (1)
+(any '= '(1 2 3) '(10 2 3))             2
+(any 'eq '(1 2) '(3 4 ()))              ()
+(any 'not ())                           ()
+(any 'consp '((1 . 2)))                 (1 . 2)
+(any (lambda (x  y) y) '(1) '((1 . 2))) (1 . 2)
+(setq x 11 y 12 z 13 w 14)              14
+(any (lambda (s v) (set s v))
+    '(x y z w) '(() () 20 30))          20
+x                                       ()
+y                                       ()
+z                                       20
+w                                       14
+(setq x ())                             ()
+(mapvector (lambda (arg) (newl x arg)) #[a b c d])      ()
+x                                       (d c b a)
+ 
+         (test-serie "[Environment functions]" ())
+ 
+(setq l '(let () 'foo))                         (let () 'foo)
+(eval l)                                        foo
+ l                                              ((lambda () 'foo))
+(setq l '(let ((x 2)(y 3)) (* x y)))            (let ((x 2)(y 3)) (* x y))
+(eval l)                                        6
+ l                                              ((lambda (x y)(* x y)) 2 3)
+(let (i (j 10) k) (list i j k))                 (() 10 ())
+(let ((t 10)))                                  (ERRBPA lambda t)
+(let (1))                                       (ERRBPA lambda 1)
+(let (((a . b) '(1 . 2)) (c 3)) (list a b c))   (1 2 3)
+(let ((a 1 2)) a)                               (ERRWNA let (1 2))
+(let ((a . 1)) a)                               (ERRWNA let 1)
+
+(letv '(a (b . c) d) '(1 (2 . 3) 4) (list a b c d)) (1 2 3 4)
+(letv '(a (b . c) . d) '(1 (2 . 3) . 4) (list a b c d)) (1 2 3 4)
+(letv '(a (t . c) d) '(1 (2 . 3) 4) (list a b c d)) (ERRBPA letv t)
+(letv '(a (() . c) d) '(1 (2 . 3) 4) (list a b c d)) (ERRBPA letv ())
+(letv '(a (b . c) d) '(1 (2 . 3) 4) (list a b c d)) (1 2 3 4)
+(letvq (a . b) '(1 2) (list a b))               (1 (2)) 
+(let ((i 10)) (lets ((i 20)(j (+ i i))) (list i j)))   (20 40)
+ 
+        (test-serie "[Macros, FLET, WITH and Closures]" ())
+
+(dmd foo (x1 x2) `(mcons ,x1 foo ,x2))          foo
+(macroexpand1 '(foo 10 20))                     (mcons 10 foo 20)
+
+(flet ((car (x) (cdr x))) (car '(a b c)))       (b c)
+(flet ((car (x) (cdr x))
+       (cdr (x) (cddr x))) 
+      (cdr (car '(a b c d e))))                 (e)
+
+(defun monindic (pl . n)
+  (ifn (consp n)
+       (getprop pl 'indic)
+       (putprop pl (car n) 'indic)
+       (car n)))                                monindic
+(monindic 'x (list 'a))                         (a)
+(monindic 'x)                                   (a)
+(with ((monindic 'x 20)) (monindic 'x))         20
+(monindic 'x)                                   (a)
+(with ((obase)))                                (ERRSXT with (obase))
+
+(setq x 1)                                      1
+;(funcall (closure '(x) '(lambda() (incr x))) )  2
+;x                                               1
+;(funcall (closure '(x) '(lambda(x) x)) 'toto)   toto
+
+         (test-serie "[Defining forms]" ())
+
+(synonym 'kons 'cons)                           kons
+(kons 'a 'b)                                    (a . b)
+(synonymq conse cons)                           conse
+(conse 'a 'b)                                   (a . b)
+
+(typefn 'car)                                   subr1
+(typefn 'if)                                    fsubr
+(typefn 'list)                                  nsubr
+
+(remob 'babar)                                  babar
+(eval '(defun babar (n) (+ n n)) )                 babar
+(funcall 'babar 10)                             20
+(typefn 'babar)                                 expr
+(valfn 'babar)                                  ((n) (+ n n))
+(findfn (valfn 'babar))                         babar
+(getdef 'babar)                                 (de babar (n) (+ n n))
+(makedef 'babar (typefn 'babar) (valfn 'babar)) (de babar (n) (+ n n))
+(setfn 'foo (typefn 'babar) (valfn 'babar))     foo
+(typefn 'foo)                                   expr
+(valfn 'foo)                                    ((n) (+ n n))
+(foo 10)                                        20
+(remfn 'foo)                                    foo
+(typefn 'foo)                                   ()
+(valfn 'foo)                                    0
+
+(defun t1 ((a . b) c (d . e) . f) (list a b c d e f))      t1
+(defun t2 (x) (t1 x x x x x))                              t2
+(t2 '(y . x))                           (y x (y . x) y x ((y . x) (y . x)))
+
+ ; Test definitions
+
+(defun 4 ())                               (ERRBDF defun 4)
+(defun () ())                              (ERRBDF defun ())
+(defun f1 (x x))                           (ERRBPA f1 x)
+(defun f2 (x y (x)))                       (ERRBPA f2 x)
+(defun f3 (x y (z . x) u v))               (ERRBPA f3 x)
+(defun f4 (x y ((z . x) w) u v))           (ERRBPA f4 x)
+
+         (test-serie "[Control special forms]" ())
+ 
+(if t 1 2 3)                                    1
+(if nil 1 2 3)                                  3
+(if)                                            ()
+(if 1)                                          ()
+(if . 1)                                        (ERRBAL if 1)
+(if 1 . 2)                                      (ERRBAL if 2)
+(if () 2 . 3)                                   (ERRBAL if 3)
+(if () 2 3 . 4)                                 (ERRBAL if 4)
+ 
+(ifn t 1 2 3)                                   3
+(ifn nil 1 2 3)                                 1
+(ifn)                                           ()
+(ifn 1)                                         ()
+(ifn ())                                        ()
+(ifn . 1)                                       (ERRBAL ifn 1)
+(ifn t . 2)                                     (ERRBAL ifn 2)
+(ifn t 2 . 3)                                   (ERRBAL ifn 3)
+(ifn t 2 3 . 4)                                 (ERRBAL ifn 4)
+
+(when t 1 2 3)                                  3
+(when nil 1 2 3)                                ()
+(when)                                          ()
+(when t)                                        ()
+(when . 1)                                      (ERRBAL when 1)
+(when 1 . 2)                                    (ERRBAL when 2)
+(when 1 2 . 3)                                  (ERRBAL when 3)
+
+(unless t 1 2 3)                                ()
+(unless nil 1 2 3)                              3
+(unless)                                        ()
+(unless t)                                      ()
+(unless . 1)                                    (ERRBAL unless 1)
+(unless () . 2)                                 (ERRBAL unless 2)
+(unless () 2 . 3)                               (ERRBAL unless 3)
+         
+(or)                                            ()
+(cons (or) (or))                                (() . ())
+(or nil)                                        ()
+(cons (or nil) (or nil))                        (() . ())
+(or 1 2)                                        1
+(cons (or 1 2) (or 1 2))                        (1 . 1)
+(or nil nil 2 3)                                2
+(or . 1)                                        (ERRBAL or 1)
+(or nil nil . 2)                                (ERRBAL or 2)
+(or nil nil 1 2 . 3)                            1
+
+(and)                                           T
+(cons (and) (and))                              (T . T)
+(and nil)                                       ()
+(cons (and nil) (and nil))                      ((). ())
+(and 1)                                         1
+(and 1 2 3 4)                                   4
+(cons (and 1 2) (and 1 2))                      (2 . 2)
+(and 1 2 () 4)                                  ()
+(and . 1)                                       (ERRBAL and 1)
+(and 1 . 2)                                     (ERRBAL and 2)
+(and 1 2 . 3)                                   (ERRBAL and 3)
+(and 1 2 () 3 . 4)                              ()
+ 
+(cond (nil 1 2) (t 3 4 5))                      5
+(cond)                                          ()
+(cond (() 1) () (t 2))                          2
+(cond . 1)                                      (ERRBAL cond 1)
+(cond 1 2)                                      (ERRNLA cond 1)
+(cond (()) . 2)                                 (ERRBAL cond 2)
+(cond (t . 1))                                  (ERRBAL cond 1)
+(cond (t 1 . 2))                                (ERRBAL cond 2)
+
+ 
+(selectq 'red (green 'hope) (red 'ok)
+                (t 'no))                        ok
+(selectq 'blue (green 'hope) (red 'ok)
+                (t 'no))                        no
+(selectq 'blue (green 'hope) (red 'ok))         ()
+(selectq 'blue ((blue green red) 'color)
+                (t 'unknow))                    color
+(selectq 'green ((blue green red) 'color)
+                (t 'unknow))                    color
+(selectq 'red ((blue green red) 'color)
+                (t 'unknow))                    color
+(selectq 'yellow ((blue green red) 'color)
+                (t 'unknow))                    unknow
+(selectq 'red (("foo" "bar") 'ok) ((blue green red) 'color)
+                (t 'unknow))                    color
+(selectq 10 (10 'ten))                          ten
+(selectq 11 (10 'ten))                          ()
+(selectq 3.2 (3.2 'ok) (t 'no))                 ok
+(selectq "abc" ((abc 3.2) 'no) ("abc" 'yes) 
+               (t 'unknow))                     yes
+(let ((a 10) (b "hoe"))
+     (selectq b ("hoe" (setq a 12) (list a b)) (t 12)))     (12 "hoe")
+(setq foo '(1 2 3))                               (1 2 3)
+(selectq foo (#.foo "bug") ((#.foo) "ok") (t "other bug")) "ok"
+(selectq 'foo (t (1+ 2)))                       3
+(selectq)                                       ()
+(selectq t)                                     ()
+(selectq . 1)                                   (ERRBAL selectq 1)
+(selectq 1 . 2)                                 (ERRBAL selectq 2)
+(selectq 1 ()  . 3)                             (ERRBAL selectq 3)
+(selectq 1 (t . 1))                             (ERRBAL selectq 1)
+(selectq 1 (t 2 . 3))                           (ERRBAL selectq 3)
+(selectq 1 2 3)                                 (ERRNLA selectq 2)
+
+(selectq 1 () (1 2))                            2
+(selectq 3 (3) (1 2))                           ()
+
+(setq s '(a b c d))                             (a b c d)
+(setq l ())                                     ()
+(while s (newl l (nextl s)))                    ()
+l                                               (d c b a)
+(setq s '(a b c d))                             (a b c d)
+(setq l ())                                     ()
+(until (null s) (newl l (nextl s)))             t
+l                                               (d c b a)
+(setq s '(a b (c d) e))                         (a b (c d) e)
+(until (consp (car s)) (nextl s))               (c d)
+(while)                                         ()
+(while . 1)                                     (ERRBAL while 1)
+(while 1 . 2)                                   (ERRBAL while 2)
+(while 1 2 . 3)                                 (ERRBAL while 3)
+; because infinite loop .... in compiled mode ...
+;(until)                                         ()
+(until . 1)                                     (ERRBAL until 1)
+(until () . 2)                                  (ERRBAL until 2)
+(until () 2 . 3)                                (ERRBAL until 3)
+
+
+(setq x 0)                                      0
+(repeat 10 (incr x))                            t
+x                                               10
+(repeat 0 (prin '-))                            t
+(repeat -1000 (prin '-))                        t
+(repeat)                                        t
+(repeat 10)                                     t
+(repeat . 1)                                    (ERRBAL repeat 1)
+(repeat 1 . 2)                                  (ERRBAL repeat 2)
+(repeat 1 2 . 3)                                (ERRBAL repeat 3)
+ 
+         (test-serie "[Non local exits]" ())
+
+(tag foo (exit foo 'ko 'ok))                    ok
+(tag foo (exit foo 'ok) (exit foo 'ko))         ok
+(tag foo (tag bar 
+      (protect (exit bar 'ko) (exit foo 'ok)))) ok
+(defun auxfn (l e)
+    (cond ((null l) ())
+	  ((eq l e) (exit trouve l))
+	  ((consp l) (auxfn (car l) e) 
+	   (auxfn (cdr l) e))
+	  (t ())))                              auxfn
+(defun present (l e)
+   (tag trouve
+      (auxfn l e)))                             present
+
+(present '(1 (2 . 3) 4) 3)                      3
+(present '(1 (2 . 3) 4) 5)                      ()
+(evtag 'foo (evexit 'foo 'ko 'ok))              ok
+(evtag 'foo (evexit 'foo 'ok) (evexit 'foo 'ko))ok
+(tag foo (lock (lambda (tag val)
+                 (if tag (evexit tag val) val))
+         (exit foo (1+ 3))))                    4
+(tag foo (1+ (tag bar (lock (lambda (tag val)
+                           (if (eq tag 'foo) (evexit tag val) val))
+                        (exit foo (1+ 3))))))   4
+(tag foo (1+ (tag bar (lock (lambda (tag val)
+                           (if (eq tag 'foo) (evexit tag val) val))
+                        (exit bar (1+ 3))))))   5
+;(let ((x 10)) (let ((x '(a))) (unwind 1 x)))    10
+;(let ((x 10)) (let ((x 11)) (let ((x 12)) (unwind 2 x))))       10
+(defvar lll ())                                 lll
+(let ((lll 10)) (tag out (let ((lll 20)) (unexit out lll)))) 10
+(protect (+ 10 20) (+ 1 2))                     30
+
+        (test-serie "[Lexical control special forms]" ())
+
+(block foo 1 (return-from foo 2) 3)             2
+(block () 1 (block bar 2 (return 3) 4) 5)       3
+(block foo (block bar (return-from foo 10) (print "ERREUR")))   10
+(block foo (block bar (return-from foo 10)) (print "ERREUR")))  10
+;(block foo (tag bar (let (x) (flet ((gee ())) (protect
+;   (lock (lambda (tag val) val) (schedule 'identity
+;          (tagbody (return-from foo 1)))))))))  1
+(block foo (tag bar (let (x) (protect
+   (lock (lambda (tag val) val) (schedule 'identity
+          (tagbody (return-from foo 1))))))))  1
+(block 10)                                      (ERRSYM block 10)
+(block b 1 (block bar 2 (return-from b 3) 4) 5) 3
+(block foo (eval '(return-from foo 10)))        (ERRNAB return-from foo)
+(block foo (eval '(car '(a))) (return-from foo 10))     10
+(return-from bar 10)                            (ERRNAB return-from bar)
+(let (y) (block foo (setq y (function (lambda () (return-from foo 10)))))
+         (funcall y))                           (ERRXIA return-from foo)
+(block foo (let ((y (function (lambda () (return-from foo 10)))))
+                (funcall y)))                    10
+
+(tagbody (1+ 1) (1+ 2) (1+ 3))                  ()
+(let (l) (tagbody (newl l 1) (newl l 2)) l)     (2 1)
+(let ((n 5) l) (tagbody tour (if (<= n 0) (GO magne)
+  (NEWL l (DECR n)) (GO tour)) magne) l)          (0 1 2 3 4)
+(tagbody
+   (tag foo
+        (mapc #'(lambda (x)
+                        (if (numberp x)
+                            ()
+                            (go out)))
+              '(1 2 t 3))
+        (return))
+   out)                                         ()
+(let (l (n 4))
+     (block foo
+            (tagbody re
+                     (if (<= n 0) (return-from foo l))
+                     (newl l (decr n))
+                     (go re))))                 (0 1 2 3)
+;(tagbody foo (tag bar (let (x) (flet ((gee ())) (protect
+;   (lock (lambda (tag val) val) (schedule 'identity (block bar 't))))))))
+;                                                ()
+(tagbody foo (tag bar (let (x) (progn (protect
+   (lock (lambda (tag val) val) (schedule 'identity (block bar 't))))))))
+                                                ()
+(go loop)                                       (ERRNAB go loop)
+(tagbody 1 2 3 (go 10) 4 5)                     (ERRNAB go 10)
+(tagbody (tagbody (go 1)) 1)                    ()
+(let (y) (tagbody re (setq y (function (lambda () (go re)))))
+         (funcall y))                           (ERRNAB go re)
+
+         (test-serie "[Basic predicates]" ())
+ 
+(false)                                         ()
+(false 1 2 3)                                   ()
+(true)                                          T
+(true 1 2 3)                                    T
+
+(null ())                                       T
+(null t)                                        ()
+(not '(a))                                      ()
+
+(atom ())                                       T
+(atom 'a)                                       T
+(atom 42)                                       T
+(atom #[1 2])                                   T
+(atom "arg")                                    T
+(atom '(a b))                                   ()
+ 
+(atomp ())                                      T
+(atomp 'a)                                      T
+(atomp 42)                                      T
+(atomp #[1 2])                                  T
+(atomp "arg")                                   T
+(atomp '(a b))                                  ()
+ 
+(constantp ())                                  T
+(constantp nil)                                 T
+(constantp 'nil)                                T
+(constantp 'a)                                  ()
+(constantp 42)                                  T
+(constantp 1.14)                                T
+(constantp #[1 2])                              T
+(constantp "arg")                               T
+(constantp '(a b))                              ()
+
+(symbolp ())                                    T
+(symbolp 'a)                                    T
+(symbolp 42)                                    ()
+(symbolp #[1 2])                                ()
+(symbolp "arg")                                 ()
+(symbolp '(a b))                                ()
+ 
+(variablep ())                                  ()
+(variablep nil)                                 ()
+(variablep 'nil)                                ()
+(variablep 'a)                                  A
+(variablep 42)                                  ()
+(variablep "arg")                               ()
+(variablep #[1 2])                              ()
+(variablep '(a b))                              ()
+
+(numberp ())                                    ()
+(numberp 'a)                                    ()
+(numberp 42)                                    42
+(numberp 20000)                                 20000
+(numberp #[1 2])                                ()
+(numberp "arg")                                 ()
+(numberp '(a b))                                ()
+(numberp '#(1.2))                               ()
+(numberp '#("a"))                               ()
+
+(stringp ())                                    ()
+(stringp 'a)                                    ()
+(stringp 42)                                    ()
+(stringp #[1 2])                                ()
+(stringp "arg")                                 "arg"
+(stringp '(a b))                                ()
+ 
+(consp ())                                      ()
+(consp nil)                                     ()
+(consp 'nil)                                    ()
+(consp 'a)                                      ()
+(consp 42)                                      ()
+(consp #[1 2])                                  ()
+(consp "arg")                                   ()
+(consp '(a b))                                  (a b)
+ 
+(listp ())                                      t
+(listp nil)                                     t
+(listp 'nil)                                    ()
+(listp 'a)                                      ()
+(listp 42)                                      ()
+(listp #[1 2])                                  ()
+(listp "arg")                                   ()
+(listp '(a b))                                  t
+ 
+(nlistp ())                                     ()
+(nlistp nil)                                    ()
+(nlistp 'nil)                                   nil
+(nlistp 'a)                                     a
+(nlistp 42)                                     42
+(nlistp #[1 2])                                 #[1 2]
+(nlistp "arg")                                  "arg"
+(nlistp '(a b))                                 ()
+ 
+(eq () ())                                      t
+(eq () nil)                                     t
+(eq () 'nil)                                    ()
+(eq 'a (car '(a)))                              t
+(eq (1+ 119) 120)                               t
+(eq (list 'a 'b) (list 'a 'b))                  ()
+(eq #[1 2] #[1 2])                              ()
+(eq #[] #[])                                    ()
+(eq "ARG" 'ARG)                                 ()
+(eq "arg" "arg")                                ()
+(setq l '(a b c))                               (a b c)
+(eq l l)                                        t
+(eq "" "")                                      ()
+ 
+(neq 'a (car '(a)))                             ()
+(neq (1+ 119) 120)                              ()
+(neq (list 'a 'b) (list 'a 'b))                 t
+(neq #[1 2] #[1 2])                             t
+(neq "ARG" 'ARG)                                t
+(setq l '(a b c))                               (a b c)
+(neq l l)                                       ()
+ 
+;(setq ?speaki t)                               t
+(equal () ())                                   t
+(equal 'a. '|A.|)                                 ()
+(equal 1214 (1+ 1213))                          t
+(equal (1+ 1213) 1214)                          t
+(equal 20000 20000)                             t
+(equal 10 10.)                                  t
+(equal 10. 10)                                  t
+(equal 10. 10.)                                 t
+(equal 10 ())                                   ()
+(equal () 10)                                   ()
+(equal 10. ())                                  ()
+(equal () 10.)                                  ()
+(equal '(10) '(10.))                            t
+(equal '(10.) '(10))                            t
+(equal '(10.) '(10.))                           t
+(equal '(10) '(t))                              ()
+(equal '(t) '(10))                              ()
+(equal '(10.) '(t))                             ()
+(equal '(t) '(10.))                             ()
+(equal #[1 2] #[1 2])                           t
+(equal #[1 2 3] #[1 2])                         ()
+(equal #[1 2] #[1 2 3])                         ()
+(equal #[(1 2) (3 4)] #[(1 2) (3 5)])           ()
+(equal #[(1 2) (3 5)] #[(1 2) (3 4)])           ()
+(equal #[1. 2] #[1 2])                          t
+(equal #[1 2.] #[1 2])                          t
+(equal #[1. 2.] #[1 2])                         t
+(equal #[1 2] #[1. 2])                          t
+(equal #[1 2] #[1 2.])                          t
+(equal #[1 2] #[1. 2.])                         t
+(equal #[1. 2.] #[1. 2.])                       t
+(equal "Foo bar" "Foo bar")                     t
+(equal "" "")                                   t
+(equal "a" "A")                                 ()
+(equal "A" "a")                                 ()
+(equal '(a (b . c) d) '(a (b . c) d))           t
+(equal '(a b c d) '(a b c . d))                 ()
+(equal '(a b c . d) '(a b c d))                 ()
+ 
+(nequal () ())                                  ()
+(nequal 1214 (1+ 1213))                         ()
+(nequal 1215 1214)                              t
+(nequal 1214 1215)                              t
+(nequal 10. 10)                                 ()
+(nequal 10 10.)                                 ()
+(nequal 10 11.)                                 t
+(nequal 10. 11)                                 t
+(nequal "Foo bar" "Foo bar")                    ()
+(nequal '(a (b . c) d) '(a (b . d) d))          t
+ 
+(boundp ())                                     t
+(boundp t)                                      t
+(boundp 'sur-qu-il-existe-pas)                  ()
+(boundp '(ca doit pas marcher))                 ()
+ 
+(if (false) t ())                               ()
+(if (true) t ())                                T
+
+(if (null ()) t ())                             T
+(if (null t) t ())                              ()
+(if (not '(a)) t ())                            ()
+
+(if (atom ()) t ())                             T
+(if (atom 'a) t ())                             T
+(if (atom 42) t ())                             T
+(if (atom #[1 2]) t ())                         T
+(if (atom "arg") t ())                          T
+(if (atom '(a b)) t ())                         ()
+ 
+(if (atomp ()) t ())                            T
+(if (atomp 'a) t ())                            T
+(if (atomp 42) t ())                            T
+(if (atomp #[1 2]) t ())                        T
+(if (atomp "arg") t ())                         T
+(if (atomp '(a b)) t ())                        ()
+
+(if (constantp ()) t ())                        T
+(if (constantp 'a) t ())                        ()
+(if (constantp 42) t ())                        T
+(if (constantp #[1 2]) t ())                    T
+(if (constantp "arg") t ())                     T
+(if (constantp '(a b)) t ())                    ()
+
+(if (symbolp ()) t ())                          T
+(if (symbolp 'a) t ())                          T
+(if (symbolp 42) t ())                          ()
+(if (symbolp #[1 2]) t ())                      ()
+(if (symbolp "arg") t ())                       ()
+(if (symbolp '(a b)) t ())                      ()
+ 
+(if (variablep ()) t ())                        ()
+(if (variablep 'a) t ())                        t
+(if (variablep 42) t ())                        ()
+(if (variablep "arg") t ())                     ()
+(if (variablep #[1 2]) t ())                    ()
+(if (variablep '(a b)) t ())                    ()
+
+(if (numberp ()) t ())                          ()
+(if (numberp 'a) t ())                          ()
+(if (numberp 42) t ())                          t
+(if (numberp 20000) t ())                       t
+(if (numberp #[1 2]) t ())                      ()
+(if (numberp "arg") t ())                       ()
+(if (numberp '(a b)) t ())                      ()
+
+(if (stringp ()) t ())                          ()
+(if (stringp 'a) t ())                          ()
+(if (stringp 42) t ())                          ()
+(if (stringp #[1 2]) t ())                      ()
+(if (stringp "arg") t ())                       T
+(if (stringp '(a b)) t ())                      ()
+ 
+(if (consp ()) t ())                            ()
+(if (consp nil) t ())                           ()
+(if (consp 'nil) t ())                          ()
+(if (consp 'a) t ())                            ()
+(if (consp 42) t ())                            ()
+(if (consp #[1 2]) t ())                        ()
+(if (consp "arg") t ())                         ()
+(if (consp '(a b)) t ())                        T
+ 
+(if (listp ()) t ())                            t
+(if (listp nil) t ())                           t
+(if (listp 'nil) t ())                          ()
+(if (listp 'a) t ())                            ()
+(if (listp 42) t ())                            ()
+(if (listp #[1 2]) t ())                        ()
+(if (listp "arg") t ())                         ()
+(if (listp '(a b)) t ())                        t
+ 
+(if (nlistp ()) t ())                           ()
+(if (nlistp nil) t ())                          ()
+(if (nlistp 'nil) t ())                         t
+(if (nlistp 'a) t ())                           t
+(if (nlistp 42) t ())                           t
+(if (nlistp #[1 2]) t ())                       t
+(if (nlistp "arg") t ())                        t
+(if (nlistp '(a b)) t ())                       ()
+ 
+(if (eq () ()) t ())                            t
+(if (eq () nil) t ())                           t
+(if (eq () 'nil) t ())                          ()
+(if (eq 'a (car '(a))) t ())                    t
+(if (eq (1+ 119) 120) t ())                     t
+(if (eq '(a b) '(a b)) t ())                    ()
+(if (eq #[1 2] #[1 2]) t ())                    ()
+(if (eq #[] #[]) () t)                          t
+(if (eq "ARG" 'ARG) t ())                       ()
+(if (eq "arg" "arg") t ())                      ()
+(if (setq l '(a b c)) t ())                     t
+(if (eq l l) t ())                              t
+(if (eq "" "") t ())                            ()
+ 
+(if (neq 'a (car '(a))) t ())                   ()
+(if (neq (1+ 119) 120) t ())                    ()
+(if (neq '(a b) '(a b)) t ())                   t
+(if (neq #[1 2] #[1 2]) t ())                   t
+(if (neq "ARG" 'ARG) t ())                      t
+(if (setq l '(a b c)) t ())                     t
+(if (neq l l) t ())                             ()
+ 
+(if (equal () ()) t ())                         t
+(if (equal 'a. '|A.|) t ())                       ()
+(if (equal 1214 (1+ 1213)) t ())                t
+(if (equal 20000 20000) t ())                   t
+(if (equal 10 10.) t ())                        t
+(if (equal #[1 2] #[1 2]) t ())                 t
+(if (equal #[1 2 3] #[1 2]) t ())               ()
+(if (equal #[(1 2) (3 4)] #[(1 2) (3 5)]) t ()) ()
+(if (equal "Foo bar" "Foo bar") t ())           t
+(if (equal "" "") t ())                         t
+(if (equal "a" "A") t ())                       ()
+(if (equal '(a (b . c) d) '(a (b . c) d)) t ()) t
+(if (equal '(a b c d) '(a b c . d)) t ())       ()
+ 
+(if (nequal () ()) t ())                        ()
+(if (nequal 1214 (1+ 1213)) t ())               ()
+(if (nequal 1215 1214) t ())                    t
+(if (nequal "Foo bar" "Foo bar") t ())          ()
+(if (nequal '(a (b . c) d) '(a (b . d) d)) t ()) t
+ 
+(if (boundp ()) t ())                           t
+(if (boundp t) t ())                            t
+(if (boundp 'sur-qu-il-existe-pas) t ())        ()
+(if (boundp '(ca doit pas marcher)) t ())       ()
+ 
+(ifn (false) () t)                              ()
+(ifn (true) () t)                               T
+
+(ifn (null ()) () t)                            T
+(ifn (null t) () t)                             ()
+(ifn (not '(a)) () t)                           ()
+
+(ifn (atom ()) () t)                            T
+(ifn (atom 'a) () t)                            T
+(ifn (atom 42) () t)                            T
+(ifn (atom #[1 2]) () t)                                T
+(ifn (atom "arg") () t)                         T
+(ifn (atom '(a b)) () t)                                ()
+ 
+(ifn (atomp ()) () t)                           T
+(ifn (atomp 'a) () t)                           T
+(ifn (atomp 42) () t)                           T
+(ifn (atomp #[1 2]) () t)                       T
+(ifn (atomp "arg") () t)                                T
+(ifn (atomp '(a b)) () t)                       ()
+
+(ifn (constantp ()) () t)                       T
+(ifn (constantp 'a) () t)                       ()
+(ifn (constantp 42) () t)                       T
+(ifn (constantp #[1 2]) () t)                   T
+(ifn (constantp "arg") () t)                    T
+(ifn (constantp '(a b)) () t)                   ()
+
+(ifn (symbolp ()) () t)                         T
+(ifn (symbolp 'a) () t)                         T
+(ifn (symbolp 42) () t)                         ()
+(ifn (symbolp #[1 2]) () t)                     ()
+(ifn (symbolp "arg") () t)                      ()
+(ifn (symbolp '(a b)) () t)                     ()
+ 
+(ifn (variablep ()) () t)                       ()
+(ifn (variablep 'a) () t)                       t
+(ifn (variablep 42) () t)                       ()
+(ifn (variablep "arg") () t)                    ()
+(ifn (variablep #[1 2]) () t)                   ()
+(ifn (variablep '(a b)) () t)                   ()
+
+(ifn (numberp ()) () t)                         ()
+(ifn (numberp 'a) () t)                         ()
+(ifn (numberp 42) () t)                         t
+(ifn (numberp 20000) () t)                      t
+(ifn (numberp #[1 2]) () t)                     ()
+(ifn (numberp "arg") () t)                      ()
+(ifn (numberp '(a b)) () t)                     ()
+
+(if (integerp 2) t ())                          t
+(if (integerp -2) t ())                         t
+(if (integerp 2.0) t ())                        ()
+(if (integerp -2.0) t ())                       ()
+(if (integerp 0.) t ())                         ()
+(if (integerp 0.0) t ())                        ()
+(if (integerp 'foo) t ())                       ()
+
+(if (floatp 2) t ())                          ()
+(if (floatp -2) t ())                         ()
+(if (floatp 2.0) t ())                        t
+(if (floatp -2.0) t ())                       t
+(if (floatp 0.) t ())                         t
+(if (floatp 0.0) t ())                        t
+(if (floatp 'foo) t ())                       ()
+
+(ifn (stringp ()) () t)                         ()
+(ifn (stringp 'a) () t)                         ()
+(ifn (stringp 42) () t)                         ()
+(ifn (stringp #[1 2]) () t)                     ()
+(ifn (stringp "arg") () t)                      T
+(ifn (stringp '(a b)) () t)                     ()
+ 
+(ifn (consp ()) () t)                           ()
+(ifn (consp nil) () t)                          ()
+(ifn (consp 'nil) () t)                         ()
+(ifn (consp 'a) () t)                           ()
+(ifn (consp 42) () t)                           ()
+(ifn (consp #[1 2]) () t)                       ()
+(ifn (consp "arg") () t)                                ()
+(ifn (consp '(a b)) () t)                       T
+ 
+(ifn (listp ()) () t)                           t
+(ifn (listp nil) () t)                          t
+(ifn (listp 'nil) () t)                         ()
+(ifn (listp 'a) () t)                           ()
+(ifn (listp 42) () t)                           ()
+(ifn (listp #[1 2]) () t)                       ()
+(ifn (listp "arg") () t)                                ()
+(ifn (listp '(a b)) () t)                       t
+ 
+(ifn (nlistp ()) () t)                          ()
+(ifn (nlistp nil) () t)                         ()
+(ifn (nlistp 'nil) () t)                                t
+(ifn (nlistp 'a) () t)                          t
+(ifn (nlistp 42) () t)                          t
+(ifn (nlistp #[1 2]) () t)                      t
+(ifn (nlistp "arg") () t)                       t
+(ifn (nlistp '(a b)) () t)                      ()
+ 
+(ifn (eq () ()) () t)                           t
+(ifn (eq () nil) () t)                          t
+(ifn (eq () 'nil) () t)                         ()
+(ifn (eq 'a (car '(a))) () t)                   t
+(ifn (eq (1+ 119) 120) () t)                    t
+(ifn (eq '(a b) '(a b)) () t)                   ()
+(ifn (eq #[1 2] #[1 2]) () t)                   ()
+(ifn (eq #[] #[]) t ())                         t
+(ifn (eq "ARG" 'ARG) () t)                      ()
+(ifn (eq "arg" "arg") () t)                     ()
+(ifn (setq l '(a b c)) () t)                    t
+(ifn (eq l l) () t)                             t
+(ifn (eq "" "") () t)                           ()
+ 
+(ifn (neq 'a (car '(a))) () t)                  ()
+(ifn (neq (1+ 119) 120) () t)                   ()
+(ifn (neq '(a b) '(a b)) () t)                  t
+(ifn (neq #[1 2] #[1 2]) () t)                  t
+(ifn (neq "ARG" 'ARG) () t)                     t
+(ifn (setq l '(a b c)) () t)                    t
+(ifn (neq l l) () t)                            ()
+ 
+(ifn (equal () ()) () t)                                t
+(ifn (equal 'a. '|A.|) () t)                      ()
+(ifn (equal 1214 (1+ 1213)) () t)               t
+(ifn (equal 20000 20000) () t)                  t
+(ifn (equal 10 10.) () t)                       t
+(ifn (equal #[1 2] #[1 2]) () t)                        t
+(ifn (equal #[1 2 3] #[1 2]) () t)              ()
+(ifn (equal #[(1 2) (3 4)] #[(1 2) (3 5)]) () t)        ()
+(ifn (equal "Foo bar" "Foo bar") () t)          t
+(ifn (equal "" "") () t)                                t
+(ifn (equal "a" "A") () t)                      ()
+(ifn (equal '(a (b . c) d) '(a (b . c) d)) () t)        t
+(ifn (equal '(a b c d) '(a b c . d)) () t)      ()
+ 
+(ifn (nequal () ()) () t)                       ()
+(ifn (nequal 1214 (1+ 1213)) () t)              ()
+(ifn (nequal 1215 1214) () t)                   t
+(ifn (nequal "Foo bar" "Foo bar") () t)         ()
+(ifn (nequal '(a (b . c) d) '(a (b . d) d)) () t) t
+ 
+(ifn (boundp ()) () t)                          t
+(ifn (boundp t) () t)                           t
+(ifn (boundp 'sur-qu-il-existe-pas) () t)       ()
+(ifn (boundp '(ca doit pas marcher)) () t)      ()
+ 
+(type-of ())                            null
+(type-of t)                             symbol
+(type-of 10)                            fix
+(type-of 10.)                           float
+(type-of "Foo")                         string
+(type-of #[1 2])                        vector
+(type-of '(a b))                        cons
+(type-of '#(a . b))                     a
+
+(type-of '#(123 123))                   #.#:system:bignum-type
+(setq #:system:bignum-type '#:R:Z:N)    #:R:Z:N
+(type-of '#(123 123))                   #:R:Z:N
+(type-of '#((123 . 123) . 123))         #:R:Z:N
+(type-of '#((a b c) ()))                (a b c)
+
+         (test-serie "[List functions]" ())
+ 
+(car '(a . b))                          a
+(cdr '(a . b))                          b
+(caar '((a . c) b . d))                 a
+(cadr '((a . c) b . d))                 b
+(cdar '((a . c) b . d))                 c
+(cddr '((a . c) b . d))                 d
+(setq l '(((a . e) c . g) (b . f) d . h)) (((a . e) c . g) (b . f) d . h)
+(caaar l)                               a
+(caadr l)                               b
+(cadar l)                               c
+(caddr l)                               d
+(cdaar l)                               e
+(cdadr l)                               f
+(cddar l)                               g
+(cdddr l)                               h
+(setq l '((((a . i) e . m) (c . k) g . o) ((b . j) f . n) (d . l) h . p) l1 ()
+)
+                                        ()
+(caaaar l)                              a
+(caaadr l)                              b
+(caadar l)                              c
+(caaddr l)                              d
+(cadaar l)                              e
+(cadadr l)                              f
+(caddar l)                              g
+(cadddr l)                              h
+(cdaaar l)                              i
+(cdaadr l)                              j
+(cdadar l)                              k
+(cdaddr l)                              l
+(cddaar l)                              m
+(cddadr l)                              n
+(cdddar l)                              o
+(cddddr l)                              p
+(car 10)                                (ERRNLA car 10)
+(caar '(10))                            (ERRNLA caar (10))
+(caaar '((10)))                         (ERRNLA caaar ((10)))
+(caaaar '(((10))))                      (ERRNLA caaaar (((10))))
+ 
+(memq 'c '(a b c d e))                          (c d e)
+(memq 'c '(a . c))                              ()
+(memq 'z '(a b c d e))                          ()
+ 
+(member 'c '(a b c d e))                        (c d e)
+(member 'z '(a b c d e))                        ()
+(member 'f '(a . f))                            ()
+(member '(a b) '(a (a b) c))                    ((a b) c)
+ 
+(setq l '(a b c d) ll (cddr l))                 (c d)
+(tailp ll l)                                    (c d)
+(tailp '(c d) '(a b c d))                       ()
+
+(nthcdr 3 '(a b c d e f))                        (d e f)
+(nthcdr 10 '(a b c d e . f))                     ()
+(nthcdr 1 '(a b))                                (b)
+(nthcdr 0 '(a b))                                (a b)
+(nthcdr -100 '(a b))                             (a b)
+ 
+(nth 3 '(a b c d e f))                          d
+(nth 100  '(a b c))                             ()
+(nth 0 '(a b))                                  a
+(nth -1 '(a b))                                 a
+(nth -10000 '(a b))                             a
+ 
+(last 120)                                       120
+(last '(a b c))                                  (c)
+(last '(a b c . d))                              (c . d)
+ 
+(length ())                                     0
+(length 10)                                     0
+(length '(1 1 1))                               3
+(length '(a b . c))                             2
+
+ 
+        (test-serie "[TCONS functions]" ())
+
+(setq x '(a . b))                               (a . b)
+(tconsmk x)                                     #(a . b)
+x                                               #(a . b)
+(setq x (tcons 'a '(b c)))                      #(a b c)
+x                                               #(a b c)
+(tconscl x)                                     (a b c)
+(tconsmk x)                                     #(a b c)
+(setq y (tcons 'd (cons 'e x)))                 #(d e . #(a b c))
+;;; still here after a GC?
+(gc)                                            t
+y                                               #(d e . #(a b c))
+(consp x)                                       #(a b c)
+(tconsp x)                                      #(a b c)
+(eq (car x) 'a)                                 t
+(tconsp (cdr x))                                ()
+(rplaca x 'z)                                   #(z b c)
+(tconsp x)                                      #(z b c)
+(rplacd x 'a)                                   #(z . a)
+(tconsp x)                                      #(z . a)
+(setq x (tcons (ncons 'a) '(b c)))              #((a) b c)
+(tconsp (car x))                                ()
+(tconsp (cons (car x) (cdr x)))	                ()
+
+         (test-serie "[List creation functions]" ())
+ 
+(cons 'a () )                                    (a)
+(cons 'a 'b)                                     (a . b)
+(cons 'a '(b c))                                (a b c)
+(setq l '(x y z))                               (x y z)
+(equal (cons (car l) (cdr l)) l)                t
+ 
+(xcons 'a () )                                   (() . a)
+(xcons 'a 'b)                                    (b . a)
+(setq x 10)                                     10
+(xcons (incr x) (incr x))                       (12 . 11)
+ 
+(ncons () )                                      (())
+(ncons 'a)                                       (a)
+ 
+(mcons)                                          ()
+(mcons 'a)                                       a
+(mcons 'a 'b)                                    (a . b)
+(mcons 'a 'b 'c)                                 (a b . c)
+(mcons 'a 'b 'c 'd)                              (a b c . d)
+ 
+(list)                                           ()
+(list 'a 'b 'c)                                  (a b c)
+
+(kwote () )                                      (quote ())
+(kwote 'a)                                       (quote a)
+(kwote (cdr '(a . b)))                          (quote b)
+(kwote '(a b c))                                 (quote (a b c))
+ 
+(makelist 0 ())                                  ()
+(makelist 3 ())                                  (() () ())
+(makelist -1 ())                                 ()
+(makelist 4 'a)                                  (a a a a)
+(length (makelist 10000 t))                     10000
+(length (makelist 0 t))                         0
+
+(append '(a b c) () )                            (a b c)
+(append () '(d e f))                             (d e f)
+(append '(a b c) '(d e f) '(g h))                (a b c d e f g h)
+(append  () '(a) () '(b) () '(c))               (a b c)
+(append '(a) () '(b) () '(c) ())                (a b c)
+ 
+(setq l '(a b c))                       (a b c)
+(append l)                              (a b c)
+(eq l (append l))                       t
+(eq l (append l ()))                    ()
+(append l 'z)                           (a b c . z)
+
+(append1 '(a) 'b)                               (a b)
+(append1 () 'b)                                 (b)
+(append1 '(a) ())                               (a ())
+
+(reverse 'a)                                     ()
+(reverse '(a b c))                               (c b a)
+(reverse '(a (b c) d))                          (d (b c) a)
+(reverse '(a b c . d))                          (c b a)
+ 
+(copylist 'a)                           a
+(copylist '(a (b (c (d)))))             (a (b (c (d))))
+(copylist '#(a b . #(d)))               (a b d)
+
+(setq strg "gdy jest")          "gdy jest"
+(eq strg strg)                  t
+(eq strg (copy strg))           ()
+(equal strg (copy strg))        t
+(setq vect #[1 2]))             #[1 2]
+(eq vect vect)                  t
+(eq vect (copy vect))           ()
+(equal vect (copy vect))        t
+(copy '#(a b . #(d)))           #(a b . #(d))
+
+(firstn t ())                                   (ERRNIA firstn t)
+(firstn 3 'a)                                   a
+(firstn 3 '(a b c d e f))                       (a b c)
+(firstn 5 '(a b c d))                           (a b c d)
+(firstn 5 '(a b c . d))                         (a b c)
+(firstn 0 '(a b c))                             ()
+(firstn -100 '(a b c))                          ()
+
+(lastn t ())                                    (ERRNIA lastn t)
+(lastn 10 'a)                                   a
+(lastn 2 '(a b c d e))                          (d e)
+(lastn 2 '(a b c d . e))                        (c d)
+(lastn 10 '(a b c))                             (a b c)
+(lastn -10 '(a b c))                            ()
+(lastn 0 '(a))                                  ()
+ 
+(subst 'z 'a '(a c (d a)))                      (z c (d z))
+(subst () () '(a b c))                          (a b c)
+(subst 'z '(a) '((a) c (d (a))))                (z c (d z))
+
+(remq 'a '(a b a (c a b) d a s))                (b (c a b) d s)
+(remq 'a '(a a))                                ()
+(remq 'a '(a . b))                              b
+(remq 'a '(a b . a))                            (b . a)
+(remq 'a '(a b . c))                            (b . c)
+
+(remove '(a) '(a b (a) (c a b) (a) s))          (a b (c a b) s)
+(remove '(a) '((a)(a)(a)))                      ()
+
+(oblist '(a b))                                 (ERRSYM oblist (a b))
+(oblist () '(c d))                              (ERRSYM oblist (c d))
+
+(boblist t)                                     (ERRNIA boblist t)
+(boblist -1)                                    (ERROOB boblist -1)
+(boblist 1000)                                  (ERROOB boblist 1000)
+
+(tconsp
+   (progn (freecons (tcons 1 2)) (cons 1 2)))   ()
+(tconsp
+   (progn
+     (freetree '#(#(1 2) #(1 2))) (cons 1 2)))  ()
+(progn (freetree '#(#(1) #(3))) (list 1 2 3))   (1 2 3)
+(freecons 'a)                                   (ERRNLA freecons a)
+
+         (test-serie "[Modification functions]" ())
+ 
+(setq x '(a b))                                 (a b)
+(rplaca x '(c))                                 ((c) b)
+ x                                              ((c) b)
+ 
+(setq x '(s t))                                 (s t)
+(rplacd x '(u))                                 (s u)
+ x                                              (s u)
+ 
+(setq x '(a b) y '(c d))                        (c d)
+(rplaca x (cdr y))                              ((d) b)
+
+(setq l1 '(a b c))                              (a b c)
+(setq l2 l1)                                    (a b c)
+(rplac l1 'x '(z))                              (x z)
+l2                                              (x z)
+
+(setq l1 '(a b c))                              (a b c)
+(setq l2 l1)                                    (a b c)
+(displace l1 '(x y))                            (x y)
+ l2                                             (x y)
+(displace l1 'z)                                (progn z)
+ l2                                             (progn z)
+(displace l1 '#(a . b))                         #(a . b)
+ l1                                             #(a . b)
+ 
+(nconc)                                         ()
+(nconc ())                                      ()
+(nconc () ())                                   ()
+(nconc () () ())                                ()
+(nconc () () () '(a b c))                       (a b c)
+(nconc '(a b))                                  (a b)
+(nconc '(a b) '(c d))                           (a b c d)
+(nconc '(a b) '(c d) '(e f))                    (a b c d e f)
+(nconc '(a b) () '(c d) () '(e f))              (a b c d e f)
+(nconc '(a b) 2 '(c d) 3 'e)                    (a b c d . e)
+(nconc '(a b) () '(c d) () '(e f) ())           (a b c d e f)
+(nconc (setq value (list 'value)) (list '()))   (value ())
+(nconc value (list '()))                        (value () ())
+
+(nconc1 (list 'a 'b 'c) 'd)                     (a b c d)
+
+(setq l1 (list 'a 'b 'c 'd 'e))                 (a b c d e)
+(setq l2 (cdr l1))                              (b c d e)
+(setq l3 (last l1))                             (e)
+(nreverse l1)                                   (e d c b a)
+ l1                                             (a)
+ l2                                             (b a)
+ l3                                             (e d c b a)
+
+(setq l1 (list 'a 'b 'c 'd 'e))                 (a b c d e)
+(setq l2 (cdr l1))                              (b c d e)
+(setq l3 (last l1))                             (e)
+(nreconc l1 '(x y))                             (e d c b a x y)
+ l1                                             (a x y)
+ l2                                             (b a x y)
+ l3                                             (e d c b a x y)
+
+(setq l '(a c a (d a . a)))                     (a c a (d a . a))
+(nsubst '(x y) 'a l)                            ((x y) c (x y) (d (x y) x y))
+ l                                              ((x y) c (x y) (d (x y) x y))
+(nsubst 1 l l)                                  1
+(setq l '(a c a (d a . a)))                     (a c a (d a . a))
+(nsubst 1 (cdr l) l)                            (a . 1)
+
+(setq l '(a b c b b d))                         (a b c b b d)
+(delq 'b l)                                     (a c d)
+(setq l '(a b a . c))                           (a b a . c)
+(delq 'a l)                                     (b . c)
+ l                                              (a b . c)
+(setq l '(a b a . a))                           (a b a . a)
+(delq 'a l)                                     (b . a)
+(setq l '(a a a . a))                           (a a a . a)
+(delq 'a l)                                     a
+(setq l '(a a a))                               (a a a)
+(delq 'a l)                                     ()
+
+(setq l '(a (b) c b (b) d))                     (a (b) c b (b) d)
+(delete '(b) l)                                 (a c b d)
+(setq l '(a a a . a))                           (a a a . a)
+(delete 'a l)                                   a
+(setq l '(a a a))                               (a a a)
+(delete 'a l)                                   ()
+
+(setq l '(1 2 3))                               (1 2 3)
+(newr l 4)                                      (1 2 3 4)
+l                                               (1 2 3 4)
+(defun foo3 () (newr l (foo4)))                    foo3
+(defun foo4 () (newr l 5) 6)                       foo4
+(foo3)                                          (1 2 3 4 5 6)
+(setq l ())                                     ()
+(foo3)                                          (5 6)
+
+         (test-serie "[A-list functions]" ())
+
+ (acons 'a '10 '((b . 11) (z . 40)))    ((a . 10)(b . 11)(z . 40))
+ (pairlis '(a b) '(1 2) '((c . 3)))     ((a . 1) (b . 2) (c . 3))
+ (pairlis '(x y z) '(a (b)) '((a . x) (b . y)))
+                                        ((x . a) (y b) (z) (a . x) (b . y))
+ (pairlis '(ya jestem wielky) '(le merle chante) ())
+                                ((ya . le) (jestem . merle) (wielky . chante))
+ (assq 'b '((a) (b 1) (c d e)))         (b 1)
+ (assoc '(b) '((a) ((b) 1) (c d e)))    ((b) 1)
+ (cassq 'c '((a) (b 1) (c d e)))        (d e)
+ (cassoc '(c) '((a) (b 1) ((c) d e)))   (d e)
+ (rassq 1 '((a) (b . 1) (c d e)))       (b . 1)
+ (rassoc '(d e) '((a) ((b) 1) (c d e))) (c d e)
+ (sublis '((a . z) (b 2 3)) '(a (b a c) d b . b))
+                                        (z ((2 3) z c) d (2 3) 2 3)
+(setq l '(a b c))                       (a b c)
+(eq (sublis '((x 1)) l) l)              t
+(eq (cdr (sublis '((a x)) l)) (cdr l))  t
+
+
+        (test-serie "[Symbol functions]" ())
+
+(setq l1 '(a b c) l2 l1 l3 'foo)                foo
+ l3                                             foo
+ l2                                             (a b c)
+(boundp 'l3)                                    t
+(symeval 'l3)                                   foo
+(setq #:system:gensym-counter 100)              100
+(symeval (gensym))                              (ERRUDV symeval g101)
+ 
+(makunbound 'l3)                                l3
+(boundp 'l3)                                    ()
+
+(set 'l1 '(a b c))                              (a b c)
+ l1                                             (a b c)
+
+(setq l1 1 l2 2)                                2
+(setq)                                          ()
+(setq a)                                        (ERRWNA setq 2)
+(setq a 1 b)                                    (ERRWNA setq 2)
+(setq t 2)                                      (ERRNVA setq t)
+(psetq l1 l2 l2 l1)                             2
+ l1                                             2
+ l2                                             1
+(setqq)                                         ()
+(setqq a)                                       (ERRWNA setqq 2)
+(setqq t 1)                                     (ERRNVA setqq t)
+(setqq a 1 b)                                   (ERRWNA setqq 2)
+(setqq l1 2 l2 3)                               3
+ l1                                             2
+ l2                                             3
+ 
+(deset '(a (b . c)) '((1 2) (3 4)))             t
+ a                                              (1 2)
+ b                                              3
+ c                                              (4)
+(deset '(a t) '(1 2))                           (ERRBPA deset t)
+(deset '(a . t) '(1 2))                         (ERRBPA deset t)
+(deset '(a (b)) '(1 2))                         (ERRILB deset ((b) 2))
+
+(desetq (a (b . c)) '((1 2) (3 4)))             t
+ a                                              (1 2)
+ b                                              3
+ c                                              (4)
+(deset '(a t) '(1 2))                           (ERRBPA deset t)
+(deset '(a . t) '(1 2))                         (ERRBPA deset t)
+(deset '(a (b)) '(1 2))                         (ERRILB deset ((b) 2))
+
+(setq a '(x y z))                               (x y z)
+(nextl a)                                       x
+ a                                              (y z)
+(setq b ())                                     ()
+(nextl a b)                                     y
+ a                                              (z)
+ b                                              y
+(nextl a)                                       z
+(nextl a)                                       ()
+(nextl a)                                       ()
+
+(setq l '(1 2 3 4 5) x 10 y 11 z 12)            12
+(progn (nextl l) (nextl l x) (nextl l z))       3
+l                                               (4 5)
+x                                               2
+z                                               3 
+
+(setq a '(x y z))                               (x y z)
+(newl a 'w)                                     (w x y z)
+ a                                              (w x y z)
+
+(setq a '(x y z))                               (x y z)
+(newr a 'w)                                     (x y z w)
+ a                                              (x y z w)
+(setq b ())                                     ()
+(newr b 'z)                                     (z)
+ b                                              (z) 
+
+(incr () 5)                                     (ERRNVA incr ())
+(incr t 5)                                      (ERRNVA incr t)
+(setq x 5)                                      5
+(incr x)                                        6
+ x                                              6
+(incr x 4)                                      10
+(incr x 1.5)                                    11.5
+(incr x)                                        12.5
+ x                                              12.5
+(decr () 5)                                     (ERRNVA decr ())
+(decr t 5)                                      (ERRNVA decr t)
+(setq x 10)                                     10
+(decr x 4)                                      6
+(decr x)                                        5
+ x                                              5
+(decr x 1.5)                                    3.5
+ x                                              3.5
+(decr x)                                        2.5
+ x                                              2.5
+
+         (test-serie "[P-lists functions]" ())
+
+ (plist () t)                           (ERRSYM plist ())
+ (plist 'rose '(nom commun genre feminin)) (nom commun genre feminin)
+ (plist 'rose)                          (nom commun genre feminin)
+ (getprop 'nil 'genre)                  ()
+ (getprop 'rose 'genre)                 feminin
+ (getprop 'rose 'famille)               ()
+ (getl 'rose '(genre nom))              (nom commun genre feminin)
+ (getl 'rose '(taille genre))           (genre feminin)
+ (getl 'rose '(type taille))            ()
+ (addprop 'rose 'fleur 'famille)        fleur
+ (plist  'rose)         (famille fleur nom commun genre feminin)
+ (putprop 'rose 'jouli 'nom)            jouli
+ (plist  'rose)         (famille fleur nom jouli genre feminin)
+ (remprop 'rose 'nom)                   (nom jouli genre feminin)
+ (remprop 'rose 'foo)                   ()
+ (plist 'rose)                          (famille fleur genre feminin)
+ (remprop 'rose 'famille)               (famille fleur genre feminin)
+ (plist 'rose)                          (genre feminin)
+ (defprop rose test defprop)            test
+ (plist 'rose)                          (defprop test genre feminin)
+ (remprop 'rose 'genre)                 (genre feminin)
+ (plist 'rose)                          (defprop test)
+ (remprop 'rose 'defprop)               (defprop test)
+ (plist 'rose)                          ()
+ (putprop () () ())                     (ERRNVA putprop ())
+ (addprop () () ())                     (ERRNVA addprop ())
+ (plist 'plt '(i1 a i2 b))              (i1 a i2 b)
+ (addprop 'plt 'c 'i1)                  c
+ (plist 'plt)                           (i1 c i1 a i2 b)
+ (plist 'plt '(i1 a i2 b))              (i1 a i2 b)
+ (putprop 'plt 'c 'i1)                  c
+ (plist 'plt)                           (i1 c i2 b)
+ (putprop 'plt 0 'i9)                   0
+ (plist 'plt)                           (i9 0 i1 c i2 b)
+
+         (test-serie "[Special field functions]" ())
+
+(objval () t)                           (ERRSYM objval ())
+(objval 'gee ())                        ()
+(objval 'gee)                           ()
+(objval 'gee 'haugh)                    haugh
+(objval 'gee)                           haugh
+
+(defvar x '#:sator:arepo:tenet:opera:rotas)     x
+(packagecell '#:sator:arepo:tenet:opera:rotas '#:sator:arepo:tenet:opera)
+        #:sator:arepo:tenet:opera          
+(packagecell x) #:sator:arepo:tenet:opera
+(packagecell (packagecell x)) #:sator:arepo:tenet
+(packagecell (packagecell (packagecell x))) #:sator:arepo
+(packagecell x '#:en:to:pan) #:en:to:pan
+
+(setq a (symbol (symbol '(a b) 'y) 'x))    #:(a b):y:x
+(setq b (symbol '(a b) 'x)))               #:(a b):x
+(subtypep a b)                             ()
+
+(setq a (symbol (symbol '(a b) 'x) 'y))    #:(a b):x:y
+(subtypep a b)                             t
+
+(setq a (symbol (symbol '(a . b) 'x) 'y))  #:(a . b):x:y
+(setq b (symbol '(a . b) 'x)))             #:(a . b):x
+(subtypep a b)                             t
+
+(setq a (symbol (symbol '(a . b) 'y) 'x))  #:(a . b):y:x
+(subtypep a b)                             ()
+(subtypep '#:a:b:d:e:f:g '#:a:b:d:e)       t
+(subtypep '#:a:b:d:e '#:a:b:d:e:f:g)       ()
+
+(subtypep "kjhkjh" '#:a:b)                 (ERRSYM subtypep "kjhkjh")
+(subtypep '(a b) "jklkjg")                 (ERRSYM subtypep (a b))
+(subtypep '#:a:b "kjhkjh")                 (ERRSYM subtypep "kjhkjh")
+(subtypep '#[a] "kjhkjh")                  (ERRSYM subtypep #[a])
+
+(progn '(#:foo:xyzzy xyzzy #:bar:xyzzy) ()) () ; to guarantee a 3d link exists
+(3d-root-symbol '#:foo:xyzzy)               xyzzy
+(3d-root-symbol '#:bar:xyzzy)               xyzzy
+(3d-root-symbol 'xyzzy)                     xyzzy
+
+(getfn1 () 'car)                car
+(defun #:foo:bar ())               #:foo:bar
+(getfn1 'foo 'bar)              #:foo:bar
+(getfn1 'gee 'bar)              ()
+
+(defun #:(a . c):foo1 () 1)	#:(a . c):foo1
+(defun #:(a . c):foo2 () 1)	#:(a . c):foo2
+(defun #:(a . c):foo3 () 1)	#:(a . c):foo3
+(defun #:(a . c):foo4 () 1)	#:(a . c):foo4
+
+(defun #:(a . #:c:d):foo2 () 2)	#:(a . #:c:d):foo2
+(defun #:(a . #:c:d):foo3 () 2)	#:(a . #:c:d):foo3
+(defun #:(a . #:c:d):foo4 () 2)	#:(a . #:c:d):foo4
+
+(defun #:(#:a:b . c):foo3 () 3)	#:(#:a:b . c):foo3
+(defun #:(#:a:b . c):foo4 () 3)	#:(#:a:b . c):foo4
+(defun #:(#:a:b . #:c:d):foo4 () 4)	#:(#:a:b . #:c:d):foo4
+
+(getfn2 '#:a:b '#:c:d 'foo1)           #:(a . c):foo1
+(funcall (getfn2 '#:a:b '#:c:d 'foo1)) 1
+(getfn2 '#:a:b '#:c:d 'foo2)           #:(a . #:c:d):foo2
+(funcall (getfn2 '#:a:b '#:c:d 'foo2)) 2
+(getfn2 '#:a:b '#:c:d 'foo3)           #:(#:a:b . c):foo3
+(funcall (getfn2 '#:a:b '#:c:d 'foo3)) 3
+(getfn2 '#:a:b '#:c:d 'foo4)           #:(#:a:b . #:c:d):foo4
+(funcall (getfn2 '#:a:b '#:c:d 'foo4)) 4
+(getfn2 '#:a:b:a '#:c:d:a 'foo1)       #:(a . c):foo1
+(getfn2 '#:a:b:a '#:c:d 'foo1)         #:(a . c):foo1
+
+(defun foo ())                           foo
+(defun #:bar:foo ())                     #:bar:foo
+(defun #:bar:gee:buz:foo ())             #:bar:gee:buz:foo
+(getfn '#:bar:gee:buz 'foo)           #:bar:gee:buz:foo
+(getfn '#:bar:gee 'foo)               #:bar:foo
+(getfn 'bar 'foo)                     #:bar:foo
+(getfn () 'foo)                       foo
+(getfn '#:potop:teraz 'foo)           foo
+(getfn '#:bar:gee 'foo ())            #:bar:foo
+(getfn 'bar 'foo ())                  #:bar:foo
+(getfn 'gee 'foo ())                  ()
+(getfn '#:bar:gee:buz 'foo 'bar)      #:bar:gee:buz:foo
+(getfn '#:bar:gee 'foo 'bar)          ()
+(defun #:bar:fuu ())                       #:bar:fuu
+(defun #:gee:fuu ())                       #:gee:fuu
+(getfn '(bar gee) 'fuu ())              #:bar:fuu
+(getfn '(gee bar) 'fuu ())              #:gee:fuu
+
+         (test-serie "[Character functions]" ())
+
+(ascii 99)                              c
+(1+ (ascii 49))                         2
+(cascii 'c)                             99
+(cascii 1)                              49
+(cascii 2)                              50
+(uppercase #/0)                         #/0
+(uppercase #/a)                         #/A
+(uppercase #/z)                         #/Z
+(lowercase #/0)                         #/0
+(lowercase #/A)                         #/a
+(lowercase #/Z)                         #/z
+(lowercase #/j)                         #/j
+(asciip 0)                              0
+(asciip 127)                            127
+(asciip -1)                             ()
+(asciip 128)                            128
+(asciip 256)                            ()
+(digitp #/0)                            #/0
+(digitp #/9)                            #/9
+(digitp #//)                            ()
+(digitp #/:)                            ()
+(letterp #/a)                           #/a
+(letterp #/z)                           #/z
+(letterp #/A)                           #/A
+(letterp #/Z)                           #/Z
+(letterp #\SP)                          ()
+(letterp #/.)                           ()
+(letterp #/])                           ()
+
+         (test-serie "[Strings functions]" ())
+
+ (slen "abcdef")                     6
+ (slen "")                           0
+ (slen 'foo)                         (ERRNSA slen foo)
+
+ (slength "abcdef")                     6
+ (slength "")                           0
+ (slength 'foo)                         3
+
+ (setq s "abcdef")                      "abcdef"
+ (sref s 1)                             #/b
+ (sref s 0)                             #/a
+ (sref s -1)                            (ERROOB sref -1)
+ (sref s 5)                             #/f
+ (sref s 6)                             (ERROOB sref 6)
+ (sref 'foo 2)                          (ERRNSA sref foo)
+
+ (sset 'bar 2 #/z)                      (ERRNSA sset bar)
+ (sset s 1 #/z)                         #/z
+ s                                      "azcdef"
+ (sset s -1 #/t)                        (ERROOB sset -1)
+ (sset s 6 #/t)                         (ERROOB sset 6)
+ (sset s 5 -2)                          -2
+ (sref s 5)                              254
+ (sset s 5 #/y)                         #/y
+ s                                      "azcdey"
+
+ (setq s "abcde")                       "abcde"
+ (type-of s)                             string
+ (typestring s)                          string
+ (typestring s 'foo-the-bar)             foo-the-bar
+ s                                       #:foo-the-bar:"abcde"
+ (type-of s)                             foo-the-bar
+ (typestring s '(1 2 3))                 (1 2 3)
+ s                                       #:(1 2 3):"abcde"
+ (type-of s)                             (1 2 3)
+ (typestring t)                          (ERRNSA typestring t)
+ (typestring s "bar")                    (ERRSYM typestring "bar")
+ (typestring s ())                       (ERRSYM typestring ())
+
+ (setq v "abc" w "de")                  "de"
+ (typestring v 'foo)                    foo
+     v                                  #:foo:"abc"
+ (setq y v z w)                         "de"
+ (exchstring v w)                       "de"
+     v                                  "de"
+     w                                  #:foo:"abc"
+     y                                  "de"
+     z                                  #:foo:"abc"
+
+ (string "abc")                         "abc"
+ (string '#"-120")                      "-120"
+ (string 'abcd)                         "abcd"
+ (string 234)                           "234"
+ (string -1)                            "-1"
+ (string 0)                             "0"
+ (string 1.5)                           "1.5"
+ (string ())                            ""
+ (string ||)                            ""
+ (string (makelist 1023 #/a))           #.(makestring 1023 #/a)
+ (string (makelist 1024 #/a))           (ERRNSA string (#/a))
+ (eq (string "") (string ||))           ()
+ (eq (string "") (string ""))           ()
+ (eq "" "")                             ()
+
+ (pname ())                             ()
+ (pname nil)                            ()
+ (pname 'nil)                           (110 105 108)
+ (pname 'foobar)                        #"foobar"
+ (pname -123)                           #"-123"
+ (pname "")                             ()
+ (pname "abcdef")                       #"abcdef"
+ (pname '#"abcd")                       #"abcd"
+
+ (hash ())                              0
+ (hash 'nil)                            776
+ (hash 'foobar)                         157
+ (hash -123)                            815
+ (hash "abcdef")                        771
+ (hash '#"abcd")                        556
+
+ (plength ())                           0
+ (plength nil)                          0
+ (plength 'nil)                         3
+ (plength 'foobar)                      6
+ (plength -100)                         4
+ (plength "")                           0
+ (plength "abcdef")                     6
+ (plength '#"abcd")                     4
+
+ (eqstring "foo" "bar")                 ()
+ (eqstring "foo" "foo")                 "foo"
+ (eqstring "" "bar")                    ()
+ (eqstring 12 (catenate 1 2))           "12"
+ (eqstring '|FooBar| "FooBar")          "FooBar"
+
+ (catenate "foo" "bar" 'toto)           "foobartoto"
+ (equal (catenate "" || () nil) "")     t
+ (catenate 12 -34 0)                    "12-340"
+ (catenate)                             ""
+ (setq sss (makestring 10000 #/a) s ()) ()
+ (catenate sss sss sss sss sss)         (ERRSTL catenate #.:FIXMAX)
+ (setq sss ())                          ()
+
+ (substring-equal 0 "fobar" 0 "afob" 0)       0
+ (substring-equal 0 "fobar" 0 "gezu" 0)       0
+ (substring-equal 5 "fobar" 0 "fobar" 0)      5
+ (substring-equal 5 "fobara" 0 "fobar" 0)     5
+ (substring-equal 5 "fobar" 0 "fobara" 0)     5
+ (substring-equal 2 "fobar" 0 "afob" 1)       2
+ (substring-equal 2 "fobar" 0 "afab" 1)       ()
+ (substring-equal 2 "fobar" 3 "afar" 2)       2
+ (substring-equal 6 "fobara" 0 "fobar" 0)     (ERROOB substring-equal 6)
+ (substring-equal 6 "fobar" 0 "fobara" 0)     (ERROOB substring-equal 6)
+ (substring-equal 1 "a" 0 "b")          (ERRWNA substring-equal 5)
+ (substring-equal 'a "a" 0 "b" 0)       (ERRNIA substring-equal a)
+ (substring-equal 1 "a" 'b "b" 0)       (ERRNIA substring-equal b)
+ (substring-equal 1 "a" 0 "b" 'c)       (ERRNIA substring-equal c)
+ (substring-equal -1 "a" 0 "b" 0)       (ERROOB substring-equal -1)
+ (substring-equal 1 "a" -2 "b" 0)       (ERROOB substring-equal -2)
+ (substring-equal 1 "a" 0 "b" -3)       (ERROOB substring-equal -3)
+
+ (substring "abcde" 0 3)                "abc"
+ (substring "abcde" 1 2)                "bc"
+ (substring "abcde" -1 3)               (ERROOB substring -1)
+ (substring "abcde" 9 2)                ""
+ (substring "abcde" 0 9)                "abcde"
+ (substring "abcde" 1 -1)               ""
+
+ (makestring 0 #/a)                     ""
+ (makestring 4 #/a)                     "aaaa"
+ (makestring -1 #/a)                    ""
+ (pname (makestring 4 -2))              (254 254 254 254)
+ (makestring 5 ())                      (ERRNIA makestring ())
+ (makestring t #/a)                     (ERRNIA makestring t)
+ (slength (makestring 10000 #/a))       10000
+ (slength (makestring -1 #/a))          0
+
+ (duplstring 3 "ab")                    "ababab"
+ (duplstring 3 "")                      ""
+ (duplstring 1 "abc")                   "abc"
+ (duplstring 0 "abc")                   ""
+ (duplstring -1 "ab")                   (ERROOB duplstring -1)
+ (duplstring t "ab")                    (ERRNIA duplstring t)
+ (duplstring 10000 "abcdefg")           (ERRSTL duplstring 10000)
+
+ (bltstring "foobar1" 1 "xyz" 2 1)      "fzobar1"
+ (bltstring "foobar2" 1 "gee" 0)        "fgeear2"
+ (bltstring "foobar3" 1 "toto" 0 6)     "ftotor3"
+ (bltstring "foobar4" -2 "totati" 2 8)  (ERROOB bltstring -2)
+ (bltstring "foobar5" 3 "totota" 0 8)   "foototo"
+ (setq strt "abcdefghij")               "abcdefghij"
+ (bltstring strt 1 strt 3 4)            "adefgfghij"
+ (bltstring strt 6 strt 0 2)            "adefgfadij"
+ (bltstring strt 0 strt 4 4)            "gfadgfadij"
+ (bltstring strt 0 strt 1)		"fadgfadijj"
+ (bltstring strt 1 strt 0)		"ffadgfadij"
+
+ (fillstring "foobar6" 1 #/X 2)         "fXXbar6"
+ (fillstring "foobar7" 0 #/Y 3)         "YYYbar7"
+ (fillstring "foobar8" -2 #/Z 5)        (ERROOB fillstring -2)
+ (fillstring "foobar9" 2 #/X)           "foXXXXX"
+ (fillstring "foobar0" 2 #/X 20)        "foXXXXX"
+ (pname (fillstring "foobara" 2 -2 20)) (102 111 254 254 254 254 254)
+
+ (scanstring "abc" "sbe")               1
+ (scanstring "abcd" "efg")              ()
+ (scanstring "abcd" " ,.a" 1)           ()
+ (scanstring "abcd" " ,.a" -2)          (ERROOB scanstring -2)
+ (scanstring "abc" "defcgh")            2
+ (scanstring "" "foo")                  ()
+ (scanstring "foo" "")                  ()
+
+ (spanstring "abc" "abe")               2
+ (spanstring "abcd" "abccd")            ()
+ (spanstring "abcd" "bcd" 1)            ()
+ (spanstring "abcd" "bcd" -2)           (ERROOB spanstring -2)
+ (spanstring "abc" "abc" 9)             ()
+ (spanstring "" "foo")                  ()
+ (spanstring "foo" "")                  0
+
+ (chrpos #/a 'abc)                      0
+ (chrpos #/b 'aaa)                      ()
+ (chrpos #/c 'abc)                      2
+ (chrpos #/D '#"0123456789ABCDEF")      13
+ (chrpos #/a 'abc 1)                    ()
+ (chrpos #/a 'abc -1)                   (ERROOB chrpos -1)
+ (chrpos #/a 'abc 5)                    ()
+ (chrpos #/D 'abc -3)                   (ERROOB chrpos -3)
+ (chrpos -138 "aaaav")                  4
+
+ (chrnth 0 'abc)                        #/a
+ (chrnth 0 "abc")                       #/a
+ (chrnth 2 "abc")                       #/c
+ (chrnth 3 "abc")                       ()
+ (chrnth -1 "abc")                      ()
+ (chrnth 10 "0123456789ABCDEF")         #/A
+ (chrnth 10.45 "a")                     (ERRNIA chrnth 10.45)
+ (chrnth t "ab")                        (ERRNIA chrnth t)
+ (chrnth 5 '(a b c))                    (ERRNSA chrnth (a b c))
+
+ (chrset 0 "abc" #/A)                   #/A
+ (progn (setq x "abc") (chrset 0 x #/A) x)        "Abc"
+ (progn (setq x "bcd") (chrset 2 x #/A) x)        "bcA"
+ (progn (setq x "cde") (chrset 3 x #/A) x)        (ERROOB chrset 3)
+ (progn (setq x "def") (chrset -1 x #/A) x)       (ERROOB chrset -1)
+ (progn (setq x "efg") (chrset 0 x -1)
+	(pname x))                                (255 102 103)
+
+ (index "goo" "goobar")                 0
+ (index "bar" "goobar")                 3
+ (index "goo" "xgoobar")                1
+ (index "goo" "xgoobar" 2)              ()
+ (index "goo" "xgoobar" 1)              1
+ (index "goo" "xgoobar" 9)              ()
+ (index "goo" "xgoobar" -3)             (ERROOB index -3)
+ (index "goo" "" 0)                     ()
+ (index "" "goo" 0)                     0
+
+ (alphalessp 'a 'a)                     t
+ (alphalessp 'aa 'a)                    ()
+ (alphalessp 'a 'aa)                    t
+ (alphalessp 'aaa 'aab)                 t
+ (alphalessp 'aab 'aaa)                 ()
+ (alphalessp 'aab 'aaac)                ()
+ (alphalessp 'aba 'aa)                  ()
+
+ (sortl '(dies irae dies illa solvet saeclum in favila))        
+                  (dies dies favila illa in irae saeclum solvet)
+
+ (sortl '(requiem aeternam donna eis Domine et lux perpetua luceat eis))
+                (aeternam domine donna eis eis et luceat lux perpetua requiem)
+
+ (mapcar 'sortl
+             '((requiem aeternam dona eis domine)
+               (et lux perpetua luceat eis)
+               (in memoria aeterna eris justus)
+               (ab auditione mala non timebit)))
+        ((aeternam domine dona eis requiem)
+         (eis et luceat lux perpetua)
+         (aeterna eris in justus memoria)
+         (ab auditione mala non timebit))
+
+ (sortl '(a z b s d))                   (a b d s z)
+ (sortn '(6 4 8 6 5  8 7))              (4 5 6 6 7 8 8)
+
+ (symbol () ())                         ||
+ (symbol () 'zoo)                       zoo
+ (symbol () "zoo")                      zoo
+ (symbol () '#:zoo:bar)                 bar
+ (symbol 'zoo 'bar)                     #:zoo:bar
+ (symbol 'zoo "bar")                    #:zoo:bar
+ (symbol '#:zoo:bar 'bar)               #:zoo:bar:bar
+ (symbol 'zoo '#:zoo:bar)               #:zoo:bar
+
+ (concat)                               ||
+ (concat 'a (1+ 5) () 'b)               a6b
+ (concat "Foo" nil '#"Bar" -2)          |FooBar-2|
+ (concat "Foo" 'nil '#"Bar" -2)         |FoonilBar-2|
+
+ (concatpkgc () ())                     ||
+ (concatpkgc 'zoo ())                   zoo
+ (concatpkgc '#:zoo:bar ())             #:zoo:bar
+ (concatpkgc 'zoo 'bar)                 #:zoo:bar
+ (concatpkgc 'zoo '#:bar:gee)           #:zoo:bar:gee
+ (concatpkgc '#:zoo:bar '#:gee:fuu)     #:zoo:bar:gee:fuu
+
+ (explode -120)                         (45 49 50 48)
+ (explode '(car '(a b)))                (40 99 97 114 32 39 40 97 32 98 41 41)
+
+ (explodech -120)                       (- 1 2 0)
+ (explodech '(car '(a b)))      (|(| c a r | | |'| |(| a | | b |)| |)|)
+
+ (implode '(45 50 51 55))               -237
+ (implode (explode '(a b)))             (a b)
+
+ (implodech '(- 2 3 7))                 -237
+ (implodech (explodech '(a b)))         (a b)
+
+(stratom t "abcdef" ())                 (ERRNIA stratom t)
+(stratom 3 t ())           	        (ERRNSA stratom t)
+(stratom 3 "abcdef" ())                 abc
+(stratom 3 "01234" ())			12
+(stratom 3 "01234" t)                   |012|
+(stratom 4 " () " ())                   | () |
+(stratom 5 "00012.34" ())               12
+(stratom 6 "00012.34" ())               12.
+(stratom 7 "00012.34" ())               12.3
+
+ (setq #:system:gensym-counter 100)     100
+ (gensym)                               g101
+ (gensym)                               g102
+ (gensym)                               g103
+
+
+         (test-serie "[Vector functions]" ())
+
+#[1 2 3]                                #[1 2 3]
+#:foo:#[a b]                            #:foo:#[a b]
+
+(makevector 5 ())                       #[() () () () ()]
+(makevector 3 'a)                       #[a a a]
+(makevector 0 t)                        #[]
+(makevector -1 ())                      (ERROOB makevector -1)
+(makevector t ())                       (ERRNIA makevector t)
+
+(vector 0 1 2 3 4)                      #[0 1 2 3 4]
+(apply 'vector '(1 #[1 2] "Foo" A (B C)))       #[1 #[1 2] "Foo" A (B C)]
+(vector 1 #[1 2] "Foo" 'A '(B C))       #[1 #[1 2] "Foo" A (B C)]
+(vector)                                #[]
+
+(vlength (makevector 10000 t))          10000
+(setq x #[a b c d e])                   #[a b c d e]
+(vlength #[])                           0
+(vlength x)                             5
+
+ (setq x #[a b c d e f])                #[a b c d e f]
+ (vref x 0)                             a
+ (vref x 1)                             b
+ (vref x 4)                             e
+ (vref 'foo 1)                          (ERRVEC vref foo)
+ (vref x -1)                            (ERROOB vref -1)
+ (vref x 6)                             (ERROOB vref 6)
+ (vset x 0 '(x y))                      (x y)
+ (vref x 0)                             (x y)
+ (vset x 4 '(t))                        (t)
+ (vset x 2 ())                          ()
+ x                                      #[(x y) b () d (t) f]
+ (vset 'bar 1 0)                        (ERRVEC vset bar)
+ (vset x -1 ())                         (ERROOB vset -1)
+ (vset x 6 1)                           (ERROOB vset 6)
+
+(setq v #[a b] w #[c d e])              #[c d e]
+(type-of v)                             vector
+(typevector v)                          vector
+(typevector t)                          (ERRVEC typevector t)
+(typevector v 'foo-the-bar)             foo-the-bar
+v                                       #:foo-the-bar:#[a b]
+(type-of v)                             foo-the-bar
+(typevector v '(1 2 3))                 (1 2 3)
+v                                       #:(1 2 3):#[a b]
+(type-of v)                             (1 2 3)
+(typevector t)                          (ERRVEC typevector t)
+(typevector v "bar")                    (ERRSYM typevector "bar")
+(typevector v ())                       (ERRSYM typevector ())
+
+(eqvector #[1 (a b c) d] #[1 (a b c) d])        #[1 (a b c) D]
+(eqvector 10 #[1])                      (ERRVEC eqvector 10)
+(eqvector #[1] "foo")                   (ERRVEC eqvector "foo")
+(eqvector #:foo:#[1 2] #[1 2])          ()
+(eqvector #:foo:#[1 2] #:foo:#[1 2])    #:foo:#[1 2]
+(eqvector #[] #[])                      #[]
+(eq #[] #[])                            ()
+
+(setq v #[a b c] w #[d e])              #[d e]
+(typevector v 'foo)                     foo
+     v                                  #:foo:#[a b c]
+(setq y v z w)                          #[d e]
+(exchvector v w)                        #[d e]
+     v                                  #[d e]
+     w                                  #:foo:#[a b c]
+     y                                  #[d e]
+     z                                  #:foo:#[a b c]
+(exchvector v t)                        (ERRVEC exchvector t)
+(exchvector t w)                        (ERRVEC exchvector t)
+
+ (bltvector #[f o o b a r] 1 #[x y z] 2 1)      #[f z o b a r]
+ (bltvector #[f o o b a r] 1 #[t o t o] 0 6)    #[f t o t o r]
+ (bltvector #[f o o b a r] -2 #[t o t a t i] 2 8)       (ERROOB bltvector -2)
+ (bltvector #[f o o b a r] 3 #[t o t o t a] 0 8)        #[f o o t o t]
+ (defvar vect #[a b c d e f g h i j])           vect
+ (bltvector vect 1 vect 3 4)                    #[a d e f g f g h i j]
+ (bltvector vect 6 vect 0 2)                    #[a d e f g f a d i j]
+ (bltvector vect 0 vect 4 4)                    #[g f a d g f a d i j]
+ (bltvector vect 0 vect 1)                      #[f a d g f a d i j j]
+ (bltvector vect 1 vect 0 12)                   #[f f a d g f a d i j]
+
+ (setq x #[a b c d e f g])              #[a b c d e f g]
+ (fillvector x 1 'z 2)                  #[a z z d e f g]
+ (fillvector x 0 'y 3)                  #[y y y d e f g]
+ (fillvector x -2 'u 5)                 (ERROOB fillvector -2)
+ (fillvector x 2 'u)                    #[y y u u u u u]
+ (fillvector x 4 'v 20)                 #[y y u u v v v]
+
+ (setq x (makearray 3 4 0))          #[#[0 0 0 0] #[0 0 0 0] #[0 0 0 0]]
+ (aset x 1 2 -1)                     -1
+ (aref x 1 2)                        -1
+ x                                   #[#[0 0 0 0] #[0 0 -1 0] #[0 0 0 0]]
+
+          (test-serie "[Structure functions]" ())
+
+(defstruct foo a (b 1) c)               foo
+(defstruct #:foo:bar d (e foo))         #:foo:bar
+ ; share a field. Error?!?
+(defstruct #:foo:gee d e a f)           #:foo:gee
+(defstruct #:foo:bar:gee (f 9))         #:foo:bar:gee
+
+(setq a (new 'foo))                     #:foo:#[() 1 ()]
+(setq foo 12)                           12
+(setq b (#:foo:bar:make))               #:foo:bar:#[() 1 () () 12]
+(setq foo 13)                           13
+(setq x (#:foo:bar:gee:make))           #:foo:bar:gee:#[() 1 () () 13 9]
+
+(#:foo:b a)                             1
+(#:foo:b a 2)                           2
+(#:foo:b b)                             1
+(#:foo:bar:b b 'b)                      b 
+(#:foo:bar:b b)                         b
+(#:foo:b b)                             b
+
+(#:foo:b x)                             1
+(#:foo:bar:b x)                         1
+(#:foo:bar:gee:b x)                     1
+(#:foo:bar:e x)                         13
+(#:foo:bar:gee:e x)                     13
+(#:foo:bar:gee:f x)                     9
+
+(#:foo:b x 0)                           0
+(#:foo:bar:e x 14)                      14
+(#:foo:bar:gee:f x 10)                  10
+x                                       #:foo:bar:gee:#[() 0 () () 14 10]
+(#:foo:bar:b x 2)                       2
+(#:foo:bar:gee:e x 15)                  15
+x                                       #:foo:bar:gee:#[() 2 () () 15 10]
+(#:foo:bar:gee:b x 3)                   3
+x                                       #:foo:bar:gee:#[() 3 () () 15 10]
+
+(#:foo:b 12)                            (ERRSTC #:foo:b 12)
+(#:foo:b #[12])                         (ERRSTC #:foo:b #[12])
+(#:foo:b #:gee:#[12])                   (ERRSTC #:foo:b #:gee:#[12])
+
+(#:foo:b 12 1)                          (ERRSTC #:foo:b 12)
+(#:foo:b #[12] 1)                       (ERRSTC #:foo:b #[12])
+(#:foo:b #:gee:#[12] 1)                 (ERRSTC #:foo:b #:gee:#[12])
+
+(#:foo:a #:foo:#[])                     (ERRSTC #:foo:a #:foo:#[])
+(#:foo:b #:foo:#[0])                    (ERRSTC #:foo:b #:foo:#[0])
+(#:foo:c #:foo:#[1 2])                  (ERRSTC #:foo:c #:foo:#[1 2])
+(#:system:structaccess 'foo -1 
+          '#:foo:#[] 0 2)               (ERROOB #:system:structaccess -1)
+
+         (test-serie "[File, Directory funtions]" ())
+(progn
+  (setq x (cond
+	   ((eq (system) 'vaxvms) "sys$scratch:tfiles1")
+	   (t "/tmp/tfiles1") ))
+  (setq y (cond
+	   ((eq (system) 'vaxvms) "sys$scratch:tfiles2")
+	   (t "/tmp/tfiles2") ))
+  (setq z (cond
+	   ((eq (system) 'vaxvms) "sys$scratch:tfiles3")
+	   (t "/tmp/tfiles3") ))
+  ())                                   ()
+
+(progn
+  (with ((outchan (openo x)))
+	(print "coucou")
+	(close (outchan)))
+ ())                                    ()
+
+(probefile x)                           t
+(probefile y)                           ()
+(copyfile x y)                          t
+(probefile y)                           t
+(renamefile y z)                        t
+(probefile y)                           ()
+(probefile z)                           t
+(let ((#:system:print-msgs 0))
+	(copyfile z z))                 (ERRIOS copyfile 5)
+(let (a)
+  (with ((inchan (openi z)))
+         (setq a (read))
+	(close (inchan)))
+ a)                                     coucou
+(deletefile x)                          t
+(deletefile z)                          t
+
+(progn
+  (setq foo (cond
+	((eq (system) 'vaxvms) "lelisp$disk:[lldtest]")
+	(t "/tmp/lldtest") ))
+  (setq bar (cond
+	((eq (system) 'vaxvms) "lelisp$disk:[lldtest]")
+	(t "/tmp/lldtest") ))
+  (setq gee (cond
+	((eq (system) 'vaxvms) "sys$scratch")
+        (t "/") ))
+  ())                                   ()
+
+(create-directory foo)                  t
+(let ((#:system:print-msgs 0))
+	(create-directory foo))         (ERRIOS create-directory 1)
+(delete-directory foo)                  t
+(let ((#:system:print-msgs 0))
+	(delete-directory foo))         (ERRIOS delete-directory 1)
+
+(let ((#:system:print-msgs 0))
+	(delete-directory gee))         (ERRIOS delete-directory 1)
+
+(create-directory bar)                  t
+(delete-directory bar)                  t
+
+(create-directory bar)                  t
+(delete-directory foo)                  t
+
+(create-directory foo)                  t
+(delete-directory bar)                  t
+
+         (test-serie "[Generic arithmetics]" ())
+
+(fix 10.4)                              10
+(fix 10.5)                              10
+(fix 10.6)                              10
+(fix 0.4)                               0
+(fix 0.5)                               0
+(fix 0.6)                               0
+(fix -0.4)                              0
+(fix -0.5)                              0
+(fix -0.6)                              0
+(fix -10.4)                             -10
+(fix -10.5)                             -10
+(fix -10.6)                             -10
+(truncate -10.6)                        -10
+(fix t)                                 (ERRGEN truncate t)
+(truncate 'b)                           (ERRGEN truncate b)
+(truncate 32767.)                       32767
+(truncate 32766.9)                      32766
+(truncate 32768.)                       (ERRGEN truncate 32768.)
+(truncate -32767.)                      -32767
+(truncate -32766.9)                     -32766
+(truncate -32768.)                      (ERRGEN truncate -32768.)
+(truncate '#(1.2))                      (ERRGEN truncate #(1.2))
+
+(setq BIG '#(BIG 1 2))                  #(BIG 1 2)
+ 
+(1+ 6)                                  7
+(1+ -3)                                 -2
+(1+ 10.)                                11.
+(1+ -1)                                 0
+(1+ BIG)                                (ERRGEN + (#(BIG 1 2) 1))
+(1+ '#(1.2))                            (ERRGEN + (#(1.2) 1))
+(1+ #.:FIXMAX)                             (ERRGEN + (#.:FIXMAX 1))
+(let ((#:sys-package:genarith 'genarith))
+     (1+ #.:FIXMAX))                       32768.
+ 
+(1- 7)                                  6
+(1- -3)                                 -4
+(1- 0)                                  -1
+(1- 10.)                                9.
+(1- -9.)                                -10.
+(1- BIG)                                (ERRGEN - (#(BIG 1 2) 1))
+(1- '#(1.2))                            (ERRGEN - (#(1.2) 1))
+(1- #.:FIXMIN)                             (ERRGEN - (#.:FIXMIN 1))
+(1- #.:MINUS0)                             (ERRGEN - (#.:MINUS0 1))
+(let ((#:sys-package:genarith 'genarith))
+     (1- #.:MINUS0))                       -32769.
+(let ((#:sys-package:genarith 'genarith))
+     (1- #.:FIXMIN))                       -32768.
+
+(abs 10)                               10
+(abs -10)                              10
+(abs 10.23)                            10.23
+(abs -10.23)                           10.23
+(abs BIG)                              (ERRGEN abs #(BIG 1 2))
+(abs '#(1.2))                          (ERRGEN abs #(1.2))
+ 
+(+)                                    0
+(+ 8)                                  8
+(+ 8.)                                 8.
+(+ BIG)                                (ERRGEN + (#(BIG 1 2) 0))
+(+ '#(1.2))                            (ERRGEN + (#(1.2) 0))
+(+ 5 6)                                11
+(+ -5 -6 1)                             -10
+(+ 5 6 7)                              18
+(+ 5. 6 7)                             18.
+(+ 5 6. 7)                             18.
+(+ 5 6 7.)                             18.
+(+ #.:FIXMAX #.:FIXMAX)			(ERRGEN + (#.:FIXMAX #.:FIXMAX))
+(let ((#:sys-package:genarith 'genarith))
+     (+ 32000 32000))                   64000.
+(+ 32000. 32000. 1)                     64001.
+(+ 100. 1000. 10000. 100000.)           111100.
+(+ 32000 32000 1)                       (ERRGEN + (32000 32000))
+(let ((#:sys-package:genarith 'genarith))
+     (+ 32000 32000 1))                 64001.
+(+ 32000 1 32000 1)                     (ERRGEN + (32001 32000))
+(let ((#:sys-package:genarith 'genarith))
+     (+ 32000 1 32000 1))               64002.
+(+ 5 BIG 4)                             (ERRGEN + (5 #(BIG 1 2)))
+(+ 5. BIG 4.)                           (ERRGEN + (5. #(BIG 1 2)))
+(+ 5. '#(1.2) 4.)                       (ERRGEN + (5. #(1.2)))
+(+ 1 2 'gronk)                          (ERRGEN + (3 gronk))
+ 
+(-)                                    0
+(- 20)                                 -20
+(- 20.)                                -20.
+(- BIG)                                (ERRGEN 0- #(BIG 1 2))
+(- '#(1.2))                            (ERRGEN 0- #(1.2))
+(- 20 5)                               15
+(- -20 -10)                            -10
+(- 20. 5 2)                            13.
+(- 20 5. 2)                            13.
+(- 20 5 2.)                            13.
+(- #.:MINUS0 1 1 1)                       (ERRGEN - (#.:MINUS0 3))
+(let ((#:sys-package:genarith 'genarith))
+     (- #.:MINUS0 1 1 1))                 -32771.
+(- 1 #.:MINUS0 1 1)                       #.:FIXMAX
+(- 1 1 #.:MINUS0 1)                       #.:FIXMAX
+(- 1 1 1 #.:MINUS0)                       #.:FIXMAX
+(- t 1 1 1)                            (ERRGEN - (t 3))
+(- 1 t 1 1)                            (ERRGEN + (t 1))
+(- 1 1 t 1)                            (ERRGEN + (1 t))
+(- 1 1 1 t)                            (ERRGEN + (2 t))
+(- BIG 5 2)                            (ERRGEN - (#(BIG 1 2) 7))
+(- 20 BIG 2)                           (ERRGEN + (#(BIG 1 2) 2))
+(- 20 5 BIG)                           (ERRGEN + (5 #(BIG 1 2)))
+(- BIG -10.2)                          (ERRGEN - (#(BIG 1 2) -10.2))
+(- BIG -10.2 -10.2)                    (ERRGEN - (#(BIG 1 2) -20.4))
+(- '#(1.2) -10.2 -10.2)                (ERRGEN - (#(1.2) -20.4))
+ 
+(*)                                     1
+(* 5)                                   5
+(* 5.)                                  5.
+(* BIG)                                 (ERRGEN * (#(BIG 1 2) 1))
+(* '#(1.2))                             (ERRGEN * (#(1.2) 1))
+(* 10 20)                               200
+(* -100 200)                            -20000
+(* 2 3 4)                               24
+(* 2. 3 4)                              24.
+(* 2 3. 4)                              24.
+(* 2 3 4.)                              24.
+(* 1 10 100 1000)                       (ERRGEN * (1000 1000))
+(let ((#:sys-package:genarith 'genarith))
+     (* 1 10 100 1000))                 1000000.
+(* 1 BIG 10 10)                         (ERRGEN * (1 #(BIG 1 2)))
+(* 1. BIG 10. 10)                       (ERRGEN * (1. #(BIG 1 2)))
+(* BIG 10 10)                           (ERRGEN * (#(BIG 1 2) 10))
+(* BIG 10. 10)                          (ERRGEN * (#(BIG 1 2) 10.))
+(* '#(1.2) 10. 10)                      (ERRGEN * (#(1.2) 10.))
+
+(/)                                     1
+(/ 1 2 3)                               (ERRGEN / (1 6))
+(/ 1)                                   1
+(/ 2)                                   (ERRGEN 1/ 2)
+(/ BIG)                                 (ERRGEN 1/ #(BIG 1 2))
+(/ #.:MINUS0 -1)                           (ERRGEN / (#.:MINUS0 -1))
+(/ 40.)                                 .025
+(/ 12 4)                                3
+(/ 24 4 2)                              3
+(/ 12 5)                                (ERRGEN / (12 5))
+(/ 12 5.)                               2.4
+(/ 12. 5)                               2.4
+(/ 24. 1.2 2)                           10.
+(/ 24 1.2 2)                            10.
+(/ 24 1.2 2.)                           10.
+(/ -8 2)                                -4
+(/ 123 0)                               (ERRGEN / (123 0))
+(/ 20000 -20000)                        -1
+(/ 10 BIG)                              (ERRGEN / (10 #(BIG 1 2)))
+(/ BIG 10)                              (ERRGEN / (#(BIG 1 2) 10))
+(/ 10. BIG)                             (ERRGEN / (10. #(BIG 1 2)))
+(/ BIG 10.)                             (ERRGEN / (#(BIG 1 2) 10.))
+ 
+(quotient 5 3)                          1
+(quotient 5 -3)                         -1
+(quotient -5 3)                         -2
+(quotient -5 -3)                        2
+(quotient 12 4)                         3
+(quotient 12 5)                         2
+(quotient 12 6)                         2
+(quotient 12 5.)                        (ERRGEN quomod (12 5.))
+(let ((#:sys-package:genarith 'genarith))
+     (quotient 12 5.))                  2
+(quotient 12. 5)                        (ERRGEN quomod (12. 5))
+(let ((#:sys-package:genarith 'genarith))
+     (quotient -12 5.))                 -3
+(quotient -12 5.)                       (ERRGEN quomod (-12 5.))
+(let ((#:sys-package:genarith 'genarith))
+     (quotient -12 5.))                 -3
+(quotient -8 2)                         -4
+(quotient 123 0)                        (ERRGEN quomod (123 0))
+(quotient #.:MINUS0 -1)                    (ERRGEN quomod  (#.:MINUS0 -1))
+(quotient 20000 -20000)                 -1
+(quotient BIG 10)                       (ERRGEN quomod (#(BIG 1 2) 10))
+(quotient 10 BIG)                       (ERRGEN quomod (10 #(BIG 1 2)))
+(quotient BIG 10.)                      (ERRGEN quomod (#(BIG 1 2) 10.))
+(quotient 10. BIG)                      (ERRGEN quomod (10. #(BIG 1 2)))
+ 
+(modulo 5 3)                            2
+(modulo 5 -3)                           2
+(modulo -5 3)                           1
+(modulo -5 -3)                          1
+(modulo 14 4)                           2
+(modulo -8 2)                           0
+(modulo 123 0)                          (ERRGEN quomod (123 0))
+(modulo 30001 3)                        1
+(let ((#:sys-package:genarith 'genarith))
+     (modulo 12.4 2))                   0.4
+;(modulo 12.4 2)                         0.4
+;(modulo 12 2.)                          0
+
+(equal 10 10.)                          t
+
+(<?> 100 100)                           0
+(<?> 100 200)                           -1
+(<?> 200 100)                           1
+
+(<?> 100. 100)                           0
+(<?> 100. 200)                           -1
+(<?> 200. 100)                           1
+
+(<?> 100 100.)                           0
+(<?> 100 200.)                           -1
+(<?> 200 100.)                           1
+
+(<?> 100. 100.)                           0
+(<?> 100. 200.)                           -1
+(<?> 200. 100.)                           1
+
+(zerop 1)                               ()
+(zerop 0)                               0
+(zerop 0.)                              0.
+(zerop 20000)                           ()
+(zerop -1)                              ()
+(zerop t)                               (ERRGEN zerop (t 0))
+
+(plusp 0)                               0
+(plusp 0.)                              0.
+(plusp 123.3245)                        123.3245
+(plusp 20000)                           20000
+(plusp 2000.)                           2000.
+(plusp -1)                              ()
+(plusp -10.23)                          ()
+(plusp t)                               (ERRGEN plusp (t 0))
+
+(minusp 1)                              ()
+(minusp 0)                              ()
+(minusp -1.)                            -1.
+(minusp -1)                             -1
+(minusp 20000)                          ()
+(minusp -123.45)                        -123.45
+(minusp t)                              (ERRGEN minusp (t 0))
+
+(= 10. 10)                              10.
+(= 10 10.)                              10
+(= 10. 10.)                             10.
+(= 10 10)                               10
+(= 10 10 10)                            10
+(= 10. 10 10)                           10.
+(= 10 10. 10)                           10
+(= 10 10 10.)                           10
+(= 20000 20000)                         20000
+
+(/= 10. 10)                             ()
+(/= 10 10.)                             ()
+(/= 10. 10.)                            ()
+(/= 10 10)                              ()
+(/= 20000 20000)                        ()
+(/= 10 20)                              10
+(/= 10. 20)                             10.
+
+(>= 20000 20000)                        20000
+(>= 20000 100)                          20000
+(>= 9. 10)                      ()
+(>= 9. 9)                       9.
+(>= 10 9.)                      10
+(>= 10 10 11 12)              ()
+(>= 10 10 11 10)              ()
+(>= 10 10 9 8)                10
+
+(> 9. 10)                       ()
+(> 9. 9)                        ()
+(> 10 9.)                       10
+(> 10 10 11)                  ()
+(> 10 11 12)                  ()
+(> 10 9 8)                    10
+
+(< 9. 10)                       9.
+(< 9. 9)                        ()
+(< 10 9.)                       ()
+(< 9 10 11)                   9
+(< 9 10 10)                   ()
+
+(<= 9. 10)                      9.
+(<= 9. 9)                       9.
+(<= 10 9.)                      ()
+(<= 9 10 11)                   9
+(<= 9 10 10)                   9
+(<= 9 10 9)                   ()
+(<= 9 9 10)                   9
+
+        (test-serie "[Mixed arithmetic]" ())
+
+(plus)                                         0
+(plus 8)                                       8
+(plus 8.)                                      8.
+(plus BIG)                                      (ERRNNA plus #(BIG 1 2))
+(plus 5 6)                                     11
+(plus 5 6 7)                           18
+(plus 5. 6 7)                          18.
+(plus 5 6. 7)                          18.
+(plus 5 6 7.)                          18.
+(plus 32000 32000 1)                    64001.
+(plus 30000 30000)                      60000.
+(plus 50000. 10000)                     60000.
+(plus 10000 50000.)                     60000.
+(plus 5 BIG 4)                          (ERRNNA plus #(BIG 1 2))
+(plus 5. BIG 4.)                        (ERRNNA plus #(BIG 1 2))
+ 
+(differ)                                       0
+(differ 20)                                    -20
+(differ 20.)                                   -20.
+(differ BIG)                                    (ERRNNA differ #(BIG 1 2))
+(differ 20 5)                          15
+(differ 20 5.)                         15.
+(differ 20. 5)                         15.
+(differ -20 -10)                               -10
+(differ -20. -10)                              -10.
+(differ -20 -10.)                              -10.
+(differ 20. 5 2)                               13.
+(differ 20 5. 2)                               13.
+(differ 20 5 2.)                               13.
+(differ #.:MINUS0 1 1)                            -32770.
+(differ BIG 5 2)                               (ERRNNA differ #(BIG 1 2))
+(differ 20 BIG 2)                              (ERRNNA differ #(BIG 1 2))
+(differ 20 5 BIG)                              (ERRNNA differ #(BIG 1 2))
+ 
+(times)                                1
+(times 5)                               5
+(times 5.)                                      5.
+(times BIG)                             (ERRNNA times #(BIG 1 2))
+(times 10 20)                          200
+(times 10. 20)                         200.
+(times 10 20.)                         200.
+(times 10 BIG)                         (ERRNNA times #(BIG 1 2))
+(times BIG 20.)                        (ERRNNA times #(BIG 1 2))
+(times -100 200)                        -20000
+(times 2 3 4)                           24
+(times 2. 3 4)                          24.
+(times 2 3. 4)                          24.
+(times 2 3 4.)                          24.
+(times 1000 1000)                       1.e+6
+(times 1000. 1000)                      1.e+6
+(times 1000 1000.)                      1.e+6
+(times 1 10 100 1000)                   1.e+6
+
+(divide 12 4)                           3
+(divide 12 5)                           2.4
+(divide 12 5.)                          2.4
+(divide 12. 5)                          2.4
+(divide -8 2)                           -4
+(divide 123 0)                          (ERR0DV divide 0)
+(divide 20000 -20000)                   -1
+ 
+        (test-serie "[Fix arithmetics]" ())
+
+(add1 1)                                2
+(add1 -1)                               0
+(add1 #.:FIXMAX)                           #.:MINUS0
+(add1 10.)                              (ERRNIA add1 10.)
+
+(sub1 1)                                0
+(sub1 -1)                               -2
+(sub1 #.:MINUS0)                           #.:FIXMAX
+(sub1 1.)                               (ERRNIA sub1 1.)
+
+(add 10 20)                             30
+(add #$7000 #$7000)                     #$E000
+(add 10. 20)                            (ERRNIA add 10.)
+(add 10 20.)                            (ERRNIA add 20.)
+
+(sub 20 11)                             9
+
+(mul 10 9)                              90
+
+(div 11 2)                              5
+(div 10 2)                              5
+(div 10 0)                              (ERR0DV div 0)
+
+(rem 14 4)                              2
+(rem -8 2)                              0
+(rem 30001 3)                           1
+(rem 12.4 2)                            (ERRNIA rem 12.4)
+(rem 10 0)                              (ERR0DV rem 0)
+
+
+(scale 1000 20000 1000)                 20000
+(scale -100 2000  -1000)                200
+(scale 1000 1000 3000)                  333
+(scale 100 100 0)                       (ERR0DV scale 0)
+
+(min)                                   (ERRWNA min 1)
+(min 10)                                10
+(min 10 20)                             10
+(min -10 -20)                           -20
+(min 1 3. 2 -7)                         -7
+(min -2. 3 0 7)                         -2.
+
+(max)                                   (ERRWNA max 1)
+(max 10)                                10
+(max 10 20)                             20
+(max -10 -20)                           -10
+(max 1 3 2 -7)                          3
+(max 1 3. 2 -7)                         3.
+(max -2 3. 0 7)                         7
+
+(oddp -1)                               -1
+(oddp 0)                                ()
+(oddp 1)                                1
+(oddp 2)                                ()
+
+(evenp -1)                              ()
+(evenp 0)                               0
+(evenp 1)                               ()
+(evenp 2)                               2
+
+(eqn -10 -10)                           -10
+(eqn 10 10)                             10
+(eqn 10 9)                              ()
+(eqn -10 -9)                            ()
+(eqn -20000 20000)                      ()
+
+(neqn -10 -10)                          ()
+(neqn 10 10)                            ()
+(neqn 10 9)                             10
+(neqn -10 -9)                           -10
+(neqn -20000 20000)                     -20000
+
+(gt 9 10)                               ()
+(gt 9 9)                                ()
+(gt 10 9)                               10
+(gt -9 -10)                             -9
+(gt -9 -9)                              ()
+(gt -10 -9)                             ()
+(gt -20000 20000)                       ()
+(gt 20000 -20000)                       20000
+
+(ge 9 10)                               ()
+(ge 9 9)                                9
+(ge 10 9)                               10
+(ge -9 -10)                             -9
+(ge -9 -9)                              -9
+(ge -10 -9)                             ()
+(ge -20000 20000)                       ()
+(ge 20000 -20000)                       20000
+
+(lt 9 10)                               9
+(lt 9 9)                                ()
+(lt 10 9)                               ()
+(lt -9 -10)                             ()
+(lt -9 -9)                              ()
+(lt -10 -9)                             -10
+(lt -20000 20000)                       -20000
+(lt 20000 -20000)                       ()
+
+(le 9 10)                               9
+(le 9 9)                                9
+(le 10 9)                               ()
+(le -9 -10)                             ()
+(le -9 -9)                              -9
+(le -10 -9)                             -10
+(le -20000 20000)                       -20000
+(le 20000 -20000)                       ()
+
+(imin 10 10)                            10
+(imin 10 11)                            10
+(imin 11 10)                            10
+(imin -10 -10)                          -10
+(imin -10 -11)                          -11
+(imin -11 -10)                          -11
+(imin 11 t)                             (ERRNIA imin t)
+(imin t 11)                             (ERRNIA imin t)
+
+(imax 10 10)                            10
+(imax 10 11)                            11
+(imax 11 10)                            11
+(imax -10 -10)                          -10
+(imax -10 -11)                          -10
+(imax -11 -10)                          -10
+(imax 11 t)                             (ERRNIA imax t)
+(imax t 11)                             (ERRNIA imax t)
+
+(if (eqn -10 -10) t ())                 t
+(if (eqn 10 10) t ())                   t
+(if (eqn 10 9) t ())                    ()
+(if (eqn -10 -9) t ())                  ()
+(if (eqn -20000 20000) t ())            ()
+
+(if (neqn -10 -10) t ())                ()
+(if (neqn 10 10) t ())                  ()
+(if (neqn 10 9) t ())                   t
+(if (neqn -10 -9) t ())                 t
+(if (neqn -20000 20000) t ())           t
+
+(if (gt 9 10) t ())                     ()
+(if (gt 9 9) t ())                      ()
+(if (gt 10 9) t ())                     t
+(if (gt -9 -10) t ())                   t
+(if (gt -9 -9) t ())                    ()
+(if (gt -10 -9) t ())                   ()
+(if (gt -20000 20000) t ())             ()
+(if (gt 20000 -20000) t ())             t
+
+(if (ge 9 10) t ())                     ()
+(if (ge 9 9) t ())                      t
+(if (ge 10 9) t ())                     t
+(if (ge -9 -10) t ())                   t
+(if (ge -9 -9) t ())                    t
+(if (ge -10 -9) t ())                   ()
+(if (ge -20000 20000) t ())             ()
+(if (ge 20000 -20000) t ())             t
+
+(if (lt 9 10) t ())                     t
+(if (lt 9 9) t ())                      ()
+(if (lt 10 9) t ())                     ()
+(if (lt -9 -10) t ())                   ()
+(if (lt -9 -9) t ())                    ()
+(if (lt -10 -9) t ())                   t
+(if (lt -20000 20000) t ())             t
+(if (lt 20000 -20000) t ())             ()
+
+(ifn (le 9 10) t ())                    ()
+(ifn (le 9 9) t ())                     ()
+(ifn (le 10 9) t ())                    t
+(ifn (le -9 -10) t ())                  t
+(ifn (le -9 -9) t ())                   ()
+(ifn (le -10 -9) t ())                  ()
+(ifn (le -20000 20000) t ())            ()
+(ifn (le 20000 -20000) t ())            t
+
+(ifn (eqn -10 -10) t ())                ()
+(ifn (eqn 10 10) t ())                  ()
+(ifn (eqn 10 9) t ())                   t
+(ifn (eqn -10 -9) t ())                 t
+(ifn (eqn -20000 20000) t ())           t
+
+(ifn (neqn -10 -10) t ())               t
+(ifn (neqn 10 10) t ())                 t
+(ifn (neqn 10 9) t ())                  ()
+(ifn (neqn -10 -9) t ())                ()
+(ifn (neqn -20000 20000) t ())          ()
+
+(ifn (gt 9 10) t ())                    t
+(ifn (gt 9 9) t ())                     t
+(ifn (gt 10 9) t ())                    ()
+(ifn (gt -9 -10) t ())                  ()
+(ifn (gt -9 -9) t ())                   t
+(ifn (gt -10 -9) t ())                  t
+(ifn (gt -20000 20000) t ())            t
+(ifn (gt 20000 -20000) t ())            ()
+
+(ifn (ge 9 10) t ())                    t
+(ifn (ge 9 9) t ())                     ()
+(ifn (ge 10 9) t ())                    ()
+(ifn (ge -9 -10) t ())                  ()
+(ifn (ge -9 -9) t ())                   ()
+(ifn (ge -10 -9) t ())                  t
+(ifn (ge -20000 20000) t ())            t
+(ifn (ge 20000 -20000) t ())            ()
+
+(ifn (lt 9 10) t ())                    ()
+(ifn (lt 9 9) t ())                     t
+(ifn (lt 10 9) t ())                    t
+(ifn (lt -9 -10) t ())                  t
+(ifn (lt -9 -9) t ())                   t
+(ifn (lt -10 -9) t ())                  ()
+(ifn (lt -20000 20000) t ())            ()
+(ifn (lt 20000 -20000) t ())            t
+
+(ifn (le 9 10) t ())                    ()
+(ifn (le 9 9) t ())                     ()
+(ifn (le 10 9) t ())                    t
+(ifn (le -9 -10) t ())                  t
+(ifn (le -9 -9) t ())                   ()
+(ifn (le -10 -9) t ())                  ()
+(ifn (le -20000 20000) t ())            ()
+(ifn (le 20000 -20000) t ())            t
+
+          (test-serie "[Divide functions]" ())
+ 
+(setq #:sys-package:genarith 'genarith) genarith
+
+(defun testdiv/rem ()
+    (for (n -10 1 10)
+         (for (d -10 1 10)
+              (when (<> d 0)
+                    (if (< n 0)
+                        (when (> (rem n d) 0)
+                              (print "** erreur de REM " (list n d)))
+                        (when (< (rem n d) 0)
+                              (print "** erreur de REM " (list n d))))
+                    (when (<> n (+ (* (div n d) d) (rem n d)))
+                          (print "** erreur de DIV " (list n d))))))
+    t)
+                              testdiv/rem
+
+(testdiv/rem)                 t
+
+(defun testquo/mod1 ()
+    (for (n -10 1 10)
+         (for (d -10 1 10)
+              (when (<> d 0)
+                    (when (< (modulo n d) 0)
+                          (print "** erreur de MODULO " (list n d)))
+                    (when (<> n (+ (* (quotient n d) d) (modulo n d)))
+                          (print " ** erreur de QUOTIENT " (list n d))))))
+    t)              
+                    testquo/mod1
+
+(defun testquo/mod2 ()
+    (for (n -10. 1. 10.)
+         (for (d -10. 1. 10.)
+              (when (<> d 0)
+                    (when (< (modulo n d) 0)
+                          (print "** erreur de MODULO " (list n d)))
+                    (when (<> n (+ (* (quotient n d) d) (modulo n d)))
+                          (print " ** erreur de QUOTIENT " (list n d))))))
+    t)
+                    testquo/mod2
+(testquo/mod1)                t
+(testquo/mod2)                t
+
+(defvar stringtestres '(
+"   -3   -3    1    0       1       0       1      0.000"
+"   -3   -2    1   -1       2       1       2      1.000"
+"   -3   -1    3    0       3       0       3      0.000"
+"   -3    1   -3    0      -3       0      -3      0.000"
+"   -3    2   -1   -1      -2       1      -2      1.000"
+"   -3    3   -1    0      -1       0      -1      0.000"
+"   -2   -3    0   -2       1       1       1      1.000"
+"   -2   -2    1    0       1       0       1      0.000"
+"   -2   -1    2    0       2       0       2      0.000"
+"   -2    1   -2    0      -2       0      -2      0.000"
+"   -2    2   -1    0      -1       0      -1      0.000"
+"   -2    3    0   -2      -1       1      -1      1.000"
+"   -1   -3    0   -1       1       2       1      2.000"
+"   -1   -2    0   -1       1       1       1      1.000"
+"   -1   -1    1    0       1       0       1      0.000"
+"   -1    1   -1    0      -1       0      -1      0.000"
+"   -1    2    0   -1      -1       1      -1      1.000"
+"   -1    3    0   -1      -1       2      -1      2.000"
+"    0   -3    0    0       0       0       0      0.000"
+"    0   -2    0    0       0       0       0      0.000"
+"    0   -1    0    0       0       0       0      0.000"
+"    0    1    0    0       0       0       0      0.000"
+"    0    2    0    0       0       0       0      0.000"
+"    0    3    0    0       0       0       0      0.000"
+"    1   -3    0    1       0       1       0      1.000"
+"    1   -2    0    1       0       1       0      1.000"
+"    1   -1   -1    0      -1       0      -1      0.000"
+"    1    1    1    0       1       0       1      0.000"
+"    1    2    0    1       0       1       0      1.000"
+"    1    3    0    1       0       1       0      1.000"
+"    2   -3    0    2       0       2       0      2.000"
+"    2   -2   -1    0      -1       0      -1      0.000"
+"    2   -1   -2    0      -2       0      -2      0.000"
+"    2    1    2    0       2       0       2      0.000"
+"    2    2    1    0       1       0       1      0.000"
+"    2    3    0    2       0       2       0      2.000"
+"    3   -3   -1    0      -1       0      -1      0.000"
+"    3   -2   -1    1      -1       1      -1      1.000"
+"    3   -1   -3    0      -3       0      -3      0.000"
+"    3    1    3    0       3       0       3      0.000"
+"    3    2    1    1       1       1       1      1.000"
+"    3    3    1    0       1       0       1      0.000"
+                       ))
+                                        stringtestres
+
+(defun stringtestdiv ()
+    (let ((res))
+         (for (n -3 1 3)
+              (for (d -3 1 3)
+                   (when (<> d 0)
+                         (newl res 
+                               (format () "~5D~5D~5D~5D~8D~8D~8D      ~5F"
+                                       n d (div n d) (rem n d) 
+                                       (quotient n d) 
+                                       (modulo n d)
+                                       (quotient (float n) (float d))
+                                       #:ex:mod)))))
+         (setq res (nreverse res))
+         (unless (equal res stringtestres)
+                 (print "**** Erreur dans le test global")
+                 (print
+               "    n    d   DIV  REM  QUOTIENT  MODULO   QUOTIENT  MODULO")
+                 (print
+               "                        entier   entier    flott.   flott.")
+                 (while (and res stringtestres)
+                        (unless (equal (car res) (car stringtestres))
+                             (print "on devrait avoir")
+                             (print (car stringtestres))
+                             (print "on a")
+                             (print (car res)))
+                        (nextl res) (nextl stringtestres))))
+    t)
+                                        stringtestdiv
+
+(stringtestdiv)                         t
+(setq #:sys-package:genarith ())        ()
+
+
+        (test-serie "[Bitwise functions]" ())
+
+(lognot 0)				-1
+(lognot -1)				0
+(lognot -2)				1
+(lognot 4369)				-4370
+
+(logand #$36 #$25)			#$24
+(logand #%11110000 #%10101010)		#%10100000
+(logand #.:FIXMAX #.:FIXMIN)		1
+(logand #.:FIXMAX #.:MINUS0)		0
+
+(logor #$15 #$17)			#$17
+(logor #.:FIXMAX #.:FIXMIN))		-1
+
+(logxor 5 3)				6
+(logxor 760 -1)				-761
+(logxor #.:FIXMAX #.:FIXMIN))		-2
+(logxor #.:MINUS0 #.:FIXMIN))		1
+
+(logshift 1 0)				1
+(logshift -1 0)				-1
+(logshift -1 -1)			#.:FIXMAX
+(logshift 1 1)				2
+(logshift 1 3)				8
+(logshift 1 15)				#$8000
+(logshift 8 -3)				1
+
+        (test-serie "[Bitfield functions]" ())
+
+(2** 0)					1
+(2** 4)					16
+(2** 15)				#$8000
+(2** -1)				0
+(2** t)					(ERRNIA 2** t)
+ 
+(load-byte #$F0 2 4)			#$C
+
+(mask-field #$F0 2 4)			#$30
+
+(deposit-byte #$F0 2 4 #$3)		#$CC
+
+(deposit-field #$F0 2 4 #$C)		#$CC
+
+(load-byte-test #$F0 2 2)		()
+(load-byte-test #$F0 2 4)		#$C
+
+
+        (test-serie "[Trigonometric functions]" ())
+
+(sin 0)                                 0.
+(sin pi/4)                              0.70710678118655
+(sin pi/2)                              1.
+(asin (sin 1.2))                        1.2
+
+(cos 0)                                 1.
+(cos pi/4)                              0.70710678118655
+(cos pi/2)                              0
+(acos (cos 1.2))                        1.2
+
+(setq x 1.2)                            1.2
+(sqrt (+ (power (sin x) 2) (power (cos x) 2)))  1.
+
+(* 4 (atan 1))                          #.pi
+
+(power 10 0)                            1.
+(power 10 1)                            10.
+(power 10 10)                           1e+10
+(power 10 -1)                           0.1
+(power 10 -2)                           0.01
+(power 2. 0.5)                          1.4142135623730951
+;;; cf LeLionnais p: 79; is this number rationnal ???
+;;; but this number if fase on 31 bits ....
+;;;(power pi eNeper)                       22.45915771836104547343
+
+(exp 0)                                 1.
+(exp 1)                                 #.eNeper
+
+(log 1)                                 0.
+(log #.eNeper)                          1.
+(log (exp 1))                           1.
+
+(log10 1)                               0.
+(log10 10)                              1.
+(log10 20)                              1.3010299956639813
+(log10 100)                             2.
+
+(sqrt 100)                              10.
+(sqrt 1000000.)                         1000.
+
+        (test-serie "[Floating point arithmetics]" ())
+
+(fadd 10. 20.)                          30.
+(fadd 10. 20)                           (ERRNFA fadd 20)
+(fadd 10 20.)                           (ERRNFA fadd 10)
+
+(fsub 20. 11.)                          9.
+
+(fmul 10. 9.)                           90.
+
+(fdiv 11. 2.)                           5.5
+(fdiv 10. 2.)                           5.
+(fdiv 10. 0.)                           (ERR0DV fdiv 0)
+
+(feqn -10. -10.)                        -10.
+(feqn 10. 10.)                          10.
+(feqn 10. 9.)                           ()
+(feqn -10. -9.)                         ()
+(feqn -20000. 20000.)                   ()
+
+(fneqn -10. -10.)                       ()
+(fneqn 10. 10.)                         ()
+(fneqn 10. 9.)                          10.
+(fneqn -10. -9.)                        -10.
+(fneqn -20000. 20000.)                  -20000.
+
+(fgt 9. 10.)                            ()
+(fgt 9. 9.)                             ()
+(fgt 10. 9.)                            10.
+(fgt -9. -10.)                          -9.
+(fgt -9. -9.)                           ()
+(fgt -10. -9.)                          ()
+(fgt -20000. 20000.)                    ()
+(fgt 20000. -20000.)                    20000.
+
+(fge 9. 10.)                            ()
+(fge 9. 9.)                             9.
+(fge 10. 9.)                            10.
+(fge -9. -10.)                          -9.
+(fge -9. -9.)                           -9.
+(fge -10. -9.)                          ()
+(fge -20000. 20000.)                    ()
+(fge 20000. -20000.)                    20000.
+
+(flt 9. 10.)                            9.
+(flt 9. 9.)                             ()
+(flt 10. 9.)                            ()
+(flt -9. -10.)                          ()
+(flt -9. -9.)                           ()
+(flt -10. -9.)                          -10.
+(flt -20000. 20000.)                    -20000.
+(flt 20000. -20000.)                    ()
+
+(fle 9. 10.)                            9.
+(fle 9. 9.)                             9.
+(fle 10. 9.)                            ()
+(fle -9. -10.)                          ()
+(fle -9. -9.)                           -9.
+(fle -10. -9.)                          -10.
+(fle -20000. 20000.)                    -20000.
+(fle 20000. -20000.)                    ()
+
+(fmin 10. 10.)                          10.
+(fmin 10. 11.)                          10.
+(fmin 11. 10.)                          10.
+(fmin -10. -10.)                        -10.
+(fmin -10. -11.)                        -11.
+(fmin -11. -10.)                        -11.
+(fmin 11. t)                            (ERRNFA fmin t)
+(fmin t 11.)                            (ERRNFA fmin t)
+
+(fmax 10. 10.)                          10.
+(fmax 10. 11.)                          11.
+(fmax 11. 10.)                          11.
+(fmax -10. -10.)                        -10.
+(fmax -10. -11.)                        -10.
+(fmax -11. -10.)                        -10.
+(fmax 11. t)                            (ERRNFA fmax t)
+(fmax t 11.)                            (ERRNFA fmax t)
+
+(if (feqn -10. -10.) t ())              t
+(if (feqn 10. 10.) t ())                t
+(if (feqn 10. 9.) t ())                 ()
+(if (feqn -10. -9.) t ())               ()
+(if (feqn -20000. 20000.) t ())         ()
+
+(if (fneqn -10. -10.) t ())             ()
+(if (fneqn 10. 10.) t ())               ()
+(if (fneqn 10. 9.) t ())                t
+(if (fneqn -10. -9.) t ())              t
+(if (fneqn -20000. 20000.) t ())        t
+
+(if (fgt 9. 10.) t ())                  ()
+(if (fgt 9. 9.) t ())                   ()
+(if (fgt 10. 9.) t ())                  t
+(if (fgt -9. -10.) t ())                t
+(if (fgt -9. -9.) t ())                 ()
+(if (fgt -10. -9.) t ())                ()
+(if (fgt -20000. 20000.) t ())          ()
+(if (fgt 20000. -20000.) t ())          t
+
+(if (fge 9. 10.) t ())                  ()
+(if (fge 9. 9.) t ())                   t
+(if (fge 10. 9.) t ())                  t
+(if (fge -9. -10.) t ())                t
+(if (fge -9. -9.) t ())                 t
+(if (fge -10. -9.) t ())                ()
+(if (fge -20000. 20000.) t ())          ()
+(if (fge 20000. -20000.) t ())          t
+
+(if (flt 9. 10.) t ())                  t
+(if (flt 9. 9.) t ())                   ()
+(if (flt 10. 9.) t ())                  ()
+(if (flt -9. -10.) t ())                ()
+(if (flt -9. -9.) t ())                 ()
+(if (flt -10. -9.) t ())                t
+(if (flt -20000. 20000.) t ())          t
+(if (flt 20000. -20000.) t ())          ()
+
+(ifn (fle 9. 10.) t ())                 ()
+(ifn (fle 9. 9.) t ())                  ()
+(ifn (fle 10. 9.) t ())                 t
+(ifn (fle -9. -10.) t ())               t
+(ifn (fle -9. -9.) t ())                ()
+(ifn (fle -10. -9.) t ())               ()
+(ifn (fle -20000. 20000.) t ())         ()
+(ifn (fle 20000. -20000.) t ())         t
+
+(ifn (feqn -10. -10.) t ())             ()
+(ifn (feqn 10. 10.) t ())               ()
+(ifn (feqn 10. 9.) t ())                t
+(ifn (feqn -10. -9.) t ())              t
+(ifn (feqn -20000. 20000.) t ())        t
+
+(ifn (fneqn -10. -10.) t ())            t
+(ifn (fneqn 10. 10.) t ())              t
+(ifn (fneqn 10. 9.) t ())               ()
+(ifn (fneqn -10. -9.) t ())             ()
+(ifn (fneqn -20000. 20000.) t ())       ()
+
+(ifn (fgt 9. 10.) t ())                 t
+(ifn (fgt 9. 9.) t ())                  t
+(ifn (fgt 10. 9.) t ())                 ()
+(ifn (fgt -9. -10.) t ())               ()
+(ifn (fgt -9. -9.) t ())                t
+(ifn (fgt -10. -9.) t ())               t
+(ifn (fgt -20000. 20000.) t ())         t
+(ifn (fgt 20000. -20000.) t ())         ()
+
+(ifn (fge 9. 10.) t ())                 t
+(ifn (fge 9. 9.) t ())                  ()
+(ifn (fge 10. 9.) t ())                 ()
+(ifn (fge -9. -10.) t ())               ()
+(ifn (fge -9. -9.) t ())                ()
+(ifn (fge -10. -9.) t ())               t
+(ifn (fge -20000. 20000.) t ())         t
+(ifn (fge 20000. -20000.) t ())         ()
+
+(ifn (flt 9. 10.) t ())                 ()
+(ifn (flt 9. 9.) t ())                  t
+(ifn (flt 10. 9.) t ())                 t
+(ifn (flt -9. -10.) t ())               t
+(ifn (flt -9. -9.) t ())                t
+(ifn (flt -10. -9.) t ())               ()
+(ifn (flt -20000. 20000.) t ())         ()
+(ifn (flt 20000. -20000.) t ())         t
+
+(ifn (fle 9. 10.) t ())                 ()
+(ifn (fle 9. 9.) t ())                  ()
+(ifn (fle 10. 9.) t ())                 t
+(ifn (fle -9. -10.) t ())               t
+(ifn (fle -9. -9.) t ())                ()
+(ifn (fle -10. -9.) t ())               ()
+(ifn (fle -20000. 20000.) t ())         ()
+(ifn (fle 20000. -20000.) t ())         t
+
+
+        (test-serie "[Extended arithmetics]" ())
+
+(setq #:ex:regret 0)			0
+(ex1+ 10)				11
+#:ex:regret				0
+(ex1+ -1)				0
+#:ex:regret				1
+
+(setq #:ex:regret 0)			0
+(ex+ 100 200)				300
+#:ex:regret				0
+
+(setq #:ex:regret 1)			1
+(ex+ 100 200)				301
+#:ex:regret				0
+
+(setq #:ex:regret 0)			0
+(ex+ -1 -1)				-2
+#:ex:regret				1
+
+(setq #:ex:regret 1)			1
+(ex+ -1 -1)				-1
+#:ex:regret				1
+
+(ex- -2)				1
+(ex- -1)				0
+(ex- 0)					-1
+(ex- 1)					-2
+(ex- 2)					-3
+
+(setq #:ex:regret 0)			0
+(ex* 100 100 0)				10000
+#:ex:regret				0
+
+(setq #:ex:regret 0)			0
+(ex* 100 100 10)			10010
+#:ex:regret				0
+
+(setq #:ex:regret 0)			0
+(ex* -1 -1 0)				1
+#:ex:regret				-2
+
+(setq #:ex:regret -1)			-1
+(ex* -1 -1 0)				0
+#:ex:regret				-1
+
+(setq #:ex:regret 0)			0
+(ex/ 100 5)				20
+#:ex:regret				0
+
+(setq #:ex:regret 1)			1
+(ex/ 100 5)				13127
+#:ex:regret				1
+
+(setq #:ex:regret -2)			-2
+(ex/ 0 -1)				-2
+#:ex:regret				-2
+
+(setq #:ex:regret -3)			-3
+(ex/ 3 -1)				-2
+#:ex:regret				1
+
+(ex? 0 0)				0
+(ex? 2 3)				-1
+(ex? 3 2)				1
+(ex? -1 -2)				1
+(ex? -1 1)				1
+(ex? -1 -1)				0
+(ex? -2 -1)				-1
+
+
+        (test-serie "[Binary I/O]" ())
+
+(defun charsout (maxchar times)
+    (with ((outchan (openob (cond
+                              ((eq (system) 'vaxvms) "sys$scratch:bintest")
+                              (t "/tmp/bintest")
+			      )) ))
+	  (repeat times
+		  (for (i 0 1 maxchar) (princn i)))
+	  (flush)
+	  (close (outchan)))
+    t)
+charsout
+
+(defun charsin (maxchar times)
+    (let ((ok t)(file (cond
+		       ((eq (system) 'vaxvms) "sys$scratch:bintest")
+		       (t "/tmp/bintest")
+		       )) )
+      (with ((inchan (openib file)))
+	    (repeat times
+		    (for (i 0 1 maxchar)
+			 (if (neq (readcn) i) (setq ok nil))))
+	    (close (inchan)))
+      (deletefile file)
+      ok))
+charsin
+
+
+(charsout 255 1)                           t
+(charsin 255 1)                            t
+(charsout 255 2)                           t
+(charsin 255 2)                            t
+(charsout 193 3)                           t
+(charsin 193 3)                            t
+
+          (test-serie "[Iterators DO/DO* FOR/IFOR/FFOR]" ())
+
+(defun ll (l)
+       (do ((x l (cdr x))
+            (j 0 (1+ j)))
+           ((atom x) j))))              ll
+
+(ll '(a b c d e f))                     6
+
+(defun lr (l)
+       (do ((x l (cdr x))
+            (y () (cons (car x) y)))
+       ((atom x) y)))                   lr
+
+(lr '(a b c d e f))                     (f e d c b a)
+
+(defun expt1 (m n)
+  (do ((result 1)
+       (exponent n))
+      ((zerop exponent) result)
+      (setq result (* m result))
+      (setq exponent (- exponent 1))))            expt1
+
+(expt1 2 3)                                       8
+
+(defun expt2 (m n)
+    (do ((result 1)
+         (exponent n))
+        (nil)
+        (cond ((zerop exponent)
+               (return result)))
+        (setq result (* m result))
+        (setq exponent (- exponent 1))))          expt2
+
+(expt2 2 3)                                       8
+
+(defun expt3 (m n)
+    (do ((result 1 (* m result))
+         (exponent n (- exponent 1)))
+        ((zerop exponent) result)))               expt3
+
+(expt3 2 3)                                       8
+
+(defun expt4 (m n)
+    (do ((result m (* m result))
+        (exponent n (- exponent 1))
+        (counter (- n 1) (- counter 1)))
+       ((zerop counter) result)))                 expt4
+
+(expt4 2 3)                                       8
+
+(defun expt5 (m n)
+    (do ((result 1)
+         (exponent n))
+        ((prog1 (zerop exponent)
+                (setq exponent (- exponent 1)))
+         result)
+        (setq result (* m result))))              expt5
+
+(expt5 2 3)                                       8
+
+(defun expt6 (m n)
+    (do* ((result m (* m result))
+          (exponent n (- exponent 1))
+          (counter (- exponent 1)  (- exponent 1)))
+         ((zerop counter) result)))               expt6
+
+(expt6 2 3)                                       8
+
+(defun expt7 (m n)
+    (prog (result exponent)
+       (setq result 1)
+       (setq exponent n)
+     loop
+       (cond ((zerop exponent) (return result)))
+             (setq result (* m result))
+             (setq exponent (- exponent 1))
+             (go loop)))                          expt7
+
+(expt7 2 3)                                       8
+
+(setq x 0 x1 0 x2 1 x3 9)                         9
+(for (i 0 1 9)(incr x))                           ()
+(for (i 0 1 9 'ok)(incr x))                       ok
+x                                                 20
+i                                                 (ERRUDV eval i)
+(for (i x1 1 9)(incr x))                          ()
+(for (i x1 x2 9)(incr x))                         ()
+(for (i 0 x2 9)(incr x))                          ()
+(for (i 0 x2 x3)(incr x))                         ()
+x                                                 60
+(for (i 0 1 x3)(incr x))                          ()
+x                                                 70
+(for (i x1 1 x3)(incr x))                         ()
+x                                                 80
+(for (i x1 x2 x3)(incr x))                        ()
+x                                                 90
+(for ((i) x1 x2 x3)(incr x))                      (ERRNVA for (i))
+x                                                 90
+(for (i 0) )                                      (ERRSXT for (i 0 ()()))
+x                                                 90
+
+(setq x 0 x1 0 x2 1 x3 9)                         9
+(ifor (i 0 1 9)(incr x))                          ()
+(ifor (i 0 1 9 'ok)(incr x))                      ok
+x                                                 20
+i                                                 (ERRUDV eval i)
+(ifor (i x1 1 9)(incr x))                         ()
+(ifor (i x1 x2 9)(incr x))                        ()
+(ifor (i 0 x2 9)(incr x))                         ()
+(ifor (i 0 x2 x3)(incr x))                        ()
+(ifor (i 0 1 x3)(incr x))                         ()
+(ifor (i x1 1 x3)(incr x))                        ()
+(ifor (i x1 x2 x3)(incr x))                       ()
+(ifor ((i) x1 x2 x3)(incr x))                     (ERRNVA ifor (i))
+(ifor (i 0) )                                     (ERRSXT ifor (i 0 ()()))
+(ifor (i 0. 1 9)(incr x))                         (ERRNIA ifor 0.)
+(ifor (i 0 1. 9)(incr x))                         (ERRNIA ifor 1.)
+(ifor (i 0 1 9.)(incr x))                         (ERRNIA ifor 9.)
+(ifor (i 0 (float x2) 9)(incr x))                 (ERRNIA ifor 1.)
+(ifor (i 0 1 (float x3))(incr x))                 (ERRNIA ifor 9.)
+x                                                 90
+
+(setq x 0 x1 0. x2 1. x3 9.)                      9.
+(ffor (i 0. 1. 9.)(incr x))                       ()
+(ffor (i 0. 1. 9. 'ok)(incr x))                   ok
+x                                                 20
+i                                                 (ERRUDV eval i)
+(ffor (i x1 1. 9.)(incr x))                       ()
+(ffor (i x1 x2 9.)(incr x))                       ()
+(ffor (i 0. x2 9.)(incr x))                       ()
+(ffor (i 0. x2 x3)(incr x))                       ()
+(ffor (i 0. 1. x3)(incr x))                       ()
+(ffor (i x1 1. x3)(incr x))                       ()
+(ffor (i x1 x2 x3)(incr x))                       ()
+(ffor ((i) x1 x2 x3)(incr x))                     (ERRNVA ffor (i))
+(ffor (i 0) )                                     (ERRSXT ffor (i 0 ()()))
+(ffor (i 0. 1 9.)(incr x))                        (ERRNFA ffor 1)
+(ffor (i 0. 1. 9)(incr x))                        (ERRNFA ffor 9)
+(ffor (i 0. (fix x2) 9.)(incr x))                 (ERRNFA ffor 1.)
+(ffor (i 0. 1. (fix x3))(incr x))                 (ERRNFA ffor 9.)
+x                                                 90
+
+
+
+
+        (test-serie "[Extended types]" ())
+
+(defun #:foo:bar (x) 3)                    #:foo:bar
+(setq x (tcons '#:foo:zip 2))           #(#:foo:zip . 2)
+(send 'bar x)                           3
+
+(defun #:(a . a):foo (o1 o2)
+    'aa)                                #:(a . a):foo
+
+(defun #:(a . #:a:b):foo (o1 o2)
+    'ab)                                #:(a . #:a:b):foo
+
+(defun #:(#:a:b . a):foo (o1 o2)
+    'ba)                                #:(#:a:b . a):foo
+
+(defun #:(a . #:a:c):foo (o1 o2)
+    'ac)                                #:(a . #:a:c):foo
+
+(send2 'foo '#(a) '#(a))                        aa
+(send2 'foo '#(a) '#(#:a:b))                    ab
+(send2 'foo '#(#:a:b) '#(a))                    ba
+(send2 'foo '#(#:a:b) '#(#:a:b))                ba
+(send2 'foo '#(#:a:c) '#(#:a:b))                ab
+(send2 'foo '#(#:a:b) '#(#:a:c))                ba
+(send2 'foo '#(#:a:c) '#(#:a:c))                ac
+
+
+          (test-serie "[Addresses computing]" ())
+
+;;; with -1 in car position => all bits are 1
+;;; with 0  in car position => all bits are 0
+;;; if not in cons format   => bit sign extented
+(subadr '(-1 . #$8005) #$8005)		0 ; bit sign extented [1]
+(subadr '(0 . #.:FIXMAX) #.:FIXMAX)	0 ; bit sign extented [0]
+(subadr '(0 . #$8005) '(0 . #.:FIXMAX))	6
+(subadr #$8005 #.:FIXMAX)		(-1 . 6)
+(subadr '(-1 . #$8005)'(-1 . #.:FIXMAX))	6
+;;; CONS | CONS
+(addadr '(3 . 657) '(4 . 4567))		(7 . 5224)
+(addadr '(1 . #.:MINUS0) '(1 . #.:MINUS0))	(3 . 0) 
+;;; FIX | FIX  
+(addadr -1 -1)				-2
+(addadr -1 1)				0
+(addadr 0 -1)				-1
+(addadr -2 2)				0
+(addadr 2 -2)				0
+(addadr -1000 0)			-1000
+(addadr 1 2)				3
+(addadr #.:FIXMAX 1)			(0 . #.:MINUS0)
+(addadr #$7FFE 1)			#.:FIXMAX
+;;; FIX | CONS
+(addadr 0 '(3 . 657))			(3 . 657)
+(addadr 1 '(1 . 234))			(1 . 235)
+(addadr 1 '(1 . -1))			(2 . 0)
+;;; CONS | FIX
+(addadr '(3 . 657) 0)			(3 . 657)
+(addadr '(1 . 234) 1)			(1 . 235)
+(addadr '(1 . -1) 1)			(2 . 0)
+(addadr '(-1 . 1) 1)			(-1 . 2)
+(addadr '(-1 . #.:FIXMIN) 1)		#$8002
+(addadr '(0 . #.:FIXMIN) 1)		(0 . #$8002)
+(addadr '(0 . #.:MINUS0) 1)		(0 . #.:FIXMIN)
+;;; CONS | CONS
+(subadr '(56 . 7899) '(45 . 3333))	(11 . 4566)
+(subadr '(1 . #.:MINUS0) '(1 . #.:MINUS0))	0
+(subadr '(1 . #$8010) '(1 . #.:MINUS0))	#$10
+(subadr '(1 . #.:MINUS0) '(1 . #.:FIXMIN))	-1
+(subadr '(5 . #$8078) '(5 . #$7fff))	#$79
+(subadr '(5 . #$8078) '(5 . #.:MINUS0))	#$78
+;;; FIX | FIX  
+(subadr -1 -1)				0
+(subadr -1 1)				-2
+(subadr 0 -1)				1
+(subadr 1 2)				-1
+(subadr 2 2)				0
+(subadr -2 -2)				0
+(subadr -1000 0)			-1000
+(subadr 0 -1000)			1000
+;;; FIX | CONS
+(subadr 0 '(3 . 3))			(#$FFFC . #$FFFD)
+(subadr 1 '(1 . 0))			(-1 . 1)
+(subadr 1 '(1 . -1))			(-2 . 2)
+;;; CONS | FIX
+(subadr '(3 . 657) 0)			(3 . 657)
+(subadr '(1 . 234) 1)			(1 . 233)
+(subadr '(1 . -1) 1)			(1 . #$FFFE)
+(subadr '(1 . 0) 1)			(0 . -1)
+
+(setq adr '(3 . #$FFFE))		(3 . -2)
+(incradr adr 1)				(3 . -1)
+(incradr adr 1)				(4 . 0)
+(incradr adr 1)				(4 . 1)
+(incradr adr 100)			(4 . 101)
+adr					(4 . 101)
+(incradr adr '(-1 . -102))		(3 . -1)
+adr					(3 . -1)
+(incradr 0 adr)				(3 . -1)
+(incradr 1 adr)				(4 . 0)
+adr					(3 . -1)
+(incradr  '(1 . 0) -1)			(0 . -1)
+(incradr -1 -1)				-2
+(incradr '(0 . #.:MINUS0) -1)		#.:FIXMAX
+(incradr '(0 . #.:MINUS0) 1)		(0 . #.:FIXMIN)
+(incradr '(0 . #.:FIXMAX) 1)		(0 . #.:MINUS0)
+
+(setq adr '(4 . 101))			(4 . 101)
+(gtadr adr '(5 . -10))			()
+(gtadr adr '(3 . -10))			t
+(gtadr adr '(4 . -10))			()
+(gtadr adr '(4 . 100))			t
+(gtadr adr '(4 . 101))			()
+
+(setq adr '(-4 . 101))			(-4 . 101)
+(gtadr adr '(-5 . -10))			t
+(gtadr adr '(-3 . -10))			()
+(gtadr adr '(-4 . -10))			()
+(gtadr adr '(-4 . 100))			t
+(gtadr adr '(-4 . 101))			()
+
+(addadr 100 t)				(ERRNDA addadr t)
+(subadr t 100)				(ERRNDA subadr t)
+(addadr 100 '(1))			(ERRNDA addadr (1))
+(subadr 100 '(t . 1))			(ERRNDA subadr (t . 1))
+(incradr '(t . 0) 0)			(ERRNDA incradr (t . 0))
+(incradr '(0 . t) 0)			(ERRNDA incradr (0 . t))
+(incradr 0 '(t . 0))			(ERRNDA incradr (t . 0))
+(incradr 0 '(0 . t))			(ERRNDA incradr (0 . t))
+(gtadr '(t . 0) 0)			(ERRNDA gtadr (t . 0))
+(gtadr 0 '(0 . t))			(ERRNDA gtadr (0 . t))
+
+(memory 'a)				(ERRNDA memory a)
+(memory '(t . 0))			(ERRNDA memory (t . 0))
+(memory '(0 . t))			(ERRNDA memory (0 . t))
+(memory 'a 0)				(ERRNDA memory a)
+(memory '(t . 0) 0)			(ERRNDA memory (t . 0))
+(memory '(0 . t) 0)			(ERRNDA memory (0 . t))
+
+(vag 'a)				(ERRNDA vag a)
+(vag '(t . 0))				(ERRNDA vag (t . 0))
+(vag '(0 . t))				(ERRNDA vag (0 . t))
+
+(vag (loc 's))				s
+(vag (loc "s"))				"s"
+(vag (loc #[a]))			#[a]
+(vag (loc '-1))				-1
+(vag (loc '-1.0))			-1.0
+
+        (test-serie "[Output functions]" ())
+
+(setq #:system:print-package-flag 0)    0
+(setq #:sys-package:colon 'foo)         foo
+(explode '#(() foo))                    #"#(() foo)"
+(explode '#((()) foo))                  #"#((()) foo)"
+(setq foo '#:a:b:c
+      bar ':a:b:c)                      :a:b:c
+(explode foo)                           #"#:a:b:c"
+(explode bar)                           #":a:b:c"
+(packagecell bar (cons foo foo))        (#:a:b:c . #:a:b:c)
+(explode bar)                           #"#:(#:a:b:c . #:a:b:c):c"
+(setq #:sys-package:colon '#:a:b)       #:a:b
+(explode bar)                           #"#:(:c . :c):c"
+(setq #:system:print-package-flag t)    t
+(explode bar)                           #"#:(#:a:b:c . #:a:b:c):c"
+(setq #:system:print-for-read ())       ()
+(setq #:system:print-package-flag t)    t
+
+
+          (test-serie "[Special errors]" ())
+
+(gc t t)                                (ERRWNA gc 1)
+(gc t t t)                              (ERRWNA gc 1)
+(send)                                  (ERRWNA send 2)
+(send t)                                (ERRWNA send 2)
+(csend)                                 (ERRWNA csend 3)
+(csend t)                               (ERRWNA csend 3)
+(csend t t)                             (ERRWNA csend 3)
+(send2)                                 (ERRWNA send2 3)
+(send2 t)                               (ERRWNA send2 3)
+(send2 t t)                             (ERRWNA send2 3)
+
+
+        (test-serie "[Floating number Test]" ())
+
+(defun fnt (x y)
+    (fmul nf (fadd (cos (fdiv x nd)) (fadd (cos (fdiv y nd)) 2.)))))
+fnt
+
+(defun frise (nl nf nd)
+    (let ((x) (y 30.))
+         (repeat nl
+                 (setq x -30. y (fsub y 1.))
+                 (repeat 59
+                         (princn (chrnth (fix (fnt (incr x) y)) 
+                                         "|-#+x.;~^,@-?'<~>")))
+                 (terpri))
+         t))
+frise
+
+(frise 25 3.5 5.5)                      t
+
+          (test-serie "[End of the Test]" ())
+
+(setq #:sys-package:genarith #:tescomm:genarith
+      #:tescomm:genarith ())            ()
+(setq #:system:read-case-flag #:save:read-case-flag a ())       ()
+()                                      ()

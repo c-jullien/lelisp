@@ -1,0 +1,176 @@
+defmodule
+#:display:windows:widgets
+files (
+	|widgets.ll|
+)
+include (
+	|virstruct.ll|
+	|virmacros.ll|
+)
+import (
+	virutil
+	win_def
+	winstruc
+	winwindo
+	virwindow
+	virevent
+	virgraph
+)
+export (
+	win-message
+	win-create-button
+	button-callback
+	#:image:rectangle:window:button:create
+	#:image:rectangle:window:button:make-window
+	#:image:rectangle:window:button:button-style
+	#:image:rectangle:window:button:callback
+	#:image:rectangle:window:button:get-state
+	#:image:rectangle:window:button:set-state
+	#:image:rectangle:window:button:get-check
+	#:image:rectangle:window:button:set-check
+	#:image:rectangle:window:button:enable
+	#:image:rectangle:window:button:display
+	#:display:windows:create-button
+	win-create-scroll
+	scroll-callback
+	#:image:rectangle:window:scroll:create
+	#:image:rectangle:window:scroll:make-window
+	#:image:rectangle:window:scroll:callback
+	#:image:rectangle:window:scroll:min
+	#:image:rectangle:window:scroll:max
+	#:image:rectangle:window:scroll:show
+	#:image:rectangle:window:scroll:inc
+	#:image:rectangle:window:scroll:val
+	#:image:rectangle:window:scroll:get-scroll-pos
+	#:image:rectangle:window:scroll:set-scroll-pos
+	#:image:rectangle:window:scroll:set-scroll-range
+	#:image:rectangle:window:scroll:enable
+	#:image:rectangle:window:scroll:display
+	#:display:windows:create-scroll
+	win-create-listbox
+	listbox-callback
+	#:image:rectangle:window:listbox:create
+	#:image:rectangle:window:listbox:make-window
+	#:image:rectangle:window:listbox:callback
+	#:image:rectangle:window:listbox:addstring
+	#:image:rectangle:window:listbox:delstring
+	#:image:rectangle:window:listbox:get-selection
+	#:image:rectangle:window:listbox:clear-selection
+	#:display:windows:create-listbox
+	#:display:windows:help
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(win-message subr3 ())
+(win-create-button nsubr ())
+(button-callback subr2 ())
+(#:image:rectangle:window:button:create nsubr ())
+(#:image:rectangle:window:button:make-window subr1 ())
+(#:image:rectangle:window:button:button-style nsubr ())
+(#:image:rectangle:window:button:callback nsubr ())
+(#:image:rectangle:window:button:get-state subr1 ())
+(#:image:rectangle:window:button:set-state subr2 ())
+(#:image:rectangle:window:button:get-check subr1 ())
+(#:image:rectangle:window:button:set-check subr2 ())
+(#:image:rectangle:window:button:enable subr2 ())
+(#:image:rectangle:window:button:display subr1 ())
+(#:display:windows:create-button subr2 ())
+(win-create-scroll nsubr ())
+(scroll-callback subr3 ())
+(#:image:rectangle:window:scroll:create nsubr ())
+(#:image:rectangle:window:scroll:make-window subr1 ())
+(#:image:rectangle:window:scroll:callback nsubr ())
+(#:image:rectangle:window:scroll:min nsubr ())
+(#:image:rectangle:window:scroll:max nsubr ())
+(#:image:rectangle:window:scroll:show nsubr ())
+(#:image:rectangle:window:scroll:inc nsubr ())
+(#:image:rectangle:window:scroll:val nsubr ())
+(#:image:rectangle:window:scroll:get-scroll-pos subr1 ())
+(#:image:rectangle:window:scroll:set-scroll-pos subr2 ())
+(#:image:rectangle:window:scroll:set-scroll-range subr3 ())
+(#:image:rectangle:window:scroll:enable subr2 ())
+(#:image:rectangle:window:scroll:display subr1 ())
+(#:display:windows:create-scroll subr2 ())
+(win-create-listbox nsubr ())
+(listbox-callback subr1 ())
+(#:image:rectangle:window:listbox:create nsubr ())
+(#:image:rectangle:window:listbox:make-window subr1 ())
+(#:image:rectangle:window:listbox:callback nsubr ())
+(#:image:rectangle:window:listbox:addstring subr2 ())
+(#:image:rectangle:window:listbox:delstring subr2 ())
+(#:image:rectangle:window:listbox:get-selection subr1 ())
+(#:image:rectangle:window:listbox:clear-selection subr1 ())
+(#:display:windows:create-listbox subr2 ())
+(#:display:windows:help subr3 ())
+)
+cpfunctions (
+(WinMessage subr3)
+(#:display:windows:check-widget-initialized subr0)
+(WinInitWidgets subr0)
+(#:image:rectangle:window:button:make subr0)
+(windows_getstate_button subr1)
+(windows_setstate_button subr2)
+(windows_getcheck_button subr1)
+(windows_setcheck_button subr2)
+(windows_enable_button subr2)
+(windows_display_button subr1)
+(#:display:windows:windows-create-button subr2)
+(windows_create_button nsubr)
+(#:image:rectangle:window:scroll:make subr0)
+(windows_get_scroll_pos subr1)
+(windows_set_scroll_pos subr2)
+(windows_set_scroll_range subr3)
+(windows_enable_scroll subr2)
+(windows_display_scroll subr1)
+(#:display:windows:windows-create-scroll subr2)
+(windows_create_scroll nsubr)
+(#:image:rectangle:window:listbox:make subr0)
+(windows_addstring_listbox subr2)
+(windows_delstring_listbox subr2)
+(windows_getindex_listbox subr1)
+(windows_getstring_listbox subr3)
+(windows_getindexes_listbox subr3)
+(windows_clearsel_listbox subr1)
+(#:display:windows:windows-create-listbox subr2)
+(windows_create_listbox nsubr)
+(windows_help subr3)
+)
+cpimport (
+(virwindow
+(make-window . subr1)
+)(virutil
+(#:graph-env:make . subr0)
+)(winwindow
+(#:display:windows:make-top-extend . subr2)
+))
+cpenv (
+virutil
+win_def
+winstruct
+virwindow
+winwindow
+virevent
+virgraph
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:windows:is-widgets-initialized 't '#:complice:globalvar)
+)((defstruct #:image:rectangle:window:button (button-style 0) (check 0) (callback (function (lambda (id button) (print id " " button)))))
+)((putprop '#:image:rectangle:window:button:pushbutton 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:defpushbutton 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:checkbox 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:autocheckbox 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:radiobutton 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:3state 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:auto3state 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:groupbox 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:userbutton 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:button:autoradiobutton 't '#:complice:globalvar)
+)((defstruct #:image:rectangle:window:scroll (scroller-style 0) (callback (function (lambda (id code pos) (selectq code (0 (send 'val id (max (|-| (send 'val id) (send 'inc id)) (send 'min id)))) (1 (send 'val id (min (|+| (send 'val id) (send 'inc id)) (send 'max id)))) (2 (send 'val id (max (|-| (send 'val id) (send 'show id)) (send 'min id)))) (3 (send 'val id (min (|+| (send 'val id) (send 'show id)) (send 'max id)))) (4 (send 'val id pos)) (5 (send 'val id pos))) (send 'set-scroll-pos id (send 'val id)) (print id " Code : " code " Pos : " (send 'val id))))) (min 0) (max 100) (show 10) (inc 1) (val 0))
+)((putprop '#:image:rectangle:window:scroll:vertical-scroller 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:scroll:horizontal-scroller 't '#:complice:globalvar)
+)((defstruct #:image:rectangle:window:listbox (listbox-style 0) (callback (function (lambda (id) (print id)))))
+)((putprop '#:image:rectangle:window:listbox:simple-selection 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:listbox:multiple-selection 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:listbox:vector-len 't '#:complice:globalvar)
+)((putprop '#:image:rectangle:window:listbox:vector-index 't '#:complice:globalvar)
+))

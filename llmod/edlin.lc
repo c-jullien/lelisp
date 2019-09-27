@@ -1,0 +1,17 @@
+defmodule
+edlin
+files (
+edlin
+)
+export (
+#:edlin:bol
+#:edlin:move
+#:edlin:delete
+#:edlin:history:add
+edlin
+edlinend
+)
+import
+()
+include
+()

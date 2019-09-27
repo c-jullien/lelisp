@@ -1,0 +1,22 @@
+
+#!/bin/sh
+set -x
+
+# Recette officielle de Le-Lisp avec complice.
+date
+
+cd ..
+rm -f letestextbin
+make letestextbin
+
+ ./letestextbin -stack 6 -code 1700 -heap 300 -number 0 -vector 4 -string 8  -symbol 7 -cons 24 -float 0 \
+	../llib/startup.ll << Eoi
+
+(load-cpl () t t t t t)
+(setq #:complice:parano-flag t)
+(setq #:complice:warning-flag ())
+
+(libloadfile "recette" t)
+
+date
+

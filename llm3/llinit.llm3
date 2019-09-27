@@ -1,0 +1,825 @@
+; .EnTete "Le-Lisp (c) version 15.2" "1/19" "llinit.llm3"
+; .EnPied " " % " "
+; .Chapitre 1 "Initialisation du syste`me Le-Lisp"
+;
+; .Centre "*****************************************************************"
+; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+
+; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+; .Centre "*****************************************************************"
+;
+; $Header: /usr/cvs/lelisp/llm3/llinit.llm3,v 1.16 2017/10/07 13:54:52 jullien Exp $
+
+          TITLE     LLINIT             
+
+; .Section "De'clarations"
+
+          XREFP     LELISP,LL_EXIT      ; 0 - LELISP (obligatoire)
+          XREFP     LELISP,EXWER
+
+          XREFP     TOPERR,SYSTOP       ; 2 - TOPERR
+          XREFP     TOPERR,INI_TOP
+          XREFP     TOPERR,ERRWNA
+          XREFP     GC,INI_GC           ; 3 - GC
+          XREFP     GC,GCCONS           ;     (obligatoire)
+          XREFP     GC,GCFLOAT          ;     (obligatoire)
+          XREFP     GC,GCNUMB           ;     (obligatoire)
+          XREFP     PHYSIO,INI_PIO      ; 4 - PHYSIO
+          XREFP     PHYSIO,INPUT
+          XREFP     PHYSIO,RESTCORI
+          XREFP     READ,INI_READ       ; 5 - READ
+          XREFP     READ,ISTDSYM
+          XREFP     READ,INISYMB
+          XREFP     READ,INICST
+          XREFI     READ,CPKGC
+          XREFP     READ,CRASTRG
+          XREFP     MACROCH,INI_MACH    ; 6 - MACROCH
+          XREFP     PRINT,INI_PRINT     ; 7 - PRINT
+          XREFP     EVAL,INI_EVAL       ; 8 - EVAL
+          XREFI     EVAL,SAVEA1
+          XREFI     EVAL,SAVEA2
+          XREFI     EVAL,SAVEA3
+          XREFI     EVAL,SAVEA4
+          XREFP     EVAL,LLITSOFT
+          XREFP     EVAL,LLSUPIT
+          XREFP     FSPECS,INI_SPEC     ; 9 - FSPECS
+          XREFP     CNTRL,INI_CTL       ; 10 - CNTRL
+          XREFP     CARCDR,INI_CAD      ; 11 - CARCDR
+          XREFP     SYMBS,INI_SYM       ; 12 - SYMBS
+          XREFP     FNTSTD,INI_STD      ; 13 - FNTSTD
+          XREFP     NUMBER,INI_NBS      ; 14 - NUMBER
+          XREFP     SPECNB,INI_SNB      ; 15 - SPECNB
+          XREFP     STRING,INI_STR      ; 16 - STRING
+          XREFP     STRING,MAKEVECT
+          XREFP     STRING,STRGSYMB
+          XREFP     STRING,STRGALLC
+          XREFI     STRING,.STRING
+          XREFI     STRING,.VECTOR
+          XREFP     CHARS,INI_CHR       ; 17 - CHARS
+          XREFP     EXTEND,INI_EXT      ; 18 - EXTEND
+          XREFP     BLLSHT,INI_BLL      ; 19 - BLLSHT
+
+          XDEFI     CSTSYSTE
+          XDEFI     BIMPUR
+
+          XDEFI     BSTACK
+          XDEFI     ESTACK
+          XDEFI     MSTACK
+          XDEFI     MSTACK1
+          XDEFI     MSTACK2
+
+          XDEFI     BCODE
+          XDEFI     CCODE
+          XDEFI     ECODE
+
+          XDEFI     BHEAP
+          XDEFI     CHEAP
+          XDEFI     EHEAP
+
+          XDEFI     BNUMB
+          XDEFI     CNUMB
+
+          XDEFI     BFLOAT
+          XDEFI     CFLOAT
+
+          XDEFI     BVECT
+          XDEFI     CVECT
+
+          XDEFI     BSTRG
+          XDEFI     CSTRG
+
+          XDEFI     BSYMB
+          XDEFI     CSYMB
+
+          XDEFI     BVAR
+
+          XDEFI     BCONS
+          XDEFI     CCONS
+
+          XDEFI     BOLD
+          XDEFI     EOLD
+
+          XDEFI     FNUMB
+          XDEFI     FFLOAT
+          XDEFI     FVECT
+          XDEFI     FSTRG
+          XDEFI     FSYMB
+          XDEFI     FCONS
+          XDEFI     HASHTAB
+          XDEFI     .UNDEF
+          XDEFI     .SYSPKGC
+          XDEFI     .VOID
+          XDEFI     .ITSOFT
+          XDEFP     ITSOFT
+          XDEFI     .LLSYSTEM
+          XDEFI     FILIN
+          XDEFI     FILIZ
+          XDEFI     FILIT
+          XDEFI     LLBAN
+          XDEFI     NBSYST
+          XDEFI     MAXCHAN
+          XDEFI     ITSTATE
+          XDEFI     ITCOUNT
+
+          XDEFP     LLINIT
+          XDEFP     REENTER
+          XDEFP     THEEND
+          XDEFI     .T
+          XDEFP     LLVERSION
+          XDEFP     LLSYSTEM
+          XDEFP     STOP
+
+; .Section "Les variables globales initialise's par le lanceur"
+
+          IMPURE
+
+BIMPUR    LABEL
+
+; .SSection "La pile"
+
+BSTACK    ADR       0                   ; adresse du debut de la pile
+ESTACK    ADR       0                   ; adresse de la fin re'elle de la pile
+MSTACK    ADR       0                   ; adresse de fin de pile courante
+MSTACK1   ADR       0                   ; premie`re tole'rance de pile (1k)
+MSTACK2   ADR       0                   ; deuxie`me tole'rance de pile (64 mots
+
+; .SSection "Les diffe'rentes zones des objets Lisp"
+
+BCODE     ADR       0                   ; adresse du debut de la zone binaire
+CCODE     ADR       0                   ; adresse courante de la zone binaire
+ECODE     ADR       0                   ; adresse de la fin de la zone binaire
+
+BHEAP     ADR       0                   ; adresse du debut de la zone tas
+CHEAP     ADR       0                   ; adresse courante de la zone tas
+EHEAP     ADR       0                   ; adresse de la fin de la zone tas
+
+BNUMB     ADR       0                   ; adresse du debut des nombres entiers
+CNUMB     ADR       0                   ; adresse courante de la zone nombres
+
+BFLOAT    ADR       0                   ; adresse du debut de la zone flottante
+CFLOAT    ADR       0                   ; adresse courante de la zone flottante
+
+BVECT     ADR       0                   ; adresse du debut de la zone vecteur
+CVECT     ADR       0                   ; adresse courante de la zone vecteur
+
+BSTRG     ADR       0                   ; adresse du debut de la zone chaine
+CSTRG     ADR       0                   ; adresse courante de la zone chaine
+
+BSYMB     ADR       0                   ; adresse du debut de la zone symbole
+CSYMB     ADR       0                   ; adresse courante de la zone symbole
+
+BVAR      ADR       0                   ; adresse du debut de la zone variable
+
+BCONS     ADR       0                   ; adresse du debut de la zone liste
+CCONS     ADR       0                   ; adresse courante de la zone liste
+
+BOLD      ADR       0                   ; adresse du debut de l'autre zone
+EOLD      ADR       0                   ; adresse de la fin de l'autre zone
+
+FNUMB     ADR       0                   ; FREE NUMB
+FFLOAT    ADR       0                   ; FREE FLOAT
+FSTRG     ADR       0                   ; FREE STRING
+FVECT     ADR       0                   ; FREE VECTOR
+FSYMB     ADR       0                   ; FREE SYMB
+FCONS     ADR       0                   ; FREE CONS
+
+; .SSection "Fichier Initial et ligne de commande"
+
+FILIZ     ADR       0              ; taille du nom du fichier (0 = pas de nom)
+FILIT     ADR       0                ; type (0 = fichier, <>0 = image memoire)
+FILIN     ADR       0                   ; nom  [pointeur externe]
+
+LLBAN     ADR       0                 ; type de la banniere (0 normal, 1 muet)
+
+; .SSection "Le nume'ro du syste`me"
+
+NBSYST    ADR       0
+
+; .SSection "Le nombre de canaux disponibles"
+
+MAXCHAN   ADR       0
+
+; .SSection "La Gestion des ITs"
+
+ITSTATE   ADR       0                   ; validation d'IT : =0 IT masquees
+ITCOUNT   ADR       0                   ; nb d'IT pendantes
+
+; .Section "Les variables globales non initialise's par le lanceur"
+
+; .SSection "La gestion des symboles"
+
+HASHTAB   ADR       0              ; [GC] la table de hachage elle-meme (vect)
+
+; .SSection "Les donne'es locales de l'initialisateur"
+
+
+TABSYST   ADR       0                   ; table des syste`mes
+CSTSYSTE  ADR       0                   ; [GC] le nom du syste`me
+
+
+
+
+; .Section "Le code de l'initialisation"
+
+          PURE
+
+LLINIT    LABEL
+
+;         a` cet endroit :
+;         - la me'moire de travail a e'te' alloue'e
+;         - le canal terminal a e'te' ouvert en mode caracte`re sans e'cho
+;         - le syste`me de fichiers a e'te' initialise'
+
+;         les me'moires globales suivantes ont e'te' initialise'es :
+;
+;              BCODE BHEAP BNUMB BFLOAT BVECT BSTRG BSYMB BCONS
+;                      les adresses de de'but des zones
+;              BOLD EOLD
+;                      les adresses des bornes de la seconde zone liste
+;              CCODE CBHEAP CNUMB CFLOAT CVECT CSTRG CSYMB CCONS
+;                      les adresses courantes des zones
+;              BSTACK ESTACK MSTACK1 MSTACK2
+;                      les limites de la pile
+;                      le nombre 0 est empile' (cf GC)
+;              FILIZ FILIT FILIN
+;                      la taille, le type et l'adresse du nom
+;                      du fichier initial
+;              NBSYST
+;                      le nume'ro du type de syste`me
+;              LLBAN
+;                      le type de la bannie`re 
+;        
+
+; .SSection "Initialisation de la pile Lisp"
+
+          SSTACK    BSTACK              ; init la pile Le-Lisp
+          MOV       MSTACK1,MSTACK
+
+; .SSection "Initialisation de la zone tas"
+
+;         MOV       BHEAP,CHEAP         ; fait a l'initialisation
+
+; .SSection "Initialisation de la liste libre des nbs entiers et FNUMB"
+
+     IFNE DEBUG
+          TTYMSG    #10," GC_NUMB  "
+     ENDC
+          MOV       #0,A1               ; marqueur de fin de liste (=NIL)
+          MOV       CNUMB,A2            ; A2 = free
+          BFNUMB    A2,IFRNS3           ; pas de NUMB
+IFRNS1    MOV       A1,VAL(A2)          ; curr
+          MOV       A2,A1               ; prev
+          NXNUMB    A2,IFRNS1           ; entier suivant
+IFRNS3    MOV       A1,FNUMB            ; A1 = CURRENT FREE NUMB
+
+; .SSection "Initialisation de la liste libre des nbs flottants et FFLOAT"
+
+     IFNE DEBUG
+          TTYMSG    #10," GC_FLOAT "
+     ENDC
+          MOV       #0,A1               ; marqueur de fin de liste
+          MOV       CFLOAT,A2           ; A2 = Current
+          BFFLOAT   A2,IFRFS3           ; pas de FLOAT
+IFRFS1    MOV       A1,VAL(A2)          ; curr
+          MOV       A2,A1               ; prev
+          NXFLOAT   A2,IFRFS1           ; il en reste encore.
+IFRFS3    MOV       A1,FFLOAT           ; A1 = CURRENT FREE FLOAT
+
+; .SSection "Initialisation de la liste libre des vecteurs et FVECT"
+
+     IFNE DEBUG
+          TTYMSG    #8," GC_VECT"
+     ENDC
+          MOVNIL    A1                  ; marqueur de fin de liste 
+          MOV       CVECT,A2            ; A2
+IFRVS1    MOV       A1,VAL(A2)          ; curr
+          MOV       A2,A1               ; prev
+          NXVECT    A2,IFRVS1           ; vecteur suivant
+          MOV       A1,FVECT            ; A1 = CURRENT FREE VECTor
+
+; .SSection "Initialisation de la liste libre des chaines et FSTRG"
+
+     IFNE DEBUG
+          TTYMSG    #8," GC_STRG"
+     ENDC
+          MOVNIL    A1                  ; marqueur de fin de liste (=NIL)
+          MOV       CSTRG,A2            ; A2 = free
+IFRSS1    MOV       A1,VAL(A2)          ; curr
+          MOV       A2,A1               ; prev
+          NXSTRG    A2,IFRSS1           ; chai^ne suivante
+          MOV       A1,FSTRG            ; A1 = CURRENT FREE STRING
+
+; .SSection "Tentative du restore-core initial"
+
+; Le HEAP et les chai^nes etantpre^tes : fabrication du nom
+; du fichier initial ou du core pour tenter le restore-core de suite.
+
+     IFNE DEBUG
+          BRA       INITF9              ; pas de sens en DEBUG
+     ENDC
+          MOV       FILIZ,A1            ; argument fichier ?
+          CNBEQ     A1,#0,INITF9        ; non rien a` faire
+          CNBEQ     FILIT,#0,INITF9     ; c'est pas un core
+          MOV       FILIN,A2            ; le nom du core
+          JCALL     CRASTRG             ; ce doit e^tre une chai^ne Lisp
+          JCALL     RESTCORI            ; un aller simple!
+INITF9    LABEL                         ; initialisation normale.
+
+; .SSection "Initialisation de la liste libre des symboles et FSYMB"
+
+; La liste libre des symboles doit e^tre termine'e par #0. La cre'ation
+; est re'alise'e via les ALINK dans l'ordre normal a` cause des constantes
+; de te^te!
+
+     IFNE DEBUG
+          TTYMSG    #8," GC_SYMB"
+     ENDC
+          MOV       CSYMB,A2            ; A2 = free
+          BRA       IFRSY2              ; la zone n'est jamais vide
+IFRSY1    MOV       A2,ALINK(A1)        ; force l'adresse du symb suivant.
+IFRSY2    MOV       A2,A1
+          NXSYMB    A2,IFRSY1
+IFRSY3    MOV       #0,ALINK(A1)        ; le dernier symbole
+          MOV       CSYMB,FSYMB         ; FSYMB <- le 1er symbole (||?)
+
+; .SSection "Initialisation de la liste libre des CONS et FCONS"
+
+     IFNE DEBUG
+          TTYMSG    #8," GC_CONS"
+     ENDC
+          MOVNIL    A1                  ; marqueur de fin de liste (=NIL)
+          MOV       CCONS,A2            ; A2 = free
+IFRLS1    MOVNIL    CAR(A2)             ; les CAR = NIL
+          MOV       A1,CDR(A2)          ; prev
+          CLINVSBL  A2                  ; pour initialiser les tables de bits
+          MOV       A2,A1               ; le dernier (FREE)
+          NXCONS    A2,IFRLS1           ; au CONS suivant
+          SFCONS    A1                  ; sauve le FREE CONS
+
+
+; .Section "Cre'ation des objets standard"
+
+          MOVNIL    SAVEA1
+          MOVNIL    SAVEA2
+          MOVNIL    SAVEA3
+          MOVNIL    SAVEA4
+
+     IFNE DEBUG
+          TTYMSG    #8," INI_HSH"
+     ENDC
+          MOV       #997,A1             ; taille de la table de hachage
+          MOVNIL    A2                  ; valeur initiale
+          JCALL     MAKEVECT            ; le vecteur est cre'e
+          MOV       A1,HASHTAB
+          HGSIZE    HASHTAB,A1
+          BRA       INHAS2              ; on y va
+INHAS1    HPMOVX    A1,HASHTAB,A1       ; raze le bucket (avec son nume'ro!)
+INHAS2    SOBGEZ    A1,INHAS1           ; il en reste
+
+     IFNE DEBUG
+          XDEFP     INI_VOI
+INI_VOI   LABEL
+          TTYMSG    #8," INI_VOI"
+     ENDC
+          MAKCST    VOID,#0,""          ; fabrique le faux-nil si bizarre!
+          MOV       .VOID,PKGC(A1)      ; PKGC(||) = ||
+          SPTYPE    #$80,A1             ; a` imprimer avec des || !
+
+     IFNE DEBUG
+          XDEFP     INI_NIL
+INI_NIL   LABEL
+          TTYMSG    #8," INI_NIL"
+     ENDC
+          MAKCST    UNDEF,#7,"_undef_"  ; le second c'est UNDEF!
+          MAKCST    NEWNIL,#3,"nil"     ; le premier symbole c'est NIL
+          MAKCST    T,#1,"t"
+          MOV       .VOID,CPKGC         ; initialise le package courant.
+          MOV       .NEWNIL,A1          ; changer les PKGC de NIL et UNDEF!
+          MOV       .VOID,PKGC(A1)
+          MOV       .VOID,CVAL(A1)
+          MOV       .UNDEF,A1           ; idem pour la valeur inde'finie 
+          MOV       .VOID,PKGC(A1)
+          MOV       .T,A1               ; idem pour T
+          MOV       .VOID,PKGC(A1)
+
+          SETBVAR   FSYMB               ; de'but des variables
+
+; Fabrique les noms des diffe'rents syste`mes
+
+     IFNE DEBUG
+INI_FNT   LABEL
+          TTYMSG    #8," INI_FNT"
+     ENDC
+          MAKCST    SYSPKGC,#11,"sys-package"
+          MOVNIL    CVAL(A1)
+          MAKFNT    ITSOFT,#6,"itsoft"
+          MAKFNT    SUPITSOF,#12,"super-itsoft"
+          MAKFNT    LLSYSTEM,#6,"system" 
+
+          MAKCST    SYSOBSLT,#8,"obsolete"	; 0
+;;        MAKCST    VERSADOS,#8,"versados"	; 1
+;;        MAKCST    VME,#3,"vme"		; 2
+;;        MAKCST    MICROMEGA,#9,"micromega"	; 3
+          MAKCST    APOLLO,#6,"apollo"		; 4
+;;        MAKCST    SM90,#4,"sm90"		; 5
+;;        MAKCST    PE32OS,#6,"pe32os"		; 6
+;;        MAKCST    PE32UNIX,#8,"pe32unix"	; 7
+          MAKCST    VAXUNIX,#7,"vaxunix"	; 8
+          MAKCST    VAXVMS,#6,"vaxvms"		; 9
+;;        MAKCST    MULTICS,#7,"multics"	; 10
+;;        MAKCST    METHEUS,#7,"metheus"	; 11
+;;        MAKCST    UNIV68,#10,"universe68"	; 12
+          MAKCST    CPM86,#5,"cpm86"		; 13
+          MAKCST    PCDOS,#5,"msdos"		; 14
+;;        MAKCST    MACII,#5,"macII"		; 15
+;;        MAKCST    VAXIS3,#6,"vaxis3"		; 16
+;;        MAKCST    MACINT,#3,"mac"		; 17
+;;        MAKCST    SPS9,#4,"sps9"		; 18
+;;        MAKCST    BELLMAC,#7,"bellmac"	; 19
+;;        MAKCST    VMUTS,#6,"vm_uts"		; 20
+;;        MAKCST    PCS,#6,"cadmus"		; 21
+          MAKCST    KSUN,#3,"sun"		; 22
+          MAKCST    HP9000,#6,"hp9300"		; 23
+;;        MAKCST    METAVISE,#10,"metaviseur"	; 24
+;;        MAKCST    GOULD,#7,"gouldpn"		; 25
+          MAKCST    IBMRT,#5,"ibmrt"		; 26
+;;        MAKCST    PYRAMID,#7,"pyramid"	; 27
+;;        MAKCST    SEQUENT,#7,"sequent"	; 28
+          MAKCST    UNIGRAPH,#5,"cetia"		; 29
+;;        MAKCST    CL1000,#6,"cl1000"		; 30
+;;        MAKCST    CL1020,#6,"cl1020"		; 31
+;;        MAKCST    TEK43,#14,"tektronix 43xx"	; 32
+          MAKCST    SLLC,#1,"C"			; 33
+          MAKCST    LEWS,#7,"dpx1000"		; 34
+          MAKCST    SUN4,#4,"sun4"		; 35
+          MAKCST    ATARI,#5,"atari"		; 36
+;;        MAKCST    CONVEX,#6,"convex"		; 37
+          MAKCST    MACAUX,#6,"macaux"		; 38
+          MAKCST    DECSTATION,#10,"decstation"	; 39
+          MAKCST    SONY,#4,"sony"		; 40
+          MAKCST    M88K,#4,"m88k"		; 41
+          MAKCST    SUN386I,#7,"sun386i"	; 42
+          MAKCST    AIX386,#6,"aix386"		; 43
+          MAKCST    IX386,#5,"ix386"		; 44
+          MAKCST    SONYR3000,#9,"sonyr3000"	; 45
+          MAKCST    LLMIPS,#6,"magnum"		; 46
+          MAKCST    RS6000,#6,"rs6000"		; 47
+          MAKCST    SCO386,#6,"sco386"		; 48
+          MAKCST    OS2,#3,"os2"		; 49
+          MAKCST    HP9400,#6,"hp9400"		; 50
+          MAKCST    IRIS4D,#6,"iris4d"		; 51
+          MAKCST    SVR4I386,#8,"svr4i386"	; 52
+          MAKCST    OS220,#5,"os2_2"		; 53
+          MAKCST    CHP9700,#7,"Chp9700"	; 54
+          MAKCST    CSUN4,#5,"Csun4"		; 55
+          MAKCST    CETIA88K,#8,"cetia88k"	; 56
+          MAKCST    SUN4MBC,#7,"sun4mbc"	; 57
+          MAKCST    HP9700,#6,"hp9700"		; 58
+          MAKCST    CALPHAVMS,#9,"Calphavms"	; 59
+          MAKCST    NT386,#5,"nt386"		; 60
+          MAKCST    NEXT68K,#7,"next68k"	; 61
+          MAKCST    SOLARIS,#7,"solaris"	; 62
+          MAKCST    CALPHAOSF,#9,"Calphaosf"	; 63
+          MAKCST    CIRIS4D,#7,"Ciris4d"	; 64
+          MAKCST    ALPHAOSF,#8,"alphaosf"	; 65
+          MAKCST    SOLARIS386,#10,"solaris386"	; 66
+          MAKCST    UNIXWARE386,#11,"unixware386"; 67
+          MAKCST    IRIX5,#5,"irix5"		; 68
+          MAKCST    ALPHAVMS,#8,"alphavms"	; 69
+          MAKCST    LINUX,#5,"linux" 	        ; 70
+          MAKCST    WIN95,#5,"win95"		; 71
+          MAKCST    CYGWIN,#6,"cygwin"		; 72
+          MAKCST    HP11,#4,"hp11"		; 73
+          MAKCST    WIN32,#5,"win32"		; 74
+          MAKCST    WIN64,#5,"win64"		; 75
+          MAKCST    X86MACOS,#8,"x86macos"	; 76
+          MAKCST    LINUXSPARC,#10,"linuxsparc"	; 77
+          MAKCST    FREEBSD,#7,"freebsd"	; 78
+          MAKCST    NETBSD,#6,"netbsd"		; 79
+
+          ;;; la taille du vecteur = nume'ro max + 1 ;;;
+
+          MOV       #80,A1              ; la taille
+          MOV       .SYSOBSLT,A2        ; la valeur initiale
+          JCALL     MAKEVECT            ; et c'est parti
+          MOV       A1,TABSYST          ; range l'adresse du vect.
+;;        HPMOVX    .VERSADOS,A1,#1     ; 1
+;;        HPMOVX    .VME,A1,#2          ; 2
+;;        HPMOVX    .MICROMEGA,A1,#3    ; 3
+          HPMOVX    .APOLLO,A1,#4       ; 4
+;;        HPMOVX    .SM90,A1,#5         ; 5
+;;        HPMOVX    .PE32OS,A1,#6       ; 6
+;;        HPMOVX    .PE32UNIX,A1,#7     ; 7
+          HPMOVX    .VAXUNIX,A1,#8      ; 8
+          HPMOVX    .VAXVMS,A1,#9       ; 9
+;;        HPMOVX    .MULTICS,A1,#10     ; 10
+;;        HPMOVX    .METHEUS,A1,#11     ; 11
+;;        HPMOVX    .UNIV68,A1,#12      ; 12
+          HPMOVX    .CPM86,A1,#13       ; 13
+          HPMOVX    .PCDOS,A1,#14       ; 14
+;;        HPMOVX    .MACII,A1,#15       ; 15
+;;        HPMOVX    .VAXIS3,A1,#16      ; 16
+;;        HPMOVX    .MACINT,A1,#17      ; 17
+;;        HPMOVX    .SPS9,A1,#18        ; 18
+;;        HPMOVX    .BELLMAC,A1,#19     ; 19
+;;        HPMOVX    .VMUTS,A1,#20       ; 20
+;;        HPMOVX    .PCS,A1,#21         ; 21
+          HPMOVX    .KSUN,A1,#22        ; 22
+          HPMOVX    .HP9000,A1,#23      ; 23
+;;        HPMOVX    .METAVISE,A1,#24    ; 24
+;;        HPMOVX    .GOULD,A1,#25       ; 25
+          HPMOVX    .IBMRT,A1,#26       ; 26
+;;        HPMOVX    .PYRAMID,A1,#27     ; 27
+;;        HPMOVX    .SEQUENT,A1,#28     ; 28
+          HPMOVX    .UNIGRAPH,A1,#29    ; 29
+;;        HPMOVX    .CL1000,A1,#30      ; 30
+;;        HPMOVX    .CL1020,A1,#31      ; 31
+;;        HPMOVX    .TEK43,A1,#32       ; 32
+          HPMOVX    .SLLC,A1,#33        ; 33
+          HPMOVX    .LEWS,A1,#34        ; 34
+          HPMOVX    .SUN4,A1,#35        ; 35
+          HPMOVX    .ATARI,A1,#36       ; 36
+;;        HPMOVX    .CONVEX,A1,#37      ; 37
+          HPMOVX    .MACAUX,A1,#38      ; 38
+          HPMOVX    .DECSTATION,A1,#39  ; 39
+          HPMOVX    .SONY,A1,#40        ; 40
+          HPMOVX    .M88K,A1,#41        ; 41
+          HPMOVX    .SUN386I,A1,#42     ; 42
+          HPMOVX    .AIX386,A1,#43      ; 43
+          HPMOVX    .IX386,A1,#44       ; 44
+          HPMOVX    .SONYR3000,A1,#45   ; 45
+          HPMOVX    .LLMIPS,A1,#46      ; 46
+          HPMOVX    .RS6000,A1,#47      ; 47
+          HPMOVX    .SCO386,A1,#48      ; 48
+	  HPMOVX    .OS2,A1,#49		; 49
+          HPMOVX    .HP9400,A1,#50      ; 50
+          HPMOVX    .IRIS4D,A1,#51      ; 51
+          HPMOVX    .SVR4I386,A1,#52    ; 52
+          HPMOVX    .OS220,A1,#53       ; 53
+          HPMOVX    .CHP9700,A1,#54     ; 54
+          HPMOVX    .CSUN4,A1,#55       ; 55
+          HPMOVX    .CETIA88K,A1,#56    ; 56
+          HPMOVX    .SUN4MBC,A1,#57     ; 57
+          HPMOVX    .HP9700,A1,#58      ; 58
+          HPMOVX    .CALPHAVMS,A1,#59   ; 59
+          HPMOVX    .NT386,A1,#60       ; 60
+          HPMOVX    .NEXT68K,A1,#61     ; 61
+          HPMOVX    .SOLARIS,A1,#62     ; 62
+          HPMOVX    .CALPHAOSF,A1,#63   ; 63
+          HPMOVX    .CIRIS4D,A1,#64     ; 64
+          HPMOVX    .ALPHAOSF,A1,#65    ; 65
+          HPMOVX    .SOLARIS386,A1,#66  ; 66
+          HPMOVX    .UNIXWARE386,A1,#67 ; 67
+          HPMOVX    .IRIX5,A1,#68       ; 68
+          HPMOVX    .ALPHAVMS,A1,#69    ; 69
+          HPMOVX    .LINUX,A1,#70       ; 70
+          HPMOVX    .WIN95,A1,#71       ; 71
+          HPMOVX    .CYGWIN,A1,#72      ; 72
+          HPMOVX    .HP11,A1,#73        ; 73
+          HPMOVX    .WIN32,A1,#74       ; 74
+          HPMOVX    .WIN64,A1,#75       ; 75
+          HPMOVX    .X86MACOS,A1,#76    ; 76
+          HPMOVX    .LINUXSPARC,A1,#77  ; 77
+          HPMOVX    .FREEBSD,A1,#78     ; 78
+          HPMOVX    .NETBSD,A1,#79      ; 79
+
+; On met dans la CVAL de #:system:system le nom du syste`me
+; Au prochain GC, on re'cupe'rera ainsi la table des syste`mes.
+
+          HPXMOV    TABSYST,NBSYST,A1   ; A1 <- le symbole
+          MOV       A1,CSTSYSTE         ; le nom du syste`me
+          HGSIZE    TABSYST,A1          ; la taille de la table
+          DECR      A1                  ; l'index est ok.
+;         On nettoie les noms des syste`mes pour le prochain GC
+CLRSYST   LABEL
+          HPXMOV    TABSYST,A1,A2       ; A2 <- un atome de syste`me
+          MOV       .UNDEF,CVAL(A2)     ; UNDEFined, maintenant
+          SOBGTZ    A1,CLRSYST
+
+          MAKFNT    LLVERSION,#7,"version" 
+          MAKCST    NAVERSION,#5,"15.26" 
+          MAKFNT    STOP,#3,"end"
+          MAKFNT    LLATEND,#6,"at-end"
+          MAKFNT    HERALD,#6,"herald"
+
+; .SSection "La cre'ation des autres symboles"
+
+     IFNE DEBUG
+          TTYMSG    #8," INI_TOP"
+     ENDC
+          JCALL     INI_TOP             ; in TOPERR
+     IFNE DEBUG
+          TTYMSG    #8," INI_GC "
+     ENDC
+          JCALL     INI_GC              ; in GC
+     IFNE DEBUG
+          TTYMSG    #8," INI_PIO"
+     ENDC
+          JCALL     INI_PIO             ; in PHYSIO
+     IFNE DEBUG
+          TTYMSG    #8," INI_REA"
+     ENDC
+          JCALL     INI_READ            ; in READ
+     IFNE DEBUG
+          TTYMSG    #8,"INI_MACH"
+     ENDC
+          JCALL     INI_MACH            ; in MACROCH
+     IFNE DEBUG
+          TTYMSG    #8," INI_PRI"
+     ENDC
+          JCALL     INI_PRINT           ; in PRINT
+     IFNE DEBUG
+          TTYMSG    #8," INI_EVA"
+     ENDC
+          JCALL     INI_EVAL            ; in EVAL
+     IFNE DEBUG
+          TTYMSG    #8,"INI_SPEC"
+     ENDC
+          JCALL     INI_SPEC            ; in FSPECS
+     IFNE DEBUG
+          TTYMSG    #8," INI_CTL"
+     ENDC
+          JCALL     INI_CTL             ; in CNTRL
+     IFNE DEBUG
+          TTYMSG    #8," INI_CAD"
+     ENDC
+          JCALL     INI_CAD             ; in CARCDR
+     IFNE DEBUG
+          TTYMSG    #8," INI_SYM"
+     ENDC
+          JCALL     INI_SYM             ; in SYMBS
+     IFNE DEBUG
+          TTYMSG    #8," INI_STD"
+     ENDC
+          JCALL     INI_STD             ; in FNTSTD
+     IFNE DEBUG
+          TTYMSG    #8," INI_NBS"
+     ENDC
+          JCALL     INI_NBS             ; in NUMBER
+     IFNE DEBUG
+          TTYMSG    #8," INI_SNB"
+     ENDC
+          JCALL     INI_SNB             ; in SPECNB
+     IFNE DEBUG
+          TTYMSG    #8," INI_CHR"
+     ENDC
+          JCALL     INI_CHR             ; in CHARS
+     IFNE DEBUG
+          TTYMSG    #8," INI_STR"
+     ENDC
+          JCALL     INI_STR             ; in STRING
+     IFNE DEBUG
+          TTYMSG    #8," INI_EXT"
+     ENDC
+          JCALL     INI_EXT             ; in EXTEND, les extensions locales
+     IFNE DEBUG
+          TTYMSG    #8," INI_BLL"
+     ENDC
+          JCALL     INI_BLL             ; in BLLSHT (et c'est la dernie`re)
+
+          MOVNIL    A1
+          MOV       PNAME(A1),A1
+          MOV       .STRING,TYP(A1)
+
+
+; .SSection "Force le type de toutes les chai^nes cre'e'es a` STRING"
+
+          MOV       BSTRG,A1            ; de'but de la zone chai^ne
+          MOV       .STRING,A2
+FORCSTR2  MOV       A2,TYP(A1)
+          NXSTRG    A1,FORCSTR2         ; pour toute la zone!
+
+; .SSection "Force le type de tous les vecteurs cre'e's a` VECTOR"
+
+          MOV       BVECT,A1            ; de'but de la zone vector
+          MOV       .VECTOR,A2
+FORCVEC2  MOV       A2,TYP(A1)
+          NXVECT    A1,FORCVEC2         ; pour toute la zone!
+          MOVNIL    A1                  ; libe`re tous les registres.
+
+; .Section "Le top-level actuel"
+
+TOPMIN    LABEL
+
+          CNBNE     LLBAN,#0,IMIN2      ; ya rien a` dire!
+          CALL      HERALD              ; imprime la bannie`re standard
+
+IMIN2     LABEL
+
+     IFNE DEBUG
+          BRA       REENTER             ; pas de sens en DEBUG
+     ENDC
+          MOV       FILIZ,A1            ; la taille du nom du fichier
+          CNBEQ     A1,#0,IMIN4         ; pas de fichier initial
+          MOV       FILIN,A2            ; adresse du nom
+          JCALL     CRASTRG             ; construit une chai^ne Lisp.
+          CNBEQ     FILIT,#0,IMIN3      ; c'est un fichier normal
+          JCALL     RESTCORI            ; c'est une image me'moire.
+          BRA       IMIN4
+IMIN3     JCALL     INPUT             
+IMIN4     LABEL
+
+; .SSection "Le point de retour a` chaud"
+
+REENTER   LABEL
+          SSTACK    BSTACK              ; repositionne la pile lisp
+          MOV       MSTACK1,MSTACK
+
+          MOV       #0,ITCOUNT          ; pas d'IT pendantes.
+          MOV       #1,ITSTATE          ; ITs autorisees.
+
+          JMP       SYSTOP              ; essai du nouveau top-level.
+
+; .SSection "La bout de la route"
+
+THEEND    LABEL
+          TTYMSG     #25,"May Le-Lisp be with you. "
+          TTYCRLF
+          JCALL     LL_EXIT
+          RETURN                        ; who knows .....
+
+
+
+; .Section "Les fonctions initiales "
+
+;  ----------------------------------------
+          FENTRY    ITSOFT,SUBR2
+;  ----------------------------------------
+          JMP      LLITSOFT             ; car c;est dans EVAL
+
+;  ----------------------------------------
+          FENTRY   SUPITSOF,SUBR3
+;  ----------------------------------------
+          JMP      LLSUPIT              ; car c;est dans EVAL
+
+;  ----------------------------------------
+          FENTRY    LLVERSION,SUBR0
+;  ----------------------------------------
+          MOV       .NAVERSION,A1       ; le symbole |15.2?|
+          MOV       PNAME(A1),A1
+          CVATOF    A1,#5,LLVERSR,A1    ; sur que 15.2? = 15.2?!
+LLVERSR   RETURN
+
+;  ----------------------------------------
+          FENTRY    LLSYSTEM,SUBR0
+;  ----------------------------------------
+          MOV       CSTSYSTE,A1         ; la variable contenant le syste`me
+          RETURN
+
+;  ----------------------------------------
+          FENTRY    STOP,SUBRN
+;  ----------------------------------------
+          CNBGT     A4,#1,STOP6         ; more than one arg -> error
+          PUSH      A4                  ; save all for ITSOFT
+          PUSH      A3
+          PUSH      A2
+          PUSH      A1
+          CNBEQ     A4,#0,STOP3         ; no arg
+          XSPMOV    #4,A2               ; arg is on stack
+          NCONS     A2
+          BRA       STOP4
+STOP3     MOVNIL    A2                  ; no arg -> ()
+STOP4     MOV       .LLATEND,A1
+          JCALL     ITSOFT              ; (ITSOFT 'LLATEND () or (arg))
+          POP       A1
+          POP       A2
+          POP       A3
+          POP       A4
+          CNBEQ     A4,#0,THEEND        ; without argument means normal return
+          POP       A1                  ; arg
+          BTNIL     A1,STOP5            ; nil means no error and no banner
+          JCALL     EXWER		; otherwise exit with banner and error
+STOP5     JCALL     LL_EXIT
+          RETURN                        ; who knows .....
+STOP6     MOV       #0,A1
+          MOV       .STOP,A2
+          JMP       ERRWNA
+;  ----------------------------------------
+          FENTRY    LLATEND,SUBRN
+;  ----------------------------------------
+          CNBGT     A4,#1,LLATEND2      ; more than one arg -> error
+          CNBEQ     A4,#1,LLATEND1      ; one arg
+          MOVNIL    A1                  ; no arg
+          RETURN
+LLATEND1  POP       A1
+          RETURN
+LLATEND2  MOV       #0,A1
+          MOV       .LLATEND,A2
+          JMP       ERRWNA
+
+;  ----------------------------------------
+          FENTRY    HERALD,SUBR0
+;  ----------------------------------------
+          TTYMSG    #52,"; Le-Lisp (by INRIA) version 15.26  (18/Aug/2017)  ["; <
+                                        ;                    taille #52     ["; <
+          MOV       CSTSYSTE,A1         ; la variable contenant le syste`me
+          JCALL     STRGSYMB            ; re'cupere le PNAME (avec liens 3D)
+          HGSIZE    A1,A2               ; sa taille
+          TTYSTRG   A2,A1               ; sort le nom du syste`me.
+          TTYMSG    #1,"]"              ; et ferme le crochet.
+          TTYCRLF
+          MOVNIL    A1
+          RETURN
+
+          END
+

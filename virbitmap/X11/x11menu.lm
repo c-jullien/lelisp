@@ -1,0 +1,106 @@
+defmodule #:display:x11
+files (
+x11menu.ll
+)
+include (
+virstruct.ll
+)
+import (
+x11_def x11struct
+virdraw ; draw-string
+virgraph ; current-mode
+virevent ; eventp
+virwindow ; make-window
+virinit ; bitxmax
+virutil ; #:event:make
+)
+export (
+:create-menu 
+:kill-menu 
+:activate-menu 
+:menu-insert-item 
+:menu-insert-item-list 
+:menu-delete-item-list 
+:menu-delete-item 
+:menu-modify-item-list 
+:menu-modify-item
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:display:x11:create-menu subr2 ())
+(#:display:x11:kill-menu subr2 ())
+(#:display:x11:activate-menu nsubr ())
+(#:display:x11:menu-insert-item nsubr ())
+(#:display:x11:menu-insert-item-list nsubr ())
+(#:display:x11:menu-delete-item-list subr3 ())
+(#:display:x11:menu-delete-item nsubr ())
+(#:display:x11:menu-modify-item-list nsubr ())
+(#:display:x11:menu-modify-item nsubr ())
+)
+cpfunctions (
+(#:display:x11:draw-menu subr3)
+(#:display:x11:width subr1)
+(width-string subr1)
+(#:display:x11:itemlist:width subr1)
+(#:display:x11:height subr1)
+(menuwindow nsubr)
+(#:display:x11:initialise-menu subr1)
+(#:display:x11:follow-mouse subr1)
+(#:display:x11:next-position subr2)
+(#:display:x11:redraw-menu subr2)
+(#:display:x11:invert-item subr3)
+(#:display:x11:itemlist-x subr2)
+(#:display:x11:itemlist-x1 subr2)
+(#:display:x11:find-list subr2)
+(#:display:x11:find-list1 subr3)
+)
+cpimport (
+(x11struct
+(#:x11:menu:make . subr0)
+(#:image:rectangle:window:menu-window:make . subr0)
+)(virinit
+(bitxmax . nsubr)
+(bitymax . nsubr)
+(bitmap-sync . nsubr)
+)(virgraph
+(width-substring . subr3)
+(font-height . subr0)
+(current-font . nsubr)
+(x-base-space . subr0)
+(font-ascent . subr0)
+(current-clip . nsubr)
+(clear-graph-env . subr0)
+)(virdraw
+(draw-substring . nsubr)
+(highlight-rectangle . nsubr)
+)(virwindow
+(make-window . subr1)
+(current-window . nsubr)
+(kill-window . subr1)
+)(virutil
+(current-display . nsubr)
+(#:event:make . subr0)
+)(virevent
+(grab-event . subr1)
+(read-event . nsubr)
+(ungrab-event . subr0)
+(eventp . subr0)
+(add-event . nsubr)
+))
+cpenv (
+x11_def
+x11struct
+virutil
+virdraw
+virgraph
+virwindow
+virevent
+files
+vircolor
+virbit
+virmenu
+virinit
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:display:x11:ev 't '#:complice:globalvar)
+))

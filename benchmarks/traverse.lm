@@ -1,0 +1,47 @@
+; The Le-Lisp Benchmarks (10-11) : traverse
+
+defmodule     traverse
+files        (traverse)
+export       (check-travinit meter-travinit test-travinit
+              check-travrun  meter-travrun  test-travrun
+	      traverse-seed)
+import       (checkmet setf)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-travinit subr0 ())
+(meter-travinit subr0 ())
+(test-travinit subr1 ())
+(check-travrun subr0 ())
+(meter-travrun subr0 ())
+(test-travrun subr1 ())
+(traverse-seed subr0 ())
+)
+cpfunctions (
+(init-traverse subr0)
+(traverse-create-structure subr1)
+(#:node:make subr0)
+(snb subr0)
+(traverse-add subr2)
+(traverse-remove subr2)
+(traverse-random subr0)
+(traverse-select subr2)
+(find-root subr2)
+(run-traverse subr0)
+(traverse subr1)
+(travers subr2)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+setf
+((putprop 'traverse-sn 't '#:complice:globalvar)
+)((putprop '*count-call* 't '#:complice:globalvar)
+)((putprop 'traverse-rand 't '#:complice:globalvar)
+)((putprop 'traverse-count 't '#:complice:globalvar)
+)((putprop 'traverse-marker 't '#:complice:globalvar)
+)((putprop 'traverse-root 't '#:complice:globalvar)
+))

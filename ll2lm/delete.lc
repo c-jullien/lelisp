@@ -1,0 +1,11 @@
+defmodule delete
+files (delete)
+import (
+kernellm
+ref
+rtmsg
+)
+
+export (
+#:llmodule:delete-modules
+)

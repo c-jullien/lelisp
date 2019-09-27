@@ -1,0 +1,23 @@
+; The Le-Lisp Benchmarks (9) : destru
+
+defmodule     destru
+files        (destru)
+export       (check-destru meter-destru test-destru)
+import       (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-destru subr0 ())
+(meter-destru subr0 ())
+(test-destru subr1 ())
+)
+cpfunctions (
+(destructive subr2)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+)

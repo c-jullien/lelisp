@@ -1,0 +1,155 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	mstack:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zundef:dword
+	extrn	zllsystem:dword
+	extrn	itstate:dword
+	extrn	itcount:dword
+	extrn	cpkgc:dword
+	extrn	dlink:dword
+	extrn	llink:dword
+	extrn	savea1:dword
+	extrn	savea2:dword
+	extrn	savea3:dword
+	extrn	savea4:dword
+	extrn	intret:dword
+	extrn	errname:dword
+	extrn	intllink:dword
+savits	dd	0
+pnmac1073	db	'schedule'
+	even
+pnmac1074	db	'suspend'
+	even
+pnmac1075	db	'resume'
+	even
+pnmac1076	db	'tagbody'
+	even
+pnmac1077	db	'go'
+	even
+pnmac1078	db	'block'
+	even
+pnmac1079	db	'return'
+	even
+pnmac1080	db	'return-from'
+	even
+zkllcp	dd	0
+pnmac1081	db	'llcp'
+	even
+pnmac1082	db	'cbind0'
+	even
+pnmac1083	db	'cbind1'
+	even
+pnmac1084	db	'cbind2'
+	even
+pnmac1085	db	'cbind3'
+	even
+pnmac1086	db	'cbindn'
+	even
+pnmac1087	db	'cbindl'
+	even
+pnmac1088	db	'cbinds'
+	even
+pnmac1089	db	'exit'
+	even
+pnmac1090	db	'tag'
+	even
+pnmac1091	db	'prot'
+	even
+pnmac1092	db	'lock'
+	even
+pnmac1093	db	'schedule'
+	even
+pnmac1094	db	'block'
+	even
+pnmac1095	db	'retfrom'
+	even
+pnmac1096	db	'go'
+	even
+pnmac1097	db	'tagbody'
+	even
+pnmac1098	db	'ffuncall'
+	even
+pnmac1099	db	'with-interrupts'
+	even
+pnmac1100	db	'without-interrupts'
+	even
+pnmac1101	db	'nlist'
+	even
+pnmac1102	db	'errwna'
+	even
+zddlink	dd	0
+pnmac1103	db	'dlink'
+	even
+zdllink	dd	0
+pnmac1104	db	'llink'
+	even
+zditcnt	dd	0
+pnmac1105	db	'itcount'
+	even
+znvar	dd	0
+pnmac1106	db	'n'
+	even
+pnmac1107	db	'fibd'
+	even
+pnmac1108	db	'fibl'
+	even
+pnmac1109	db	'fibml'
+	even
+zschedule	dd	0
+zsuspend	dd	0
+lab_m__6  db ' error SUSPN '
+	even
+zresume	dd	0
+ztagbody	dd	0
+zgo	dd	0
+zblock	dd	0
+zllret	dd	0
+zllretf	dd	0
+zcbind0	dd	0
+	extrn	_itloop:dword
+zcbind1	dd	0
+zcbind2	dd	0
+zcbind3	dd	0
+zcbindn	dd	0
+zcbindl	dd	0
+zcbinds	dd	0
+zctag	dd	0
+zcprot	dd	0
+zcmplock	dd	0
+zcsched	dd	0
+zcblock	dd	0
+zcexit	dd	0
+zcretfr	dd	0
+zcgo	dd	0
+zctagbody	dd	0
+zcffuncall	dd	0
+zcwithit	dd	0
+zcwithnoit	dd	0
+zllcpnlist	dd	0
+zllcperwna	dd	0
+zfibd	dd	0
+zfibl	dd	0
+zfibml	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

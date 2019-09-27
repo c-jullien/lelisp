@@ -1,0 +1,30 @@
+defmodule parse
+files (cpmac parse)
+import(
+defvar
+kernellm
+syserror
+rtmsg
+ref
+)
+
+export (
+defdefiner
+#:llmodule:definerp
+defdynamiccall
+defstruct
+#:llmodule:get-all-def-in-files
+#:llmodule:parse
+#:compiler:macro-expand-error
+; to avoid warning from complice
+;W.2.parse..Fonction non utilisee:
+     defmacro-open
+;W.2.parse..Fonction non utilisee:
+     make-macro-open
+;W.2.parse..Fonction non utilisee:
+     macro-openp
+;W.2.parse..Fonction non utilisee:
+     remove-macro-open
+
+)
+

@@ -1,0 +1,117 @@
+defmodule
+()
+files (
+|ttywindow.ll|
+)
+export (
+#:image:rectangle:window:tty:make
+(structure #:image:rectangle:window:tty)
+#:image:rectangle:window:tty:create
+#:image:rectangle:window:tty:current-window
+#:image:rectangle:window:tty:uncurrent-window
+#:image:rectangle:window:tty:modify-window
+#:tty:window:tycn
+#:tty:window:tystring
+#:tty:window:tynewline
+#:tty:window:tybs
+#:tty:window:tycr
+#:tty:window:tycleol
+#:tty:window:tycls
+#:tty:window:tyattrib
+#:tty:window:tyi
+#:tty:window:tys
+#:tty:window:tycursor
+#:tty:window:tyback
+#:tty:window:tydelcn
+#:tty:window:tyinscn
+)
+import (
+virbitmap
+defstruct
+virtty
+)
+include (
+virstruct
+)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:image:rectangle:window:tty:itsoft nsubr ())
+(#:image:rectangle:window:tty:tty nsubr ())
+(#:image:rectangle:window:tty:tyshowcursor nsubr ())
+(#:image:rectangle:window:tty:rmargin nsubr ())
+(#:image:rectangle:window:tty:lmargin nsubr ())
+(#:image:rectangle:window:tty:cy nsubr ())
+(#:image:rectangle:window:tty:cx nsubr ())
+(#:image:rectangle:window:tty:state nsubr ())
+(#:image:rectangle:window:tty:graphic-properties nsubr ())
+(#:image:rectangle:window:tty:window-type nsubr ())
+(#:image:rectangle:window:tty:events-list nsubr ())
+(#:image:rectangle:window:tty:subwindows nsubr ())
+(#:image:rectangle:window:tty:display nsubr ())
+(#:image:rectangle:window:tty:cursor nsubr ())
+(#:image:rectangle:window:tty:properties nsubr ())
+(#:image:rectangle:window:tty:father nsubr ())
+(#:image:rectangle:window:tty:extend nsubr ())
+(#:image:rectangle:window:tty:graph-env nsubr ())
+(#:image:rectangle:window:tty:visible nsubr ())
+(#:image:rectangle:window:tty:hilited nsubr ())
+(#:image:rectangle:window:tty:title nsubr ())
+(#:image:rectangle:window:tty:h nsubr ())
+(#:image:rectangle:window:tty:w nsubr ())
+(#:image:rectangle:window:tty:y nsubr ())
+(#:image:rectangle:window:tty:x nsubr ())
+(#:image:rectangle:window:tty:make subr0 ())
+(#:image:rectangle:window:tty:create nsubr ())
+(#:image:rectangle:window:tty:current-window subr1 ())
+(#:image:rectangle:window:tty:uncurrent-window subr1 ())
+(#:image:rectangle:window:tty:modify-window nsubr ())
+(#:tty:window:tycn subr1 ())
+(#:tty:window:tystring subr2 ())
+(#:tty:window:tynewline subr0 ())
+(#:tty:window:tybs subr1 ())
+(#:tty:window:tycr subr0 ())
+(#:tty:window:tycleol subr0 ())
+(#:tty:window:tycls subr0 ())
+(#:tty:window:tyattrib subr1 ())
+(#:tty:window:tyi subr0 ())
+(#:tty:window:tys subr0 ())
+(#:tty:window:tycursor subr2 ())
+(#:tty:window:tyback subr1 ())
+(#:tty:window:tydelcn subr1 ())
+(#:tty:window:tyinscn subr1 ())
+)
+cpfunctions (
+(#:window:flip-tty subr1)
+(#:window:adjust subr1)
+)
+cpimport (
+(virtty
+(tyshowcursor . nsubr)
+(tycleol . subr0)
+(tybs . subr1)
+))
+cpenv (
+files
+virutil
+vircolor
+virbit
+virwindow
+virgraph
+virevent
+virmenu
+virinit
+virdraw
+virbitmap
+defstruct
+virtty
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:tty:window:tyshowcursor 't '#:complice:globalvar)
+)((putprop '#:tty:window:page-mode 't '#:complice:globalvar)
+)((putprop '#:window:blankscreen 't '#:complice:globalvar)
+)((putprop '#:tty:window:tyattrib 't '#:complice:globalvar)
+)((putprop '#:window:event 't '#:complice:globalvar)
+)((putprop '#:event:code 't '#:complice:globalvar)
+)((putprop '#:tty:window:xmax 't '#:complice:globalvar)
+)((putprop '#:tty:window:ymax 't '#:complice:globalvar)
+))

@@ -1,0 +1,75 @@
+defmodule
+microceyx
+files (
+microceyx
+)
+export (
+deftclass
+defrecord
+tclass-namep
+record-namep
+field-list
+defmake
+omakeq
+ogetq
+oputq
+omatchq
+demethod
+send-error
+sendq
+sendf
+sendfq
+plink
+)
+import (
+abbrev
+defstruct
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(deftclass dmsubr ())
+(tclass-namep subr1 ())
+(defrecord dmsubr ())
+(record-namep subr1 ())
+(field-list subr1 ())
+(defmake dmsubr ())
+(omakeq dmsubr ())
+(ogetq dmsubr ())
+(oputq dmsubr ())
+(omatchq dmsubr ())
+(demethod dmsubr ())
+(send-error subr2 ())
+(sendq dmsubr ())
+(sendf dmsubr ())
+(sendfq dmsubr ())
+(plink nsubr ())
+)
+cpfunctions (
+(#:microceyx:make-field-access nsubr)
+(#:microceyx:make-access subr3)
+(#:microceyx:make-single-field-access subr3)
+(#:microceyx:check-record-or-tclass subr2)
+(#:microceyx:tclass-field-list subr2)
+(#:microceyx:check-field subr3)
+(#:microceyx:check-tclass subr2)
+)
+cpimport (
+(abbrev
+(abbrevp . subr1)
+(get-abbrev . subr1)
+(put-abbrev . subr2)
+))
+cpenv (
+abbrev
+defstruct
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((defmacro deftclass (type . fields) (let ((type-abbrev)) (until (and (symbolp type) (or (null (packagecell type)) (tclass-namep (packagecell type)))) (setq type (error 'deftclass '#:microceyx:errnotatclass type))) (when (null (packagecell type)) (setq type (symbol 'tclass type))) (setq type-abbrev (symbol () type)) (when (and (abbrevp type-abbrev) (neq (get-abbrev type-abbrev) type)) (error 'deftclass '#:microceyx:errtclassabbrev type-abbrev)) (list 'progn (mcons 'defstruct type fields) (list 'defabbrev (symbol () type) type) (list 'quote type))))
+)((defmacro defrecord (name . lfield) (until (and (variablep name) (null (packagecell name))) (setq name (error 'defrecord 'errnva name))) (when (gt (length lfield) 16) (error 'defrecord '#:microceyx:errrecordtoolong (cons name lfield))) (setq lfield (mapcar (lambda (f) (until (or (symbolp f) (and (consp f) (symbolp (car f)) (consp (cdr f)) (null (cddr f)))) (setq f (error 'defrecord '#:microceyx:errbadfield f))) (or (consp f) (cons f '(())))) lfield)) (when (and (abbrevp name) (neq (get-abbrev name) name)) (error 'defrecord '#:microceyx:errrecordabbrev name)) (let* ((access (ncons ())) (constructor (if (cdr lfield) (#:microceyx:make-field-access name lfield () access) (#:microceyx:make-single-field-access name lfield access)))) (mcons 'exportable-definition (list 'quote name) ''structure (list 'de (symbol name 'make) () constructor) (nconc (cdr access) (list (mcons 'putprop (list 'quote name) (list 'quote (cons (mapcar 'car lfield) (mapcar 'cadr lfield))) '('defrecord)) (list 'defabbrev name name))))))
+(defun #:microceyx:make-single-field-access (name lfield access) (nconc access (list (mcons 'de (symbol name (caar lfield)) '(&nobind (if (eq (arg) 1) (car (arg 0)) (car (rplaca (arg 0) (arg 1)))))) (when (featurep 'compiler) (mcons 'defmacro-open (symbol name (caar lfield)) '((o . v) (ifn v (list 'car o) (list 'car (list 'rplaca o (car v))))))))) (list 'ncons (cadar lfield)))
+(defun #:microceyx:make-field-access (name lfield cadrs access) (cond ((null (cdr lfield)) (nconc access (#:microceyx:make-access name (car lfield) cadrs)) (cadar lfield)) (t (list 'cons (#:microceyx:make-field-access name (firstn (div (length lfield) 2) lfield) (cons 'a cadrs) access) (#:microceyx:make-field-access name (nthcdr (div (length lfield) 2) lfield) (cons 'd cadrs) access)))))
+(defun #:microceyx:make-access (name field cadrs) (cons (list 'de (symbol name (car field)) '&nobind (list 'if '(eq (arg) 1) (cons (implodech (cons 'c (append cadrs '(r)))) '((arg 0))) (list (implodech (mcons 'c (car cadrs) '(r))) (mcons (concat "rplac" (car cadrs)) (if (cdr cadrs) (cons (implodech (cons 'c (append (cdr cadrs) '(r)))) '((arg 0))) '(arg 0)) '((arg 1)))))) (when (featurep 'compiler) (ncons (list 'defmacro-open (symbol name (car field)) '(o . v) (list 'ifn 'v (mcons 'list (list 'quote (implodech (cons 'c (append cadrs '(r))))) '(o)) (if (cdr cadrs) (list 'list (list 'quote (implodech (mcons 'c (car cadrs) '(r)))) (mcons 'list (list 'quote (concat "rplac" (car cadrs))) (mcons 'list (list 'quote (implodech (cons 'c (append (cdr cadrs) '(r))))) '(o)) '((car v)))) (list 'list (list 'quote (implodech (mcons 'c (car cadrs) '(r)))) (mcons 'list (list 'quote (concat "rplac" (car cadrs))) '(o (car v)))))))))))
+)((defun tclass-namep (type) (when (and (symbolp type) (subtypep type 'tclass) (getprop type 'defstruct)) t))
+))

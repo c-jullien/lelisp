@@ -1,0 +1,59 @@
+;;; GELL 15.26: elaboration file for the module: setf
+;;;             translation done: "Wed June 16 93 18:01:07 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: setf.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'setf)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZsetf" "Wed June 16 93 18:01:07 "
+
+'((system-put . dmsubr) (push-setf-method . dmsubr) (push-setf-inverse . dmsubr) (push-setf-expander . dmsubr) (define-setf-method . dmsubr) (get-setf-method . subr1) (setf . dmsubr) (defsetf . dmsubr) (define-modify-macro . dmsubr) (#:setf:make-call . nsubr))
+
+#[progn putprop list system-put 'setf-method 'setf-inverse 'setf-expander push-setf-method quote lambda mcons gensym setq listp macroexpand get-setf-method setf-method getprop apply setf-inverse append setf-expander errgen errbpa setf nconc errwna let* let errnaa defsetf push-setf-expander push-setf-inverse errbal defmacro ref cond (symbolp ref) 'setq #:setf:make-call (consp ref) ((get-setf-method ref)) 'let* mapcar (lambda (x y) (list x y)) 'let car nth ((t (error 'define-modify-macro 'errbpa ref))) #:llcp:errwna symbolp typefn (dmacro dmsubr macro msubr) valfn #:gell-resetfn:function-name #:gell-resetfn:function-1 define-setf-method define-modify-macro #:gell-resetfn:function-n]
+)
+
+(defvar #:sys-package:colon 'setf)
+(add-feature 'setf)
+(defcsetfn 'system-put "GZsetf" 0)
+(defcsetfn 'push-setf-method "GZsetf" 1)
+(defcsetfn 'push-setf-inverse "GZsetf" 2)
+(defcsetfn 'push-setf-expander "GZsetf" 3)
+(defcsetfn 'define-setf-method "GZsetf" 4)
+(defcsetfn 'get-setf-method "GZsetf" 5)
+(defcsetfn 'setf "GZsetf" 6)
+(defcsetfn 'defsetf "GZsetf" 7)
+(defcsetfn 'define-modify-macro "GZsetf" 8)
+(defcsetfn '#:setf:make-call "GZsetf" 9)
+(putprop 'car (lambda (list) (let ((plist (gensym)) (new-val (gensym))) (list (list plist) (list list) (list new-val) (list 'progn (list 'rplaca plist new-val) new-val) (list 'car plist)))) 'setf-method)
+'car
+'car
+(putprop 'cdr (lambda (new-val list) (list 'progn (list 'rplacd list new-val) new-val)) 'setf-expander)
+'cdr
+(putprop 'caar (lambda (new-val list) (list 'progn (list 'rplaca (list 'car list) new-val) new-val)) 'setf-expander)
+'caar
+(putprop 'cadr (lambda (new-val list) (list 'progn (list 'rplaca (list 'cdr list) new-val) new-val)) 'setf-expander)
+'cadr
+(putprop 'cdar (lambda (new-val list) (list 'progn (list 'rplacd (list 'car list) new-val) new-val)) 'setf-expander)
+'cdar
+(putprop 'cddr (lambda (new-val list) (list 'progn (list 'rplacd (list 'cdr list) new-val) new-val)) 'setf-expander)
+'cddr
+(putprop 'get (lambda (new-val symbol indicator) (list 'putprop symbol new-val indicator)) 'setf-expander)
+'get
+(putprop 'getprop (lambda (new-val symbol indicator) (list 'putprop symbol new-val indicator)) 'setf-expander)
+'getprop
+(putprop 'vref 'vset 'setf-inverse)
+'vref
+(putprop 'nth (lambda (index list) (let ((pindex (gensym)) (plist (gensym)) (new-val (gensym))) (list (list pindex plist) (list index list) (list new-val) (list 'progn (list 'rplaca (list 'nthcdr pindex plist) new-val) new-val) (list 'nth pindex plist)))) 'setf-method)
+'nth
+'nth
+(putprop 'dynamic 'setq 'setf-inverse)
+'dynamic
+(putprop 'valfn (lambda (new-val symb) (list 'progn (list 'setfn symb ''expr new-val) new-val)) 'setf-expander)
+'valfn
+(putprop 'plist (lambda (new-val symb) (list 'progn (list 'plist symb new-val) new-val)) 'setf-expander)
+'plist
+
+(defccheck '(valfn typefn symbolp #:llcp:errwna nth nconc append apply getprop get-setf-method macroexpand listp gensym mcons list))

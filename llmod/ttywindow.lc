@@ -1,0 +1,35 @@
+defmodule
+()
+files (
+|ttywindow.ll|
+)
+export (
+#:image:rectangle:window:tty:make
+(structure #:image:rectangle:window:tty)
+#:image:rectangle:window:tty:create
+#:image:rectangle:window:tty:current-window
+#:image:rectangle:window:tty:uncurrent-window
+#:image:rectangle:window:tty:modify-window
+#:tty:window:tycn
+#:tty:window:tystring
+#:tty:window:tynewline
+#:tty:window:tybs
+#:tty:window:tycr
+#:tty:window:tycleol
+#:tty:window:tycls
+#:tty:window:tyattrib
+#:tty:window:tyi
+#:tty:window:tys
+#:tty:window:tycursor
+#:tty:window:tyback
+#:tty:window:tydelcn
+#:tty:window:tyinscn
+)
+import (
+virbitmap
+defstruct
+virtty
+)
+include (
+virstruct
+)

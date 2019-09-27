@@ -1,0 +1,16 @@
+; The Le-Lisp Benchmarks (0) : checkmet
+
+defmodule     checkmet
+files        (checkmet)
+export       (check-value perform-meter)
+import       ()
+
+;;; Added automatically, don't type beyond this line.
+cpexport
+((check-value subr2 ()) (perform-meter dmsubr ()))
+cpfunctions
+()
+cpimport
+()
+cpenv
+()

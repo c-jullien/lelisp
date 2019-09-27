@@ -1,0 +1,126 @@
+defmodule
+r
+files (
+complex
+)
+export (
+complexp
+realp
+realpart
+imagpart
+conjugate
+sinh
+cosh
+tanh
+asinh
+acosh
+atanh
+tan
+makecomplex
+#:r:c:realp
+#:r:c:float
+#:r:c:truncate
+#:r:c:<?>
+#:r:c:|+|
+#:r:c:|0-|
+#:r:c:*
+#:r:c:1/
+#:r:c:prin
+#:r:c:abs
+phase
+signum
+cis
+#:r:c:log
+#:r:c:exp
+#:r:c:sqrt
+#:r:c:sin
+#:r:c:cos
+#:r:c:atan
+#:r:log
+#:fix:log
+#:float:log
+#:r:sqrt
+#:fix:sqrt
+#:float:sqrt
+#:r:asin
+#:fix:asin
+#:float:asin
+#:r:acos
+#:fix:acos
+#:float:acos
+#:r:|+|
+#:r:*
+#:r:<?>
+)
+import (
+genr
+)
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(complexp subr1 ())
+(realp subr1 ())
+(realpart subr1 ())
+(imagpart subr1 ())
+(conjugate subr1 ())
+(sinh subr1 ())
+(cosh subr1 ())
+(tanh subr1 ())
+(asinh subr1 ())
+(acosh subr1 ())
+(atanh subr1 ())
+(tan subr1 ())
+(makecomplex subr2 ())
+(#:r:c:realp subr1 ())
+(#:r:c:float subr1 ())
+(#:r:c:truncate subr1 ())
+(#:r:c:<?> subr2 ())
+(#:r:c:|+| subr2 ())
+(#:r:c:|0-| subr1 ())
+(#:r:c:* subr2 ())
+(#:r:c:1/ subr1 ())
+(#:r:c:prin subr1 ())
+(#:r:c:abs subr1 ())
+(phase subr1 ())
+(signum subr1 ())
+(cis subr1 ())
+(#:r:c:log subr1 ())
+(#:r:c:exp subr1 ())
+(#:r:c:sqrt subr1 ())
+(#:r:c:sin subr1 ())
+(#:r:c:cos subr1 ())
+(#:r:c:atan subr1 ())
+(#:r:log subr1 ())
+(#:fix:log subr1 ())
+(#:float:log subr1 ())
+(#:r:sqrt subr1 ())
+(#:fix:sqrt subr1 ())
+(#:float:sqrt subr1 ())
+(#:r:asin subr1 ())
+(#:fix:asin subr1 ())
+(#:float:asin subr1 ())
+(#:r:acos subr1 ())
+(#:fix:acos subr1 ())
+(#:float:acos subr1 ())
+(#:r:|+| subr2 ())
+(#:r:* subr2 ())
+(#:r:<?> subr2 ())
+)
+cpfunctions (
+(#:r:c:make subr0)
+(#:r:c:module2 subr1)
+(#:r:c:arctan subr2)
+(#:r:c:cis subr1)
+)
+cpimport (
+(genr
+(precision . nsubr)
+))
+cpenv (
+genr
+((putprop 'i 't '#:complice:globalvar)
+)((putprop 'pi 't '#:complice:globalvar)
+)((putprop 'pi/2 't '#:complice:globalvar)
+))

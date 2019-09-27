@@ -1,0 +1,580 @@
+\documentstyle{ilogmanuel}
+
+%%
+%% Plan releases notes
+%%
+
+\Begin
+
+\Title{Le-Lisp 15.25.2 \\ Notes de mise \`{a} jour \\ et \\
+addendum}{Septembre 1992}{R\'{e}f\'{e}rence: }
+
+\Chapter {1} {Notes de mise \`{a} jour}
+
+\Section{Spec'cificit\'{e}s de la version 15.25.2}
+
+        \SSection{Configuration du produit}
+
+%% exemple: le Grt est livr\'{e} avec le produit.
+
+        \SSection{Documentation}
+
+            \SSection{Nouveaut\'{e}s}
+              % Nouvelle doc ou pas, r\'{e}organisation eventuelle etc...
+La documentation \LeLisp\ 15.25.2 est identique \`{a} la version 15.25.
+
+            \SSection{Erratum}
+            
+\begin{tabbing}
+\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \= \kill
+\verb_Rats for le-lisp selected by type-documentation-status-open? as of 30/10/1992._\\ \verb_ _\\
+\hspace{-5em}rat 510 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  kuczynsk@ilog
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_La doc. devrait dire un mot sur l'ordre d'\'{e}val. des arg. d'1 fct
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 511 \> area: {\it  other
+\ }\> origin: {\it  kerjean
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_Sur quelles machines dispose-t-on du mode execore
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 672 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  Choupeau
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_doc. de RANDOM differente en anglais et en francais
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 772 \> area: {\it  language
+\ }\> aspect: {\it  extended-types
+\ }\> origin: {\it  davis
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_English documentation wrong for DEMETHOD
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 773 \> area: {\it  run-time
+\ }\> aspect: {\it  error-handling
+\ }\> origin: {\it  davis
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_The function ERROR is not documented.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 783 \> area: {\it  other
+\ }\> origin: {\it  gallou
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_documention anglaise chapitre 3: dms<->dmc
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1332 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  kerjean
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_la fonction copyfile n'est pas document\'{e}e en 15.25.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1514 \> area: {\it  language
+\ }\> aspect: {\it  extended-types
+\ }\> origin: {\it  spir@ilog.fr
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_typos dans la doc
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1523 \> area: {\it  i/o
+\ }\> aspect: {\it  formatted-i/o
+\ }\> origin: {\it  camiul@ilog
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_erreur dans un exemple EVLOOP de la doc 15.25
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1643 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\> origin: {\it  kerjean
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_grabevent est une subr1
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1737 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  kuczynsk
+\ }\\ 
+\> status: {\it  open
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_la fct MAP-EXPAND-PATHNAME n'est pas document\'{e}e
+_\\ 
+\verb_ _\\ 
+
+\end{tabbing}
+
+        \SSection{Nouvelles fonctionnalit\'{e}s}
+
+\begin {itemize}
+
+\item Dans les r\'{e}pertoires {\it machine}:
+\begin {itemize}
+\item {\bf Makefile}\\
+Les fichiers {\tt Makefile} ont \'{e}t\'{e} modifi\'{e} sur un plan
+essentiellement syntaxique. Ainsi les entr\'{e}es g\'{e}n\'{e}riques
+fonctionnent maintenant sur toutes les plateformes.
+
+\item {\bf config}\\
+Am\'{e}lioration de la gestion du r\'{e}pertoire des cores lisp \`{a} la
+fabrication des images m\'{e}moire Le-Lisp.
+Dor\'{e}navant, la variable {\tt \#:system:core-directory} est mise
+\`{a} jour automatiquement \`{a} partir de l'option fournie \`{a} {\tt config}.
+
+\item {\bf complice}\\
+Introduction de deux nouvelles options: {\tt -lldir <path>} pour
+imposer un r\'{e}pertoire de r\'{e}f\'{e}rence diff\'{e}rent (r\^{o}le pricipal: o\`{u}
+aller chercher le binaire?); {\tt -cmplc <cmd>}
+pour imposer une autre commande que {\tt cmplc++} qui est le core lisp
+utilis\'{e} en standard pour compiler les modules Le-Lisp. Le manuel Unix
+a \'{e}t\'{e} revu en cons\'{e}quence. 
+
+\item {\bf cmplc++}\\
+le core utilis\'{e} par {\tt complice} en standard, int\`{e}gre maintenant
+le modules {\tt hash} et {\tt format}, tr\`{e}s couramment utilis\'{e}s.
+Cette modification intervient dans le fichier {\tt Cmplcconf.ll}.
+\end{itemize}
+
+\item Concernant les modules lisp:
+\begin{itemize}
+\item {\bf edlin}\\
+Optimisation de l'effacement des caract\`{e}res.
+
+\item {\bf evloop}\\
+Prise en compte du {\it foreground} dans la boucle d'\'{e}v\'{e}nements.
+
+\item {\bf path}\\
+Introduction de la gestion des pathnames DOS et OS2.
+
+\item {\bf product}\\
+Une d\'{e}finition de {\tt macro-open} manquait, et faisait que ce module
+ne fonctionnait pas en compil\'{e}. De plus ce module est pass\'{e} de {\tt
+llub} en {\tt llib}.
+
+\item {\bf cpmac}\\
+Le fait de recharger le module {\bf cpmac}
+introduisait des erreurs de compilation, dues au {\tt CPENV} qui
+\'{e}tait \'{e}cras\'{e}. C'est r\'{e}par\'{e}.
+
+\item {\bf complice}\\
+Lorsqu'un module import\'{e} {\tt M}, exporte une macro qui n'est pas
+dans un EVAL-WHEN, alors ce module doit \^{e}tre charg\'{e} (LOADMODULE)
+dans l'environnement de la compilation du module qui importe {\tt M}.
+Ce chargement \'{e}tait jusqu'alors fait au moyen de la forme: {\tt
+(loadmodule M t)}. le {\tt T} en second argument de LOADMODULE
+imposait le {\bf re}chargement de tout l'arbre de d\'{e}pendance de {\tt M}. On
+utilise maintenant la forme: {\tt (loadmodule M ())} afin d'all\'{e}ger
+l'environnement de compilation.
+
+\item {\bf Bitmap Virtuel}\\
+Introduction de la gestion des \'{e}crans 24 plans.
+Introduction des {\it stipples}. Ainsi que quelques corrections
+mineures. Tous les fichiers {\tt .c} sont concern\'{e}s, seuls quelques
+fichiers {\tt .ll} ont \'{e}t\'{e} modifi\'{e}s ({\tt x11init, x11graph,
+x11window, x11bitmap, x11draw, x11\_def}).
+\end{itemize}
+
+\item Concernant les sources C:
+\begin{itemize}
+\item Les probl\`{e}mes de {\tt PAGESIZE} qui rendaient parfois les
+cores lisp incompatibles sur une m\^{e}me machine, sont r\'{e}solus. (Cela ne
+concernait, \`{a} priori, que Sun4 et Apollo).
+
+\item L'introduction du portage {\it MSDOS} a introduit de nombreuses
+modifications du code C. Toutefois, ces modifications n'affectent pas 
+le code Unix, puisque ce code a \'{e}t\'{e} ajout\'{e} sous
+la condition: {\tt \#ifdef LLDOS}.
+
+\item Introduction de code C adapt\'{e} au format {\bf ELF} des fichiers objets
+(remplacant le format {\bf COFF} sur M88K, et SVR4 en particulier). Cela
+conserne principalement la fonctionnalit\'{e} {\tt GETGLOBAL}.
+
+\item Le fichier {\tt C/Machine.h} de chaque portage s'est vu
+l\'{e}g\`{e}rement modifi\'{e}, suite \`{a} l'introduction de nouvelles macros
+(LLGETCWD,LLBMEMALIGN).
+\end{itemize}
+
+\item Concernant la distribution:
+\begin{itemize}
+\item {\bf fichiers distribu\'{e}s}\\
+Les fichiers {\tt llib/RCSDIFF} et {\tt common/RCSDIFF}, contenant les
+diff\'{e}rences depuis la derni\`{e}re version, sont
+maintenant pr\'{e}sents dans {\tt USERFILES} au lieu de {\tt PORTFILES}.
+Ceci a pour cons\'{e}quence de distribuer ces deux fichiers \`{a} l'ensemble
+des clients, et non plus seulement aux porteurs. Les clients pourront
+d\`{e}s lors observer eux-m\^{e}mes l'ensemble des modifications r\'{e}alis\'{e}es
+entre deux distributions.
+\end {itemize}
+
+\item Concernant seulement certains portages :
+\begin{itemize}
+\item {\bf plombage}\\
+Le plombage introduit par Ilog met en jeu un fichier(ILOGACCESS), 
+qui n'\'{e}tait pas toujours referm\'{e}. C'est r\'{e}par\'{e}.\\
+Introduction de la notion de {\bf clef infinie}. \\
+Possibilit\'{e} de d\'{e}signer le fichier de clefs au travers d'une
+variable d'environnement Unix. 
+
+\item {\bf RS6000}\\
+Le loader du RS6000 a vu l'optimisation de la gestion du cache
+m\'{e}moire. Le passage des arguments de Lisp \`{a} C \'{e}tait d\'{e}fectueux
+dans certains cas d'utilisation de LISPCALL. Tout cela est r\'{e}par\'{e}.
+
+\item {\bf MAGNUM}\\
+Une erreur d'alignement de pile provoquait des erreurs de
+transmission de flottants entre C et Le-Lisp. C'est r\'{e}par\'{e}.
+
+\end {itemize}
+\end{itemize}
+
+        \SSection{Probl\`{e}mes connus}
+
+\begin{itemize}
+\item{Les pathnames}\\
+Certaines fonctions concernant les pathnames devraient pouvoir \^{e}tre
+optimis\'{e}es (en particulier {\tt map-expand-pathname}).
+\item{GELL}
+Les portages GELL ({\tt Chp9700}) subissent quelques limitations de
+fonctionnalit\'{e}s, puisque le {\tt loader} n'existe pas (pas de {\tt
+compile-all-in-core}), mais aussi le {\tt defextern} qui n'accepte pas
+les tous les types de param\`{e}tres pass\'{e}s \`{a} C. Le d\'{e}tail est fourni
+dans le document sp\'{e}cifique aux portages GELL, distribu\'{e} avec chaque
+livraison. 
+\end{itemize}
+
+        \SSection{Bugs corrig\'{e}s}
+        %%
+        %% rats
+
+\begin{tabbing}
+\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \= \kill
+\verb_Rats for le-lisp selected by status-fixed? as of 30/10/1992._\\ \verb_ _\\
+\hspace{-5em}rat 240 \> area: {\it  kernel
+\ }\> aspect: {\it  compiler
+\ }\> origin: {\it  parquier
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_select compiles into nested if
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 306 \> area: {\it  language
+\ }\> aspect: {\it  extended-types
+\ }\> origin: {\it  chaillou
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_type des types \'{e}tendus
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 372 \> area: {\it  run-time
+\ }\> aspect: {\it  external-functions
+\ }\> origin: {\it  M Nanni [Bull]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_la taiiles des entiers du langage ext. depend des machines
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 391 \> area: {\it  compiler
+\ }\> aspect: {\it  complice
+\ }\> origin: {\it  H Bessonne [Ilog]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_limite de la sucrerie lexicale des structures dans les exportaion des .lm
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 425 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  Marco.Nanni@cediag.bull.fr
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  wish
+\ }\\ 
+\verb_il serait bon de pouvoir etendre la table des symboles LL
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 483 \> area: {\it  i/o
+\ }\> aspect: {\it  basic-i/o
+\ }\> origin: {\it  berizzi
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  wish
+\ }\\ 
+\verb_copyfile
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 489 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  berizzi
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_La doc de la fonction (err) est douteuse.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 613 \> area: {\it  compiler
+\ }\> aspect: {\it  complice
+\ }\> origin: {\it  pommier@ilog
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_dedoublement des clef dans les descripteurs de modules
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 673 \> area: {\it  i/o
+\ }\> aspect: {\it  virbitmap
+\ }\> origin: {\it  J. Chailloux [Ilog]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_code de BLTVECTOR est en avance sur la doc et les tests
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 674 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  J. Chailloux [Ilog]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_doc. francaise de GETL non conforme.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 684 \> area: {\it  i/o
+\ }\> aspect: {\it  virbitmap
+\ }\> origin: {\it  Roland Ducournau  ducour@cerci2.uucp
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_BITBLIT de l'undo d'un editeur d'icone semble se faire en mode XOR
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 688 \> area: {\it  i/o
+\ }\> aspect: {\it  virbitmap
+\ }\> origin: {\it  Roland Ducournau  ducour@cerci2.uucp
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_WINDOW-CLEAR-REGION ne tient pas compte du CLIP
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 693 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  G. Schmacher [MADICIA]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_INDEX doit etre document\'{e} comme une fct \`{a} 2 ou 3 arguments
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 727 \> area: {\it  language
+\ }\> aspect: {\it  extended-types
+\ }\> origin: {\it  Shumacher [madicia]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_CONTROL-FILE-PATHNAME ne remplie pas tjrs correctement son r\^{o}le
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 728 \> area: {\it  language
+\ }\> aspect: {\it  extended-types
+\ }\> origin: {\it  Shumacher [Madicia]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_le wildcarding n'est pas possible sur les repertoire en OS2
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 756 \> area: {\it  language
+\ }\> aspect: {\it  other
+\ }\> origin: {\it  kerjean
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_doc de la fonction probepathf
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 778 \> area: {\it  ports
+\ }\> aspect: {\it  loader
+\ }\> origin: {\it  euzenat
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_Bugs documentation modules
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 794 \> area: {\it  i/o
+\ }\> aspect: {\it  basic-i/o
+\ }\> origin: {\it  meller
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  documentation
+\ }\\ 
+\verb_pathnames namestring
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 803 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  kerjean
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_pusharg sur m88k en 64bf
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 937 \> area: {\it  compiler
+\ }\> aspect: {\it  complice
+\ }\> origin: {\it  pguerin
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_option -cons sur RS6000
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1084 \> area: {\it  user-contributed-software
+\ }\> origin: {\it  meffre@ilog (Marie Francoise Meffre)
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_detail dans un message d'erreur de LLUB/LOADFILE
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1142 \> area: {\it  language
+\ }\> aspect: {\it  interpreter
+\ }\> origin: {\it  E. Canton [Ilog]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_MAP-EXPAND-PATHNAME traite mal certains cas combines avec DIRECTORYP
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1248 \> area: {\it  user-contributed-software
+\ }\> origin: {\it  kuczynsk
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_liaison dynamyque dnageureuse dans le module PRODUCT
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1371 \> area: {\it  ports
+\ }\> aspect: {\it  tools
+\ }\> origin: {\it  J. Chailloux [Ilog]
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_le plombeur semble mal fermer le fichier ILOGACCESS
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1599 \> area: {\it  run-time
+\ }\> aspect: {\it  o/s-interface
+\ }\> origin: {\it  kuczynsk
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_le PLOMBEUR oublie de fermer le fichier ILOGACCESS
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1608 \> area: {\it  compiler
+\ }\> aspect: {\it  complice
+\ }\> origin: {\it  le
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_cpenv
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1651 \> area: {\it  compiler
+\ }\> aspect: {\it  complice
+\ }\> origin: {\it  le@ilog
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_la commande shell COMPLICE devrait ouvrir ses variables SHELL
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 1661 \> area: {\it  i/o
+\ }\> aspect: {\it  virtty
+\ }\> origin: {\it  eisenman@ilog
+\ }\\ 
+\> status: {\it  fixed
+\ }\> type: {\it  bug
+\ }\\ 
+\verb_certains messages qui font peu industriel...
+_\\ 
+\verb_ _\\ 
+\end{tabbing}
+
+\Section{Spec'cificit\'{e}s de la version 15.25}
+
+%%
+%% pour \'{e}viter de g\'{e}rer diff\'{e}remment les machines en retard de
+% portage il est utile de conserver l'info pour les gens qui recoivent
+% la version ant\'{e}rieure. M\^{e}me plan que pr\'{e}c\'{e}demment.
+
+\Chapter {2} {Addendum}
+
+%%
+%% Les choses qu'on a pu mettre dans les manuels
+%%
+
+\End

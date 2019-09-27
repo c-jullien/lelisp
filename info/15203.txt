@@ -1,0 +1,135 @@
+
+
+===================================================================
+
+Voici les corrections de la nouvelle diffusion de Le-Lisp
+version 15.2 date'e du 1 Aou^t 1987.  Cette diffusion ne
+comporte que des corrections d'erreurs, principalement dans
+les compilateurs.
+
+
+Interpre`te et fonctions pre'de'finies :
+========================================
+
+4 bogues corrige'es :
+
+1 - le de'bordement de 1- : (1- -32767) est correctement
+	traite'.
+
+2 - TYSTRING teste le domaine de de'finition de ses arguments.
+
+3 - CHRNTH est conforme a` la documentation (retourne () en
+	cas d'index hors limite de la chai^ne).
+
+4 - DUPLSTRING fonctionne correctement si le nb d'occurrence
+	est 0.
+
+
+LLCP :
+======
+
+3 bogues corrige'es :
+
+1 - [25/06/87] signale' par M. Devin (ILOG).
+	Fixe l'erreur interne signale'e par LLCP dans le cas simple de
+		(vset x y ())
+
+2 - [29/06/87]
+	Rend compatible COMPLICE la rede'finition de la macro NEXTL.
+
+3 - [29/07/87] signale' par G. Nuyens (ILOG).
+	Fixe l'erreur de gestion des registres mise en e'vidence
+	par la fonction :
+		(de foo-o8 (adr)
+		    (if (fixp adr)
+			(logshift adr -1)
+		        (rplacd adr (if (evenp (car adr))
+					(logshift (cdr adr) -1)
+				        (logor #$8000
+				               (logshift (cdr adr) -1))))
+			(rplaca adr (logshift (car adr) -1))))
+
+
+COMPLICE :
+==========
+
+5 bogues fixe'es :
+
+1 - [22/05/87]
+	Bug du compilo signale' par J. Chambon (Thompson).
+	Reperable par (defun foo (x) (let ((x 0)) (setq x (add1 x))) x)
+	Rend toujours 1....
+	modification de cpenv
+
+2 - [02/06/87]
+	Bug du compilo signale' par J. Vuillemin (Inria).
+	Repearable par (defun foo (s) (cons (slen s) s))
+        (foo "foo") -> (3 . 3)
+	modification de cpfnt
+	patch dans complice.lo
+	(loader '((entry #:complice:cpfnt-open subr2)
+	...
+	(cabeq a1 'vlength 120)
+	(cabne a1 'slen 119)
+	...
+	(mov nil a1)				; A rajouter
+	(mov (cvalq #:complice:return?) a2)	; A rajouter
+	(call #:complice:write-op)		; A rajouter
+	122
+	(mov (cvalq #:complice:return?) a1)
+	(bfnil a1 124)
+	(mov 't a1)
+	124
+	(adjstk '1)
+	(return)
+	119
+
+3 - [03/06/87]
+	Buf de compilation signale par R Ducournau (Inria-Sema Metra)
+	reparable par:
+        (defun foo &nobind
+           (let ( (x (flush)) (n (arg 0)) (y (flush)) )
+              n ))
+        (foo 9 8 7) -> 8
+	modification de cpfnt et cp2
+
+4 - [04/06/87]
+	feature de compilation signale par R Ducournau (Inria-Sema Metra)
+	les tests de bon nombre d'arguments (errwna) etaient faits
+	pour les fonctions internes des modules mais n'etaient pas faits
+	pour les fonctions exportees.
+
+5 - [23/06/87]
+	feature de compilation signale par M Devin (Ilog)
+	les noms de fonctions generes par les lambda anonymes (closure)
+	ne sont pas uniques car la fonction gensym peut donner le meme
+	atome entre deux appels differents de Complice (compilation modulaire)
+	Reperable par
+	(defun foo () (lambda (x) x)))          ; in module M1
+	(defun #:bar:foo () (lambda (x y) y)))  ; in module M2
+	Modification de cpfnt et cp1
+
+
+PEEPHOLE
+========
+
+fixe la bogue des boucles infinies, (while t), qui provoquaient
+une erreur de chargement.
+
+
+Bibliothe`que standard
+======================
+
+DATE : rajoute le trait DATE
+
+
+DOCUMENTATION :
+===============
+
+En plus des erreurs typographiques :
+
+- la fonction LIST-FEATURES est documente'e comme se nommant
+FEATURES-LIST. Le ve'ritable nom est bien LIST-FEATURES.
+
+- la fonction GETFN2 est documente'e avec des arguments inverses.
+

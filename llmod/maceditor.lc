@@ -1,0 +1,35 @@
+defmodule
+#:edit:editor
+files (
+maceditor
+)
+export (
+win-clear
+win-right
+win-left
+win-down
+win-up
+win-next
+win-previous
+win-cur-top
+win-ygoto
+win-xgoto
+cur-win-top
+cur-win-buttom
+cur-win-ygoto
+cur-win-xgoto
+query-readfile
+query-writefile
+query-insertfile
+query-search
+query-rsearch
+savefile
+query-goto-line
+exp-eval
+exp-eval-print
+)
+import (
+macedit
+)
+include
+()

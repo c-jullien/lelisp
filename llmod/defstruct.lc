@@ -1,0 +1,14 @@
+defmodule
+defstruct
+files (
+defstruct
+)
+export (
+structurep
+defstruct
+new
+)
+import
+()
+include
+()

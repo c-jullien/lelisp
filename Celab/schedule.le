@@ -1,0 +1,38 @@
+;;; GELL 15.26: elaboration file for the module: schedule
+;;;             translation done: "Wed June 16 93 18:03:02 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: schedule.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'schedule)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZschedule" "Wed June 16 93 18:03:02 "
+
+'((clock . subr0) (clockstart . dmsubr) (clockstop . dmsubr) (parallel . fsubr) (#:parallel:g106 . subr1) (parallelvalues . fsubr) (#:parallelvalues:g107 . subr1) (tryinparallel . fsubr) (#:tryinparallel:g108 . subr1) (progn-no-suspend . dmsubr) (letparallel . dmsubr))
+
+#[() debug princn suspend (clockalarm #:system:clock-tick) (clockalarm 0.) #:schedule:ll (#:schedule:ll) #:llcp:without-interrupts append #:schedule:l (#:schedule:l) lambda resume kwote list nconc #:parallel:g106 #:llcp:schedule #:schedule:|e| (#:schedule:|e|) #:system:clock-tick clockalarm #:llcp:with-interrupts eval 0. (#:schedule:ll) makelist #:schedule:r #:schedule:i #:schedule:ltask (#:schedule:r #:schedule:i #:schedule:ltask #:schedule:l) #:parallelvalues:g107 (#:schedule:|e|) |1+| nthcdr (#:schedule:ll) (#:schedule:l #:schedule:ltask) #:schedule:return-value #:tryinparallel:g108 (#:schedule:|e|) #:llcp:exit schedule mcons letvq parallelvalues clock #:gell-resetfn:function-name #:gell-resetfn:function-0 clockstart #:gell-resetfn:function-1 clockstop parallel #:gell-resetfn:function-f tryinparallel progn-no-suspend letparallel]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'schedule)))
+(defvar #:sys-package:colon 'schedule)
+(defvar #:system:clock-tick .05)
+(putprop 'clock 'parano '#:complice:fvar)
+(defcsetfn 'clock "GZschedule" 0)
+(defcsetfn 'clockstart "GZschedule" 1)
+(defcsetfn 'clockstop "GZschedule" 2)
+(defvar #:schedule:ll)
+(putprop 'parallel 'parano '#:complice:fvar)
+(defcsetfn 'parallel "GZschedule" 3)
+(defcsetfn '#:parallel:g106 "GZschedule" 4)
+(putprop 'parallelvalues 'parano '#:complice:fvar)
+(defcsetfn 'parallelvalues "GZschedule" 5)
+(defcsetfn '#:parallelvalues:g107 "GZschedule" 6)
+(putprop 'tryinparallel 'parano '#:complice:fvar)
+(defcsetfn 'tryinparallel "GZschedule" 7)
+(defcsetfn '#:tryinparallel:g108 "GZschedule" 8)
+(defcsetfn 'progn-no-suspend "GZschedule" 9)
+(defcsetfn 'letparallel "GZschedule" 10)
+
+(defccheck '(mcons #:llcp:exit nthcdr |1+| resume makelist eval #:llcp:with-interrupts clockalarm #:llcp:schedule nconc list kwote append #:llcp:without-interrupts suspend princn debug))

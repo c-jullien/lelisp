@@ -1,0 +1,108 @@
+#include <windows.h>
+#include "winterm.h"
+#include "widgets.h"
+
+LeLispMenu MENU
+BEGIN
+	POPUP	"&File"
+	BEGIN
+/*
+		***** Not yet implemented *****
+
+		MENUITEM "&Load...",		IDM_LOAD
+		MENUITEM SEPARATOR
+*/
+		MENUITEM "&Break",		IDM_BREAK
+		MENUITEM SEPARATOR
+
+		MENUITEM "&Quit",		IDM_QUIT
+	END
+/*
+
+	***** Not yet implemented *****
+
+	POPUP	"&Edit"
+	BEGIN
+		MENUITEM "Cu&t\tShift+Del"	IDM_CUT,	GRAYED
+		MENUITEM "&Copy\tCtrl+Ins"	IDM_COPY,	GRAYED
+		MENUITEM "&Paste\tShift+Ins"	IDM_PASTE,	GRAYED
+	END
+*/
+
+	POPUP	"&Help"
+	BEGIN
+		MENUITEM "&About ...",		IDM_ABOUT
+	END
+END
+
+LELISPICON	ICON	lelisp.ico
+LELISPICON2	ICON	lelisp2.ico
+AIDAICON	ICON	aida.ico
+MASAIICON	ICON	masai.ico
+MAIDA2D		ICON	lelisp.ico
+/* MAIDA2D		ICON	maida2d.ico */
+PECOSICON	ICON	pecos.ico
+
+circle		CURSOR	circle.cur
+cross		CURSOR	cross.cur
+crosshair	CURSOR	croshair.cur
+diamond-cross	CURSOR	diamond.cur
+dot		CURSOR	dot.cur
+exchange	CURSOR	exchange.cur
+i-beam		CURSOR	ibeam.cur
+iron-cross	CURSOR	ironcros.cur
+mouse		CURSOR	mouse.cur
+plus		CURSOR	plus.cur
+question	CURSOR	question.cur
+sizing		CURSOR	sizing.cur
+spray		CURSOR	spray.cur
+fleur		CURSOR	compass.cur
+left-hand	CURSOR	lefthand.cur
+heart		CURSOR	heart.cur
+pencil		CURSOR	pencil.cur
+pirate		CURSOR	pirate.cur
+left-ptr	CURSOR	mouse.cur
+watch		CURSOR	watch.cur
+
+LeLispAccelerator	ACCELERATORS
+BEGIN
+	VK_PAUSE,  IDM_BREAK,	VIRTKEY
+	VK_INSERT, IDM_PASTE,	VIRTKEY, SHIFT
+END
+
+WinGetText	DIALOG LOADONCALL MOVEABLE DISCARDABLE  30, 30, 200, 46
+STYLE	DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION ""
+BEGIN
+	DEFPUSHBUTTON "&OK",	   IDOK,       108, 30,  40, 12
+	PUSHBUTTON    "&Cancel",   IDCANCEL,   152, 30,  40, 12
+	EDITTEXT		   IDG_EDIT,     8, 12, 184, 14, ES_AUTOHSCROLL
+	LTEXT "Enter your text :", IDG_STATIC,   8,  2, 140,  8
+END
+
+Open	DIALOG 10, 10, 148, 112
+STYLE	DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION "File Selection"
+BEGIN
+        LTEXT "File&Name:",  IDC_FILENAME, 4,  4,  60, 10
+        EDITTEXT             IDC_EDIT,     4, 16, 100, 12, ES_AUTOHSCROLL
+        LTEXT "&Files in",   IDC_FILES,    4, 40,  32, 10
+        LISTBOX,             IDC_LISTBOX,  4, 52,  70, 56, LBS_STANDARD|WS_TABSTOP
+        LTEXT "",            IDC_PATH,    40, 40, 100, 10
+        DEFPUSHBUTTON "&OK", IDOK,        87, 60,  50, 14
+        PUSHBUTTON "Cancel", IDCANCEL,    87, 80,  50, 14
+END
+
+AboutBox DIALOG 22, 17, 144, 120
+STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION "About Le-Lisp 15.26.12 Windows"
+BEGIN
+	CTEXT "Le-Lisp v15.26.12 by INRIA"         -1,   0, 16, 144,  8
+	CTEXT "x86 Windows port by Eligis"  	   -1,   0, 28, 144,  8
+	CTEXT "Copyright (c) 1992-2017, Eligis"	   -1,   0, 40, 144,  8
+	CTEXT "http://www.eligis.com/lelisp"       -1,   0, 52, 144,  8
+	CTEXT "mailto:lelisp@eligis.com"           -1,   0, 64, 144,  8
+	CTEXT "Last change: 2017/08/18"            -1,   0, 80, 144,  8
+	DEFPUSHBUTTON "OK"                       IDOK,  96, 96,  40, 12, WS_GROUP
+	ICON  LELISPICON,	                   -1,   8, 16,  16, 21
+END

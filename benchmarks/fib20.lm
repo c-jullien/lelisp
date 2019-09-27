@@ -1,0 +1,23 @@
+; The Le-Lisp Benchmarks (1) : fib
+
+defmodule     fib20
+files        (fib20)
+export       (check-fib20 meter-fib20 test-fib20)
+import       (checkmet)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(check-fib20 subr0 ())
+(meter-fib20 subr0 ())
+(test-fib20 subr1 ())
+)
+cpfunctions (
+(fib subr1)
+)
+cpimport (
+(checkmet
+(check-value . subr2)
+))
+cpenv (
+checkmet
+)

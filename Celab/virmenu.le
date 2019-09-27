@@ -1,0 +1,30 @@
+;;; GELL 15.26: elaboration file for the module: virmenu
+;;;             translation done: "Tue Aug  24 93 10:48:46 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: virmenu.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'virmenu)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZvirmenu" "Tue Aug  24 93 10:48:46 "
+
+'((create-menu . nsubr) (kill-menu . subr1) (activate-menu . subr3) (menu-insert-item-list . nsubr) (menu-insert-item . nsubr) (menu-delete-item-list . subr2) (menu-delete-item . subr3) (menu-modify-item-list . nsubr) (menu-modify-item . nsubr))
+
+#[#:menu:itemlist:make #:menu:item:make create-menu #:llcp:errwna string #:display:current-display #:display:no-current-display #:menu:make send nconc1 menu-insert-item-list |1+| menu-insert-item menu typep #:display:errnotamenu kill-menu display #:display:errnotadisplay delq activate-menu errnia current-display nth menu-delete-item-list menu-delete-item menu-modify-item-list menu-modify-item #:gell-resetfn:function-name #:gell-resetfn:function-n #:gell-resetfn:function-1 #:gell-resetfn:function-3 #:gell-resetfn:function-2]
+)
+
+(if (not (>= (version) 15.2)) (progn (error 'load 'erricf 'virbitmap)))
+(setq #:sys-package:colon 'menu)
+(defcsetfn 'create-menu "GZvirmenu" 0)
+(defcsetfn 'kill-menu "GZvirmenu" 1)
+(defcsetfn 'activate-menu "GZvirmenu" 2)
+(defcsetfn 'menu-insert-item-list "GZvirmenu" 3)
+(defcsetfn 'menu-insert-item "GZvirmenu" 4)
+(defcsetfn 'menu-delete-item-list "GZvirmenu" 5)
+(defcsetfn 'menu-delete-item "GZvirmenu" 6)
+(defcsetfn 'menu-modify-item-list "GZvirmenu" 7)
+(defcsetfn 'menu-modify-item "GZvirmenu" 8)
+
+(defccheck '(nth current-display delq typep menu-insert-item |1+| menu-insert-item-list nconc1 send #:menu:make string #:llcp:errwna #:menu:item:make #:menu:itemlist:make))

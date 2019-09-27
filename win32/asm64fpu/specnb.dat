@@ -1,0 +1,249 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	zundef:dword
+	extrn	fcons:dword
+	extrn	bvar:dword
+	extrn	zt:dword
+	extrn	zvoid:dword
+	extrn	zsyspkgc:dword
+	extrn	mstack:dword
+	extrn	cpkgc:dword
+	extrn	zkllcp:dword
+	extrn	zquote:dword
+	extrn	fzero:dword
+	extrn	zex:dword
+pnmac1496	db	'scale'
+	even
+pnmac1497	db	'lognot'
+	even
+pnmac1498	db	'logand'
+	even
+pnmac1499	db	'logor'
+	even
+pnmac1500	db	'logxor'
+	even
+pnmac1501	db	'logshift'
+	even
+pnmac1502	db	'2**'
+	even
+pnmac1503	db	'mask-field'
+	even
+pnmac1504	db	'load-byte'
+	even
+pnmac1505	db	'deposit-byte'
+	even
+pnmac1506	db	'deposit-field'
+	even
+pnmac1507	db	'load-byte-test'
+	even
+pnmac1508	db	'oddp'
+	even
+pnmac1509	db	'evenp'
+	even
+pnmac1510	db	'random'
+	even
+pnmac1511	db	'srandom'
+	even
+pnmac1512	db	'floatp'
+	even
+pnmac1513	db	'fixp'
+	even
+pnmac1514	db	'plus'
+	even
+pnmac1515	db	'difference'
+	even
+pnmac1516	db	'differ'
+	even
+pnmac1517	db	'times'
+	even
+pnmac1518	db	'divide'
+	even
+pnmac1519	db	'add1'
+	even
+pnmac1520	db	'sub1'
+	even
+pnmac1521	db	'add'
+	even
+pnmac1522	db	'sub'
+	even
+pnmac1523	db	'mul'
+	even
+pnmac1524	db	'div'
+	even
+pnmac1525	db	'rem'
+	even
+pnmac1526	db	'eqn'
+	even
+pnmac1527	db	'neqn'
+	even
+pnmac1528	db	'ge'
+	even
+pnmac1529	db	'gt'
+	even
+pnmac1530	db	'le'
+	even
+pnmac1531	db	'lt'
+	even
+pnmac1532	db	'imin'
+	even
+pnmac1533	db	'imax'
+	even
+pnmac1534	db	'fadd'
+	even
+pnmac1535	db	'fsub'
+	even
+pnmac1536	db	'fmul'
+	even
+pnmac1537	db	'fdiv'
+	even
+pnmac1538	db	'feqn'
+	even
+pnmac1539	db	'fneqn'
+	even
+pnmac1540	db	'fge'
+	even
+pnmac1541	db	'fgt'
+	even
+pnmac1542	db	'fle'
+	even
+pnmac1543	db	'flt'
+	even
+pnmac1544	db	'fmin'
+	even
+pnmac1545	db	'fmax'
+	even
+pnmac1546	db	'logshift'
+	even
+pnmac1547	db	'mul'
+	even
+pnmac1548	db	'div'
+	even
+pnmac1549	db	'rem'
+	even
+pnmac1550	db	'fadd'
+	even
+pnmac1551	db	'fsub'
+	even
+pnmac1552	db	'fmul'
+	even
+pnmac1553	db	'fdiv'
+	even
+pnmac1554	db	'feqn'
+	even
+pnmac1555	db	'fneqn'
+	even
+pnmac1556	db	'fge'
+	even
+pnmac1557	db	'fgt'
+	even
+pnmac1558	db	'fle'
+	even
+pnmac1559	db	'flt'
+	even
+zexcarry	dd	0
+pnmac1560	db	'regret'
+	even
+pnmac1561	db	'ex+'
+	even
+pnmac1562	db	'ex1+'
+	even
+pnmac1563	db	'ex-'
+	even
+pnmac1564	db	'ex*'
+	even
+pnmac1565	db	'ex/'
+	even
+pnmac1566	db	'ex?'
+	even
+zoddp	dd	0
+zevenp	dd	0
+zlleqn	dd	0
+zllneqn	dd	0
+zllgt	dd	0
+zllge	dd	0
+zlllt	dd	0
+zllle	dd	0
+zllimin	dd	0
+zllimax	dd	0
+zlladd1	dd	0
+zllsub1	dd	0
+zlladd	dd	0
+zllsub	dd	0
+zllmul	dd	0
+zll_div	dd	0
+zllrem	dd	0
+zscale	dd	0
+randseed	dd	0
+zllsrandom	dd	0
+zllrandom	dd	0
+zlognot	dd	0
+zlogand	dd	0
+zlogor	dd	0
+zlogxor	dd	0
+zlogshift	dd	0
+zdpn	dd	0
+zmskfield	dd	0
+zldbyte	dd	0
+zldbt	dd	0
+zdpbyte	dd	0
+zdpfield	dd	0
+zllfeqn	dd	0
+zllfneqn	dd	0
+zllfgt	dd	0
+zllfge	dd	0
+zllflt	dd	0
+zllfle	dd	0
+zllfmin	dd	0
+zllfmax	dd	0
+zllfadd	dd	0
+zllfsub	dd	0
+zllfmul	dd	0
+zllfdiv	dd	0
+zclllsht	dd	0
+zcllmul	dd	0
+zclldiv	dd	0
+zcllrem	dd	0
+zcllfadd	dd	0
+zcllfsub	dd	0
+zcllfmul	dd	0
+zcllfdiv	dd	0
+zcllfeqn	dd	0
+zcllfneqn	dd	0
+zcllfgt	dd	0
+zcllfge	dd	0
+zcllflt	dd	0
+zcllfle	dd	0
+zfloatp	dd	0
+zfixp	dd	0
+zflplus	dd	0
+	extrn	_accusingle1:dword
+zfldiff	dd	0
+zfltimes	dd	0
+zflquo	dd	0
+zexadd	dd	0
+zexincr	dd	0
+zexinv	dd	0
+zexmul	dd	0
+zexdiv	dd	0
+zexcomp	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

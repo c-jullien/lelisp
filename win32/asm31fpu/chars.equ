@@ -1,0 +1,4 @@
+	extrn	gccons:near
+	extrn	inisymb:near
+	extrn	inicst:near
+	public	ini_chr

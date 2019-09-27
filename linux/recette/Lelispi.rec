@@ -1,0 +1,26 @@
+
+#!/bin/sh
+set -x
+
+# Recette officielle de Le-Lisp interpre'te' sur LINUX
+date
+
+cd ..
+rm -f letestextbin
+make letestextbin
+ ./letestextbin -stack 6 -code 1 -heap 300 -number 0 -vector 4 -string 8  -symbol 7 -cons 24 -float 0 \
+	../llib/startup.ll << Eoi
+
+(df compile l)
+(defun compiler l)
+(defun compile-all-in-core ())
+(defun loader l)
+
+(load-std  () t t t () ())
+
+(debug ())
+(libload "recette")
+Eoi
+
+date
+

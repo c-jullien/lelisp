@@ -1,0 +1,19 @@
+;;; GELL 15.26: elaboration file for the module: carcdr
+;;;             translation done: "Wed June 30 93 17:34:34 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: carcdr.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'carcdr)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZcarcdr" "Wed June 30 93 17:34:34 "
+
+'((car . subr1) (cdr . subr1) (caar . subr1) (cadr . subr1) (cdar . subr1) (cddr . subr1) (caaar . subr1) (caadr . subr1) (cadar . subr1) (caddr . subr1) (cdaar . subr1) (cdadr . subr1) (cddar . subr1) (cdddr . subr1) (caaaar . subr1) (caaadr . subr1) (caadar . subr1) (caaddr . subr1) (cadaar . subr1) (cadadr . subr1) (caddar . subr1) (cadddr . subr1) (cdaaar . subr1) (cdaadr . subr1) (cdadar . subr1) (cdaddr . subr1) (cddaar . subr1) (cddadr . subr1) (cdddar . subr1) (cddddr . subr1))
+
+#[car #:gell-resetfn:function-name #:gell-resetfn:function-1 cdr caar cadr cdar cddr caaar caadr cadar caddr cdaar cdadr cddar cdddr caaaar caaadr caadar caaddr cadaar cadadr caddar cadddr cdaaar cdaadr cdadar cdaddr cddaar cddadr cdddar cddddr]
+)
+
+
+(defccheck '())

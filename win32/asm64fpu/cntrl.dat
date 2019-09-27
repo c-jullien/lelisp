@@ -1,0 +1,195 @@
+_DATA	segment para  use32 public 'DATA'
+	extrn	hashtab:dword
+	extrn	fcons:dword
+	extrn	mstack:dword
+	extrn	bvar:dword
+	extrn	zundef:dword
+	extrn	zt:dword
+	extrn	zvoid:dword
+	extrn	zllsystem:dword
+	extrn	zlsubr0:dword
+	extrn	zlsubr1:dword
+	extrn	zlsubr2:dword
+	extrn	zlsubr3:dword
+	extrn	znlsubr:dword
+	extrn	zflsubr:dword
+	extrn	zllexpr:dword
+	extrn	zllfexpr:dword
+	extrn	zllmacro:dword
+	extrn	zlldmacro:dword
+	extrn	zllmsubr:dword
+	extrn	zlldmsubr:dword
+	extrn	savea1:dword
+	extrn	savea2:dword
+	extrn	errname:dword
+tabtypfn	dd	0
+tabcodfn	dd	0
+zlff	dd	0
+pnmac894	db	'loaded-from-file'
+	even
+pnmac895	db	'defun'
+	even
+pnmac896	db	'de'
+	even
+pnmac897	db	'df'
+	even
+pnmac898	db	'dm'
+	even
+pnmac899	db	'dmd'
+	even
+pnmac900	db	'defmacro'
+	even
+pnmac901	db	'ds'
+	even
+pnmac902	db	'defvar'
+	even
+zprevdef	dd	0
+pnmac903	db	'previous-def'
+	even
+pnmac904	db	'revert'
+	even
+pnmac905	db	'getdef'
+	even
+pnmac906	db	'makedef'
+	even
+pnmac907	db	'if'
+	even
+pnmac908	db	'ifn'
+	even
+pnmac909	db	'when'
+	even
+pnmac910	db	'unless'
+	even
+pnmac911	db	'cond'
+	even
+pnmac912	db	'or'
+	even
+pnmac913	db	'and'
+	even
+pnmac914	db	'while'
+	even
+pnmac915	db	'until'
+	even
+pnmac916	db	'loop'
+	even
+pnmac917	db	'repeat'
+	even
+pnmac918	db	'selectq'
+	even
+pnmac919	db	'map'
+	even
+pnmac920	db	'mapl'
+	even
+pnmac921	db	'mapc'
+	even
+pnmac922	db	'maplist'
+	even
+pnmac923	db	'mapcar'
+	even
+pnmac924	db	'mapcon'
+	even
+pnmac925	db	'mapcan'
+	even
+pnmac926	db	'every'
+	even
+pnmac927	db	'any'
+	even
+pnmac928	db	'mapvector'
+	even
+pnmac929	db	'mapoblist'
+	even
+pnmac930	db	'mapcoblist'
+	even
+pnmac931	db	'maploblist'
+	even
+pnmac932	db	'quote'
+	even
+pnmac933	db	'lambda'
+	even
+pnmac934	db	'flambda'
+	even
+pnmac935	db	'mlambda'
+	even
+pnmac936	db	'identity'
+	even
+pnmac937	db	'comment'
+	even
+pnmac938	db	'progn'
+	even
+pnmac939	db	'eprogn'
+	even
+pnmac940	db	'prog1'
+	even
+pnmac941	db	'exportable-definition'
+	even
+pnmac942	db	'prog2'
+	even
+zllde	dd	0
+zlldf	dd	0
+zlldm	dd	0
+zdmd	dd	0
+zllds	dd	0
+zdefvar	dd	0
+zrevert	dd	0
+zgetdef	dd	0
+zmakedef	dd	0
+zllif	dd	0
+zllifn	dd	0
+zwhen	dd	0
+zunless	dd	0
+zcond	dd	0
+zllor	dd	0
+zlland	dd	0
+zwhile000	dd	0
+zuntil	dd	0
+zloop000	dd	0
+zfrepeat	dd	0
+zselectq	dd	0
+zmap	dd	0
+zmapc	dd	0
+zmaplist	dd	0
+zmapcar	dd	0
+zmapcon	dd	0
+zmapcan	dd	0
+zfevery	dd	0
+zfany	dd	0
+zmapvect	dd	0
+zmapcoblist	dd	0
+zmaploblist	dd	0
+zmapoblist	dd	0
+zquote	dd	0
+zlambda	dd	0
+zflambda	dd	0
+zmlambda	dd	0
+zcomment000	dd	0
+zllident	dd	0
+	extrn	itstate:dword
+	extrn	itcount:dword
+	extrn	_itloop:dword
+zeprogn	dd	0
+zprogn	dd	0
+zexdef	dd	0
+zprog1	dd	0
+zprog2	dd	0
+	extrn	bfloat:dword
+	extrn	cfloat:dword
+	extrn	ffloat:dword
+	extrn	bvect:dword
+	extrn	cvect:dword
+	extrn	fvect:dword
+	extrn	bstrg:dword
+	extrn	cstrg:dword
+	extrn	fstrg:dword
+	extrn	csymb:dword
+	extrn	fsymb:dword
+	extrn	ccons:dword
+	extrn	econs:dword
+	extrn	bheap:dword
+	extrn	cheap:dword
+	extrn	eheap:dword
+	extrn	bnumb:dword
+	extrn	cnumb:dword
+	extrn	bstack:dword
+	extrn	estack:dword
+	extrn	crwork:dword
+_DATA	ends

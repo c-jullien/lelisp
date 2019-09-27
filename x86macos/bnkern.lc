@@ -1,0 +1,17 @@
+defmodule kern
+   ;; Ce module n'exite que pour generer correctement les cles de Complice.
+   files  (bnkern)
+   ;; Les fonctions de l'interface.
+   export (
+           ;; C, assembleur ou Lisp.
+           bnsettozero bnassign bnsetdigit bngetdigit bnnumdigits
+           bnnumleadingzerobitsindigit bndoesdigitfitinword bnisdigitzero
+           bnisdigitnormalized bnisdigitodd bncomparedigits bncomplement
+           bnanddigits bnordigits bnxordigits bnshiftleft bnshiftright
+           bnaddcarry bnadd bnsubtractborrow bnsubtract bnmultiplydigit
+           bndividedigit
+           ;; Ecrites en Lisp.
+           bnalloc bncreate bnfree bngettype bnsettype bngetsize
+           ;; Utilitaires.
+           #:n:prin
+          )

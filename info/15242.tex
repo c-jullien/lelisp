@@ -1,0 +1,370 @@
+\documentstyle{ilogmanuel}
+
+
+\Begin
+\Title {Diffusion Le-Lisp}
+\SuperTitle {Le-Lisp  de  l'INRIA  version 15.24.2}
+\bigskip
+\SuperTitre {Version interm\'{e}daire de maintenance}
+
+\Author {Ilog}
+\Author {Ao\^{u}t 1991}
+
+                 
+                            
+\chapter {Version "15.24.2"}
+Voici les corrections et les extensions de la nouvelle diffusion de
+\LeLisp\ version 15.24.2 dat\'{e}e du 5 Ao\^{u}t 1991.
+
+Il s'agit de la deuxi\^{e}me diffusion de maintenance de la version
+intitul\'{e}e 15.24.  Cette diffusion comprend uniquement des 
+contournements et corrections effectu\'{e}s en Lisp et en C.  
+Comme d\'{e}cid\'{e} au Club des Porteurs, aucune expansion LLM3 n'est n\'{e}cessaire.
+
+\Section {Contenu de cette diffusion}
+
+
+La bande de diffusion est explicit\'{e}e ci-dessous:
+
+\begin {itemize}
+\item   68k:
+\item   benchmarks:
+\item   common: 
+\item   info:
+\item   llib:           
+\item   llmod:
+\item   llobj:
+\item   lltest:         
+\item   llub:   
+\item   manl:
+\item   sun:
+\item   vaxunix:
+\item   virbitmap:
+\item   virtty: 
+\end {itemize}
+
+
+\Section {Survol de 15.24.2}
+
+La version 15.24.2 n'apporte de pas de grande nouveaut\'{e} mais
+s'inscrit dans la continuit\'{e} du travail de normalisation de Le-Lisp
+version 15.2 sur l'ensemble de ses portages, avec un maximun de traits
+pr\'{e}sents sur chacun d'eux. La compatibilit\'{e} ascendante est totale et
+n'impose que la refabrication des cores pour les logiciels utilisant
+Le-Lisp.
+
+Un certain nombres de choses ont toutefois
+\'{e}t\'{e} revues ou corrig\'{e}es \`{a} l'occasion de cette version:
+On peut citer:
+
+\begin {enumerate}
+
+\item Intervention d'ordre g\'{e}n\'{e}ral sur le code Le-Lisp:
+
+\begin {itemize}
+
+\item Un gros travail a \'{e}t\'{e} accompli sur le module des PATHNAMES,
+aussi bien en correction d'anomalies qu'en ajout de s\'{e}mantique,
+en particulier le probl\`{e}me de la longueur des noms de fichiers (sur
+Sys5 et sur OS/2). On notera la cr\'{e}ation d'un outil de
+d\'{e}tection de conflit de noms: {\tt lelisp/llub/verifpath.ll}
+
+\item Changement de l'ordre des r\'{e}pertoires dans la variable
+\#:SYSTEM:PATH:
+le r\'{e}pertoire {\tt system/} est plac\'{e} devant les librairies.
+Cela permet de mieux g\'{e}rer l'introduction de nouveaux portages en
+cours d'ann\'{e}e, lesquels n\'{e}cessitent parfois une intervention locale dans
+un fichier de la librairie.
+
+\item Passage de {\bf \#:system:23-compatibility-flag} \`{a} NIL. Ce flag
+introduit en 15.23.2 permettait aux anciens (RMARGIN 256) de simuler
+l'effet de (RMARGIN (1+ (SLEN (OUTBUF)))). 
+
+\item Reprise de certaines bizareries autour des longueurs des buffers
+d'entr\'{e}e sortie (harmonisation LL/C, mise \`{a} niveau de stringio.ll).
+
+\end {itemize}
+
+\item Intervention sur la technologie de portage:
+
+\begin {itemize}
+
+\item Pr\'{e}sence unique du LOADER dans le r\'{e}pertoire de la machine.
+Le nombre et la complexit\'{e} des portages allant en augmentant, il
+apparait que chaque machine exige une ou plusieurs sp\'{e}cificit\'{e}s 
+qui lui est
+propre, qui la diff\'{e}rencie des autres machines utilisant le m\^{e}me
+type de processeur.
+exemples: big endian/little indian sur lapmips, introduction su 68040
+sur lap68k, etc 
+
+\item Am\'{e}nagement de la cha\^{\i}ne de production du binaire Le-Lisp
+sur UNIX:
+introduction du fichier {\tt lelispllm3.o} ne contenant strictement que
+l'expansion LLM3, et garantissant ainsi la non-expansion LLM3.
+Avec le temps, la complexit\'{e} des portages augmentant, 
+un certains nombres de
+choses sont venues par dessus l'expansion LLM3 (kern.o, plombage,
+specificit\'{e}s C de certains portages etc) et sont int\'{e}gr\'{e}es dans le
+fichier {\tt lelispbin.o} qui lui est fourni aux clients commes base
+de recompilation du syst\`{e}me. C'est toujours le makefile {\tt
+Makeport} qui fabrique {\tt lelispbin.o}, mais c'est maintenant un
+makefile {\tt makellm3} qui, en amont du {\tt Makeport}, 
+fabrique le fichier {\tt lelispllm3.o}. Ce
+makefile n'est lanc\'{e} qu'une fois par an \`{a} l'occasion des versions
+majeures. 
+
+\item Homog\'{e}n\'{e}it\'{e} plus pouss\'{e}e sur les traits de portages tels que
+CLOAD, 31BITFLOATS et 64BITFLOATS, scheduleur.
+
+\item Encore plus de g\'{e}n\'{e}ration automatique: {\tt complice} et les
+{\it configurateurs} d'images m\'{e}moire ({\tt conf/*conf.ll}) sont
+engendr\'{e}s automatiquement. C'est pourquoi les noms configurateurs
+commencent maintenant par une majuscule. Le {\tt Makefile} int\`{e}gre
+cela. 
+
+\item Introduction de la recette interpr\'{e}t\'{e}e.
+
+\item Etant donn\'{e} le temps que mettait la recette du module {\it
+KerN} \`{a} s'ex\'{e}cuter sur cetaines machines, les tests 13, 18 et 19 ont
+\'{e}t\'{e} simplifi\'{e}s. Les temps sont divis\'{e}s de 4 \`{a} 8 fois, mais 
+il est bon de savoir que ce sont autant de cas non test\'{e}s par
+d\'{e}faut. Pour en am\'{e}liorer les performances de facon significative,
+nous ne pouvons que conseiller aux porteurs d'impl\'{e}menter le
+module KerN en assembleur sur leur(s) syst\`{e}me(s).
+
+\end {itemize}
+
+\item Intervention sur les codes C et assembleur :
+
+\begin {itemize}
+
+\item Pr\'{e}paration \`{a} l'int\'{e}gration du portage OS/2 (introduction de
+code C en particulier). 
+
+\item Traduction du noyau KerN en assembleur au format MOTOROLA sur
+68K permettant l'introduction ais\'{e}e de KerN en assembleur sur la
+majorit\'{e} des portages 68K. Nous gagnons ainsi un rapport 2 en vitesse
+d'ex\'{e}cution des primitives de KerN sur ces machines.
+
+\item Mise au point d'un certain nombre de flags s\'{e}mantiques de
+compilation C sur les portages UNIX : 
+LLPAGESIZE (taille des pages m\'{e}moire), LLTIMEUNIT
+(fr\'{e}quence d'horloge), EXECORE (cores executables), CLOAD/NOCLOAD
+(loader dynamique), ITINREAD (IT \`{a} la lecture), LLFOREGROUND (process
+en foreground), LLVFORK (vfork ou non), LLRENAME (proc\'{e}dure rename
+existe ou non). Et toujours: BSD4x et S5. Introduction du flag POSIX:
+ce dernier devra prendre de plus en plus d'importance. \\
+Cette manipulation des flags offre une plus grande lisibilit\'{e} du code
+C,  permet une automatisation plus ais\'{e}e de la
+g\'{e}n\'{e}ration de fichiers, mais surtout facilite l'introduction de
+nouveaux portages.
+
+\end {itemize}
+
+\item Corrections propres \`{a} COMPLICE:
+
+\begin {itemize}
+
+\item
+On change le nouveau syst\`{e}me de {\tt defvar} qui ne convenait pas
+pour les {\tt (unless (boundp 'kop) (defvar kop ...))}. On red\'{e}fini
+{\tt defvar} dans complice pour forcer les putprops. On parse quand m\^{e}me
+pour pouvoir \'{e}tendre le {\bf cpenv}. Cela implique que si le
+{\tt defvar} n'est pas en {\it ToplevelForm} alors le {\bf cpenv}
+n'est pas \'{e}tendu. 
+
+\item
+Correction de la g\'{e}n\'{e}ration en "dur" de l'\'{e}tiquette 0 pour le
+test des {\tt nsubrs} ({\tt :check-nsubr} dans {\tt cp2.ll}).
+On ouvre les fonctions {\tt typevector} et {\tt typestring}.
+
+\item
+On traite les cas d\'{e}g\'{e}n\'{e}r\'{e}s de {\tt (and)} et {\tt (or)}.
+On fait la sauvegarde les {\tt (cvalq x)} proteg\'{e}s pour chaque {\tt
+call} ou {\tt jump}.
+Correction d'un bug d'allocation de registres dans (arg <expr>).
+
+\end{itemize}
+\end{enumerate}
+
+\Section {Les RATS}
+
+Les changements de \LeLisp\ sont g\'{e}r\'{e}s avec des \|RATs|
+(Requ\^{e}tes d'Action Technique).  Nous n'avons fourni que les sujets
+des RATs par souci de place, mais vous pouvez avoir le texte complet
+d'un rat d'ILOG en nous en communiquant le num\'{e}ro.  (Notez s'il vous
+pla\^{\i}t que les num\'{e}ros des RATs sont partag\'{e}s par tous les produits
+ILOG et pas uniquement \LeLisp.  Ne soyez pas effray\'{e} par les
+num\'{e}ros \'{e}lev\'{e}s!). \\
+Nous fournissons ici la liste de tous les rats corrig\'{e}s depuis
+la derni\`{e}re version majeure de Le-Lisp (15.24).
+\newpage
+\begin{tabbing}
+\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\= xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \= \kill
+\verb_Rats for lelisp selected by status-fixed-or-declined as of 27/6/1991._\\ \verb_ _\\
+\hspace{-5em}rat 512 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk@ilog
+\ }\\ 
+\verb_LISPCALL avec plusieurs flottants plante! (cf rat448)
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 531 \> area: {\it language
+\ }\> aspect: {\it arithmetic
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it eisenman@ilog
+\ }\\ 
+\verb_POWER sec omporte mal sur certaines machines avec des negatifs
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 556 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it meller
+\ }\\ 
+\verb_compilation de maphash
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 560 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it dufourd@elec.enst.fr
+\ }\\ 
+\verb_comportement diff. entre "complice foo" et "compilemodule foo"
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 578 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it C. Julien [ACT]
+\ }\\ 
+\verb_encore un pb de ">" pour le compilo C sur ix386
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 596 \> area: {\it run-time
+\ }\> aspect: {\it external-functions
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kuczynsk
+\ }\\ 
+\verb_(getglobal ">tcfloat") = (getglobal ">tcfloat3") sur RS6000
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 625 \> area: {\it programming-environment
+\ }\> aspect: {\it editors
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it kerjean
+\ }\\ 
+\verb_certaines commandes de edlin ne semblent pas repondre
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 640 \\ 
+\> status: {\it fixed
+\ }\> origin: {\it le
+\ }\\ 
+\verb_erreur inadequate lors d'ouverture d'1 fichier inconnu sur RS6000
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 644 \\ 
+\> status: {\it fixed
+\ }\> origin: {\it le
+\ }\\ 
+\verb_l'arg. numerique passe a lelisp reste sans effet sur la zone des CONS
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 659 \> area: {\it programming-environment
+\ }\> aspect: {\it trace
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it davis
+\ }\\ 
+\verb_Unilingual message in trace.
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 666 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it J.F. Puget [Ilog]
+\ }\\ 
+\verb_mauvaise compilation des fonctions anonymes (LAMBDA)
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 675 \> area: {\it compiler
+\ }\> aspect: {\it complice
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it P. Kuczynski [Ilog]
+\ }\\ 
+\verb_le mode d'emploi des DEFVAR a chang\'{e} depuis la 15.24
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 676 \> area: {\it language
+\ }\> aspect: {\it other
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it J Chailloux [Ilog]
+\ }\\ 
+\verb_traduction systematique de toutes chaine francaise en anglais dans STARTUP.ll>>>>>>>>>>>>>>
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 687 \> area: {\it i/o
+\ }\> aspect: {\it virbitmap
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it Roland Ducournau  ducour@cerci2.uucp
+\ }\\ 
+\verb_Semantique de Clear-graph-env vis a vis de la couleur
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 690 \\ 
+\> status: {\it fixed
+\ }\> origin: {\it le
+\ }\\ 
+\verb_il faut trait\'{e} le cas du "//" en debut de path pour Apollo
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 698 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it grimm@medee.inria.fr
+\ }\\ 
+\verb_(CURRENT-DIRECTORY) sur la racine unix "/" rend un resultat inadequat
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 699 \> area: {\it language
+\ }\> aspect: {\it interpreter
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it grimm@medee.inria.fr
+\ }\\ 
+\verb_comportement non homogene de SEARCH-IN-PATH face a des types differents
+_\\ 
+\verb_ _\\ 
+\hspace{-5em}rat 700 \> area: {\it i/o
+\ }\> aspect: {\it virbitmap
+\ }\\ 
+\> status: {\it fixed
+\ }\> origin: {\it ducour@cerci2.uucp
+\ }\\ 
+\verb_CURRENT-CLIP consomme 4 CONS
+_\\ 
+\verb_ _\\ 
+\end{tabbing}
+
+\newpage
+\bigskip
+
+\tableofcontents
+\listoftables
+
+\End
