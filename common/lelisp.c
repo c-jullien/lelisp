@@ -1275,8 +1275,10 @@ corsav(char *nom) {
                         return(13);    /* 13 is I/O error */
                 }
 
-        strncpy(entete.idlelisp, ID, 12);
-        strncpy(entete.stamp, STAMP, 4);
+        memset(entete.idlelisp, 0, 12);
+        memcpy(entete.idlelisp, ID, 12);
+        memset(entete.stamp, 0, 4);
+        memcpy(entete.stamp, STAMP, 4);
 
         entete.corsstack = sstack;
         entete.corscode  = scode;
