@@ -1,9 +1,9 @@
 ;;;
 ;;; STARTUP:  The Le-Lisp initialization file.
 ;;;
-;;; $Source: /usr/cvs/lelisp/llib/startup.ll,v $
-;;; $Date: 2017/10/07 14:13:32 $
-;;; $Revision: 1.48 $
+;;; $Source: /usr/cvs/lelisp/llib/startup.ll.in,v $
+;;; $Date: 2017/10/07 13:54:52 $
+;;; $Revision: 1.6 $
 ;;;
 ;;; ------------------------------------------------------------
 ;;; This file is part of Le-Lisp version 15, developped by INRIA
@@ -103,7 +103,7 @@
   (selectq (system)
 
      (#.unix
-	(defvar #:system:directory "@SOURCE@/")
+	(defvar #:system:directory "/home/jullien/lelisp/")
 	(defvar #:system:unixp t)
 	(defvar #:system:vmsp  ())
 	(defvar #:system:dosp  ())
