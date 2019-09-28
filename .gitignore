@@ -10,6 +10,8 @@
 */lelispbin
 */llcore/*.core
 */o/*.o
+*/o/*.obj
+win32/*/*.obj
 llib/startup.ll
 Makefile
 common/config.h
