@@ -20,13 +20,14 @@ dnl - powerpc64-unknown-linux-gnu           CFLAGS=-m32
 dnl - powerpc64le-unknown-linux-gnu
 dnl - sparc-sun-solaris2.10                 CFLAGS=-m32
 dnl - sparc64-unknown-linux-gnu             CFLAGS=-m32
-dnl - x86_64-apple-darwin16.7.0
 dnl - x86_64-apple-darwin10.8.0
+dnl - x86_64-apple-darwin16.7.0
+dnl - x86_64-apple-darwin19.0.0
 dnl - x86_64-pc-linux-gnu
 dnl - x86_64-unknown-cygwin
 dnl - x86_64-unknown-freebsd10.0
-dnl - x86_64-unknown-netbsd6.1
 dnl - x86_64-unknown-netbsd5.1
+dnl - x86_64-unknown-netbsd6.1
 dnl
 dnl Works with some limitations
 dnl - i386-unknown-openbsd5.8               No core because of SAR
@@ -378,7 +379,12 @@ case "${target_cpu}-${target_os}" in
   *darwin*)
      if test $PORTABLE_C = no
      then
-       TARGET=x86macos
+       if test `uname -r | cut -d '.' -f 1` -lt 18
+       then
+         TARGET=x86macos
+       else
+         PORTABLE_C=yes
+       fi
      fi
      ;;
   i386*freebsd*)
