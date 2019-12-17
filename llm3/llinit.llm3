@@ -810,7 +810,7 @@ LLATEND2  MOV       #0,A1
 ;  ----------------------------------------
           FENTRY    HERALD,SUBR0
 ;  ----------------------------------------
-          TTYMSG    #52,"; Le-Lisp (by INRIA) version 15.26  (18/Aug/2017)  ["; <
+          TTYMSG    #52,"; Le-Lisp (by INRIA) version 15.26  (01/Jan/2020)  ["; <
                                         ;                    taille #52     ["; <
           MOV       CSTSYSTE,A1         ; la variable contenant le syste`me
           JCALL     STRGSYMB            ; re'cupere le PNAME (avec liens 3D)
