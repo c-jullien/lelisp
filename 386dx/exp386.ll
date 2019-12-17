@@ -1,6 +1,6 @@
 ;;;; Author:    C. Jullien
 ;;;; License:   Simplified BSD license
-;;;; GIT:       "$Id: exp386.ll,v 1.123 2019/12/13 17:14:12 jullien Exp $"
+;;;; GIT:       "$Id$"
 
 ;;; Copyright (c) 1988-2020, Eligis
 ;;;
