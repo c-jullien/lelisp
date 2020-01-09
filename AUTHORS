@@ -4,10 +4,12 @@ was developed as a direct result of the need for a small, portable,
 efficient language for a VLSI design system. It ran on most major
 computer systems including SunOS, Solaris, Mac II, Apollo, Decstation,
 Vax, Sony, Hewlett-Packard, Bull, PS/2, and of course major 386
-systems (Windows, Linux, Solaris). It was marketed by several
+systems (Windows, Solaris, Linux, macOS, FreeBSD). It was marketed by several
 companies throughout Europe, including ILOG, Bull, the Sema Group and
 Eligis. Its technical evolution was assured by ILOG and INRIA until
-2000. Many commercial products have been built on top of Le-Lisp.
+2000 and by Eligis until 2020.
+
+Many commercial products have been built on top of Le-Lisp.
 
 Here is an inevitably incomplete list of MUCH-APPRECIATED CONTRIBUTORS --
 
