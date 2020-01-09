@@ -26,14 +26,14 @@
 
   (defun subversion ()
     ;; returns the sub-version number.
-    12)
+    13)
 
   (defun herald ()
     ;; prints in the tty channel the name of the system
     ;; and the version number.
     (with ((outchan ()))
 	  (print "; Le-Lisp (by INRIA) version 15.26  "
-		 "(18/Aug/2017)  [" (system) "]"))
+		 "(01/Jan/2020)  [" (system) "]"))
     ())
 
   (catenate "Subversion: " (subversion)) )
