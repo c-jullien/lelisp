@@ -7,7 +7,7 @@
 # $Author: jullien $
 
 # First entry, to start everything
-all: check default
+all: default
 
 SYSTEM	= rs6000
 HOST	= $(SYSTEM)
@@ -145,7 +145,7 @@ XINCLUDE=
 
 _X11_CFLAGS=$(WINDOW) $(XINCLUDE)
 
-X11_CFLAGS=$(_X11_CFLAGS)
+X11_CFLAGS=$(_X11_CFLAGS) -D_ALL_SOURCE
 
 _X11_LDFLAGS=
 

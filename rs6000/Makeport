@@ -112,9 +112,12 @@ bootstrap:
 # Build from LLM3 (i.e. generate .s), requires a working lelispbin.
 world:
 	./newdir > /dev/null
-	-rm -f ../bignum/o/*.o *.o o/*.o o31/*.o o64/*o
+	-rm -f ../bignum/o/*.o *.o o/*.o o31/*.o o64/*o expansion??
 	$(MAKE) -f Makeport kern.o
-	$(MAKE) -f makellm3 llm3expand
+	$(MAKE) -f makellm3 expander
+	$(MAKE) -f makellm3 FLT=31 lelisp31llm3.o
+	$(MAKE) -f makellm3 FLT=64 lelisp64llm3.o
+#	$(MAKE) -f makellm3 llm3expand
 	$(MAKE) -f Makeport FLT=31
 	$(MAKE) -f Makeport FLT=64
 	$(MAKE) allbin cmplc++
