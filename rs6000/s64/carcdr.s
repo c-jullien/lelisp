@@ -6,240 +6,240 @@
 C.ini_cad:	mflr	0
 	stu	0,-4(1)
 ini_cad:	lil	14,3
-	cal	15,7586(13)
-	l	16,3264(13)
+	cal	15,7650(13)
+	l	16,3260(13)
 	cal	17,164(13)
 	lil	3,._fcar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,7589(13)
-	l	16,3260(13)
+	cal	15,7653(13)
+	l	16,3256(13)
 	cal	17,164(13)
 	lil	3,._fcdr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7592(13)
-	l	16,3256(13)
+	cal	15,7656(13)
+	l	16,3252(13)
 	cal	17,164(13)
 	lil	3,._ca2r
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7596(13)
-	l	16,3252(13)
+	cal	15,7660(13)
+	l	16,3248(13)
 	cal	17,164(13)
 	lil	3,._cadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7600(13)
-	l	16,3248(13)
+	cal	15,7664(13)
+	l	16,3244(13)
 	cal	17,164(13)
 	lil	3,._cdar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7604(13)
-	l	16,3244(13)
+	cal	15,7668(13)
+	l	16,3240(13)
 	cal	17,164(13)
 	lil	3,._cddr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7608(13)
-	l	16,3240(13)
+	cal	15,7672(13)
+	l	16,3236(13)
 	cal	17,164(13)
 	lil	3,._caaar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7613(13)
-	l	16,3236(13)
+	cal	15,7677(13)
+	l	16,3232(13)
 	cal	17,164(13)
 	lil	3,._caadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7618(13)
-	l	16,3232(13)
+	cal	15,7682(13)
+	l	16,3228(13)
 	cal	17,164(13)
 	lil	3,._cadar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7623(13)
-	l	16,3228(13)
+	cal	15,7687(13)
+	l	16,3224(13)
 	cal	17,164(13)
 	lil	3,._caddr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7628(13)
-	l	16,3224(13)
+	cal	15,7692(13)
+	l	16,3220(13)
 	cal	17,164(13)
 	lil	3,._cdaar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7633(13)
-	l	16,3220(13)
+	cal	15,7697(13)
+	l	16,3216(13)
 	cal	17,164(13)
 	lil	3,._cdadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7638(13)
-	l	16,3216(13)
+	cal	15,7702(13)
+	l	16,3212(13)
 	cal	17,164(13)
 	lil	3,._cddar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7643(13)
-	l	16,3212(13)
+	cal	15,7707(13)
+	l	16,3208(13)
 	cal	17,164(13)
 	lil	3,._cdddr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7648(13)
-	l	16,3208(13)
+	cal	15,7712(13)
+	l	16,3204(13)
 	cal	17,164(13)
 	lil	3,._caaaar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7654(13)
-	l	16,3204(13)
+	cal	15,7718(13)
+	l	16,3200(13)
 	cal	17,164(13)
 	lil	3,._caaadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7660(13)
-	l	16,3200(13)
+	cal	15,7724(13)
+	l	16,3196(13)
 	cal	17,164(13)
 	lil	3,._caadar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7666(13)
-	l	16,3196(13)
+	cal	15,7730(13)
+	l	16,3192(13)
 	cal	17,164(13)
 	lil	3,._caaddr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7672(13)
-	l	16,3192(13)
+	cal	15,7736(13)
+	l	16,3188(13)
 	cal	17,164(13)
 	lil	3,._cadaar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7678(13)
-	l	16,3188(13)
+	cal	15,7742(13)
+	l	16,3184(13)
 	cal	17,164(13)
 	lil	3,._cadadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7684(13)
-	l	16,3184(13)
+	cal	15,7748(13)
+	l	16,3180(13)
 	cal	17,164(13)
 	lil	3,._caddar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7690(13)
-	l	16,3180(13)
+	cal	15,7754(13)
+	l	16,3176(13)
 	cal	17,164(13)
 	lil	3,._cadddr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7696(13)
-	l	16,3176(13)
+	cal	15,7760(13)
+	l	16,3172(13)
 	cal	17,164(13)
 	lil	3,._cdaaar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7702(13)
-	l	16,3172(13)
+	cal	15,7766(13)
+	l	16,3168(13)
 	cal	17,164(13)
 	lil	3,._cdaadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7708(13)
-	l	16,3168(13)
+	cal	15,7772(13)
+	l	16,3164(13)
 	cal	17,164(13)
 	lil	3,._cdadar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7714(13)
-	l	16,3164(13)
+	cal	15,7778(13)
+	l	16,3160(13)
 	cal	17,164(13)
 	lil	3,._cdaddr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7720(13)
-	l	16,3160(13)
+	cal	15,7784(13)
+	l	16,3156(13)
 	cal	17,164(13)
 	lil	3,._cddaar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7726(13)
-	l	16,3156(13)
+	cal	15,7790(13)
+	l	16,3152(13)
 	cal	17,164(13)
 	lil	3,._cddadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7732(13)
-	l	16,3152(13)
+	cal	15,7796(13)
+	l	16,3148(13)
 	cal	17,164(13)
 	lil	3,._cdddar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7738(13)
-	l	16,3148(13)
+	cal	15,7802(13)
+	l	16,3144(13)
 	cal	17,164(13)
 	lil	3,._cddddr
 	stu	3,-4(1)
@@ -262,7 +262,7 @@ careret:	l	0,0(1)
 C.fcar:	mflr	0
 	stu	0,-4(1)
 	.globl	fcar
-fcar:	cal	15,13952(21)
+fcar:	cal	15,14240(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -276,7 +276,7 @@ fcar:	cal	15,13952(21)
 C.fcdr:	mflr	0
 	stu	0,-4(1)
 	.globl	fcdr
-fcdr:	cal	15,13984(21)
+fcdr:	cal	15,14272(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -290,7 +290,7 @@ fcdr:	cal	15,13984(21)
 C.ca2r:	mflr	0
 	stu	0,-4(1)
 	.globl	ca2r
-ca2r:	cal	15,14016(21)
+ca2r:	cal	15,14304(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -307,7 +307,7 @@ ca2r:	cal	15,14016(21)
 C.cadr:	mflr	0
 	stu	0,-4(1)
 	.globl	cadr
-cadr:	cal	15,14048(21)
+cadr:	cal	15,14336(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -324,7 +324,7 @@ cadr:	cal	15,14048(21)
 C.cdar:	mflr	0
 	stu	0,-4(1)
 	.globl	cdar
-cdar:	cal	15,14080(21)
+cdar:	cal	15,14368(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -341,7 +341,7 @@ cdar:	cal	15,14080(21)
 C.cddr:	mflr	0
 	stu	0,-4(1)
 	.globl	cddr
-cddr:	cal	15,14112(21)
+cddr:	cal	15,14400(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -358,7 +358,7 @@ cddr:	cal	15,14112(21)
 C.caaar:	mflr	0
 	stu	0,-4(1)
 	.globl	caaar
-caaar:	cal	15,14144(21)
+caaar:	cal	15,14432(21)
 	oril	16,14,0
 caaar1:	cmp	0,14,22
 	blt	carerr
@@ -378,7 +378,7 @@ caaar1:	cmp	0,14,22
 C.caadr:	mflr	0
 	stu	0,-4(1)
 	.globl	caadr
-caadr:	cal	15,14176(21)
+caadr:	cal	15,14464(21)
 	oril	16,14,0
 caadr1:	cmp	0,14,22
 	blt	carerr
@@ -398,7 +398,7 @@ caadr1:	cmp	0,14,22
 C.cadar:	mflr	0
 	stu	0,-4(1)
 	.globl	cadar
-cadar:	cal	15,14208(21)
+cadar:	cal	15,14496(21)
 	oril	16,14,0
 cadar1:	cmp	0,14,22
 	blt	carerr
@@ -418,7 +418,7 @@ cadar1:	cmp	0,14,22
 C.caddr:	mflr	0
 	stu	0,-4(1)
 	.globl	caddr
-caddr:	cal	15,14240(21)
+caddr:	cal	15,14528(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -438,7 +438,7 @@ caddr:	cal	15,14240(21)
 C.cdaar:	mflr	0
 	stu	0,-4(1)
 	.globl	cdaar
-cdaar:	cal	15,14272(21)
+cdaar:	cal	15,14560(21)
 	oril	16,14,0
 cdaar1:	cmp	0,14,22
 	blt	carerr
@@ -458,7 +458,7 @@ cdaar1:	cmp	0,14,22
 C.cdadr:	mflr	0
 	stu	0,-4(1)
 	.globl	cdadr
-cdadr:	cal	15,14304(21)
+cdadr:	cal	15,14592(21)
 	oril	16,14,0
 cdadr1:	cmp	0,14,22
 	blt	carerr
@@ -478,7 +478,7 @@ cdadr1:	cmp	0,14,22
 C.cddar:	mflr	0
 	stu	0,-4(1)
 	.globl	cddar
-cddar:	cal	15,14336(21)
+cddar:	cal	15,14624(21)
 	oril	16,14,0
 cddar1:	cmp	0,14,22
 	blt	carerr
@@ -498,7 +498,7 @@ cddar1:	cmp	0,14,22
 C.cdddr:	mflr	0
 	stu	0,-4(1)
 	.globl	cdddr
-cdddr:	cal	15,14368(21)
+cdddr:	cal	15,14656(21)
 	oril	16,14,0
 cdddr1:	cmp	0,14,22
 	blt	carerr
@@ -518,7 +518,7 @@ cdddr1:	cmp	0,14,22
 C.caaaar:	mflr	0
 	stu	0,-4(1)
 	.globl	caaaar
-caaaar:	cal	15,14400(21)
+caaaar:	cal	15,14688(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -529,7 +529,7 @@ caaaar:	cal	15,14400(21)
 C.caaadr:	mflr	0
 	stu	0,-4(1)
 	.globl	caaadr
-caaadr:	cal	15,14432(21)
+caaadr:	cal	15,14720(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -540,7 +540,7 @@ caaadr:	cal	15,14432(21)
 C.caadar:	mflr	0
 	stu	0,-4(1)
 	.globl	caadar
-caadar:	cal	15,14464(21)
+caadar:	cal	15,14752(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -551,7 +551,7 @@ caadar:	cal	15,14464(21)
 C.caaddr:	mflr	0
 	stu	0,-4(1)
 	.globl	caaddr
-caaddr:	cal	15,14496(21)
+caaddr:	cal	15,14784(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -562,7 +562,7 @@ caaddr:	cal	15,14496(21)
 C.cadaar:	mflr	0
 	stu	0,-4(1)
 	.globl	cadaar
-cadaar:	cal	15,14528(21)
+cadaar:	cal	15,14816(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -573,7 +573,7 @@ cadaar:	cal	15,14528(21)
 C.cadadr:	mflr	0
 	stu	0,-4(1)
 	.globl	cadadr
-cadadr:	cal	15,14560(21)
+cadadr:	cal	15,14848(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -584,7 +584,7 @@ cadadr:	cal	15,14560(21)
 C.caddar:	mflr	0
 	stu	0,-4(1)
 	.globl	caddar
-caddar:	cal	15,14592(21)
+caddar:	cal	15,14880(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -607,7 +607,7 @@ caddar:	cal	15,14592(21)
 C.cadddr:	mflr	0
 	stu	0,-4(1)
 	.globl	cadddr
-cadddr:	cal	15,14624(21)
+cadddr:	cal	15,14912(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -630,7 +630,7 @@ cadddr:	cal	15,14624(21)
 C.cdaaar:	mflr	0
 	stu	0,-4(1)
 	.globl	cdaaar
-cdaaar:	cal	15,14656(21)
+cdaaar:	cal	15,14944(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -641,7 +641,7 @@ cdaaar:	cal	15,14656(21)
 C.cdaadr:	mflr	0
 	stu	0,-4(1)
 	.globl	cdaadr
-cdaadr:	cal	15,14688(21)
+cdaadr:	cal	15,14976(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -652,7 +652,7 @@ cdaadr:	cal	15,14688(21)
 C.cdadar:	mflr	0
 	stu	0,-4(1)
 	.globl	cdadar
-cdadar:	cal	15,14720(21)
+cdadar:	cal	15,15008(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -663,7 +663,7 @@ cdadar:	cal	15,14720(21)
 C.cdaddr:	mflr	0
 	stu	0,-4(1)
 	.globl	cdaddr
-cdaddr:	cal	15,14752(21)
+cdaddr:	cal	15,15040(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -674,7 +674,7 @@ cdaddr:	cal	15,14752(21)
 C.cddaar:	mflr	0
 	stu	0,-4(1)
 	.globl	cddaar
-cddaar:	cal	15,14784(21)
+cddaar:	cal	15,15072(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -685,7 +685,7 @@ cddaar:	cal	15,14784(21)
 C.cddadr:	mflr	0
 	stu	0,-4(1)
 	.globl	cddadr
-cddadr:	cal	15,14816(21)
+cddadr:	cal	15,15104(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -696,7 +696,7 @@ cddadr:	cal	15,14816(21)
 C.cdddar:	mflr	0
 	stu	0,-4(1)
 	.globl	cdddar
-cdddar:	cal	15,14848(21)
+cdddar:	cal	15,15136(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr
@@ -707,7 +707,7 @@ cdddar:	cal	15,14848(21)
 C.cddddr:	mflr	0
 	stu	0,-4(1)
 	.globl	cddddr
-cddddr:	cal	15,14880(21)
+cddddr:	cal	15,15168(21)
 	oril	16,14,0
 	cmp	0,14,22
 	blt	carerr

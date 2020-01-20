@@ -34,7 +34,7 @@
 C.ini_ctl:	mflr	0
 	stu	0,-4(1)
 ini_ctl:	lil	14,16
-	cal	15,7294(13)
+	cal	15,7358(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
@@ -45,498 +45,498 @@ ini_ctl:	lil	14,16
 	oril	15,21,0
 	.globl	C.makevect
 	bl	C.makevect
-	st	14,1876(13)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,1920(21)
-	st	5,12(3)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,1952(21)
-	st	5,16(3)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,1984(21)
-	st	5,20(3)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,2016(21)
-	st	5,24(3)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,2048(21)
-	st	5,28(3)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,2080(21)
-	st	5,32(3)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,2112(21)
-	st	5,36(3)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,2144(21)
-	st	5,40(3)
-	l	3,1876(13)
-	l	3,0(3)
-	cal	5,2176(21)
-	st	5,44(3)
-	l	3,1876(13)
+	st	14,1872(13)
+	l	3,1872(13)
 	l	3,0(3)
 	cal	5,2208(21)
-	st	5,48(3)
-	l	3,1876(13)
+	st	5,12(3)
+	l	3,1872(13)
 	l	3,0(3)
 	cal	5,2240(21)
-	st	5,52(3)
-	l	3,1876(13)
+	st	5,16(3)
+	l	3,1872(13)
 	l	3,0(3)
 	cal	5,2272(21)
+	st	5,20(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2304(21)
+	st	5,24(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2336(21)
+	st	5,28(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2368(21)
+	st	5,32(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2400(21)
+	st	5,36(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2432(21)
+	st	5,40(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2464(21)
+	st	5,44(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2496(21)
+	st	5,48(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2528(21)
+	st	5,52(3)
+	l	3,1872(13)
+	l	3,0(3)
+	cal	5,2560(21)
 	st	5,56(3)
 	lil	14,13
 	oril	15,21,0
 	.globl	C.makevect
 	bl	C.makevect
-	st	14,1880(13)
-	l	3,1880(13)
+	st	14,1876(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,1
 	st	5,12(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,2
 	st	5,16(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,3
 	st	5,20(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,4
 	st	5,24(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,5
 	st	5,28(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,6
 	st	5,32(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,7
 	st	5,36(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,8
 	st	5,40(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,9
 	st	5,44(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,10
 	st	5,48(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,11
 	st	5,52(3)
-	l	3,1880(13)
+	l	3,1876(13)
 	l	3,0(3)
 	lil	5,12
 	st	5,56(3)
 	lil	14,5
-	cal	15,7310(13)
-	l	16,3496(13)
-	cal	17,164(13)
-	lil	3,._llde
-	stu	3,-4(1)
-	.globl	C.inisymb
-	bl	C.inisymb
-	lil	14,2
-	cal	15,7315(13)
-	l	16,3496(13)
-	cal	17,164(13)
-	lil	3,._llde
-	stu	3,-4(1)
-	.globl	C.inisymb
-	bl	C.inisymb
-	lil	14,2
-	cal	15,7317(13)
+	cal	15,7374(13)
 	l	16,3492(13)
+	cal	17,164(13)
+	lil	3,._llde
+	stu	3,-4(1)
+	.globl	C.inisymb
+	bl	C.inisymb
+	lil	14,2
+	cal	15,7379(13)
+	l	16,3492(13)
+	cal	17,164(13)
+	lil	3,._llde
+	stu	3,-4(1)
+	.globl	C.inisymb
+	bl	C.inisymb
+	lil	14,2
+	cal	15,7381(13)
+	l	16,3488(13)
 	cal	17,164(13)
 	lil	3,._lldf
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,7319(13)
-	l	16,3488(13)
+	cal	15,7383(13)
+	l	16,3484(13)
 	cal	17,164(13)
 	lil	3,._lldm
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,7321(13)
-	l	16,3484(13)
+	cal	15,7385(13)
+	l	16,3480(13)
 	cal	17,164(13)
 	lil	3,._dmd
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,7324(13)
-	l	16,3484(13)
+	cal	15,7388(13)
+	l	16,3480(13)
 	cal	17,164(13)
 	lil	3,._dmd
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,7332(13)
-	l	16,3480(13)
+	cal	15,7396(13)
+	l	16,3476(13)
 	cal	17,164(13)
 	lil	3,._llds
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7334(13)
-	l	16,3476(13)
+	cal	15,7398(13)
+	l	16,3472(13)
 	cal	17,164(13)
 	lil	3,._defvar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,12
-	cal	15,7340(13)
+	cal	15,7404(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	cal	3,224(21)
 	st	3,12(14)
 	lil	14,6
-	cal	15,7352(13)
-	l	16,3472(13)
+	cal	15,7416(13)
+	l	16,3468(13)
 	cal	17,164(13)
 	lil	3,._revert
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7358(13)
-	l	16,3468(13)
+	cal	15,7422(13)
+	l	16,3464(13)
 	cal	17,164(13)
 	lil	3,._getdef
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7364(13)
-	l	16,3464(13)
+	cal	15,7428(13)
+	l	16,3460(13)
 	cal	17,164(13)
 	lil	3,._makedef
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,7371(13)
-	l	16,3460(13)
+	cal	15,7435(13)
+	l	16,3456(13)
 	cal	17,164(13)
 	lil	3,._llif
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,7373(13)
-	l	16,3456(13)
+	cal	15,7437(13)
+	l	16,3452(13)
 	cal	17,164(13)
 	lil	3,._llifn
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7376(13)
-	l	16,3452(13)
+	cal	15,7440(13)
+	l	16,3448(13)
 	cal	17,164(13)
 	lil	3,._when
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7380(13)
-	l	16,3448(13)
+	cal	15,7444(13)
+	l	16,3444(13)
 	cal	17,164(13)
 	lil	3,._unless
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7386(13)
-	l	16,3444(13)
+	cal	15,7450(13)
+	l	16,3440(13)
 	cal	17,164(13)
 	lil	3,._cond
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,7390(13)
-	l	16,3440(13)
+	cal	15,7454(13)
+	l	16,3436(13)
 	cal	17,164(13)
 	lil	3,._llor
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,7392(13)
-	l	16,3436(13)
+	cal	15,7456(13)
+	l	16,3432(13)
 	cal	17,164(13)
 	lil	3,._lland
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7395(13)
-	l	16,3432(13)
+	cal	15,7459(13)
+	l	16,3428(13)
 	cal	17,164(13)
 	lil	3,._while
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7400(13)
-	l	16,3428(13)
+	cal	15,7464(13)
+	l	16,3424(13)
 	cal	17,164(13)
 	lil	3,._until
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7405(13)
-	l	16,3424(13)
+	cal	15,7469(13)
+	l	16,3420(13)
 	cal	17,164(13)
 	lil	3,._loop
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7409(13)
-	l	16,3420(13)
+	cal	15,7473(13)
+	l	16,3416(13)
 	cal	17,164(13)
 	lil	3,._frepeat
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7415(13)
-	l	16,3416(13)
+	cal	15,7479(13)
+	l	16,3412(13)
 	cal	17,164(13)
 	lil	3,._selectq
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,7422(13)
-	l	16,3412(13)
+	cal	15,7486(13)
+	l	16,3408(13)
 	cal	17,164(13)
 	lil	3,._map
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7425(13)
-	l	16,3412(13)
+	cal	15,7489(13)
+	l	16,3408(13)
 	cal	17,164(13)
 	lil	3,._map
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7429(13)
-	l	16,3404(13)
+	cal	15,7493(13)
+	l	16,3400(13)
 	cal	17,164(13)
 	lil	3,._mapc
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7433(13)
-	l	16,3396(13)
+	cal	15,7497(13)
+	l	16,3392(13)
 	cal	17,164(13)
 	lil	3,._maplist
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7440(13)
-	l	16,3388(13)
+	cal	15,7504(13)
+	l	16,3384(13)
 	cal	17,164(13)
 	lil	3,._mapcar
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7446(13)
-	l	16,3380(13)
+	cal	15,7510(13)
+	l	16,3376(13)
 	cal	17,164(13)
 	lil	3,._mapcon
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7452(13)
-	l	16,3372(13)
+	cal	15,7516(13)
+	l	16,3368(13)
 	cal	17,164(13)
 	lil	3,._mapcan
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7458(13)
-	l	16,3364(13)
+	cal	15,7522(13)
+	l	16,3360(13)
 	cal	17,164(13)
 	lil	3,._fevery
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,7463(13)
-	l	16,3352(13)
+	cal	15,7527(13)
+	l	16,3348(13)
 	cal	17,164(13)
 	lil	3,._fany
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,7466(13)
-	l	16,3340(13)
+	cal	15,7530(13)
+	l	16,3336(13)
 	cal	17,164(13)
 	lil	3,._mapvect
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,7475(13)
-	l	16,3316(13)
+	cal	15,7539(13)
+	l	16,3312(13)
 	cal	17,164(13)
 	lil	3,._mapoblist
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,7484(13)
-	l	16,3332(13)
+	cal	15,7548(13)
+	l	16,3328(13)
 	cal	17,164(13)
 	lil	3,._mapcoblist
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,7494(13)
-	l	16,3324(13)
+	cal	15,7558(13)
+	l	16,3320(13)
 	cal	17,164(13)
 	lil	3,._maploblist
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7504(13)
-	l	16,3308(13)
+	cal	15,7568(13)
+	l	16,3304(13)
 	cal	17,164(13)
 	lil	3,._quote
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7509(13)
-	l	16,3304(13)
+	cal	15,7573(13)
+	l	16,3300(13)
 	cal	17,164(13)
 	lil	3,._lambda
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7515(13)
-	l	16,3300(13)
+	cal	15,7579(13)
+	l	16,3296(13)
 	cal	17,164(13)
 	lil	3,._flambda
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7522(13)
-	l	16,3296(13)
+	cal	15,7586(13)
+	l	16,3292(13)
 	cal	17,164(13)
 	lil	3,._mlambda
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,7529(13)
-	l	16,3288(13)
+	cal	15,7593(13)
+	l	16,3284(13)
 	cal	17,164(13)
 	lil	3,._llident
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7537(13)
-	l	16,3292(13)
+	cal	15,7601(13)
+	l	16,3288(13)
 	cal	17,164(13)
 	lil	3,._comment
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7544(13)
-	l	16,3280(13)
+	cal	15,7608(13)
+	l	16,3276(13)
 	cal	17,164(13)
 	lil	3,._progn
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7549(13)
-	l	16,3284(13)
+	cal	15,7613(13)
+	l	16,3280(13)
 	cal	17,164(13)
 	lil	3,._eprogn
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7555(13)
-	l	16,3272(13)
+	cal	15,7619(13)
+	l	16,3268(13)
 	cal	17,164(13)
 	lil	3,._prog1
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,21
-	cal	15,7560(13)
-	l	16,3276(13)
+	cal	15,7624(13)
+	l	16,3272(13)
 	cal	17,164(13)
 	lil	3,._exdef
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7581(13)
-	l	16,3268(13)
+	cal	15,7645(13)
+	l	16,3264(13)
 	cal	17,164(13)
 	lil	3,._prog2
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
-	cal	14,13600(21)
+	cal	14,13888(21)
 	st	14,0(14)
-	cal	14,13632(21)
+	cal	14,13920(21)
 	st	14,0(14)
-	cal	14,13664(21)
+	cal	14,13952(21)
 	st	14,0(14)
-	cal	14,13696(21)
+	cal	14,13984(21)
 	st	14,0(14)
 cnfalse:	oril	14,21,0
 cnpopj:	l	0,0(1)
@@ -552,7 +552,7 @@ def:	l	15,4(14)
 	l	14,0(14)
 	sth	16,24(14)
 	st	15,8(14)
-	cal	16,12384(21)
+	cal	16,12672(21)
 	l	15,0(16)
 	cmpl	0,15,21
 	beq	cnpopj
@@ -623,7 +623,7 @@ defvar:	cmp	0,14,22
 	bge	defverr
 	st	14,0(15)
 	oril	14,15,0
-	cal	16,12384(21)
+	cal	16,12672(21)
 	l	15,0(16)
 	cmpl	0,15,21
 	beq	defvar9
@@ -637,14 +637,14 @@ defvar9:	l	0,0(1)
 	mtlr	0
 	br	
 defverr:	oril	14,15,0
-	cal	15,12640(21)
+	cal	15,12928(21)
 	b	errnva
 	.set	._revert,2
 	.globl	C.revert
 C.revert:	mflr	0
 	stu	0,-4(1)
 	.globl	revert
-revert:	cal	15,12672(21)
+revert:	cal	15,12960(21)
 	.globl	C.getprop
 	bl	C.getprop
 	cmpl	0,14,21
@@ -662,7 +662,7 @@ getdef:	cmpl	0,14,21
 	lhz	15,24(14)
 	l	16,8(14)
 	b	defsuit
-gtdefe:	cal	15,12736(21)
+gtdefe:	cal	15,13024(21)
 	b	errsym
 	.set	._makedef,4
 	.globl	C.makedef
@@ -677,14 +677,14 @@ makedef:	cmpl	0,15,18
 	exts	3,15
 	cmpi	0,3,12
 	ble	defsuit
-uncodtr:	cal	15,12768(21)
+uncodtr:	cal	15,13056(21)
 	b	erroob
 uncod0:	stu	16,-4(1)
-	l	3,1876(13)
+	l	3,1872(13)
 	l	3,0(3)
 	l	17,4(3)
 	b	uncod2
-uncod1:	l	3,1876(13)
+uncod1:	l	3,1872(13)
 	l	3,0(3)
 	ai	4,17,2
 	sli	4,4,2
@@ -700,7 +700,7 @@ uncod3:	oril	15,17,0
 	l	16,0(1)
 	ai	1,1,4
 defsuit:	sli	3,15,2
-	cal	4,1884(13)
+	cal	4,1880(13)
 	lx	0,4,3
 	mtlr	0
 	br	
@@ -722,7 +722,7 @@ mkdef0:	oril	14,21,0
 	ai	1,1,4
 	mtlr	0
 	br	
-mkdef1:	l	4,1108(13)
+mkdef1:	l	4,1104(13)
 	cmpl	0,16,4
 	blt	.cnt.1
 	l	4,168(13)
@@ -738,61 +738,61 @@ mkdef1:	l	4,1108(13)
 	ai	1,1,4
 	l	14,0(1)
 	ai	1,1,4
-mkdef10:	l	6,1188(13)
+mkdef10:	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.2
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.2:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	16,0(6)
 	st	21,4(6)
 	oril	16,6,0
-	l	3,1876(13)
+	l	3,1872(13)
 	l	3,0(3)
 	ai	4,15,2
 	sli	4,4,2
 	lx	15,3,4
-	l	6,1188(13)
+	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.3
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.3:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	15,0(6)
 	st	16,4(6)
 	oril	16,6,0
-	cal	17,12608(21)
+	cal	17,12896(21)
 	b	mkdef8
-mkdef2:	cal	17,12448(21)
+mkdef2:	cal	17,12736(21)
 	b	mkdef8
-mkdef3:	cal	17,12480(21)
+mkdef3:	cal	17,12768(21)
 	b	mkdef8
-mkdef4:	cal	17,12512(21)
+mkdef4:	cal	17,12800(21)
 	b	mkdef8
-mkdef5:	cal	17,12576(21)
-mkdef8:	l	6,1188(13)
+mkdef5:	cal	17,12864(21)
+mkdef8:	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.4
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.4:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	14,0(6)
 	st	16,4(6)
 	oril	16,6,0
-	l	6,1188(13)
+	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.5
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.5:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	17,0(6)
 	st	16,4(6)
 	oril	16,6,0
@@ -817,8 +817,8 @@ llif:	cmp	0,14,22
 	cmp	0,15,22
 	blt	ifer1
 	l	16,4(15)
-	cal	3,12800(21)
-	st	3,1748(13)
+	cal	3,13088(21)
+	st	3,1744(13)
 	cmpl	0,14,21
 	beq	progna3
 	l	14,0(15)
@@ -826,7 +826,7 @@ llif:	cmp	0,14,22
 ifer1:	oril	14,15,0
 ifer2:	cmpl	0,14,21
 	beq	cnpopj
-	cal	15,12800(21)
+	cal	15,13088(21)
 	b	errbal
 	.set	._llifn,6
 	.globl	C.llifn
@@ -844,8 +844,8 @@ llifn:	cmp	0,14,22
 	cmp	0,15,22
 	blt	ifner1
 	l	16,4(15)
-	cal	3,12832(21)
-	st	3,1748(13)
+	cal	3,13120(21)
+	st	3,1744(13)
 	cmpl	0,14,21
 	bne	progna3
 	l	14,0(15)
@@ -853,7 +853,7 @@ llifn:	cmp	0,14,22
 ifner1:	oril	14,15,0
 ifner2:	cmpl	0,14,21
 	beq	cnpopj
-	cal	15,12832(21)
+	cal	15,13120(21)
 	b	errbal
 	.set	._when,6
 	.globl	C.when
@@ -868,8 +868,8 @@ when:	cmp	0,14,22
 	bl	C.evalcar
 	l	16,0(1)
 	ai	1,1,4
-	cal	3,12864(21)
-	st	3,1748(13)
+	cal	3,13152(21)
+	st	3,1744(13)
 	cmpl	0,14,21
 	bne	progna3
 whenr:	l	0,0(1)
@@ -878,7 +878,7 @@ whenr:	l	0,0(1)
 	br	
 whener1:	cmpl	0,14,21
 	beq	whenr
-	cal	15,12864(21)
+	cal	15,13152(21)
 	b	errbal
 	.set	._unless,6
 	.globl	C.unless
@@ -893,8 +893,8 @@ unless:	cmp	0,14,22
 	bl	C.evalcar
 	l	16,0(1)
 	ai	1,1,4
-	cal	3,12896(21)
-	st	3,1748(13)
+	cal	3,13184(21)
+	st	3,1744(13)
 	cmpl	0,14,21
 	beq	progna3
 	oril	14,21,0
@@ -904,7 +904,7 @@ unlesr:	l	0,0(1)
 	br	
 unler1:	cmpl	0,14,21
 	beq	unlesr
-	cal	15,12896(21)
+	cal	15,13184(21)
 	b	errbal
 	.set	._cond,6
 	.globl	C.cond
@@ -929,8 +929,8 @@ cond1:	cmp	0,15,22
 	ai	1,1,4
 	cmpl	0,14,21
 	beq	cond1
-	cal	3,12928(21)
-	st	3,1748(13)
+	cal	3,13216(21)
+	st	3,1744(13)
 	cmp	0,16,22
 	bge	progna3
 	cmpl	0,16,21
@@ -946,7 +946,7 @@ conder1:	cmpl	0,14,21
 	l	15,0(1)
 	ai	1,1,4
 	b	cond1
-conder2:	cal	15,12928(21)
+conder2:	cal	15,13216(21)
 	b	errnla
 conder3:	oril	14,15,0
 	cmpl	0,14,21
@@ -955,7 +955,7 @@ conder3:	oril	14,15,0
 	ai	1,1,4
 	mtlr	0
 	br	
-conder4:	cal	15,12928(21)
+conder4:	cal	15,13216(21)
 	b	errbal
 	.set	._llor,6
 	.globl	C.llor
@@ -981,7 +981,7 @@ or2:	l	15,4(14)
 	bne	orer1
 	b	evalcar
 orer1:	oril	14,15,0
-orer2:	cal	15,12960(21)
+orer2:	cal	15,13248(21)
 	b	errbal
 	.set	._lland,6
 	.globl	C.lland
@@ -1013,7 +1013,7 @@ pret:	l	15,0(1)
 	mtlr	0
 	br	
 ander1:	oril	14,15,0
-ander2:	cal	15,12992(21)
+ander2:	cal	15,13280(21)
 	b	errbal
 	.set	._while,6
 	.globl	C.while
@@ -1026,8 +1026,8 @@ while:	cmp	0,14,22
 	b	while2
 while1:	l	14,0(1)
 	l	14,4(14)
-	cal	3,13024(21)
-	st	3,1748(13)
+	cal	3,13312(21)
+	st	3,1744(13)
 	.globl	C.iprogn
 	bl	C.iprogn
 while2:	l	14,0(1)
@@ -1043,7 +1043,7 @@ whileret:	l	0,0(1)
 	br	
 whiler:	cmpl	0,14,21
 	beq	whileret
-	cal	15,13024(21)
+	cal	15,13312(21)
 	b	errbal
 	.set	._until,6
 	.globl	C.until
@@ -1056,8 +1056,8 @@ until:	cmp	0,14,22
 	b	until2
 until1:	l	14,0(1)
 	l	14,4(14)
-	cal	3,13056(21)
-	st	3,1748(13)
+	cal	3,13344(21)
+	st	3,1744(13)
 	.globl	C.iprogn
 	bl	C.iprogn
 until2:	l	14,0(1)
@@ -1073,7 +1073,7 @@ untilret:	l	0,0(1)
 	br	
 untiler:	cmpl	0,14,21
 	beq	untilret
-	cal	15,13056(21)
+	cal	15,13344(21)
 	b	errbal
 	.set	._loop,6
 	.globl	C.loop
@@ -1082,8 +1082,8 @@ C.loop:	mflr	0
 	.globl	loop
 loop:	stu	14,-4(1)
 loop1:	l	14,0(1)
-	cal	3,13088(21)
-	st	3,1748(13)
+	cal	3,13376(21)
+	st	3,1744(13)
 	.globl	C.iprogn
 	bl	C.iprogn
 	b	loop1
@@ -1104,12 +1104,12 @@ frepeat:	cmp	0,14,22
 	cmpl	0,15,18
 	blt	repeat2
 	oril	14,15,0
-	cal	15,13120(21)
+	cal	15,13408(21)
 	b	errnia
 repeat1:	stu	14,-4(1)
 	stu	15,-4(1)
-	cal	3,13120(21)
-	st	3,1748(13)
+	cal	3,13408(21)
+	st	3,1744(13)
 	.globl	C.iprogn
 	bl	C.iprogn
 	l	15,0(1)
@@ -1124,7 +1124,7 @@ repeat2:	exts	15,15
 	b	cnttrue
 freper:	cmpl	0,14,21
 	beq	cnttrue
-	cal	15,13120(21)
+	cal	15,13408(21)
 	b	errbal
 	.set	._selectq,6
 	.globl	C.selectq
@@ -1175,28 +1175,28 @@ selec5:	cmp	0,16,22
 	oril	14,16,0
 selecer1:	cmpl	0,14,21
 	beq	cnpopj
-	cal	15,13152(21)
+	cal	15,13440(21)
 	b	errbal
 selecer2:	cmpl	0,15,21
 	beq	selec5
 	oril	14,15,0
-	cal	15,13152(21)
+	cal	15,13440(21)
 	b	errnla
 selec6:	l	14,0(1)
 	ai	1,1,4
 selec7:	oril	14,17,0
-	cal	3,13152(21)
-	st	3,1748(13)
+	cal	3,13440(21)
+	st	3,1744(13)
 	b	iprogn
 	.set	._map,5
 	.globl	C.map
 C.map:	mflr	0
 	stu	0,-4(1)
 	.globl	map
-map:	cal	15,13216(21)
+map:	cal	15,13504(21)
 	lil	3,0
 	stu	3,-4(1)
-	l	3,3408(13)
+	l	3,3404(13)
 	stu	3,-4(1)
 	oril	16,21,0
 allmap:	stu	17,-4(1)
@@ -1261,14 +1261,14 @@ map5:	l	0,0(1)
 	.globl	map6
 map6:	l	15,0(1)
 	ai	1,1,4
-	l	6,1188(13)
+	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.6
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.6:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	14,0(6)
 	st	15,4(6)
 	oril	15,6,0
@@ -1346,14 +1346,14 @@ mapun5:	l	0,0(1)
 	.globl	mapun6
 mapun6:	l	15,0(1)
 	ai	1,1,4
-	l	6,1188(13)
+	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.7
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.7:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	14,0(6)
 	st	15,4(6)
 	oril	15,6,0
@@ -1395,11 +1395,11 @@ mapc:	oril	16,21,0
 	stu	3,-4(1)
 	cmpli	0,17,2
 	bne	mapcn
-	l	3,3400(13)
+	l	3,3396(13)
 	stu	3,-4(1)
 	b	allmapun
-mapcn:	cal	15,13248(21)
-	l	3,3408(13)
+mapcn:	cal	15,13536(21)
+	l	3,3404(13)
 	stu	3,-4(1)
 	b	allmap
 	.set	._maplist,5
@@ -1408,10 +1408,10 @@ C.maplist:	mflr	0
 	stu	0,-4(1)
 	.globl	maplist
 maplist:	oril	16,21,0
-	cal	15,13280(21)
+	cal	15,13568(21)
 	lil	3,0
 	stu	3,-4(1)
-	l	3,3392(13)
+	l	3,3388(13)
 	stu	3,-4(1)
 	b	allmap
 	.set	._mapcar,5
@@ -1424,11 +1424,11 @@ mapcar:	oril	16,21,0
 	stu	3,-4(1)
 	cmpli	0,17,2
 	bne	mapcarn
-	l	3,3384(13)
+	l	3,3380(13)
 	stu	3,-4(1)
 	b	allmapun
-mapcarn:	cal	15,13312(21)
-	l	3,3392(13)
+mapcarn:	cal	15,13600(21)
+	l	3,3388(13)
 	stu	3,-4(1)
 	b	allmap
 	.set	._mapcon,5
@@ -1436,11 +1436,11 @@ mapcarn:	cal	15,13312(21)
 C.mapcon:	mflr	0
 	stu	0,-4(1)
 	.globl	mapcon
-mapcon:	cal	15,13344(21)
+mapcon:	cal	15,13632(21)
 	oril	16,21,0
 	lil	3,0
 	stu	3,-4(1)
-	l	3,3376(13)
+	l	3,3372(13)
 	stu	3,-4(1)
 	b	allmap
 	.set	._mapcan,5
@@ -1453,11 +1453,11 @@ mapcan:	oril	16,21,0
 	stu	3,-4(1)
 	cmpli	0,17,2
 	bne	mapcann
-	l	3,3368(13)
+	l	3,3364(13)
 	stu	3,-4(1)
 	b	allmapun
-mapcann:	cal	15,13376(21)
-	l	3,3376(13)
+mapcann:	cal	15,13664(21)
+	l	3,3372(13)
 	stu	3,-4(1)
 	b	allmap
 	.set	._fevery,5
@@ -1470,11 +1470,11 @@ fevery:	cal	16,96(21)
 	stu	3,-4(1)
 	cmpli	0,17,2
 	bne	feveryn
-	l	3,3360(13)
+	l	3,3356(13)
 	stu	3,-4(1)
 	b	allmapun
-feveryn:	cal	15,13408(21)
-	l	3,3356(13)
+feveryn:	cal	15,13696(21)
+	l	3,3352(13)
 	stu	3,-4(1)
 	b	allmap
 	.set	._fany,5
@@ -1487,11 +1487,11 @@ fany:	oril	16,21,0
 	stu	3,-4(1)
 	cmpli	0,17,2
 	bne	fanyn
-	l	3,3348(13)
+	l	3,3344(13)
 	stu	3,-4(1)
 	b	allmapun
-fanyn:	cal	15,13440(21)
-	l	3,3344(13)
+fanyn:	cal	15,13728(21)
+	l	3,3340(13)
 	stu	3,-4(1)
 	b	allmap
 	.set	._mapvect,3
@@ -1515,7 +1515,7 @@ mapvect1:	stu	14,-4(1)
 	ai	4,16,2
 	sli	4,4,2
 	lx	16,3,4
-	l	3,3336(13)
+	l	3,3332(13)
 	stu	3,-4(1)
 	stu	16,-4(1)
 	lil	17,1
@@ -1542,22 +1542,22 @@ mapvect8:	exts	17,17
 	mtlr	0
 	br	
 mapvect9:	oril	14,15,0
-	cal	15,13472(21)
+	cal	15,13760(21)
 	b	errvec
 	.set	._mapcoblist,2
 	.globl	C.mapcoblist
 C.mapcoblist:	mflr	0
 	stu	0,-4(1)
 	.globl	mapcoblist
-mapcoblist:	l	3,3328(13)
+mapcoblist:	l	3,3324(13)
 	stu	3,-4(1)
 allmapob:	oril	17,21,0
-	l	3,1224(13)
+	l	3,1220(13)
 	l	3,0(3)
 	l	16,4(3)
 	si	4,16,1
 	andil.	16,4,0xFFFF
-mapcob0:	l	3,1224(13)
+mapcob0:	l	3,1220(13)
 	l	3,0(3)
 	ai	4,16,2
 	sli	4,4,2
@@ -1614,14 +1614,14 @@ maplobco:	cmpl	0,14,21
 	ai	1,1,4
 	l	15,0(1)
 	ai	1,1,4
-	l	6,1188(13)
+	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.10
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.10:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	15,0(6)
 	st	17,4(6)
 	oril	17,6,0
@@ -1640,7 +1640,7 @@ mapcobco:	cmp	0,14,22
 C.maploblist:	mflr	0
 	stu	0,-4(1)
 	.globl	maploblist
-maploblist:	l	3,3320(13)
+maploblist:	l	3,3316(13)
 	stu	3,-4(1)
 	b	allmapob
 	.set	._mapoblist,2
@@ -1648,7 +1648,7 @@ maploblist:	l	3,3320(13)
 C.mapoblist:	mflr	0
 	stu	0,-4(1)
 	.globl	mapoblist
-mapoblist:	l	3,3312(13)
+mapoblist:	l	3,3308(13)
 	stu	3,-4(1)
 	b	allmapob
 	.set	._quote,6
@@ -1665,22 +1665,22 @@ quote:	l	15,4(14)
 	mtlr	0
 	br	
 quoterr:	lil	14,1
-	cal	15,13600(21)
+	cal	15,13888(21)
 	b	errwna
 	.set	._lambda,6
 	.globl	C.lambda
 C.lambda:	mflr	0
 	stu	0,-4(1)
 	.globl	lambda
-lambda:	l	6,1188(13)
+lambda:	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.11
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.11:	l	3,4(6)
-	st	3,1188(13)
-	cal	3,13632(21)
+	st	3,1184(13)
+	cal	3,13920(21)
 	st	3,0(6)
 	st	14,4(6)
 	oril	14,6,0
@@ -1693,15 +1693,15 @@ lambda:	l	6,1188(13)
 C.flambda:	mflr	0
 	stu	0,-4(1)
 	.globl	flambda
-flambda:	l	6,1188(13)
+flambda:	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.12
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.12:	l	3,4(6)
-	st	3,1188(13)
-	cal	3,13664(21)
+	st	3,1184(13)
+	cal	3,13952(21)
 	st	3,0(6)
 	st	14,4(6)
 	oril	14,6,0
@@ -1714,15 +1714,15 @@ flambda:	l	6,1188(13)
 C.mlambda:	mflr	0
 	stu	0,-4(1)
 	.globl	mlambda
-mlambda:	l	6,1188(13)
+mlambda:	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.cnt.13
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .cnt.13:	l	3,4(6)
-	st	3,1188(13)
-	cal	3,13696(21)
+	st	3,1184(13)
+	cal	3,13984(21)
 	st	3,0(6)
 	st	14,4(6)
 	oril	14,6,0
@@ -1735,7 +1735,7 @@ mlambda:	l	6,1188(13)
 C.comment:	mflr	0
 	stu	0,-4(1)
 	.globl	comment
-comment:	cal	14,13760(21)
+comment:	cal	14,14048(21)
 	l	0,0(1)
 	ai	1,1,4
 	mtlr	0
@@ -1745,12 +1745,12 @@ comment:	cal	14,13760(21)
 C.llident:	mflr	0
 	stu	0,-4(1)
 	.globl	llident
-llident:	l	3,1220(13)
+llident:	l	3,1216(13)
 	cmpli	0,3,0
 	beq	.cnt.14
 	.globl	C.ithard
 	bl	C.ithard
-.cnt.14:	l	3,1072(13)
+.cnt.14:	l	3,1068(13)
 	cmpl	0,1,3
 	bge	.cnt.15
 	b	errfs
@@ -1759,7 +1759,7 @@ llident:	l	3,1220(13)
 	mtlr	0
 	br	
 progna3:	oril	14,16,0
-	l	3,1220(13)
+	l	3,1216(13)
 	cmpli	0,3,0
 	beq	.cnt.16
 	.globl	C.ithard
@@ -1776,9 +1776,9 @@ progna36:	b	evalcar
 C.eprogn:	mflr	0
 	stu	0,-4(1)
 	.globl	eprogn
-eprogn:	cal	3,13824(21)
-	st	3,1748(13)
-	l	3,1220(13)
+eprogn:	cal	3,14112(21)
+	st	3,1744(13)
+	l	3,1216(13)
 	cmpli	0,3,0
 	beq	.cnt.17
 	.globl	C.ithard
@@ -1789,13 +1789,13 @@ eprogn:	cal	3,13824(21)
 C.progn:	mflr	0
 	stu	0,-4(1)
 	.globl	progn
-progn:	cal	3,13792(21)
-	st	3,1748(13)
+progn:	cal	3,14080(21)
+	st	3,1744(13)
 	b	iprogn
 	.globl	C.iprogn
 C.iprogn:	mflr	0
 	stu	0,-4(1)
-iprogn:	l	3,1220(13)
+iprogn:	l	3,1216(13)
 	cmpli	0,3,0
 	beq	.cnt.18
 	.globl	C.ithard
@@ -1821,8 +1821,8 @@ prog1:	cmp	0,14,22
 	l	4,0(1)
 	st	14,0(1)
 	oril	14,4,0
-	cal	3,13856(21)
-	st	3,1748(13)
+	cal	3,14144(21)
+	st	3,1744(13)
 	.globl	C.iprogn
 	bl	C.iprogn
 	l	14,0(1)
@@ -1833,7 +1833,7 @@ prog1r:	l	0,0(1)
 	br	
 prog1e:	cmpl	0,14,21
 	beq	prog1r
-	cal	15,13856(21)
+	cal	15,14144(21)
 	b	errbal
 	.set	._prog2,6
 	.globl	C.prog2
@@ -1857,8 +1857,8 @@ prog2:	cmp	0,14,22
 	l	4,0(1)
 	st	14,0(1)
 	oril	14,4,0
-	cal	3,13920(21)
-	st	3,1748(13)
+	cal	3,14208(21)
+	st	3,1744(13)
 	.globl	C.iprogn
 	bl	C.iprogn
 	l	14,0(1)
@@ -1869,5 +1869,5 @@ prog2r:	l	0,0(1)
 	br	
 prog2e:	cmpl	0,14,21
 	beq	prog2r
-	cal	15,13920(21)
+	cal	15,14208(21)
 	b	errbal

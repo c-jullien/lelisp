@@ -23,16 +23,16 @@
 C.ini_bll:	mflr	0
 	stu	0,-4(1)
 ini_bll:	lil	14,3
-	cal	15,9221(13)
-	l	16,2080(13)
+	cal	15,9285(13)
+	l	16,2076(13)
 	cal	17,164(13)
 	lil	3,._loc
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9224(13)
-	l	16,2076(13)
+	cal	15,9288(13)
+	l	16,2072(13)
 	cal	17,164(13)
 	lil	3,._locint
 	stu	3,-4(1)
@@ -41,64 +41,64 @@ ini_bll:	lil	14,3
 	cal	3,224(21)
 	st	3,12(14)
 	lil	14,3
-	cal	15,9230(13)
-	l	16,2072(13)
+	cal	15,9294(13)
+	l	16,2068(13)
 	cal	17,164(13)
 	lil	3,._vag
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9233(13)
-	l	16,2044(13)
+	cal	15,9297(13)
+	l	16,2040(13)
 	cal	17,164(13)
 	lil	3,._memory
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,9239(13)
-	l	16,2040(13)
+	cal	15,9303(13)
+	l	16,2036(13)
 	cal	17,164(13)
 	lil	3,._bltmemory
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9248(13)
-	l	16,2068(13)
+	cal	15,9312(13)
+	l	16,2064(13)
 	cal	17,164(13)
 	lil	3,._addadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,9254(13)
-	l	16,2064(13)
+	cal	15,9318(13)
+	l	16,2060(13)
 	cal	17,164(13)
 	lil	3,._incradr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9261(13)
-	l	16,2060(13)
+	cal	15,9325(13)
+	l	16,2056(13)
 	cal	17,164(13)
 	lil	3,._subadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,9267(13)
-	l	16,2056(13)
+	cal	15,9331(13)
+	l	16,2052(13)
 	cal	17,164(13)
 	lil	3,._gtadr
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,9272(13)
-	l	16,2052(13)
+	cal	15,9336(13)
+	l	16,2048(13)
 	cal	17,164(13)
 	lil	3,._accode
 	stu	3,-4(1)
@@ -107,8 +107,8 @@ ini_bll:	lil	14,3
 	cal	3,224(21)
 	st	3,12(14)
 	lil	14,5
-	cal	15,9277(13)
-	l	16,2048(13)
+	cal	15,9341(13)
+	l	16,2044(13)
 	cal	17,164(13)
 	lil	3,._aecode
 	stu	3,-4(1)
@@ -117,24 +117,24 @@ ini_bll:	lil	14,3
 	cal	3,224(21)
 	st	3,12(14)
 	lil	14,10
-	cal	15,9282(13)
-	l	16,2036(13)
+	cal	15,9346(13)
+	l	16,2032(13)
 	cal	17,164(13)
 	lil	3,._precomp
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,9292(13)
-	l	16,2032(13)
+	cal	15,9356(13)
+	l	16,2028(13)
 	cal	17,164(13)
 	lil	3,._llcall
 	stu	3,-4(1)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,9296(13)
-	l	16,2028(13)
+	cal	15,9360(13)
+	l	16,2024(13)
 	cal	17,164(13)
 	lil	3,._llcaln
 	stu	3,-4(1)
@@ -153,14 +153,14 @@ loc:	sri	15,14,16
 	andil.	14,14,0xFFFF
 	cmpli	0,15,0
 	beq	loc9
-	l	6,1188(13)
+	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.bll.1
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .bll.1:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	15,0(6)
 	st	14,4(6)
 	oril	14,6,0
@@ -187,7 +187,7 @@ locint:	sri	15,14,16
 C.vag:	mflr	0
 	stu	0,-4(1)
 	.globl	vag
-vag:	cal	15,23488(21)
+vag:	cal	15,23776(21)
 	b	vaga1
 	.globl	C.vaga1
 C.vaga1:	mflr	0
@@ -210,7 +210,7 @@ vagret:	l	0,0(1)
 	br	
 vagc:	cmpl	0,14,18
 	bge	vagerr
-	l	4,1108(13)
+	l	4,1104(13)
 	cmpl	0,14,4
 	blt	vagret
 	cmpl	0,14,18
@@ -243,7 +243,7 @@ vaga3ret:	l	0,0(1)
 	br	
 vaga3c:	cmpl	0,16,18
 	bge	vagerr3
-	l	4,1108(13)
+	l	4,1104(13)
 	cmpl	0,16,4
 	blt	vaga3ret
 	cmpl	0,16,18
@@ -258,8 +258,8 @@ vaga3c:	cmpl	0,16,18
 C.addadr:	mflr	0
 	stu	0,-4(1)
 	.globl	addadr
-addadr:	cal	3,23584(21)
-	st	3,2020(13)
+addadr:	cal	3,23872(21)
+	st	3,2016(13)
 	.globl	C.adrverif
 	bl	C.adrverif
 	a	3,14,15
@@ -278,8 +278,8 @@ C.incradr:	mflr	0
 	stu	0,-4(1)
 	.globl	incradr
 incradr:	stu	14,-4(1)
-	cal	3,23616(21)
-	st	3,2020(13)
+	cal	3,23904(21)
+	st	3,2016(13)
 	.globl	C.adrverif
 	bl	C.adrverif
 	a	3,14,15
@@ -309,14 +309,14 @@ incadr2:	cmpli	0,16,0xFFFF
 	ai	1,1,4
 	mtlr	0
 	br	
-incadr1:	l	6,1188(13)
+incadr1:	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.bll.2
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .bll.2:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	16,0(6)
 	st	14,4(6)
 	oril	14,6,0
@@ -329,8 +329,8 @@ incadr3:	l	0,0(1)
 C.subadr:	mflr	0
 	stu	0,-4(1)
 	.globl	subadr
-subadr:	cal	3,23648(21)
-	st	3,2020(13)
+subadr:	cal	3,23936(21)
+	st	3,2016(13)
 	.globl	C.adrverif
 	bl	C.adrverif
 	stu	16,-4(1)
@@ -364,8 +364,8 @@ subadr:	cal	3,23648(21)
 C.gtadr:	mflr	0
 	stu	0,-4(1)
 	.globl	gtadr
-gtadr:	cal	3,23680(21)
-	st	3,2020(13)
+gtadr:	cal	3,23968(21)
+	st	3,2016(13)
 	.globl	C.adrverif
 	bl	C.adrverif
 	cmpl	0,16,17
@@ -464,7 +464,7 @@ adrver3:	l	16,0(14)
 	mtlr	0
 	br	
 adrerr2:	oril	14,15,0
-adrerr1:	l	15,2020(13)
+adrerr1:	l	15,2016(13)
 	b	errnda
 adrcreat:	cmpli	0,16,0
 	bne	adrcrea1
@@ -480,14 +480,14 @@ adrcrea1:	cmpli	0,16,0xFFFF
 	exts	3,14
 	cmpi	0,3,0
 	blt	adrcrear
-adrcrea2:	l	6,1188(13)
+adrcrea2:	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.bll.3
 	.globl	C.gccons
 	bl	C.gccons
-	l	6,1188(13)
+	l	6,1184(13)
 .bll.3:	l	3,4(6)
-	st	3,1188(13)
+	st	3,1184(13)
 	st	16,0(6)
 	st	14,4(6)
 	oril	14,6,0
@@ -500,7 +500,7 @@ adrcrear:	l	0,0(1)
 C.accode:	mflr	0
 	stu	0,-4(1)
 	.globl	accode
-accode:	cal	15,23712(21)
+accode:	cal	15,24000(21)
 	cmpli	0,17,0
 	beq	accodeg
 	cmpli	0,17,1
@@ -511,22 +511,22 @@ accodes:	l	14,0(1)
 	ai	1,1,4
 	.globl	C.vaga1
 	bl	C.vaga1
-	st	14,1088(13)
-accodeg:	l	14,1088(13)
+	st	14,1084(13)
+accodeg:	l	14,1084(13)
 	b	loc
 	.set	._aecode,1
 	.globl	C.aecode
 C.aecode:	mflr	0
 	stu	0,-4(1)
 	.globl	aecode
-aecode:	l	14,1092(13)
+aecode:	l	14,1088(13)
 	b	loc
 	.set	._memory,5
 	.globl	C.memory
 C.memory:	mflr	0
 	stu	0,-4(1)
 	.globl	memory
-memory:	cal	15,23520(21)
+memory:	cal	15,23808(21)
 	cmpli	0,17,2
 	bne	memor2
 	l	14,0(1)
@@ -560,7 +560,7 @@ C.bltmemory:	mflr	0
 	stu	0,-4(1)
 	.globl	bltmemory
 bltmemory:	stu	15,-4(1)
-	cal	15,23552(21)
+	cal	15,23840(21)
 	.globl	C.vaga1
 	bl	C.vaga1
 	.globl	C.vaga3
@@ -609,7 +609,7 @@ llcall:	cmpli	0,17,4
 	ai	1,1,4
 	mtlr	0
 	br	
-callerr1:	cal	15,23808(21)
+callerr1:	cal	15,24096(21)
 	lil	14,4
 	b	errwna
 	.set	._llcaln,3
@@ -618,14 +618,14 @@ C.llcaln:	mflr	0
 	stu	0,-4(1)
 	.globl	llcaln
 llcaln:	oril	16,15,0
-	cal	15,23840(21)
+	cal	15,24128(21)
 	.globl	C.vaga1
 	bl	C.vaga1
 	lil	17,0
 	b	calln3
 calln2:	l	3,0(16)
 	stu	3,-4(1)
-	l	3,1072(13)
+	l	3,1068(13)
 	cmpl	0,1,3
 	bge	.bll.4
 	b	errfs
