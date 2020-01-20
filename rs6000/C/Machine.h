@@ -166,21 +166,17 @@ extern int **prtmsgs;   	/* in save-core ! */
 
 #include <sys/stat.h>           /* for every body */
 #include <stdio.h>              /* for ios */
+#include <stdlib.h>             /* for libraries */
+#include <string.h>             /* for strings */
 #include <errno.h>              /* for perror */
 #include <fcntl.h>              /* for open and fcntl */
 #include <time.h>               /* for date */
-
 #include <sys/time.h>           /* for runtime */
-
 #include <sys/times.h>
-
 #include <sys/param.h>
-
 #include <termios.h>            /* for POSIX tty */
-
 #include <dirent.h>             /* for struct DIR & opendir */
-
-#include <unistd.h>		/* for pbs STDC/POSIX/AnsiC */
+#include <unistd.h>		          /* for pbs STDC/POSIX/AnsiC */
 #ifndef __sys_signal_h
 #include <signal.h>		/* for UNIX signals */
 #endif
