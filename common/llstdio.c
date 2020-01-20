@@ -379,7 +379,7 @@ int outfl (int canal, int length, char *buff)
         return(0);
 }
 
-#if !defined(NBSYST) || ((NBSYST != 33) && (NBSYST != 66))
+#if !defined(NBSYST) || ((NBSYST != 33) && (NBSYST != 66) && (NBSYST != 47))
 
 /* llseek: set <chan> channel at position <n1>*<n2>
    ------------------------------------------------
