@@ -61,7 +61,7 @@
 C.ini_nbs:	mflr	0
 	stu	0,-4(1)
 ini_nbs:	lil	14,8
-	cal	15,8350(13)
+	cal	15,8409(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
@@ -69,7 +69,7 @@ ini_nbs:	lil	14,8
 	cal	3,128(21)
 	st	3,12(14)
 	lil	14,7
-	cal	15,8358(13)
+	cal	15,8417(13)
 	l	16,2704(13)
 	cal	17,164(13)
 	lil	3,._numberp
@@ -77,7 +77,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,8365(13)
+	cal	15,8424(13)
 	l	16,2700(13)
 	cal	17,164(13)
 	lil	3,._intgerp
@@ -85,7 +85,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,8373(13)
+	cal	15,8432(13)
 	l	16,2696(13)
 	cal	17,164(13)
 	lil	3,._rationalp
@@ -93,7 +93,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,8382(13)
+	cal	15,8441(13)
 	l	16,2692(13)
 	cal	17,164(13)
 	lil	3,._llfloat
@@ -101,7 +101,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8387(13)
+	cal	15,8446(13)
 	l	16,2684(13)
 	cal	17,164(13)
 	lil	3,._llfix
@@ -109,7 +109,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,8390(13)
+	cal	15,8449(13)
 	l	16,2688(13)
 	cal	17,164(13)
 	lil	3,._lltrunc
@@ -117,7 +117,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8398(13)
+	cal	15,8457(13)
 	l	16,2680(13)
 	cal	17,164(13)
 	lil	3,._gaadd1
@@ -125,7 +125,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8400(13)
+	cal	15,8459(13)
 	l	16,2676(13)
 	cal	17,164(13)
 	lil	3,._gasub1
@@ -133,7 +133,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8402(13)
+	cal	15,8461(13)
 	l	16,2672(13)
 	cal	17,164(13)
 	lil	3,._gaabs
@@ -141,7 +141,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,1
-	cal	15,8405(13)
+	cal	15,8464(13)
 	l	16,2668(13)
 	cal	17,164(13)
 	lil	3,._gaplus
@@ -149,7 +149,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8406(13)
+	cal	15,8465(13)
 	l	16,2660(13)
 	cal	17,164(13)
 	lil	3,._gadinv
@@ -157,7 +157,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,1
-	cal	15,8408(13)
+	cal	15,8467(13)
 	l	16,2656(13)
 	cal	17,164(13)
 	lil	3,._gadiff
@@ -165,7 +165,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,1
-	cal	15,8409(13)
+	cal	15,8468(13)
 	l	16,2664(13)
 	cal	17,164(13)
 	lil	3,._gatimes
@@ -173,7 +173,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8410(13)
+	cal	15,8469(13)
 	l	16,2648(13)
 	cal	17,164(13)
 	lil	3,._gadrev
@@ -181,7 +181,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8412(13)
+	cal	15,8471(13)
 	l	16,2644(13)
 	cal	17,164(13)
 	lil	3,._gadiv
@@ -189,7 +189,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,1
-	cal	15,8414(13)
+	cal	15,8473(13)
 	l	16,2644(13)
 	cal	17,164(13)
 	lil	3,._gadiv
@@ -197,7 +197,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8415(13)
+	cal	15,8474(13)
 	l	16,2636(13)
 	cal	17,164(13)
 	lil	3,._gaquomod
@@ -205,7 +205,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,8418(13)
+	cal	15,8477(13)
 	l	16,2636(13)
 	cal	17,164(13)
 	lil	3,._gaquomod
@@ -213,7 +213,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,8426(13)
+	cal	15,8485(13)
 	l	16,2636(13)
 	cal	17,164(13)
 	lil	3,._gaquomod
@@ -221,21 +221,21 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8432(13)
+	cal	15,8491(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,3
-	cal	15,8434(13)
+	cal	15,8493(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	3,0
 	st	3,0(14)
-	cal	3,18912(21)
+	cal	3,19200(21)
 	st	3,12(14)
 	lil	14,6
-	cal	15,8437(13)
+	cal	15,8496(13)
 	l	16,2632(13)
 	cal	17,164(13)
 	lil	3,._gamod
@@ -243,7 +243,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8443(13)
+	cal	15,8502(13)
 	l	16,2620(13)
 	cal	17,164(13)
 	lil	3,._gacomp
@@ -251,7 +251,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,1
-	cal	15,8446(13)
+	cal	15,8505(13)
 	l	16,2600(13)
 	cal	17,164(13)
 	lil	3,._gaeqen
@@ -259,7 +259,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8447(13)
+	cal	15,8506(13)
 	l	16,2596(13)
 	cal	17,164(13)
 	lil	3,._ganeqn
@@ -267,7 +267,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8449(13)
+	cal	15,8508(13)
 	l	16,2596(13)
 	cal	17,164(13)
 	lil	3,._ganeqn
@@ -275,7 +275,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8451(13)
+	cal	15,8510(13)
 	l	16,2588(13)
 	cal	17,164(13)
 	lil	3,._gage
@@ -283,7 +283,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,1
-	cal	15,8453(13)
+	cal	15,8512(13)
 	l	16,2592(13)
 	cal	17,164(13)
 	lil	3,._gagt
@@ -291,7 +291,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,2
-	cal	15,8454(13)
+	cal	15,8513(13)
 	l	16,2580(13)
 	cal	17,164(13)
 	lil	3,._gale
@@ -299,7 +299,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,1
-	cal	15,8456(13)
+	cal	15,8515(13)
 	l	16,2584(13)
 	cal	17,164(13)
 	lil	3,._galt
@@ -307,7 +307,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,8457(13)
+	cal	15,8516(13)
 	l	16,2616(13)
 	cal	17,164(13)
 	lil	3,._zerop
@@ -315,7 +315,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,8462(13)
+	cal	15,8521(13)
 	l	16,2608(13)
 	cal	17,164(13)
 	lil	3,._plusp
@@ -323,7 +323,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,8467(13)
+	cal	15,8526(13)
 	l	16,2612(13)
 	cal	17,164(13)
 	lil	3,._minusp
@@ -331,7 +331,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8473(13)
+	cal	15,8532(13)
 	l	16,2576(13)
 	cal	17,164(13)
 	lil	3,._min
@@ -339,7 +339,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8476(13)
+	cal	15,8535(13)
 	l	16,2572(13)
 	cal	17,164(13)
 	lil	3,._max
@@ -347,7 +347,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8479(13)
+	cal	15,8538(13)
 	l	16,2568(13)
 	cal	17,164(13)
 	lil	3,._llsin
@@ -355,7 +355,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8482(13)
+	cal	15,8541(13)
 	l	16,2564(13)
 	cal	17,164(13)
 	lil	3,._llcos
@@ -363,7 +363,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,8485(13)
+	cal	15,8544(13)
 	l	16,2560(13)
 	cal	17,164(13)
 	lil	3,._llasin
@@ -371,7 +371,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,8489(13)
+	cal	15,8548(13)
 	l	16,2556(13)
 	cal	17,164(13)
 	lil	3,._llacos
@@ -379,7 +379,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,8493(13)
+	cal	15,8552(13)
 	l	16,2552(13)
 	cal	17,164(13)
 	lil	3,._llatan
@@ -387,7 +387,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8497(13)
+	cal	15,8556(13)
 	l	16,2548(13)
 	cal	17,164(13)
 	lil	3,._llexp
@@ -395,7 +395,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,8500(13)
+	cal	15,8559(13)
 	l	16,2544(13)
 	cal	17,164(13)
 	lil	3,._lllog
@@ -403,7 +403,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,8503(13)
+	cal	15,8562(13)
 	l	16,2540(13)
 	cal	17,164(13)
 	lil	3,._lllog10
@@ -411,7 +411,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,8508(13)
+	cal	15,8567(13)
 	l	16,2536(13)
 	cal	17,164(13)
 	lil	3,._llpower
@@ -419,7 +419,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,8513(13)
+	cal	15,8572(13)
 	l	16,2532(13)
 	cal	17,164(13)
 	lil	3,._llsqrt
@@ -427,7 +427,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,20
-	cal	15,8517(13)
+	cal	15,8576(13)
 	l	16,2528(13)
 	cal	17,164(13)
 	lil	3,._llfixmax
@@ -435,7 +435,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,20
-	cal	15,8537(13)
+	cal	15,8596(13)
 	l	16,2524(13)
 	cal	17,164(13)
 	lil	3,._llfixmin
@@ -443,7 +443,7 @@ ini_nbs:	lil	14,8
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,14
-	cal	15,8557(13)
+	cal	15,8616(13)
 	l	16,2520(13)
 	cal	17,164(13)
 	lil	3,._llminus0
@@ -577,7 +577,7 @@ bangen:	stu	16,-4(1)
 	cmpl	0,14,21
 	bne	bangencal
 	l	15,0(1)
-	cal	14,18272(21)
+	cal	14,18560(21)
 	l	14,0(14)
 	cmpl	0,14,21
 	beq	bangerr
@@ -662,7 +662,7 @@ numberp:	cmpl	0,14,18
 	blt	nbpt
 	cmpi	0,14,0
 	blt	nbpt
-	cal	15,18304(21)
+	cal	15,18592(21)
 nbpgen:	stu	14,-4(1)
 	.globl	C.gettype
 	bl	C.gettype
@@ -692,7 +692,7 @@ intgerp:	cmpl	0,14,18
 	blt	nbpt
 	cmpi	0,14,0
 	blt	nbpnil
-	cal	15,18336(21)
+	cal	15,18624(21)
 	b	nbpgen
 	.set	._rationalp,2
 	.globl	C.rationalp
@@ -703,7 +703,7 @@ rationalp:	cmpl	0,14,18
 	blt	nbpt
 	cmpi	0,14,0
 	blt	nbpnil
-	cal	15,18368(21)
+	cal	15,18656(21)
 	b	nbpgen
 	.set	._llfloat,2
 	.globl	C.llfloat
@@ -736,14 +736,14 @@ llfloatr:	l	0,0(1)
 	br	
 llfloatf:	cmpi	0,14,0
 	blt	llfloatr
-	cal	16,18400(21)
+	cal	16,18688(21)
 	b	bangen1
 	.set	._lltrunc,2
 	.globl	C.lltrunc
 C.lltrunc:	mflr	0
 	stu	0,-4(1)
 	.globl	lltrunc
-lltrunc:lltrunc1:	cal	16,18464(21)
+lltrunc:lltrunc1:	cal	16,18752(21)
 	cmpl	0,14,18
 	blt	lltrcret
 	cmpi	0,14,0
@@ -833,7 +833,7 @@ gaadd2:	cmpi	0,14,0
 	br	
 gaadd3:	oril	14,15,0
 	lil	15,1
-	cal	16,18592(21)
+	cal	16,18880(21)
 	b	bangen2
 	.set	._gasub1,2
 	.globl	C.gasub1
@@ -876,7 +876,7 @@ gasub2:	cmpi	0,14,0
 	br	
 gasub3:	oril	14,15,0
 	lil	15,1
-	cal	16,18656(21)
+	cal	16,18944(21)
 	b	bangen2
 	.set	._gaabs,2
 	.globl	C.gaabs
@@ -932,7 +932,7 @@ gaabs2:	cmpi	0,14,0
 	ai	1,1,4
 	mtlr	0
 	br	
-gaabs3:	cal	16,18560(21)
+gaabs3:	cal	16,18848(21)
 	b	bangen1
 	.set	._gaplus,5
 	.globl	C.gaplus
@@ -1000,7 +1000,7 @@ gapplus:	cmpli	0,17,0
 	cmpi	0,14,0
 	blt	gaprret
 	lil	15,0
-	cal	16,18592(21)
+	cal	16,18880(21)
 	b	bangen2
 gaprt0:	oril	14,17,0
 gaprret:	l	0,0(1)
@@ -1115,7 +1115,7 @@ gaplfl3:	exts	17,17
 gaplgn0:	sli	3,17,2
 	lx	15,1,3
 gaplgn1:	stu	17,-4(1)
-	cal	16,18592(21)
+	cal	16,18880(21)
 	.globl	C.bangen2
 	bl	C.bangen2
 	l	17,0(1)
@@ -1187,7 +1187,7 @@ gattimes:	cmpli	0,17,0
 	cmpi	0,14,0
 	blt	gatrret
 	lil	15,1
-	cal	16,18688(21)
+	cal	16,18976(21)
 	b	bangen2
 gatrret:	l	0,0(1)
 	ai	1,1,4
@@ -1306,7 +1306,7 @@ gatifl3:	exts	17,17
 gatign0:	sli	3,17,2
 	lx	15,1,3
 gatign1:	stu	17,-4(1)
-	cal	16,18688(21)
+	cal	16,18976(21)
 	.globl	C.bangen2
 	bl	C.bangen2
 	l	17,0(1)
@@ -1342,7 +1342,7 @@ gadneg:	lil	14,0
 	blt	gadneg2
 	cmpi	0,15,0
 	blt	gadneg3
-gadneg1:	cal	16,18624(21)
+gadneg1:	cal	16,18912(21)
 	oril	14,15,0
 	b	bangen1
 gadneg2:	exts	3,15
@@ -1408,7 +1408,7 @@ gadiff2i:	oril	16,14,0
 	cmpi	0,14,0
 	blt	gadiffp3
 gadiffp0:	oril	14,16,0
-	cal	16,18656(21)
+	cal	16,18944(21)
 	b	bangen2
 gadiffp1:	cmpl	0,15,18
 	bge	gadiffp2
@@ -1529,7 +1529,7 @@ garev:	cmpli	0,15,1
 	blt	garev1
 	cmpi	0,15,0
 	blt	garev2
-garev1:	cal	16,18720(21)
+garev1:	cal	16,19008(21)
 	oril	14,15,0
 	b	bangen1
 garev2:	lil	14,1
@@ -1579,7 +1579,7 @@ gadivt:	oril	15,14,0
 	cmpi	0,14,0
 	blt	gadivt3
 gadivt0:	oril	14,16,0
-	cal	16,18784(21)
+	cal	16,19072(21)
 	b	bangen2
 gadivt1:	cmpl	0,15,18
 	bge	gadivt2
@@ -1681,7 +1681,7 @@ gadiv3:	si	4,17,1
 C.gaquomod:	mflr	0
 	stu	0,-4(1)
 	.globl	gaquomod
-gaquomod:	cal	16,18880(21)
+gaquomod:	cal	16,19168(21)
 	cmpi	0,14,0
 	blt	bangen2
 	cmpi	0,15,0
@@ -1743,14 +1743,14 @@ gamodr3:	exts	3,15
 	exts	6,4
 	cmpl	0,6,4
 	bne	gaquomodg
-gamodret:	cal	15,18944(21)
+gamodret:	cal	15,19232(21)
 	st	17,0(15)
 	l	0,0(1)
 	ai	1,1,4
 	mtlr	0
 	br	
 gaquomodg:	oril	14,16,0
-	cal	16,18880(21)
+	cal	16,19168(21)
 	b	bangen2
 gaquo2:	cmpi	0,15,0
 	blt	gaquo4
@@ -1819,7 +1819,7 @@ C.gamod:	mflr	0
 	.globl	gamod
 gamod:	.globl	C.gaquomod
 	bl	C.gaquomod
-	cal	14,18944(21)
+	cal	14,19232(21)
 	l	14,0(14)
 	l	0,0(1)
 	ai	1,1,4
@@ -1972,7 +1972,7 @@ gacomgn0:	sli	3,17,2
 gacomgn1:	stu	17,-4(1)
 	stu	16,-4(1)
 	stu	15,-4(1)
-	cal	16,19008(21)
+	cal	16,19296(21)
 	.globl	C.bangensp2
 	bl	C.bangensp2
 	l	15,0(1)
@@ -2069,7 +2069,7 @@ tworet:	l	17,0(1)
 C.gacomp:	mflr	0
 	stu	0,-4(1)
 	.globl	gacomp
-gacomp:	cal	16,19008(21)
+gacomp:	cal	16,19296(21)
 	cmpl	0,14,18
 	blt	gacomp5
 	cmpi	0,14,0
@@ -2162,7 +2162,7 @@ gacomp6:	cmpl	0,14,15
 C.zerop:	mflr	0
 	stu	0,-4(1)
 	.globl	zerop
-zerop:	cal	3,19264(21)
+zerop:	cal	3,19552(21)
 	st	3,1956(13)
 	stu	14,-4(1)
 	lil	3,0
@@ -2175,7 +2175,7 @@ zerop:	cal	3,19264(21)
 C.minusp:	mflr	0
 	stu	0,-4(1)
 	.globl	minusp
-minusp:	cal	3,19328(21)
+minusp:	cal	3,19616(21)
 	st	3,1956(13)
 	stu	14,-4(1)
 	lil	3,0
@@ -2188,7 +2188,7 @@ minusp:	cal	3,19328(21)
 C.plusp:	mflr	0
 	stu	0,-4(1)
 	.globl	plusp
-plusp:	cal	3,19296(21)
+plusp:	cal	3,19584(21)
 	st	3,1956(13)
 	stu	14,-4(1)
 	lil	3,0
@@ -2201,7 +2201,7 @@ gaeqn:	stu	16,-4(1)
 	stu	3,-4(1)
 	stu	14,-4(1)
 	stu	15,-4(1)
-	cal	3,19040(21)
+	cal	3,19328(21)
 	st	3,1956(13)
 	lil	17,2
 	lil	16,2
@@ -2237,7 +2237,7 @@ gaeqqn0:	l	0,0(1)
 	br	
 gaeqen1:	stu	14,-4(1)
 	stu	15,-4(1)
-gaeqen2:	cal	3,19040(21)
+gaeqen2:	cal	3,19328(21)
 	st	3,1956(13)
 	lil	16,2
 	b	gacom
@@ -2259,7 +2259,7 @@ ganen0:	l	0,0(1)
 	br	
 ganen1:	stu	14,-4(1)
 	stu	15,-4(1)
-	cal	3,19104(21)
+	cal	3,19392(21)
 	st	3,1956(13)
 	lil	16,5
 	lil	17,2
@@ -2269,7 +2269,7 @@ ganen1:	stu	14,-4(1)
 C.gagt:	mflr	0
 	stu	0,-4(1)
 	.globl	gagt
-gagt:	cal	3,19168(21)
+gagt:	cal	3,19456(21)
 	st	3,1956(13)
 	lil	16,1
 	b	gacom
@@ -2278,7 +2278,7 @@ gagt:	cal	3,19168(21)
 C.gage:	mflr	0
 	stu	0,-4(1)
 	.globl	gage
-gage:	cal	3,19136(21)
+gage:	cal	3,19424(21)
 	st	3,1956(13)
 	lil	16,3
 	b	gacom
@@ -2287,7 +2287,7 @@ gage:	cal	3,19136(21)
 C.galt:	mflr	0
 	stu	0,-4(1)
 	.globl	galt
-galt:	cal	3,19232(21)
+galt:	cal	3,19520(21)
 	st	3,1956(13)
 	lil	16,4
 	b	gacom
@@ -2296,7 +2296,7 @@ galt:	cal	3,19232(21)
 C.gale:	mflr	0
 	stu	0,-4(1)
 	.globl	gale
-gale:	cal	3,19200(21)
+gale:	cal	3,19488(21)
 	st	3,1956(13)
 	lil	16,6
 	b	gacom
@@ -2332,7 +2332,7 @@ min3:	exts	17,17
 	mtlr	0
 	br	
 minerr:	lil	14,1
-	cal	15,19360(21)
+	cal	15,19648(21)
 	b	errwna
 	.globl	C.mintwo
 C.mintwo:	mflr	0
@@ -2373,7 +2373,7 @@ max3:	exts	17,17
 	mtlr	0
 	br	
 maxerr:	lil	14,1
-	cal	15,19392(21)
+	cal	15,19680(21)
 	b	errwna
 	.globl	C.maxtwo
 C.maxtwo:	mflr	0
@@ -2387,7 +2387,7 @@ maxtwo:	stu	14,-4(1)
 C.llsin:	mflr	0
 	stu	0,-4(1)
 	.globl	llsin
-llsin:	cal	16,19424(21)
+llsin:	cal	16,19712(21)
 	cmpi	0,14,0
 	blt	sin2
 	cmpl	0,14,18
@@ -2439,7 +2439,7 @@ sin2:	a	3,14,14
 C.llcos:	mflr	0
 	stu	0,-4(1)
 	.globl	llcos
-llcos:	cal	16,19456(21)
+llcos:	cal	16,19744(21)
 	cmpi	0,14,0
 	blt	cos2
 	cmpl	0,14,18
@@ -2491,7 +2491,7 @@ cos2:	a	3,14,14
 C.llasin:	mflr	0
 	stu	0,-4(1)
 	.globl	llasin
-llasin:	cal	16,19488(21)
+llasin:	cal	16,19776(21)
 	cmpi	0,14,0
 	blt	asin2
 	cmpl	0,14,18
@@ -2570,7 +2570,7 @@ asin3:	a	3,14,14
 C.llacos:	mflr	0
 	stu	0,-4(1)
 	.globl	llacos
-llacos:	cal	16,19520(21)
+llacos:	cal	16,19808(21)
 	cmpi	0,14,0
 	blt	acos2
 	cmpl	0,14,18
@@ -2649,7 +2649,7 @@ acos3:	a	3,14,14
 C.llatan:	mflr	0
 	stu	0,-4(1)
 	.globl	llatan
-llatan:	cal	16,19552(21)
+llatan:	cal	16,19840(21)
 	cmpi	0,14,0
 	blt	atan2
 	cmpl	0,14,18
@@ -2701,7 +2701,7 @@ atan2:	a	3,14,14
 C.llexp:	mflr	0
 	stu	0,-4(1)
 	.globl	llexp
-llexp:	cal	16,19584(21)
+llexp:	cal	16,19872(21)
 	cmpi	0,14,0
 	blt	exp2
 	cmpl	0,14,18
@@ -2753,7 +2753,7 @@ exp2:	a	3,14,14
 C.lllog:	mflr	0
 	stu	0,-4(1)
 	.globl	lllog
-lllog:	cal	16,19616(21)
+lllog:	cal	16,19904(21)
 	cmpi	0,14,0
 	blt	log2
 	cmpl	0,14,18
@@ -2818,7 +2818,7 @@ log3:	a	3,14,14
 C.lllog10:	mflr	0
 	stu	0,-4(1)
 	.globl	lllog10
-lllog10:	cal	16,19648(21)
+lllog10:	cal	16,19936(21)
 	cmpi	0,14,0
 	blt	log102
 	cmpl	0,14,18
@@ -2883,7 +2883,7 @@ log103:	a	3,14,14
 C.llpower:	mflr	0
 	stu	0,-4(1)
 	.globl	llpower
-llpower:	cal	16,19680(21)
+llpower:	cal	16,19968(21)
 	cmpi	0,14,0
 	blt	power2
 	cmpl	0,14,18
@@ -2960,7 +2960,7 @@ power3:	a	3,14,14
 C.llsqrt:	mflr	0
 	stu	0,-4(1)
 	.globl	llsqrt
-llsqrt:	cal	16,19712(21)
+llsqrt:	cal	16,20000(21)
 	cmpi	0,14,0
 	blt	sqrt2
 	cmpl	0,14,18

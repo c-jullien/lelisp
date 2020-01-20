@@ -68,20 +68,20 @@ ini_read:	st	21,1424(13)
 	cal	3,224(21)
 	st	3,1452(13)
 	lil	14,14
-	cal	15,6347(13)
+	cal	15,6406(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	st	21,0(14)
 	lil	14,12
-	cal	15,6361(13)
+	cal	15,6420(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	st	21,0(14)
 	st	21,1452(13)
 	lil	14,4
-	cal	15,6373(13)
+	cal	15,6432(13)
 	l	16,4128(13)
 	cal	17,164(13)
 	lil	3,._lread
@@ -89,7 +89,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,6377(13)
+	cal	15,6436(13)
 	l	16,4124(13)
 	cal	17,164(13)
 	lil	3,._implode
@@ -97,7 +97,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,6384(13)
+	cal	15,6443(13)
 	l	16,4120(13)
 	cal	17,164(13)
 	lil	3,._implodech
@@ -105,7 +105,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6393(13)
+	cal	15,6452(13)
 	l	16,4116(13)
 	cal	17,164(13)
 	lil	3,._readch
@@ -113,7 +113,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6399(13)
+	cal	15,6458(13)
 	l	16,4108(13)
 	cal	17,164(13)
 	lil	3,._readcod
@@ -121,7 +121,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,6405(13)
+	cal	15,6464(13)
 	l	16,4104(13)
 	cal	17,164(13)
 	lil	3,._lcuread
@@ -129,7 +129,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6412(13)
+	cal	15,6471(13)
 	l	16,4100(13)
 	cal	17,164(13)
 	lil	3,._teread
@@ -137,7 +137,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6418(13)
+	cal	15,6477(13)
 	l	16,4096(13)
 	cal	17,164(13)
 	lil	3,._reread
@@ -145,7 +145,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,6424(13)
+	cal	15,6483(13)
 	l	16,4084(13)
 	cal	17,164(13)
 	lil	3,._readline
@@ -153,7 +153,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,6432(13)
+	cal	15,6491(13)
 	l	16,4076(13)
 	cal	17,164(13)
 	lil	3,._readstrg
@@ -161,7 +161,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,6442(13)
+	cal	15,6501(13)
 	l	16,4080(13)
 	cal	17,164(13)
 	lil	3,._stratom
@@ -169,7 +169,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,19
-	cal	15,6449(13)
+	cal	15,6508(13)
 	l	16,4072(13)
 	cal	17,164(13)
 	lil	3,._readdltd
@@ -177,7 +177,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6468(13)
+	cal	15,6527(13)
 	l	16,4092(13)
 	cal	17,164(13)
 	lil	3,._peekch
@@ -185,7 +185,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6474(13)
+	cal	15,6533(13)
 	l	16,4088(13)
 	cal	17,164(13)
 	lil	3,._peekcn
@@ -193,7 +193,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,6480(13)
+	cal	15,6539(13)
 	l	16,4052(13)
 	cal	17,164(13)
 	lil	3,._concatpk
@@ -201,7 +201,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,6490(13)
+	cal	15,6549(13)
 	l	16,4060(13)
 	cal	17,164(13)
 	lil	3,._fascii
@@ -209,7 +209,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6495(13)
+	cal	15,6554(13)
 	l	16,4056(13)
 	cal	17,164(13)
 	lil	3,._cascii
@@ -217,7 +217,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,6501(13)
+	cal	15,6560(13)
 	l	16,4048(13)
 	cal	17,164(13)
 	lil	3,._uppercase
@@ -225,7 +225,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,6510(13)
+	cal	15,6569(13)
 	l	16,4044(13)
 	cal	17,164(13)
 	lil	3,._lowercase
@@ -233,7 +233,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6519(13)
+	cal	15,6578(13)
 	l	16,4040(13)
 	cal	17,164(13)
 	lil	3,._asciip
@@ -241,7 +241,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6525(13)
+	cal	15,6584(13)
 	l	16,4036(13)
 	cal	17,164(13)
 	lil	3,._digitp
@@ -249,7 +249,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,6531(13)
+	cal	15,6590(13)
 	l	16,4032(13)
 	cal	17,164(13)
 	lil	3,._letterp
@@ -257,7 +257,7 @@ ini_read:	st	21,1424(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,6538(13)
+	cal	15,6597(13)
 	l	16,4028(13)
 	cal	17,164(13)
 	lil	3,._fibase
@@ -1338,7 +1338,7 @@ getcv1:	st	17,1416(13)
 	ai	1,1,4
 	mtlr	0
 	br	
-getcv2:	cal	16,7104(21)
+getcv2:	cal	16,7392(21)
 	l	3,0(16)
 	cmpl	0,3,21
 	bne	getcv3
@@ -1433,7 +1433,7 @@ rddot2:	l	3,1444(13)
 	stb	4,8(3)
 	lil	15,1
 	b	rdpname
-rdpkgc:	cal	14,8416(21)
+rdpkgc:	cal	14,8704(21)
 	l	14,0(14)
 	b	rdpkgc2
 rdpkgc1:	oril	14,15,0
@@ -1624,7 +1624,7 @@ C.read2:	mflr	0
 	.globl	read2
 read2:	l	3,1428(13)
 	stu	3,-4(1)
-	cal	14,7328(21)
+	cal	14,7616(21)
 	l	6,1184(13)
 	cmpl	0,6,21
 	bne	.rea.24
@@ -1741,9 +1741,9 @@ erlec11:	lil	14,11
 erlec:	l	3,1436(13)
 	cmpl	0,3,21
 	bne	erlecc1
-	cal	15,7168(21)
+	cal	15,7456(21)
 	b	errsxt
-erlecc1:	cal	15,7200(21)
+erlecc1:	cal	15,7488(21)
 	st	21,1436(13)
 	st	21,1440(13)
 	b	errsxt
@@ -1760,7 +1760,7 @@ lread:	.globl	C.getcv
 	beq	lread
 	.globl	C.rereada4
 	bl	C.rereada4
-	cal	14,7136(21)
+	cal	14,7424(21)
 	l	3,0(14)
 	stu	3,-4(1)
 	cal	3,96(21)
@@ -1770,7 +1770,7 @@ lread:	.globl	C.getcv
 	bl	C.sysprot
 lreadend:	l	14,0(1)
 	ai	1,1,4
-	cal	17,7136(21)
+	cal	17,7424(21)
 	l	3,0(1)
 	st	3,0(17)
 	ai	1,1,4
@@ -1932,7 +1932,7 @@ reread9:	l	14,1424(13)
 	ai	1,1,4
 	mtlr	0
 	br	
-rereade:	cal	15,7392(21)
+rereade:	cal	15,7680(21)
 	b	errnla
 	.globl	C.rereada4
 C.rereada4:	mflr	0
@@ -2042,10 +2042,10 @@ stratom:	cmpl	0,14,18
 	bge	erstrat2
 	st	16,1416(13)
 	b	tryatom
-erstrat1:	cal	15,7488(21)
+erstrat1:	cal	15,7776(21)
 	b	errnia
 erstrat2:	oril	14,15,0
-	cal	15,7488(21)
+	cal	15,7776(21)
 	b	errnsa
 	.set	._readstrg,1
 	.globl	C.readstrg
@@ -2145,7 +2145,7 @@ readdltd:	cmpl	0,14,18
 	stbx	15,3,4
 	mtlr	16
 	br	
-readdltr:	cal	15,7520(21)
+readdltr:	cal	15,7808(21)
 	b	errnia
 	.globl	C.asciii
 C.asciii:	mflr	0
@@ -2216,7 +2216,7 @@ fascii7:	mtlr	16
 	.globl	fascii8
 fascii8:	st	21,1452(13)
 	b	tryatom
-ascierr:	cal	15,7648(21)
+ascierr:	cal	15,7936(21)
 	b	errnia
 	.set	._fascii,2
 	.globl	C.fascii
@@ -2230,7 +2230,7 @@ fascii:	oril	17,14,0
 C.cascii:	mflr	0
 	stu	0,-4(1)
 	.globl	cascii
-cascii:	cal	3,7680(21)
+cascii:	cal	3,7968(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -2271,7 +2271,7 @@ concpkr:	l	0,0(1)
 	mtlr	0
 	br	
 concpkr2:	oril	14,15,0
-concpkr1:	cal	15,7616(21)
+concpkr1:	cal	15,7904(21)
 	b	errsym
 	.set	._uppercase,2
 	.globl	C.uppercase
@@ -2291,7 +2291,7 @@ upper8:	l	0,0(1)
 	ai	1,1,4
 	mtlr	0
 	br	
-upper9:	cal	15,7712(21)
+upper9:	cal	15,8000(21)
 	b	errnia
 	.set	._lowercase,2
 	.globl	C.lowercase
@@ -2311,7 +2311,7 @@ lower8:	l	0,0(1)
 	ai	1,1,4
 	mtlr	0
 	br	
-lower9:	cal	15,7744(21)
+lower9:	cal	15,8032(21)
 	b	errnia
 	.set	._asciip,2
 	.globl	C.asciip
@@ -2378,7 +2378,7 @@ lettert:	l	0,0(1)
 C.fibase:	mflr	0
 	stu	0,-4(1)
 	.globl	fibase
-fibase:	cal	15,7872(21)
+fibase:	cal	15,8160(21)
 	l	16,1404(13)
 	lil	3,2
 	stu	3,-4(1)

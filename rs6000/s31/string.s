@@ -42,7 +42,7 @@
 C.ini_str:	mflr	0
 	stu	0,-4(1)
 ini_str:	lil	14,6
-	cal	15,8901(13)
+	cal	15,8960(13)
 	l	16,2240(13)
 	cal	17,164(13)
 	lil	3,._string
@@ -50,7 +50,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,8907(13)
+	cal	15,8966(13)
 	l	16,2236(13)
 	cal	17,164(13)
 	lil	3,._plength
@@ -58,7 +58,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,8914(13)
+	cal	15,8973(13)
 	l	16,2232(13)
 	cal	17,164(13)
 	lil	3,._slength
@@ -66,7 +66,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,8921(13)
+	cal	15,8980(13)
 	l	16,2228(13)
 	cal	17,164(13)
 	lil	3,._slen
@@ -74,7 +74,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,8925(13)
+	cal	15,8984(13)
 	l	16,2180(13)
 	cal	17,164(13)
 	lil	3,._sref
@@ -82,7 +82,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,8929(13)
+	cal	15,8988(13)
 	l	16,2172(13)
 	cal	17,164(13)
 	lil	3,._sset
@@ -90,7 +90,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,8933(13)
+	cal	15,8992(13)
 	l	16,2164(13)
 	cal	17,164(13)
 	lil	3,._typestrg
@@ -98,7 +98,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,8943(13)
+	cal	15,9002(13)
 	l	16,2160(13)
 	cal	17,164(13)
 	lil	3,._exchstrg
@@ -106,7 +106,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,8953(13)
+	cal	15,9012(13)
 	l	16,2224(13)
 	cal	17,164(13)
 	lil	3,._caten
@@ -114,7 +114,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,8961(13)
+	cal	15,9020(13)
 	l	16,2216(13)
 	cal	17,164(13)
 	lil	3,._eqstring
@@ -122,7 +122,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,15
-	cal	15,8969(13)
+	cal	15,9028(13)
 	l	16,2220(13)
 	cal	17,164(13)
 	lil	3,._subsequal
@@ -130,7 +130,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,8984(13)
+	cal	15,9043(13)
 	l	16,2212(13)
 	cal	17,164(13)
 	lil	3,._substring
@@ -138,7 +138,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,8993(13)
+	cal	15,9052(13)
 	l	16,2208(13)
 	cal	17,164(13)
 	lil	3,._makestrg
@@ -146,7 +146,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9003(13)
+	cal	15,9062(13)
 	l	16,2204(13)
 	cal	17,164(13)
 	lil	3,._duplstrg
@@ -154,7 +154,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,9013(13)
+	cal	15,9072(13)
 	l	16,2200(13)
 	cal	17,164(13)
 	lil	3,._bltstrg
@@ -162,7 +162,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9022(13)
+	cal	15,9081(13)
 	l	16,2196(13)
 	cal	17,164(13)
 	lil	3,._fillstrg
@@ -170,7 +170,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9032(13)
+	cal	15,9091(13)
 	l	16,2192(13)
 	cal	17,164(13)
 	lil	3,._scanstrg
@@ -178,7 +178,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9042(13)
+	cal	15,9101(13)
 	l	16,2188(13)
 	cal	17,164(13)
 	lil	3,._spanstrg
@@ -186,7 +186,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9052(13)
+	cal	15,9111(13)
 	l	16,2184(13)
 	cal	17,164(13)
 	lil	3,._chrpos
@@ -194,7 +194,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9058(13)
+	cal	15,9117(13)
 	l	16,2176(13)
 	cal	17,164(13)
 	lil	3,._chrnth
@@ -202,7 +202,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9064(13)
+	cal	15,9123(13)
 	l	16,2168(13)
 	cal	17,164(13)
 	lil	3,._chrset
@@ -210,7 +210,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,9070(13)
+	cal	15,9129(13)
 	l	16,2156(13)
 	cal	17,164(13)
 	lil	3,._ffindex
@@ -218,7 +218,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,9075(13)
+	cal	15,9134(13)
 	l	16,2136(13)
 	cal	17,164(13)
 	lil	3,._hash
@@ -226,7 +226,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9079(13)
+	cal	15,9138(13)
 	l	16,2148(13)
 	cal	17,164(13)
 	lil	3,._ffsymbol
@@ -234,7 +234,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,9085(13)
+	cal	15,9144(13)
 	l	16,2132(13)
 	cal	17,164(13)
 	lil	3,._fpnam
@@ -242,7 +242,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9090(13)
+	cal	15,9149(13)
 	l	16,2144(13)
 	cal	17,164(13)
 	lil	3,._concat
@@ -250,7 +250,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9096(13)
+	cal	15,9155(13)
 	l	16,2128(13)
 	cal	17,164(13)
 	lil	3,._gensym
@@ -258,7 +258,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9102(13)
+	cal	15,9161(13)
 	l	16,2152(13)
 	cal	17,164(13)
 	lil	3,._alphales
@@ -266,7 +266,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,9112(13)
+	cal	15,9171(13)
 	l	16,2120(13)
 	cal	17,164(13)
 	lil	3,._bltscrn
@@ -274,7 +274,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9121(13)
+	cal	15,9180(13)
 	l	16,2116(13)
 	cal	17,164(13)
 	lil	3,._typevect
@@ -282,7 +282,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9131(13)
+	cal	15,9190(13)
 	l	16,2084(13)
 	cal	17,164(13)
 	lil	3,._exchvect
@@ -290,7 +290,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9141(13)
+	cal	15,9200(13)
 	l	16,2112(13)
 	cal	17,164(13)
 	lil	3,._makevect
@@ -298,7 +298,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,9151(13)
+	cal	15,9210(13)
 	l	16,2108(13)
 	cal	17,164(13)
 	lil	3,._vlength
@@ -306,7 +306,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,9158(13)
+	cal	15,9217(13)
 	l	16,2104(13)
 	cal	17,164(13)
 	lil	3,._eqvector
@@ -314,7 +314,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,9166(13)
+	cal	15,9225(13)
 	l	16,2100(13)
 	cal	17,164(13)
 	lil	3,._vref
@@ -322,7 +322,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,9170(13)
+	cal	15,9229(13)
 	l	16,2096(13)
 	cal	17,164(13)
 	lil	3,._vset
@@ -330,7 +330,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,9174(13)
+	cal	15,9233(13)
 	l	16,2092(13)
 	cal	17,164(13)
 	lil	3,._bltvect
@@ -338,7 +338,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9183(13)
+	cal	15,9242(13)
 	l	16,2088(13)
 	cal	17,164(13)
 	lil	3,._vector
@@ -346,7 +346,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,9189(13)
+	cal	15,9248(13)
 	l	16,2080(13)
 	cal	17,164(13)
 	lil	3,._fillvect
@@ -354,7 +354,7 @@ ini_str:	lil	14,6
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,13
-	cal	15,9199(13)
+	cal	15,9258(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
@@ -369,7 +369,7 @@ ini_str:	lil	14,6
 	ai	1,1,4
 	st	14,0(16)
 	lil	14,14
-	cal	15,9212(13)
+	cal	15,9271(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
@@ -422,7 +422,7 @@ strgall2:	l	3,0(14)
 	ai	4,15,8
 	lil	5,0
 	stbx	5,3,4
-	cal	3,22112(21)
+	cal	3,22400(21)
 	st	3,4(14)
 	l	0,0(1)
 	ai	1,1,4
@@ -694,7 +694,7 @@ stringr:	l	0,0(1)
 	ai	1,1,4
 	mtlr	0
 	br	
-stringc:	cal	3,22112(21)
+stringc:	cal	3,22400(21)
 	st	3,1740(13)
 	b	strgrest
 	.globl	C.stringa1
@@ -872,7 +872,7 @@ stra3c:	stu	14,-4(1)
 C.plength:	mflr	0
 	stu	0,-4(1)
 	.globl	plength
-plength:	cal	3,22144(21)
+plength:	cal	3,22432(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -887,7 +887,7 @@ plength:	cal	3,22144(21)
 C.slength:	mflr	0
 	stu	0,-4(1)
 	.globl	slength
-slength:	cal	3,22176(21)
+slength:	cal	3,22464(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -902,7 +902,7 @@ slength:	cal	3,22176(21)
 C.slen:	mflr	0
 	stu	0,-4(1)
 	.globl	slen
-slen:	cal	3,22208(21)
+slen:	cal	3,22496(21)
 	st	3,1740(13)
 	cmpl	0,14,20
 	blt	badstr1
@@ -919,7 +919,7 @@ slen:	cal	3,22208(21)
 C.caten:	mflr	0
 	stu	0,-4(1)
 	.globl	caten
-caten:	cal	3,22368(21)
+caten:	cal	3,22656(21)
 	st	3,1740(13)
 caten0:	oril	16,17,0
 	lil	15,0
@@ -994,14 +994,14 @@ caten3:	l	16,0(1)
 	mtlr	0
 	br	
 catenstl:	lil	14,32767
-	cal	15,22368(21)
+	cal	15,22656(21)
 	b	errstl
 	.set	._subsequal,5
 	.globl	C.subsequal
 C.subsequal:	mflr	0
 	stu	0,-4(1)
 	.globl	subsequal
-subsequal:	cal	3,22432(21)
+subsequal:	cal	3,22720(21)
 	st	3,1740(13)
 	cmpli	0,17,5
 	bne	badnbar5
@@ -1090,7 +1090,7 @@ subseqr:	l	0,0(1)
 C.eqstring:	mflr	0
 	stu	0,-4(1)
 	.globl	eqstring
-eqstring:	cal	3,22400(21)
+eqstring:	cal	3,22688(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -1175,7 +1175,7 @@ sret2:	l	0,0(1)
 C.substring:	mflr	0
 	stu	0,-4(1)
 	.globl	substring
-substring:	cal	3,22464(21)
+substring:	cal	3,22752(21)
 	st	3,1740(13)
 	lil	14,32767
 	cmpli	0,17,2
@@ -1245,7 +1245,7 @@ substr2:	.globl	C.mina1a2
 C.makestrg:	mflr	0
 	stu	0,-4(1)
 	.globl	makestrg
-makestrg:	cal	3,22496(21)
+makestrg:	cal	3,22784(21)
 	st	3,1740(13)
 	cmpl	0,14,18
 	bge	badfix1
@@ -1279,7 +1279,7 @@ makstrg2:	exts	15,15
 C.duplstrg:	mflr	0
 	stu	0,-4(1)
 	.globl	duplstrg
-duplstrg:	cal	3,22528(21)
+duplstrg:	cal	3,22816(21)
 	st	3,1740(13)
 	cmpl	0,14,18
 	bge	badfix1
@@ -1344,16 +1344,16 @@ dupstrg2:	l	3,1728(13)
 	ai	1,1,4
 	mtlr	0
 	br	
-dupserr:	cal	15,22528(21)
+dupserr:	cal	15,22816(21)
 	b	erroob
-dupsstl:	cal	15,22528(21)
+dupsstl:	cal	15,22816(21)
 	b	errstl
 	.set	._bltstrg,5
 	.globl	C.bltstrg
 C.bltstrg:	mflr	0
 	stu	0,-4(1)
 	.globl	bltstrg
-bltstrg:	cal	3,22560(21)
+bltstrg:	cal	3,22848(21)
 	st	3,1740(13)
 	cmpli	0,17,5
 	beq	bltstrg0
@@ -1460,7 +1460,7 @@ bltstr4:	.globl	C.mina4a3
 C.fillstrg:	mflr	0
 	stu	0,-4(1)
 	.globl	fillstrg
-fillstrg:	cal	3,22592(21)
+fillstrg:	cal	3,22880(21)
 	st	3,1740(13)
 	lil	14,32767
 	cmpli	0,17,3
@@ -1521,7 +1521,7 @@ fillstr8:	exts	17,17
 C.scanstrg:	mflr	0
 	stu	0,-4(1)
 	.globl	scanstrg
-scanstrg:	cal	3,22624(21)
+scanstrg:	cal	3,22912(21)
 	st	3,1740(13)
 sanstrg1:	lil	16,0
 	cmpli	0,17,2
@@ -1572,12 +1572,12 @@ sanpos6:	exts	16,16
 	cmpi	0,16,0
 	bge	sanpos5
 	lil	16,0
-	cal	3,22624(21)
+	cal	3,22912(21)
 	l	4,1740(13)
 	cmpl	0,3,4
 	bne	sanstrg6
 	b	sanposf
-sanpos9:	cal	3,22656(21)
+sanpos9:	cal	3,22944(21)
 	l	4,1740(13)
 	cmpl	0,3,4
 	bne	sanstrg6
@@ -1610,7 +1610,7 @@ sanstrg6:	l	17,0(1)
 C.spanstrg:	mflr	0
 	stu	0,-4(1)
 	.globl	spanstrg
-spanstrg:	cal	3,22656(21)
+spanstrg:	cal	3,22944(21)
 	st	3,1740(13)
 	b	sanstrg1
 	.set	._chrpos,5
@@ -1618,7 +1618,7 @@ spanstrg:	cal	3,22656(21)
 C.chrpos:	mflr	0
 	stu	0,-4(1)
 	.globl	chrpos
-chrpos:	cal	3,22688(21)
+chrpos:	cal	3,22976(21)
 	st	3,1740(13)
 	lil	16,0
 	cmpli	0,17,2
@@ -1680,7 +1680,7 @@ chrpos5:	oril	14,16,0
 C.sref:	mflr	0
 	stu	0,-4(1)
 	.globl	sref
-sref:	cal	3,22240(21)
+sref:	cal	3,22528(21)
 	st	3,1740(13)
 	cmpl	0,14,20
 	blt	badstr1
@@ -1709,7 +1709,7 @@ sref:	cal	3,22240(21)
 C.chrnth:	mflr	0
 	stu	0,-4(1)
 	.globl	chrnth
-chrnth:	cal	3,22720(21)
+chrnth:	cal	3,23008(21)
 	st	3,1740(13)
 	.globl	C.stringa2
 	bl	C.stringa2
@@ -1736,7 +1736,7 @@ chrnth:	cal	3,22720(21)
 C.sset:	mflr	0
 	stu	0,-4(1)
 	.globl	sset
-sset:	cal	3,22272(21)
+sset:	cal	3,22560(21)
 	st	3,1740(13)
 	oril	17,14,0
 	oril	14,15,0
@@ -1759,7 +1759,7 @@ sset:	cal	3,22272(21)
 C.chrset:	mflr	0
 	stu	0,-4(1)
 	.globl	chrset
-chrset:	cal	3,22752(21)
+chrset:	cal	3,23040(21)
 	st	3,1740(13)
 	.globl	C.stringa2
 	bl	C.stringa2
@@ -1793,7 +1793,7 @@ chrset5:	cmpl	0,14,18
 C.typestrg:	mflr	0
 	stu	0,-4(1)
 	.globl	typestrg
-typestrg:	cal	15,22304(21)
+typestrg:	cal	15,22592(21)
 	cmpli	0,17,1
 	beq	typesg
 	cmpli	0,17,2
@@ -1840,7 +1840,7 @@ typeser2:	b	errsym
 C.exchstrg:	mflr	0
 	stu	0,-4(1)
 	.globl	exchstrg
-exchstrg:	cal	3,22336(21)
+exchstrg:	cal	3,22624(21)
 	st	3,1740(13)
 	cmpl	0,14,20
 	blt	badstr1
@@ -1879,7 +1879,7 @@ exchstrg:	cal	3,22336(21)
 C.ffindex:	mflr	0
 	stu	0,-4(1)
 	.globl	ffindex
-ffindex:	cal	3,22784(21)
+ffindex:	cal	3,23072(21)
 	st	3,1740(13)
 	lil	16,0
 	cmpli	0,17,2
@@ -1953,7 +1953,7 @@ ffindex6:	oril	14,16,0
 C.alphales:	mflr	0
 	stu	0,-4(1)
 	.globl	alphales
-alphales:	cal	3,22976(21)
+alphales:	cal	3,23264(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -2011,7 +2011,7 @@ ffsymbol:	cmpl	0,15,21
 	cmpl	0,15,22
 	bge	ffsymb1
 	b	trysympk
-ffsymb1:	cal	3,22848(21)
+ffsymb1:	cal	3,23136(21)
 	st	3,1740(13)
 	.globl	C.stringa2
 	bl	C.stringa2
@@ -2020,7 +2020,7 @@ ffsymb1:	cal	3,22848(21)
 	cmpl	0,14,22
 	bge	ffsymbr2
 	b	trysymp
-ffsymbr2:	cal	15,22848(21)
+ffsymbr2:	cal	15,23136(21)
 	b	errsym
 	.set	._concat,5
 	.globl	C.concat
@@ -2033,7 +2033,7 @@ concat:	sli	3,17,2
 	sli	5,17,2
 	l	4,2140(13)
 	stx	4,1,5
-	cal	3,22912(21)
+	cal	3,23200(21)
 	st	3,1740(13)
 	b	caten0
 	.globl	concat9
@@ -2047,7 +2047,7 @@ concat9:	oril	15,14,0
 C.hash:	mflr	0
 	stu	0,-4(1)
 	.globl	hash
-hash:	cal	3,22816(21)
+hash:	cal	3,23104(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -2057,7 +2057,7 @@ hash:	cal	3,22816(21)
 C.fpnam:	mflr	0
 	stu	0,-4(1)
 	.globl	fpnam
-fpnam:	cal	3,22880(21)
+fpnam:	cal	3,23168(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -2094,10 +2094,10 @@ fpnam2:	exts	15,15
 C.gensym:	mflr	0
 	stu	0,-4(1)
 	.globl	gensym
-gensym:	cal	14,23360(21)
+gensym:	cal	14,23648(21)
 	l	3,0(14)
 	stu	3,-4(1)
-	cal	15,23392(21)
+	cal	15,23680(21)
 	l	14,0(15)
 	exts	4,14
 	ai	4,4,1
@@ -2109,7 +2109,7 @@ gennerr:	st	14,0(15)
 	stu	14,-4(1)
 	lil	17,2
 	b	concat
-rdpscrn:	cal	3,5632(21)
+rdpscrn:	cal	3,5920(21)
 	st	3,1740(13)
 	b	bltscrn0
 rdpscrn1:	l	4,1728(13)
@@ -2326,7 +2326,7 @@ miny1:	st	14,1984(13)
 C.bltscrn:	mflr	0
 	stu	0,-4(1)
 	.globl	bltscrn
-bltscrn:	cal	3,23008(21)
+bltscrn:	cal	3,23296(21)
 	st	3,1740(13)
 bltscrn0:	l	14,0(1)
 	ai	1,1,4
@@ -2461,7 +2461,7 @@ bltscrnb:	l	3,0(1)
 	l	3,1996(13)
 	a	4,3,16
 	andil.	16,4,0xFFFF
-	cal	3,5632(21)
+	cal	3,5920(21)
 	l	4,1740(13)
 	cmpl	0,3,4
 	beq	rdpscrn1
@@ -2520,7 +2520,7 @@ bltscrn9:	l	14,1728(13)
 C.typevect:	mflr	0
 	stu	0,-4(1)
 	.globl	typevect
-typevect:	cal	15,23040(21)
+typevect:	cal	15,23328(21)
 	cmpli	0,17,1
 	beq	typevg
 	cmpli	0,17,2
@@ -2567,7 +2567,7 @@ typever2:	b	errsym
 C.makevect:	mflr	0
 	stu	0,-4(1)
 	.globl	makevect
-makevect:	cal	3,23104(21)
+makevect:	cal	3,23392(21)
 	st	3,1740(13)
 	cmpl	0,14,18
 	bge	badfix1
@@ -2609,7 +2609,7 @@ vectfil4:	exts	16,16
 	cmpi	0,16,0
 	bge	vectfil1
 	lil	16,0
-	cal	3,23296(21)
+	cal	3,23584(21)
 	st	3,4(14)
 	l	0,0(1)
 	ai	1,1,4
@@ -2644,7 +2644,7 @@ makvect4:	oril	14,21,0
 C.vlength:	mflr	0
 	stu	0,-4(1)
 	.globl	vlength
-vlength:	cal	3,23136(21)
+vlength:	cal	3,23424(21)
 	st	3,1740(13)
 	cmpl	0,14,19
 	blt	badvec1
@@ -2661,7 +2661,7 @@ vlength:	cal	3,23136(21)
 C.eqvector:	mflr	0
 	stu	0,-4(1)
 	.globl	eqvector
-eqvector:	cal	3,23168(21)
+eqvector:	cal	3,23456(21)
 	st	3,1740(13)
 	cmpl	0,14,19
 	blt	badvec1
@@ -2743,7 +2743,7 @@ eqvect6:	stu	14,-4(1)
 C.vref:	mflr	0
 	stu	0,-4(1)
 	.globl	vref
-vref:	cal	3,23200(21)
+vref:	cal	3,23488(21)
 	st	3,1740(13)
 	cmpl	0,15,18
 	bge	badfix2
@@ -2773,7 +2773,7 @@ vref:	cal	3,23200(21)
 C.vset:	mflr	0
 	stu	0,-4(1)
 	.globl	vset
-vset:	cal	3,23232(21)
+vset:	cal	3,23520(21)
 	st	3,1740(13)
 	cmpl	0,15,18
 	bge	badfix2
@@ -2804,7 +2804,7 @@ vset:	cal	3,23232(21)
 C.bltvect:	mflr	0
 	stu	0,-4(1)
 	.globl	bltvect
-bltvect:	cal	3,23264(21)
+bltvect:	cal	3,23552(21)
 	st	3,1740(13)
 	cmpli	0,17,5
 	beq	bltvect0
@@ -2935,7 +2935,7 @@ vector2:	exts	17,17
 C.exchvect:	mflr	0
 	stu	0,-4(1)
 	.globl	exchvect
-exchvect:	cal	3,23072(21)
+exchvect:	cal	3,23360(21)
 	st	3,1740(13)
 	cmpl	0,14,19
 	blt	badvec1
@@ -2974,7 +2974,7 @@ exchvect:	cal	3,23072(21)
 C.fillvect:	mflr	0
 	stu	0,-4(1)
 	.globl	fillvect
-fillvect:	cal	3,23328(21)
+fillvect:	cal	3,23616(21)
 	st	3,1740(13)
 	lil	14,32767
 	cmpli	0,17,3

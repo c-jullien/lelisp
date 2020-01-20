@@ -93,8 +93,6 @@ savsp:	.long	0
 llucode:	.long	0
 	.globl	lluheap
 lluheap:	.long	0
-	.globl	aprtmsgs
-aprtmsgs:	.long	0
 	.globl	prtmsgs
 prtmsgs:	.long	0
 	.globl	state
@@ -2159,6 +2157,8 @@ eimpur:	.long	0
 	.long	gopanic1
 	.globl	gopanic
 	.long	gopanic
+	.globl	prtmsgs
+	.long	prtmsgs
 	.byte	
 	.byte	"_undef_"
 	.byte	"nil"
@@ -2211,8 +2211,8 @@ eimpur:	.long	0
 	.byte	"alphaosf"
 	.byte	"solaris386"
 	.byte	"unixware386"
-	.byte	"ll68"
-	.byte	"ll69"
+	.byte	"irix5"
+	.byte	"alphavms"
 	.byte	"ll70"
 	.byte	"version"
 	.byte	"15.26"

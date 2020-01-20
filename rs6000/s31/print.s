@@ -60,7 +60,7 @@ ini_print:	st	21,1704(13)
 	bl	C.makestrg
 	st	14,1648(13)
 	lil	14,3
-	cal	15,6708(13)
+	cal	15,6767(13)
 	l	16,3884(13)
 	cal	17,164(13)
 	lil	3,._eol
@@ -68,7 +68,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,6711(13)
+	cal	15,6770(13)
 	l	16,3880(13)
 	cal	17,164(13)
 	lil	3,._llfflush
@@ -76,7 +76,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6716(13)
+	cal	15,6775(13)
 	l	16,3876(13)
 	cal	17,164(13)
 	lil	3,._upratom
@@ -84,7 +84,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,6722(13)
+	cal	15,6781(13)
 	l	16,3856(13)
 	cal	17,164(13)
 	lil	3,._prin
@@ -92,7 +92,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,6726(13)
+	cal	15,6785(13)
 	l	16,3848(13)
 	cal	17,164(13)
 	lil	3,._print
@@ -100,7 +100,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,6731(13)
+	cal	15,6790(13)
 	l	16,3844(13)
 	cal	17,164(13)
 	lil	3,._prinflush
@@ -108,7 +108,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6740(13)
+	cal	15,6799(13)
 	l	16,3840(13)
 	cal	17,164(13)
 	lil	3,._terpri
@@ -116,7 +116,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6746(13)
+	cal	15,6805(13)
 	l	16,3836(13)
 	cal	17,164(13)
 	lil	3,._princh
@@ -124,7 +124,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6752(13)
+	cal	15,6811(13)
 	l	16,3832(13)
 	cal	17,164(13)
 	lil	3,._princod
@@ -132,7 +132,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,6758(13)
+	cal	15,6817(13)
 	l	16,3816(13)
 	cal	17,164(13)
 	lil	3,._fptype
@@ -140,7 +140,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,6763(13)
+	cal	15,6822(13)
 	l	16,3808(13)
 	cal	17,164(13)
 	lil	3,._prline
@@ -148,7 +148,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,6772(13)
+	cal	15,6831(13)
 	l	16,3804(13)
 	cal	17,164(13)
 	lil	3,._prlevel
@@ -156,7 +156,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,11
-	cal	15,6782(13)
+	cal	15,6841(13)
 	l	16,3800(13)
 	cal	17,164(13)
 	lil	3,._prlength
@@ -164,7 +164,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,6793(13)
+	cal	15,6852(13)
 	l	16,3812(13)
 	cal	17,164(13)
 	lil	3,._fobase
@@ -172,7 +172,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,6798(13)
+	cal	15,6857(13)
 	l	16,3796(13)
 	cal	17,164(13)
 	lil	3,._lmargin
@@ -180,7 +180,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,6805(13)
+	cal	15,6864(13)
 	l	16,3792(13)
 	cal	17,164(13)
 	lil	3,._rmargin
@@ -188,7 +188,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6812(13)
+	cal	15,6871(13)
 	l	16,3788(13)
 	cal	17,164(13)
 	lil	3,._outpos
@@ -196,7 +196,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,6818(13)
+	cal	15,6877(13)
 	l	16,3784(13)
 	cal	17,164(13)
 	lil	3,._outbuf
@@ -204,7 +204,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,6824(13)
+	cal	15,6883(13)
 	l	16,3828(13)
 	cal	17,164(13)
 	lil	3,._explode
@@ -212,7 +212,7 @@ ini_print:	st	21,1704(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,6831(13)
+	cal	15,6890(13)
 	l	16,3820(13)
 	cal	17,164(13)
 	lil	3,._explodech
@@ -222,19 +222,19 @@ ini_print:	st	21,1704(13)
 	cal	3,224(21)
 	st	3,1452(13)
 	lil	14,14
-	cal	15,6840(13)
+	cal	15,6899(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	st	21,0(14)
 	lil	14,15
-	cal	15,6854(13)
+	cal	15,6913(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	st	21,0(14)
 	lil	14,18
-	cal	15,6869(13)
+	cal	15,6928(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
@@ -242,7 +242,7 @@ ini_print:	st	21,1704(13)
 	st	3,0(14)
 	st	21,1452(13)
 	lil	14,3
-	cal	15,6887(13)
+	cal	15,6946(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
@@ -278,7 +278,7 @@ flulin:	stu	14,-4(1)
 	stu	15,-4(1)
 	stu	16,-4(1)
 	stu	17,-4(1)
-	cal	14,9568(21)
+	cal	14,9856(21)
 	oril	15,21,0
 	.globl	C.itsoft
 	bl	C.itsoft
@@ -301,7 +301,7 @@ fullin:	stu	14,-4(1)
 	stu	15,-4(1)
 	stu	16,-4(1)
 	stu	17,-4(1)
-	cal	14,9536(21)
+	cal	14,9824(21)
 	oril	15,21,0
 	.globl	C.itsoft
 	bl	C.itsoft
@@ -685,13 +685,13 @@ pratom1:	stu	14,-4(1)
 	blt	pratom2
 	cmpl	0,14,22
 	bge	pratom2
-	cal	15,9632(21)
+	cal	15,9920(21)
 	oril	16,21,0
 	.globl	C.getfns
 	bl	C.getfns
 	cmpl	0,14,21
 	beq	pratom2
-	cal	4,9632(21)
+	cal	4,9920(21)
 	cmpl	0,14,4
 	beq	pratom2
 	lil	17,1
@@ -721,7 +721,7 @@ prsympk:	cmpl	0,14,21
 	beq	pratnil
 	lil	3,0
 	st	3,1684(13)
-	cal	16,10240(21)
+	cal	16,10528(21)
 	l	3,0(16)
 	cmpl	0,3,21
 	beq	prsymb
@@ -751,11 +751,11 @@ prpkg:	l	3,1684(13)
 	mtlr	16
 	br	
 	.globl	prpkg0
-prpkg0:	cal	17,10240(21)
+prpkg0:	cal	17,10528(21)
 	l	3,0(17)
 	cmpli	0,3,0
 	bne	prpkg1
-	cal	17,8416(21)
+	cal	17,8704(21)
 	l	4,0(17)
 	cmpl	0,14,4
 	bne	prpkg1
@@ -794,7 +794,7 @@ prpkgsym:	l	3,12(14)
 	stu	3,-4(1)
 	b	outshrp
 	.globl	prsymb
-prsymb:	cal	15,10176(21)
+prsymb:	cal	15,10464(21)
 	l	15,0(15)
 	cmpl	0,15,21
 	beq	prat2
@@ -876,7 +876,7 @@ prat21:	l	3,1688(13)
 	.globl	C.chklp
 	bl	C.chklp
 prat3:	lil	15,0
-	cal	17,10208(21)
+	cal	17,10496(21)
 	l	17,0(17)
 	cmpl	0,17,21
 	bne	prat8
@@ -1030,11 +1030,11 @@ chkstrg3:	l	0,0(1)
 C.prtypvec:	mflr	0
 	stu	0,-4(1)
 prtypvec:	l	3,4(14)
-	cal	4,23296(21)
+	cal	4,23584(21)
 	cmpl	0,3,4
 	beq	prpopj
 	l	3,4(14)
-	cal	4,22112(21)
+	cal	4,22400(21)
 	cmpl	0,3,4
 	beq	prpopj
 	stu	14,-4(1)
@@ -1049,7 +1049,7 @@ prtypvec:	l	3,4(14)
 	br	
 prstrg:	.globl	C.prtypvec
 	bl	C.prtypvec
-	cal	15,10176(21)
+	cal	15,10464(21)
 	l	15,0(15)
 	cmpl	0,15,21
 	bne	prstr5
@@ -1268,7 +1268,7 @@ C.probj:	mflr	0
 probj:	stu	14,-4(1)
 	l	3,3864(13)
 	stu	3,-4(1)
-	cal	3,9632(21)
+	cal	3,9920(21)
 	stu	3,-4(1)
 	l	3,1756(13)
 	stu	3,-4(1)
@@ -1283,7 +1283,7 @@ probje:	l	14,0(1)
 	ai	1,1,4
 	mtlr	0
 	br	
-probjend:	cal	15,9632(21)
+probjend:	cal	15,9920(21)
 	b	findtag
 probj01:	l	3,1664(13)
 	st	3,1668(13)
@@ -1318,7 +1318,7 @@ probj0:	l	3,1216(13)
 	l	4,168(13)
 	cmpl	0,14,4
 	blt	probj0t
-.pri.5:	cal	14,10272(21)
+.pri.5:	cal	14,10560(21)
 	b	prsymb
 probj0t:	cmp	0,14,22
 	blt	pratom
@@ -1353,11 +1353,11 @@ probj11:	sf	5,22,14
 	blt	probj12
 	cmpl	0,14,22
 	bge	probj12
-	cal	15,9632(21)
+	cal	15,9920(21)
 	oril	16,21,0
 	.globl	C.getfns
 	bl	C.getfns
-	cal	4,9632(21)
+	cal	4,9920(21)
 	cmpl	0,14,4
 	beq	probj12
 	cmpl	0,14,21
@@ -1371,7 +1371,7 @@ probj2:	lil	17,40
 	bl	C.outshrp
 	b	probj7
 probj3:	l	15,0(14)
-	cal	4,13600(21)
+	cal	4,13888(21)
 	cmpl	0,15,4
 	bne	probj5
 	l	15,4(14)
@@ -1476,14 +1476,14 @@ prinn:	cmpli	0,17,0
 	andil.	17,4,0xFFFF
 	stu	17,-4(1)
 	b	prinn1
-prinn0:	cal	14,10176(21)
+prinn0:	cal	14,10464(21)
 	l	14,0(14)
 	cmpl	0,14,21
 	beq	prinn1
 	stu	17,-4(1)
 	l	3,3852(13)
 	stu	3,-4(1)
-	cal	3,9632(21)
+	cal	3,9920(21)
 	stu	3,-4(1)
 	l	3,1756(13)
 	stu	3,-4(1)
@@ -1541,7 +1541,7 @@ prinflush:	.globl	C.prinn
 C.terpri:	mflr	0
 	stu	0,-4(1)
 	.globl	terpri
-terpri:	cal	15,9728(21)
+terpri:	cal	15,10016(21)
 	cmpli	0,17,1
 	beq	terpr2
 	lil	14,1
@@ -1572,17 +1572,17 @@ princh:	lil	15,1
 	cmpli	0,17,2
 	beq	princh2
 	lil	14,2
-	cal	15,9760(21)
+	cal	15,10048(21)
 	b	errwna
 princh2:	l	15,0(1)
 	ai	1,1,4
 princh1:	cmpl	0,15,18
 	blt	princh3
 	oril	14,15,0
-	cal	15,9760(21)
+	cal	15,10048(21)
 	b	errnia
 princh3:	l	14,0(1)
-	cal	3,9760(21)
+	cal	3,10048(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -1601,7 +1601,7 @@ C.princr1:	mflr	0
 	stu	0,-4(1)
 princr1:	l	3,1664(13)
 	st	3,1668(13)
-	cal	3,9632(21)
+	cal	3,9920(21)
 	stu	3,-4(1)
 	l	3,1756(13)
 	stu	3,-4(1)
@@ -1634,20 +1634,20 @@ princod:	lil	15,1
 	cmpli	0,17,2
 	beq	princd0
 	lil	14,2
-	cal	15,9792(21)
+	cal	15,10080(21)
 	b	errwna
 princd0:	l	15,0(1)
 	ai	1,1,4
 	cmpl	0,15,18
 	blt	princd1
 	oril	14,15,0
-	cal	15,9792(21)
+	cal	15,10080(21)
 	b	errnia
 princd1:	l	17,0(1)
 	cmpl	0,17,18
 	blt	princd2
 	oril	14,17,0
-	cal	15,9792(21)
+	cal	15,10080(21)
 	b	errnia
 princd2:	.globl	C.princr1
 	bl	C.princr1
@@ -1773,7 +1773,7 @@ explch1:	stu	15,-4(1)
 C.fptype:	mflr	0
 	stu	0,-4(1)
 	.globl	fptype
-fptype:	cal	15,9824(21)
+fptype:	cal	15,10112(21)
 	cmpli	0,17,1
 	beq	ptyp1
 	cmpli	0,17,2
@@ -1812,7 +1812,7 @@ ptyper2:	oril	14,16,0
 C.fobase:	mflr	0
 	stu	0,-4(1)
 	.globl	fobase
-fobase:	cal	15,9952(21)
+fobase:	cal	15,10240(21)
 	l	16,1652(13)
 	lil	3,2
 	stu	3,-4(1)
@@ -1830,7 +1830,7 @@ fobase:	cal	15,9952(21)
 C.prline:	mflr	0
 	stu	0,-4(1)
 	.globl	prline
-prline:	cal	15,9856(21)
+prline:	cal	15,10144(21)
 	l	16,1664(13)
 	lil	3,0
 	stu	3,-4(1)
@@ -1848,7 +1848,7 @@ prline:	cal	15,9856(21)
 C.prlevel:	mflr	0
 	stu	0,-4(1)
 	.globl	prlevel
-prlevel:	cal	15,9888(21)
+prlevel:	cal	15,10176(21)
 	l	16,1656(13)
 	lil	3,0
 	stu	3,-4(1)
@@ -1866,7 +1866,7 @@ prlevel:	cal	15,9888(21)
 C.prlength:	mflr	0
 	stu	0,-4(1)
 	.globl	prlength
-prlength:	cal	15,9920(21)
+prlength:	cal	15,10208(21)
 	l	16,1672(13)
 	lil	3,0
 	stu	3,-4(1)
@@ -1901,7 +1901,7 @@ poser2:	oril	15,17,0
 C.lmargin:	mflr	0
 	stu	0,-4(1)
 	.globl	lmargin
-lmargin:	cal	15,9984(21)
+lmargin:	cal	15,10272(21)
 	l	16,1692(13)
 	lil	3,0
 	stu	3,-4(1)
@@ -1927,7 +1927,7 @@ rmargin:	lil	3,1
 	ai	4,15,1
 	andil.	15,4,0xFFFF
 	stu	15,-4(1)
-	cal	15,10016(21)
+	cal	15,10304(21)
 	l	16,1696(13)
 	.globl	C.getsetn
 	bl	C.getsetn
@@ -1951,7 +1951,7 @@ rmargin2:	l	0,0(1)
 C.outpos:	mflr	0
 	stu	0,-4(1)
 	.globl	outpos
-outpos:	cal	15,10048(21)
+outpos:	cal	15,10336(21)
 	l	16,1688(13)
 	lil	3,0
 	stu	3,-4(1)
@@ -1977,7 +1977,7 @@ outbuf:	cmpli	0,17,0
 	cmpli	0,17,2
 	beq	outbu4
 	lil	14,1
-	cal	15,10080(21)
+	cal	15,10368(21)
 	b	errwna
 outbu1:	l	14,1644(13)
 	l	0,0(1)
@@ -1988,7 +1988,7 @@ outbu4:	l	15,0(1)
 	ai	1,1,4
 outbu5:	l	14,0(1)
 	ai	1,1,4
-	cal	17,10080(21)
+	cal	17,10368(21)
 	.globl	C.tespos
 	bl	C.tespos
 	cmpl	0,15,21

@@ -1033,10 +1033,10 @@ eimpur:	.long	0
 	.long	logand
 	.globl	lognot
 	.long	lognot
-	.globl	random
-	.long	random
-	.globl	srandom
-	.long	srandom
+	.globl	llrandom
+	.long	llrandom
+	.globl	llsrandom
+	.long	llsrandom
 	.globl	scale
 	.long	scale
 	.globl	llrem
@@ -2213,14 +2213,23 @@ eimpur:	.long	0
 	.byte	"unixware386"
 	.byte	"irix5"
 	.byte	"alphavms"
-	.byte	"ll70"
+	.byte	"linux"
+	.byte	"win95"
+	.byte	"cygwin"
+	.byte	"hp11"
+	.byte	"win32"
+	.byte	"win64"
+	.byte	"x86macos"
+	.byte	"linuxsparc"
+	.byte	"freebsd"
+	.byte	"netbsd"
 	.byte	"version"
 	.byte	"15.26"
 	.byte	"end"
 	.byte	"at-end"
 	.byte	"herald"
 	.byte	"May Le-Lisp be with you. "
-	.byte	"; Le-Lisp (by INRIA) version 15.26  (01/Dec/93)  ["
+	.byte	"; Le-Lisp (by INRIA) version 15.26  (01/Jan/2020)  ["
 	.byte	"]"
 	.byte	"subr0"
 	.byte	"subr1"

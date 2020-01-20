@@ -28,7 +28,7 @@
 C.ini_sym:	mflr	0
 	stu	0,-4(1)
 ini_sym:	lil	14,10
-	cal	15,7749(13)
+	cal	15,7808(13)
 	l	16,3140(13)
 	cal	17,164(13)
 	lil	3,._makunbound
@@ -36,7 +36,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7759(13)
+	cal	15,7818(13)
 	l	16,3136(13)
 	cal	17,164(13)
 	lil	3,._fplist
@@ -44,7 +44,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,11
-	cal	15,7764(13)
+	cal	15,7823(13)
 	l	16,3128(13)
 	cal	17,164(13)
 	lil	3,._pckgcell
@@ -52,7 +52,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,14
-	cal	15,7775(13)
+	cal	15,7834(13)
 	l	16,3120(13)
 	cal	17,164(13)
 	lil	3,._d3root
@@ -60,7 +60,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7789(13)
+	cal	15,7848(13)
 	l	16,3116(13)
 	cal	17,164(13)
 	lil	3,._objval
@@ -68,7 +68,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7795(13)
+	cal	15,7854(13)
 	l	16,3108(13)
 	cal	17,164(13)
 	lil	3,._valfn
@@ -76,7 +76,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7800(13)
+	cal	15,7859(13)
 	l	16,3104(13)
 	cal	17,164(13)
 	lil	3,._typefn
@@ -84,7 +84,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7806(13)
+	cal	15,7865(13)
 	l	16,3100(13)
 	cal	17,164(13)
 	lil	3,._setfn
@@ -92,7 +92,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7811(13)
+	cal	15,7870(13)
 	l	16,3084(13)
 	cal	17,164(13)
 	lil	3,._remfn
@@ -100,7 +100,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7816(13)
+	cal	15,7875(13)
 	l	16,3080(13)
 	cal	17,164(13)
 	lil	3,._findfn
@@ -108,7 +108,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7822(13)
+	cal	15,7881(13)
 	l	16,3096(13)
 	cal	17,164(13)
 	lil	3,._getfn1
@@ -116,7 +116,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7828(13)
+	cal	15,7887(13)
 	l	16,3092(13)
 	cal	17,164(13)
 	lil	3,._getfn
@@ -124,7 +124,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,7833(13)
+	cal	15,7892(13)
 	l	16,3060(13)
 	cal	17,164(13)
 	lil	3,._getsym1
@@ -132,7 +132,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7841(13)
+	cal	15,7900(13)
 	l	16,3064(13)
 	cal	17,164(13)
 	lil	3,._getsymb
@@ -140,7 +140,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,7848(13)
+	cal	15,7907(13)
 	l	16,3088(13)
 	cal	17,164(13)
 	lil	3,._getbi
@@ -148,7 +148,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7854(13)
+	cal	15,7913(13)
 	l	16,3076(13)
 	cal	17,164(13)
 	lil	3,._synonym
@@ -156,7 +156,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,7861(13)
+	cal	15,7920(13)
 	l	16,3072(13)
 	cal	17,164(13)
 	lil	3,._synqnym
@@ -164,7 +164,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,7869(13)
+	cal	15,7928(13)
 	l	16,3068(13)
 	cal	17,164(13)
 	lil	3,._remob
@@ -172,7 +172,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,3
-	cal	15,7874(13)
+	cal	15,7933(13)
 	l	16,3056(13)
 	cal	17,164(13)
 	lil	3,._getprop
@@ -180,7 +180,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7877(13)
+	cal	15,7936(13)
 	l	16,3056(13)
 	cal	17,164(13)
 	lil	3,._getprop
@@ -188,7 +188,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7884(13)
+	cal	15,7943(13)
 	l	16,3052(13)
 	cal	17,164(13)
 	lil	3,._getl
@@ -196,7 +196,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7888(13)
+	cal	15,7947(13)
 	l	16,3048(13)
 	cal	17,164(13)
 	lil	3,._addprop
@@ -204,7 +204,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7895(13)
+	cal	15,7954(13)
 	l	16,3044(13)
 	cal	17,164(13)
 	lil	3,._putprop
@@ -212,7 +212,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7902(13)
+	cal	15,7961(13)
 	l	16,3040(13)
 	cal	17,164(13)
 	lil	3,._defprop
@@ -220,7 +220,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,7909(13)
+	cal	15,7968(13)
 	l	16,3036(13)
 	cal	17,164(13)
 	lil	3,._remprop
@@ -228,7 +228,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7916(13)
+	cal	15,7975(13)
 	l	16,3032(13)
 	cal	17,164(13)
 	lil	3,._fincr
@@ -236,7 +236,7 @@ ini_sym:	lil	14,10
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,7920(13)
+	cal	15,7979(13)
 	l	16,3028(13)
 	cal	17,164(13)
 	lil	3,._fdecr
@@ -271,14 +271,14 @@ makunbound:	cmpl	0,14,23
 	ai	1,1,4
 	mtlr	0
 	br	
-makuerr:	cal	15,14912(21)
+makuerr:	cal	15,15200(21)
 	b	errnva
 	.set	._fplist,5
 	.globl	C.fplist
 C.fplist:	mflr	0
 	stu	0,-4(1)
 	.globl	fplist
-fplist:	cal	15,14944(21)
+fplist:	cal	15,15232(21)
 	l	16,3132(13)
 	.globl	C.getset12
 	bl	C.getset12
@@ -298,7 +298,7 @@ setplist:	st	14,4(16)
 C.pckgcell:	mflr	0
 	stu	0,-4(1)
 	.globl	pckgcell
-pckgcell:	cal	15,14976(21)
+pckgcell:	cal	15,15264(21)
 	l	16,3124(13)
 	.globl	C.getset12
 	bl	C.getset12
@@ -340,7 +340,7 @@ d3rootr:	l	0,0(1)
 C.objval:	mflr	0
 	stu	0,-4(1)
 	.globl	objval
-objval:	cal	15,15040(21)
+objval:	cal	15,15328(21)
 	l	16,3112(13)
 	.globl	C.getset12
 	bl	C.getset12
@@ -372,7 +372,7 @@ valfn:	cmpl	0,14,21
 	cmpl	0,14,4
 	blt	valfnr
 .sym.1:	b	loc
-valferr:	cal	15,15072(21)
+valferr:	cal	15,15360(21)
 	b	errsym
 valfnr:	l	0,0(1)
 	ai	1,1,4
@@ -413,9 +413,9 @@ typefn2:	l	3,1872(13)
 	ai	1,1,4
 	mtlr	0
 	br	
-typefer1:	cal	15,15104(21)
+typefer1:	cal	15,15392(21)
 	b	errsym
-typefer2:	cal	15,15104(21)
+typefer2:	cal	15,15392(21)
 	b	erroob
 	.set	._setfn,4
 	.globl	C.setfn
@@ -436,11 +436,11 @@ setfn:	cmpl	0,14,23
 	l	17,4(3)
 	b	setfn3
 setfner1:	oril	14,15,0
-	cal	15,15136(21)
+	cal	15,15424(21)
 	b	errsym
-setfner2:	cal	15,15136(21)
+setfner2:	cal	15,15424(21)
 	b	errnva
-setfner3:	cal	15,15136(21)
+setfner3:	cal	15,15424(21)
 	oril	14,16,0
 	b	erroob
 setfn2:	l	3,1872(13)
@@ -506,14 +506,14 @@ getfn1i:	.globl	C.getsym1i
 	mtlr	0
 	br	
 getfn1r1:	oril	14,15,0
-getfn1r2:	cal	15,15232(21)
+getfn1r2:	cal	15,15520(21)
 	b	errsym
 	.set	._getfn,5
 	.globl	C.getfn
 C.getfn:	mflr	0
 	stu	0,-4(1)
 	.globl	getfn
-getfn:	cal	15,15264(21)
+getfn:	cal	15,15552(21)
 	lil	16,0
 	cmpli	0,17,2
 	beq	getfn2
@@ -533,7 +533,7 @@ getfn2:	l	15,0(1)
 	ai	1,1,4
 	b	getfns
 getfner1:	oril	14,15,0
-getfner2:	cal	15,15264(21)
+getfner2:	cal	15,15552(21)
 	b	errsym
 getfner3:	oril	14,16,0
 	b	errsym
@@ -741,7 +741,7 @@ getbi9:	ai	1,1,8
 getbier3:	oril	14,16,0
 	b	getbier1
 getbier2:	oril	14,15,0
-getbier1:	cal	15,15360(21)
+getbier1:	cal	15,15648(21)
 	b	errsym
 	.globl	C.getbi1i
 C.getbi1i:	mflr	0
@@ -805,7 +805,7 @@ remfn:	cmpl	0,14,21
 	ai	1,1,4
 	mtlr	0
 	br	
-makunfner:	cal	15,15168(21)
+makunfner:	cal	15,15456(21)
 	b	errsym
 	.set	._findfn,2
 	.globl	C.findfn
@@ -867,7 +867,7 @@ synonym:	cmpl	0,14,21
 	cmpl	0,15,22
 	blt	synom
 .sym.7:	oril	14,15,0
-synmerr2:	cal	15,15392(21)
+synmerr2:	cal	15,15680(21)
 	b	errsym
 synom:	lhz	16,24(15)
 	cmpli	0,16,0
@@ -881,7 +881,7 @@ synom:	lhz	16,24(15)
 	br	
 synmerr3:	stu	14,-4(1)
 	oril	14,15,0
-	cal	15,15392(21)
+	cal	15,15680(21)
 	.globl	C.errudf
 	bl	C.errudf
 	l	14,0(1)
@@ -907,7 +907,7 @@ synqnym:	l	15,4(14)
 	bge	synmerq1
 	b	synom
 synmerq1:	oril	14,15,0
-synmerq2:	cal	15,15424(21)
+synmerq2:	cal	15,15712(21)
 	b	errsym
 	.set	._remob,2
 	.globl	C.remob
@@ -919,7 +919,7 @@ remob:	cmpl	0,14,23
 	cmpl	0,14,22
 	bge	remoberr
 	b	istdsym
-remoberr:	cal	15,15456(21)
+remoberr:	cal	15,15744(21)
 	b	errsym
 	.set	._getsymb,5
 	.globl	C.getsymb
@@ -930,7 +930,7 @@ getsymb:	cmpli	0,17,3
 	beq	getsymb0
 	cmpli	0,17,2
 	beq	getsymb1
-	cal	15,15328(21)
+	cal	15,15616(21)
 	lil	14,3
 	b	errwna
 getsymb0:	l	16,0(1)
@@ -940,7 +940,7 @@ getsymb0:	l	16,0(1)
 	cmpl	0,16,22
 	blt	getsymb2
 .sym.8:	oril	14,16,0
-	cal	15,15328(21)
+	cal	15,15616(21)
 	b	errsym
 getsymb1:	lil	16,0
 getsymb2:	l	15,0(1)
@@ -979,7 +979,7 @@ getsymi5:	ai	1,1,4
 	ai	1,1,4
 	mtlr	0
 	br	
-getsymer:	cal	14,15328(21)
+getsymer:	cal	14,15616(21)
 	b	errsym
 	.set	._getsym1,3
 	.globl	C.getsym1
@@ -1023,7 +1023,7 @@ getsym12:	oril	14,15,0
 	mtlr	0
 	br	
 getsy1r2:	oril	14,15,0
-getsy1r1:	cal	15,15296(21)
+getsy1r1:	cal	15,15584(21)
 	b	errsym
 	.globl	C.geti
 C.geti:	mflr	0
@@ -1092,7 +1092,7 @@ getpr5:	l	17,4(17)
 	ai	1,1,4
 	mtlr	0
 	br	
-geterr:	cal	15,15520(21)
+geterr:	cal	15,15808(21)
 	b	errsym
 	.set	._getl,3
 	.globl	C.getl
@@ -1137,10 +1137,10 @@ getl8:	l	15,0(1)
 	ai	1,1,4
 	mtlr	0
 	br	
-getlerr:	cal	15,15552(21)
+getlerr:	cal	15,15840(21)
 	b	errsym
 getlerr2:	oril	14,15,0
-	cal	15,15552(21)
+	cal	15,15840(21)
 	b	errnla
 	.set	._addprop,4
 	.globl	C.addprop
@@ -1182,7 +1182,7 @@ addprop:	cmpl	0,14,21
 	ai	1,1,4
 	mtlr	0
 	br	
-addpret:	cal	15,15584(21)
+addpret:	cal	15,15872(21)
 	b	errnva
 	.set	._putprop,4
 	.globl	C.putprop
@@ -1213,7 +1213,7 @@ putprop:	cmpl	0,14,21
 	ai	1,1,4
 	mtlr	0
 	br	
-putperr:	cal	15,15616(21)
+putperr:	cal	15,15904(21)
 	b	errnva
 	.set	._defprop,6
 	.globl	C.defprop
@@ -1232,7 +1232,7 @@ defprop:	cmp	0,14,22
 	blt	defperr
 	l	16,0(16)
 	b	putprop
-defperr:	cal	15,15648(21)
+defperr:	cal	15,15936(21)
 	b	errnva
 	.set	._remprop,3
 	.globl	C.remprop
@@ -1268,7 +1268,7 @@ rempr4:	st	15,4(14)
 	ai	1,1,4
 	mtlr	0
 	br	
-remperr:	cal	15,15680(21)
+remperr:	cal	15,15968(21)
 	b	errnva
 	.globl	C.getset12
 C.getset12:	mflr	0
@@ -1339,7 +1339,7 @@ incr3:	oril	15,14,0
 	ai	1,1,4
 	mtlr	0
 	br	
-increrr1:	cal	15,15712(21)
+increrr1:	cal	15,16000(21)
 	b	errnva
 	.set	._fdecr,6
 	.globl	C.fdecr
@@ -1371,5 +1371,5 @@ decr3:	oril	15,14,0
 	ai	1,1,4
 	mtlr	0
 	br	
-decrerr1:	cal	15,15744(21)
+decrerr1:	cal	15,16032(21)
 	b	errnva

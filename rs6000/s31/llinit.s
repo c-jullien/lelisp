@@ -195,7 +195,7 @@ inhas2:	exts	14,14
 	bl	C.inicst
 	st	21,0(14)
 	lil	14,6
-	cal	15,6890(13)
+	cal	15,6949(13)
 	l	16,4660(13)
 	cal	17,164(13)
 	lil	3,._itsoft
@@ -448,12 +448,57 @@ inhas2:	exts	14,14
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
-	lil	14,4
+	lil	14,5
 	cal	15,5027(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
-	lil	14,71
+	lil	14,5
+	cal	15,5032(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,6
+	cal	15,5037(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,4
+	cal	15,5043(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,5
+	cal	15,5047(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,5
+	cal	15,5052(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,8
+	cal	15,5057(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,10
+	cal	15,5065(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,7
+	cal	15,5075(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,6
+	cal	15,5082(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,80
 	cal	15,256(21)
 	.globl	C.makevect
 	bl	C.makevect
@@ -596,6 +641,33 @@ inhas2:	exts	14,14
 	l	3,0(14)
 	cal	5,1728(21)
 	st	5,288(3)
+	l	3,0(14)
+	cal	5,1760(21)
+	st	5,292(3)
+	l	3,0(14)
+	cal	5,1792(21)
+	st	5,296(3)
+	l	3,0(14)
+	cal	5,1824(21)
+	st	5,300(3)
+	l	3,0(14)
+	cal	5,1856(21)
+	st	5,304(3)
+	l	3,0(14)
+	cal	5,1888(21)
+	st	5,308(3)
+	l	3,0(14)
+	cal	5,1920(21)
+	st	5,312(3)
+	l	3,0(14)
+	cal	5,1952(21)
+	st	5,316(3)
+	l	3,0(14)
+	cal	5,1984(21)
+	st	5,320(3)
+	l	3,0(14)
+	cal	5,2016(21)
+	st	5,324(3)
 	l	3,1224(13)
 	l	3,0(3)
 	l	4,1204(13)
@@ -621,7 +693,7 @@ clrsyst:	l	3,1224(13)
 	bgt	clrsyst
 	lil	14,0
 	lil	14,7
-	cal	15,5031(13)
+	cal	15,5088(13)
 	l	16,4652(13)
 	cal	17,164(13)
 	lil	3,._llversion
@@ -629,12 +701,12 @@ clrsyst:	l	3,1224(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,5038(13)
+	cal	15,5095(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,3
-	cal	15,5043(13)
+	cal	15,5100(13)
 	l	16,4644(13)
 	cal	17,164(13)
 	lil	3,._stop
@@ -642,7 +714,7 @@ clrsyst:	l	3,1224(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,5046(13)
+	cal	15,5103(13)
 	l	16,4640(13)
 	cal	17,164(13)
 	lil	3,._llatend
@@ -650,7 +722,7 @@ clrsyst:	l	3,1224(13)
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,5052(13)
+	cal	15,5109(13)
 	l	16,4636(13)
 	cal	17,164(13)
 	lil	3,._herald
@@ -695,16 +767,16 @@ clrsyst:	l	3,1224(13)
 	bl	C.ini_bll
 	oril	14,21,0
 	l	14,28(14)
-	cal	3,22112(21)
+	cal	3,22400(21)
 	st	3,4(14)
 	l	14,1128(13)
-	cal	15,22112(21)
+	cal	15,22400(21)
 forcstr2:	st	15,4(14)
 	ai	14,14,8
 	cmpl	0,14,21
 	blt	forcstr2
 	l	14,1120(13)
-	cal	15,23296(21)
+	cal	15,23584(21)
 forcvec2:	st	15,4(14)
 	ai	14,14,8
 	cmpl	0,14,20
@@ -738,7 +810,7 @@ imin4:reenter:	l	1,1060(13)
 	st	3,1212(13)
 	b	systop
 theend:	lil	3,25
-	cal	4,5058(13)
+	cal	4,5115(13)
 	lil	6,0
 	st	6,208(13)
 	st	1,136(13)
@@ -786,9 +858,9 @@ supitsof:	b	llsupit
 C.llversion:	mflr	0
 	stu	0,-4(1)
 	.globl	llversion
-llversion:	cal	14,1792(21)
-	l	3,28(14)
-	l	3,0(3)
+llversion:	cal	14,2080(21)
+	l	14,28(14)
+	l	3,0(14)
 	ai	3,3,8
 	lil	4,0
 	lil	5,5
@@ -852,7 +924,7 @@ stop:	exts	3,17
 	oril	15,6,0
 	b	stop4
 stop3:	oril	15,21,0
-stop4:	cal	14,1856(21)
+stop4:	cal	14,2144(21)
 	.globl	C.itsoft
 	bl	C.itsoft
 	l	14,0(1)
@@ -878,7 +950,7 @@ stop5:	.globl	C.ll_exit
 	mtlr	0
 	br	
 stop6:	lil	14,0
-	cal	15,1824(21)
+	cal	15,2112(21)
 	b	errwna
 	.set	._llatend,5
 	.globl	C.llatend
@@ -902,15 +974,15 @@ llatend1:	l	14,0(1)
 	mtlr	0
 	br	
 llatend2:	lil	14,0
-	cal	15,1856(21)
+	cal	15,2144(21)
 	b	errwna
 	.set	._herald,1
 	.globl	C.herald
 C.herald:	mflr	0
 	stu	0,-4(1)
 	.globl	herald
-herald:	lil	3,50
-	cal	4,5083(13)
+herald:	lil	3,52
+	cal	4,5140(13)
 	lil	6,0
 	st	6,208(13)
 	st	1,136(13)
@@ -944,7 +1016,7 @@ herald:	lil	3,50
 	lil	6,1
 	st	6,208(13)
 	lil	3,1
-	cal	4,6570(13)
+	cal	4,6629(13)
 	lil	6,0
 	st	6,208(13)
 	st	1,136(13)

@@ -23,7 +23,7 @@
 C.ini_bll:	mflr	0
 	stu	0,-4(1)
 ini_bll:	lil	14,3
-	cal	15,9226(13)
+	cal	15,9285(13)
 	l	16,2076(13)
 	cal	17,164(13)
 	lil	3,._loc
@@ -31,7 +31,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9229(13)
+	cal	15,9288(13)
 	l	16,2072(13)
 	cal	17,164(13)
 	lil	3,._locint
@@ -41,7 +41,7 @@ ini_bll:	lil	14,3
 	cal	3,224(21)
 	st	3,12(14)
 	lil	14,3
-	cal	15,9235(13)
+	cal	15,9294(13)
 	l	16,2068(13)
 	cal	17,164(13)
 	lil	3,._vag
@@ -49,7 +49,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9238(13)
+	cal	15,9297(13)
 	l	16,2040(13)
 	cal	17,164(13)
 	lil	3,._memory
@@ -57,7 +57,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,9244(13)
+	cal	15,9303(13)
 	l	16,2036(13)
 	cal	17,164(13)
 	lil	3,._bltmemory
@@ -65,7 +65,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9253(13)
+	cal	15,9312(13)
 	l	16,2064(13)
 	cal	17,164(13)
 	lil	3,._addadr
@@ -73,7 +73,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,9259(13)
+	cal	15,9318(13)
 	l	16,2060(13)
 	cal	17,164(13)
 	lil	3,._incradr
@@ -81,7 +81,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,9266(13)
+	cal	15,9325(13)
 	l	16,2056(13)
 	cal	17,164(13)
 	lil	3,._subadr
@@ -89,7 +89,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,9272(13)
+	cal	15,9331(13)
 	l	16,2052(13)
 	cal	17,164(13)
 	lil	3,._gtadr
@@ -97,7 +97,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,9277(13)
+	cal	15,9336(13)
 	l	16,2048(13)
 	cal	17,164(13)
 	lil	3,._accode
@@ -107,7 +107,7 @@ ini_bll:	lil	14,3
 	cal	3,224(21)
 	st	3,12(14)
 	lil	14,5
-	cal	15,9282(13)
+	cal	15,9341(13)
 	l	16,2044(13)
 	cal	17,164(13)
 	lil	3,._aecode
@@ -117,7 +117,7 @@ ini_bll:	lil	14,3
 	cal	3,224(21)
 	st	3,12(14)
 	lil	14,10
-	cal	15,9287(13)
+	cal	15,9346(13)
 	l	16,2032(13)
 	cal	17,164(13)
 	lil	3,._precomp
@@ -125,7 +125,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,9297(13)
+	cal	15,9356(13)
 	l	16,2028(13)
 	cal	17,164(13)
 	lil	3,._llcall
@@ -133,7 +133,7 @@ ini_bll:	lil	14,3
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,9301(13)
+	cal	15,9360(13)
 	l	16,2024(13)
 	cal	17,164(13)
 	lil	3,._llcaln
@@ -187,7 +187,7 @@ locint:	sri	15,14,16
 C.vag:	mflr	0
 	stu	0,-4(1)
 	.globl	vag
-vag:	cal	15,23488(21)
+vag:	cal	15,23776(21)
 	b	vaga1
 	.globl	C.vaga1
 C.vaga1:	mflr	0
@@ -258,7 +258,7 @@ vaga3c:	cmpl	0,16,18
 C.addadr:	mflr	0
 	stu	0,-4(1)
 	.globl	addadr
-addadr:	cal	3,23584(21)
+addadr:	cal	3,23872(21)
 	st	3,2016(13)
 	.globl	C.adrverif
 	bl	C.adrverif
@@ -278,7 +278,7 @@ C.incradr:	mflr	0
 	stu	0,-4(1)
 	.globl	incradr
 incradr:	stu	14,-4(1)
-	cal	3,23616(21)
+	cal	3,23904(21)
 	st	3,2016(13)
 	.globl	C.adrverif
 	bl	C.adrverif
@@ -329,7 +329,7 @@ incadr3:	l	0,0(1)
 C.subadr:	mflr	0
 	stu	0,-4(1)
 	.globl	subadr
-subadr:	cal	3,23648(21)
+subadr:	cal	3,23936(21)
 	st	3,2016(13)
 	.globl	C.adrverif
 	bl	C.adrverif
@@ -364,7 +364,7 @@ subadr:	cal	3,23648(21)
 C.gtadr:	mflr	0
 	stu	0,-4(1)
 	.globl	gtadr
-gtadr:	cal	3,23680(21)
+gtadr:	cal	3,23968(21)
 	st	3,2016(13)
 	.globl	C.adrverif
 	bl	C.adrverif
@@ -500,7 +500,7 @@ adrcrear:	l	0,0(1)
 C.accode:	mflr	0
 	stu	0,-4(1)
 	.globl	accode
-accode:	cal	15,23712(21)
+accode:	cal	15,24000(21)
 	cmpli	0,17,0
 	beq	accodeg
 	cmpli	0,17,1
@@ -526,7 +526,7 @@ aecode:	l	14,1088(13)
 C.memory:	mflr	0
 	stu	0,-4(1)
 	.globl	memory
-memory:	cal	15,23520(21)
+memory:	cal	15,23808(21)
 	cmpli	0,17,2
 	bne	memor2
 	l	14,0(1)
@@ -560,7 +560,7 @@ C.bltmemory:	mflr	0
 	stu	0,-4(1)
 	.globl	bltmemory
 bltmemory:	stu	15,-4(1)
-	cal	15,23552(21)
+	cal	15,23840(21)
 	.globl	C.vaga1
 	bl	C.vaga1
 	.globl	C.vaga3
@@ -609,7 +609,7 @@ llcall:	cmpli	0,17,4
 	ai	1,1,4
 	mtlr	0
 	br	
-callerr1:	cal	15,23808(21)
+callerr1:	cal	15,24096(21)
 	lil	14,4
 	b	errwna
 	.set	._llcaln,3
@@ -618,7 +618,7 @@ C.llcaln:	mflr	0
 	stu	0,-4(1)
 	.globl	llcaln
 llcaln:	oril	16,15,0
-	cal	15,23840(21)
+	cal	15,24128(21)
 	.globl	C.vaga1
 	bl	C.vaga1
 	lil	17,0

@@ -86,67 +86,67 @@
 C.ini_top:	mflr	0
 	stu	0,-4(1)
 ini_top:	lil	14,5
-	cal	15,5134(13)
+	cal	15,5193(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5139(13)
+	cal	15,5198(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5144(13)
+	cal	15,5203(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5149(13)
+	cal	15,5208(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5154(13)
+	cal	15,5213(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5159(13)
+	cal	15,5218(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,4
-	cal	15,5164(13)
+	cal	15,5223(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5168(13)
+	cal	15,5227(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5173(13)
+	cal	15,5232(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5178(13)
+	cal	15,5237(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5184(13)
+	cal	15,5243(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5189(13)
+	cal	15,5248(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,8
-	cal	15,5195(13)
+	cal	15,5254(13)
 	l	16,4628(13)
 	cal	17,164(13)
 	lil	3,._toplevel
@@ -156,34 +156,34 @@ ini_top:	lil	14,5
 	cal	3,224(21)
 	st	3,1452(13)
 	lil	14,13
-	cal	15,5203(13)
+	cal	15,5262(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	cal	3,96(21)
 	st	3,0(14)
 	lil	14,10
-	cal	15,5216(13)
+	cal	15,5275(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	3,1
 	st	3,0(14)
 	lil	14,12
-	cal	15,5226(13)
+	cal	15,5285(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	3,3
 	st	3,0(14)
 	lil	14,9
-	cal	15,5238(13)
+	cal	15,5297(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	st	21,1452(13)
 	lil	14,7
-	cal	15,5247(13)
+	cal	15,5306(13)
 	l	16,4552(13)
 	cal	17,164(13)
 	lil	3,._runt
@@ -191,7 +191,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,5254(13)
+	cal	15,5313(13)
 	l	16,4548(13)
 	cal	17,164(13)
 	lil	3,._llsleep
@@ -199,7 +199,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,5259(13)
+	cal	15,5318(13)
 	l	16,4544(13)
 	cal	17,164(13)
 	lil	3,._lldate
@@ -207,7 +207,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,5263(13)
+	cal	15,5322(13)
 	l	16,4540(13)
 	cal	17,164(13)
 	lil	3,._clkalarm
@@ -215,7 +215,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,15
-	cal	15,7211(13)
+	cal	15,7270(13)
 	l	16,4536(13)
 	cal	17,164(13)
 	lil	3,._withit
@@ -223,7 +223,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,18
-	cal	15,7226(13)
+	cal	15,7285(13)
 	l	16,4528(13)
 	cal	17,164(13)
 	lil	3,._withnoit
@@ -231,7 +231,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,4
-	cal	15,5306(13)
+	cal	15,5365(13)
 	l	16,4520(13)
 	cal	17,164(13)
 	lil	3,._lltime
@@ -239,7 +239,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,5310(13)
+	cal	15,5369(13)
 	l	16,4516(13)
 	cal	17,164(13)
 	lil	3,._llshwstk
@@ -247,7 +247,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,7
-	cal	15,5320(13)
+	cal	15,5379(13)
 	l	16,4572(13)
 	cal	17,164(13)
 	lil	3,._llcline
@@ -255,7 +255,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,5327(13)
+	cal	15,5386(13)
 	l	16,4564(13)
 	cal	17,164(13)
 	lil	3,._llgetenv
@@ -263,7 +263,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,9
-	cal	15,5333(13)
+	cal	15,5392(13)
 	l	16,4560(13)
 	cal	17,164(13)
 	lil	3,._llgetadr
@@ -271,7 +271,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,10
-	cal	15,5342(13)
+	cal	15,5401(13)
 	l	16,4556(13)
 	cal	17,164(13)
 	lil	3,._llcallx
@@ -279,7 +279,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,6
-	cal	15,5352(13)
+	cal	15,5411(13)
 	l	16,4620(13)
 	cal	17,164(13)
 	lil	3,._cstack
@@ -287,7 +287,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,5358(13)
+	cal	15,5417(13)
 	l	16,4508(13)
 	cal	17,164(13)
 	lil	3,._syserror
@@ -295,7 +295,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,5366(13)
+	cal	15,5425(13)
 	l	16,4512(13)
 	cal	17,164(13)
 	lil	3,._lerror
@@ -303,7 +303,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,8
-	cal	15,5371(13)
+	cal	15,5430(13)
 	l	16,4504(13)
 	cal	17,164(13)
 	lil	3,._sysdebug
@@ -312,222 +312,222 @@ ini_top:	lil	14,5
 	bl	C.inisymb
 	st	21,0(14)
 	lil	14,3
-	cal	15,5379(13)
+	cal	15,5438(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,3
-	cal	15,5382(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
-	cal	15,5385(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
-	cal	15,5392(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
-	cal	15,5399(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
-	cal	15,5406(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
-	cal	15,5413(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
-	cal	15,5420(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
-	cal	15,5427(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
-	cal	15,5434(13)
-	cal	16,164(13)
-	.globl	C.inicst
-	bl	C.inicst
-	lil	14,7
 	cal	15,5441(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,7
-	cal	15,5448(13)
+	cal	15,5444(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,7
-	cal	15,5455(13)
+	cal	15,5451(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
-	lil	14,6
-	cal	15,5462(13)
+	lil	14,7
+	cal	15,5458(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
-	lil	14,6
-	cal	15,5468(13)
+	lil	14,7
+	cal	15,5465(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
-	lil	14,6
-	cal	15,5474(13)
+	lil	14,7
+	cal	15,5472(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
-	lil	14,6
-	cal	15,5480(13)
+	lil	14,7
+	cal	15,5479(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
-	lil	14,6
+	lil	14,7
 	cal	15,5486(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
-	lil	14,6
-	cal	15,5492(13)
+	lil	14,7
+	cal	15,5493(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,7
+	cal	15,5500(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,7
+	cal	15,5507(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,7
+	cal	15,5514(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,7249(13)
+	cal	15,5521(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5504(13)
+	cal	15,5527(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5510(13)
+	cal	15,5533(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5516(13)
+	cal	15,5539(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5522(13)
+	cal	15,5545(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5528(13)
+	cal	15,5551(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5534(13)
+	cal	15,7308(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5540(13)
+	cal	15,5563(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5546(13)
+	cal	15,5569(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5552(13)
+	cal	15,5575(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5558(13)
+	cal	15,5581(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5564(13)
+	cal	15,5587(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5570(13)
+	cal	15,5593(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5576(13)
+	cal	15,5599(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5582(13)
+	cal	15,5605(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5588(13)
+	cal	15,5611(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5594(13)
+	cal	15,5617(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5600(13)
+	cal	15,5623(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5606(13)
+	cal	15,5629(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5612(13)
+	cal	15,5635(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5618(13)
+	cal	15,5641(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5624(13)
+	cal	15,5647(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,6
-	cal	15,5630(13)
+	cal	15,5653(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,6
+	cal	15,5659(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,6
+	cal	15,5665(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,6
+	cal	15,5671(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,6
+	cal	15,5677(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,6
+	cal	15,5683(13)
+	cal	16,164(13)
+	.globl	C.inicst
+	bl	C.inicst
+	lil	14,6
+	cal	15,5689(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,5
-	cal	15,5636(13)
+	cal	15,5695(13)
 	cal	16,164(13)
 	.globl	C.inicst
 	bl	C.inicst
 	lil	14,14
-	cal	15,5641(13)
+	cal	15,5700(13)
 	l	16,4496(13)
 	cal	17,164(13)
 	lil	3,._userit
@@ -535,7 +535,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,5655(13)
+	cal	15,5714(13)
 	l	16,4488(13)
 	cal	17,164(13)
 	lil	3,._mouse
@@ -543,7 +543,7 @@ ini_top:	lil	14,5
 	.globl	C.inisymb
 	bl	C.inisymb
 	lil	14,5
-	cal	15,5660(13)
+	cal	15,5719(13)
 	l	16,4484(13)
 	cal	17,164(13)
 	lil	3,._lltclock
@@ -560,7 +560,7 @@ systop:	st	21,1756(13)
 	l	3,4632(13)
 	stu	3,-4(1)
 	st	1,1756(13)
-systop2:	cal	14,2304(21)
+systop2:	cal	14,2592(21)
 	oril	15,21,0
 	.globl	C.itsoft
 	bl	C.itsoft
@@ -579,12 +579,12 @@ toplevel:	.globl	C.lread
 	lil	17,2
 	b	eval
 	.globl	toplevr
-toplevr:	cal	15,2336(21)
+toplevr:	cal	15,2624(21)
 	l	15,0(15)
 	cmpl	0,15,21
 	beq	toplend
 	lil	3,2
-	cal	4,5665(13)
+	cal	4,5724(13)
 	lil	6,0
 	st	6,208(13)
 	st	1,136(13)
@@ -694,7 +694,7 @@ evstck1:	oril	14,21,0
 	cmpl	0,16,4
 	beq	evstkk
 	lil	3,14
-	cal	4,5667(13)
+	cal	4,5726(13)
 	lil	6,0
 	st	6,208(13)
 	st	1,136(13)
@@ -948,7 +948,7 @@ evstkk:	lil	15,10
 C.llcline:	mflr	0
 	stu	0,-4(1)
 	.globl	llcline
-llcline:	cal	3,2720(21)
+llcline:	cal	3,3008(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -991,7 +991,7 @@ llclin2:	l	3,0(14)
 C.llgetenv:	mflr	0
 	stu	0,-4(1)
 	.globl	llgetenv
-llgetenv:	cal	3,2752(21)
+llgetenv:	cal	3,3040(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -1027,7 +1027,7 @@ gtenv8:	l	15,1444(13)
 C.llgetadr:	mflr	0
 	stu	0,-4(1)
 	.globl	llgetadr
-llgetadr:	cal	3,2784(21)
+llgetadr:	cal	3,3072(21)
 	st	3,1740(13)
 	.globl	C.stringa1
 	bl	C.stringa1
@@ -1056,7 +1056,7 @@ llcallx:	si	4,17,1
 	andil.	17,4,0xFFFF
 	sli	3,17,2
 	lx	14,1,3
-	cal	15,2816(21)
+	cal	15,3104(21)
 	.globl	C.vaga1
 	bl	C.vaga1
 	sli	5,17,2
@@ -1147,7 +1147,7 @@ llsleep1:	a	3,14,14
 	ai	1,1,4
 	mtlr	0
 	br	
-llsleep2:	cal	15,2496(21)
+llsleep2:	cal	15,2784(21)
 	b	errnna
 	.set	._lldate,1
 	.globl	C.lldate
@@ -1158,7 +1158,7 @@ lldate:	lil	14,8
 	oril	15,21,0
 	.globl	C.makevect
 	bl	C.makevect
-	cal	3,2528(21)
+	cal	3,2816(21)
 	st	3,4(14)
 	l	3,0(14)
 	ai	3,3,8
@@ -1224,7 +1224,7 @@ alrms1:	a	3,14,14
 	ai	1,1,4
 	mtlr	0
 	br	
-alrmer2:	cal	15,2560(21)
+alrmer2:	cal	15,2848(21)
 	b	errnna
 	.set	._withit,6
 	.globl	C.withit
@@ -1344,11 +1344,11 @@ llshwstk3:	ai	1,1,-4
 	andil.	14,4,0xFFFF
 	exts	3,14
 	cmpi	0,3,1024
-	blt	lab103
+	blt	lab101
 	lil	14,0
 	ai	4,15,1
 	andil.	15,4,0xFFFF
-lab103:	cror	15,15,15
+lab101:	cror	15,15,15
 	b	llshwstk3
 llshwstk4:	oril	1,16,0
 	cmpli	0,15,0
@@ -1407,7 +1407,7 @@ lerror:	l	6,1184(13)
 	st	16,4(6)
 	oril	16,6,0
 	oril	15,16,0
-	cal	14,2880(21)
+	cal	14,3168(21)
 	b	itsoft
 serror:	l	6,1184(13)
 	cmpl	0,6,21
@@ -1442,7 +1442,7 @@ serror:	l	6,1184(13)
 	st	15,0(6)
 	st	14,4(6)
 	oril	15,6,0
-	cal	14,2880(21)
+	cal	14,3168(21)
 	b	itsoft
 ferror:	stu	14,-4(1)
 	l	15,0(14)
@@ -1485,7 +1485,7 @@ ferror1:	l	3,0(15)
 	l	14,0(1)
 	ai	1,1,4
 ferror2:	oril	14,21,0
-	cal	15,2432(21)
+	cal	15,2720(21)
 	oril	16,21,0
 	oril	17,21,0
 	b	findtag
@@ -1497,21 +1497,21 @@ C.syserror:	mflr	0
 syserror:	stu	16,-4(1)
 	stu	15,-4(1)
 	stu	14,-4(1)
-	cal	14,2976(21)
+	cal	14,3264(21)
 	.globl	C.probj
 	bl	C.probj
 	l	14,0(1)
 	ai	1,1,4
 	.globl	C.probj
 	bl	C.probj
-	cal	14,3008(21)
+	cal	14,3296(21)
 	.globl	C.probj
 	bl	C.probj
 	l	14,0(1)
 	ai	1,1,4
 	.globl	C.probj
 	bl	C.probj
-	cal	14,3008(21)
+	cal	14,3296(21)
 	.globl	C.probj
 	bl	C.probj
 	l	14,0(1)
@@ -1528,7 +1528,7 @@ sysdebug:	l	0,0(1)
 	ai	1,1,4
 	mtlr	0
 	br	
-errfs:	cal	14,3040(21)
+errfs:	cal	14,3328(21)
 	l	3,1076(13)
 	cmpl	0,1,3
 	bge	.top.27
@@ -1546,12 +1546,12 @@ errfs:	cal	14,3040(21)
 errfs0:	l	3,1076(13)
 	st	3,1068(13)
 	oril	16,14,0
-	cal	15,10336(21)
+	cal	15,10624(21)
 	oril	14,21,0
 	b	serror
-errfsgc:	cal	14,3072(21)
+errfsgc:	cal	14,3360(21)
 	b	ferror
-erres:	cal	14,3104(21)
+erres:	cal	14,3392(21)
 	l	15,0(14)
 	cmpl	0,15,20
 	blt	.top.28
@@ -1590,80 +1590,80 @@ erres2:	l	3,0(15)
 	lil	6,1
 	st	6,208(13)
 	b	reenter
-errfsp:	cal	14,3136(21)
+errfsp:	cal	14,3424(21)
 	b	ferror
-errato:	cal	14,3168(21)
+errato:	cal	14,3456(21)
 	b	ferror
-errfm:	cal	14,3200(21)
+errfm:	cal	14,3488(21)
 	b	ferror
-errff:	cal	14,3232(21)
+errff:	cal	14,3520(21)
 	b	ferror
-errfn:	cal	14,3264(21)
+errfn:	cal	14,3552(21)
 	b	ferror
-errfh:	cal	14,3296(21)
+errfh:	cal	14,3584(21)
 	b	ferror
-errfr:	cal	14,3328(21)
+errfr:	cal	14,3616(21)
 	b	ferror
-errfv:	cal	14,3360(21)
+errfv:	cal	14,3648(21)
 	b	ferror
-errudv:	cal	16,3424(21)
+errudv:	cal	16,3712(21)
 	b	serror
 	.globl	C.errudf
 C.errudf:	mflr	0
 	stu	0,-4(1)
-errudf:	cal	16,3456(21)
+errudf:	cal	16,3744(21)
 	b	serror
-errudm:	cal	16,3488(21)
+errudm:	cal	16,3776(21)
 	b	serror
-errudt:	cal	16,3520(21)
+errudt:	cal	16,3808(21)
 	b	serror
-errbdf:	cal	16,3552(21)
+errbdf:	cal	16,3840(21)
 	b	serror
-errwna:	cal	16,3584(21)
+errwna:	cal	16,3872(21)
 	b	serror
-errbpa:	cal	16,3616(21)
+errbpa:	cal	16,3904(21)
 	b	serror
-errbal:	cal	16,3648(21)
+errbal:	cal	16,3936(21)
 	b	serror
-errilb:	cal	16,3680(21)
+errilb:	cal	16,3968(21)
 	b	serror
-errsxt:	cal	16,3712(21)
+errsxt:	cal	16,4000(21)
 	b	serror
-errios:	cal	16,3744(21)
+errios:	cal	16,4032(21)
 	b	serror
-err0dv:	cal	16,3776(21)
+err0dv:	cal	16,4064(21)
 	b	serror
-errnaa:	cal	16,3936(21)
+errnaa:	cal	16,4224(21)
 	b	serror
-errnna:	cal	16,3808(21)
+errnna:	cal	16,4096(21)
 	b	serror
-errnia:	cal	16,3840(21)
+errnia:	cal	16,4128(21)
 	b	serror
-errnfa:	cal	16,3872(21)
+errnfa:	cal	16,4160(21)
 	b	serror
-errnsa:	cal	16,3904(21)
+errnsa:	cal	16,4192(21)
 	b	serror
-errnla:	cal	16,3968(21)
+errnla:	cal	16,4256(21)
 	b	serror
-errnva:	cal	16,4000(21)
+errnva:	cal	16,4288(21)
 	b	serror
-errstl:	cal	16,4064(21)
+errstl:	cal	16,4352(21)
 	b	serror
-erroob:	cal	16,4032(21)
+erroob:	cal	16,4320(21)
 	b	serror
-errvec:	cal	16,4096(21)
+errvec:	cal	16,4384(21)
 	b	serror
-errnda:	cal	16,4128(21)
+errnda:	cal	16,4416(21)
 	b	serror
-errstc:	cal	16,4160(21)
+errstc:	cal	16,4448(21)
 	b	serror
-errsym:	cal	16,4192(21)
+errsym:	cal	16,4480(21)
 	b	serror
-errgen:	cal	16,4224(21)
+errgen:	cal	16,4512(21)
 	b	serror
-errnab:	cal	16,4256(21)
+errnab:	cal	16,4544(21)
 	b	serror
-errxia:	cal	16,4288(21)
+errxia:	cal	16,4576(21)
 	b	serror
 	.globl	C.llmerro
 C.llmerro:	mflr	0
@@ -1693,7 +1693,7 @@ llmerro:	stu	14,-4(1)
 	l	6,1184(13)
 .top.30:	l	3,4(6)
 	st	3,1184(13)
-	cal	3,3392(21)
+	cal	3,3680(21)
 	st	3,0(6)
 	st	15,4(6)
 	oril	15,6,0
@@ -1708,7 +1708,7 @@ llmerro:	stu	14,-4(1)
 	st	14,0(6)
 	st	15,4(6)
 	oril	15,6,0
-	cal	14,2880(21)
+	cal	14,3168(21)
 	.globl	C.itsoft
 	bl	C.itsoft
 	l	17,0(1)
@@ -1730,7 +1730,7 @@ llbreak:	stu	14,-4(1)
 	stu	15,-4(1)
 	stu	16,-4(1)
 	stu	17,-4(1)
-	cal	14,4352(21)
+	cal	14,4640(21)
 	oril	15,21,0
 	.globl	C.itsoft
 	bl	C.itsoft
@@ -1770,7 +1770,7 @@ llpanic:	stu	14,-4(1)
 	l	6,1184(13)
 .top.33:	l	3,4(6)
 	st	3,1184(13)
-	cal	3,4320(21)
+	cal	3,4608(21)
 	st	3,0(6)
 	st	15,4(6)
 	oril	15,6,0
@@ -1782,11 +1782,11 @@ llpanic:	stu	14,-4(1)
 	l	6,1184(13)
 .top.34:	l	3,4(6)
 	st	3,1184(13)
-	cal	3,4320(21)
+	cal	3,4608(21)
 	st	3,0(6)
 	st	15,4(6)
 	oril	15,6,0
-	cal	14,2880(21)
+	cal	14,3168(21)
 	.globl	C.itsoft
 	bl	C.itsoft
 	l	17,0(1)
@@ -1809,7 +1809,7 @@ llmouse:	stu	14,-4(1)
 	stu	16,-4(1)
 	stu	17,-4(1)
 	oril	15,21,0
-	cal	14,4384(21)
+	cal	14,4672(21)
 	.globl	C.itsoft
 	bl	C.itsoft
 	l	17,0(1)
@@ -1831,7 +1831,7 @@ llclock:	stu	14,-4(1)
 	stu	15,-4(1)
 	stu	16,-4(1)
 	stu	17,-4(1)
-	cal	14,4416(21)
+	cal	14,4704(21)
 	oril	15,21,0
 	.globl	C.itsoft
 	bl	C.itsoft
@@ -1887,7 +1887,7 @@ userit2:	oril	15,21,0
 	l	6,1184(13)
 .top.36:	l	3,4(6)
 	st	3,1184(13)
-	cal	3,4320(21)
+	cal	3,4608(21)
 	st	3,0(6)
 	st	15,4(6)
 	oril	15,6,0
@@ -1899,11 +1899,11 @@ userit2:	oril	15,21,0
 	l	6,1184(13)
 .top.37:	l	3,4(6)
 	st	3,1184(13)
-	cal	3,4320(21)
+	cal	3,4608(21)
 	st	3,0(6)
 	st	15,4(6)
 	oril	15,6,0
-	cal	14,2880(21)
+	cal	14,3168(21)
 	b	itsoft
 	.set	._mouse,1
 	.globl	C.mouse
