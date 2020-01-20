@@ -44,7 +44,7 @@ do
 	-files)
 		echo "(defvar #:llm3:files '($2))"		>> $tmp
 		;;		
-	*)	echo "llexpand: Mauvaises options"
+	*)	echo "llexpand: Mauvaises options $1"
 		exit ;;
     esac
     shift; shift
