@@ -1,0 +1,12 @@
+#!/bin/sh 
+set -x
+
+# Recette officielle de Le-Lisp avec complice.
+date
+cd ..
+rm -f letestextbin
+make letestextbin
+ ./letestextbin -stack 6 -code 1920 -heap 280 -number 0 -vector 4 -string 7  -symbol 8 -cons 24 -float 0 \
+	../llib/startup.ll < ../lltest/cmplc.rec.ll
+
+date

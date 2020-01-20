@@ -1,0 +1,41 @@
+
+#!/bin/sh
+set -x
+
+# Recette officielle de Le-Lisp standard modulaire.
+date
+cd ..
+make clean
+
+make letestextbin
+date
+ ./letestextbin -stack 6 -code 1600 -heap 300 -number 0 -vector 4 -string 8 -symbol 7 -cons 24 -float 0 \
+	../llib/startup.ll < ../lltest/lelisp.rec.ll
+
+rm -f letestextbin
+make letestextbin BIN=lelisp64
+date
+ ./letestextbin -stack 6 -code 1600 -heap 300 -number 0 -vector 7 -string 8 -symbol 7 -cons 24 -float 16 \
+	../llib/startup.ll < ../lltest/lelisp.rec.ll
+
+date
+
+# Pour tester avec FORTRAN
+if [ -f /bin/f77 ]
+then
+
+rm -f leftestbin
+make leftestbin
+date
+ ./leftestbin -stack 6 -code 1600 -heap 300 -number 0 -vector 4 -string 8 -symbol 7 -cons 24 -float 0 ../llib/startup.ll << Eoi
+(load-stm ()()()'(callext) t)
+(loadfile "../lltest/testfortran.ll" t)
+(end)
+Eoi
+
+else
+echo "**** impossible to test with FORTRAN on this machine: " RS6000
+fi
+
+date
+

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+## Valeurs par de'faut:
+BOOTLISP=/nfs/current/lelisp/rs6000/cmplc++
+
+SYSTEM=rs6000
+
+while test x$1 != x
+do
+case $1 in
+-bootl*) BOOTLISP=$2 ;;
+-system) SYSTEM=$2;;
+esac
+shift; shift
+done
+
+$BOOTLISP <<EOI
+;; Fabriquer le core expanseur llm3 -> RS6000.
+../lltool/llm3
+../lltool/expand
+../lltool/macllm3
+macrs6000
+(compile-all-in-core)
+(prs6000)
+(progn (save-core "../$SYSTEM/llcore/expdrs6000.core")
+       "L'expanseur LLM3 -> RS6000")
+(end)
+EOI

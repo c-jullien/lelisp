@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# IBM AIX 3.2.x / X11R4    <->    IBM AIX 3.2.x / X11R5
+#
+# usage: tosystem X11R4
+#        tosystem X11R5
+
+case $1 in
+# for AIX Version X11R5
+X11R5|r5|5)
+	rm -f foo
+	sed -e 's/\$(_X11R4FLAGS)/\$(_X11R5FLAGS)/' Makefile >foo
+	rm -f Makefile
+	mv foo Makefile
+	chmod 444 Makefile
+	;;
+
+# for AIX Version X11R4
+X11R4|r4|4)
+	rm -f foo
+	sed -e 's/\$(_X11R5FLAGS)/\$(_X11R4FLAGS)/' Makefile >foo
+	rm -f Makefile
+	mv foo Makefile
+	chmod 444 Makefile
+	;;
+*)
+	echo "usage: $0 [X11R4|X11R5]"
+	exit 1
+
+esac

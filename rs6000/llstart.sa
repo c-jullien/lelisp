@@ -1,0 +1,4 @@
+	.file "huge.s"
+	.toc
+T.lelisp_dat:	.tc	lelisp_dat[TC],lelisp_dat[RW]
+

@@ -1,0 +1,23 @@
+defmodule
+bug
+files (
+bug
+)
+export (
+bug
+)
+import
+()
+include
+()
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(bug subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv
+()

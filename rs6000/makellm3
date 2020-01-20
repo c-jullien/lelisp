@@ -1,0 +1,202 @@
+#
+#          Makefile for the  Le_Lisp system [rs6000]
+#
+
+SYSTEM=RS6000
+
+# La machine sur laquelle se realise l'expansion (utile au Bootstrap!)
+# Normalement c'est la meme:
+HOST=$(SYSTEM)
+
+MAKE=make
+SHELL=/bin/sh
+
+# On peut choisir le Lisp qui va realiser l'expansion. 
+BOOTLISP=/nfs/current/lelisp/rs6000/cmplc++
+
+# la version de flottants
+FLT=31
+
+S=s$(FLT)
+O=o$(FLT)
+
+BIN=lisp$(FLT)
+
+# pour compilo, assembleur, linker
+
+ASFLAGS=
+LDFLAGS= -r -x
+
+## Compilations C 
+CC=cc
+LIB=
+
+##################################################################
+# les entre'es classiques
+
+all: le$(BIN)llm3.o
+
+clean:
+	rm -f le*llm3.o 
+	rm -f o??/*.o
+	rm -f s??/*.s
+
+################################################################
+
+# les fichiers qui definissent l'expansion d'LLM3
+llm3tools= ../lltool/llm3.ll ../lltool/expand.ll ../lltool/macllm3.ll
+
+#
+# The object files
+# 
+
+sobj64= o64/llrs6000.o o64/llinit.o \
+     o64/toperr.o o64/gc.o o64/physio.o \
+     o64/read.o o64/macroch.o o64/print.o \
+     o64/eval.o o64/fspecs.o \
+     o64/cntrl.o o64/carcdr.o o64/symbs.o \
+     o64/fntstd.o o64/number.o \
+     o64/specnb.o o64/string.o o64/chars.o \
+     o64/extend.o o64/bllsht.o
+
+sobj31= o31/llrs6000.o o31/llinit.o \
+     o31/toperr.o o31/gc.o o31/physio.o \
+     o31/read.o o31/macroch.o o31/print.o \
+     o31/eval.o o31/fspecs.o \
+     o31/cntrl.o o31/carcdr.o o31/symbs.o \
+     o31/fntstd.o o31/number.o \
+     o31/specnb.o o31/string.o o31/chars.o \
+     o31/extend.o o31/bllsht.o
+
+sobj = sobj$(FLT)
+
+llm3s64= s64/llrs6000.s s64/llinit.s \
+     s64/toperr.s s64/gc.s s64/physio.s \
+     s64/read.s s64/macroch.s s64/print.s \
+     s64/eval.s s64/fspecs.s \
+     s64/cntrl.s s64/carcdr.s s64/symbs.s \
+     s64/fntstd.s s64/number.s \
+     s64/specnb.s s64/string.s s64/chars.s \
+     s64/extend.s s64/bllsht.s
+
+llm3s31= s31/llrs6000.s s31/llinit.s \
+     s31/toperr.s s31/gc.s s31/physio.s \
+     s31/read.s s31/macroch.s s31/print.s \
+     s31/eval.s s31/fspecs.s \
+     s31/cntrl.s s31/carcdr.s s31/symbs.s \
+     s31/fntstd.s s31/number.s \
+     s31/specnb.s s31/string.s s31/chars.s \
+     s31/extend.s s31/bllsht.s
+
+llm3=  llrs6000.llm3 ../llm3/llinit.llm3 \
+	../llm3/toperr.llm3 ../llm3/gc.llm3 ../llm3/physio.llm3 \
+	../llm3/read.llm3 ../llm3/macroch.llm3 ../llm3/print.llm3 \
+	../llm3/eval.llm3 ../llm3/fspecs.llm3 \
+	../llm3/cntrl.llm3 ../llm3/carcdr.llm3 ../llm3/symbs.llm3 \
+	../llm3/fntstd.llm3 ../llm3/number.llm3 \
+	../llm3/specnb.llm3 ../llm3/string.llm3 ../llm3/chars.llm3 \
+	../llm3/extend.llm3 ../llm3/bllsht.llm3
+
+
+# les fichiers qui definissent l'expansion d'LLM3
+LLM3TOOLS= ../lltool/llm3.ll ../lltool/expand.ll ../lltool/macllm3.ll
+
+# pour rearmer ou non les IT apres les system-calls
+SIGBLOCK="1"
+#SIGBLOCK="0"
+
+# flag pour l'edition de liens
+# flag -Q pour avoir tous les symbols
+# flag -x sinon
+LDFLAGS= -x
+
+lelisp31llm3.o:: expander expansion31
+lelisp31llm3.o:: $(sobj31)
+
+lelisp64llm3.o:: expander expansion64
+lelisp64llm3.o:: $(sobj64)
+
+expansion64: $(llm3s64)
+		@echo ...Generating $@ because of $?
+		llexpand -bootlisp $(BOOTLISP) \
+			-flag SIGBLOCK $(SIGBLOCK) \
+			-source "../llm3/" \
+			-flag 31bitfloats \(\) \
+			-dest "./$(S)/" \
+			-files "`for i in $? ; do basename $$i .s ; done`"
+		@rm -f expansion64
+		@touch expansion64
+
+expansion31: $(llm3s31)
+		@echo ...Generating $@ because of $?
+		llexpand -bootlisp $(BOOTLISP) \
+			-flag SIGBLOCK $(SIGBLOCK) \
+			-source "../llm3/" \
+			-dest "./$(S)/" \
+			-files "`for i in $? ; do basename $$i .s ; done`"
+		@rm -f expansion31
+		@touch expansion31
+
+expander: llcore/expdrs6000.core
+	@echo "...Generating" $@ "because of" $?
+	@rm -f expander
+	@touch expander
+
+llcore/expdrs6000.core: macrs6000.ll $(LLM3TOOLS) faire.llexpand
+	@echo ...Generating $@ because of $?
+	./faire.llexpand -bootlisp $(BOOTLISP)
+	rm -f expansion??
+
+# Assembler sources created by expansion from llm3.
+# separate entries so that llexpand (and thus the core restoration)
+# is called only once.
+$(S)/testllm3.s:	testllm3.llm3 ; rm -f $@    
+$(S)/testllrs6000.s:	testllrs6000.llm3 ; rm -f $@ 
+
+$(S)/extend.s:	../llm3/extend.llm3 ; rm -f $@        
+$(S)/llrs6000.s:	llrs6000.llm3 ; rm -f $@        
+$(S)/llinit.s:	../llm3/llinit.llm3 ; rm -f $@   
+$(S)/toperr.s:	../llm3/toperr.llm3 ; rm -f $@   
+$(S)/gc.s:	../llm3/gc.llm3 ; rm -f $@    
+$(S)/physio.s:	../llm3/physio.llm3 ; rm -f $@   
+$(S)/read.s:	../llm3/read.llm3 ; rm -f $@  
+$(S)/macroch.s:	../llm3/macroch.llm3 ; rm -f $@ 
+$(S)/print.s:	../llm3/print.llm3 ; rm -f $@     
+$(S)/eval.s:	../llm3/eval.llm3 ; rm -f $@ 
+$(S)/fspecs.s:	../llm3/fspecs.llm3 ; rm -f $@   
+$(S)/cntrl.s:	../llm3/cntrl.llm3 ; rm -f $@     
+$(S)/carcdr.s:	../llm3/carcdr.llm3 ; rm -f $@   
+$(S)/symbs.s:	../llm3/symbs.llm3 ; rm -f $@     
+$(S)/fntstd.s:	../llm3/fntstd.llm3 ; rm -f $@   
+$(S)/number.s:	../llm3/number.llm3 ; rm -f $@   
+$(S)/specnb.s:	../llm3/specnb.llm3 ; rm -f $@   
+$(S)/string.s:	../llm3/string.llm3 ; rm -f $@   
+$(S)/chars.s:	../llm3/chars.llm3 ; rm -f $@     
+$(S)/bllsht.s:	../llm3/bllsht.llm3 ; rm -f $@   
+
+
+$(O)/extend.o:	$(S)/extend.s ; as -o $(O)/extend.o $(S)/extend.s
+$(O)/llinit.o:	$(S)/llinit.s ; as -o $(O)/llinit.o $(S)/llinit.s
+$(O)/toperr.o:	$(S)/toperr.s ; as -o $(O)/toperr.o $(S)/toperr.s
+$(O)/gc.o:	$(S)/gc.s ; as -o $(O)/gc.o $(S)/gc.s
+$(O)/physio.o:	$(S)/physio.s ; as -o $(O)/physio.o $(S)/physio.s
+$(O)/read.o:	$(S)/read.s ; as -o $(O)/read.o $(S)/read.s
+$(O)/macroch.o:	$(S)/macroch.s ; as -o $(O)/macroch.o $(S)/macroch.s
+$(O)/print.o:	$(S)/print.s ; as -o $(O)/print.o $(S)/print.s
+$(O)/eval.o:	$(S)/eval.s ; as -o $(O)/eval.o $(S)/eval.s
+$(O)/fspecs.o:	$(S)/fspecs.s ; as -o $(O)/fspecs.o $(S)/fspecs.s
+$(O)/cntrl.o:	$(S)/cntrl.s ; as -o $(O)/cntrl.o $(S)/cntrl.s
+$(O)/carcdr.o:	$(S)/carcdr.s ; as -o $(O)/carcdr.o $(S)/carcdr.s
+$(O)/symbs.o:	$(S)/symbs.s ; as -o $(O)/symbs.o $(S)/symbs.s
+$(O)/fntstd.o:	$(S)/fntstd.s ; as -o $(O)/fntstd.o $(S)/fntstd.s
+$(O)/number.o:	$(S)/number.s ; as -o $(O)/number.o $(S)/number.s
+$(O)/specnb.o:	$(S)/specnb.s ; as -o $(O)/specnb.o $(S)/specnb.s
+$(O)/string.o:	$(S)/string.s ; as -o $(O)/string.o $(S)/string.s
+$(O)/chars.o:	$(S)/chars.s ; as -o $(O)/chars.o $(S)/chars.s
+$(O)/bllsht.o:	$(S)/bllsht.s ; as -o $(O)/bllsht.o $(S)/bllsht.s
+$(O)/llrs6000.o:	$(S)/llrs6000.s preproc.s
+	cat preproc.s $(S)/llrs6000.s > $(S)/startrs.s
+	as -o $(O)/llrs6000.o $(S)/startrs.s
+
+
+

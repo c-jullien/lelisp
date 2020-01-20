@@ -1,0 +1,26 @@
+
+# Suites is use to throw all recettes on a type of machine
+#
+# usage: Suites
+#
+
+logdate="log"
+
+date '+%d-%m-%y'  >/dev/null 2> /dev/null && logdate=`date '+%d-%m-%y'` 
+
+echo
+echo "********  Validation of Le-Lisp on " rs6000
+echo
+echo "Suiting Le-Lisp, wait a moment, please"
+echo "  And don't touch your machine during the last test [about BV]"
+echo
+
+./Lelisp.rec > log/llm.$logdate  2> log/llm.err
+./Cmplc.rec > log/cmplc.$logdate 2> log/cmplc.err
+./Lelisps.rec >log/lls.$logdate  2> log/lls.err
+./Lelispext.rec > log/llext.$logdate 2> log/llext.err
+./Lelispend.rec > log/llend.$logdate 2> log/llend.err
+./Bv.rec > log/bv.$logdate 2> log/bv.err
+
+echo "OK, Suites are ended."
+echo "Consult Log-files."

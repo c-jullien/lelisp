@@ -1,0 +1,6 @@
+defmodule ldrs6000
+   files  (loader)
+   export (loader)
+   import (files)
+
+;;; Added automatically, don't type beyond this line.

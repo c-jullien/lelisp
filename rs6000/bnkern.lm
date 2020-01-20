@@ -1,0 +1,39 @@
+defmodule kern
+   files  (bnkern)
+   ;; Les fonctions de l'interface.
+   export (
+           ;; Le-Lisp.
+           ;; bnsettozero bnassign bnsetdigit bngetdigit bnnumdigits
+           ;; bnnumleadingzerobitsindigit bndoesdigitfitinword bnisdigitzero
+           ;; bnisdigitnormalized bnisdigitodd bncomparedigits bncomplement
+           ;; bnanddigits bnordigits bnxordigits bnshiftleft bnshiftright
+           ;; bnaddcarry bnadd bnsubtractborrow bnsubtract bnmultiplydigit
+           ;; bndividedigit
+           ;; Ecrites en Lisp.
+           bnalloc bncreate bnfree bngettype bnsettype bngetsize
+           ;; Utilitaires.
+           #:n:prin
+          )
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(bnalloc subr1 ())
+(bncreate subr2 ())
+(bnfree subr1 ())
+(bngettype subr1 ())
+(bnsettype subr2 ())
+(bngetsize subr1 ())
+(#:n:prin subr1 ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:kern:version 't '#:complice:globalvar)
+)((putprop 'bn_digit_size 't '#:complice:globalvar)
+)((putprop 'bn_word_size 't '#:complice:globalvar)
+)((putprop '#:kern:no_byte_in_digit 't '#:complice:globalvar)
+)((putprop '#:kern:tampon 't '#:complice:globalvar)
+))

@@ -1,0 +1,1146 @@
+; .EnTete "Le_Lisp Version 15.2" " " "Le-Lisp IBM RS6000 (llrs6000.llm3)"
+; .sp 2
+; .SuperTitre "Le-Lisp IBM RS6000"
+; .SuperTitre "(llrs6000.llm3)"
+; .Auteur "Greg Nuyens"
+; .Auteur2 "Bernard Serpette"
+; .Auteur2 "Bernard Kerjean"
+
+; .Centre "*****************************************************************"
+; .Centre " Ce fichier est en lecture seule hors du projet ALE de l'INRIA.  "
+; .Centre " Il est maintenu par ILOG SA, 2 Avenue Gallie'ni, 94250 Gentilly "
+; .Centre " (c) Le-Lisp est une marque de'pose'e de l'INRIA                 "
+; .Centre "*****************************************************************"
+;
+; .Centre "$Header: /nfs/lelisp15/work/rs6000/RCS/llrs6000.llm3,v 10.1 1993/12/16 16:25:23 kuczynsk Rel kerjean $"
+
+;;; Reste a` faire:
+;;;  Ve'rifier le code (il doit manquer des EPILOGUE_LISP)
+;;;  Qui utilise MOUSCNT
+;;;  Qui utilise SIGNUM
+;;;  Qui utilise PRTMSGS
+;;;  Ve'rifier les conflits sur BTBIN, BTBGC, ECONS
+
+          TITLE     LLSTART
+
+; Les variables globales Le_Lisp/C
+
+          XREFI     LLINIT,BCODE
+          XREFI     LLINIT,CCODE
+          XREFI     LLINIT,ECODE
+    
+          XREFI     LLINIT,BHEAP
+          XREFI     LLINIT,CHEAP
+          XREFI     LLINIT,EHEAP
+    
+          XREFI     LLINIT,BNUMB
+          XREFI     LLINIT,CNUMB
+    
+          XREFI     LLINIT,BFLOAT
+          XREFI     LLINIT,CFLOAT
+    
+          XREFI     LLINIT,BVECT
+          XREFI     LLINIT,CVECT
+    
+          XREFI     LLINIT,BSTRG
+          XREFI     LLINIT,CSTRG
+    
+          XREFI     LLINIT,BSYMB
+          XREFI     LLINIT,CSYMB
+    
+          XREFI     LLINIT,BVAR
+
+          XREFI     LLINIT,BCONS
+          XREFI     LLINIT,CCONS
+    
+          XREFI     LLINIT,BOLD
+          XREFI     LLINIT,EOLD
+
+          XREFI     LLINIT,BSTACK
+          XREFI     LLINIT,MSTACK1
+          XREFI     LLINIT,MSTACK2
+          XREFI     LLINIT,ESTACK
+    
+          XREFI     LLINIT,FILIN
+          XREFI     LLINIT,FILIZ
+          XREFI     LLINIT,FILIT
+          XREFI     LLINIT,NBSYST
+          XREFI     LLINIT,MAXCHAN
+          XREFI     LLINIT,LLBAN
+
+          XREFI     LLINIT,ITCOUNT
+          XREFI     LLINIT,ITSTATE
+
+          XREFI     LELISP,BTBIN
+
+          XREFI     LELISP,BTBGC
+
+          XREFI     TOPERR,.PRTMSGS
+
+          XREFP     EVAL,FFUNCALL
+
+          IMPURE
+FLTRASH1  ADR       0
+FLTRASH2  ADR       0
+          PURE
+
+; le vrai point d'entree
+          XREFP     LLINIT,LLINIT
+          XDEFP     .LLSTART
+
+.LLSTART  PROLOGUE_LISP                 ; Sauve le toc et charge le CP lisp
+          STACK     SPEXT               ; Sauve le SP C.
+          SSTACK    BSTACK	        ; On est sur la pile Lisp.
+          MOV       #0,ITSTATE          ; Init des compteurs.
+          MOV       #0,ITCOUNT
+          MOV       #0,BRKCNT
+          MOV       #0,MOUSCNT
+          MOV       #0,CLKCNT
+          MOV       @PRTMSGS,PRTMSGS
+          CALL      RESTORE             ; Init des registres constants
+          C_CALL    .INTON              ; Init des interruptions.
+          JMP       LLINIT              ; On y va !
+	  
+;
+;      ll_corsav  :  sauve une image memoire dans le fichier 
+;                  de nom x1 cc = 
+;  appele  corsav (nom)
+
+          XDEFP     LL_CORSAV
+          XREFP     LELISP,.CORSAV
+
+LL_CORSAV STACK     SAVSP
+          C_CALL    .CORSAV,X1
+          RETURN
+
+;
+;      ll_corest  :  restaure une image memoire dans le fichier X1
+;
+; appelle  corest(nom)
+; le code retour de -1 indique une erreur rattrapable.
+
+          XDEFP     LL_COREST
+          XREFP     LELISP,.COREST
+
+LL_COREST STACK	    SAVSP1
+	  STACK     SAVSP
+          C_CALL    .COREST,X1
+	  CNBEQ	    CRES,#0,LL_CREST	; si pas erreur , ok
+	  MOV       #1,STATE            ; en Lisp
+	  SSTACK    SAVSP1		; sinon 
+	  BRA	    LL_CORRET		; going home	  
+LL_CREST  SSTACK    SAVSP
+    	  CALL      RESTORE
+          MOV       NIL,&1
+LL_CORRET RETURN
+
+;
+;      llcorgo  : lancement d'une image me'moire EXECORE
+;
+
+          XDEFP     .LLCORGO
+.LLCORGO  PROLOGUE_LISP                 ; On vient de C
+          STACK     SPEXT               ; Sauve le SP C.
+          MOV       %BSAVE,BLLM3        ; Pourquoi !!!!
+          MOV       #1,STATE            ; en Lisp
+          SSTACK    SAVSP               ; sauve' par save-core
+          CALL      RESTORE
+          MOV       NIL,A1              ; to signal a return from restore
+          ADJSTK    #1                  ; Clean the Le-Lisp stack.
+          RETURN
+
+
+;      LL_EXIT            RETOUR AU SYSTEME HOTE
+;
+          XDEFP     LL_EXIT
+          XREFP     LELISP,.OUTNER
+LL_EXIT   C_CALL    .OUTNER
+          RETURN
+
+          XREFP     LELISP,.OUTWER
+          XDEFP     EXWER
+EXWER     C_CALL    .OUTWER
+          RETURN
+
+;
+;      .LL_BREAK  le break interne
+;       This is an entry point from C.  Thus all the state must be stored
+;       and restored as in a C (not LL) call.
+
+
+          XREFP     TOPERR,LLPANIC
+          XREFP     LELISP,.SETALARM
+          XREFP     EVAL,SYSPROT
+          XDEFI     LL_BREAK
+          XDEFP     .LL_BREAK
+
+          IMPURE
+LL_BREAK  FUNADR    .LL_BREAK
+          PURE
+
+
+.LL_BREAK LABEL
+	  PROLOGUE_LISP			; save 16-31 for the case where we just
+					; return without doing anything.
+          INCR      BRKCNT              ; un break de plus
+          INCR      ITCOUNT             ; une it de plus
+
+     IFNE SIGBLOCK
+			; have to make this call without changing stacks, etc.
+          CALL_C_DIRECT     .INTON             ; on re'arme les it
+     ENDC
+          CNBGE     BRKCNT,#4,LL_PANIC  ; it sauvage on force!
+				
+LL_BREAR  EPILOGUE_LISP			; retourne a C proprement
+
+LL_PANIC  CNBEQ     ITSTATE,#0,LL_BREAR ; rien a faire !
+          CNBEQ     STATE,#0,LLPANICC   ; dans du c ?
+          CNBEQ     STATE,#1,LLPANICL   ; dans du lisp ?
+          BRA       LLPANICE            ; dans une routine externe ?
+
+;  break panique dans du c
+
+LLPANICC  LABEL
+          SSTACK    SPLISP              ; retour sur la pile lisp
+          MOV       #1,STATE            ; lisp
+          CALL      GOPANIC             ; traitement
+          MOV       #$FFFF,CRES           ; code -1 (erreur probable)
+          RETURN                        ; retour de l'interruption
+
+
+; temp for LLPANICL
+	  IMPURE
+PANICRET  ADR	 0
+	  PURE
+;  break dans du lisp
+
+LLPANICL  LABEL
+          MOV       SPEXT,SPEXT1        ; pour travailler
+          PUSH      A1                  ; sauve les registres
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          PUSH      SPEXT1              ; la pile externe
+          CALL      PANICL1             ; traitement
+          ADJSTK    #1                  ; ajuste (pour spext)
+          POP       A4                  ; restaure les registres
+          POP       A3
+          POP       A2
+          POP       A1
+	  EPILOGUE_LISP
+
+PANICL1   LABEL
+          MOV       @GOPANIC,A3         ; ou on va
+          JCALL     SYSPROT             ; protege
+          POP       A1                  ; le resultat
+          MOV       &1,SPEXT            ; la pile externe
+          BRI       A3                  ; back
+
+
+;  break dans une routine externe
+
+LLPANICE  LABEL
+          PUSH      SPLISP              ; pointeur lisp
+          PUSH      SPARG               ; pointeur arguments
+          PUSH      SPEXT               ; pointeur externe
+          STACK     SPEXT               ; le nouveau
+          SSTACK    SPARG               ; pass sur la pile lisp
+          MOV       #1,STATE
+          CALL      PANICE1             ; traitement
+          SSTACK    SPEXT1              ; reprend la pile externe
+          MOV       #2,STATE
+          ADJSTK    #3                  ; ajuste
+	  EPILOGUE_LISP
+
+; traitement en lisp
+
+PANICE1   LABEL
+          CALL      RESTORE             ; A NE PAS OUBLIER !
+          MOV       @GOPANIC,A3         ; pour la suite
+          JCALL     SYSPROT             ; protege
+          POP       A1                  ; resultat
+          MOV       SPEXT,SPEXT1        ; echange
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; l'ancien pointeur
+          POPR      A4,SPARG            ; les arguments
+          POPR      A4,SPLISP           ; pointeur lisp
+          BRI       A3                  ; back
+
+; la partie commune du traitement du break panique
+
+GOPANIC   LABEL
+
+     IFEQ SIGBLOCK
+          C_CALL    .INTON              ; rearme les it
+     ENDC
+
+          CALL      RESTORE             ; recupere les registres
+          DIFF      BRKCNT,ITCOUNT      ; en moins
+          MOV       #0,BRKCNT           ; plus de break
+          MOV       @GOPANIC1,A3        ; pour la suite
+          JCALL     SYSPROT
+          POP       A1                  ; le resultat
+          MOV       #1,ITSTATE          ; re'autorise les it
+          BRI       A3                  ; back
+
+GOPANIC1  MOV       #0,ITSTATE          ; pas d'it dans it
+          JMP       LLPANIC             ; on y va
+
+;;;
+;;;   Remise en e'tat des registres constants de lisp
+;;;
+RESTORE   MOV       BFLOAT,RBFLOAT
+          MOV       BVECT,RBVECT
+          MOV       BSTRG,RBSTRG
+          MOV       BSYMB,RBSYMB
+          MOV       BCONS,RBCONS        ; attention au GC en S & C
+          MOV       BVAR,RBVAR
+	  MOV       %DLINK,RADLINK
+	  MOV	    %LLINK,RALLINK
+	  MOV	    %ITCOUNT,RAITCOUNT
+          RETURN
+
+; L'interruption MOUSE
+ 
+
+	  IMPURE
+LL_MOUSE  FUNADR    .LL_MOUSE
+	  PURE
+
+          XDEFP     .LL_MOUSE
+
+.LL_MOUSE LABEL
+	  PROLOGUE_LISP
+
+          CNBEQ     MOUSCNT,#1,LLMOUS1  ; deja une ?
+          MOV       #1,MOUSCNT          ; une souris
+          INCR      ITCOUNT              ; une IT de plus
+LLMOUS1   LABEL
+     IFNE SIGBLOCK
+          CALL_C_DIRECT     .INTON              ; on re'arme les IT
+     ENDC
+	  EPILOGUE_LISP			; retourne a C proprement
+
+
+; 
+; L'interruption CLOCK
+; 
+	  XDEFI     LL_CLOCK
+	  XDEFP     .LL_CLOCK
+
+
+	  IMPURE
+LL_CLOCK  FUNADR	.LL_CLOCK
+	  PURE
+
+.LL_CLOCK LABEL
+	  PROLOGUE_LISP
+
+          CNBEQ     CLKCNT,#1,LLCLK1    ; deja une ?
+          MOV       #1,CLKCNT           ; une clock
+          INCR      ITCOUNT             ; une IT de plus
+LLCLK1    LABEL
+
+     IFNE SIGBLOCK
+          CALL_C_DIRECT     .INTON             ; on re'arme les it
+     ENDC
+
+	  EPILOGUE_LISP			; retourne a C proprement
+;
+; ITHARD
+; This is a Le_Lisp entry, and so does not need to worry about any
+; special saving and restoring of state.
+; 
+; Traitement des interruptions en attente
+; 
+;  BRKCNT: nombre de BREAKS en attente (pour PANIC)
+;  MOUSCNT: (0, 1) il y a une souris en attente
+;  CLKCNT: (0, 1) la pendule a sonne
+; 
+;  ITCOUNT=BRKCNT+MOUSCNT+CLKCNT
+
+          XDEFP     ITHARD
+          XREFP     TOPERR,LLBREAK
+          XREFP     TOPERR,LLMOUSE
+          XREFP     TOPERR,LLCLOCK
+
+ITHARD    CNBEQ     ITSTATE,#0,ITHARDR  ; rien a faire
+          PUSH      A1                  ; pousse les accus
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          CALL      ITHARDD             ; traitement
+          POP       A4                  ; recupere les accus
+          POP       A3
+          POP       A2
+          POP       A1
+          RETURN
+
+
+;          XREFP     LELISP,.INTEST
+
+ITHARDD	  MOV       @ITHARD0,A3         ; ce que l'on veut faire
+          JCALL     SYSPROT
+          POP       A1                  ; le re'sultat
+          MOV       #1,ITSTATE          ; re'autorise les IT
+          BRI       A3                  ; back
+
+ITHARD0   MOV       #0,ITSTATE          ; pas d'IT dans IT
+          CNBEQ     BRKCNT,#0,ITHARD1   ; ce n'est pas un break
+          DIFF      BRKCNT,ITCOUNT      ; plus de BREAK
+          MOV       #0,BRKCNT           ;         en attente
+          JCALL     LLBREAK             ; break IT
+ITHARD1   CNBNE     MOUSCNT,#1,ITHARD2  ; pas de mouse
+          DECR      ITCOUNT             ; plus de mouse
+          MOV       #0,MOUSCNT          ;         en attente
+          JCALL     LLMOUSE             ; mouse IT
+ITHARD2   CNBEQ     CLKCNT,#0,ITHARDR   ; pas de clock
+          MOV       #0,ITCOUNT          ; plus d'IT
+          MOV       #0,CLKCNT           ; plus de CLOCK
+          JCALL     LLCLOCK             ; clock it!
+ITHARDR   RETURN                        ; retour du INTEST
+
+
+; 
+;      ll_merror interne : erreur machine!
+;
+          XREFP     TOPERR,LLMERRO
+	  XDEFI     LL_MERRO
+	  XDEFP	    .LL_MERRO 
+
+	  IMPURE
+LL_MERRO  FUNADR    .LL_MERRO
+	  PURE
+
+.LL_MERRO LABEL
+	  PROLOGUE_LISP
+
+	  MOV		CRES,SIGNUM	; the signal number is received as arg
+          CALL_C_DIRECT     .INTON              ; avant tout !
+          CNBEQ     STATE,#0,LLMERROC   ; dans du C ?
+          CNBEQ     STATE,#1,LLMERROL   ; dans du Lisp ?
+          BRA       LLMERROE            ; dans une routine externe ?
+
+;  MERRO dans du C
+
+LLMERROC  LABEL
+          SSTACK    SPLISP              ; retour sur la pile Lisp
+          MOV       #1,STATE            ; Lisp
+          CALL      RESTORE             ; restore the constant registers
+          MOV       SIGNUM,A2           ; le numero
+          JCALL     LLMERRO             ; DO IT
+          MOV       #$FFFF,CRES         ; code -1 (erreur probable)
+
+          EPILOGUE_LISP                 ; retour de l'erreur
+
+;  MERRO dans du LISP
+
+	  XDEFP		LLMERROL	; for debugging
+LLMERROL  LABEL
+          CALL      RESTORE             ; recupere les registres
+          MOV       SIGNUM,A2           ; le numero
+          JCALL     LLMERRO             ; DO IT
+	  EPILOGUE_LISP
+
+; MERRO dans une routine Externe
+
+LLMERROE  LABEL
+          SSTACK    SPLISP              ; passe sur la pile lisp
+          MOV       #1,STATE
+          CALL      RESTORE             ; remet les registres
+MERROE1   MOV       SIGNUM,A2           ; le code dans A2
+          JCALL     LLMERRO             ; LLMERRO
+          BRA       MERROE1             ; on ne revient que par exit
+
+; Appel de routine externe
+; 
+; sommet de pile: retour, typn, argn, ... , typ1 ,arg1, typres, adresse
+
+          XREFP     GC,GCFLOAT
+          XREFI     LLINIT,FFLOAT
+          XDEFP     LL_CALLG
+
+LL_CALLG  LABEL                         ; c'est ici l'entree
+          STACK     CALLSP              ; le sp a l'entre'e (pour les arg)
+          MOV       &1,CALLNARG         ; le nombre d'arguments
+          PUSH      A1                  ; sauve les accumulateurs
+          PUSH      A2
+          PUSH      A3
+          PUSH      A4
+          MOV       CALLSP,A4           ; pointeur sur l'appel
+          ADJSTKR   A4,CALLNARG         ; vers le type du resultat
+          TOPSTR    A4,CALLTYPR         ; je le prend
+          PUSH      CALLTYPR            ; pour le proteger
+          PUSH      SPLISP              ; sauve spLisp
+          CALL      CALL_C1             ; fait ce qu'il faut
+          ADJSTK    #2                  ; nettoie la pile
+          POP       A4                  ; restaure les accumulateurs
+          POP       A3
+          POP       A2
+          POP       A1
+          MOV       BCONS,RBCONS        ; s'il y a eu un GC ?
+          MOV       CALLTYPR,A0         ; le type du re'sultat
+          MOV       CALLREG0,D0         ; le re'sultat 0
+          MOV       CALLREG1,D1         ; le re'sultat 1
+          JCALL     LL_BUILD            ; Construit le re'sultat
+          POP       A3                  ; l'adresse de retour
+          POP       A4                  ; le nombre d'arguments
+          BRI       A3                  ; et on rentre
+
+
+; la routine qui fait tout dans le sys-protect
+
+CALL_C1   LABEL
+          MOV       @CALL_C2,A3         ; la routine prote'ge'e 
+          JCALL     SYSPROT             ; protection syste`me!
+          CALL      EXTVREST            ; on restore si vecteur externe
+NOEXTV    POP       A1                  ; le re'sultat
+          MOV       &1,SPLISP           ; restaure le spLisp et
+          MOV       &2,CALLTYPR         ; le type du resultat
+          BRI       A3                  ; la continuation
+
+CALL_C2   STACK     SPLISP              ; le nouveau spLisp
+          STACK     SPARG               ; ptr sur arguments de lispcall
+          MOV       #2,STATE            ; passe dans l'externe !
+          SSTACK    SPEXT               ; change de pile
+
+;!!!!!!!! Cette partie de code n'est pas dans Lisp  !!!!!!!!
+
+; Appelle la routine externe et met le re'sultat dans CALLREG0/1
+
+          MOV       CALLSP,A4           ; sauvegarde de la pile d'appel
+          ADJSTKR   A4,#2               ; ajuste sur le premier type
+          MOV       CALLNARG,A3         ; le nombre d'arguments empiles
+
+; Convertir et stocker les arguments dans la table CALLGARG
+
+          STACK     SPEXT1              ; pour de'piler pratiquement
+          JCALL     LL_CONVE		; converts the arguments
+					; the number in pointers is in A5
+          POPR      A4,CALLTYPR         ; le type du re'sultat
+          POPR      A4,CALLGADR         ; l'adresse ou on va
+          PROLOGUE_C                    ; on alloue de la pile pour C
+          MOVARGS   A1,A5    	        ; recopie les arguments dans la pile
+; Here comes the real call 
+          MOV       CALLGADR,A3         ; l'adresse ou aller
+	  CALLR	    A3
+CALL_C5	  MOV       CRES,CALLREG0       ; le premier re'sultat (pour sys-prot)
+          EPILOGUE_C                    ; ajuste la pile C
+
+;!!!!!!!! Fin de la partie de code hors de Lisp !!!!!!!!
+
+          SSTACK    SPLISP              ; reprend la pile Lisp
+          MOV       #1,STATE            ; retour a Lisp
+          CALL      RESTORE             ; parano
+          RETURN                        ; retour du sys-protect
+
+
+;;; EXTVREST
+;;; Restauration des arguments de type vecteurs au format Le-Lisp.
+;;; Tous les parametres de type FIXVECTOR, ou FLOATVECTOR, qui
+;;;  ont donc ete tranforme's lors de passage LL->Ext, doivent etre
+;;;  retabli au format LL apres evaluation du code Ext.
+;;; CALLSP  pointe tjrs sur la liste des parametres et leurs types
+;;; Don't touch A3, which contains the sysprot return address
+
+EXTVREST  LABEL
+          STACK     A1                  ; recup. la pile sur les arg. pour C
+          ADJSTKR   A1,#10              ; ajuste sur le premier type
+          POPR      A1,A5	        ; le nombre d'arguments
+          BRA       EXTV1               ; test de boucle
+EXTV2     POPR      A1,A4               ; le type du prochain argument
+          CNBNE     A4,#7,EXTV3         ; type 7 = fixvector
+          POPR      A1,A2               ; le fixvector en question
+          FIXV_X_LL A2                  ; fixvect-ext. -> fixvect-ll
+          BRA       EXTV1               ; suite
+EXTV3     CNBNE     A4,#8,EXTV4         ; type 8 = floatvector
+          POPR      A1,A2               ; le floatvector eb question
+          FLOATV_X_LL A2                ; fltvect-ext. -> fltvect-ll
+          BRA       EXTV1               ; suite
+EXTV4     ADJSTKR   A1,#1               ; pour preparer le prochain POPR
+EXTV1     DECR      A5                  ; -1 (pour la valeur)
+          SOBGTZ    A5,EXTV2            ; il en reste?
+          RETURN
+ 
+; LL_CONVE
+; 
+; Conversion des arguments Lisp pour une routine Externe
+; Stockage dans le tableau CALLBARG-CALLEARG
+; 
+; A3 = nombre d'arguments empile's
+; A4 = compteur de pile auxilliaire
+; A5 = taille en pointeurs des convertis
+; Don't Forget that the conversion happens already in the C state, so 
+; can't do a normal C call here. (to not destroy SPLISP and STATE etc) 
+
+          XDEFP     LL_CONVE
+LL_CONVE  LABEL
+          MOV       %CALLTARG,A1        ; la table (fin)
+	  MOV	    %CALLRARG,REFARGPTR ; init pointeur sur la table des refs
+	  MOV	    %CALLFARG,FLOATSP	; init pointeur sur table des doubles
+          DIFF      #2,A3               ; moins typr adr
+          MOV       #0,A5               ; compte
+          BRA       LL_CONVL
+LL_CONV0  DECR      A3                  ; decompte un argument
+          INCR      A5                  ; compte un pointeur
+          POPR      A4,D0               ; le type
+          POPR      A4,A2               ; l'argument
+LL_CONV1  LABEL
+          CNBNE     D0,#1,LL_CONV2      ; type 1 = entier
+          MOV       A2,X3
+          FIX_LL_C  X3                  ; conversion
+          PUSHR     A1,X3               ; empile
+          BRA       LL_CONVL
+LL_CONV2  CNBNE     D0,#2,LL_CONV3      ; type 2 = float
+          FLOAT_LL_C  A2                ; conversion (result in x1 and x2)
+          PUSHR     A1,X2               ; empile !
+          PUSHR     A1,X1               ; empile
+          INCR      A5                  ; sur 2 pointeurs
+          BRA       LL_CONVL
+LL_CONV3  CNBNE     D0,#3,LL_CONV4      ; type 3 = string
+          STRG_LL_C A2                  ; conversion
+          PUSHR     A1,A2               ; empile
+          BRA       LL_CONVL
+LL_CONV4  CNBNE     D0,#4,LL_CONV5      ; type 4 = vecteur
+          VECT_LL_C A2                  ; conversion
+          PUSHR     A1,A2               ; empile
+          BRA       LL_CONVL
+LL_CONV5  CNBNE     D0,#5,LL_CONV6      ; type 5 = rfix
+	  RFIX_LL_X A2			
+	  PUSHR	    A1,A2
+	  BRA	    LL_CONVL
+LL_CONV6  CNBNE     D0,#6,LL_CONV7      ; type 6 = rfloat
+	  RFLOAT_LL_X A2			
+	  PUSHR	    A1,A2
+	  BRA	    LL_CONVL
+LL_CONV7  CNBNE     D0,#7,LL_CONV8      ; type 7 = fixvector
+	  FIXV_LL_X A2			; sign extend the vector elements
+	  PUSHR	    A1,A2
+	  BRA	    LL_CONVL
+LL_CONV8  CNBNE     D0,#8,LL_CONV9      ; type 8 = floatvector
+          FLOATV_LL_X A2		; convert from ll to external floats
+	  PUSHR	    A1,A2
+	  BRA	    LL_CONVL
+LL_CONV9  PUSHR     A1,A2		; type t = pointeur
+LL_CONVL  SOBGTZ    A3,LL_CONV0         ; il en reste ?
+          RETURN
+
+; 
+; Construction du re'sultat de l'appel externe
+; 
+; D0 = re'sultat    A0 = type du re'sultat        re'sultat dans CALLREG0
+;
+
+          XDEFP     LL_BUILD
+
+LL_BUILD  LABEL
+LL_BUIL1  LABEL
+          CNBNE     A0,#1,LL_BUIL2      ; type 1 = entier
+          FIX_C_LL  D0                  ; conversion
+          MOV       D0,CALLREG0
+          RETURN
+LL_BUIL2  CNBNE     A0,#2,LL_BUIL3      ; type 2 = float
+          FLT_C_LL  D0,D1               ; conversion
+          MOV       D0,CALLREG0
+          RETURN
+LL_BUIL3  CNBNE     A0,#3,LL_BUIL4      ; type 3 = string
+          STRG_C_LL D0
+          MOV       D0,CALLREG0
+          RETURN
+LL_BUIL4  CNBNE     A0,#4,LL_BUIL5      ; type 4 = vector
+          VECT_C_LL D0
+          MOV       D0,CALLREG0
+          RETURN
+LL_BUIL5  MOV       D0,CALLREG0
+          RETURN
+;
+; Dummy definitions for unimplemented Lispcaller routines.
+;
+	  XDEFI	    LISPCALL
+	  XDEFI	    GETSYM
+	  XDEFI     PUSHARG
+	  XDEFI     PUSHARGD
+	  XDEFP	    .LISPCALL
+	  XDEFP	    .GETSYM
+	  XDEFP     .PUSHARG
+          XDEFP     .PUSHARGD
+          XDEFP     .CFLOAT_TO_LFLOAT
+          XDEFP     .LFLOAT_TO_CFLOAT
+
+	  IMPURE
+LISPCALL  FUNADR 	    .LISPCALL	  
+GETSYM    FUNADR 	    .GETSYM
+PUSHARG   FUNADR 	    .PUSHARG
+PUSHARGD  FUNADR 	    .PUSHARGD
+CFLOAT_TO_LFLOAT  FUNADR    .CFLOAT_TO_LFLOAT
+LFLOAT_TO_CFLOAT  FUNADR    .LFLOAT_TO_CFLOAT
+
+	  PURE
+; 
+; void *_lispcall (type, narg, symbol) int type, narg; SYMBOL *symbol;
+; 
+; Appel de routines Lisp depuis C
+; Pile: retour, type, narg, symbol
+
+.LISPCALL PROLOGUE_LISP	        ; save c's registers (from 16 on...)
+          MOV       X1,CALLTYPR ; the type of the result.
+          MOV       X2,CALLNARG ; number of arguments on the stack.
+          MOV       X3,CALLSYMB ; the function to be called.
+				; The following pushes are on the external 
+				; stack.
+	  PUSH 	    SPLISP	; Since we may call C from here again, we 
+	  PUSH 	    STATE	; need to preserve the previous Lisp SP.
+	  PUSH	    SPEXT	
+	  PUSH	    CALLTYPR	; save the result type of our call since
+				; the conversion occurs even in the error case.
+	  STACK	    SPEXT	; Save the SPEXT after the pushes.
+	  SSTACK    SPARG	; Set the stack to the base of the arguments
+	  MOV	    #1,STATE	; We are now in Lisp
+	  CALL	    CALL_L1	
+	  SSTACK    A4  	; return to the external stack.
+          MOV       SPLISP,SPARG; RESET stack of arguments
+	  MOV	    CALLTYPR,A0 ; type of the result	
+	  CALL	    LL_RESL	; convert the result
+	  EPILOGUE_LISP		; restore reg 16-31 and return.
+
+; This code runs in Lisp
+
+CALL_L1	  LABEL
+	  CALL	    RESTORE	; get back the constant registers
+	  MOV	    @CALL_L2,A3 ; the protected routine
+	  JCALL	    SYSPROT	; unwind-protect
+	  POP	    CALLREG0    ; the lisp result
+          MOV       SPEXT,A4    ; the sp saved after pushing the environment
+	  POPR	    A4,CALLTYPR ; the result type for this call
+          POPR      A4,SPEXT    ; the value of spext when we entered the call
+	  POPR	    A4,STATE	; the old state
+          POPR      A4,SPLISP   ; splisp
+
+		; at this point, A4 points to the place on the external
+		; stack where C's registers were saved on entry to 
+		; Lispcall.
+          BRI       A3          ; the return
+
+CALL_L2   MOV       SPARG,A4    ; get the pointer to the arguments
+          ADJSTKR   A4,CALLNARG ; move over the arguments
+          ONSTACK   A4,CALLNARG ; recopy the arguments 
+				; because of the intervening sysprot frame.
+          MOV       CALLSYMB,A1 ; the function to call
+          MOV       CALLNARG,A4 ; the number of args on the stack
+          JMP       FFUNCALL   	; call the Lisp function.
+
+
+; Conversion of the Lisp result (currently in CALLREG0) to external
+; format in CRES (register X1).  The type of the result is in A0.
+; When this code runs, we are on the external stack but the registers
+; are correct for Lisp.
+
+LL_RESL	  LABEL
+LL_RES1   CNBNE     #1,A0,LL_RES2       ; type 1 = entier
+          MOV       CALLREG0,CRES       ; put the result in place and ...
+          FIX_LL_C  X2                  ; conversion
+          RETURN
+LL_RES2   CNBNE     #2,A0,LL_RES3       ; type 2 = flottant
+          FLOAT_LL_C  CALLREG0		; the double is in x1,x2 already
+          RETURN 
+LL_RES3   CNBNE     #3,A0,LL_RES4       ; type 3 = chaine
+          MOV       CALLREG0,CRES       ; put the lisp string in the c res reg.
+          STRG_LL_C CRES                ; conversion
+          RETURN
+LL_RES4   CNBNE     #4,A0,LL_RES5       ; type 4 = vecteur
+          MOV       CALLREG0,CRES       ; vector in CRES
+          VECT_LL_C CRES                ; conversion
+          RETURN
+LL_RES5   MOV       CALLREG0,CRES       ; le re'sultat Lisp dans DUX0
+          RETURN                        ; les autres
+
+
+; symbol *getsym (s) char *s;
+; 
+; Recherche de l'adresse d'un symbole Lisp  
+;
+; pile (C): retour, chaine   
+
+
+.GETSYM	  PROLOGUE_LISP
+	  MOV       X1,CALLREG0         ; l'argument
+	  PUSH	    SPLISP		; Since we are going to run in lisp
+					;  we have to protect from calls to C.
+          PUSH      SPEXT               ; l'ancien pointeur
+          STACK     SPEXT               ; le nouveau
+          SSTACK    SPARG               ; passe sur la pile Lisp
+          MOV       #1,STATE
+          CALL      LLGETSYM1           ; execute
+          SSTACK    A4                  ; repasse en externe, pile a jour
+          ;SSTACK    SPEXT1              ; repasse en externe
+          MOV       #2,STATE
+          ;ADJSTK    #1                  ; ajuste (pour spext)
+	  ;POP	    SPLISP
+	  MOV	    CALLREG0,CRES
+	  EPILOGUE_LISP
+
+; This code executes in Lisp
+
+LLGETSYM1 LABEL
+          CALL      RESTORE             ; parano
+          MOV       @GETSYM2,A3         ; la routine
+          JCALL     SYSPROT             ; protege
+          POP       A1                  ; le resultat
+          ;MOV       SPEXT,SPEXT1        ; echange
+          ;MOV       SPEXT,A4            ; pointe sur la pile externe
+          ;TOPSTR    A4,SPEXT            ; l'ancien pointeur
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; l'ancien pointeur Ext
+          POPR      A4,SPLISP           ; l'ancien pointeur LL
+          BRI       A3                  ; back
+
+GETSYM2   LABEL
+	  MOV	    CALLREG0,A3
+          STRG_C_LL A3			; strg_c_ll uses A1,A2
+	  MOV	    A3,A2
+	  HGSIZE    A2,A1
+          JCALL     TRYSYMB             ; recherche le symbole
+          MOV       A1,CALLREG0
+          RETURN                        
+
+
+;
+; _pusharg (type, val) int type; void *val;
+;
+; Conversion/Empilage d'un argument C dans la pile Lisp
+; pile (C): retour, type, valeur
+
+.PUSHARGD LABEL
+.PUSHARG  PROLOGUE_LISP
+	  MOV	    X1,CALLTYPR
+          MOV       X2,CALLREG0         ; val0
+	  MOV       X3,CALLREG1         ; val1
+;;; On note le passage a Lisp
+	  PUSH	    SPLISP		; Since we are going to run in lisp
+					;  we have to protect from calls to C.
+          PUSH      SPEXT               ; l'ancien pointeur
+          STACK     SPEXT               ; le nouveau
+          SSTACK    SPARG               ; passe sur la pile Lisp
+          MOV       #1,STATE
+          CALL      RESTORE             ; parano
+;;;
+          MOV       CALLREG0,D0
+          MOV       CALLREG1,D1
+          MOV       CALLTYPR,A0
+          JCALL     LL_BUILD            ; convert the result into CALLREG0
+          MOV       SPARG,A1            ; pointer to the Lisp stack
+          PUSHR     A1,CALLREG0         ; push the converted argument
+          MOV       A1,SPARG            ; save the updated sp
+;;; on note le retour a C
+          MOV       SPEXT,SPEXT1        ; echange
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; restaure l'ancien pointeur pile ext
+          POPR      A4,SPLISP           ; restaure l'ancien pointeur pile ll
+          SSTACK    A4                  ; repasse en externe, pile a jour
+          MOV       #2,STATE
+;;;
+	  EPILOGUE_LISP
+
+;;; Convertion double C -> flottant lisp
+.CFLOAT_TO_LFLOAT   LABEL
+          PROLOGUE_LISP
+          MOV       X1,CALLREG0         ; val0
+	  MOV       X2,CALLREG1         ; val1
+;;; On note le passage a Lisp
+	  PUSH	    SPLISP		; Since we are going to run in lisp
+					;  we have to protect from calls to C.
+          PUSH      SPEXT               ; l'ancien pointeur
+          STACK     SPEXT               ; le nouveau
+          SSTACK    SPARG               ; passe sur la pile Lisp
+          MOV       #1,STATE
+          CALL      RESTORE             ; parano
+;;;
+          MOV       CALLREG0,D0
+          MOV       CALLREG1,D1
+          FLT_C_LL  D0,D1               ; conversion
+;;; on note le retour a C
+          MOV       SPEXT,SPEXT1        ; echange
+          MOV       SPEXT,A4            ; pointe sur la pile externe
+          POPR      A4,SPEXT            ; restaure l'ancien pointeur pile ext
+          POPR      A4,SPLISP           ; restaure l'ancien pointeur pile ll
+          SSTACK    A4                  ; repasse en externe, pile a jour
+          MOV       #2,STATE
+;;;
+          MOV	    D0,CRES
+	  EPILOGUE_LISP
+
+;;; Convertion flottant lisp -> double C
+.LFLOAT_TO_CFLOAT LABEL
+          CVTFLT_LL_C                   ; l'argument est dans X1
+;;; le return est fait dans la macro
+
+          XDEFI     SPLISP
+	  XDEFI	    SPEXT1
+	  XDEFI	    SPEXT
+	  XDEFI     SPARG
+	  XDEFI     TRASH	; temp for symbol creation
+	  XDEFI     REFARGPTR	; pointer to temp zone for external ref vars
+
+	  IMPURE
+LL_NCARS  ADR       0
+SPLISP    ADR       0
+SAVSP1	  ADR	    0
+SPARG     ADR       0
+SPEXT     ADR       0
+SPEXT1    ADR       0
+SPEXT2    ADR	    0      ; used only in callg for the quick pop.
+REFARGPTR ADR       0
+TRASH	  ADR       0
+          XDEFI     ECONS
+ECONS     ADR       0
+          XDEFI     BLLM3
+BLLM3     ADR       0
+          XDEFI     ELLM3
+ELLM3     ADR       0
+          XDEFI     BTBIN
+BTBIN     ADR       0
+          XDEFI     BTBGC
+BTBGC     ADR       0
+
+;
+;      Debut de la zone a sauver par SAV-xxx
+;
+
+	  IMPURE
+BSAVE     ADR       0                 ; LABEL !!!!
+SAVSP     ADR       0
+          XDEFI     LLUCODE
+LLUCODE   ADR       0
+          XDEFI     LLUHEAP
+LLUHEAP   ADR       0
+          XDEFI     PRTMSGS
+PRTMSGS  ADR       0
+    
+          XDEFI     STATE
+STATE     ADR       0                   ; 0 = C, 1 = Lisp, 2 = External
+
+CALLSP    ADR       0                   ; SP du callg
+CALLGADR  ADR       0                   ; adresse de lancement CALLG
+CALLTYPR  ADR       0                   ; type de retour CALLG
+CALLREG0  ADR       0                   ; le re'sultat du CALLG
+CALLREG1  ADR       0                   ; le re'sultat du CALLG
+CALLNARG  ADR       0                   ; nombre d'argument
+CALLSYMB  ADR       0                   ; fonction appele'e
+CALLBARG  ADR       0                   ; pour 32 arguments
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+CALLEARG  ADR       0
+          XDEFI     CALLTARG
+CALLTARG  ADR       0                  ; LABEL !!!!
+
+CALRBARG  ADR       0                   ; table des references des arguments
+          ADR       0                   ;  pour ranger 32 * 64 bits max.
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+CALREARG  ADR       0                   ; fin du tableau des references
+          XDEFI     CALLRARG            ; pointeur sur la fin du tableau
+CALLRARG  ADR       0                   ; LABEL !!!!
+CALFBARG  ADR       0                   ; table des doubles
+          ADR       0                   ;  pour ranger 32 * 64 bits max.
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+          ADR       0
+CALFEARG  ADR       0                   ; fin du tableau des doubles
+          XDEFI     CALLFARG            ; pointeur sur la fin du tableau
+CALLFARG  ADR       0                   ;; LABEL !!
+FLOATSP	  ADR	    0                   ; pointeur dans le tableau des doubles.
+
+A0	  ADR	   0			; fake 68k registers for callg
+D0        ADR      0
+D1        ADR      0
+A5        ADR      0
+
+	  XDEFI     ALARM_ON            ; pour C
+ALARM_ON ADR       0
+
+; Les variables des IT pour INTEST
+          XDEFI     MOUSCNT
+
+BRKCNT    ADR       0                   ; nb de breaks en attente
+CLKCNT    ADR       0                   ; il y a eu une clock
+MOUSCNT   ADR       0                   ; il y a eu une souris
+
+SIGNUM    ADR       0
+          END
