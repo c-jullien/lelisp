@@ -195,7 +195,7 @@ extern int **prtmsgs;   	/* in save-core ! */
 #define align(x) (x = ((x+LLPAGESIZE-1)&~(LLPAGESIZE-1)))
 
 /* some adresses must be aligned */
-#define round(x,s) ((((x)-1) & ~((s)-1)) +(s))
+#define _llround(x,s) ((((x)-1) & ~((s)-1)) +(s))
 
 /*  printing system errors */
 #define errreturn(M,V) { if(**prtmsgs == 0) perror(M) ; return(V); }
@@ -239,7 +239,7 @@ typedef void (*signal_type)();
 
 #define LLMAXPAGESIZE 8192
 
-#define LLBMEMALIGN(b) (char *)(((long)b+LLPAGESIZE-1)&~(LLPAGESIZE-1))
+#define LLBMEMALIGN(b) (char *)_llround((long)b+LLMAXPAGESIZE, LLMAXPAGESIZE)
 
 /* current process group */
 
