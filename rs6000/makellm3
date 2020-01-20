@@ -2,34 +2,34 @@
 #          Makefile for the  Le_Lisp system [rs6000]
 #
 
-SYSTEM=RS6000
+SYSTEM		= rs6000
 
 # La machine sur laquelle se realise l'expansion (utile au Bootstrap!)
 # Normalement c'est la meme:
-HOST=$(SYSTEM)
+HOST	      	= $(SYSTEM)
 
-MAKE=make
-SHELL=/bin/sh
+MAKE		= make
+SHELL		= /bin/sh
 
 # On peut choisir le Lisp qui va realiser l'expansion. 
-BOOTLISP=/nfs/current/lelisp/rs6000/cmplc++
+BOOTLISP	= ../$(HOST)/cmplc++
 
 # la version de flottants
-FLT=31
+FLT		= 31
 
-S=s$(FLT)
-O=o$(FLT)
+S		= s$(FLT)
+O		= o$(FLT)
 
-BIN=lisp$(FLT)
+BIN		= lisp$(FLT)
 
 # pour compilo, assembleur, linker
 
-ASFLAGS=
-LDFLAGS= -r -x
+ASFLAGS		=
+LDFLAGS		= -r -x
 
 ## Compilations C 
-CC=cc
-LIB=
+CC		= gcc
+LIB		=
 
 ##################################################################
 # les entre'es classiques

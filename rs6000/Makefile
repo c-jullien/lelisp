@@ -15,7 +15,7 @@ SHELL	= /bin/sh
 CC	= gcc
 LD	= $(CC)
 LDR	= ld
-LDRFLAGS= --export-dynamic -r -o
+LDRFLAGS= -r -o # --export-dynamic -r -o
 MV	= mv
 
 ################################
