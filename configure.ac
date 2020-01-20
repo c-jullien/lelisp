@@ -397,6 +397,12 @@ case "${target_cpu}-${target_os}" in
      # X11 requires: xorg-server xproto libX11-devel
      TARGET=cygwin
      ;;
+  powerpc*aix*)
+     if test $PORTABLE_C = no
+     then
+       TARGET=rs6000
+     fi
+     ;;
   *)
      PORTABLE_C=yes
      ;;

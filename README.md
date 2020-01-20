@@ -10,6 +10,7 @@ Reference ports made by INRIA are:
 - C
 
 Native ports originally made by ILOG are:
+- rs6000 (powerpc on AIX)
 - solaris
 
 Native ports originally made by Eligis are:
