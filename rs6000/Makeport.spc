@@ -1,2 +1,0 @@
-/*  pour le Makeport 
- */
