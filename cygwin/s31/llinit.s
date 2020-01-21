@@ -445,7 +445,7 @@ zllatend:
 zherald:
 	.long	0
 lab_m__3:
-	.string	"; Le-Lisp (by INRIA) version 15.26  (18/Aug/2017)  ["
+	.string	"; Le-Lisp (by INRIA) version 15.26  (01/Jan/2020)  ["
 	.even
 lab_m__4:
 	.string	"]"

@@ -2039,7 +2039,7 @@ llatend2:
 herald:
 	.seg	"data1"   
 	.align	4
-slli72:	.asciz	"; Le-Lisp (by INRIA) version 15.26  (18/Aug/2017)  ["
+slli72:	.asciz	"; Le-Lisp (by INRIA) version 15.26  (01/Jan/2020)  ["
 	.seg	"text"
 	dec  	4,%l7 
 	st   	%g2,[%l7+0] 
