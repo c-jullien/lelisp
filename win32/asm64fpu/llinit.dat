@@ -258,7 +258,7 @@ zllsystem	dd	0
 zstop	dd	0
 zllatend	dd	0
 zherald	dd	0
-lab_m__4  db '; Le-Lisp (by INRIA) version 15.26  (18/Aug/2017)  ['
+lab_m__4  db '; Le-Lisp (by INRIA) version 15.26  (01/Jan/2020)  ['
 	even
 lab_m__5  db ']'
 	even
