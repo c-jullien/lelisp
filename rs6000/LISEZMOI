@@ -8,13 +8,6 @@
 			      Pour IBM RS/6000
 			       sous X11R5
 
-				    ILOG
-			 2, avenue Gallie'ni, BP	85
-			    94253 Gentilly Cedex
-				  France
-			    Tel. (1) 46	63 66 66
-
-
 Cher client Ilog, Vous avez installe' Le-Lisp ILLVERSION	 sur
 vos  disques.	Cette  notice  vous permet de (re)configurer
 Le-Lisp	selon vos besoins. Il serait sans doute	 souhaitable
@@ -439,10 +432,8 @@ Mise a` jour des	paths dans Le-Lisp.
      afin  de  lui  indiquer  ce  re'pertoire d'installation.
      Pour cela	vous allez vous	placer	dans  le  re'pertoire
      rs6000 de Le-Lisp et lancer la commande newdir qui	met-
-     tra ce chemin absolu a` jour (voir newdir(l)).  On	sup-
-     pose  ici	que  vous  avez	de'ja` installer le fichier de
-     de've'rouillage de Le-Lisp  :  access.ilm.	Il  ne	vous
-     reste plus	qu'a` refabriquer les images me'moire standard
+     tra ce chemin absolu a` jour (voir newdir(l)).
+     Il ne vous reste plus qu'a` refabriquer les images me'moire standard
 
      en	prenant	soin de	ve'rifier que la	configuration  stan-
      dard    de	  Le-Lisp   correspond	 a`   votre   syste`me
