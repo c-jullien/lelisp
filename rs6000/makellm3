@@ -175,28 +175,28 @@ $(S)/chars.s:	../llm3/chars.llm3 ; rm -f $@
 $(S)/bllsht.s:	../llm3/bllsht.llm3 ; rm -f $@   
 
 
-$(O)/extend.o:	$(S)/extend.s ; as -o $(O)/extend.o $(S)/extend.s
-$(O)/llinit.o:	$(S)/llinit.s ; as -o $(O)/llinit.o $(S)/llinit.s
-$(O)/toperr.o:	$(S)/toperr.s ; as -o $(O)/toperr.o $(S)/toperr.s
-$(O)/gc.o:	$(S)/gc.s ; as -o $(O)/gc.o $(S)/gc.s
-$(O)/physio.o:	$(S)/physio.s ; as -o $(O)/physio.o $(S)/physio.s
-$(O)/read.o:	$(S)/read.s ; as -o $(O)/read.o $(S)/read.s
-$(O)/macroch.o:	$(S)/macroch.s ; as -o $(O)/macroch.o $(S)/macroch.s
-$(O)/print.o:	$(S)/print.s ; as -o $(O)/print.o $(S)/print.s
-$(O)/eval.o:	$(S)/eval.s ; as -o $(O)/eval.o $(S)/eval.s
-$(O)/fspecs.o:	$(S)/fspecs.s ; as -o $(O)/fspecs.o $(S)/fspecs.s
-$(O)/cntrl.o:	$(S)/cntrl.s ; as -o $(O)/cntrl.o $(S)/cntrl.s
-$(O)/carcdr.o:	$(S)/carcdr.s ; as -o $(O)/carcdr.o $(S)/carcdr.s
-$(O)/symbs.o:	$(S)/symbs.s ; as -o $(O)/symbs.o $(S)/symbs.s
-$(O)/fntstd.o:	$(S)/fntstd.s ; as -o $(O)/fntstd.o $(S)/fntstd.s
-$(O)/number.o:	$(S)/number.s ; as -o $(O)/number.o $(S)/number.s
-$(O)/specnb.o:	$(S)/specnb.s ; as -o $(O)/specnb.o $(S)/specnb.s
-$(O)/string.o:	$(S)/string.s ; as -o $(O)/string.o $(S)/string.s
-$(O)/chars.o:	$(S)/chars.s ; as -o $(O)/chars.o $(S)/chars.s
-$(O)/bllsht.o:	$(S)/bllsht.s ; as -o $(O)/bllsht.o $(S)/bllsht.s
+$(O)/extend.o:	$(S)/extend.s ; as -m any -o $(O)/extend.o $(S)/extend.s
+$(O)/llinit.o:	$(S)/llinit.s ; as -m any -o $(O)/llinit.o $(S)/llinit.s
+$(O)/toperr.o:	$(S)/toperr.s ; as -m any -o $(O)/toperr.o $(S)/toperr.s
+$(O)/gc.o:	$(S)/gc.s ; as -m any -o $(O)/gc.o $(S)/gc.s
+$(O)/physio.o:	$(S)/physio.s ; as -m any -o $(O)/physio.o $(S)/physio.s
+$(O)/read.o:	$(S)/read.s ; as -m any -o $(O)/read.o $(S)/read.s
+$(O)/macroch.o:	$(S)/macroch.s ; as -m any -o $(O)/macroch.o $(S)/macroch.s
+$(O)/print.o:	$(S)/print.s ; as -m any -o $(O)/print.o $(S)/print.s
+$(O)/eval.o:	$(S)/eval.s ; as -m any -o $(O)/eval.o $(S)/eval.s
+$(O)/fspecs.o:	$(S)/fspecs.s ; as -m any -o $(O)/fspecs.o $(S)/fspecs.s
+$(O)/cntrl.o:	$(S)/cntrl.s ; as -m any -o $(O)/cntrl.o $(S)/cntrl.s
+$(O)/carcdr.o:	$(S)/carcdr.s ; as -m any -o $(O)/carcdr.o $(S)/carcdr.s
+$(O)/symbs.o:	$(S)/symbs.s ; as -m any -o $(O)/symbs.o $(S)/symbs.s
+$(O)/fntstd.o:	$(S)/fntstd.s ; as -m any -o $(O)/fntstd.o $(S)/fntstd.s
+$(O)/number.o:	$(S)/number.s ; as -m any -o $(O)/number.o $(S)/number.s
+$(O)/specnb.o:	$(S)/specnb.s ; as -m any -o $(O)/specnb.o $(S)/specnb.s
+$(O)/string.o:	$(S)/string.s ; as -m any -o $(O)/string.o $(S)/string.s
+$(O)/chars.o:	$(S)/chars.s ; as -m any -o $(O)/chars.o $(S)/chars.s
+$(O)/bllsht.o:	$(S)/bllsht.s ; as -m any -o $(O)/bllsht.o $(S)/bllsht.s
 $(O)/llrs6000.o:	$(S)/llrs6000.s preproc.s
 	cat preproc.s $(S)/llrs6000.s > $(S)/startrs.s
-	as -o $(O)/llrs6000.o $(S)/startrs.s
+	as -m any -o $(O)/llrs6000.o $(S)/startrs.s
 
 
 
