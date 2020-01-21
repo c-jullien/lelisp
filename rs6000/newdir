@@ -54,5 +54,5 @@ chmod -w ../llib/startup.ll
 
 ########################
 # on efface tous les cores
-make cleancore
+gmake cleancore
 
