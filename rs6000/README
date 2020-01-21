@@ -8,14 +8,7 @@
 			     For IBM RS/6000
 			      under X11R5
 
-				    ILOG
-			 2, avenue Gallie'ni, BP 85
-			    94253 Gentilly Cedex
-				  France
-			    Tel. (1) 46	63 66 66
-
-
-Dear Ilog client,
+Dear user,
 
 You have installed Le-Lisp 15.26 on your disk.	This  notice
 allows	you to configure or reconfigure	Le-Lisp	according to
@@ -436,9 +429,8 @@ Updating Le-Lisp paths
      installation directory.  To do this, you place yourself
      in	the Le-Lisp directory rs6000  and  use	the  command
      `newdir'  which  will  update  this absolute directory.
-     (See newdir(l).)  We will suppose that you	have already
-     installed	the Le-Lisp access file	access.ilm.  You now
-     only have to recreate the standard	memory images
+     (See newdir(l).)  You  now only  have to  recreate  the
+     standard memory images
 
      taking care to verify that	the standard Le-Lisp  confi-
      guration  corresponds  to	your  operating	system.	 You
