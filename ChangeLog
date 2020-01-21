@@ -1,5 +1,6 @@
 RELEASE NOTES:
 
+2020/01/21: Add rs6000 (AIX powerpc) port.
 2020/01/08: First public Open Source version.
 2019/12/17: All sources are with "Simplified BSD license", see LICENSE.txt.
 2019/12/17: Change Le-Lisp version and date for the FOSS release.
