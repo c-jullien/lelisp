@@ -27,4 +27,7 @@ clean:
 	@rm -r -f common/config.h config.status configure.log
 	@(cd $(TARGET); rm -f lelisp cmplc++ cll2lm *\.o */*.\o *bin)
 
+tarball:
+	(ROOT=`basename $(PWD)`; cd ..; tar -cvzf lelisp.tar.gz --exclude-vcs $$ROOT)
+
 PHONY += clean
