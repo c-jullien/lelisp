@@ -1,5 +1,5 @@
 /* GELL 15.26: source file for the module: "llinit" */
-/*             translation done:           "Sat Oct   7 17 20:52:58 " */
+/*             translation done:           "Wed Jan  22 20 06:27:39 " */
 /*             peephole-optimize-p:        t */
 /*             optimize-local-labels-p:    t */
 
@@ -540,7 +540,7 @@ l_llatend2:
 
 extern Ptr GXherald(void) {	/* herald */
    {	register Ptr aRet;
-	llrt_ttyout((Fix) 52, "; Le-Lisp (by INRIA) version 15.26  (18/Aug/2017)  [");
+	llrt_ttyout((Fix) 52, "; Le-Lisp (by INRIA) version 15.26  (01/Jan/2020)  [");
 	GIa1 = GIcstsyste;
 	(--GIsp)->Val = ((Ptr) GLllinit_29);
 	{aRet = ((Ptr) GXstrgsymb); goto lRet;}
