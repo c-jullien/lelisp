@@ -1,3 +1,0 @@
-./qolispbin -code 0 -heap 400 \
- -symbol 5 -string 6 -vector 5 -cons 5 -float 0 \
--r llcore/qolisp.core
