@@ -1,0 +1,7 @@
+./telispbin -float 8 -heap 512 <<EOI
+(print "GELL: testfn")
+(gcinfo))
+(print "Time: " (time '(loadfile "../../lltest/testfn.ll" t)) " ok.")
+(gcinfo))
+(end)
+EOI

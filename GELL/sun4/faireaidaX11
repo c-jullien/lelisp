@@ -1,0 +1,18 @@
+./aidaX11bin -code 0 -heap 800 \
+ -symbol 14 -string 12 -vector 8 -cons 24 -float 0 <<EOI
+
+(defvar gell-elaboration-for-trace-p t)
+
+(loadfile "aidaX11bin.cache" t)
+
+(loadfile "aidaX11config.ll" t)
+
+(gell-save-core "llcore/aidaX11.core" 
+                "Ready with Le-Lisp GELL + X11 + Aida (aidaX11)"
+                aidarun)
+                
+
+EOI
+
+
+

@@ -1,0 +1,83 @@
+`telispbin' is up to date.
+; Le-Lisp (by INRIA) version 15.22  (6/Jan/89)   [C]
+= (Version:  15.22)
+= subversion
+= herald
+= defvar
+= syste`me unix
+ (load-std sav min pepe env ld llcp)  pour charger l'environnement std,
+ (load-stm sav min pepe env ld llcp)  pour l'environnement std modulaire,
+ (load-cpl sav min meme env ld cmpl)  pour l'environnement complice.
+= Fin du startup.
+? (loadfile "../../lltest/testfn.ll" t)
+; Le-Lisp (by INRIA) version 15.22  (6/Jan/89)   [C]
+
+      [Conversions Majuscules/Minuscules]
+      [Evaluateur EVAL/APPLY/FUNCALL]
+      [Fonctions d'evaluation]
+      [Fonctions d'application]
+      [Fonctions qui manipulent l'environnement]
+      [Macros, FLET, WITH et Fermetures]
+      [Fonctions de definition]
+      [Fonctions de controle]
+      [Fonctions de controle non locales]
+      [Fonctions de controle lexicales]
+      [Predicats de base]
+      [Fonctions de recherche dans les listes]
+      [Fonctions sur les TCONS]
+      [Fonctions de creation de listes]
+      [Fonctions de modification]
+      [Fonctions sur les A-listes]
+      [Fonctions d'acce`s aux valeurs des symboles]
+      [Fonctions sur les P-listes]
+      [Fonctions sur les champs speciaux]
+      [Fonctions sur les caracteres]
+      [Fonctions sur les chaines]
+      [Fonctions sur les vecteurs]
+      [Fonctions sur les Structures]
+      [Fonctions numeriques generiques]
+      [Fonctions de l'arithmetique mixte]
+      [Fonctions de l'arithmetique entiere]
+      [Fonctions de division]
+      [Fonctions logiques]
+      [Fonctions sur champ de bits]
+      [Fonctions circulaires]
+      [Fonctions de l'arithmetique flottante]
+      [Fonctions de l'arithmetique etendue]
+      [Fonctions des Entre'es/Sorties binaires]
+      [Les iterateurs DO/DO*]
+      [Fonctions sur les types etendus]
+      [Calcul d'adresses]
+      [Fonctions d'Ecriture]
+      [Test des erreurs speciales]
+      [La Frise]
+@@,^^~~;;.......;;~^^,,@---?????---@,,^^~;;.......;;~~^^,@@
+@,^^~~;;..xxxx...;;~^^,,@@-------@@,,^^~;;...xxxx..;;~~^^,@
+,^^~~;..xxxxxxxx..;;~^^,,@@@---@@@,,^^~;;..xxxxxxxx..;~~^^,
+^^~~;..xx++++++xx..;;~^^,,@@@@@@@,,^^~;;..xx++++++xx..;~~^^
+^~~;..xx+++##++++xx.;;~^^,,,,,,,,,^^~;;.xx++++##+++xx..;~~^
+~~;..xx++#######++xx.;;~~^^,,,,,^^~~;;.xx++#######++xx..;~~
+~;..xx+###----###++xx.;;~~^^^^^^^~~;;.xx++###----###+xx..;~
+;;.xx+##--------##++x..;;~~~^^^~~~;;..x++##--------##+xx.;;
+;.xx++#---||||---##+xx..;;~~~~~~~;;..xx+##---||||---#++xx.;
+..x++##--||||||---#++xx.;;;~~~~~;;;.xx++#---||||||--##++x..
+.xx++#--||||||||--##+xx..;;;~~~;;;..xx+##--||||||||--#++xx.
+.xx+##--||||||||--##++x..;;;;~;;;;..x++##--||||||||--##+xx.
+.xx+##--||||||||--##++x..;;;;~;;;;..x++##--||||||||--##+xx.
+.xx++#--||||||||--##+xx..;;;~~~;;;..xx+##--||||||||--#++xx.
+..x++##--|||||||--##+xx..;;~~~~~;;..xx+##--|||||||--##++x..
+..xx+##---|||||--##++x..;;~~~~~~~;;..x++##--|||||---##+xx..
+;..x++##--------##++xx.;;~~~~^~~~~;;.xx++##--------##++x..;
+;;..x++##------###+xx.;;~~~^^^^^~~~;;.xx+###------##++x..;;
+~;;.xx++########++xx..;~~^^^^,^^^^~~;..xx++########++xx.;;~
+^~;;.xx+++#####++xx..;~~^^,,,,,,,^^~~;..xx++#####+++xx.;;~^
+^^~;;.xxx+++++++xx..;~~^^,,@@@@@,,^^~~;..xx+++++++xxx.;;~^^
+,^^~;;..xxx++xxxx..;~~^,,@@@@@@@@@,,^~~;..xxxx++xxx..;;~^^,
+,,^^~;;..xxxxxx..;;~~^,,@@-------@@,,^~~;;..xxxxxx..;;~^^,,
+@,,^^~;;........;;~~^,,@@---???---@@,,^~~;;........;;~^^,,@
+-@,,^~~;;;.....;;~~^^,@@--???????--@@,^^~~;;.....;;;~~^,,@-
+      [Fin du test]
+= ../../lltest/testfn.ll
+? (end)
+Que Le-Lisp soit avec vous. 
+

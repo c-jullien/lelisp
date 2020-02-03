@@ -1,0 +1,13 @@
+
+(de gcalarm () )
+(gc)
+(gc)
+(print "============ toblist ==============")
+(print "time gc = " (time '(gc)) " ms.")
+(setq lo (length (oblist)))
+(setq ll (boblist))
+(setq bo (length ll))
+(print "lenght oblist = " lo ", length boblist = " bo ", ratio = " (/ lo bo))
+(setq ll (mapcar 'length ll))
+(setq ll (sortn ll))
+(print ll)

@@ -1,0 +1,4 @@
+./masaiAX11bin -code 0 -heap 1500 \
+ -symbol 30 -string 30 -vector 20 -cons 24 -float 0 \
+ -r llcore/masaiAX11.core
+

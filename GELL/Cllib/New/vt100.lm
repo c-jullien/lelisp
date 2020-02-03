@@ -1,0 +1,14 @@
+defmodule #:tty:vt100
+files (vt100)
+import (virtty)
+export (#:tty:vt100:tycursor  #:tty:vt100:tycls  #:tty:vt100:tycleol
+#:tty:vt100:tycleos #:tty:vt100:tyattrib #:tty:vt100:typrologue 
+#:tty:vt100:tyepilogue)
+
+;;; Added automatically, don't type beyond this line.
+cpexport
+((#:tty:vt100:tycursor subr2 ()) (#:tty:vt100:tycls subr0 ()) (#:tty:vt100:tycleol subr0 ()) (#:tty:vt100:tycleos subr0 ()) (#:tty:vt100:tyattrib subr1 ()) (#:tty:vt100:typrologue subr0 ()) (#:tty:vt100:tyepilogue subr0 ()))
+cpfunctions
+()
+cpimport
+((virtty (tyod . subr2)))

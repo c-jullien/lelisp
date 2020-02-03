@@ -1,0 +1,5 @@
+aidaX11bin -code 0 -heap 800 \
+ -symbol 14 -string 12 -vector 8 -cons 24 -float 0 \
+ -r llcore/aidaX11.core $*
+
+

@@ -1,0 +1,120 @@
+; Le-Lisp (by INRIA) version 15.22  (6/Jan/89)   [sun]
+; Systeme standard modulaire : jeu 16 fevr 89 14:06:42 
+= (31bitfloats date microceyx pathname debug callext setf pepe virbitmap 
+defstruct virtty compiler pretty abbrev loader)
+? (loadfile "../C/modtoc.ll"  t)
+= ../C/modtoc.ll
+? (loadfile "../C/modpeep.ll" t)
+= ../C/modpeep.ll
+? (loadfile "../C/modopt.ll"  t)
+= ../C/modopt.ll
+? (compile-all-in-core)
+= ()
+? 
+? 
+? (setq #:modtoc:C-verbose-mode            ())
+= ()
+? (setq #:modtoc:peephole-optimize-p       t)
+= t
+? (setq #:modtoc:optimize-local-labels-p   t)
+= t
+? (setq #:modtoc:stats-on-C-size-p         t)
+= t
+? (setq #:modtoc:doit-debug                ())
+= ()
+? 
+? 
+? (module-to-c 'testlap)
+GELL: module-to-C: translating module: testlap
+
+Nb of C procedures: 444.
+0    0.
+1    14.
+2    225.
+3    30.
+4    37.
+5    14.
+6    21.
+7    23.
+8    14.
+9    12.
+10   14.
+11   10.
+12   2.
+13   1.
+14   20.
+15   4.
+16   1.
+17   0.
+18   0.
+19   0.
+20   0.
+21   0.
+22   0.
+23   0.
+24   2.
+Average per C procedures: 4.436936
+
+= t
+? (end)
+Que Le-Lisp soit avec vous. 
+GCC -x -I/udd/chatelet/work/lelisp/GELL/C -I/udd/chatelet/work/lelisp/common -O -fforce-mem -fforce-addr -fomit-frame-pointer  -m68020 -m68881  -fcall-used-d2 -fcall-used-d3 -fcall-used-d4  -fcall-used-a2 -fcall-used-a3 -fcall-used-a4  -funsigned-char -c ../Ctest/testlap.c
+mv testlap.o To
+GCC -x -I/udd/chatelet/work/lelisp/GELL/C -I/udd/chatelet/work/lelisp/common -O -fforce-mem -fforce-addr -fomit-frame-pointer  -m68020 -m68881  -fcall-used-d2 -fcall-used-d3 -fcall-used-d4  -fcall-used-a2 -fcall-used-a3 -fcall-used-a4  -funsigned-char -c ../../lltest/testext.c
+mv testext.o To
+GCC -DNBSYST=33 -DBSD4x -DBSD42 -DTIMEUNIT=60.  -DFILEINI=\"/udd/chatelet/work/lelisp/llib/startup.ll\"  -DINRIA -O -fforce-mem -fforce-addr -fomit-frame-pointer  -m68020 -m68881  -fcall-used-d2 -fcall-used-d3 -fcall-used-d4  -fcall-used-a2 -fcall-used-a3 -fcall-used-a4  -funsigned-char -x -z o/llmain.o o/lelisp.o o/llstdio.o o/llfloat.o o/llc.o  o/llinit.o  o/toperr.o  o/gc.o     o/physio.o o/read.o    o/macroch.o o/print.o   o/eval.o   o/fspecs.o o/cntrl.o   o/carcdr.o  o/symbs.o   o/fntstd.o o/number.o o/specnb.o  o/string.o  o/chars.o   o/extend.o o/bllsht.o  To/testlap.o To/testext.o -lm -lc -o telispbin
+; Le-Lisp (by INRIA) version 15.22  (6/Jan/89)   [C]
+= (Version:  15.22)
+= subversion
+= herald
+= defvar
+= syste`me unix
+ (load-std sav min pepe env ld llcp)  pour charger l'environnement std,
+ (load-stm sav min pepe env ld llcp)  pour l'environnement std modulaire,
+ (load-cpl sav min meme env ld cmpl)  pour l'environnement complice.
+= Fin du startup.
+? (loadfile "../C/initc.ll" t)
+= ../C/initc.ll
+? (loadfile "testlap.lc" t)
+;Loading elaboration file: testlap.lc
+I.     test de RETURN et MOV
+II.    test de PUSH POP ADJSTK
+III.   test de BFNIL BTNIL BTCONS BFCONS BRA
+IV.    test de CABEQ/NE BT/F[FIX FLOAT SYMB STRG VECT VAR] 
+V.     test de JCALL JMP
+VI.    test de HPMOVX HPXMOV
+VII.   test de MOVXSP XSPMOV et (& n)
+VIII.  test de INCR PLUS FPLUS
+IX.    test de DECR DIFF FDIFF
+X.     test de NEGATE TIMES QUO REM FTIMES FQUO
+XI.    test de NOP SOBGEZ
+XII.   test de CALL BRA ENTRY
+XIII.  test de BRI BRX
+XIV.   test de STACK SSTACK
+XV.    test de CNB[EQ/NE/LT/LE/GT/GE]
+XVI.   test de LAND LOR LXOR
+XVII.  test de LSHIFT
+XVIII. test de HBXMOV HBMOVX HGSIZE
+XIX.   test de CFB[EQ/NE/LT/LE/GT/GE]
+XX.    test de NLIST, LLINK, DLINK, TAG, EXIT, CBINDN, PROT
+XXI.   test de EVAL
+       (foo-21-1)
+       x
+*** TESTLAP erreur pour x
+devrait etre () et non pas 12
+       (foo-21-2)
+       (foo-21-3)
+       (foo-21-4)
+       x
+*** TESTLAP erreur pour x
+devrait etre 9 et non pas 12
+XXII.  Fin du Test Lap
+       (let ((size (subadr (#:system:ccode) deb-code))) (print 
+Taille en octets de la zone code utilise'e par le test :  (cond ((fixp size) (
+if (ge size 0) size (+ (power 2 15) (logand 32767 size)))) ((consp size) (+ (*
+(car size) (power 2 16)) (if (ge (cdr size) 0) (cdr size) (+ (power 2 15) (
+logand 32767 (cdr size)))))) (t ()))) ())
+** eval : variable indefinie : deb-code
+? (end)
+Que Le-Lisp soit avec vous. 
+

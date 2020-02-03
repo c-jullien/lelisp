@@ -1,0 +1,5 @@
+./telispbin -float 8 -heap 512 <<EOI
+(loadfile "../C/initc.ll" t)
+(time '(loadfile "../Ctest/testlap.lc" t))
+(end)
+EOI

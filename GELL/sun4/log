@@ -1,0 +1,3 @@
+cc -I/nfs/work/lelisp/GELL/C -I/nfs/work/lelisp/common -temp=/usr/share/tmp -O -c ../Cllm3/print.c   
+mv print.o   o
+cc -DNBSYST=33 -DBSD4x -DBSD42  -DSUNOS40 -DSUN4 -Bstatic  -DFILEINI=\"/nfs/work/lelisp/llib/startup.ll\"  -DFOREIGN -temp=/usr/share/tmp -O -z o/llmain.o o/lelisp.o o/llstdio.o o/llfloat.o o/llc.o o/llinit.o  o/toperr.o  o/gc.o     o/physio.o o/read.o    o/macroch.o o/print.o   o/eval.o   o/fspecs.o o/cntrl.o   o/carcdr.o  o/symbs.o   o/fntstd.o o/number.o o/specnb.o  o/string.o  o/chars.o   o/extend.o o/bllsht.o -lm -lc -o lelispbin

@@ -1,0 +1,32 @@
+sans -O
+
+molitor% size lelispbin
+text    data    bss     dec     hex
+630784  65536   9104    705424  ac390
+
+? (test-fib)
+Test de Fib : nombre de tests = 10
+essais de (fib  20)  min = 2.65999984741 max = 2.76000213623 moy =
+2.69499969482
+
+
+avec -O
+
+molitor% size lelispbin
+text    data    bss     dec     hex
+475136  65536   9104    549776  86390
+
+? (test-fib)
+Test de Fib : nombre de tests = 10
+essais de (fib  20)  min = 2.30000114441 max = 2.44999885559 moy =
+2.33699989319
+
+
+
+avec -O4
+
+molitor% size lelispbin
+text    data    bss     dec     hex
+458752  65536   9104    533392  82390
+
+puis segmentation fault!!!!!

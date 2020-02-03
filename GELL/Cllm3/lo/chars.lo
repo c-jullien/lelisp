@@ -1,0 +1,17 @@
+(loader '(
+(listext (ini_chr inicst inisymb gccons evalan evalt))
+(entry startmodule subr0)
+	(title chars)
+	(xrefi llinit mstack)
+	(xrefi llinit fcons)
+	(xrefi llinit bvar)
+	(xrefp gc gccons)
+	(xrefp read inisymb)
+	(xrefp read inicst)
+	(xdefp ini_chr)
+	(pure)
+ini_chr
+	(eval ())
+	(return)
+	(end)
+))

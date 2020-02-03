@@ -1,0 +1,51 @@
+DIR=/usr/ilog/lelisp
+SYSDIR=/usr/ilog/lelisp/decstation
+case $# in
+        0)      exec $SYSDIR/cmplc++;;
+esac
+CPCMDFILE="/tmp/cp$$"
+files="" 
+trap "rm -f $CPCMDFILE; exit" 0 1 2 3 15
+CMDPA="(defvar #:complice:parano-flag "
+FLGPA="nil"
+CMDWN="(defvar #:complice:warning-flag "
+FLGWN="t"
+DEST=""
+LLPATH=""
+while test x$1 != x
+        do
+                case $1 in
+                        -parano) FLGPA=$2; shift;;
+                        -w)     FLGWN=$2; shift;;
+                        -v)     FLGPR="t";;
+                        -o)     DEST=$2; shift;;
+                        -p)     LLPATH="$LLPATH $2"; shift;;
+                        -i)     shift; exec $SYSDIR/cmplc++ $*;;
+                        -e)     echo $2 >> $CPCMDFILE; shift;;
+                        *)      files="$files $1" ;;
+                esac
+                shift
+        done
+echo $CMDPA $FLGPA ")" >> $CPCMDFILE
+echo $CMDWN $FLGWN ")" >> $CPCMDFILE
+echo "(setq #:system:path (append '(" $LLPATH ") #:system:path))" >>$CPCMDFILE
+echo "(de user-interrupt () (end))" >> $CPCMDFILE
+echo "(de syserror (f m b)" >> $CPCMDFILE
+echo "   (print \" ** \" f \" : \" m \" : \" b) (end))" >> $CPCMDFILE
+for i in $files
+        do
+        echo "(compilemodule '" $i ")" >> $CPCMDFILE
+        done
+echo "(end)" >> $CPCMDFILE
+case $FLGPR in
+        t)      cat $CPCMDFILE;;
+esac
+export CPCMDFILE
+$SYSDIR/cmplc++
+if test x$DEST != x
+        then
+                for i in $files
+                        do
+                        mv $i.lo $DEST/$i.lo
+                        done
+fi

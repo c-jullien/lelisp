@@ -1,0 +1,118 @@
+#!/bin/sh
+
+GELLDIR=/nfs/work/lelisp/GELL
+SYSDIR=$GELLDIR/tools
+LELISP=/nfs/current/lelisp/`/nfs/ishare/bin/scripts/llsystem`/cmplc++
+
+# Variables specifiques produits.
+
+product=
+productdir=
+elabcomment=
+odir=
+cdir=
+omainname=
+depname=
+makecolumns=
+productdirs=
+types=
+modfile=
+elabfile=
+makefile=
+ccmdfile=
+parms=
+exclude=
+
+while test -n "$1"
+        do
+                case $1 in
+                        -exclude) exclude="$exclude $2" ; shift ;;
+                        -product) product=$2 ; shift ;;
+                        -productdir) productdir=$2 ; shift ;;
+                        -ccmdfile) ccmdfile=$2 ; shift ;;
+                        -elabcomment) elabcomment=$2 ; shift ;;
+                        -odir) odir=$2 ; shift ;;
+                        -cdir) cdir=$2 ; shift ;;
+                        -omainname) omainname=$2 ; shift ;;
+                        -depname) depname=$2 ; shift ;;
+                        -makecolumns) makecolumns=$2 ; shift ;;
+                        -productdirs) productdirs=$2 ; shift ;;
+                        -types) types=$2 ; shift ;;
+                        -modfile) modfile=$2 ; shift ;;
+                        -elabfile) elabfile=$2 ; shift ;;
+                        -makefile) makefile=$2 ; shift ;;
+                        *) parms="$parms $1" ;;
+                esac
+                shift
+        done
+ 
+echo "** Parametres ignore's \"$parms\""
+
+###########
+#************************** construction de la liste temporaire des modules
+###########
+
+# variable interne
+but=/tmp/$product.gell
+
+$SYSDIR/makegelltmp $but "$productdirs" "$types"
+
+###########
+#************************** construction de la liste des modules a elaborer
+###########
+
+HOME=foothebar $LELISP <<EOI
+
+;; pour les noms des repertoires en Majuscules.
+
+(setq #:system:read-case-flag t)
+
+(defvar gelldir "$GELLDIR/")
+
+;; les utilitaires pour construire les fichiers necessaires a GELL.
+
+(libloadfile "$SYSDIR/gellutil.ll" t)
+
+;; les modules a exclude
+
+(defvar #:gell:modules-to-exclude (quote ($exclude)))
+
+
+;; initialisation des chemins de recherche.
+
+(setq #:system:path (append (quote ($productdirs)) #:system:path )) 
+
+;; definition de la variable qui precise la liste des modules
+;; a elaborer pour le produit.
+
+(#:gell:make-modules-file "$but" 
+                          "$modfile")
+
+;; construction de la liste des fichiers d'elaboration
+
+(#:gell:make-elab-file "$modfile" 
+                       "$elabfile" 
+                       "$cdir"
+                       "$elabcomment")
+
+;; construction du makefile.
+
+(#:gell:make-make-file "$modfile" 
+                       "$makefile"
+                       "$cdir"
+                       "$odir"
+                       "$omainname"
+                       "$depname"
+                       $makecolumns)
+
+;; construction de la commande qui va lancer la traduction
+
+(#:gell:make-make-c "$ccmdfile" gelldir "$modfile" "$cdir")
+
+(end)
+EOI
+
+chmod +x $ccmdfile
+
+
+

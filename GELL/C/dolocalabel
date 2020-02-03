@@ -1,0 +1,18 @@
+#!/bin/sh
+# fabrique le fichier "localabel" qui contient la liste
+# des e'tiquettes locales aux fichiers LLM3
+# ce fichier est utilise' dans l'expanseur macC.ll
+rm -f localabel
+/usr/local/bin/complice <<EOI
+(loadfile "/nfs/work/lelisp/lltool/llm3.ll" t)
+(loadfile "/nfs/work/lelisp/lltool/expand.ll" t)
+(loadfile "/nfs/work/lelisp/lltool/macllm3.ll" t)
+macCopt
+(defvar #:expand:s-dir "/tmp/")
+(defvar #:llm3:dir-source "$1/llm3/")
+; Pour ces sacres FLET
+(setq #:complice:parano-flag t)
+(compile-all-in-core)
+(expand)
+(end)
+EOI

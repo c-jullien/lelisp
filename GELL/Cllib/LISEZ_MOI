@@ -1,0 +1,24 @@
+                ======================================
+                Ge'ne'rateur d'Exe'cutifs Le-Lisp en C
+
+                             "GELL" 26
+
+                (c) 1989 1990 1991 1992 1993 ILOG S.A.
+                ======================================
+                fichier: ./lelisp/GELL/Cllib/LISEZ_MOI
+                ======================================
+
+
+
+
+Ce catalogue ne sert qu'a` fabriquer les fichiers C correspondant
+a` la bibliothe`que standard et au compilateur de Le-Lisp.
+
+Pour fabriquer les fichiers C correspondant a` la LLIB, faire :
+	% faireCllib >& faireCllib.log &
+
+Pour fabriquer les fichiers C correspondant au compilateur complice
+et a` modtoc, faire :
+
+	% faireCcomplice >& faireCcomplice.log &
+

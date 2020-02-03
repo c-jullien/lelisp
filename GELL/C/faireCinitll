@@ -1,0 +1,21 @@
+complice -i -cons 8 <<EOI
+(loadfile "../C/modtoc.ll" t)
+(loadfile "../C/modopt.ll" t)
+(compile-all-in-core)
+
+(setq #:modtoc:C-verbose-mode ())
+(setq #:modtoc:optimize-local-labels t)
+(setq doit-debug ())
+
+(defun makeCinitll ()
+   (let ((#:system:path (cons "/udd/chatelet/work/lelisp/CeLisp/C/" 
+	                      #:system:path)))
+        (mapc  'module-to-C '(
+	       initll))))
+
+
+
+(makeCinitll)
+(end)
+
+EOI

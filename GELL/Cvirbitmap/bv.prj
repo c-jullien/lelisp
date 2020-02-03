@@ -1,0 +1,46 @@
+#| Refaire le Makemod par
+   crunch -load bv.prj -makemod virbitmap -omit complice -omit cc -split -gell
+|#
+
+(define-rt-project virbitmap
+  required-projects (lisp)
+  root-directory #u"/nfs/work/lelisp/"
+  system-directory #u"GELL/Cvirbitmap/"
+  directories (#u"virbitmap/X11/"
+		 #u"llmod/"
+		 #u"llobj/")
+  crunch-directory #u"GELL/Cvirbitmap/"
+  c-object-directories ("./")
+  c-source-directories ("GELL/Cvirbitmap/")
+  elaboration-directories ("Celab/")
+  modules (
+                x11_def
+                x11bitmap
+                x11color
+                x11draw
+                x11event
+                x11graph
+                x11init
+                x11menu
+                x11struct
+                x11window
+
+                virutil
+                virmenu
+                vircolor
+                virbit
+                virevent
+                virdraw
+                virgraph
+                virwindow
+                virinit
+
+                virbitmap
+
+		ttywindow
+		evloop
+
+		)
+  modules-lists ("none")
+  )
+

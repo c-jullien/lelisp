@@ -1,0 +1,20 @@
+defmodule  queens1
+files      (queens1)
+export     (start)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(start subr0 ())
+)
+cpfunctions (
+(hr subr1)
+)
+cpimport
+()
+cpenv (
+((#:complice:declareglobalvar 'nb))
+((#:complice:declareglobalvar 'col))
+((#:complice:declareglobalvar 'dm))
+((#:complice:declareglobalvar 'dp))
+((#:complice:declareglobalvar 'nbsol))
+)

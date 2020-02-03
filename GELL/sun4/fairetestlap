@@ -1,0 +1,10 @@
+./telispbin -float 8 -heap 512 <<EOI
+(loadfile "../C/initc.ll" t)
+(setq #:|defC|:defc-verbose-p ()) ; a mettre si erreurs
+(de gc-before-alarm () (print "GCBEFORE"))
+(de gcalarm () (print "GCAFTER"))
+(print "Time: " (time '(loadfile "../Ctest/testlap.lc" t)) " to run the tests.")
+(gc t)
+(print "Time: " (time '(repeat 10 (gc))) " for 10 GCs.")
+(end)
+EOI

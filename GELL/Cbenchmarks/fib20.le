@@ -1,0 +1,22 @@
+;;; GELL 15.26: elaboration file for the module: fib20
+;;;             translation done: "Wed June 16 93 18:18:04 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: fib20.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'fib20)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZfib20" "Wed June 16 93 18:18:04 "
+
+'((check-fib20 . subr0) (meter-fib20 . subr0) (test-fib20 . subr1))
+
+#[(test-fib20 1) check-value (count-calls-init) eval (count-calls-stop) t check-fib20 #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-fib20 test-fib20 #:gell-resetfn:function-1]
+)
+
+(defcsetfn 'check-fib20 "GZfib20" 0)
+(defcsetfn 'meter-fib20 "GZfib20" 1)
+(defcsetfn 'test-fib20 "GZfib20" 2)
+
+(defccheck '(eval check-value))

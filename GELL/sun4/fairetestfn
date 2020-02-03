@@ -1,0 +1,8 @@
+./telispbin -float 0 -heap 512 -code 0 <<EOI
+(print "GELL: testfn")
+(gc t)
+(print "Time: " (time '(loadfile "../../lltest/testfn.ll" t)) " to run the tests.")
+(gc t)
+(print "Time: " (time '(repeat 10 (gc))) " for 10 GCs.")
+(end)
+EOI

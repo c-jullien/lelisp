@@ -1,0 +1,3 @@
+aidaQOX11bin -code 0 -heap 800 \
+ -symbol 14 -string 16 -vector 8 -cons 24 -float 0 \
+ -r llcore/aidaQOX11.core $*

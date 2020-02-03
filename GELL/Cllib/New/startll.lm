@@ -1,0 +1,38 @@
+defmodule startll
+
+files    (startll)
+import   ()
+export   (subversion herald explodech implodech lhoblist
+          #:llcp:ext-not-resolved
+	  core-init-std save-std
+	  defmacro-open make-macro-open macro-openp
+	  remove-macro-open loader compiler compile-all-in-core)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(subversion subr0 ())
+(herald subr0 ())
+(explodech subr1 ())
+(implodech subr1 ())
+(lhoblist subr1 () (s) (subr1) (()))
+(#:llcp:ext-not-resolved subr0 ())
+(core-init-std subr1 ())
+(save-std nsubr ())
+(defmacro-open fsubr ())
+(make-macro-open subr2 ())
+(macro-openp subr1 ())
+(remove-macro-open subr1 ())
+(loader nsubr ())
+(compiler nsubr ())
+(compile-all-in-core nsubr ())
+)
+cpfunctions
+()
+cpimport
+()
+cpenv (
+((putprop '#:system:initty-after-restore-flag 't '#:complice:globalvar)
+)((putprop '#:system:inibitmap-after-restore-flag 't '#:complice:globalvar)
+)((putprop '#:system:save-std-gcinfo-list 't '#:complice:globalvar)
+)((putprop '#:system:save-std-date 't '#:complice:globalvar)
+))

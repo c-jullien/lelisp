@@ -1,0 +1,45 @@
+/usr/ilog/lelisp/sun4/complice <<EOI
+(loadfile "../C/modtoc.lo"  t)
+
+
+(setq #:modtoc:use-threshold-read-only  2)  ; 2
+(setq #:modtoc:use-threshold-read-write 2)  ; 3
+
+(setq #:modtoc:peephole-optimize-p       t)
+(setq #:modtoc:optimize-local-labels-p   t)
+
+(setq #:modtoc:open-cons-p               t)
+
+(setq #:modtoc:stats-on-C-size-p         t)
+(setq #:modtoc:peephole-debug            ())
+(setq #:modtoc:doit-debug                ())
+(setq #:modtoc:C-verbose-mode            ())
+
+
+(defun makeCbench ()
+   (let ((#:system:path (cons "../../benchmarks/" #:system:path)))
+        (mapc  'module-to-C '(
+               checkmet
+               fib20
+               tak
+               stak
+               ctak
+               takl
+               takr
+               boyer
+               browse
+               destru
+               traverse
+               deriv
+               dderiv
+               div
+               fft
+               puzzle
+               triang
+))))
+
+(makeCbench)
+(#:modtoc:stats-global)
+(end)
+
+EOI

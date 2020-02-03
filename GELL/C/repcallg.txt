@@ -1,0 +1,42 @@
+Les limitations du CALLG actuel sur GELL :
+------------------------------------------
+
+
+- pas plus de 16 arguments
+
+- type des arguments en interpre'te' :
+
+	appel:		EXTERNAL, T, FIX, STRING, VECTOR, RFIX, RFLOAT, 
+			FIXVECTOR, FLOATVECTOR
+			(tous les types d'appel sauf FLOAT)
+
+	retour:		EXTERNAL, T, FIX, STRING
+			(tous les types de retour sauf FLOAT)
+
+- type des arguments en compile', GELL essaie de compiler les appels
+aux fonctions externes directement en des appels C si c'est possible.
+Si ce n'est pas le cas, (avertissement "INLINE CALLEXTERN" durant la
+traduction *.lo -> *.c), l'appel est re'alise' en interpre'te'.
+
+	appel:		EXTERNAL, T, FIX, FLOAT, STRING, VECTOR
+			(manque RFIX, RFLOAT, FIXVECTOR, FLOATVECTOR)
+
+	retour:	        EXTERNAL, T, FIX, FLOAT, STRING
+			(tous les types de retour)
+
+
+La distribution 15.25.2 contiendra l'ensemble des types d'appel en
+compile' c'est-a-dire la liste actuelle augmente'e de RFIX, RFLOAT,
+FIXVECTOR et FLOATVECTOR, en revanche nous ne pourrons pas enlever la
+limitation des appels en interpre'te' sur le type FLOAT.
+
+
+Re'pondre au rat chaud 1563 :
+
+- de ve'rifier que tous les types utilise's existent aujourd'hui en mode compile',
+
+- de faire un module des fonctions de type "defextern"
+
+- de les compiler et de charger le module re'sultant
+
+Je'ro^me

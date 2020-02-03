@@ -1,0 +1,103 @@
+; Le-Lisp (by INRIA) version 15.25 (22/sept/92)   [sun4]
+; Complice : jeu 26 nov  92 19:51:09 
+= (31bitfloats abbrev callext compiler complice date debug defstruct format 
+hash-table loader messages microceyx module pathname pepe pretty setf 
+virbitmap virtty)
+? 
+? (loadfile "../C/modtoc.lo"  t)
+= ../C/modtoc.lo
+? 
+? (setq #:modtoc:use-threshold-read-only  2)  ; 2
+= 2
+? (setq #:modtoc:use-threshold-read-write 3)  ; 3
+= 3
+? 
+? 
+? (setq #:modtoc:peephole-optimize-p       t)
+= t
+? (setq #:modtoc:optimize-local-labels-p   t)
+= t
+? 
+? (setq #:modtoc:stats-on-C-size-p         t)
+= t
+? (setq #:modtoc:peephole-debug            ())
+= ()
+? (setq #:modtoc:doit-debug                ())
+= ()
+? (setq #:modtoc:C-verbose-mode            ())
+= ()
+? 
+? 
+? 
+? (defun makeCcomplice ()
+?    (let ((#:system:path (mcons "New/" 
+?                                "../C/"
+?                                 "/nfs/work/lelisp/llib/"
+?                                 "/nfs/work/lelisp/llobj/"
+?                                 "/nfs/work/lelisp/llmod/"
+?                                 #:system:path)))
+? 
+?         (mapc  'module-to-C '(
+? 
+?                 complice
+?                 modtoc
+? ))))
+= makeccomplice
+? 
+? 
+? 
+? (makeCcomplice)
+GELL 15.26: module-to-C: translating module: complice
+Nb of C procedures: 1835.
+  0    0.   16   20.
+  1    0.   17   20.
+  2    37.  18   13.
+  3    233. 19   13.
+  4    349. 20   10.
+  5    265. 21   14.
+  6    151. 22   13.
+  7    136. 23   7.
+  8    101. 24   5.
+  9    92.  25   4.
+  10   65.  26   4.
+  11   64.  27   2.
+  12   57.  28   5.
+  13   56.  29   2.
+  14   31.  30   7.
+  15   18.  31   41.
+Average per C procedures: 7.954768
+Preloaded registers:      3262.
+Unloaded  registers:      2233.
+
+GELL 15.26: module-to-C: translating module: modtoc
+Nb of C procedures: 2750.
+  0    0.   16   7.
+  1    0.   17   9.
+  2    5.   18   6.
+  3    479. 19   2.
+  4    1201.20   9.
+  5    434. 21   8.
+  6    182. 22   2.
+  7    88.  23   5.
+  8    52.  24   1.
+  9    68.  25   5.
+  10   47.  26   1.
+  11   32.  27   4.
+  12   13.  28   1.
+  13   20.  29   2.
+  14   23.  30   0.
+  15   14.  31   30.
+Average per C procedures: 5.506908
+Preloaded registers:      1941.
+Unloaded  registers:      1348.
+
+= ()
+? (#:modtoc:stats-global)
+
+Global nb of C procedures: 4585.
+ average per C procedures: 6.486587
+= 6.486587
+? (end)
+Que Le-Lisp soit avec vous. 
+translation done.
+elaboration files copied on Celab.

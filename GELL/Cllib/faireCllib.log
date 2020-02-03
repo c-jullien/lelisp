@@ -1,0 +1,891 @@
+Making C code for files: startll
+
+        initc
+       
+        messages
+        toplevel
+        files
+        module
+        defs
+        genarith
+
+        path
+        llpboot
+        setf
+        defstruct
+        abbrev
+        microceyx
+        debug
+        trace
+        pretty
+
+        libcir
+        sort
+        array
+        callext
+        format
+        date
+
+        libdate
+        sets
+        hash
+        stringio
+        evloop
+
+        virtty
+        vt100
+
+        resetfn
+
+        schedule
+        product
+; Le-Lisp (by INRIA) version 15.25 (22/sept/92)   [sun4]
+; Complice : jeu 26 nov  92 19:51:09 
+= (31bitfloats abbrev callext compiler complice date debug defstruct format 
+hash-table loader messages microceyx module pathname pepe pretty setf 
+virbitmap virtty)
+? (loadfile "../C/modtoc.lo"  t)
+= ../C/modtoc.lo
+? 
+? 
+? (setq #:modtoc:use-threshold-read-only  2)  ; 2
+= 2
+? (setq #:modtoc:use-threshold-read-write 3)  ; 3
+= 3
+? 
+? (setq #:modtoc:peephole-optimize-p       t)
+= t
+? (setq #:modtoc:optimize-local-labels-p   t)
+= t
+? 
+? (setq #:modtoc:stats-on-C-size-p         t)
+= t
+? (setq #:modtoc:peephole-debug            ())
+= ()
+? (setq #:modtoc:doit-debug                ())
+= ()
+? (setq #:modtoc:C-verbose-mode            ())
+= ()
+? 
+? (defun makeCllib ()
+?    (let ((#:system:path (mcons "New/" 
+?                                "../C/"
+?                                 "/nfs/work/lelisp/llib/"
+?                                 "/nfs/work/lelisp/llub/"
+?                                 "/nfs/work/lelisp/llobj/"
+?                                 "/nfs/work/lelisp/llmod/"
+?                                 #:system:path)))
+? 
+?         (mapc  (quote module-to-C) (quote (startll
+? 
+?         initc
+?        
+?         messages
+?         toplevel
+?         files
+?         module
+?         defs
+?         genarith
+? 
+?         path
+?         llpboot
+?         setf
+?         defstruct
+?         abbrev
+?         microceyx
+?         debug
+?         trace
+?         pretty
+? 
+?         libcir
+?         sort
+?         array
+?         callext
+?         format
+?         date
+? 
+?         libdate
+?         sets
+?         hash
+?         stringio
+?         evloop
+? 
+?         virtty
+?         vt100
+? 
+?         resetfn
+? 
+?         schedule
+?         product)) )
+? '        (mapc  (quote module-to-C) (quote (initc)) )
+?    ))
+= makecllib
+? 
+? 
+? 
+? (makeCllib)
+GELL 15.26: module-to-C: translating module: startll
+Nb of C procedures: 93.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    18.  18   0.
+  3    9.   19   0.
+  4    11.  20   0.
+  5    21.  21   1.
+  6    11.  22   0.
+  7    3.   23   0.
+  8    1.   24   1.
+  9    4.   25   1.
+  10   4.   26   0.
+  11   2.   27   0.
+  12   1.   28   0.
+  13   2.   29   0.
+  14   3.   30   0.
+  15   0.   31   0.
+Average per C procedures: 5.967742
+Preloaded registers:      115.
+Unloaded  registers:      82.
+
+GELL 15.26: module-to-C: translating module: initc
+modpeep: ICALLG: name= llrt_set_regular_fval typeret= 1 args= (a1 0 (vag a2) 0 (& 0) 1)
+modpeep: ICALLG: name= llrt_set_lit_table typeret= 1 args= ((vag a1) 0 (& 0) 4 (& 1) 1)
+modpeep: ICALLG: name= llrt_check_timestamp typeret= 1 args= ((vag a1) 0 (& 0) 3)
+modpeep: ICALLG: name= llrt_set_trace_fval_p typeret= 1 args= (a1 0 (vag a2) 0 (vag (& 0)) 0)
+Nb of C procedures: 104.
+  0    0.   16   2.
+  1    0.   17   0.
+  2    11.  18   0.
+  3    16.  19   1.
+  4    16.  20   2.
+  5    11.  21   1.
+  6    15.  22   1.
+  7    0.   23   0.
+  8    4.   24   0.
+  9    7.   25   0.
+  10   5.   26   0.
+  11   1.   27   0.
+  12   3.   28   0.
+  13   5.   29   0.
+  14   3.   30   0.
+  15   0.   31   0.
+Average per C procedures: 6.846153
+Preloaded registers:      123.
+Unloaded  registers:      84.
+
+GELL 15.26: module-to-C: translating module: messages
+Nb of C procedures: 76.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    15.  18   1.
+  3    6.   19   1.
+  4    10.  20   0.
+  5    5.   21   0.
+  6    11.  22   0.
+  7    10.  23   0.
+  8    3.   24   1.
+  9    5.   25   0.
+  10   1.   26   0.
+  11   0.   27   0.
+  12   1.   28   0.
+  13   1.   29   1.
+  14   1.   30   0.
+  15   2.   31   1.
+Average per C procedures: 6.815789
+Preloaded registers:      139.
+Unloaded  registers:      81.
+
+GELL 15.26: module-to-C: translating module: toplevel
+Nb of C procedures: 66.
+  0    0.   16   0.
+  1    0.   17   2.
+  2    7.   18   0.
+  3    11.  19   2.
+  4    2.   20   0.
+  5    11.  21   0.
+  6    7.   22   2.
+  7    8.   23   1.
+  8    4.   24   0.
+  9    1.   25   0.
+  10   1.   26   0.
+  11   0.   27   0.
+  12   0.   28   0.
+  13   0.   29   0.
+  14   1.   30   0.
+  15   1.   31   5.
+Average per C procedures: 8.818182
+Preloaded registers:      99.
+Unloaded  registers:      56.
+
+GELL 15.26: module-to-C: translating module: files
+Nb of C procedures: 106.
+  0    0.   16   4.
+  1    0.   17   1.
+  2    16.  18   1.
+  3    8.   19   2.
+  4    22.  20   0.
+  5    16.  21   0.
+  6    15.  22   0.
+  7    5.   23   0.
+  8    2.   24   0.
+  9    2.   25   0.
+  10   1.   26   0.
+  11   1.   27   0.
+  12   3.   28   1.
+  13   4.   29   0.
+  14   0.   30   0.
+  15   1.   31   1.
+Average per C procedures: 6.632075
+Preloaded registers:      140.
+Unloaded  registers:      88.
+
+GELL 15.26: module-to-C: translating module: module
+Nb of C procedures: 192.
+  0    0.   16   1.
+  1    0.   17   2.
+  2    9.   18   1.
+  3    24.  19   2.
+  4    28.  20   0.
+  5    38.  21   1.
+  6    20.  22   1.
+  7    12.  23   1.
+  8    5.   24   0.
+  9    13.  25   1.
+  10   6.   26   0.
+  11   5.   27   1.
+  12   3.   28   1.
+  13   5.   29   1.
+  14   4.   30   0.
+  15   5.   31   2.
+Average per C procedures: 7.515625
+Preloaded registers:      285.
+Unloaded  registers:      198.
+
+GELL 15.26: module-to-C: translating module: defs
+Nb of C procedures: 310.
+  0    0.   16   1.
+  1    0.   17   0.
+  2    22.  18   1.
+  3    20.  19   6.
+  4    57.  20   1.
+  5    39.  21   2.
+  6    32.  22   0.
+  7    33.  23   1.
+  8    12.  24   1.
+  9    11.  25   2.
+  10   10.  26   3.
+  11   9.   27   0.
+  12   12.  28   0.
+  13   8.   29   5.
+  14   11.  30   1.
+  15   2.   31   8.
+Average per C procedures: 8.335484
+Preloaded registers:      557.
+Unloaded  registers:      354.
+
+GELL 15.26: module-to-C: translating module: genarith
+Nb of C procedures: 73.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    10.  18   0.
+  3    4.   19   0.
+  4    13.  20   0.
+  5    12.  21   0.
+  6    9.   22   0.
+  7    7.   23   0.
+  8    4.   24   0.
+  9    5.   25   0.
+  10   2.   26   0.
+  11   2.   27   0.
+  12   2.   28   0.
+  13   2.   29   0.
+  14   0.   30   0.
+  15   0.   31   1.
+Average per C procedures: 6.123287
+Preloaded registers:      90.
+Unloaded  registers:      66.
+
+GELL 15.26: module-to-C: translating module: path
+modpeep: ICALLG: name= lldirectoryp typeret= 1 args= (a1 3)
+modpeep: ICALLG: name= llgetwd typeret= 1 args= (a1 3 a2 1)
+modpeep: ICALLG: name= llopendir typeret= 0 args= (a1 3)
+modpeep: ICALLG: name= llreaddir typeret= 3 args= ((vag a1) 0)
+modpeep: ICALLG: name= llclosedir typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= cchdir typeret= 1 args= (a1 3)
+Nb of C procedures: 491.
+  0    0.   16   3.
+  1    0.   17   4.
+  2    44.  18   3.
+  3    60.  19   4.
+  4    72.  20   2.
+  5    97.  21   3.
+  6    27.  22   0.
+  7    21.  23   1.
+  8    18.  24   2.
+  9    31.  25   0.
+  10   30.  26   2.
+  11   17.  27   0.
+  12   24.  28   0.
+  13   3.   29   0.
+  14   7.   30   1.
+  15   6.   31   9.
+Average per C procedures: 7.242362
+Preloaded registers:      759.
+Unloaded  registers:      544.
+
+GELL 15.26: module-to-C: translating module: llpboot
+Nb of C procedures: 10.
+  0    0.   16   0.
+  1    0.   17   1.
+  2    2.   18   0.
+  3    0.   19   0.
+  4    1.   20   0.
+  5    3.   21   0.
+  6    1.   22   0.
+  7    2.   23   0.
+  8    0.   24   0.
+  9    0.   25   0.
+  10   0.   26   0.
+  11   0.   27   0.
+  12   0.   28   0.
+  13   0.   29   0.
+  14   0.   30   0.
+  15   0.   31   0.
+Average per C procedures: 6.
+Preloaded registers:      14.
+Unloaded  registers:      8.
+
+GELL 15.26: module-to-C: translating module: setf
+Nb of C procedures: 118.
+  0    0.   16   2.
+  1    0.   17   2.
+  2    10.  18   4.
+  3    4.   19   1.
+  4    30.  20   1.
+  5    10.  21   0.
+  6    7.   22   0.
+  7    16.  23   1.
+  8    2.   24   0.
+  9    5.   25   0.
+  10   3.   26   0.
+  11   4.   27   1.
+  12   8.   28   0.
+  13   3.   29   0.
+  14   1.   30   0.
+  15   2.   31   1.
+Average per C procedures: 7.864407
+Preloaded registers:      204.
+Unloaded  registers:      147.
+
+GELL 15.26: module-to-C: translating module: defstruct
+Nb of C procedures: 46.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    3.   18   0.
+  3    4.   19   0.
+  4    10.  20   0.
+  5    5.   21   0.
+  6    1.   22   0.
+  7    8.   23   1.
+  8    3.   24   0.
+  9    2.   25   0.
+  10   1.   26   0.
+  11   0.   27   0.
+  12   4.   28   0.
+  13   0.   29   0.
+  14   2.   30   0.
+  15   1.   31   1.
+Average per C procedures: 7.434782
+Preloaded registers:      66.
+Unloaded  registers:      39.
+
+GELL 15.26: module-to-C: translating module: abbrev
+Nb of C procedures: 30.
+  0    0.   16   0.
+  1    0.   17   2.
+  2    7.   18   0.
+  3    4.   19   0.
+  4    3.   20   0.
+  5    4.   21   0.
+  6    2.   22   0.
+  7    1.   23   0.
+  8    1.   24   0.
+  9    2.   25   0.
+  10   0.   26   0.
+  11   0.   27   0.
+  12   1.   28   0.
+  13   0.   29   0.
+  14   1.   30   0.
+  15   1.   31   1.
+Average per C procedures: 6.966666
+Preloaded registers:      47.
+Unloaded  registers:      29.
+
+GELL 15.26: module-to-C: translating module: microceyx
+Nb of C procedures: 197.
+  0    0.   16   1.
+  1    0.   17   3.
+  2    17.  18   0.
+  3    20.  19   1.
+  4    42.  20   0.
+  5    26.  21   1.
+  6    11.  22   0.
+  7    18.  23   0.
+  8    4.   24   0.
+  9    9.   25   0.
+  10   10.  26   1.
+  11   7.   27   1.
+  12   12.  28   1.
+  13   5.   29   0.
+  14   2.   30   0.
+  15   2.   31   3.
+Average per C procedures: 7.218274
+Preloaded registers:      293.
+Unloaded  registers:      207.
+
+GELL 15.26: module-to-C: translating module: debug
+Nb of C procedures: 403.
+  0    0.   16   5.
+  1    0.   17   4.
+  2    29.  18   2.
+  3    56.  19   7.
+  4    52.  20   5.
+  5    69.  21   2.
+  6    42.  22   0.
+  7    23.  23   0.
+  8    15.  24   0.
+  9    20.  25   0.
+  10   21.  26   1.
+  11   11.  27   0.
+  12   6.   28   1.
+  13   7.   29   1.
+  14   9.   30   0.
+  15   5.   31   10.
+Average per C procedures: 7.540943
+Preloaded registers:      613.
+Unloaded  registers:      409.
+
+GELL 15.26: module-to-C: translating module: trace
+Nb of C procedures: 272.
+  0    0.   16   2.
+  1    0.   17   2.
+  2    12.  18   2.
+  3    32.  19   1.
+  4    49.  20   1.
+  5    54.  21   1.
+  6    25.  22   2.
+  7    17.  23   0.
+  8    9.   24   1.
+  9    17.  25   0.
+  10   12.  26   1.
+  11   5.   27   0.
+  12   11.  28   0.
+  13   6.   29   1.
+  14   3.   30   0.
+  15   3.   31   3.
+Average per C procedures: 7.095588
+Preloaded registers:      381.
+Unloaded  registers:      234.
+
+GELL 15.26: module-to-C: translating module: pretty
+Nb of C procedures: 185.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    6.   18   0.
+  3    23.  19   0.
+  4    32.  20   1.
+  5    44.  21   1.
+  6    19.  22   0.
+  7    15.  23   1.
+  8    10.  24   1.
+  9    12.  25   2.
+  10   9.   26   0.
+  11   2.   27   0.
+  12   5.   28   1.
+  13   0.   29   0.
+  14   0.   30   0.
+  15   1.   31   0.
+Average per C procedures: 6.427027
+Preloaded registers:      209.
+Unloaded  registers:      156.
+
+GELL 15.26: module-to-C: translating module: libcir
+Nb of C procedures: 138.
+  0    0.   16   2.
+  1    0.   17   0.
+  2    8.   18   1.
+  3    7.   19   1.
+  4    27.  20   1.
+  5    27.  21   2.
+  6    16.  22   0.
+  7    10.  23   0.
+  8    10.  24   1.
+  9    4.   25   0.
+  10   9.   26   0.
+  11   4.   27   0.
+  12   2.   28   0.
+  13   0.   29   2.
+  14   0.   30   0.
+  15   1.   31   3.
+Average per C procedures: 7.543478
+Preloaded registers:      245.
+Unloaded  registers:      174.
+
+GELL 15.26: module-to-C: translating module: sort
+Nb of C procedures: 25.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    5.   18   0.
+  3    1.   19   0.
+  4    4.   20   0.
+  5    1.   21   0.
+  6    3.   22   0.
+  7    0.   23   0.
+  8    2.   24   0.
+  9    1.   25   0.
+  10   1.   26   0.
+  11   1.   27   0.
+  12   0.   28   0.
+  13   3.   29   0.
+  14   2.   30   0.
+  15   1.   31   0.
+Average per C procedures: 7.2
+Preloaded registers:      40.
+Unloaded  registers:      22.
+
+GELL 15.26: module-to-C: translating module: array
+Nb of C procedures: 24.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    3.   18   0.
+  3    2.   19   0.
+  4    3.   20   0.
+  5    4.   21   0.
+  6    5.   22   0.
+  7    2.   23   0.
+  8    0.   24   0.
+  9    1.   25   0.
+  10   1.   26   0.
+  11   0.   27   0.
+  12   0.   28   0.
+  13   0.   29   1.
+  14   0.   30   0.
+  15   0.   31   2.
+Average per C procedures: 8.25
+Preloaded registers:      34.
+Unloaded  registers:      24.
+
+GELL 15.26: module-to-C: translating module: callext
+modpeep: ICALLG: name= llmgetglo typeret= 1 args= (a1 0 a2 0)
+modpeep: ICALLG: name= llgetinlib typeret= 0 args= ((& 3) 3 (& 2) 3 (& 1) 4 (& 0) 1)
+modpeep: ICALLG: name= llcload typeret= 0 args= ((& 3) 3 (& 2) 1 (vag (& 1)) 0 (vag (& 0)) 0)
+Nb of C procedures: 161.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    7.   18   2.
+  3    19.  19   2.
+  4    28.  20   4.
+  5    25.  21   0.
+  6    12.  22   0.
+  7    10.  23   0.
+  8    14.  24   1.
+  9    18.  25   0.
+  10   3.   26   0.
+  11   4.   27   0.
+  12   0.   28   0.
+  13   4.   29   1.
+  14   2.   30   1.
+  15   0.   31   4.
+Average per C procedures: 7.695652
+Preloaded registers:      232.
+Unloaded  registers:      154.
+
+GELL 15.26: module-to-C: translating module: format
+Nb of C procedures: 511.
+  0    0.   16   4.
+  1    0.   17   8.
+  2    2.   18   4.
+  3    89.  19   2.
+  4    85.  20   5.
+  5    67.  21   2.
+  6    42.  22   1.
+  7    29.  23   3.
+  8    35.  24   1.
+  9    30.  25   2.
+  10   22.  26   3.
+  11   13.  27   2.
+  12   14.  28   0.
+  13   10.  29   1.
+  14   13.  30   2.
+  15   8.   31   12.
+Average per C procedures: 8.07045
+Preloaded registers:      756.
+Unloaded  registers:      459.
+
+GELL 15.26: module-to-C: translating module: date
+Nb of C procedures: 85.
+  0    0.   16   1.
+  1    0.   17   1.
+  2    18.  18   8.
+  3    6.   19   0.
+  4    10.  20   0.
+  5    4.   21   0.
+  6    6.   22   0.
+  7    1.   23   0.
+  8    7.   24   0.
+  9    1.   25   0.
+  10   9.   26   0.
+  11   2.   27   1.
+  12   5.   28   0.
+  13   1.   29   0.
+  14   0.   30   0.
+  15   2.   31   2.
+Average per C procedures: 8.270588
+Preloaded registers:      128.
+Unloaded  registers:      103.
+
+GELL 15.26: module-to-C: translating module: libdate
+modpeep: ICALLG: name= getfdate typeret= 1 args= (a1 7 a2 3)
+Nb of C procedures: 149.
+  0    0.   16   1.
+  1    0.   17   1.
+  2    10.  18   0.
+  3    19.  19   1.
+  4    27.  20   0.
+  5    14.  21   0.
+  6    15.  22   0.
+  7    11.  23   0.
+  8    13.  24   0.
+  9    12.  25   0.
+  10   15.  26   0.
+  11   3.   27   0.
+  12   0.   28   0.
+  13   2.   29   0.
+  14   2.   30   1.
+  15   2.   31   0.
+Average per C procedures: 6.597315
+Preloaded registers:      190.
+Unloaded  registers:      119.
+
+GELL 15.26: module-to-C: translating module: sets
+Nb of C procedures: 154.
+  0    0.   16   2.
+  1    0.   17   1.
+  2    14.  18   1.
+  3    2.   19   4.
+  4    15.  20   0.
+  5    13.  21   2.
+  6    15.  22   2.
+  7    8.   23   0.
+  8    4.   24   0.
+  9    7.   25   2.
+  10   4.   26   1.
+  11   3.   27   0.
+  12   5.   28   12.
+  13   14.  29   0.
+  14   15.  30   0.
+  15   6.   31   2.
+Average per C procedures: 11.15584
+Preloaded registers:      377.
+Unloaded  registers:      307.
+
+GELL 15.26: module-to-C: translating module: hash
+Nb of C procedures: 166.
+  0    0.   16   2.
+  1    0.   17   0.
+  2    19.  18   2.
+  3    20.  19   3.
+  4    20.  20   3.
+  5    19.  21   0.
+  6    14.  22   2.
+  7    14.  23   2.
+  8    3.   24   1.
+  9    10.  25   0.
+  10   4.   26   0.
+  11   5.   27   2.
+  12   6.   28   0.
+  13   4.   29   0.
+  14   2.   30   0.
+  15   5.   31   4.
+Average per C procedures: 8.240963
+Preloaded registers:      268.
+Unloaded  registers:      192.
+
+GELL 15.26: module-to-C: translating module: stringio
+Nb of C procedures: 79.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    12.  18   1.
+  3    3.   19   3.
+  4    8.   20   0.
+  5    18.  21   0.
+  6    2.   22   2.
+  7    6.   23   2.
+  8    5.   24   1.
+  9    4.   25   0.
+  10   3.   26   0.
+  11   2.   27   0.
+  12   2.   28   0.
+  13   0.   29   0.
+  14   1.   30   0.
+  15   3.   31   1.
+Average per C procedures: 8.101265
+Preloaded registers:      111.
+Unloaded  registers:      79.
+
+GELL 15.26: module-to-C: translating module: evloop
+modpeep: ICALLG: name= evloop_set_timeout typeret= 1 args= (a1 1 a2 1)
+modpeep: ICALLG: name= evloop_build_mask typeret= 0 args= (a1 4 a2 1)
+modpeep: ICALLG: name= evloop_select_in typeret= 1 args= ((vag a1) 0 (& 0) 4)
+modpeep: ICALLG: name= evloop_busy_select typeret= 1 args= ((vag a1) 0 (& 0) 4)
+modpeep: ICALLG: name= evloop_add_file_descriptor typeret= 1 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= evloop_remove_file_descriptor typeret= 1 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= evloop_init typeret= 0 args= ()
+modpeep: ICALLG: name= evloop_mask_to_fds typeret= 1 args= ((vag a1) 0 (& 0) 4)
+modpeep: ICALLG: name= evloop_get_errno typeret= 1 args= ()
+modpeep: ICALLG: name= evloop_get_out_mask typeret= 0 args= ()
+modpeep: ICALLG: name= evloop_select_in_out typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 4 (& 0) 4)
+modpeep: ICALLG: name= evloop_test_if_valid_fd typeret= 1 args= (a1 1 a2 1)
+modpeep: ICALLG: name= is_ll_fg typeret= 1 args= ()
+modpeep: ICALLG: name= is_ll_foreground typeret= 1 args= ()
+Nb of C procedures: 159.
+  0    0.   16   1.
+  1    0.   17   0.
+  2    29.  18   1.
+  3    29.  19   1.
+  4    22.  20   0.
+  5    10.  21   2.
+  6    10.  22   0.
+  7    12.  23   2.
+  8    6.   24   1.
+  9    3.   25   1.
+  10   4.   26   0.
+  11   4.   27   0.
+  12   7.   28   0.
+  13   6.   29   0.
+  14   6.   30   0.
+  15   0.   31   2.
+Average per C procedures: 6.81761
+Preloaded registers:      211.
+Unloaded  registers:      134.
+
+GELL 15.26: module-to-C: translating module: virtty
+Nb of C procedures: 160.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    51.  18   1.
+  3    20.  19   2.
+  4    15.  20   0.
+  5    12.  21   0.
+  6    9.   22   2.
+  7    18.  23   0.
+  8    11.  24   1.
+  9    9.   25   1.
+  10   2.   26   0.
+  11   1.   27   0.
+  12   1.   28   0.
+  13   4.   29   0.
+  14   0.   30   0.
+  15   0.   31   0.
+Average per C procedures: 5.46875
+Preloaded registers:      169.
+Unloaded  registers:      109.
+
+GELL 15.26: module-to-C: translating module: vt100
+Nb of C procedures: 19.
+  0    0.   16   1.
+  1    0.   17   0.
+  2    8.   18   1.
+  3    0.   19   0.
+  4    0.   20   0.
+  5    2.   21   0.
+  6    1.   22   0.
+  7    4.   23   0.
+  8    1.   24   0.
+  9    0.   25   0.
+  10   0.   26   0.
+  11   0.   27   0.
+  12   1.   28   0.
+  13   0.   29   0.
+  14   0.   30   0.
+  15   0.   31   0.
+Average per C procedures: 6.
+Preloaded registers:      15.
+Unloaded  registers:      13.
+
+GELL 15.26: module-to-C: translating module: resetfn
+Nb of C procedures: 47.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    8.   18   0.
+  3    7.   19   0.
+  4    6.   20   0.
+  5    6.   21   0.
+  6    6.   22   0.
+  7    4.   23   0.
+  8    0.   24   0.
+  9    3.   25   0.
+  10   2.   26   0.
+  11   3.   27   0.
+  12   0.   28   0.
+  13   1.   29   0.
+  14   0.   30   0.
+  15   0.   31   1.
+Average per C procedures: 5.93617
+Preloaded registers:      64.
+Unloaded  registers:      45.
+
+GELL 15.26: module-to-C: translating module: schedule
+Nb of C procedures: 66.
+  0    0.   16   1.
+  1    0.   17   1.
+  2    12.  18   0.
+  3    7.   19   1.
+  4    9.   20   1.
+  5    13.  21   0.
+  6    8.   22   0.
+  7    6.   23   1.
+  8    0.   24   0.
+  9    1.   25   0.
+  10   0.   26   0.
+  11   1.   27   0.
+  12   0.   28   0.
+  13   0.   29   0.
+  14   3.   30   0.
+  15   0.   31   1.
+Average per C procedures: 6.424242
+Preloaded registers:      89.
+Unloaded  registers:      49.
+
+GELL 15.26: module-to-C: translating module: product
+Nb of C procedures: 64.
+  0    0.   16   1.
+  1    0.   17   0.
+  2    13.  18   0.
+  3    3.   19   0.
+  4    1.   20   1.
+  5    11.  21   0.
+  6    7.   22   1.
+  7    5.   23   0.
+  8    1.   24   0.
+  9    1.   25   3.
+  10   1.   26   0.
+  11   1.   27   0.
+  12   5.   28   0.
+  13   7.   29   0.
+  14   2.   30   0.
+  15   0.   31   0.
+Average per C procedures: 8.140625
+Preloaded registers:      120.
+Unloaded  registers:      85.
+
+= (mapc 'module-to-c '(initc))
+? (#:modtoc:stats-global)
+
+Global nb of C procedures: 4779.
+ average per C procedures: 7.472274
+= 7.472274
+? (end)
+Que Le-Lisp soit avec vous. 
+translation done.
+elaboration files copied on Celab.
+                              faireCllib: 10779 Terminated

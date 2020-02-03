@@ -1,0 +1,23 @@
+;;; GELL 15.26: elaboration file for the module: deriv
+;;;             translation done: "Wed June 16 93 18:18:26 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: deriv.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'deriv)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZderiv" "Wed June 16 93 18:18:26 "
+
+'((check-deriv . subr0) (meter-deriv . subr0) (test-deriv . subr1) (deriv . subr1))
+
+#[(|+| (* (* 3 x x) (|+| (/ 0 3) (/ 1 x) (/ 1 x))) (* (* a x x) (|+| (/ 0 a) (/ 1 x) (/ 1 x))) (* (* b x) (|+| (/ 0 b) (/ 1 x))) 0) (deriv '(|+| (* 3 x x) (* a x x) (* b x) 5)) check-value (count-calls-init) eval (count-calls-stop) t / deriv list x |+| |-| * error (|+| (* 3 x x) (* a x x) (* b x) 5) check-deriv #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-deriv test-deriv #:gell-resetfn:function-1]
+)
+
+(defcsetfn 'check-deriv "GZderiv" 0)
+(defcsetfn 'meter-deriv "GZderiv" 1)
+(defcsetfn 'test-deriv "GZderiv" 2)
+(defcsetfn 'deriv "GZderiv" 3)
+
+(defccheck '(list deriv eval check-value))

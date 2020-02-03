@@ -1,0 +1,723 @@
+; Le-Lisp (by INRIA) version 15.25 (22/sept/92)   [sun4]
+; Complice : jeu 26 nov  92 19:51:09 
+= (31bitfloats abbrev callext compiler complice date debug defstruct format 
+hash-table loader messages microceyx module pathname pepe pretty setf 
+virbitmap virtty)
+? 
+? (loadfile "../C/modtoc.lo"  t)
+= ../C/modtoc.lo
+? 
+? 
+? (setq #:modtoc:use-threshold-read-only  2)  ; 2
+= 2
+? (setq #:modtoc:use-threshold-read-write 3)  ; 3
+= 3
+? 
+? (setq #:modtoc:peephole-optimize-p       t)
+= t
+? (setq #:modtoc:optimize-local-labels-p   t)
+= t
+? 
+? (setq #:modtoc:stats-on-C-size-p         t)
+= t
+? (setq #:modtoc:peephole-debug            ())
+= ()
+? (setq #:modtoc:doit-debug                ())
+= ()
+? (setq #:modtoc:C-verbose-mode            ())
+= ()
+? 
+? 
+? (defun makeCX11 ()
+?    (let ((#:system:path (mcons "New/"
+?                                "/nfs/work/lelisp/virbitmap/X11/" 
+?                                "/nfs/work/lelisp/llmod/"
+?                                "/nfs/work/lelisp/llobj/"
+?                                #:system:path)))
+?         (mapc  'module-to-C '(
+? 
+? 
+?                 x11_def
+?                 x11bitmap
+?                 x11color
+?                 x11draw
+?                 x11event
+?                 x11graph
+?                 x11init
+?                 x11menu
+?                 x11struct
+?                 x11window
+? 
+?                 virutil
+?                 virmenu
+?                 vircolor
+?                 virbit
+?                 virevent
+?                 virdraw
+?                 virgraph
+?                 virwindow
+?                 virinit
+? 
+?                 virbitmap
+? 
+?                 ttywindow
+? 
+? ^I^Ievloop
+? ;;                gellpatch
+? 
+? 
+?         ))))
+= makecx11
+? 
+? 
+? 
+? (makeCX11)
+GELL 15.26: module-to-C: translating module: x11_def
+modpeep: ICALLG: name= x11_create_stipple typeret= 0 args= ((vag (& 3)) 0 (& 2) 1 (& 1) 1 (& 0) 3)
+modpeep: ICALLG: name= x11_set_stipple typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_set_fill_mode typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_fill_rectangle typeret= 1 args= ((vag (& 6)) 0 (vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_arc typeret= 1 args= ((vag (& 8)) 0 (vag (& 7)) 0 (vag (& 6)) 0 (& 5) 1 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_area typeret= 1 args= ((vag (& 7)) 0 (vag (& 6)) 0 (vag (& 5)) 0 (& 4) 4 (& 3) 4 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_rectangles typeret= 1 args= ((vag (& 10)) 0 (vag (& 9)) 0 (vag (& 8)) 0 (& 7) 4 (& 6) 4 (& 5) 4 (& 4) 4 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_arcs typeret= 1 args= ((vag (& 9)) 0 (vag (& 8)) 0 (vag (& 7)) 0 (& 6) 4 (& 5) 4 (& 4) 4 (& 3) 4 (& 2) 4 (& 1) 4 (& 0) 1)
+modpeep: ICALLG: name= x11_xcolor typeret= 0 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= x11_lispcolor typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_xcolorp typeret= 0 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= x11_lispcolorp typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_query_color_from_pixel typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 4)
+modpeep: ICALLG: name= x11_get_byte_line typeret= 1 args= ((vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 3 (& 0) 1)
+modpeep: ICALLG: name= x11_free_cursor typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_set_byte_line typeret= 1 args= ((vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 3 (& 0) 1)
+modpeep: ICALLG: name= x11_byteref typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_byteset typeret= 1 args= ((vag (& 4)) 0 (vag (& 3)) 0 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_initialise typeret= 1 args= (a1 0 a2 0 a3 0)
+modpeep: ICALLG: name= x11_bitprologue typeret= 0 args= ((& 3) 3 (& 2) 1 (& 1) 1 (& 0) 4)
+modpeep: ICALLG: name= x11_x_version typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_x_release typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_x_revision typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_init_pixels typeret= 1 args= ((vag (& 3)) 0 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_bitepilogue typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_bitmap_flush typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_bitmap_sync typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_bitmap_refresh typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_root_window typeret= 0 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_pop_window typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_move_behind_window typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_kill_window typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_kill_ll_window typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_find_window typeret= 0 args= ((vag a1) 0 (& 0) 1 (& 1) 1)
+modpeep: ICALLG: name= x11_map_window typeret= 1 args= ((vag (& 4)) 0 (vag (& 3)) 0 (& 2) 1 (& 1) 1 (& 0) 4)
+modpeep: ICALLG: name= x11_eventp typeret= 0 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_flush_event typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_grab_event typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_ungrab_event typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_read_event typeret= 1 args= ((vag a1) 0 (& 0) 0)
+modpeep: ICALLG: name= x11_peek_event typeret= 1 args= ((vag a1) 0 (& 0) 0)
+modpeep: ICALLG: name= x11_read_mouse typeret= 1 args= ((vag a1) 0 (& 0) 4)
+modpeep: ICALLG: name= x11_load_font typeret= 0 args= ((vag a1) 0 (& 0) 3)
+modpeep: ICALLG: name= x11_font_height typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_font_ascent typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_width_string typeret= 1 args= ((vag (& 3)) 0 (& 2) 3 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_height_string typeret= 1 args= ((vag (& 3)) 0 (& 2) 3 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_x_base_string typeret= 1 args= ((vag (& 3)) 0 (& 2) 3 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_y_base_string typeret= 1 args= ((vag (& 3)) 0 (& 2) 3 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_create_bitmap typeret= 0 args= ((vag a1) 0 (& 0) 1 (& 1) 1)
+modpeep: ICALLG: name= x11_kill_bitmap typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_get_bit_line typeret= 1 args= ((vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 3 (& 0) 1)
+modpeep: ICALLG: name= x11_set_bit_line typeret= 1 args= ((vag (& 6)) 0 (vag (& 5)) 0 (& 4) 1 (& 3) 1 (& 2) 3 (& 1) 1 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_bmref typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_bmset typeret= 1 args= ((vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_default_gc typeret= 0 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_pixmap_to_bitmap typeret= 0 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_set_cursor typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_create_cursor typeret= 0 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= x11_move_cursor typeret= 1 args= ((vag a1) 0 (& 0) 1 (& 1) 1)
+modpeep: ICALLG: name= x11_make_color typeret= 1 args= ((vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 4)
+modpeep: ICALLG: name= x11_make_mutable_color typeret= 1 args= ((vag (& 3)) 0 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_make_named_color typeret= 1 args= ((vag a1) 0 (& 0) 3 (& 1) 4)
+modpeep: ICALLG: name= x11_kill_color typeret= 1 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= x11_color_component typeret= 0 args= ((vag (& 5)) 0 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_get_default typeret= 3 args= ((vag a1) 0 (& 0) 3 (& 1) 3)
+modpeep: ICALLG: name= x11_bitblit typeret= 1 args= ((vag (& 9)) 0 (vag (& 8)) 0 (vag (& 7)) 0 (& 6) 1 (& 5) 1 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_make_cursor typeret= 0 args= ((vag (& 10)) 0 (vag (& 9)) 0 (vag (& 8)) 0 (& 7) 1 (& 6) 1 (& 5) 1 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_synchronize typeret= 1 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= x11_create_window typeret= 0 args= ((vag (& 5)) 0 (& 4) 0 (& 3) 4 (vag (& 2)) 0 (vag (& 1)) 0 (& 0) 1)
+modpeep: ICALLG: name= x11_create_subwindow typeret= 0 args= ((vag (& 5)) 0 (& 4) 0 (& 3) 4 (vag (& 2)) 0 (vag (& 1)) 0 (& 0) 1)
+modpeep: ICALLG: name= x11_create_transparentwindow typeret= 0 args= ((vag (& 8)) 0 (& 7) 0 (& 6) 1 (& 5) 1 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_move_window typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_resize_window typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_moveresize_window typeret= 1 args= ((vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_changewindow_border typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_changewindow_bordercolor typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_build_mask typeret= 0 args= (a1 4 a2 1)
+modpeep: ICALLG: name= x11_changeeventmask_window typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_changelongmask_window typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 0)
+modpeep: ICALLG: name= x11_change_title typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 3)
+modpeep: ICALLG: name= x11_change_icontitle typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 3)
+modpeep: ICALLG: name= x11_create_graph_env typeret= 0 args= ((vag (& 6)) 0 (vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (vag (& 1)) 0 (& 0) 1)
+modpeep: ICALLG: name= x11_new_create_graph_env typeret= 0 args= ((vag (& 9)) 0 (vag (& 8)) 0 (vag (& 7)) 0 (& 6) 1 (& 5) 1 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_free_graph_env typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_window_map typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_window_unmap typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+modpeep: ICALLG: name= x11_clear_window typeret= 1 args= ((vag (& 6)) 0 (vag (& 5)) 0 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_set_font typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_set_clip typeret= 1 args= ((vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_set_clips typeret= 1 args= ((vag (& 6)) 0 (vag (& 5)) 0 (& 4) 4 (& 3) 4 (& 2) 4 (& 1) 4 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_string typeret= 1 args= ((vag (& 7)) 0 (vag (& 6)) 0 (vag (& 5)) 0 (& 4) 1 (& 3) 1 (& 2) 3 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_image_string typeret= 1 args= ((vag (& 7)) 0 (vag (& 6)) 0 (vag (& 5)) 0 (& 4) 1 (& 3) 1 (& 2) 3 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_set_mode typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_set_line_style typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_set_pattern typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_draw_point typeret= 1 args= ((vag (& 4)) 0 (vag (& 3)) 0 (vag (& 2)) 0 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_points typeret= 1 args= ((vag (& 7)) 0 (vag (& 6)) 0 (vag (& 5)) 0 (& 4) 4 (& 3) 4 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_segments typeret= 1 args= ((vag (& 9)) 0 (vag (& 8)) 0 (vag (& 7)) 0 (& 6) 4 (& 5) 4 (& 4) 4 (& 3) 4 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_line typeret= 1 args= ((vag (& 6)) 0 (vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_lines typeret= 1 args= ((vag (& 7)) 0 (vag (& 6)) 0 (vag (& 5)) 0 (& 4) 4 (& 3) 4 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_rectangle typeret= 1 args= ((vag (& 6)) 0 (vag (& 5)) 0 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_rectangles typeret= 1 args= ((vag (& 10)) 0 (vag (& 9)) 0 (vag (& 8)) 0 (& 7) 4 (& 6) 4 (& 5) 4 (& 4) 4 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_arc typeret= 1 args= ((vag (& 8)) 0 (vag (& 7)) 0 (vag (& 6)) 0 (& 5) 1 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_draw_arcs typeret= 1 args= ((vag (& 9)) 0 (vag (& 8)) 0 (vag (& 7)) 0 (& 6) 4 (& 5) 4 (& 4) 4 (& 3) 4 (& 2) 4 (& 1) 4 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_oldrectangle typeret= 1 args= ((vag (& 7)) 0 (vag (& 6)) 0 (vag (& 5)) 0 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_oldrectangles typeret= 1 args= ((vag (& 11)) 0 (vag (& 10)) 0 (vag (& 9)) 0 (& 8) 4 (& 7) 4 (& 6) 4 (& 5) 4 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_oldarc typeret= 1 args= ((vag (& 9)) 0 (vag (& 8)) 0 (vag (& 7)) 0 (& 6) 1 (& 5) 1 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_oldarcs typeret= 1 args= ((vag (& 10)) 0 (vag (& 9)) 0 (vag (& 8)) 0 (& 7) 4 (& 6) 4 (& 5) 4 (& 4) 4 (& 3) 4 (& 2) 4 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_fill_oldarea typeret= 1 args= ((vag (& 8)) 0 (vag (& 7)) 0 (vag (& 6)) 0 (& 5) 4 (& 4) 4 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_set_foreground typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_set_background typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_setwindow_background typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_imagebyteorder typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_bitmapbitorder typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_seticon_pixmap typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_setwindow_state typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_set_window_pixmap typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_store_bytes typeret= 1 args= ((vag a1) 0 (& 0) 3 (& 1) 1)
+modpeep: ICALLG: name= x11_fetch_bytes typeret= 0 args= ((vag a1) 0 (& 0) 4)
+modpeep: ICALLG: name= x11_bytes_to_llstring typeret= 1 args= ((vag a1) 0 (& 0) 3 (& 1) 1)
+modpeep: ICALLG: name= x11_topmove_window typeret= 1 args= ((vag (& 4)) 0 (vag (& 3)) 0 (& 2) 1 (& 1) 1 (& 0) 0)
+modpeep: ICALLG: name= x11_topresize_window typeret= 1 args= ((vag (& 4)) 0 (vag (& 3)) 0 (& 2) 1 (& 1) 1 (& 0) 0)
+modpeep: ICALLG: name= x11_topmoveresize_window typeret= 1 args= ((vag (& 6)) 0 (vag (& 5)) 0 (& 4) 1 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 0)
+modpeep: ICALLG: name= x11_topchangewindow_border typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 1 (& 0) 0)
+modpeep: ICALLG: name= x11_depth typeret= 1 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_get_format typeret= 1 args= ()
+modpeep: ICALLG: name= x11_get_data_string typeret= 3 args= ()
+modpeep: ICALLG: name= x11_change_gc_values typeret= 1 args= ((vag (& 9)) 0 (vag (& 8)) 0 (& 7) 4 (vag (& 6)) 0 (& 5) 1 (vag (& 4)) 0 (& 3) 1 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_change_attributes typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 4 (& 0) 4)
+modpeep: ICALLG: name= x11_graph_subwindow_mode typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (& 1) 1)
+modpeep: ICALLG: name= x11_list_fonts typeret= 0 args= ((vag (& 4)) 0 (& 3) 3 (& 2) 1 (& 1) 0 (& 0) 0)
+modpeep: ICALLG: name= x11_font_info typeret= 1 args= ((vag (& 3)) 0 (& 2) 3 (vag (& 1)) 0 (& 0) 4)
+modpeep: ICALLG: name= x11_set_planemask typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0 (vag (& 1)) 0)
+modpeep: ICALLG: name= x11_xdisplay typeret= 0 args= ((vag a1) 0)
+modpeep: ICALLG: name= x11_subst_colors typeret= 1 args= ((vag (& 6)) 0 (vag (& 5)) 0 (& 4) 4 (& 3) 4 (& 2) 1 (& 1) 1 (& 0) 1)
+modpeep: ICALLG: name= x11_lookup_named_color typeret= 1 args= ((vag (& 3)) 0 (& 2) 3 (& 1) 4 (& 0) 4)
+modpeep: ICALLG: name= x11_query_color typeret= 1 args= ((vag a1) 0 (& 0) 1 (& 1) 4)
+modpeep: ICALLG: name= x11_setappname typeret= 1 args= (a1 3)
+modpeep: ICALLG: name= x11_setappclass typeret= 1 args= (a1 3)
+modpeep: ICALLG: name= x11_forget_window_gravity typeret= 1 args= ((vag a1) 0 (vag (& 0)) 0)
+Nb of C procedures: 284.
+  0    0.   16   31.
+  1    0.   17   0.
+  2    142. 18   0.
+  3    0.   19   0.
+  4    0.   20   1.
+  5    0.   21   18.
+  6    0.   22   2.
+  7    2.   23   4.
+  8    1.   24   2.
+  9    19.  25   7.
+  10   1.   26   1.
+  11   1.   27   8.
+  12   2.   28   0.
+  13   19.  29   7.
+  14   0.   30   0.
+  15   1.   31   15.
+Average per C procedures: 10.37676
+Preloaded registers:      3.
+Unloaded  registers:      3.
+
+GELL 15.26: module-to-C: translating module: x11bitmap
+Nb of C procedures: 56.
+  0    0.   16   1.
+  1    0.   17   0.
+  2    15.  18   0.
+  3    4.   19   0.
+  4    4.   20   2.
+  5    3.   21   0.
+  6    3.   22   0.
+  7    4.   23   1.
+  8    2.   24   0.
+  9    1.   25   0.
+  10   4.   26   0.
+  11   1.   27   0.
+  12   0.   28   0.
+  13   1.   29   1.
+  14   0.   30   0.
+  15   0.   31   9.
+Average per C procedures: 10.625
+Preloaded registers:      116.
+Unloaded  registers:      94.
+
+GELL 15.26: module-to-C: translating module: x11color
+Nb of C procedures: 77.
+  0    0.   16   0.
+  1    0.   17   1.
+  2    11.  18   0.
+  3    6.   19   0.
+  4    6.   20   0.
+  5    7.   21   1.
+  6    5.   22   0.
+  7    3.   23   2.
+  8    4.   24   0.
+  9    4.   25   0.
+  10   3.   26   0.
+  11   5.   27   2.
+  12   4.   28   1.
+  13   2.   29   0.
+  14   6.   30   0.
+  15   3.   31   1.
+Average per C procedures: 9.129869
+Preloaded registers:      133.
+Unloaded  registers:      96.
+
+GELL 15.26: module-to-C: translating module: x11draw
+Nb of C procedures: 88.
+  0    0.   16   0.
+  1    0.   17   1.
+  2    22.  18   0.
+  3    5.   19   2.
+  4    11.  20   0.
+  5    1.   21   2.
+  6    1.   22   0.
+  7    4.   23   0.
+  8    1.   24   0.
+  9    1.   25   0.
+  10   1.   26   4.
+  11   0.   27   1.
+  12   2.   28   0.
+  13   6.   29   0.
+  14   0.   30   0.
+  15   0.   31   23.
+Average per C procedures: 13.77273
+Preloaded registers:      203.
+Unloaded  registers:      149.
+
+GELL 15.26: module-to-C: translating module: x11event
+Nb of C procedures: 102.
+  0    0.   16   1.
+  1    0.   17   2.
+  2    32.  18   1.
+  3    4.   19   1.
+  4    17.  20   1.
+  5    13.  21   1.
+  6    12.  22   0.
+  7    2.   23   0.
+  8    1.   24   0.
+  9    3.   25   1.
+  10   1.   26   1.
+  11   1.   27   0.
+  12   1.   28   0.
+  13   0.   29   0.
+  14   0.   30   0.
+  15   3.   31   3.
+Average per C procedures: 6.666666
+Preloaded registers:      155.
+Unloaded  registers:      96.
+
+GELL 15.26: module-to-C: translating module: x11graph
+Nb of C procedures: 115.
+  0    0.   16   1.
+  1    0.   17   1.
+  2    37.  18   3.
+  3    5.   19   1.
+  4    3.   20   1.
+  5    8.   21   1.
+  6    7.   22   0.
+  7    6.   23   1.
+  8    3.   24   1.
+  9    3.   25   1.
+  10   8.   26   1.
+  11   8.   27   1.
+  12   0.   28   0.
+  13   3.   29   1.
+  14   2.   30   0.
+  15   0.   31   8.
+Average per C procedures: 9.21739
+Preloaded registers:      189.
+Unloaded  registers:      155.
+
+GELL 15.26: module-to-C: translating module: x11init
+Nb of C procedures: 191.
+  0    0.   16   2.
+  1    0.   17   1.
+  2    38.  18   0.
+  3    30.  19   1.
+  4    12.  20   1.
+  5    22.  21   1.
+  6    14.  22   6.
+  7    12.  23   0.
+  8    7.   24   0.
+  9    9.   25   1.
+  10   12.  26   3.
+  11   4.   27   0.
+  12   1.   28   0.
+  13   4.   29   1.
+  14   4.   30   0.
+  15   1.   31   4.
+Average per C procedures: 7.460732
+Preloaded registers:      265.
+Unloaded  registers:      177.
+
+GELL 15.26: module-to-C: translating module: x11menu
+Nb of C procedures: 158.
+  0    0.   16   2.
+  1    0.   17   0.
+  2    9.   18   2.
+  3    13.  19   1.
+  4    26.  20   0.
+  5    25.  21   0.
+  6    20.  22   0.
+  7    8.   23   0.
+  8    7.   24   0.
+  9    18.  25   0.
+  10   3.   26   0.
+  11   8.   27   0.
+  12   8.   28   2.
+  13   3.   29   0.
+  14   2.   30   0.
+  15   1.   31   0.
+Average per C procedures: 7.082278
+Preloaded registers:      215.
+Unloaded  registers:      182.
+
+GELL 15.26: module-to-C: translating module: x11struct
+Nb of C procedures: 157.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    74.  18   65.
+  3    8.   19   0.
+  4    1.   20   0.
+  5    0.   21   0.
+  6    1.   22   1.
+  7    2.   23   0.
+  8    0.   24   0.
+  9    1.   25   0.
+  10   1.   26   0.
+  11   1.   27   0.
+  12   1.   28   0.
+  13   0.   29   0.
+  14   0.   30   0.
+  15   0.   31   1.
+Average per C procedures: 9.305733
+Preloaded registers:      215.
+Unloaded  registers:      140.
+
+GELL 15.26: module-to-C: translating module: x11window
+Nb of C procedures: 212.
+  0    0.   16   4.
+  1    0.   17   1.
+  2    44.  18   1.
+  3    21.  19   2.
+  4    33.  20   2.
+  5    13.  21   1.
+  6    9.   22   0.
+  7    19.  23   1.
+  8    8.   24   0.
+  9    8.   25   0.
+  10   3.   26   0.
+  11   1.   27   2.
+  12   1.   28   2.
+  13   5.   29   3.
+  14   3.   30   0.
+  15   4.   31   21.
+Average per C procedures: 9.245283
+Preloaded registers:      352.
+Unloaded  registers:      270.
+
+GELL 15.26: module-to-C: translating module: virutil
+Nb of C procedures: 43.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    14.  18   1.
+  3    13.  19   0.
+  4    0.   20   0.
+  5    0.   21   1.
+  6    0.   22   1.
+  7    0.   23   0.
+  8    4.   24   1.
+  9    2.   25   0.
+  10   0.   26   0.
+  11   3.   27   0.
+  12   0.   28   0.
+  13   0.   29   1.
+  14   1.   30   0.
+  15   0.   31   1.
+Average per C procedures: 7.186047
+Preloaded registers:      43.
+Unloaded  registers:      24.
+
+GELL 15.26: module-to-C: translating module: virmenu
+Nb of C procedures: 76.
+  0    0.   16   1.
+  1    0.   17   3.
+  2    9.   18   0.
+  3    1.   19   7.
+  4    6.   20   1.
+  5    5.   21   2.
+  6    8.   22   1.
+  7    7.   23   0.
+  8    1.   24   0.
+  9    3.   25   0.
+  10   6.   26   1.
+  11   0.   27   1.
+  12   3.   28   0.
+  13   1.   29   0.
+  14   7.   30   0.
+  15   1.   31   1.
+Average per C procedures: 10.42105
+Preloaded registers:      178.
+Unloaded  registers:      114.
+
+GELL 15.26: module-to-C: translating module: vircolor
+Nb of C procedures: 64.
+  0    0.   16   1.
+  1    0.   17   0.
+  2    11.  18   0.
+  3    0.   19   1.
+  4    7.   20   0.
+  5    9.   21   5.
+  6    8.   22   1.
+  7    0.   23   1.
+  8    2.   24   0.
+  9    0.   25   0.
+  10   3.   26   1.
+  11   0.   27   0.
+  12   2.   28   0.
+  13   6.   29   0.
+  14   0.   30   2.
+  15   1.   31   3.
+Average per C procedures: 10.46875
+Preloaded registers:      148.
+Unloaded  registers:      104.
+
+GELL 15.26: module-to-C: translating module: virbit
+Nb of C procedures: 301.
+  0    0.   16   3.
+  1    0.   17   6.
+  2    21.  18   5.
+  3    35.  19   1.
+  4    28.  20   1.
+  5    32.  21   1.
+  6    30.  22   0.
+  7    21.  23   2.
+  8    27.  24   3.
+  9    23.  25   0.
+  10   17.  26   0.
+  11   8.   27   0.
+  12   2.   28   2.
+  13   6.   29   0.
+  14   9.   30   0.
+  15   5.   31   13.
+Average per C procedures: 8.661129
+Preloaded registers:      536.
+Unloaded  registers:      379.
+
+GELL 15.26: module-to-C: translating module: virevent
+Nb of C procedures: 85.
+  0    0.   16   2.
+  1    0.   17   3.
+  2    28.  18   0.
+  3    2.   19   0.
+  4    12.  20   0.
+  5    1.   21   0.
+  6    6.   22   0.
+  7    2.   23   0.
+  8    1.   24   0.
+  9    2.   25   0.
+  10   18.  26   3.
+  11   0.   27   0.
+  12   0.   28   0.
+  13   3.   29   1.
+  14   0.   30   0.
+  15   0.   31   1.
+Average per C procedures: 7.42353
+Preloaded registers:      137.
+Unloaded  registers:      91.
+
+GELL 15.26: module-to-C: translating module: virdraw
+Nb of C procedures: 167.
+  0    0.   16   2.
+  1    0.   17   0.
+  2    46.  18   8.
+  3    2.   19   8.
+  4    26.  20   0.
+  5    0.   21   7.
+  6    0.   22   6.
+  7    0.   23   0.
+  8    2.   24   3.
+  9    0.   25   5.
+  10   20.  26   0.
+  11   0.   27   2.
+  12   2.   28   2.
+  13   1.   29   0.
+  14   0.   30   0.
+  15   1.   31   24.
+Average per C procedures: 12.74251
+Preloaded registers:      395.
+Unloaded  registers:      272.
+
+GELL 15.26: module-to-C: translating module: virgraph
+Nb of C procedures: 375.
+  0    0.   16   2.
+  1    0.   17   8.
+  2    108. 18   1.
+  3    15.  19   2.
+  4    14.  20   1.
+  5    37.  21   7.
+  6    25.  22   11.
+  7    8.   23   5.
+  8    3.   24   1.
+  9    3.   25   2.
+  10   56.  26   2.
+  11   3.   27   2.
+  12   5.   28   4.
+  13   2.   29   6.
+  14   14.  30   0.
+  15   4.   31   24.
+Average per C procedures: 9.738667
+Preloaded registers:      733.
+Unloaded  registers:      482.
+
+GELL 15.26: module-to-C: translating module: virwindow
+Nb of C procedures: 257.
+  0    0.   16   2.
+  1    0.   17   2.
+  2    55.  18   3.
+  3    6.   19   2.
+  4    20.  20   3.
+  5    32.  21   3.
+  6    14.  22   6.
+  7    11.  23   1.
+  8    9.   24   3.
+  9    21.  25   0.
+  10   13.  26   1.
+  11   8.   27   2.
+  12   13.  28   0.
+  13   2.   29   1.
+  14   1.   30   0.
+  15   2.   31   21.
+Average per C procedures: 9.735409
+Preloaded registers:      518.
+Unloaded  registers:      352.
+
+GELL 15.26: module-to-C: translating module: virinit
+Nb of C procedures: 341.
+  0    0.   16   3.
+  1    0.   17   19.
+  2    56.  18   2.
+  3    19.  19   4.
+  4    30.  20   18.
+  5    51.  21   2.
+  6    29.  22   0.
+  7    16.  23   4.
+  8    7.   24   0.
+  9    4.   25   0.
+  10   23.  26   2.
+  11   10.  27   0.
+  12   15.  28   5.
+  13   5.   29   1.
+  14   3.   30   1.
+  15   5.   31   7.
+Average per C procedures: 9.
+Preloaded registers:      644.
+Unloaded  registers:      472.
+
+GELL 15.26: module-to-C: translating module: virbitmap
+Nb of C procedures: 264.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    130. 18   107.
+  3    5.   19   0.
+  4    0.   20   0.
+  5    18.  21   0.
+  6    0.   22   0.
+  7    0.   23   0.
+  8    1.   24   0.
+  9    0.   25   0.
+  10   0.   26   0.
+  11   0.   27   0.
+  12   0.   28   0.
+  13   0.   29   0.
+  14   1.   30   0.
+  15   0.   31   2.
+Average per C procedures: 8.996212
+Preloaded registers:      349.
+Unloaded  registers:      238.
+
+GELL 15.26: module-to-C: translating module: ttywindow
+Nb of C procedures: 197.
+  0    0.   16   0.
+  1    0.   17   0.
+  2    44.  18   26.
+  3    16.  19   0.
+  4    21.  20   0.
+  5    27.  21   0.
+  6    25.  22   0.
+  7    13.  23   0.
+  8    6.   24   0.
+  9    7.   25   0.
+  10   2.   26   0.
+  11   5.   27   0.
+  12   2.   28   0.
+  13   0.   29   1.
+  14   1.   30   0.
+  15   0.   31   1.
+Average per C procedures: 6.842639
+Preloaded registers:      238.
+Unloaded  registers:      184.
+
+GELL 15.26: module-to-C: translating module: evloop
+modpeep: ICALLG: name= evloop_set_timeout typeret= 1 args= (a1 1 a2 1)
+modpeep: ICALLG: name= evloop_build_mask typeret= 0 args= (a1 4 a2 1)
+modpeep: ICALLG: name= evloop_select_in typeret= 1 args= ((vag a1) 0 (& 0) 4)
+modpeep: ICALLG: name= evloop_busy_select typeret= 1 args= ((vag a1) 0 (& 0) 4)
+modpeep: ICALLG: name= evloop_add_file_descriptor typeret= 1 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= evloop_remove_file_descriptor typeret= 1 args= ((vag a1) 0 (& 0) 1)
+modpeep: ICALLG: name= evloop_init typeret= 0 args= ()
+modpeep: ICALLG: name= evloop_mask_to_fds typeret= 1 args= ((vag a1) 0 (& 0) 4)
+modpeep: ICALLG: name= evloop_get_errno typeret= 1 args= ()
+modpeep: ICALLG: name= evloop_get_out_mask typeret= 0 args= ()
+modpeep: ICALLG: name= evloop_select_in_out typeret= 1 args= ((vag (& 3)) 0 (vag (& 2)) 0 (& 1) 4 (& 0) 4)
+modpeep: ICALLG: name= evloop_test_if_valid_fd typeret= 1 args= (a1 1 a2 1)
+modpeep: ICALLG: name= is_ll_fg typeret= 1 args= ()
+modpeep: ICALLG: name= is_ll_foreground typeret= 1 args= ()
+Nb of C procedures: 159.
+  0    0.   16   1.
+  1    0.   17   0.
+  2    29.  18   1.
+  3    29.  19   1.
+  4    22.  20   0.
+  5    10.  21   2.
+  6    10.  22   0.
+  7    12.  23   2.
+  8    6.   24   1.
+  9    3.   25   1.
+  10   4.   26   0.
+  11   4.   27   0.
+  12   7.   28   0.
+  13   6.   29   0.
+  14   6.   30   0.
+  15   0.   31   2.
+Average per C procedures: 6.81761
+Preloaded registers:      211.
+Unloaded  registers:      134.
+
+= ()
+? (#:modtoc:stats-global)
+
+Global nb of C procedures: 3769.
+ average per C procedures: 9.108252
+= 9.108252
+? (end)
+Que Le-Lisp soit avec vous. 
+translation done.
+elaboration files copied on Celab.

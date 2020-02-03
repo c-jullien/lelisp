@@ -1,0 +1,13 @@
+../belispbin -stack 6 -code 0 -heap 300 -number 0 -float 0 \
+	-vector 4 -string 8 -symbol 7 -cons 48 <<EOI
+
+(defvar gell-elaboration-for-trace-p ())
+
+(loadfile "../../C/initc.ll" t)
+(loadfile "../../Cbenchmarks/bench.ll" t)
+
+(do-bench "sun4-75" ())
+
+(end)
+
+EOI

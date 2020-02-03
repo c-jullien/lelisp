@@ -1,0 +1,30 @@
+/usr/local/bin/complice <<EOI
+../../lltool/llm3
+../../lltool/expand
+../../lltool/macllm3
+macC
+
+(defun single-name (n)
+    (setq n (string n))
+    (let ((st 0) (ed (slen n)))
+         (while (index "/" n st) (setq st (1+ (index "/" n st))))
+         (when (index "." n st) (setq ed (index "." n st)))
+         (substring n st (- ed st))))
+
+
+
+(defun expand-to-C (lst)
+   (#:expand:expand-list-of-files (mapcar 'single-name lst))
+   (mapc
+      (lambda (file)
+         (let ( (f (single-name file)) )
+            (comline (catenate "mv " f ".h ../Cllm3"))
+            (comline (catenate "mv " f ".s ../Cllm3/" f ".c")) ))
+      lst ))
+; Pour ces sacres FLET
+(setq #:complice:parano-flag t)
+(compile-all-in-core)
+(progn (save-core "llcore/expandC.core")
+      "L'expanseur LLM3 -> C" )
+(end)
+EOI

@@ -1,0 +1,1 @@
+fgrep $1 *.[ch] ../hp9800/*.[ch] /nfs/current/lelisp/common/*.[ch] ../Cllm3/*.[ch] 

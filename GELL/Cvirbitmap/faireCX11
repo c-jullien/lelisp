@@ -1,0 +1,72 @@
+/usr/ilog/lelisp/sun4/complice -i  <<EOI
+
+(loadfile "../C/modtoc.lo"  t)
+
+
+(setq #:modtoc:use-threshold-read-only  2)  ; 2
+(setq #:modtoc:use-threshold-read-write 3)  ; 3
+
+(setq #:modtoc:peephole-optimize-p       t)
+(setq #:modtoc:optimize-local-labels-p   t)
+
+(setq #:modtoc:stats-on-C-size-p         t)
+(setq #:modtoc:peephole-debug            ())
+(setq #:modtoc:doit-debug                ())
+(setq #:modtoc:C-verbose-mode            ())
+
+
+(defun makeCX11 ()
+   (let ((#:system:path (mcons "New/"
+                               "/nfs/work/lelisp/virbitmap/X11/" 
+                               "/nfs/work/lelisp/llmod/"
+                               "/nfs/work/lelisp/llobj/"
+                               #:system:path)))
+        (mapc  'module-to-C '(
+
+
+                x11_def
+                x11bitmap
+                x11color
+                x11draw
+                x11event
+                x11graph
+                x11init
+                x11menu
+                x11struct
+                x11window
+
+                virutil
+                virmenu
+                vircolor
+                virbit
+                virevent
+                virdraw
+                virgraph
+                virwindow
+                virinit
+
+                virbitmap
+
+                ttywindow
+
+		evloop
+;;                gellpatch
+
+
+        ))))
+
+
+
+(makeCX11)
+(#:modtoc:stats-global)
+(end)
+
+EOI
+
+
+
+
+echo "translation done."
+mv *.le /nfs/lelisp15/work/Celab
+echo "elaboration files copied on Celab."
+

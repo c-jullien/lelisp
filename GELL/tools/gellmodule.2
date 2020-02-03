@@ -1,0 +1,17 @@
+#!/bin/sh
+# To generate the .c, .h and .lc files for GELL
+
+module=$1
+shift
+cdir=$1
+shift
+
+HOME=foothebar ilogcomplice -i <<EOI
+
+(setq #:system:read-case-flag t)
+
+(#:gell:translate-one-module-to-c "$module" "$cdir")
+
+(end)
+
+EOI

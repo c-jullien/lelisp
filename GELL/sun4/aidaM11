@@ -1,0 +1,5 @@
+./aidaM11bin -code 0 -heap 1200 \
+ -symbol 16 -string 20 -vector 12 -cons 24 -float 0 \
+ -r llcore/aidaM11.core $*
+
+

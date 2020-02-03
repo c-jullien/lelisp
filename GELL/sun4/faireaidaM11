@@ -1,0 +1,29 @@
+./aidaM11bin -code 0 -heap 1200 \
+ -symbol 16 -string 20 -vector 12 -cons 24 -float 0 <<EOI
+
+(loadfile "aidaMconfig.ll" t)
+
+
+'(let ((#:system:core-directory #:system:aida-core-directory))
+     (setq #:system:path (delq (car (last #:system:path)) #:system:path))
+     (save-std
+         #:system:name
+         aidaherald
+	 'end
+         (lambda (msg) 
+	     (initialize-elaborated-modules)
+             (motif-init)
+      	     (funcall aidarun msg))))
+
+(gell-clean-core-image)
+(gc) (gc)
+
+(if (save-core "llcore/aidaM11.core")
+    (end)
+    (initialize-elaborated-modules)
+    (print  "Ready with GELL + X11 + Motif + Aida")
+    (aida-run "GELL + X11 + Motif + Aida")
+    (motif-init))
+
+EOI
+

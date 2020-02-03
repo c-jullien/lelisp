@@ -1,0 +1,38 @@
+defmodule resetfn
+files     (resetfn)
+import    ()
+export    (#:gell-resetfn:function-0
+           #:gell-resetfn:function-1
+           #:gell-resetfn:function-2
+           #:gell-resetfn:function-3
+           #:gell-resetfn:function-n
+           #:gell-resetfn:function-f
+           #:gell-resetfn:get-body
+           resetfn
+;           testresetfnf
+;           testresetfn0
+;           testresetfn1
+;           testresetfn1t
+;           testresetfn2
+;           testresetfn3
+;           testresetfnn
+;           testtailrec
+;           testfib
+           )
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(#:gell-resetfn:get-body subr0 ())
+(resetfn subr3 (#:defC:list-module-table-adr))
+)
+cpfunctions (
+(#:gell-resetfn:resetfn subr3)
+(#:gell-resetfn:resetfn-aux subr3)
+)
+cpimport
+()
+cpenv (
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+)((putprop '#:gell-resetfn:function-name 't '#:complice:globalvar)
+)((putprop '#:gell-resetfn:body-property 't '#:complice:globalvar)
+))

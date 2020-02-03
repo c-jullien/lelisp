@@ -1,0 +1,95 @@
+		======================================
+		Ge'ne'rateur d'Exe'cutifs Le-Lisp en C
+
+			    "GELL" 26
+
+	        (c) 1989 1990 1991 1992 1993 ILOG S.A.
+		======================================
+		 fichier : ../lelisp/GELL/C/LISEZ_MOI
+		======================================
+
+
+Ce catalogue contient les diffe'rents traducteurs (LLM3 et LAP) en Le-Lisp
+pour le ge'ne'rateur GELL.
+
+Pour faire un exe'cutif GELL, on utilise la me^me technique que pour
+un portage natif, i.e. les composants suivants : 
+- la bibliothe`que d'exe'cution en C de ../common
+- la traduction en C des fichiers LLM3  de ../llm3
+- la traduction en C des modules de la bibliothe`que  ../llobj/../llmod.
+
+
+I - common
+==========
+
+Les fichiers du "runtime" Lisp en C de ../common sont utilise's en
+ge'ne'ral sans aucunes modifications (il suffit d'y avoir acce`s).
+Il faut utiliser les me^mes indicateurs de compilation que pour un
+portage natif (e.g. -DS5, -DBSD4.2 ..)
+
+
+II - LLM3
+=========
+
+Pour refaire (sur ../GELL/Cllm3) l'ensemble des fichiers C
+correspondant au code LLM3 :
+
+	% cd $WORK/lelisp/GELL/Cllm3
+	% faireCllm3 >& faireCllm3.log &
+
+
+Ce qui se passe :
+
+1 - l'ensemble des fichiers de ../work/llm3/*.llm3 sont retraduits
+en fichiers pseudo-lap sur ../GELL/Cllm3/lo/*.lo
+
+2 - l'ensemble de ces fichiers pseudo-lap sont traduits en C dans
+../GELL/Cllm3/*.c
+
+3 - l'ensemble des fichiers d'e'laboration sont copie's sur
+../lelisp/Celab/*.le
+
+ou bien les seuls fichiers LLM3 modifie's.
+
+Bugs/ame'liorations restants a` faire dans ce traducteur LLM3 -> GELL :
+
+
+III - LAP
+=========
+
+Pour traduire le module foo.lo/lm en C :
+
+complice <<EOI
+(loadfile "../C/modtoc.lo"  t)
+
+(setq #:modtoc:peephole-optimize-p       t)
+(setq #:modtoc:optimize-local-labels-p   t)
+(setq #:modtoc:stats-on-C-size-p         ())
+(setq #:modtoc:peephole-debug            ())
+(setq #:modtoc:doit-debug                ())
+(setq #:modtoc:C-verbose-mode            ())
+
+(module-to-C 'foo)
+
+(end)
+
+
+
+Bugs/ame'liorations restants dans le traducteur "modtoc" :
+
+- le test "browse" explose si -symbol < 2! car le test d'erreur
+  ne fonctionne pas avec "celispbin" ?!?! Il fait boucler le GC ?!?!?
+
+- voir si le changement de #:system:object-extension a` ".lc"
+  ne suffirait pas pour utiliser les ge'ne'rateur de makefile
+  (e'vite de ree'crire les elab-.. a`  la main).
+
+
+
+
+
+
+
+
+
+

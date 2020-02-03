@@ -1,0 +1,44 @@
+/usr/ilog/lelisp/sun4/complice <<EOI
+
+(loadfile "../C/modtoc.lo"  t)
+
+(setq #:modtoc:use-threshold-read-only  2)  ; 2
+(setq #:modtoc:use-threshold-read-write 3)  ; 3
+
+
+(setq #:modtoc:peephole-optimize-p       t)
+(setq #:modtoc:optimize-local-labels-p   t)
+
+(setq #:modtoc:stats-on-C-size-p         t)
+(setq #:modtoc:peephole-debug            ())
+(setq #:modtoc:doit-debug                ())
+(setq #:modtoc:C-verbose-mode            ())
+
+
+
+(defun makeCcomplice ()
+   (let ((#:system:path (mcons "New/" 
+                               "../C/"
+                                "/nfs/work/lelisp/llib/"
+                                "/nfs/work/lelisp/llobj/"
+                                "/nfs/work/lelisp/llmod/"
+                                #:system:path)))
+
+        (mapc  'module-to-C '(
+
+                complice
+                modtoc
+))))
+
+
+
+(makeCcomplice)
+(#:modtoc:stats-global)
+(end)
+
+EOI
+
+
+echo "translation done."
+mv *.le /nfs/lelisp15/work/Celab
+echo "elaboration files copied on Celab."

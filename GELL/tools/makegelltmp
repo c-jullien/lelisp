@@ -1,0 +1,27 @@
+#!/bin/sh
+
+
+but=$1
+shift
+
+dirs=$1
+shift
+
+types=$1
+shift
+
+# initialisation
+rm $but
+touch $but
+
+
+for j in $types
+do
+        echo "==== Processing modules of type " $j
+        for i in $dirs
+        do
+            echo "-- Processing in " $i
+            cat $i/$j >> $but
+        done
+done
+

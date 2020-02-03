@@ -1,0 +1,18 @@
+./celispX11bin -code 0 -heap 800 \
+ -symbol 7 -string 10 -vector 7 -cons 10 -float 0 <<EOI
+
+(defvar gell-elaboration-for-trace-p t)
+
+(loadfile "celispX11SCH" t)
+
+(loadfile "../Cllib/elab-llib.ll"      t)
+(loadfile "../Cvirbitmap/elab-X11.ll"  t)
+
+(gell-save-core "llcore/celispX11.core" 
+                "Ready with Le-Lisp GELL + X11 (celispX11)"
+                'core-init-std)
+
+EOI
+
+
+

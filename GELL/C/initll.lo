@@ -1,0 +1,16 @@
+(loader '(
+            (fentry #:llcp:nlist subr0)
+            (pop a3)
+            (mov nil a1)
+            (bra 4)
+         3  (pop a2)
+            (jcall xcons)
+         4  (sobgez a4 3)
+            (bri a3)
+            (fentry #:llcp:errwna subr2)    ; A1 <- fnt; A2 <- bad-nb-arg
+            (mov a2 a3)
+            (mov 'errwna a2)
+            (jmp error)
+            (end) )
+)
+

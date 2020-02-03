@@ -1,0 +1,23 @@
+;;; GELL 15.26: elaboration file for the module: checkmet
+;;;             translation done: "Wed June 16 93 18:18:04 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: checkmet.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'checkmet)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZcheckmet" "Wed June 16 93 18:18:04 "
+
+'((check-value . subr2) (perform-meter . dmsubr))
+
+#[eval equal "** the value of " " has to be " " not " print progn (count-calls-init) ((count-calls-stop)) mcons check-value #:gell-resetfn:function-name #:gell-resetfn:function-2 perform-meter #:gell-resetfn:function-1]
+)
+
+(if (not (featurep 'countcalls)) (progn (libloadfile 'countcalls t)))
+(add-feature 'checkmet)
+(defcsetfn 'check-value "GZcheckmet" 0)
+(defcsetfn 'perform-meter "GZcheckmet" 1)
+
+(defccheck '(mcons print equal eval))

@@ -1,0 +1,209 @@
+		======================================
+		Ge'ne'rateur d'Exe'cutifs Le-Lisp en C
+
+			      "GELL"
+
+	      (c) 1989, 1990, 1991, 1992, 1993  ILOG S.A.
+		======================================
+		  fichier: ./lelisp/GELL/PORTER_GELL
+		======================================
+
+
+*****************************************************************
+Petit re'sume' du portage de GELL sur une machine simple (i.e.
+ sur le re'seau local d'ILOG avec NSF). En faire quelques uns
+      avant de se lancer dans un portage plus complique'
+*****************************************************************
+
+Pour porter GELL sur une nouvelle machine il faut copier/utiliser
+un portage pre-existant (on prendra l'exemple du sun ici).
+
+1) s'installer ou` il faut
+==========================
+
+Cette premie`e phase consiste a` cre'er un catalogue du nom de la
+nouvelle machine sur :
+
+	% mkdir "$work"/lelisp/GELL/<machine>
+	% cd "$work"/lelisp/GELL/<machine>
+
+son sous-catalogue RCS :
+
+	% mkdir RCS
+
+ainsi que les sous-catalogues contenant les fichiers *.o :
+
+	% mkdir o	pour lelispbin
+	% mkdir	To	pour telispbin (les tests)
+	% mkdir	Lo	pour celispbin (llib)
+	% mkdir	Bo	pour belispbin (les benchs)
+	% mkdir	Vo	pour celispX11bin (avec X11)
+
+
+2) cre'ation du premier binaire : "lelispbin"
+=============================================
+
+Cette deuxie`me phase est la partie la plus complexe car elle suppose
+que le runtime Le-Lisp en C de ../common va marcher sur la machine. Si
+c,a ne marche pas il faut fixer les fichier C de ../common et/ou
+rajouter des indicateurs de compilation idoines (e.g. IBMRT, LEWS ...)
+
+copier un fichier "makefile" (de ../sun par exemple)
+	% cp ../sun/makefile .
+
+e'diter le fichier "makefile" pour modifier les options de compilation
+des fichiers en C de common : lelisp.c llstdio.c llfloat.c ... Le
+nume'ro du syste`me correspondant a` GELL (i.e. [C]) est -DNBSYST=33.
+Ne rien changer apre`s la limite indique'e.
+
+faire le premier binaire :
+	% make lelispbin >& lelispbin.log &
+
+et le tester avec
+        % lelispbin
+	...
+	? et la` jouer un peu avec lelispbin ....
+	le plus simple est de lancer les tests
+	par ^Ltestfn
+	Une bonne mesure de la vitesse totale sera
+	donne'e par le test de l'e'valuateur avec
+	^Ltestfib
+
+	Pour la suite des e've'nements, il faut tester l'appel
+	des fonctions en C. D'abord de'terminez le pre'fixe rajoute'
+ 	par le linker en te^te des symboles globaux.
+	Utilisez "nm" pour c,a.
+	Puis jouez avec un truc de type :
+		(call (getglobal "l_llcons") 1 2 ())
+	pour e^tre su^r de ne pas avoir de pbs avec les adresses.
+	
+puis ve'rifier avec votre chrono de base que les temps retourne's par
+la fonction (time x) sont corrects. Une bonne mesure est (time '(fib
+23)) apre`s avoir charge' ^Ltestfib. Si l'horloge n'a pas le bon
+TIMEUNIT cela se voit tout de suite. Sur les syste`mes V, le TIMEUNIT
+est donne' par le syste`me.
+	
+
+enfin rendre le fichier "makefile"
+
+	% rendre makefile
+
+3) faire les premiers tests : "telispbin"
+=========================================
+
+Cette troisie`me phase ve'rifie les diffe'rents traducteurs, la
+me'canique d'"e'laboration" et le fichier d'initialisation de GELL,
+../C/initc.ll.  Il faut faire un binaire "telispbin" contenant
+"testlap" et "testext" pre'linke's a` lelispbin. Cela suppose que
+../Ctest/testlap.c soit fait. Voir le LISEZ_MOI de ../Ctest pour le
+refabriquer.
+
+	% make telispbin >& telispbin.log &
+
+copier les fichiers de commande de tests :
+
+	% cp ../Ctest/fairetestfn .
+	% rendre fairetestfn
+	% cp ../Ctest/fairetestlap .
+	% rendre fairetestlap
+	% cp ../Ctest/fairetextext .
+	% rendre fairetestext
+
+puis les jouer :
+
+	% fairetestfn  >& testfn.log &
+	% fairetestlap >& testlap.log &
+	% fairetestext >& testext.log &
+
+et le tour est joue' .... tout se recupe`re dans les fichiers *.log ....
+Il reste des pbs, voir ../Ctest/LISEZ_MOI.
+
+
+4) faire Le-Lisp + llib : "celispbin" et la commande "celisp"
+=============================================================
+
+Cette phase teste a` la fois l'e'laboration, la fabrication et la
+restauration (au moyen de la fonction "initialize-elaborated-modules)
+d'images me'moires sous GELL. Elle consiste a` fabriquer un Le-Lisp de
+de'veloppement de nom "celisp".
+
+faire le binaire "celispbin" qui contient la plupart des modules de
+la biblioth`que llib :
+	% make celispbin >& celispbin.log &
+
+cre'er un catalogue pour les images-mem'moires :
+	% mkdir llcore
+
+copier le fabricateur de celisp et la commande (par exemple de ../sun) :
+	% cp ../sun/fairecelisp .
+	% rendre fairecelisp
+	% cp ../sun/celisp .
+	% rendre celisp
+
+fabriquer l'image me'moire :
+	% fairecelisp >& fairecelisp.log &
+
+tester la be^te avec la batterie de tests idoines :
+	% celisp
+	? ^Ltestfn
+	? ^Ltestformat
+	...
+
+
+
+5) passer les benchmarks standards : "belispbin"
+================================================
+
+Permet de mesurer les performances des tests standards :
+
+cree'er le binaire idoine :
+	% make belispbin >& belispbin.log &
+
+copier le fichier de fabrication des benchs (par exemple de ../sun) :
+	% cp ../sun/fairebench .
+	e'diter le dernier appel (do-bench <type-de-machine> <check-p>)
+	le 2e`me argument a` T demande la ve'rification des benchs.
+	% rendre fairebench
+
+
+et lancer les benchs. 
+	% fairebench >& bench.log &
+
+La fin du fichier bench.log contient les valeurs des benchs (a` rajouter
+dans les re'sultats de ../lelisp/llilog/benchmarks/gellresults.ll). 
+Pour avoir un tableau avec vos nouveaux re'sultats, faites :
+	% cd ../lelisp/llilog/benchmarks
+	% lelisp
+	^Lmakeresults
+	(makeresll)
+	et voia` le tout est sur 
+		resultsll.txt
+
+
+6) faire un binaire avec BV : "celispX11bin"
+============================================
+
+Permet de faire passer le peu de tests du BV, en particulier
+(topwindow t) et le debug ....
+
+cree'er le binaire idoine :
+	% make celispX11bin >& celispX11bin.log &
+
+copier le fabricateur de celispX11 et la commande (par exemple de ../sun) :
+	% cp ../sun/fairecelispX11 .
+	% rendre fairecelispX11
+	% cp ../sun/celispX11 .
+	% rendre celispX11
+
+fabriquer l'image me'moire :
+	% fairecelispx11 >& fairecelispX11.log &
+
+tester la be^te avec la batterie de tests idoines :
+	% celispX11
+	? (topwindow t)
+	...
+
+
+
+
+

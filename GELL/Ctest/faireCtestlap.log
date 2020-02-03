@@ -1,0 +1,58 @@
+; Le-Lisp (by INRIA) version 15.25 (22/sept/92)   [sun4]
+; Complice : jeu 26 nov  92 19:51:09 
+= (31bitfloats abbrev callext compiler complice date debug defstruct format 
+hash-table loader messages microceyx module pathname pepe pretty setf 
+virbitmap virtty)
+? 
+? (loadfile "makelo.ll" t)
+= makelo.ll
+? 
+? (loadfile "../C/modtoc.lo"  t)
+= ../C/modtoc.lo
+? 
+? (setq #:modtoc:use-threshold-read-only  3)  ; 2
+= 3
+? (setq #:modtoc:use-threshold-read-write 4)  ; 3
+= 4
+? 
+? (setq #:modtoc:peephole-optimize-p       t)
+= t
+? (setq #:modtoc:optimize-local-labels-p   t)
+= t
+? 
+? (setq #:modtoc:stats-on-C-size-p         t)
+= t
+? (setq #:modtoc:peephole-debug            ())
+= ()
+? (setq #:modtoc:doit-debug                ())
+= ()
+? (setq #:modtoc:C-verbose-mode            ())
+= ()
+? 
+? (module-to-c 'testlap)
+GELL 15.26: module-to-C: translating module: testlap
+Nb of C procedures: 740.
+  0    0.   16   2.
+  1    0.   17   3.
+  2    293. 18   0.
+  3    243. 19   0.
+  4    32.  20   0.
+  5    51.  21   0.
+  6    14.  22   0.
+  7    29.  23   0.
+  8    14.  24   0.
+  9    8.   25   0.
+  10   12.  26   0.
+  11   11.  27   0.
+  12   3.   28   0.
+  13   2.   29   0.
+  14   5.   30   0.
+  15   17.  31   1.
+Average per C procedures: 3.933784
+Preloaded registers:      235.
+Unloaded  registers:      214.
+
+= t
+? 
+? (end)
+Que Le-Lisp soit avec vous. 

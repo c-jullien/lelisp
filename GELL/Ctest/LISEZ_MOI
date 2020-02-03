@@ -1,0 +1,48 @@
+		======================================
+		Ge'ne'rateur d'Exe'cutifs Le-Lisp en C
+		       (version expe'rimentale)
+
+			      "GELL"
+
+			 (c) 1989 ILOG S.A.
+		======================================
+		fichier: ./lelisp/GELL/Ctest/LISEZ_MOI
+		======================================
+
+
+
+Ce catalogue contient tout ce qu'il faut pour passer un certain nombre
+de tests du ge'ne'rateur GELL :
+	- testfn (trivial)
+	- testlap
+	- testext
+
+TESTFN
+======
+
+rien a` dire; c'est trivial, tout passe et cela teste la traduction
+LLM3 -> C.
+
+TESTLAP
+=======
+
+Pb : il faut convertir le fichier ../../lltest/testlddata.ll en en pseudo
+module (testlap.lm et testlap.lo) au moyen du programme "makelo.ll", puis
+compiler en C ce pseudo-module qui sera utilise' dans "telispbin"
+
+Pour refaire testlap.c, utilisez le script "../Ctest/faireCtestlap"
+
+Il reste des erreurs en fin de fichier de test au niveau du XXI et XXII
+mais c'est normal. Tout le reste passe et c'est tre`s bien!
+
+TESTEXT
+=======
+
+Pb: il faut e'galement pre'linker ../../lltest/testext.c a` "telispbin"
+avant de jouer le test.
+
+Il reste plein de pbs :
+- je n'ai que les flottants 64bits (=> pas de passge de flottants)
+- pas plus de 16 arguments ....
+- pas encore le FIXVECTOR et le FLOATVECTOR
+....

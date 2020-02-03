@@ -1,0 +1,18 @@
+./celispbin -code 0 -heap 400 \
+ -symbol 5 -string 6 -vector 5 -cons 5 -float 0 <<EOI
+
+(defvar gell-elaboration-for-trace-p t)
+
+(loadfile "celispSCH" t)
+
+(loadfile "../Cllib/elab-llib.ll" t)
+
+(gell-save-core "llcore/celisp.core"
+                "Ready with Le-Lisp GELL (celisp)"
+                'core-init-std)
+
+
+EOI
+
+
+

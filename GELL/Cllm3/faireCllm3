@@ -1,0 +1,80 @@
+/usr/ilog/lelisp/sun4/complice <<EOI
+
+#|
+
+GELL 26 : 
+
+1 - build the pseudo modules from the LLM3 files in ../Cllm3/lo/*.lo,
+2 - translate these pseudo modules using an interpreted MODTOC in ../Cllm3/*
+3 - copy the corresponding elaboration files in ../../Celab/
+
+|#
+
+
+
+
+(setq list-of-llm3-files '(
+
+llinit
+toperr
+gc
+physio
+read 
+macroch
+print
+eval 
+fspecs 
+cntrl 
+carcdr
+symbs
+fntstd 
+number
+specnb
+string
+chars
+extend
+bllsht
+
+))
+
+(loadfile "../C/llm3tolo.ll" t)
+(llm3tolo list-of-llm3-files)
+
+(loadfile "../C/modtoc.ll" t)
+(loadfile "../C/modopt.ll" t)
+(loadfile "../C/modpeep.ll" t)
+
+
+(setq #:modtoc:use-threshold-read-only  2)  ; 2
+(setq #:modtoc:use-threshold-read-write 3)  ; 3
+
+(setq #:modtoc:C-verbose-mode            ())
+(setq #:modtoc:peephole-optimize-p       t)
+(setq #:modtoc:optimize-local-labels-p   t)
+(setq #:modtoc:llm3-module-p             t)
+(setq #:modtoc:stats-on-C-size-p         t)
+
+(setq #:modtoc:peephole-debug            ())
+(setq #:modtoc:doit-debug                ())
+
+
+(defun makeCllm3 ()
+   (let ((#:system:path (cons "lo/" 
+                               #:system:path)))
+        (mapc  'module-to-C list-of-llm3-files)))
+
+
+
+(makeCllm3)
+(#:modtoc:stats-global)
+(end)
+
+
+
+EOI
+
+
+
+echo "translation done."
+mv *.le /nfs/lelisp15/work/Celab
+echo "elaboration files copied on Celab."

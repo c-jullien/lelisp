@@ -1,0 +1,55 @@
+		======================================
+		Ge'ne'rateur d'Exe'cutifs Le-Lisp en C
+
+			     "GELL" 26
+
+	        (c) 1989 1990 1991 1992 1993 ILOG S.A.
+		======================================
+		   fichier: ./lelisp/GELL/LISEZ_MOI
+		======================================
+
+
+Ce catalogue  contient   la version  26  du  ge'ne'rateur d'exe'cutifs
+Le-Lisp en C appele'  "GELL".   Il est suppose'   se trouver  sous  le
+catalogue   Le-Lisp   utilise'  pour   la ge'ne'ration    d'exe'cutifs
+(../lelisp/GELL).
+
+
+Il contient les catalogues :
+
+
+- C		contient l'outil en Le-Lisp de traduction des modules LLM3 et
+		LAP (le programme modtoc) ainsi que les exe'cutifs en C
+		associe's.
+
+- Cllm3		contient le script et le code C (*.c *.h) correspondant a` la
+		traduction des fichiers LLM3
+
+- Ctest		contient les scripts et le code C permettant de passer les
+		tests (testlap et testextern)
+
+- Cllib		contient les scripts et le code C (*.c *.h *.lc) correspondant
+		a` la traduction des fichiers *.lo de la bibiothe`que
+		standard LLIB ainsi que de COMPLICE et MODTOC.
+
+- Cbenchmarks	contient les scripts et le code C (*.c *.h *.lc) correspondant
+		a` la traduction des fichiers de tests de BENCHMARKS
+
+- Cvirbitmap	contient les scripts et le code C (*.c *.h *.lc) correspondant
+		a` la traduction des fichiers *.ll du bitmap virtuel sur X11.
+
+
+
+Voici l'ensemble des fichiers d'aide :
+
+	../lelisp/GELL/LISEZ_MOI	ce fichier
+	../lelisp/GELL/PORTER_GELL	description d'un portage simple
+	../lelisp/GELL/C/LISEZ_MOI
+	../lelisp/GELL/Cllm3/LISEZ_MOI
+	../lelisp/GELL/Ctest/LISEZ_MOI
+	../lelisp/GELL/Cllib/LISEZ_MOI
+	../lelisp/GELL/Cbenchmarks/LISEZ_MOI
+	../lelisp/GELL/Cvirbitmap/LISEZ_MOI
+
+
+

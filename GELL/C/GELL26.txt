@@ -1,0 +1,209 @@
+			GELL 15.26
+			==========
+
+Points sur lesquels un travail a e'te' re'alise' entre la version GELL
+15.25 et GELL 15.26 a` l'occasion du portage sur Alpha.
+
+Disponibilite':
+---------------
+
+GELL 26 fonctionne sur les machines a` mots de 32 bits  (sun4, hp9700)
+ou 64  bits (alpha).  Le code C engendre'  par  GELL 26 ainsi  que ses
+bibliothe`ques sont uniques quelque soit l'architecture.
+
+Code C engendre':
+-----------------
+
+GELL 26 engendre du code strict ISO C. Teste' sur :
+
+	Alpha AXP (option -std1)
+	hp9700 (option -Aa)
+	sun4 (compilo 2.0 option -Xc)
+	......
+
+Flottants:
+----------
+
+GELL 26 posse`de des flottants 31 ou  64 bits. De  plus il engendre le
+me^me code (source et  objet) pour les  binaires   flottants 31 ou  64
+bits.   Il n'est  pas  besoin de  re-engendrer  ou de  re-compiler les
+modules, c'est au link final que le choix est fait par  l'inclusion du
+fichier llfloat31.o ou llfloat64.o.
+
+Espace disque pour stocker les sources:
+---------------------------------------
+
+GELL 26 engendre des sources plus petits (ce  qui change peu  temps de
+compilation, mais avec   "wc *.[ch]" les  tailles  sont plus petites).
+Gain de l'ordre du tiers.
+
+Exemples :
+		% wc ../Cllm3/*.[ch]
+	
+	GELL 25:  41117  182727 1348053 total
+	GELL 26:  31422  155614  993368 total
+
+		% wc ../Cllib/*.[ch]
+	
+	GELL 25:  138391  647439 4832666 total
+	GELL 26:  106837  500437 3271765 total
+
+		% wc ../Cvirbitmap/*.[ch]
+
+	GELL 25:   67005  342770 2547482 total
+	GELL 26:   59266  292678 1884593 total
+
+
+Taille des images me'moires (zone dynamique):
+---------------------------------------------
+
+GELL 25,   mettait  des indicateurs sur  les  P-listes  de  toutes les
+fonctions  externes  pour pouvoir les  tracer  ou les rede'finir.  Une
+nouvelle  technique  utilisant des tables  statiques C  permet  de les
+supprimer.   Ce gain est  un gain  dans   la taille  de  la  zone CONS
+utilise'e.   Dans  le cas d'Aida Motif  par  exemple,  il  y avait 10k
+fonctions externes,    le gain  est  de  10k  x  5 cons   =  50 k cons
+(e'quivalent a` un -cons  6,  i.e.  de l'ordre de  500k sur machine 32
+bits et 1M sur machine 64 bits), ce qui revient a` dire que les images
+me'moires ont un -cons plus petit de 6. Si les applications en GELL ou
+le GRT en tiennent compte, la taille disque  des images me'moires s'en
+trouvera re'duite d'autant.
+
+Vitesse du GC:
+--------------
+
+GELL 26 posse`de une nouvelle fonction de balayage pour le GC,  ce qui
+lui fait gagner de l'ordre d'un facteur 2. Dans la foule'e le balayeur
+sur SUN4 a e'te' ree'crit avaec un gain de l'ordre de 30%.
+
+Defextern:
+----------
+
+GELL  26 posse`de un  meilleur  "defextern" et totalement portable, ce
+qui  a demande' de l'imagination car  les appels avec des arguments ou
+des valeurs de  retour    flottants sont fourbes   (certaines machines
+stockant  les valeurs dans  des registres  internes)  et perturbent la
+re'alisation du DEFEXTERN en interpre'te'.
+
+L'ensemble des types d'entre'e et de retour sont correctement traite's
+a`   la  fois en    interpre'te' et en    compile'.  Deux  limitations
+re'siduelles persistent UNIQUEMENT en interpre'te' :
+
+1 - le nombre max d'arguments est limite' a` 16 (32 en V15 native)
+
+2 -  le nombre max  d'arguments est  limite'  a` 3 si   on utilise des
+arguments d'entre'e flottants (mais toujours a` 16  si seule la valeur
+de retour est flottante).
+
+Acce`s me'moire
+---------------
+
+GELL 26 supporte la fonction MEMORY (utile en conjonction avec
+le defexetrn "malloc"). Les acce`s se font par mots de 16 bits.
+
+Trace et rede'finition:
+-----------------------
+
+Toute  fonction  SUBR  (y  compris celles en   LLM3  comme OPENI,....)
+peuvent se rede'finir et donc se tracer.
+
+E'laboration:
+-------------
+
+L'e'laboration d'un module teste si  le fichier <module>.le correspond
+bien au fichier <module>.o effectivement  linke' dans le binaire (time
+stamp). Si ce n'est pas le cas, une erreur explicite est de'clenche'e.
+
+Introduction d'une variable  "gell-silent-elaboration-p" qui permet de
+faire taire l'e'laboration.
+
+Il  n'y a  plus de   variable "gell-elaboration-for-trace-p". Elle est
+devenue inutile car les traces ne mettent plus rien sur  les P-listes.
+Tout est fait par tables statiques.
+
+La vitesse de l'e'laboration a e'te' acce'le're'e. GELL 26 ne re'alise
+plus qu'un seul GETGLOBAL  par module.  Tre`s sensible  sans cache des
+symboles externes, peu sensible avec un cache.
+
+Le  module gestionnaire  des   fichiers  d'e'laboration est  lui-me^me
+compile' (bonjour  le  bootstrap!)  ce  qui  rend l'e'laboration  plus
+rapide. 
+
+Espace disque pour stocker les exe'cutables:
+--------------------------------------------
+
+Toutes  les   fonctions e'tant "static", la    taille des binaires sur
+disque   sont  plus petits  car  la  table des symboles est  bien plus
+petite.
+
+<< A mesurer sur Chp9700 >>
+
+Taille me'moire de l'exe'cutable:
+---------------------------------
+
+C'est le plus gros proble`me actuel de GELL.
+
+<< A mesurer sur Chp9700 >>
+
+
+Vitesse a` l'exe'cution du code interpre'te':
+---------------------------------------------
+
+Ce devrait e^tre sensiblement e'gal, ou d'un gain minime.
+
+<< A mesurer sur Chp9700 >>
+
+
+Vitesse a` l'exe'cution du code compile'
+----------------------------------------
+
+Ce devrait  e^tre  un peu  meilleur   gra^ce a`  l'augmentation  de la
+bibliothe`que d'exe'cution e'crite directement en C.
+
+<< A mesurer sur Chp9700 >>
+
+
+			Le-Lisp 15.26
+			=============
+
+Defextern:
+----------
+
+Tous  les   defextern  testent le  type  des  arguments  fournis a` la
+fonction C invoque'e.
+
+Lispcall:
+---------
+
+Il  existe une  nouvelle  forme de "pusharg",  "pushargd",  totalement
+transparente  en  V15  native,  qui  permet  d'empiler   des arguments
+flottants pour les "lispcall"s.
+
+
+Nouvelles fonctions :
+---------------------
+
+(mkdir <dir>)
+(rmdir <dir>)
+
+(stack-info)
+
+Eval :
+------
+
+Les erreurs ERRWNA retournent le nombre d'arguments (comme pour les
+fonctions compile'es).
+
+
+			TODO (a` mon retour de vacances)
+			================================
+
+- encore bosser: la TAILLE, la TAILLE et encore la TAILLE de la zone
+  code de l'exe'cutable
+
+- 100% POSIX
+
+- ve'rifier GELL 26 sur Chp9700/Csun4 avant de le livrer a` ses bourreaux
+
+- revoir la CLOCK (et le pb du protect-call)
+

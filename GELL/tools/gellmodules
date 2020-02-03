@@ -1,0 +1,38 @@
+#!/bin/sh
+
+modfile=$1
+shift
+cdir=$1
+shift
+
+#HOME=foothebar complice -i -cons 8 <<EOI
+HOME=foothebar /nfs/current/lelisp/Chp9700/complice -i <<EOI
+
+
+(setq #:system:read-case-flag t)
+
+(setq gelldir "/nfs/work/lelisp/GELL/")
+
+(unless (typefn 'module-to-c)
+	(if (eq (system) '|C|)
+	    (let ((#:system:path (cons (catenate gelldir "C/")
+				       #:system:path)))
+	      (loadmodule 'modtoc))
+	  (loadfile (catenate gelldir "C/modtoc.lo")  t))
+	
+	(setq #:modtoc:peephole-optimize-p       t
+	      #:modtoc:optimize-local-labels-p   t
+	      #:modtoc:stats-on-C-size-p         ()
+	      #:modtoc:peephole-debug            ()
+	      #:modtoc:doit-debug                ()
+	      #:modtoc:C-verbose-mode            ()))
+
+(loadfile (catenate gelldir "tools/gellutil.ll")  t)
+
+(#:gell:translate-modules-to-c "$modfile" "$cdir")
+
+(#:modtoc:stats-global)
+
+(end)
+
+EOI

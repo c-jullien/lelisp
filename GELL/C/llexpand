@@ -1,0 +1,50 @@
+#! /bin/sh
+################################################################
+#
+#		Le shell-script de l'expanseur
+#
+################################################################
+#
+#	Options :
+#		-load <fichier> : fichier a charger
+#		-source <directory> : dir-source
+#		-dest <directory> : s-dir
+#		-val <name> <value> : change la valeur d'un symbole
+#		-flag <name> <value> : change la valeur d'un flag
+#		<file> : fichier a expanser
+#
+################################################################
+
+files=""
+tmp="/tmp/llexpand$$"
+trap "rm -f $tmp; exit" 0 1 2 3 15
+
+while test x$1 != x
+do
+    case $1 in
+	-load)	echo "(load " \"$2\" ")"		>> $tmp
+		shift ;;
+	-source)
+		echo "(defvar #:llm3:dir-source " \"$2\" ")" >> $tmp
+		shift ;;
+	-dest)
+		echo "(defvar #:expand:s-dir " \"$2\" ")" >> $tmp
+		shift ;;
+	-val)
+		echo "(defvar " $2 " " $3 ")"	>> $tmp
+		shift ; shift ;;
+	-flag)
+		echo -n "(rplaca (getprop " \'$2	>> $tmp
+		echo " '#:expand:value) " $3 ")"	>> $tmp
+		shift ; shift ;;
+	*)	files="$files $1" ;;
+    esac
+    shift
+done
+echo "(with ((typecn #/. 'cpname)) (setq ffiles (read)))"	>> $tmp
+echo "(" $files ")"						>> $tmp
+echo "(expand-to-C ffiles)"					>> $tmp
+echo "(end)"							>> $tmp
+
+/usr/local/bin/complice -i -r llcore/expandC.core < $tmp
+rm $tmp

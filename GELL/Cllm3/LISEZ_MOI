@@ -1,0 +1,27 @@
+		======================================
+		Ge'ne'rateur d'Exe'cutifs Le-Lisp en C
+
+			     "GELL" 26
+
+	        (c) 1989 1990 1991 1992 1993 ILOG S.A.
+		======================================
+		   fichier: ./lelisp/GELL/LISEZ_MOI
+		======================================
+
+
+Pour engendrer les fichiers C correspondant aux modules LLM3
+faire :
+
+
+	% faireCllm3 >& faireCllm3.log &
+
+
+Cette commande va :
+
+1 - cre'er des pseudos-modules *.lo a` partir des sources LLM3 dans le
+catalogue ./lelisp/GELL/Cllm3/lo/*.lo
+
+2 - traduire ces pseudos-modules en *.c et *.h
+
+3 - copier les fichiers d'e'laboration sur : ./lelisp/Celab/*.le
+

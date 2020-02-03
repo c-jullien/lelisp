@@ -1,0 +1,70 @@
+`telispbin' is up to date.
+; Le-Lisp (by INRIA) version 15.22  (6/Jan/89)   [C]
+= (Version:  15.22)
+= subversion
+= herald
+= defvar
+= syste`me unix
+ (load-std sav min pepe env ld llcp)  pour charger l'environnement std,
+ (load-stm sav min pepe env ld llcp)  pour l'environnement std modulaire,
+ (load-cpl sav min meme env ld cmpl)  pour l'environnement complice.
+= Fin du startup.
+? (loadfile "../../lltest/testextern.ll" t)
+      Test d'arguments du type FIX
+      Test d'arguments du type FLOAT
+***** la valeur de (_tlfloat 1.) devrait e^tre 2 et non pas    0
+***** la valeur de (_tlfloat -1.) devrait e^tre -2 et non pas    0
+***** la valeur de (_tlfloat 32767.) devrait e^tre -2 et non pas    0
+***** la valeur de (_tlfloat -32767.) devrait e^tre 2 et non pas    0
+***** la valeur de (_tlfloat .5) devrait e^tre 1 et non pas    0
+***** la valeur de (_tlfloat -.5) devrait e^tre -1 et non pas    0
+      Test d'arguments du type STRING
+      Test d'arguments du type VECTOR
+      Test d'arguments du type RFIX
+***** la valeur de (_trfix 3) devrait e^tre 6 et non pas    (errmac C 11)
+***** la valeur de (_trfix 0) devrait e^tre 0 et non pas    (errmac C 11)
+***** la valeur de (_trfix -3) devrait e^tre -6 et non pas    (errmac C 11)
+***** la valeur de (_trfix 16383) devrait e^tre 32766 et non pas    (errmac C 
+11)
+      Test d'arguments du type RFLOAT
+      Test d'arguments du type FIXVECTOR
+***** la valeur de (_ttabint 3 (setq v #[1 2 3])) devrait e^tre 3
+ et non pas    (errmac C 11)
+***** la valeur de v devrait e^tre #[2 4 6] et non pas    #[1 2 3]
+***** la valeur de (_ttabint 2 v) devrait e^tre 2 et non pas    (errmac C 11)
+***** la valeur de v devrait e^tre #[4 8 6] et non pas    #[1 2 3]
+***** la valeur de (_ttabint 3 (setq v #[-3 16383 -16384])) devrait e^tre 3
+ et non pas    (errmac C 11)
+***** la valeur de v devrait e^tre #[-6 32766 -32768.] et non pas    #[-3 
+16383 -16384]
+      Pas de test du type FLOATVECTOR en 64BITFLOATS
+      Test d'arguments du type T
+      Test d'arguments du type EXTERNAL
+      Test du resultat de type FLOAT
+***** la valeur de (_tcfloat -1) devrait e^tre -2. et non pas    0
+***** la valeur de (_tcfloat 1) devrait e^tre 2. et non pas    0
+***** la valeur de (_tcfloat 32767) devrait e^tre 65534. et non pas    0
+***** la valeur de (_tcfloat -32767) devrait e^tre -65534. et non pas    0
+***** la valeur de (_tcfloat2 123. 456.) devrait e^tre 56088.4102299
+ et non pas    0
+***** la valeur de (_f_s_to_d) devrait e^tre 2.3 et non pas    0
+      Test du resultat de type STRING
+      Test du resultat de type T
+***** la valeur de (loc (_tct -1)) devrait e^tre (-1 . -1) et non pas    -1
+      Test du resultat de type EXTERNAL
+***** la valeur de (_tcexternal -1) devrait e^tre (-1 . -1) et non pas    -1
+      Tests generaux
+***** la valeur de (_tnbmaxi 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+20 21 22 23 24 25 26 27 28 29 30 31 32) devrait e^tre 32 et non pas    1024
+***** la valeur de (_tnbmaxf 1. 2. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13. 14. 
+15. 16. 17. 18. 19. 20. 21. 22. 23. 24. 25. 26. 27. 28. 29. 30. 31. 32.)
+ devrait e^tre 32 et non pas    1024
+***** la valeur de (_tnbmaxri 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+20 21 22 23 24 25 26 27 28 29 30 31 32) devrait e^tre 32 et non pas    1024
+***** la valeur de (_tnbmaxrf 1. 2. 3. 4. 5. 6. 7. 8. 9. 10. 11. 12. 13. 14. 
+15. 16. 17. 18. 19. 20. 21. 22. 23. 24. 25. 26. 27. 28. 29. 30. 31. 32.)
+ devrait e^tre 32 et non pas    1024
+***** la valeur de (_tltout -100 1200. hello #[46] 3) devrait e^tre -9341
+ et non pas    (errmac C 11)
+      Test de fonctions du lispcaller
+

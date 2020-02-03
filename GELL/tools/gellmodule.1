@@ -1,0 +1,25 @@
+#!/bin/sh
+# To generate the .c, .h and .lc files for GELL
+
+module=$1
+shift
+cdir=$1
+shift
+
+#HOME=foothebar complice -i -cons 8 <<EOI
+HOME=foothebar /nfs/work/lelisp/Chp9700/complice -i <<EOI
+
+
+(setq #:system:read-case-flag t)
+
+(setq gelldir "/nfs/work/lelisp/GELL/")
+
+(loadfile "/nfs/work/lelisp/GELL/tools/gellmodule.ll" t)
+
+(#:gell:translate-one-module-to-c "$module" "$cdir")
+
+;; (#:modtoc:stats-global)
+
+(end)
+
+EOI

@@ -1,0 +1,21 @@
+		======================================
+		Ge'ne'rateur d'Exe'cutifs Le-Lisp en C
+		       (version expe'rimentale)
+
+			    "GELL 24"
+
+		   (c) 1989 1990 1991 ILOG S.A.
+		======================================
+             fichier: ./lelisp/GELL/Cbenchmarks/LISEZ_MOI
+		======================================
+
+
+
+Ce catalogue ne sert qu'a` fabriquer les fichiers C correspondants
+aux tests standards de Le-Lisp.
+
+Pour fabriquer les fichiers C correspondans aux benchmarks, faire :
+	% faireCbench
+avec pourquoi pas, un log-file :
+	% faireCbench >& faireCbench.log &
+

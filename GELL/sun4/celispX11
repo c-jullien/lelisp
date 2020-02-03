@@ -1,0 +1,3 @@
+./celispX11bin -code 0 -heap 800 -symbol 7 -string 10 -vector 7 -cons 10 \
+-float 0 -r llcore/celispX11.core $*
+

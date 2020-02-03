@@ -1,0 +1,526 @@
+/* GELL 15.26: include file for the module: "complice" */
+/*             translation done:            "Thu Aug  26 93 10:15:12 " */
+
+/*      impure LLM3 predefined  */
+extern Ptr GIdlink, GIllink, GIfcons, GIevalst;
+
+
+/*      LLM3 functions  */
+extern Ptr GXunbind7(), GXunbind5(), GXunbind3(), GXunbind1();
+extern Ptr GXpopja4(), GXpopj9(), GXpopj8(), GXpopj7();
+extern Ptr GXpopj6(), GXpopj5(), GXpopj4(), GXpopj3();
+extern Ptr GXpopj2(), GXpopj1(), GXpopj0();
+
+/*      intern functions        */
+static Ptr GLcomplice_1(), GLcomplice_3(), GLcomplice_5(), GLcomplice_6();
+static Ptr GLcomplice_8(), GLcomplice_10(), GLcomplice_11(), GLcomplice_12();
+static Ptr GLcomplice_14(), GLcomplice_15(), GLcomplice_17(), GLcomplice_18();
+static Ptr GLcomplice_19(), GLcomplice_20(), GLcomplice_21(), GLcomplice_23();
+static Ptr GLcomplice_24(), GLcomplice_25(), GLcomplice_27(), GLcomplice_28();
+static Ptr GLcomplice_30(), GLcomplice_31(), GLcomplice_33(), GLcomplice_35();
+static Ptr GLcomplice_36(), GLcomplice_38(), GLcomplice_40(), GLcomplice_41();
+static Ptr GLcomplice_43(), GLcomplice_45(), GLcomplice_46(), GLcomplice_48();
+static Ptr GLcomplice_49(), GLcomplice_50(), GLcomplice_51(), GLcomplice_52();
+static Ptr GLcomplice_53(), GLcomplice_54(), GLcomplice_55(), GLcomplice_56();
+static Ptr GLcomplice_57(), GLcomplice_58(), GLcomplice_59(), GLcomplice_60();
+static Ptr GLcomplice_61(), GLcomplice_62(), GLcomplice_63(), GLcomplice_64();
+static Ptr GLcomplice_65(), GLcomplice_66(), GLcomplice_67(), GLcomplice_68();
+static Ptr GLcomplice_69(), GLcomplice_70(), GLcomplice_71(), GLcomplice_72();
+static Ptr GLcomplice_73(), GLcomplice_74(), GLcomplice_75(), GLcomplice_76();
+static Ptr GLcomplice_77(), GLcomplice_78(), GLcomplice_79(), GLcomplice_80();
+static Ptr GLcomplice_81(), GLcomplice_82(), GLcomplice_83(), GLcomplice_84();
+static Ptr GLcomplice_85(), GLcomplice_86(), GLcomplice_87(), GLcomplice_88();
+static Ptr GLcomplice_89(), GLcomplice_90(), GLcomplice_91(), GLcomplice_92();
+static Ptr GLcomplice_93(), GLcomplice_94(), GLcomplice_95(), GLcomplice_96();
+static Ptr GLcomplice_97(), GLcomplice_98(), GLcomplice_99(), GLcomplice_100();
+static Ptr GLcomplice_101(), GLcomplice_102(), GLcomplice_103(), GLcomplice_104();
+static Ptr GLcomplice_105(), GLcomplice_106(), GLcomplice_107(), GLcomplice_108();
+static Ptr GLcomplice_109(), GLcomplice_110(), GLcomplice_111(), GLcomplice_112();
+static Ptr GLcomplice_113(), GLcomplice_114(), GLcomplice_115(), GLcomplice_116();
+static Ptr GLcomplice_117(), GLcomplice_118(), GLcomplice_119(), GLcomplice_120();
+static Ptr GLcomplice_121(), GLcomplice_122(), GLcomplice_123(), GLcomplice_124();
+static Ptr GLcomplice_125(), GLcomplice_126(), GLcomplice_127(), GLcomplice_128();
+static Ptr GLcomplice_129(), GLcomplice_130(), GLcomplice_131(), GLcomplice_132();
+static Ptr GLcomplice_133(), GLcomplice_134(), GLcomplice_135(), GLcomplice_136();
+static Ptr GLcomplice_137(), GLcomplice_138(), GLcomplice_139(), GLcomplice_140();
+static Ptr GLcomplice_141(), GLcomplice_142(), GLcomplice_143(), GLcomplice_144();
+static Ptr GLcomplice_145(), GLcomplice_146(), GLcomplice_147(), GLcomplice_148();
+static Ptr GLcomplice_149(), GLcomplice_150(), GLcomplice_151(), GLcomplice_152();
+static Ptr GLcomplice_153(), GLcomplice_154(), GLcomplice_155(), GLcomplice_156();
+static Ptr GLcomplice_157(), GLcomplice_158(), GLcomplice_159(), GLcomplice_160();
+static Ptr GLcomplice_161(), GLcomplice_162(), GLcomplice_163(), GLcomplice_164();
+static Ptr GLcomplice_165(), GLcomplice_166(), GLcomplice_167(), GLcomplice_168();
+static Ptr GLcomplice_169(), GLcomplice_170(), GLcomplice_171(), GLcomplice_172();
+static Ptr GLcomplice_173(), GLcomplice_174(), GLcomplice_176(), GLcomplice_177();
+static Ptr GLcomplice_179(), GLcomplice_180(), GLcomplice_181(), GLcomplice_182();
+static Ptr GLcomplice_184(), GLcomplice_185(), GLcomplice_187(), GLcomplice_189();
+static Ptr GLcomplice_190(), GLcomplice_191(), GLcomplice_192(), GLcomplice_193();
+static Ptr GLcomplice_194(), GLcomplice_195(), GLcomplice_196(), GLcomplice_197();
+static Ptr GLcomplice_199(), GLcomplice_201(), GLcomplice_202(), GLcomplice_204();
+static Ptr GLcomplice_205(), GLcomplice_207(), GLcomplice_208(), GLcomplice_210();
+static Ptr GLcomplice_211(), GLcomplice_212(), GLcomplice_213(), GLcomplice_214();
+static Ptr GLcomplice_216(), GLcomplice_217(), GLcomplice_219(), GLcomplice_220();
+static Ptr GLcomplice_221(), GLcomplice_222(), GLcomplice_223(), GLcomplice_225();
+static Ptr GLcomplice_226(), GLcomplice_227(), GLcomplice_228(), GLcomplice_229();
+static Ptr GLcomplice_230(), GLcomplice_231(), GLcomplice_232(), GLcomplice_233();
+static Ptr GLcomplice_234(), GLcomplice_236(), GLcomplice_237(), GLcomplice_238();
+static Ptr GLcomplice_239(), GLcomplice_240(), GLcomplice_241(), GLcomplice_242();
+static Ptr GLcomplice_243(), GLcomplice_244(), GLcomplice_245(), GLcomplice_246();
+static Ptr GLcomplice_247(), GLcomplice_248(), GLcomplice_249(), GLcomplice_250();
+static Ptr GLcomplice_251(), GLcomplice_252(), GLcomplice_253(), GLcomplice_254();
+static Ptr GLcomplice_255(), GLcomplice_256(), GLcomplice_257(), GLcomplice_258();
+static Ptr GLcomplice_259(), GLcomplice_260(), GLcomplice_261(), GLcomplice_263();
+static Ptr GLcomplice_264(), GLcomplice_265(), GLcomplice_267(), GLcomplice_268();
+static Ptr GLcomplice_270(), GLcomplice_271(), GLcomplice_272(), GLcomplice_274();
+static Ptr GLcomplice_275(), GLcomplice_276(), GLcomplice_277(), GLcomplice_278();
+static Ptr GLcomplice_279(), GLcomplice_281(), GLcomplice_282(), GLcomplice_283();
+static Ptr GLcomplice_284(), GLcomplice_286(), GLcomplice_287(), GLcomplice_288();
+static Ptr GLcomplice_289(), GLcomplice_291(), GLcomplice_292(), GLcomplice_293();
+static Ptr GLcomplice_295(), GLcomplice_297(), GLcomplice_298(), GLcomplice_299();
+static Ptr GLcomplice_300(), GLcomplice_302(), GLcomplice_303(), GLcomplice_305();
+static Ptr GLcomplice_306(), GLcomplice_307(), GLcomplice_308(), GLcomplice_310();
+static Ptr GLcomplice_311(), GLcomplice_312(), GLcomplice_313(), GLcomplice_314();
+static Ptr GLcomplice_315(), GLcomplice_316(), GLcomplice_317(), GLcomplice_318();
+static Ptr GLcomplice_320(), GLcomplice_321(), GLcomplice_322(), GLcomplice_323();
+static Ptr GLcomplice_324(), GLcomplice_325(), GLcomplice_326(), GLcomplice_327();
+static Ptr GLcomplice_329(), GLcomplice_330(), GLcomplice_331(), GLcomplice_332();
+static Ptr GLcomplice_333(), GLcomplice_334(), GLcomplice_335(), GLcomplice_337();
+static Ptr GLcomplice_338(), GLcomplice_340(), GLcomplice_341(), GLcomplice_342();
+static Ptr GLcomplice_343(), GLcomplice_344(), GLcomplice_345(), GLcomplice_346();
+static Ptr GLcomplice_347(), GLcomplice_349(), GLcomplice_350(), GLcomplice_351();
+static Ptr GLcomplice_353(), GLcomplice_355(), GLcomplice_356(), GLcomplice_357();
+static Ptr GLcomplice_358(), GLcomplice_359(), GLcomplice_361(), GLcomplice_362();
+static Ptr GLcomplice_364(), GLcomplice_365(), GLcomplice_366(), GLcomplice_367();
+static Ptr GLcomplice_368(), GLcomplice_369(), GLcomplice_370(), GLcomplice_371();
+static Ptr GLcomplice_372(), GLcomplice_373(), GLcomplice_374(), GLcomplice_376();
+static Ptr GLcomplice_377(), GLcomplice_378(), GLcomplice_379(), GLcomplice_381();
+static Ptr GLcomplice_382(), GLcomplice_383(), GLcomplice_384(), GLcomplice_385();
+static Ptr GLcomplice_386(), GLcomplice_387(), GLcomplice_388(), GLcomplice_389();
+static Ptr GLcomplice_390(), GLcomplice_392(), GLcomplice_393(), GLcomplice_394();
+static Ptr GLcomplice_396(), GLcomplice_398(), GLcomplice_399(), GLcomplice_401();
+static Ptr GLcomplice_403(), GLcomplice_404(), GLcomplice_406(), GLcomplice_407();
+static Ptr GLcomplice_408(), GLcomplice_410(), GLcomplice_411(), GLcomplice_413();
+static Ptr GLcomplice_414(), GLcomplice_416(), GLcomplice_417(), GLcomplice_418();
+static Ptr GLcomplice_419(), GLcomplice_421(), GLcomplice_422(), GLcomplice_424();
+static Ptr GLcomplice_426(), GLcomplice_428(), GLcomplice_430(), GLcomplice_432();
+static Ptr GLcomplice_433(), GLcomplice_435(), GLcomplice_437(), GLcomplice_438();
+static Ptr GLcomplice_439(), GLcomplice_441(), GLcomplice_442(), GLcomplice_443();
+static Ptr GLcomplice_445(), GLcomplice_447(), GLcomplice_448(), GLcomplice_450();
+static Ptr GLcomplice_451(), GLcomplice_452(), GLcomplice_453(), GLcomplice_454();
+static Ptr GLcomplice_455(), GLcomplice_457(), GLcomplice_458(), GLcomplice_460();
+static Ptr GLcomplice_461(), GLcomplice_463(), GLcomplice_465(), GLcomplice_466();
+static Ptr GLcomplice_468(), GLcomplice_469(), GLcomplice_470(), GLcomplice_471();
+static Ptr GLcomplice_473(), GLcomplice_474(), GLcomplice_476(), GLcomplice_478();
+static Ptr GLcomplice_479(), GLcomplice_481(), GLcomplice_482(), GLcomplice_484();
+static Ptr GLcomplice_486(), GLcomplice_488(), GLcomplice_490(), GLcomplice_491();
+static Ptr GLcomplice_492(), GLcomplice_494(), GLcomplice_496(), GLcomplice_498();
+static Ptr GLcomplice_499(), GLcomplice_501(), GLcomplice_502(), GLcomplice_503();
+static Ptr GLcomplice_504(), GLcomplice_506(), GLcomplice_507(), GLcomplice_508();
+static Ptr GLcomplice_509(), GLcomplice_511(), GLcomplice_512(), GLcomplice_514();
+static Ptr GLcomplice_515(), GLcomplice_517(), GLcomplice_518(), GLcomplice_520();
+static Ptr GLcomplice_521(), GLcomplice_523(), GLcomplice_524(), GLcomplice_525();
+static Ptr GLcomplice_527(), GLcomplice_528(), GLcomplice_529(), GLcomplice_531();
+static Ptr GLcomplice_533(), GLcomplice_534(), GLcomplice_535(), GLcomplice_536();
+static Ptr GLcomplice_537(), GLcomplice_538(), GLcomplice_540(), GLcomplice_541();
+static Ptr GLcomplice_542(), GLcomplice_544(), GLcomplice_545(), GLcomplice_547();
+static Ptr GLcomplice_548(), GLcomplice_549(), GLcomplice_551(), GLcomplice_552();
+static Ptr GLcomplice_553(), GLcomplice_555(), GLcomplice_556(), GLcomplice_558();
+static Ptr GLcomplice_559(), GLcomplice_560(), GLcomplice_562(), GLcomplice_564();
+static Ptr GLcomplice_565(), GLcomplice_567(), GLcomplice_568(), GLcomplice_569();
+static Ptr GLcomplice_570(), GLcomplice_571(), GLcomplice_572(), GLcomplice_574();
+static Ptr GLcomplice_575(), GLcomplice_576(), GLcomplice_578(), GLcomplice_579();
+static Ptr GLcomplice_580(), GLcomplice_582(), GLcomplice_583(), GLcomplice_585();
+static Ptr GLcomplice_586(), GLcomplice_588(), GLcomplice_589(), GLcomplice_591();
+static Ptr GLcomplice_592(), GLcomplice_594(), GLcomplice_596(), GLcomplice_597();
+static Ptr GLcomplice_599(), GLcomplice_601(), GLcomplice_603(), GLcomplice_604();
+static Ptr GLcomplice_606(), GLcomplice_607(), GLcomplice_609(), GLcomplice_610();
+static Ptr GLcomplice_612(), GLcomplice_613(), GLcomplice_614(), GLcomplice_615();
+static Ptr GLcomplice_617(), GLcomplice_618(), GLcomplice_619(), GLcomplice_621();
+static Ptr GLcomplice_622(), GLcomplice_624(), GLcomplice_625(), GLcomplice_627();
+static Ptr GLcomplice_629(), GLcomplice_631(), GLcomplice_633(), GLcomplice_635();
+static Ptr GLcomplice_636(), GLcomplice_637(), GLcomplice_639(), GLcomplice_640();
+static Ptr GLcomplice_642(), GLcomplice_644(), GLcomplice_645(), GLcomplice_646();
+static Ptr GLcomplice_648(), GLcomplice_650(), GLcomplice_652(), GLcomplice_653();
+static Ptr GLcomplice_654(), GLcomplice_655(), GLcomplice_656(), GLcomplice_658();
+static Ptr GLcomplice_660(), GLcomplice_661(), GLcomplice_663(), GLcomplice_665();
+static Ptr GLcomplice_666(), GLcomplice_667(), GLcomplice_668(), GLcomplice_669();
+static Ptr GLcomplice_670(), GLcomplice_671(), GLcomplice_673(), GLcomplice_674();
+static Ptr GLcomplice_676(), GLcomplice_677(), GLcomplice_679(), GLcomplice_681();
+static Ptr GLcomplice_682(), GLcomplice_684(), GLcomplice_686(), GLcomplice_687();
+static Ptr GLcomplice_688(), GLcomplice_690(), GLcomplice_691(), GLcomplice_692();
+static Ptr GLcomplice_694(), GLcomplice_696(), GLcomplice_697(), GLcomplice_699();
+static Ptr GLcomplice_701(), GLcomplice_702(), GLcomplice_704(), GLcomplice_705();
+static Ptr GLcomplice_706(), GLcomplice_707(), GLcomplice_709(), GLcomplice_710();
+static Ptr GLcomplice_711(), GLcomplice_713(), GLcomplice_715(), GLcomplice_717();
+static Ptr GLcomplice_718(), GLcomplice_719(), GLcomplice_721(), GLcomplice_723();
+static Ptr GLcomplice_725(), GLcomplice_726(), GLcomplice_727(), GLcomplice_729();
+static Ptr GLcomplice_730(), GLcomplice_732(), GLcomplice_733(), GLcomplice_734();
+static Ptr GLcomplice_735(), GLcomplice_737(), GLcomplice_739(), GLcomplice_740();
+static Ptr GLcomplice_741(), GLcomplice_742(), GLcomplice_744(), GLcomplice_746();
+static Ptr GLcomplice_747(), GLcomplice_748(), GLcomplice_749(), GLcomplice_751();
+static Ptr GLcomplice_753(), GLcomplice_755(), GLcomplice_756(), GLcomplice_758();
+static Ptr GLcomplice_759(), GLcomplice_761(), GLcomplice_762(), GLcomplice_763();
+static Ptr GLcomplice_765(), GLcomplice_766(), GLcomplice_767(), GLcomplice_769();
+static Ptr GLcomplice_771(), GLcomplice_772(), GLcomplice_773(), GLcomplice_774();
+static Ptr GLcomplice_775(), GLcomplice_777(), GLcomplice_778(), GLcomplice_779();
+static Ptr GLcomplice_780(), GLcomplice_781(), GLcomplice_782(), GLcomplice_783();
+static Ptr GLcomplice_785(), GLcomplice_787(), GLcomplice_789(), GLcomplice_790();
+static Ptr GLcomplice_791(), GLcomplice_792(), GLcomplice_794(), GLcomplice_796();
+static Ptr GLcomplice_798(), GLcomplice_799(), GLcomplice_800(), GLcomplice_801();
+static Ptr GLcomplice_803(), GLcomplice_805(), GLcomplice_807(), GLcomplice_808();
+static Ptr GLcomplice_809(), GLcomplice_811(), GLcomplice_812(), GLcomplice_814();
+static Ptr GLcomplice_815(), GLcomplice_816(), GLcomplice_817(), GLcomplice_818();
+static Ptr GLcomplice_820(), GLcomplice_822(), GLcomplice_823(), GLcomplice_824();
+static Ptr GLcomplice_825(), GLcomplice_827(), GLcomplice_828(), GLcomplice_830();
+static Ptr GLcomplice_832(), GLcomplice_833(), GLcomplice_834(), GLcomplice_836();
+static Ptr GLcomplice_838(), GLcomplice_839(), GLcomplice_840(), GLcomplice_842();
+static Ptr GLcomplice_844(), GLcomplice_846(), GLcomplice_847(), GLcomplice_848();
+static Ptr GLcomplice_850(), GLcomplice_852(), GLcomplice_853(), GLcomplice_854();
+static Ptr GLcomplice_856(), GLcomplice_857(), GLcomplice_859(), GLcomplice_861();
+static Ptr GLcomplice_863(), GLcomplice_865(), GLcomplice_867(), GLcomplice_869();
+static Ptr GLcomplice_870(), GLcomplice_871(), GLcomplice_872(), GLcomplice_873();
+static Ptr GLcomplice_875(), GLcomplice_876(), GLcomplice_877(), GLcomplice_879();
+static Ptr GLcomplice_880(), GLcomplice_881(), GLcomplice_882(), GLcomplice_883();
+static Ptr GLcomplice_885(), GLcomplice_886(), GLcomplice_888(), GLcomplice_890();
+static Ptr GLcomplice_891(), GLcomplice_892(), GLcomplice_893(), GLcomplice_894();
+static Ptr GLcomplice_896(), GLcomplice_897(), GLcomplice_898(), GLcomplice_899();
+static Ptr GLcomplice_900(), GLcomplice_902(), GLcomplice_903(), GLcomplice_904();
+static Ptr GLcomplice_905(), GLcomplice_906(), GLcomplice_908(), GLcomplice_909();
+static Ptr GLcomplice_910(), GLcomplice_911(), GLcomplice_912(), GLcomplice_913();
+static Ptr GLcomplice_914(), GLcomplice_915(), GLcomplice_917(), GLcomplice_919();
+static Ptr GLcomplice_920(), GLcomplice_921(), GLcomplice_922(), GLcomplice_923();
+static Ptr GLcomplice_925(), GLcomplice_926(), GLcomplice_927(), GLcomplice_928();
+static Ptr GLcomplice_929(), GLcomplice_930(), GLcomplice_931(), GLcomplice_932();
+static Ptr GLcomplice_933(), GLcomplice_934(), GLcomplice_935(), GLcomplice_936();
+static Ptr GLcomplice_937(), GLcomplice_938(), GLcomplice_939(), GLcomplice_940();
+static Ptr GLcomplice_941(), GLcomplice_943(), GLcomplice_945(), GLcomplice_946();
+static Ptr GLcomplice_948(), GLcomplice_949(), GLcomplice_950(), GLcomplice_951();
+static Ptr GLcomplice_952(), GLcomplice_953(), GLcomplice_954(), GLcomplice_955();
+static Ptr GLcomplice_956(), GLcomplice_957(), GLcomplice_958(), GLcomplice_959();
+static Ptr GLcomplice_960(), GLcomplice_961(), GLcomplice_962(), GLcomplice_963();
+static Ptr GLcomplice_964(), GLcomplice_965(), GLcomplice_966(), GLcomplice_967();
+static Ptr GLcomplice_968(), GLcomplice_969(), GLcomplice_970(), GLcomplice_971();
+static Ptr GLcomplice_972(), GLcomplice_973(), GLcomplice_975(), GLcomplice_976();
+static Ptr GLcomplice_977(), GLcomplice_978(), GLcomplice_979(), GLcomplice_980();
+static Ptr GLcomplice_981(), GLcomplice_982(), GLcomplice_983(), GLcomplice_984();
+static Ptr GLcomplice_985(), GLcomplice_986(), GLcomplice_987(), GLcomplice_988();
+static Ptr GLcomplice_989(), GLcomplice_990(), GLcomplice_991(), GLcomplice_992();
+static Ptr GLcomplice_993(), GLcomplice_994(), GLcomplice_995(), GLcomplice_996();
+static Ptr GLcomplice_997(), GLcomplice_998(), GLcomplice_999(), GLcomplice_1000();
+static Ptr GLcomplice_1001(), GLcomplice_1002(), GLcomplice_1003(), GLcomplice_1004();
+static Ptr GLcomplice_1006(), GLcomplice_1007(), GLcomplice_1008(), GLcomplice_1009();
+static Ptr GLcomplice_1010(), GLcomplice_1011(), GLcomplice_1012(), GLcomplice_1013();
+static Ptr GLcomplice_1014(), GLcomplice_1015(), GLcomplice_1016(), GLcomplice_1017();
+static Ptr GLcomplice_1018(), GLcomplice_1020(), GLcomplice_1021(), GLcomplice_1023();
+static Ptr GLcomplice_1024(), GLcomplice_1026(), GLcomplice_1027(), GLcomplice_1028();
+static Ptr GLcomplice_1029(), GLcomplice_1030(), GLcomplice_1032(), GLcomplice_1033();
+static Ptr GLcomplice_1034(), GLcomplice_1036(), GLcomplice_1037(), GLcomplice_1039();
+static Ptr GLcomplice_1041(), GLcomplice_1042(), GLcomplice_1044(), GLcomplice_1045();
+static Ptr GLcomplice_1046(), GLcomplice_1047(), GLcomplice_1048(), GLcomplice_1049();
+static Ptr GLcomplice_1050(), GLcomplice_1051(), GLcomplice_1053(), GLcomplice_1054();
+static Ptr GLcomplice_1056(), GLcomplice_1057(), GLcomplice_1059(), GLcomplice_1061();
+static Ptr GLcomplice_1063(), GLcomplice_1064(), GLcomplice_1066(), GLcomplice_1068();
+static Ptr GLcomplice_1069(), GLcomplice_1071(), GLcomplice_1072(), GLcomplice_1074();
+static Ptr GLcomplice_1075(), GLcomplice_1077(), GLcomplice_1078(), GLcomplice_1079();
+static Ptr GLcomplice_1080(), GLcomplice_1082(), GLcomplice_1083(), GLcomplice_1084();
+static Ptr GLcomplice_1086(), GLcomplice_1087(), GLcomplice_1089(), GLcomplice_1090();
+static Ptr GLcomplice_1092(), GLcomplice_1093(), GLcomplice_1095(), GLcomplice_1096();
+static Ptr GLcomplice_1097(), GLcomplice_1098(), GLcomplice_1100(), GLcomplice_1101();
+static Ptr GLcomplice_1103(), GLcomplice_1104(), GLcomplice_1106(), GLcomplice_1107();
+static Ptr GLcomplice_1109(), GLcomplice_1110(), GLcomplice_1111(), GLcomplice_1112();
+static Ptr GLcomplice_1113(), GLcomplice_1114(), GLcomplice_1115(), GLcomplice_1116();
+static Ptr GLcomplice_1117(), GLcomplice_1118(), GLcomplice_1120(), GLcomplice_1121();
+static Ptr GLcomplice_1123(), GLcomplice_1125(), GLcomplice_1127(), GLcomplice_1128();
+static Ptr GLcomplice_1130(), GLcomplice_1132(), GLcomplice_1134(), GLcomplice_1135();
+static Ptr GLcomplice_1137(), GLcomplice_1139(), GLcomplice_1141(), GLcomplice_1143();
+static Ptr GLcomplice_1145(), GLcomplice_1147(), GLcomplice_1149(), GLcomplice_1151();
+static Ptr GLcomplice_1153(), GLcomplice_1154(), GLcomplice_1156(), GLcomplice_1157();
+static Ptr GLcomplice_1158(), GLcomplice_1159(), GLcomplice_1161(), GLcomplice_1162();
+static Ptr GLcomplice_1164(), GLcomplice_1165(), GLcomplice_1166(), GLcomplice_1167();
+static Ptr GLcomplice_1169(), GLcomplice_1171(), GLcomplice_1172(), GLcomplice_1174();
+static Ptr GLcomplice_1176(), GLcomplice_1177(), GLcomplice_1179(), GLcomplice_1180();
+static Ptr GLcomplice_1181(), GLcomplice_1183(), GLcomplice_1185(), GLcomplice_1187();
+static Ptr GLcomplice_1188(), GLcomplice_1189(), GLcomplice_1191(), GLcomplice_1193();
+static Ptr GLcomplice_1194(), GLcomplice_1196(), GLcomplice_1197(), GLcomplice_1198();
+static Ptr GLcomplice_1199(), GLcomplice_1200(), GLcomplice_1201(), GLcomplice_1202();
+static Ptr GLcomplice_1203(), GLcomplice_1204(), GLcomplice_1205(), GLcomplice_1207();
+static Ptr GLcomplice_1208(), GLcomplice_1209(), GLcomplice_1210(), GLcomplice_1211();
+static Ptr GLcomplice_1212(), GLcomplice_1214(), GLcomplice_1215(), GLcomplice_1216();
+static Ptr GLcomplice_1217(), GLcomplice_1219(), GLcomplice_1220(), GLcomplice_1222();
+static Ptr GLcomplice_1223(), GLcomplice_1225(), GLcomplice_1227(), GLcomplice_1228();
+static Ptr GLcomplice_1230(), GLcomplice_1231(), GLcomplice_1233(), GLcomplice_1235();
+static Ptr GLcomplice_1237(), GLcomplice_1238(), GLcomplice_1239(), GLcomplice_1240();
+static Ptr GLcomplice_1241(), GLcomplice_1242(), GLcomplice_1243(), GLcomplice_1245();
+static Ptr GLcomplice_1246(), GLcomplice_1247(), GLcomplice_1248(), GLcomplice_1250();
+static Ptr GLcomplice_1251(), GLcomplice_1252(), GLcomplice_1253(), GLcomplice_1254();
+static Ptr GLcomplice_1255(), GLcomplice_1256(), GLcomplice_1257(), GLcomplice_1258();
+static Ptr GLcomplice_1259(), GLcomplice_1260(), GLcomplice_1261(), GLcomplice_1262();
+static Ptr GLcomplice_1263(), GLcomplice_1264(), GLcomplice_1265(), GLcomplice_1266();
+static Ptr GLcomplice_1268(), GLcomplice_1269(), GLcomplice_1270(), GLcomplice_1271();
+static Ptr GLcomplice_1272(), GLcomplice_1273(), GLcomplice_1274(), GLcomplice_1275();
+static Ptr GLcomplice_1277(), GLcomplice_1279(), GLcomplice_1281(), GLcomplice_1282();
+static Ptr GLcomplice_1284(), GLcomplice_1285(), GLcomplice_1286(), GLcomplice_1288();
+static Ptr GLcomplice_1290(), GLcomplice_1292(), GLcomplice_1293(), GLcomplice_1295();
+static Ptr GLcomplice_1297(), GLcomplice_1298(), GLcomplice_1300(), GLcomplice_1302();
+static Ptr GLcomplice_1303(), GLcomplice_1304(), GLcomplice_1306(), GLcomplice_1307();
+static Ptr GLcomplice_1308(), GLcomplice_1309(), GLcomplice_1310(), GLcomplice_1311();
+static Ptr GLcomplice_1313(), GLcomplice_1315(), GLcomplice_1317(), GLcomplice_1318();
+static Ptr GLcomplice_1320(), GLcomplice_1322(), GLcomplice_1323(), GLcomplice_1325();
+static Ptr GLcomplice_1326(), GLcomplice_1327(), GLcomplice_1329(), GLcomplice_1331();
+static Ptr GLcomplice_1333(), GLcomplice_1335(), GLcomplice_1336(), GLcomplice_1337();
+static Ptr GLcomplice_1338(), GLcomplice_1339(), GLcomplice_1340(), GLcomplice_1341();
+static Ptr GLcomplice_1342(), GLcomplice_1344(), GLcomplice_1345(), GLcomplice_1347();
+static Ptr GLcomplice_1349(), GLcomplice_1350(), GLcomplice_1352(), GLcomplice_1354();
+static Ptr GLcomplice_1355(), GLcomplice_1356(), GLcomplice_1357(), GLcomplice_1358();
+static Ptr GLcomplice_1360(), GLcomplice_1362(), GLcomplice_1363(), GLcomplice_1365();
+static Ptr GLcomplice_1366(), GLcomplice_1367(), GLcomplice_1369(), GLcomplice_1370();
+static Ptr GLcomplice_1372(), GLcomplice_1373(), GLcomplice_1375(), GLcomplice_1376();
+static Ptr GLcomplice_1377(), GLcomplice_1378(), GLcomplice_1379(), GLcomplice_1380();
+static Ptr GLcomplice_1381(), GLcomplice_1382(), GLcomplice_1383(), GLcomplice_1384();
+static Ptr GLcomplice_1385(), GLcomplice_1386(), GLcomplice_1388(), GLcomplice_1389();
+static Ptr GLcomplice_1390(), GLcomplice_1391(), GLcomplice_1393(), GLcomplice_1394();
+static Ptr GLcomplice_1395(), GLcomplice_1396(), GLcomplice_1398(), GLcomplice_1399();
+static Ptr GLcomplice_1400(), GLcomplice_1402(), GLcomplice_1403(), GLcomplice_1405();
+static Ptr GLcomplice_1406(), GLcomplice_1407(), GLcomplice_1408(), GLcomplice_1410();
+static Ptr GLcomplice_1411(), GLcomplice_1413(), GLcomplice_1414(), GLcomplice_1415();
+static Ptr GLcomplice_1416(), GLcomplice_1417(), GLcomplice_1418(), GLcomplice_1419();
+static Ptr GLcomplice_1421(), GLcomplice_1423(), GLcomplice_1424(), GLcomplice_1426();
+static Ptr GLcomplice_1427(), GLcomplice_1428(), GLcomplice_1429(), GLcomplice_1430();
+static Ptr GLcomplice_1432(), GLcomplice_1433(), GLcomplice_1434(), GLcomplice_1435();
+static Ptr GLcomplice_1437(), GLcomplice_1439(), GLcomplice_1440(), GLcomplice_1441();
+static Ptr GLcomplice_1442(), GLcomplice_1443(), GLcomplice_1444(), GLcomplice_1446();
+static Ptr GLcomplice_1447(), GLcomplice_1448(), GLcomplice_1449(), GLcomplice_1450();
+static Ptr GLcomplice_1452(), GLcomplice_1453(), GLcomplice_1454(), GLcomplice_1455();
+static Ptr GLcomplice_1456(), GLcomplice_1458(), GLcomplice_1459(), GLcomplice_1460();
+static Ptr GLcomplice_1461(), GLcomplice_1462(), GLcomplice_1464(), GLcomplice_1466();
+static Ptr GLcomplice_1467(), GLcomplice_1468(), GLcomplice_1469(), GLcomplice_1471();
+static Ptr GLcomplice_1473(), GLcomplice_1474(), GLcomplice_1475(), GLcomplice_1476();
+static Ptr GLcomplice_1477(), GLcomplice_1479(), GLcomplice_1480(), GLcomplice_1482();
+static Ptr GLcomplice_1483(), GLcomplice_1484(), GLcomplice_1485(), GLcomplice_1486();
+static Ptr GLcomplice_1488(), GLcomplice_1490(), GLcomplice_1491(), GLcomplice_1492();
+static Ptr GLcomplice_1494(), GLcomplice_1496(), GLcomplice_1497(), GLcomplice_1499();
+static Ptr GLcomplice_1500(), GLcomplice_1502(), GLcomplice_1503(), GLcomplice_1505();
+static Ptr GLcomplice_1507(), GLcomplice_1508(), GLcomplice_1510(), GLcomplice_1511();
+static Ptr GLcomplice_1513(), GLcomplice_1514(), GLcomplice_1515(), GLcomplice_1516();
+static Ptr GLcomplice_1517(), GLcomplice_1518(), GLcomplice_1519(), GLcomplice_1521();
+static Ptr GLcomplice_1523(), GLcomplice_1524(), GLcomplice_1526(), GLcomplice_1527();
+static Ptr GLcomplice_1529(), GLcomplice_1530(), GLcomplice_1531(), GLcomplice_1532();
+static Ptr GLcomplice_1534(), GLcomplice_1536(), GLcomplice_1538(), GLcomplice_1539();
+static Ptr GLcomplice_1540(), GLcomplice_1542(), GLcomplice_1543(), GLcomplice_1544();
+static Ptr GLcomplice_1545(), GLcomplice_1546(), GLcomplice_1548(), GLcomplice_1550();
+static Ptr GLcomplice_1552(), GLcomplice_1553(), GLcomplice_1555(), GLcomplice_1557();
+static Ptr GLcomplice_1559(), GLcomplice_1560(), GLcomplice_1562(), GLcomplice_1564();
+static Ptr GLcomplice_1565(), GLcomplice_1566(), GLcomplice_1568(), GLcomplice_1570();
+static Ptr GLcomplice_1572(), GLcomplice_1573(), GLcomplice_1575(), GLcomplice_1576();
+static Ptr GLcomplice_1577(), GLcomplice_1579(), GLcomplice_1581(), GLcomplice_1582();
+static Ptr GLcomplice_1583(), GLcomplice_1584(), GLcomplice_1585(), GLcomplice_1587();
+static Ptr GLcomplice_1588(), GLcomplice_1589(), GLcomplice_1590(), GLcomplice_1591();
+static Ptr GLcomplice_1593(), GLcomplice_1594(), GLcomplice_1595(), GLcomplice_1596();
+static Ptr GLcomplice_1597(), GLcomplice_1599(), GLcomplice_1601(), GLcomplice_1602();
+static Ptr GLcomplice_1604(), GLcomplice_1606(), GLcomplice_1607(), GLcomplice_1609();
+static Ptr GLcomplice_1611(), GLcomplice_1612(), GLcomplice_1613(), GLcomplice_1614();
+static Ptr GLcomplice_1616(), GLcomplice_1617(), GLcomplice_1618(), GLcomplice_1620();
+static Ptr GLcomplice_1622(), GLcomplice_1624(), GLcomplice_1625(), GLcomplice_1627();
+static Ptr GLcomplice_1629(), GLcomplice_1630(), GLcomplice_1631(), GLcomplice_1632();
+static Ptr GLcomplice_1634(), GLcomplice_1635(), GLcomplice_1637(), GLcomplice_1638();
+static Ptr GLcomplice_1639(), GLcomplice_1641(), GLcomplice_1642(), GLcomplice_1644();
+static Ptr GLcomplice_1645(), GLcomplice_1647(), GLcomplice_1648(), GLcomplice_1650();
+static Ptr GLcomplice_1652(), GLcomplice_1654(), GLcomplice_1655(), GLcomplice_1656();
+static Ptr GLcomplice_1657(), GLcomplice_1658(), GLcomplice_1659(), GLcomplice_1661();
+static Ptr GLcomplice_1663(), GLcomplice_1664(), GLcomplice_1665(), GLcomplice_1666();
+static Ptr GLcomplice_1667(), GLcomplice_1668(), GLcomplice_1669(), GLcomplice_1670();
+static Ptr GLcomplice_1671(), GLcomplice_1672(), GLcomplice_1673(), GLcomplice_1674();
+static Ptr GLcomplice_1675(), GLcomplice_1676(), GLcomplice_1677(), GLcomplice_1678();
+static Ptr GLcomplice_1679(), GLcomplice_1680(), GLcomplice_1681(), GLcomplice_1682();
+static Ptr GLcomplice_1683(), GLcomplice_1684(), GLcomplice_1685(), GLcomplice_1686();
+static Ptr GLcomplice_1687(), GLcomplice_1688(), GLcomplice_1690(), GLcomplice_1691();
+static Ptr GLcomplice_1692(), GLcomplice_1693(), GLcomplice_1694(), GLcomplice_1695();
+static Ptr GLcomplice_1696(), GLcomplice_1697(), GLcomplice_1698(), GLcomplice_1699();
+static Ptr GLcomplice_1700(), GLcomplice_1701(), GLcomplice_1702(), GLcomplice_1703();
+static Ptr GLcomplice_1705(), GLcomplice_1707(), GLcomplice_1708(), GLcomplice_1709();
+static Ptr GLcomplice_1710(), GLcomplice_1711(), GLcomplice_1712(), GLcomplice_1714();
+static Ptr GLcomplice_1716(), GLcomplice_1718(), GLcomplice_1720(), GLcomplice_1722();
+static Ptr GLcomplice_1724(), GLcomplice_1726(), GLcomplice_1727(), GLcomplice_1728();
+static Ptr GLcomplice_1730(), GLcomplice_1732(), GLcomplice_1733(), GLcomplice_1735();
+static Ptr GLcomplice_1737(), GLcomplice_1739(), GLcomplice_1741(), GLcomplice_1743();
+static Ptr GLcomplice_1744(), GLcomplice_1746(), GLcomplice_1748(), GLcomplice_1750();
+static Ptr GLcomplice_1752(), GLcomplice_1754(), GLcomplice_1755(), GLcomplice_1757();
+static Ptr GLcomplice_1759(), GLcomplice_1760(), GLcomplice_1762(), GLcomplice_1764();
+static Ptr GLcomplice_1765(), GLcomplice_1767(), GLcomplice_1769(), GLcomplice_1771();
+static Ptr GLcomplice_1772(), GLcomplice_1774(), GLcomplice_1776(), GLcomplice_1778();
+static Ptr GLcomplice_1780(), GLcomplice_1782(), GLcomplice_1783(), GLcomplice_1785();
+static Ptr GLcomplice_1787(), GLcomplice_1788(), GLcomplice_1790(), GLcomplice_1792();
+static Ptr GLcomplice_1794(), GLcomplice_1795(), GLcomplice_1797(), GLcomplice_1799();
+static Ptr GLcomplice_1801(), GLcomplice_1802(), GLcomplice_1804(), GLcomplice_1806();
+static Ptr GLcomplice_1808(), GLcomplice_1810(), GLcomplice_1812(), GLcomplice_1814();
+static Ptr GLcomplice_1816(), GLcomplice_1818(), GLcomplice_1820(), GLcomplice_1822();
+static Ptr GLcomplice_1823(), GLcomplice_1825(), GLcomplice_1826(), GLcomplice_1828();
+static Ptr GLcomplice_1830(), GLcomplice_1831(), GLcomplice_1833(), GLcomplice_1835();
+static Ptr GLcomplice_1837(), GLcomplice_1838(), GLcomplice_1840(), GLcomplice_1842();
+static Ptr GLcomplice_1843(), GLcomplice_1845(), GLcomplice_1847(), GLcomplice_1849();
+static Ptr GLcomplice_1851(), GLcomplice_1853(), GLcomplice_1854(), GLcomplice_1855();
+static Ptr GLcomplice_1857(), GLcomplice_1858(), GLcomplice_1859(), GLcomplice_1860();
+static Ptr GLcomplice_1862(), GLcomplice_1863(), GLcomplice_1865(), GLcomplice_1866();
+static Ptr GLcomplice_1867(), GLcomplice_1868(), GLcomplice_1869(), GLcomplice_1870();
+static Ptr GLcomplice_1872(), GLcomplice_1874(), GLcomplice_1875(), GLcomplice_1876();
+static Ptr GLcomplice_1878(), GLcomplice_1879(), GLcomplice_1881(), GLcomplice_1882();
+static Ptr GLcomplice_1883(), GLcomplice_1885(), GLcomplice_1887(), GLcomplice_1888();
+static Ptr GLcomplice_1890(), GLcomplice_1891(), GLcomplice_1892(), GLcomplice_1894();
+static Ptr GLcomplice_1895(), GLcomplice_1897(), GLcomplice_1898(), GLcomplice_1900();
+static Ptr GLcomplice_1902(), GLcomplice_1904(), GLcomplice_1905(), GLcomplice_1906();
+static Ptr GLcomplice_1907(), GLcomplice_1908(), GLcomplice_1909(), GLcomplice_1910();
+static Ptr GLcomplice_1911(), GLcomplice_1912(), GLcomplice_1913(), GLcomplice_1915();
+static Ptr GLcomplice_1916(), GLcomplice_1918(), GLcomplice_1919(), GLcomplice_1921();
+static Ptr GLcomplice_1922(), GLcomplice_1924(), GLcomplice_1926(), GLcomplice_1928();
+static Ptr GLcomplice_1929(), GLcomplice_1930(), GLcomplice_1931(), GLcomplice_1933();
+static Ptr GLcomplice_1934(), GLcomplice_1935(), GLcomplice_1936(), GLcomplice_1937();
+static Ptr GLcomplice_1939(), GLcomplice_1940(), GLcomplice_1942(), GLcomplice_1944();
+static Ptr GLcomplice_1946(), GLcomplice_1947(), GLcomplice_1948(), GLcomplice_1950();
+static Ptr GLcomplice_1952(), GLcomplice_1954(), GLcomplice_1955(), GLcomplice_1956();
+static Ptr GLcomplice_1957(), GLcomplice_1958(), GLcomplice_1960(), GLcomplice_1962();
+static Ptr GLcomplice_1963(), GLcomplice_1964(), GLcomplice_1966(), GLcomplice_1968();
+static Ptr GLcomplice_1969(), GLcomplice_1970(), GLcomplice_1972(), GLcomplice_1973();
+static Ptr GLcomplice_1974(), GLcomplice_1976(), GLcomplice_1978(), GLcomplice_1979();
+static Ptr GLcomplice_1981(), GLcomplice_1983(), GLcomplice_1984(), GLcomplice_1985();
+static Ptr GLcomplice_1987(), GLcomplice_1989(), GLcomplice_1991(), GLcomplice_1993();
+static Ptr GLcomplice_1994(), GLcomplice_1996(), GLcomplice_1997(), GLcomplice_1999();
+static Ptr GLcomplice_2001(), GLcomplice_2003(), GLcomplice_2005(), GLcomplice_2006();
+static Ptr GLcomplice_2008(), GLcomplice_2010(), GLcomplice_2012(), GLcomplice_2013();
+static Ptr GLcomplice_2014(), GLcomplice_2015(), GLcomplice_2016(), GLcomplice_2017();
+static Ptr GLcomplice_2018(), GLcomplice_2019(), GLcomplice_2020(), GLcomplice_2021();
+static Ptr GLcomplice_2022(), GLcomplice_2023(), GLcomplice_2024(), GLcomplice_2026();
+static Ptr GLcomplice_2028(), GLcomplice_2030(), GLcomplice_2031(), GLcomplice_2033();
+static Ptr GLcomplice_2034(), GLcomplice_2036(), GLcomplice_2038(), GLcomplice_2039();
+static Ptr GLcomplice_2041(), GLcomplice_2043(), GLcomplice_2045(), GLcomplice_2047();
+static Ptr GLcomplice_2048(), GLcomplice_2050(), GLcomplice_2052(), GLcomplice_2054();
+static Ptr GLcomplice_2056(), GLcomplice_2058(), GLcomplice_2060(), GLcomplice_2062();
+static Ptr GLcomplice_2063(), GLcomplice_2065(), GLcomplice_2067(), GLcomplice_2069();
+static Ptr GLcomplice_2070(), GLcomplice_2072(), GLcomplice_2074(), GLcomplice_2076();
+static Ptr GLcomplice_2078(), GLcomplice_2079(), GLcomplice_2081(), GLcomplice_2083();
+static Ptr GLcomplice_2085(), GLcomplice_2087(), GLcomplice_2088(), GLcomplice_2090();
+static Ptr GLcomplice_2092(), GLcomplice_2094(), GLcomplice_2095(), GLcomplice_2097();
+static Ptr GLcomplice_2099(), GLcomplice_2100(), GLcomplice_2102(), GLcomplice_2104();
+static Ptr GLcomplice_2106(), GLcomplice_2108(), GLcomplice_2110(), GLcomplice_2112();
+static Ptr GLcomplice_2114(), GLcomplice_2115(), GLcomplice_2117(), GLcomplice_2119();
+static Ptr GLcomplice_2121(), GLcomplice_2123(), GLcomplice_2124(), GLcomplice_2126();
+static Ptr GLcomplice_2127(), GLcomplice_2129(), GLcomplice_2131(), GLcomplice_2133();
+static Ptr GLcomplice_2135(), GLcomplice_2137(), GLcomplice_2139(), GLcomplice_2140();
+static Ptr GLcomplice_2142(), GLcomplice_2143(), GLcomplice_2144(), GLcomplice_2146();
+static Ptr GLcomplice_2148(), GLcomplice_2150(), GLcomplice_2152(), GLcomplice_2154();
+static Ptr GLcomplice_2155(), GLcomplice_2157(), GLcomplice_2158(), GLcomplice_2160();
+static Ptr GLcomplice_2161(), GLcomplice_2163(), GLcomplice_2165(), GLcomplice_2167();
+static Ptr GLcomplice_2169(), GLcomplice_2171(), GLcomplice_2173(), GLcomplice_2175();
+static Ptr GLcomplice_2176(), GLcomplice_2178(), GLcomplice_2180(), GLcomplice_2182();
+static Ptr GLcomplice_2183(), GLcomplice_2185(), GLcomplice_2187(), GLcomplice_2189();
+static Ptr GLcomplice_2191(), GLcomplice_2193(), GLcomplice_2194(), GLcomplice_2196();
+static Ptr GLcomplice_2198(), GLcomplice_2200(), GLcomplice_2202(), GLcomplice_2204();
+static Ptr GLcomplice_2205(), GLcomplice_2207(), GLcomplice_2209(), GLcomplice_2211();
+static Ptr GLcomplice_2213(), GLcomplice_2215(), GLcomplice_2216(), GLcomplice_2218();
+static Ptr GLcomplice_2219(), GLcomplice_2220(), GLcomplice_2221(), GLcomplice_2222();
+static Ptr GLcomplice_2224(), GLcomplice_2225(), GLcomplice_2227(), GLcomplice_2228();
+static Ptr GLcomplice_2230(), GLcomplice_2232(), GLcomplice_2233(), GLcomplice_2234();
+static Ptr GLcomplice_2235(), GLcomplice_2236(), GLcomplice_2238(), GLcomplice_2241();
+static Ptr GLcomplice_2243(), GLcomplice_2245(), GLcomplice_2246(), GLcomplice_2248();
+static Ptr GLcomplice_2249(), GLcomplice_2251(), GLcomplice_2253(), GLcomplice_2255();
+static Ptr GLcomplice_2256(), GLcomplice_2258(), GLcomplice_2259(), GLcomplice_2261();
+static Ptr GLcomplice_2263(), GLcomplice_2265(), GLcomplice_2267(), GLcomplice_2269();
+static Ptr GLcomplice_2270(), GLcomplice_2272(), GLcomplice_2273(), GLcomplice_2274();
+static Ptr GLcomplice_2275(), GLcomplice_2277(), GLcomplice_2279(), GLcomplice_2281();
+static Ptr GLcomplice_2283(), GLcomplice_2285(), GLcomplice_2286(), GLcomplice_2288();
+static Ptr GLcomplice_2289(), GLcomplice_2290(), GLcomplice_2291(), GLcomplice_2293();
+static Ptr GLcomplice_2295(), GLcomplice_2297(), GLcomplice_2298(), GLcomplice_2299();
+static Ptr GLcomplice_2300(), GLcomplice_2301(), GLcomplice_2303(), GLcomplice_2304();
+static Ptr GLcomplice_2306(), GLcomplice_2308(), GLcomplice_2310(), GLcomplice_2312();
+static Ptr GLcomplice_2314(), GLcomplice_2316(), GLcomplice_2318(), GLcomplice_2320();
+static Ptr GLcomplice_2321(), GLcomplice_2323(), GLcomplice_2325(), GLcomplice_2326();
+static Ptr GLcomplice_2328(), GLcomplice_2330(), GLcomplice_2331(), GLcomplice_2333();
+static Ptr GLcomplice_2334(), GLcomplice_2335(), GLcomplice_2336(), GLcomplice_2337();
+static Ptr GLcomplice_2338(), GLcomplice_2339(), GLcomplice_2340(), GLcomplice_2341();
+static Ptr GLcomplice_2342(), GLcomplice_2344(), GLcomplice_2346(), GLcomplice_2348();
+static Ptr GLcomplice_2350(), GLcomplice_2351(), GLcomplice_2352(), GLcomplice_2354();
+static Ptr GLcomplice_2355(), GLcomplice_2356(), GLcomplice_2357(), GLcomplice_2359();
+static Ptr GLcomplice_2360(), GLcomplice_2362(), GLcomplice_2364(), GLcomplice_2366();
+static Ptr GLcomplice_2367(), GLcomplice_2368(), GLcomplice_2369(), GLcomplice_2370();
+static Ptr GLcomplice_2371(), GLcomplice_2372(), GLcomplice_2373(), GLcomplice_2374();
+static Ptr GLcomplice_2375(), GLcomplice_2376(), GLcomplice_2377(), GLcomplice_2378();
+static Ptr GLcomplice_2379(), GLcomplice_2381(), GLcomplice_2382(), GLcomplice_2383();
+static Ptr GLcomplice_2384(), GLcomplice_2385(), GLcomplice_2386(), GLcomplice_2387();
+static Ptr GLcomplice_2388(), GLcomplice_2391(), GLcomplice_2392(), GLcomplice_2393();
+static Ptr GLcomplice_2395(), GLcomplice_2396(), GLcomplice_2397(), GLcomplice_2398();
+static Ptr GLcomplice_2399(), GLcomplice_2400(), GLcomplice_2402(), GLcomplice_2403();
+static Ptr GLcomplice_2404(), GLcomplice_2406(), GLcomplice_2407(), GLcomplice_2408();
+static Ptr GLcomplice_2409(), GLcomplice_2411(), GLcomplice_2413(), GLcomplice_2415();
+static Ptr GLcomplice_2417(), GLcomplice_2418(), GLcomplice_2419(), GLcomplice_2420();
+static Ptr GLcomplice_2421(), GLcomplice_2423(), GLcomplice_2424(), GLcomplice_2425();
+static Ptr GLcomplice_2427(), GLcomplice_2428(), GLcomplice_2431(), GLcomplice_2432();
+static Ptr GLcomplice_2433(), GLcomplice_2435(), GLcomplice_2436(), GLcomplice_2438();
+static Ptr GLcomplice_2439(), GLcomplice_2441(), GLcomplice_2443(), GLcomplice_2444();
+static Ptr GLcomplice_2447(), GLcomplice_2448(), GLcomplice_2449(), GLcomplice_2451();
+static Ptr GLcomplice_2453(), GLcomplice_2454(), GLcomplice_2455(), GLcomplice_2457();
+static Ptr GLcomplice_2458(), GLcomplice_2460(), GLcomplice_2461(), GLcomplice_2462();
+static Ptr GLcomplice_2464(), GLcomplice_2465(), GLcomplice_2466(), GLcomplice_2467();
+static Ptr GLcomplice_2468(), GLcomplice_2470(), GLcomplice_2471(), GLcomplice_2474();
+static Ptr GLcomplice_2476(), GLcomplice_2477(), GLcomplice_2478(), GLcomplice_2479();
+static Ptr GLcomplice_2480(), GLcomplice_2481(), GLcomplice_2482();
+
+/*      trace functions */
+static Ptr GDcomplice_2483(), GDcomplice_2484(), GDcomplice_2485(), GDcomplice_2486();
+static Ptr GDcomplice_2487(), GDcomplice_2488(), GDcomplice_2489(), GDcomplice_2490();
+static Ptr GDcomplice_2491(), GDcomplice_2492(), GDcomplice_2493(), GDcomplice_2494();
+static Ptr GDcomplice_2495(), GDcomplice_2496(), GDcomplice_2497(), GDcomplice_2498();
+static Ptr GDcomplice_2499(), GDcomplice_2500(), GDcomplice_2501(), GDcomplice_2502();
+static Ptr GDcomplice_2503(), GDcomplice_2504(), GDcomplice_2505(), GDcomplice_2506();
+static Ptr GDcomplice_2507(), GDcomplice_2508(), GDcomplice_2509(), GDcomplice_2510();
+static Ptr GDcomplice_2511(), GDcomplice_2512(), GDcomplice_2513(), GDcomplice_2514();
+static Ptr GDcomplice_2515(), GDcomplice_2516(), GDcomplice_2517();
+
+static Ptr GYcomplice[606];
+
+static const char GNcomplice[] = "complice";
+static const char GTcomplice[] = "Thu Aug  26 93 10:15:12 ";
+
+static struct GellEntry GWcomplice[] = {
+        {GLcomplice_1,  GDcomplice_2483,        6},     /* defmacro-open */
+        {GLcomplice_6,  GDcomplice_2484,        3},     /* make-macro-open */
+        {GLcomplice_11, GDcomplice_2485,        2},     /* macro-openp */
+        {GLcomplice_12, GDcomplice_2486,        2},     /* remove-macro-open */
+        {GLcomplice_259,        GDcomplice_2487,        2},     /* #:complice:macroexpand */
+        {GLcomplice_260,        GDcomplice_2488,        2},     /* #:complice:flatt */
+        {GLcomplice_264,        GDcomplice_2489,        3},     /* #:complice:count */
+        {GLcomplice_268,        GDcomplice_2490,        3},     /* #:complice:complement */
+        {GLcomplice_271,        GDcomplice_2491,        4},     /* #:complice:setcassq */
+        {GLcomplice_272,        GDcomplice_2492,        6},     /* #:complice:defvar */
+        {GLcomplice_279,        GDcomplice_2493,        2},     /* #:complice:globalvarp */
+        {GLcomplice_282,        GDcomplice_2494,        2},     /* #:complice:declareglobalvar */
+        {GLcomplice_283,        GDcomplice_2495,        3},     /* #:complice:get-all-def-in-files */
+        {GLcomplice_350,        GDcomplice_2496,        3},     /* #:complice:error */
+        {GLcomplice_351,        GDcomplice_2497,        4},     /* #:complice:errorf */
+        {GLcomplice_357,        GDcomplice_2498,        3},     /* #:complice:warning */
+        {GLcomplice_358,        GDcomplice_2499,        4},     /* #:complice:warningf */
+        {GLcomplice_362,        GDcomplice_2500,        3},     /* #:complice:ierror */
+        {GLcomplice_365,        GDcomplice_2501,        1},     /* #:complice:set-error */
+        {GLcomplice_374,        GDcomplice_2502,        1},     /* #:complice:error:eol */
+        {GLcomplice_377,        GDcomplice_2503,        4},     /* #:complice:syserror */
+        {GLcomplice_382,        GDcomplice_2504,        2},     /* #:complice:pass-one */
+        {GLcomplice_674,        GDcomplice_2505,        2},     /* makemodule */
+        {GLcomplice_848,        GDcomplice_2506,        2},     /* makemodule-pass-two */
+        {GLcomplice_909,        GDcomplice_2507,        4},     /* #:complice:generate-in-file */
+        {GLcomplice_971,        GDcomplice_2508,        3},     /* pretty-lap */
+        {GLcomplice_1014,       GDcomplice_2509,        2},     /* #:complice:peephole */
+        {GLcomplice_1050,       GDcomplice_2510,        4},     /* #:complice:pass-two */
+        {GLcomplice_2377,       GDcomplice_2511,        6},     /* dont-compile */
+        {GLcomplice_2387,       GDcomplice_2512,        6},     /* compile */
+        {GLcomplice_2388,       GDcomplice_2513,        5},     /* compiler */
+        {GLcomplice_2428,       GDcomplice_2514,        5},     /* compile-all-in-core */
+        {GLcomplice_2433,       GDcomplice_2515,        2},     /* #:compile-all-in-core:g104 */
+        {GLcomplice_2444,       GDcomplice_2516,        5},     /* compilefiles */
+        {GLcomplice_2471,       GDcomplice_2517,        5},     /* compilemodule */
+};
+
+struct GellModule GZcomplice = {
+        GELLMODULESTAMP,
+        GNcomplice,
+        GTcomplice,
+        GYcomplice,
+        35,
+        GWcomplice};

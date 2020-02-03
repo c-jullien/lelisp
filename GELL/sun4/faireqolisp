@@ -1,0 +1,21 @@
+./qolispbin -code 0 -heap 400 \
+ -symbol 5 -string 6 -vector 5 -cons 5 -float 0 <<EOI
+
+(defvar gell-elaboration-for-trace-p t)
+
+(loadfile "qolispSCH" t)
+
+(loadfile "../Cllib/elab-llib.ll" t)
+
+(loadfile "../Casquell/elab-oracle.ll" t)
+
+
+(gell-save-core "llcore/qolisp.core"
+                "Ready with Le-Lisp GELL + ASQUELL Oracle (qolisp)"
+                'core-init-std)
+
+
+EOI
+
+
+

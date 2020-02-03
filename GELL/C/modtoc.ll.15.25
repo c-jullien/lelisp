@@ -1,0 +1,2387 @@
+; .EnTete "Le_Lisp Version 15.2" " " "Traducteur de Modules Le-Lisp en C" "86c"
+; .EnPied "modtoc.ll" "%" "modtoc.ll"
+; .sp 2
+; .SuperTitre "Traducteur de Modules Le-Lisp en C : modtoc"
+
+(unless (>= (version) 15.2)
+        (error 'load 'erricf 'modtoc ))
+
+(defvar #:sys-package:colon 'modtoc)
+
+(unless (featurep 'date)
+        (libload date)
+        (libload libdate))
+
+(current-language 'english)
+
+#|
+
+Ce traducteur re'alise la conversion d'un module Le-Lisp compile' avec
+Complice en un programme C utilisable dans des exe'cutifs GELL.
+
+
+  <file1>.ll  |             <module>.lo   |              <module>.c
+  <file2>.ll  |    ==>                    |    ==>       <module>.h
+    ...       | (complice)                |  (modtoc)    <module>.le
+  <fileN>.ll  |             <module>.lm   |
+  <module>.lm |
+
+Il se compose d'un traducteur ge'ne'ral : "modtoc.ll" ainsi que de 2
+optimiseurs optionnels globaux (i.e. travaillant sur la liste LAP) :
+
+  1 - "modpeep.ll" un "peephole" optimiseur qui travaille sur les listes 
+      d'instructions LAP et qui retourne une nouvelle liste LAP valide
+  2 - "modopt.ll" un  optimiseur qui calcule la liste des e'tiquettes Lap qui
+      peuvent e^tre traduites par de ve'ritables e'tiquettes C accessibles
+      par de vilains "goto" et non pas sous forme de proce'dures C.
+
+Ce traducteur re'alise e'galement la conversion d'un module LLM3 traduit au
+format LAP par l'utilitaire "llm3tolo". Cela permet de n'avoir qu'un seul
+traducteur et de partager toutes les optimisations. Dans ce type de
+traduction le fichier d'e'laboration n'est pas cre'e'.
+
+  <file>.llm3  |             <file>.lo    |              <module>.c
+               |    ==>      <file>.lm    |    ==>       <module>.h
+               | (llm3tolo)               |  (modtoc)
+
+|#
+
+; .Section "Les Variables Globales de Contro^le du Traducteur"
+
+#|
+Le traducteur est contro^le' au moyen des 6 variables globales suivantes et
+se lance au moyen de la fonction externe "module-to-C" qui admet un nom de 
+module en argument.
+|#
+
+; Le code fonctionne avec des flottants 31 bits
+(defvar :31bitfloats t)
+
+; Les instructions LAP sont mises en commentaires dans le programme C
+(defvar :C-verbose-mode ())
+
+; L'optimisateur du code LAP "peephole"  est lance' avant la traduction.
+(defvar :peephole-optimize-p   t)
+
+; L'optimisateur d'e'tiquettes locales "modopt" est lance' avant la traduction.
+(defvar :optimize-local-labels-p t)
+
+; Ce traducteur est appele' sur un pseudo-module provenant de la
+; traduction d'un fichier LLM3 (llm3tolo).
+(defvar :llm3-module-p ())
+
+; Des statistiques sur la taille des fonctions locales C sont re'alise'es et 
+; imprime'es apre`s la phase de ge'ne'ration.
+; Utile pour les optimisations futures car le re'sultat global de GELL de'pend
+; pour beaucoup de la taille des proce'dures C engendre'es.
+(defvar :stats-on-C-size-p t)
+
+; .Section "Les Constantes de Ge'ne'ration"
+
+; Elles peuvent e^tre change'es en fonction des compilateurs C
+; TOUS les identificateurs C engendre's utilisent de tels pre'fixes
+; pour e'viter tout conflit de nom avec des bibliothe`ques e'crites 
+; en C (merci Ingres....).
+
+; Pre'fixes de cre'ation d'identificateurs C
+(defvar :prefix-internal-function     "GlL_")
+(defvar :prefix-external-function     "GlE_")
+(defvar :prefix-trace-function        "GlD_")
+(defvar :prefix-elaborate-function    "GlZ_")
+(defvar :prefix-litteral-base         "GlY_")
+(defvar :prefix-local-label           "loc_")
+(defvar :prefix-impure-llm3           "G3I_")
+(defvar :prefix-dot-llm3              "G3M_")
+(defvar :prefix-ftype-llm3            "G3F_")
+(defvar :prefix-external-llm3         "G3X_")
+
+; Pre'fixes de cre'ation de noms de fichiers C
+(defvar :suffix-le                    ".le")
+(defvar :suffix-h                     ".h")
+(defvar :suffix-c                     ".c")
+
+; .Section "Les Variables Globales Internes"
+
+; Toutes ces variables sont initialise'es a` chaque appel de la fonction 
+; principale de traduction d'un module complet : "module-to-C".
+
+; Le surnom du module en cours de traduction (utilise' dans les noms C). 
+; Calcule' a` partir du nom de module Lisp.
+(defvar :C-module-name ())
+
+; Le nom de la fonction C d'e'laboration. 
+; Calcule' a` partir du nom de module Lisp.
+(defvar :C-elab-fnt-name ())
+
+; Les 3 fichiers/canaux cre'e's par ce traducteur.
+(defvar :include-channel ())
+(defvar :Ccode-channel ())
+(defvar :elaborate-channel ())
+
+; La liste (simple) des litte'raux du module
+(defvar :list-litterals ())
+
+; La liste des fonctions exporte'es du module : 
+; alist de la forme (llname . ftype) dans l'ordre des FENTRY
+(defvar :list-fentry ())
+
+; La liste des symboles sur lesquels on re'alise un appel de type
+; FVALQ. Cette liste permet de ve'rifier avec defCcheck, apre`s
+; e'laboration comple`te, qu'il n'existe pas d'appel a` des
+; fonctions non pre'sentes.
+(defvar :list-of-fvalqued-symbols ())
+
+; Le nom de la variable C qui contient la table de litte'raux
+(defvar :C-lit-table-name ())
+
+; Les points d'entre'e "externes" des fonctions de'clare'es avec FENTRY
+; A-Liste de la forme (nom-lap . nom-C)
+(defvar :extern-predefined 
+  (list
+   (cons 'popj0   (catenate :prefix-external-llm3 "popj0"))
+   (cons 'popj1   (catenate :prefix-external-llm3 "popj1"))
+   (cons 'popj2   (catenate :prefix-external-llm3 "popj2"))
+   (cons 'popj3   (catenate :prefix-external-llm3 "popj3"))
+   (cons 'popj4   (catenate :prefix-external-llm3 "popj4"))
+   (cons 'popj5   (catenate :prefix-external-llm3 "popj5"))
+   (cons 'popj6   (catenate :prefix-external-llm3 "popj6"))
+   (cons 'popj7   (catenate :prefix-external-llm3 "popj7"))
+   (cons 'popj8   (catenate :prefix-external-llm3 "popj8"))
+   (cons 'popj9   (catenate :prefix-external-llm3 "popj9"))
+   (cons 'popja4  (catenate :prefix-external-llm3 "popja4"))
+   (cons 'cbindn  (catenate :prefix-external-llm3 "unbind1"))
+   (cons 'tag     (catenate :prefix-external-llm3 "unbind3"))
+   (cons 'lock    (catenate :prefix-external-llm3 "unbind5"))
+   (cons 'prot    (catenate :prefix-external-llm3 "unbind7"))))
+
+(defvar :extern-functions ())
+
+; Les points d'entre'e trace'es des fonctions de'clare'es avec FENTRY
+; A-Liste de la forme (nom-lap . nom-C)
+(defvar :trace-functions ())
+
+; Les points d'entre'e qui sont "intern" : de'clare's avec ENTRY
+; s'il n'existe pas de FENTRY (car Complice engendre les 2).
+; A-Liste de la forme (nom-lap . nom-C).
+(defvar :intern-functions ())
+
+; Les e'tiquettes internes qui ne sont pas des points d'entre'e C.
+; Cette liste est calcule'e par l'optimisateur, s'il est appele'.
+; Les e'tiquettes de ce type sont de ve'ritables e'tiquettes C
+; et doivent en the'orie faire gagner pas mal de temps et de place.
+(defvar :local-labels-module '())
+
+; Le compteur du ge'ne'rateur de noms locaux (a` la Gensym)
+; mais utilisant e'galement le nom du module.
+(defvar :gen-new-label-counter 0)
+
+; Les noms des variables de type ADR d'un module LLM3 (elles sont
+; parfois de'finies 2 fois)
+(defvar :internal-variables-list ())
+
+; .Section "La Fonction Principale de lancement"
+
+(defun module-to-C (module)
+   ; <module> est le nom d'un module engendre' par Complice
+   (:print-msg "GELL 15.25: module-to-C: translating module: " module)
+   (if (probepathm module)
+       (let ((defmod (readdefmodule module))
+             exp)
+            (setq :C-module-name      (:gen-module-name module))
+            (setq :include-channel    (openo (catenate module :suffix-h)))
+            (setq :Ccode-channel      (openo (catenate module :suffix-c)))
+	    (unless :llm3-module-p 
+		    (setq :elaborate-channel  (openo (catenate module :suffix-le)))
+		    (setq :C-elab-fnt-name    (catenate :prefix-elaborate-function
+							:C-module-name)))
+            (setq :C-lit-table-name   (catenate :prefix-litteral-base
+                                                :C-module-name))
+            (setq :list-litterals     ())
+            (setq :list-fentry        ())
+            (setq :extern-functions   :extern-predefined)
+            (setq :trace-functions    ())
+            (setq :intern-functions   ())
+            (setq :list-of-fvalqued-symbols ())
+            (setq :gen-new-label-counter 0)
+            (setq :internal-variables-list ())
+            (setq :in-procedure-C-p ())
+	    (unless :llm3-module-p 
+		    (:initialize-elaborate-channel)
+		    (with ((outchan :elaborate-channel))
+			  (:wt0 ";;; GELL 15.25: elaboration file for the module: "
+				module)
+			  (:wt0 ";;;             translation done " (date))
+			  (:wt0)
+			  (:wt0 "(with ((outchan ()))")
+			  (:wt1 "(print "";Loading elaboration file: "
+				module :suffix-le """))" )
+			  (:wt0 "(unless (boundp '#:module:compiled-list)")
+			  (:wt1 "(setq #:module:compiled-list ()))")
+			  (:wt0 "(newl #:module:compiled-list '" module ")")
+			  (:wt0 "(setq #:system:read-case-flag t)")
+			  (:wt0)))
+            (with ((outchan :include-channel))
+                  (:wt0 "/* GELL 15.25: include file for the module: " module " */")
+                  (:wt0 "/*             translation done " (date) " */")
+                  (:wt0)
+		  (mapc (lambda (x)
+			  (:wt0 "extern Ptr " (:opr x) ";"))
+			'(dlink llink fcons evalst))
+		  (mapc (lambda (x)
+			  (:wt0 "extern Ptr " (cdr x) "();"))
+			:extern-predefined)
+                  (:wt0))
+            (with ((outchan :Ccode-channel)
+                   (lmargin 0)
+                   (rmargin (add1 (slen (outbuf))))
+                   (inchan (openi (probepatho module))))
+                  (:wt0 "/* GELL 15.25: source file for the module: " module " */")
+                  (:wt0 "/*             translation done      " (date) " */")
+                  (:wt0 "/*             :31bitfloats              = "
+			:31bitfloats " */")
+                  (:wt0 "/*             :peephole-optimize-p      = "
+			:peephole-optimize-p " */")
+                  (:wt0 "/*             :optimize-local-labels-p  = " 
+			:optimize-local-labels-p " */")
+                  (:wt0)
+                  (:wt0 "#include ""lelispc.h"" ")
+                  (:wt0 "#include """ module ".h"" ")
+                  (:wt0)
+                  (when :stats-on-C-size-p
+                        (:stats-start))
+                  (let ((#:system:read-case-flag t))
+                    (untilexit eof
+                             (setq exp (read))
+                             (if (and (consp exp)
+                                      (eq (car exp) 'loader)
+                                      (consp (cadr exp))
+                                      (eq (car (cadr exp)) 'quote))
+                                 (:loader (cadr (cadr exp)))
+			         (unless :llm3-module-p 
+					 (:to-elaborate-channel exp)))))
+                  (unless :llm3-module-p 
+                          (:generate-elaboration-function :list-fentry))
+                  (:function-ending-point)
+                  (unless :llm3-module-p 
+			  (with ((outchan :include-channel))
+				(:wt0)
+				(:wt0 "Ptr " :C-lit-table-name "["
+				      (add 2 (length :list-litterals)) "];")))
+                  (close :include-channel)
+                  (unless :llm3-module-p 
+			  (:close-elaborate-channel))
+                  (when :stats-on-C-size-p
+                        (:stats-stop))
+                  (close :Ccode-channel)))
+       (error 'module-to-C "no module description for" module)))
+
+
+(defun :generate-elaboration-function (list-fentry)
+   ; engendre les fonctions trace'es et la fonction d'e'laboration.
+   (let* ((list-fentry-size (length list-fentry))
+          (:extern-functions (newl :extern-functions
+                                   (cons :C-elab-fnt-name
+                                         :C-elab-fnt-name))))
+	 (:loader `(
+             ,@(mapcan 
+		(lambda (elem)
+		  (list (list 'DENTRY (car elem) (cdr elem))
+			(list 'JMPD (car elem) '#:gell-resetfn:function-name
+			       (selectq (cdr elem)
+					 (subr0  '#:gell-resetfn:function-0)
+					 (subr1  '#:gell-resetfn:function-1)
+					 (subr2  '#:gell-resetfn:function-2)
+					 (subr3  '#:gell-resetfn:function-3)
+					 (nsubr  '#:gell-resetfn:function-n)
+					 (fsubr  '#:gell-resetfn:function-f)
+					 (msubr  '#:gell-resetfn:function-1)
+					 (dmsubr '#:gell-resetfn:function-1)
+					 (t (error ':generate-elaboration-function
+						   "bade type"
+						   elem))))))
+		list-fentry)))
+         (:loader `((FENTRY ,:C-elab-fnt-name subr1)
+                    (MSETFN ,list-fentry)
+		    (RETURN)))))
+
+
+; .Section "Les Fonctions sur le canal C"
+
+#|
+
+On ne peut e'mettre une fonction C qu'a` la fin de celle-ci car on ge`re les
+de'clarations locales et l'utilisation de "register" par un cache des
+variables globales tre`s utilise'es.
+
+|#
+
+#|
+
+Ces variables globales sont utilise'es a` l'inte'rieur de la compilation
+d'une seule fonction C (en ge'ne'ral un morceau de code LAP)
+
+|#
+
+; Indicateur vrai si en cours de ge'ne'ration d'un corps de proce'dure C.
+(defvar :in-procedure-C-p ())
+
+; Le contenu du corps de la fonction C (liste de chai^nes)
+(defvar :C-body-list ())
+
+; La se'quence de de'claration en te^te de proce'dure C, une chai^ne.
+(defvar :C-dec-seq "")
+
+; La se'quence d'initialisation en te^te de proce'dure C, une chai^ne
+; (l'initialisation des registres)
+(defvar :C-ini-seq "")
+
+; La se'quence de retour en fin de proce'dure C, une chai^ne
+; (le de'chargement des registres)
+(defvar :C-ret-seq "")
+
+; La liste des noms de proce'dures des re'fe'rences avants.
+(defvar :current-declarations ())
+
+; La liste des e'tiquettes locales rencontre'es, pour ge'rer
+; l'indicateur de "re'fe'rences locales en avant"
+(defvar :local-procedure-label-list ())
+
+; L'indicateur indiquant des re'fe'rences en arrie`re : ie des boucles!
+(defvar :backward-references-p ())
+
+; L'indicateur qui sait si cette fonction C a e'te' appele'e
+; re'cursivement (et dans ce cas faire un goto et engendrer
+; l'e'tiquette correspondante en cas d'appel re'cursifs).
+(defvar :tailrec-p ())
+
+; Le nom de l'e'tiquette pour le "goto" tailrec.
+(defvar :tailrec-label ())
+
+; Le nom LL de la fonction en cours de ge'ne'ration
+(defvar :current-name ())
+
+#| 
+
+Pour essayer d'optimiser un peu le code C engendre', les registres globaux
+(nil, bnumb, bvect, bstrg, bsymb, bcons, sp, a1, a2, a3, a4) sont mis dans
+des variables locales a` la fonction C et de type register. Le gain en temps
+et en place est appre'ciable. Pour s'assurer de leur restauration correcte
+a` la sortie des proce'dures C, on ge`re e'galement leur modification dans
+cette me^me proce'dure C.
+
+|#
+
+; Le nombre de fois qu'un registre global parmi :
+;      litterals, nil, bnumb, bvect, bstrg, bsymb, bcons, sp, a1, a2, a3, a4
+; est utilise' en lecture seule ou en lecture/e'criture avant de le mettre 
+; dans une variable locale "register".
+(defvar :use-threshold-read-only  2)
+(defvar :use-threshold-read-write 3)
+
+; Les compteurs d'utilisation des registres globaux.
+
+(defvar :use-lit-count       ())
+(defvar :use-nil-count       ())
+(defvar :use-bnumb-count     ())
+(defvar :use-bvect-count     ())
+(defvar :use-bstrg-count     ())
+(defvar :use-bsymb-count     ())
+(defvar :use-bcons-count     ())
+(defvar :use-sp-count        ())
+(defvar :use-a1-count        ())
+(defvar :use-a2-count        ())
+(defvar :use-a3-count        ())
+(defvar :use-a4-count        ())
+(defvar :modify-sp-p         ())
+(defvar :modify-a1-p         ())
+(defvar :modify-a2-p         ())
+(defvar :modify-a3-p         ())
+(defvar :modify-a4-p         ())
+
+(defun :init-register-use ()
+   (setq :use-lit-count       0
+         :use-nil-count       0
+         :use-bnumb-count     0
+         :use-bvect-count     0
+         :use-bstrg-count     0
+         :use-bsymb-count     0
+         :use-bcons-count     0
+         :use-sp-count        0
+         :use-a1-count        0
+         :use-a2-count        0
+         :use-a3-count        0
+         :use-a4-count        0
+	 :modify-sp-p         ()
+	 :modify-a1-p         ()
+	 :modify-a2-p         ()
+	 :modify-a3-p         ()
+	 :modify-a4-p         ()
+))
+
+(defun :no-register-use ()
+   ; pour inhiber toutes les allocations de registres.
+   (setq :use-lit-count       -1000
+         :use-nil-count       -1000
+         :use-bnumb-count     -1000
+         :use-bvect-count     -1000
+         :use-bstrg-count     -1000
+         :use-bsymb-count     -1000
+         :use-bcons-count     -1000
+         :use-sp-count        -1000
+         :use-a1-count        -1000
+         :use-a2-count        -1000
+         :use-a3-count        -1000
+         :use-a4-count        -1000
+))
+
+
+(defvar :register-attribute-list
+   '((nil     "<<nil>>"       "reg_nil")
+     (bnumb   "<<bnumb>>"     "reg_bnumb")
+     (bvect   "<<bvect>>"     "reg_bvect")
+     (bstrg   "<<bstrg>>"     "reg_bstrg")
+     (bsymb   "<<bsymb>>"     "reg_bsymb")
+     (bcons   "<<bcons>>"     "reg_bcons")
+     (a1      "<<a1>>"        "reg_a1")
+     (a2      "<<a2>>"        "reg_a2")
+     (a3      "<<a3>>"        "reg_a3")
+     (a4      "<<a4>>"        "reg_a4")
+     (sp      "<<sp>>"        "reg_sp")))
+
+
+(defun :use-register (reg)
+   (selectq reg
+	    (lit       (setq :use-lit-count   (add1 :use-lit-count)))
+	    (nil       (setq :use-nil-count   (add1 :use-nil-count)))
+	    (bnumb     (setq :use-bnumb-count (add1 :use-bnumb-count)))
+	    (bvect     (setq :use-bvect-count (add1 :use-bvect-count)))
+	    (bstrg     (setq :use-bstrg-count (add1 :use-bstrg-count)))
+	    (bsymb     (setq :use-bsymb-count (add1 :use-bsymb-count)))
+	    (bcons     (setq :use-bcons-count (add1 :use-bcons-count)))
+	    (sp        (setq :use-sp-count    (add1 :use-sp-count)))
+	    (a1        (setq :use-a1-count    (add1 :use-a1-count)))
+	    (a2        (setq :use-a2-count    (add1 :use-a2-count)))
+	    (a3        (setq :use-a3-count    (add1 :use-a3-count)))
+	    (a4        (setq :use-a4-count    (add1 :use-a4-count)))
+	    (t         ())))
+
+(defun :modify-register (reg)
+   (selectq reg
+	    (sp        (setq :modify-sp-p  t))
+	    (a1        (setq :modify-a1-p  t))
+	    (a2        (setq :modify-a2-p  t))
+	    (a3        (setq :modify-a3-p  t))
+	    (a4        (setq :modify-a4-p  t))
+	    (t         ())))
+
+(defun :function-entry-point (name)
+   ; engendre l'ente^te d'une proce'dure C
+   (:function-ending-point)
+   (let ((internal-name (:lab name)))
+        (if (:get-extern-function name)
+            (:wt0 "extern Ptr " internal-name "() {  /* " name " */")
+            (:wt0 "static Ptr " internal-name "() {  /* " name " */"))
+        (:function-entry-point-init name internal-name)))
+
+(defun :trace-entry-point (name)
+   ; engendre l'ente^te d'une proce'dure C de type trace
+   (:function-ending-point)
+   (let ((internal-name (:get-trace-function name)))
+        (:wt0 "extern Ptr " internal-name "() {  /* " name " */")
+   (:function-entry-point-init name internal-name)))
+
+(defun :function-entry-point-init (name internal-name)
+        (setq :in-procedure-C-p t
+              :C-body-list ()
+	      :C-ini-seq ""
+	      :C-ret-seq ""
+              :current-declarations ()
+	      :local-procedure-label-list ()
+	      :backward-references-p ()
+              :tailrec-p ()
+              :tailrec-label (:gen-tailrec-label internal-name)
+              :current-name name)
+        (:init-register-use))
+
+        
+(defun :function-ending-point ()
+   ; termine une fonction (si ce n'est pas de'ja` fait)
+   ; et l'imprime.
+   (when :in-procedure-C-p
+         (mapc (lambda (x)
+                 (when (substring-equal (slen :prefix-internal-function)
+                                        :prefix-internal-function 0
+                                        x 0)
+                       ; ne pas mettre les "external" et on ne les
+                       ; connait pas tous encore.
+                       (princn #\tab)
+                       (print "static Ptr " x "();")))
+               :current-declarations)
+         ;
+         ; les de'clarations et les initialisations
+         ;
+	 (prin "   {	register Ptr ret_adr;")
+	 (:force-register :use-lit-count ()  
+			  "<<lit>>" :C-lit-table-name "Ptr *" "reg_lit")
+	 (:force-simple-register :use-sp-count     :modify-sp-p   'sp)
+	 (:force-simple-register :use-a1-count     :modify-a1-p   'a1)
+	 (:force-simple-register :use-a2-count     :modify-a2-p   'a2)
+	 (:force-simple-register :use-a3-count     :modify-a3-p   'a3)
+	 (:force-simple-register :use-a4-count     :modify-a4-p   'a4)
+	 (:force-simple-register :use-nil-count    ()             'nil)
+	 (:force-simple-register :use-bnumb-count  ()             'bnumb)
+	 (:force-simple-register :use-bvect-count  ()             'bvect)
+	 (:force-simple-register :use-bstrg-count  ()             'bstrg)
+	 (:force-simple-register :use-bsymb-count  ()             'bsymb)
+	 (:force-simple-register :use-bcons-count  ()             'bcons)
+	 (print)
+	 (when (nequal :C-ini-seq "") (print "	" :C-ini-seq))
+	 (:wt0 "   ret_fnt: <<ret>> return (ret_adr);")
+	 (:code-replace :C-body-list "<<ret>>" :C-ret-seq)
+	 (when :tailrec-p
+	       (print :tailrec-label ":"))
+	 (mapc 'print (setq :C-body-list (nreverse :C-body-list)))
+	 (setq :in-procedure-C-p ())
+	 (:wt0 "   }}")
+	 (:wt0)
+	 (when :stats-on-C-size-p
+	       (incr :stats-nb-of-procs)
+ 	       (let ((size (length :C-body-list)))
+		    (setq size (min size (1- (vlength :stats-vector))))
+		    (vset :stats-vector size
+			  (1+ (vref :stats-vector size)))))))
+
+
+(defun :force-simple-register (count modified register)
+   (let ((val (assq register :register-attribute-list)))
+        (:force-register count modified (cadr val) register "Ptr" (caddr val))))
+
+(defun :force-register (count modified internal word type reg)
+   (let ((allocated (ge count
+			(if (or (not modified) :tailrec-p :backward-references-p)
+			    :use-threshold-read-only
+			    :use-threshold-read-write))))
+        (when (symbolp word)
+	      (setq word (catenate :prefix-impure-llm3 word)))
+        (if allocated
+	    (progn
+	        (incr :stats-preloaded-registers)
+	        (prin " register " type " " reg ";")
+		(setq :C-ini-seq 
+		      (catenate :C-ini-seq " " reg " = "  word ";"))
+		(:code-replace :C-body-list internal  reg)
+		(when modified
+		      (incr :stats-unloaded-registers)
+		      (setq :C-ret-seq 
+			    (catenate :C-ret-seq " " word " = " reg ";"))))
+	    (:code-replace :C-body-list internal word))))
+
+
+(defun :code-replace (lstrg old new)
+   ; remplace toutes les chai^nes "old" par "new" dans la liste des
+   ; chaines "lstrg". "old" et "new" n'ont pas la me^me taille.
+   (mapc (lambda (strg)
+           (let ((ind 0))
+                (when (setq ind (index old strg 0))
+                      (exchstring strg (:code-replace-aux strg old new ind 
+							  (slen old))))))
+         lstrg))
+
+(defun :code-replace-aux (strg old new ind len)
+    (if (null ind)
+        strg
+        (catenate (substring strg 0 ind)
+                  new
+                  (let ((strg (substring strg (add ind len))))
+                       (:code-replace-aux strg
+					  old
+					  new
+					  (index old strg 0)
+					  len)))))
+
+(defun :terpri ()
+   ; termine une ligne C et re'alise le stockage s'il le faut.
+   (if (and :in-procedure-C-p (eq (outchan) :Ccode-channel))
+       (progn (newl :C-body-list (substring (outbuf) 0 (outpos)))
+              (outpos 0))
+       (terpri)))
+
+; .Section "Les Fonctions sur le canal d'e'laboration"
+
+#|
+
+Le fichier d'e'laboration devant contenir EN TETE le vecteur de litte'raux
+(le "defClit" pour permettre une e'laboration incre'mentale). Il faut donc
+stocker toutes les formes d'e'laboration avant d'e'crire le fichier
+d'e'laboration.
+
+|#
+
+; Les formes a` e'laborer.
+(defvar :exprs-to-elaborate-channel ())
+
+(defun :initialize-elaborate-channel ()
+   (setq :exprs-to-elaborate-channel ()))
+
+(defun :to-elaborate-channel (exp)
+   (newl :exprs-to-elaborate-channel exp))
+
+(defun :close-elaborate-channel ()
+   ; E'crit l'ensemble du fichier d'e'laboration.
+   (with ((outchan :elaborate-channel)
+          (obase 10)
+          (printlevel 1000)
+          (printlength 30000)
+          (rmargin (add1 (slen (outbuf))))
+          (lmargin 0))
+         (let ((#:system:print-for-read t)
+	       (#:system:print-with-abbrev-flag ()))
+              (print `(defClit ,:C-lit-table-name
+			,(apply 'vector (nreverse :list-litterals))))
+	      (print)
+	      (print `(defCelaborate ,:C-elab-fnt-name 
+			,(kwote :list-fentry)))
+	      (print)
+	      (mapc ':print-elaborate-channel (nreverse :exprs-to-elaborate-channel))
+	      (print)
+	      (print `(defCcheck ,(kwote :list-of-fvalqued-symbols))))
+         (close :elaborate-channel)))
+                    
+(defun :print-elaborate-channel (expr)
+   ; imprime une expression sur lr canal d'e'laboration.
+   (if (and (consp expr) (eq (car expr) 'defCsetfn))
+       ; si c'est un "defCsetfn" rajoute en commentaire le nom de la fonction
+       (progn (prin expr) (princn #/ ) 
+	      (princn #/;) (princn #/ ) 
+	      (print (car (nth (caddr expr) :list-fentry))))
+       ; sinon imprime normalement
+       (print expr)))
+
+; .Section "La Ge'ne'ration des ope'randes"
+
+(defun :opr (op)
+   ; ge'ne'ration d'un ope'rande en lecture seule.
+   (:operand op))
+
+(defun :opw (op)
+   ; ge'ne'ration d'un ope'rande en e'criture.
+   (:operand op)
+   (when (symbolp op) (:modify-register op)))
+
+(defun :opm (op)
+   ; ge'ne'ration d'un ope'rande en lecture puis e'criture.
+   ; pour les ++ -- += -= de C.
+   (when (symbolp op) (:use-register op))
+   (:operand op)
+   (when (symbolp op) (:modify-register op)))
+
+(defun :operand (op)
+   ; traduit un ope'rande LAP de type pointeur -> C
+   (when (null op) (error ':operand 'modtoc ()))  ; pour filter des erreurs ...
+   (if (atom op)
+       (let ((val (cassq op :extern-predefined)))
+            (cond (val (prin "((Ptr) " val ")"))
+		  ((symbolp op)
+		   (if (eq (sref (string op) 0) #/.)
+		       (prin :prefix-dot-llm3 (substring (string op) 1))
+		       (let ((val (:optr-convert op)))
+			    (if (stringp val)
+				(prin val)
+			        (prin :prefix-impure-llm3 op)))))
+		  (t (prin op))))
+       (selectq (car op)
+                ; les pseudo-adresses de castrage
+
+                ; on suppose que les ope'randes sont bien forme's.
+                (QUOTE  (if (fixp (cadr op))
+                            (cond ((eq (cadr op) #$8000)
+                                   (prin "(Ptr) ((UFIX) 0x8000)"))
+                                  ((ge (cadr op) 0)
+				   (prin "(Ptr) " (cadr op)))
+                                  (t 
+				   (prin "(Ptr) ((UFIX) ")
+				   (:prinhex (cadr op))
+				   (prin ")")))
+                            (:lit (cadr op))))
+                (CAR    (:wn0 (:opr (cadr op)) "->Val"))
+                (CDR    (:wn0 "(" (:opr (cadr op)) " + 1)->Val"))
+                (CVAL   (:wn0 (:opr (cadr op)) "->Val"))
+                (PLIST  (:wn0 "(" (:opr (cadr op)) " + 1)->Val"))
+                (FVAL   (:wn0 "(" (:opr (cadr op)) " + 2)->Val"))
+                (PKGC   (:wn0 "(" (:opr (cadr op)) " + 3)->Val"))
+                (OVAL   (:wn0 "(" (:opr (cadr op)) " + 4)->Val"))
+                (ALINK  (:wn0 "(" (:opr (cadr op)) " + 5)->Val"))
+                (PFTYPE (:wn0 "(" (:opr (cadr op)) " + 6)->Val"))
+                (PNAME  (:wn0 "(" (:opr (cadr op)) " + 7)->Val"))
+                (VAL    (:wn0 (:opr (cadr op)) "->Val"))
+                (TYP    (:wn0 "(" (:opr (cadr op)) " + 1)->Val"))
+                (CVALQ  (:wn0 (:lit (cadr op)) "->Val"))
+                (FVALQ  (unless (memq (cadr op) :list-of-fvalqued-symbols)
+                                (newl :list-of-fvalqued-symbols (cadr op)))
+                        (:wn0 "(" (:lit (cadr op)) " + 2)->Val"))
+                (&      (if (eq (cadr op) 0)
+                            (:wn0 (:opr 'sp) "->Val")
+                            (:wn0 "(" (:opr 'sp) " + " (cadr op) ")->Val")))
+                (@      (:wn0 "((Ptr) " (:lab (cadr op)) ")"))
+                (%      (:wn0 "((Ptr) &" (:opr (cadr op)) ")"))
+                (EVAL   (if (and (consp (cadr op))
+                                 (eq (caadr op) 'kwote)
+                                 (consp (cadr (cadr op)))
+                                 (memq (caadr (cadr op)) 
+                                       '(getglobal #:system:cached-getglobal))
+                                 (consp (cadr (cadr (cadr op))))
+                                 (eq (caadr (cadr (cadr op))) 'quote))
+                            ; les "getglobal" sont re'solus par l'e'diteur de liens
+                            ; Attention: enlever le "_" le cas e'che'ant ....
+                            (let ((name (cadr (cadr (cadr (cadr op))))))
+                                 (when (eq (chrnth 0 name) #/_)
+                                       (setq name (substring name 1)))
+                                 (:wn0 "(Ptr) " name)
+                                 (with ((outchan :include-channel))
+                                       (:wt0 "extern Ptr " name "();")))
+                            (:opr (eval (cadr op)))))
+                (t      (error ':operand 'modtoc op)))))
+
+(defun :optr-convert (op)
+   (if (symbolp op)
+       (let ((val (assq op :register-attribute-list)))
+	    (if (null val)
+		op
+	        (:use-register op)
+		(cadr val)))
+       op))
+
+(defun :int (op)
+   ; engendre l'acce`s a` un ope'rande qui va e^tre utilise'
+   ; avec un castrage de type (int)
+   (if (and (consp op)
+            (eq (car op) 'QUOTE)
+            (fixp (cadr op)))
+       (prin "(int) " (cadr op))
+       (:wn0 "(int) (" (:opr op) ")")))
+
+(defun :fix (op)
+   ; engendre l'acce`s a` un ope'rande qui va e^tre utilise'
+   ; avec un castrage de type (FIX).
+   (if (and (consp op)
+            (eq (car op) 'QUOTE)
+            (fixp (cadr op)))
+       (prin "(FIX) " (cadr op))
+       (:wn0 "(FIX) (" (:opr op) ")")))
+
+(defun :fixpos (op)
+   ; engendre l'acce`s a` un ope'rande qui va e^tre utilise'
+   ; avec un castrage de type (FIX), pour un nb toujours >= 0
+   (if (and (consp op)
+            (eq (car op) 'QUOTE)
+            (fixp (cadr op)))
+       (if (ge (cadr op) 0)
+	   (prin "(FIX) " (cadr op))
+	   (error ':fixpos 'erroob op))
+       (:wn0 "(FIX) (" (:opr op) ")")))
+
+(defun :fixincr (op)
+   ; engendre une ope'ration d'auto incre'ment avec un ope'rande de type
+   ; FIX, positif ou ne'gatif.
+   (if (and (consp op)
+            (eq (car op) 'QUOTE)
+            (fixp (cadr op)))
+       (if (ge (cadr op) 0)
+	   (prin " += (FIX) " (cadr op))
+	   (prin " -= (FIX) " (abs (cadr op))))
+       (:wn0 " += (FIX) (" (:opr op) ")")))
+
+(defun :ufix (op)
+   ; engendre l'acce`s a` un ope'rande qui va e^tre utilise'
+   ; avec un castrage de type (UFIX).
+   (if (and (consp op)
+            (eq (car op) 'QUOTE)
+            (fixp (cadr op)))
+       (prin "(UFIX) " (cadr op))
+       (:wn0 "(UFIX) (" (:opr op) ")")))
+
+(defun :lab (label)
+   ; engendre l'acce`s a` un ope'rande de type adresse (@).
+   (when (null label)
+         (error ':lab 'modtoc ()))
+   (let ((lab (or (:get-extern-function label)
+                  (:get-intern-function label)
+                  (:make-intern-function label))))
+        (unless (or (memq lab :current-declarations)
+                    (cassq lab :extern-functions))
+                (newl :current-declarations lab))
+        lab))
+
+(defun :literal-index (op)
+   ; retourne l'index de op dans la table des litte'raux
+   (let ((ls (if (or (stringp op)
+                     (and :31bitfloats (floatp op)))
+                 (member op :list-litterals)
+                 (memq   op :list-litterals))))
+        (if ls
+	    (add1 (length ls))
+            (progn
+              (newl :list-litterals op)
+              (:literal-index op)))))
+
+(defun :lit (op)
+   ; engendre l'acce`s a` un ope'rande quote' (').
+   (:use-register 'lit)
+   (prin "<<lit>>[" (:literal-index op) "]"))
+
+(defun :strg (strg)
+   ; engendre l'acce`s a` un ope'rande type chai^me (LLM3)
+   (if (and (consp strg) (eq (car strg) 'strg))
+       (progn (princn #/")  ; le caracte`re guillemet
+              (mapc (lambda (c)
+                        ; le quote-char des chai^nes C
+                        (when (memq c '(#/\ #/"))
+                              (princn 92))
+                        (princn c))
+                     (explode (cadr strg)))
+	      (princn #/"))
+       (error ':strg "bad value" strg)))
+
+(defun :prinhex (n)
+   ; impression de <n> en hexade'cimal.
+   (prin "0x")
+   (:prinhexb (logand (logshift n -8) #$FF))
+   (:prinhexb (logand n #$FF)) )
+
+(defun :prinhexb (n)
+   ; impression de l'octet <n> em hexade'cimal.
+   (when (lt n #$10) (princn #/0))
+   (with ((obase 16)) (prin n)) )
+
+
+; .Section "La Ge'ne'ration du code d'une instruction"
+
+(defun :instruction (obj)
+   (when :C-verbose-mode 
+         (:wt1 " /* " obj " */"))
+   (cond
+       ((null obj) ())
+       ((atom obj)
+        (if (memq obj :local-labels-module)
+	    (progn
+	      (newl :local-procedure-label-list obj)
+	      (:wt0 :prefix-local-label obj ":"))
+            (when (if (consp :previous-instruction)
+                      (null (memq (car :previous-instruction) 
+                                  '(BRA BRI BRX JMP JMPD CALL JCALL RETURN)))
+                      :previous-instruction)
+                  (:goto-label-at obj ""))
+            (:function-entry-point obj)))
+       (t (let ((codop (car obj))
+                (arg1  (cadr obj))
+                (arg2  (caddr obj))
+                (arg3  (cadddr obj))
+		(arg4  (car (cddddr obj))))
+
+            ; se'lection sur les code-ope'rations (ordre de la doc).
+
+           (selectq codop
+
+
+; .SSection "les pseudos-instructions"
+
+            (ENTRY   ; (ENTRY <name> <ftype> <lparam>)
+                     (unless (:get-extern-function arg1)
+                             (:function-entry-point arg1)))
+            (ENDL)
+            (END)
+            (EVAL    ; (EVAL s)  e'valuation a` LOAD-TIME
+                     (catcherror t (eval arg1)))
+            (FENTRY  ; (FENTRY <name> <ftype> <lparam>)
+	             (let* ((fentry-elab-p (equal arg1 :C-elab-fnt-name))
+			    (entry (if fentry-elab-p
+				       (:get-extern-function arg1)
+				       (:make-extern-function arg1))))
+                          (:function-entry-point arg1)
+                          (when (and (not fentry-elab-p)
+				     (null :llm3-module-p))
+                                (:to-elaborate-channel 
+                                   `(defCsetfn ,:C-elab-fnt-name 
+				               ,(length :list-fentry)))
+                                (setq :list-fentry 
+				      (nconc1 :list-fentry (cons arg1 arg2))))
+                          (with ((outchan :include-channel))
+                                (:wt0 "extern Ptr " entry "();	/* " arg1 " */"))))
+            (DENTRY  ; (DENTRY <name> <ftype> <lparam>)
+                     ; c'est une fonction relai de trace
+                     (let ((entry (:make-trace-function arg1)))
+                          (:trace-entry-point arg1)
+                          (with ((outchan :include-channel))
+                                (:wt0 "extern Ptr " entry 
+				      "();	/* traced " arg1 " */"))))
+	    (JMPD    ; (JMPD <symbol> gell-name gell-reset)
+	             (:wt1 "{ret_adr = llrt_jmpd(<<lit>>,"
+			   (:literal-index arg1) ","
+			   (:literal-index arg2) ","
+			   (:literal-index arg3) ");}"))
+            (LOCAL)
+            (TITLE)
+
+
+; .SSection "Manipulation de pointeurs"
+
+            (NOP)    ; difficile de faire quelquechose non enleve' par l'-O
+            (MOV     (:wt1 (:opw arg2) " = " (:opr arg1) ";"))
+	    (MOVNIL  ; LLM3 : op
+                     (:instruction `(MOV nil ,arg1)))
+            (CABEQ   (:cmp-ptr-and-branch arg1 "==" arg2 arg3))
+            (CABNE   (:cmp-ptr-and-branch arg1 "!=" arg2 arg3))
+            (BTLISP  (:cmp-type-inside  arg1 'BNUMB 'ECONS arg2))
+            (BFLISP  (:cmp-type-outside arg1 'BNUMB 'ECONS arg2))
+
+
+; .SSection "Le contro^le"
+
+            (BRA     (:instruction `(BRI (@ ,arg1))))
+            (JMP     (:instruction `(BRI (FVALQ ,arg1))))
+            (BRI     (:goto-label arg1 ""))
+            (BRX     ; LLM3 : (letiq index)
+	             (let ((:current-declarations :current-declarations))
+		       ; plus de de'claration dans le *.c
+		       (let ((lab (:lab (concat 'brx_ (gensym)))) 
+					; le nom d'un tabelau local.
+			     (letiq arg1))         ; la liste des e'tiquettes.
+			  ; le nom d'un tableau local
+			  (:wn1 "{ret_adr = (Ptr) (" lab "[" (:int arg2) "]);")
+			  (:wt0 "goto ret_fnt;}")
+                          (with ((outchan :include-channel))
+			        ; forward decl in include.
+				(mapc (lambda (alab)
+					(or (:get-extern-function (cadr alab))
+					    (:wt0 "static Ptr " 
+						  (:lab (cadr alab)) " ();")))
+				      letiq)
+				(:wt0 "Ptr (* " lab " []) () = {")
+				(while (cdr letiq)
+				       (:wt1 (:lab (cadr (nextl letiq))) ","))
+				(:wt1 (:lab (cadar letiq)) "};")))))
+            (SOBGEZ  ;
+                     (:wt1 "{register FIX aux;")
+                     (:wt2 "aux = " (:fix arg1) " - 1;")
+                     (:wt2 (:opw arg1) " = (Ptr) ((UFIX) aux);")
+                     (:wn2 "if (aux >= 0) ")
+                     (:goto-label-at arg2 "}"))
+            (SOBGTZ  ; LLM3
+                     (:wt1 "{register FIX aux;")
+                     (:wt2 "aux = " (:fix arg1) " - 1;")
+                     (:wt2 (:opw arg1) " = (Ptr) ((UFIX) aux);")
+                     (:wn1 "if (aux > 0) ")
+                     (:goto-label-at arg2 "")
+                     (:wt2 "else " (:opr arg1) " = (Ptr) 0;}"))
+
+
+; .SSection "Les instructions sur la pile"
+
+            (STACK   (:instruction `(MOV sp ,arg1)))
+            (SSTACK  (:instruction `(MOV ,arg1 sp)))
+
+            ; Pile de contro^le
+
+            (CALL    (:instruction `(CALLI (@ ,arg1))))
+            (CALLI   (:call-internal arg1))
+            (JCALL   (:instruction
+		        (if (eq arg1 :current-name)
+                            ; JCALL tail-rec
+			    `(CALLI (@ ,arg1))
+                            ; JCALL normal (via la FVAL)
+			    `(CALLI (FVALQ ,arg1)))))
+            (RETURN  (:wt1 "{ret_adr = (" (:opm 'sp) "++)->Val; goto ret_fnt;}"))
+
+            ; Pile de donne'es
+
+            (PUSH    (if (and (consp arg1)
+                              (eq (car arg1) '&))
+                         ; cas vicieux (PUSH (& n))
+                         (:wt1 "{register Ptr aux; aux = "
+                              (:opr arg1) "; (--" (:opm 'sp) ")->Val = aux;}")
+                         (:wt1 "(--" (:opm 'sp) ")->Val = " (:opr arg1) ";")))
+            (POP     (if (and (consp arg1)
+                              (eq (car arg1) '&))
+                         ; cas vicieux (POP (& n))
+                         (:wt1 "{register Ptr aux; aux = (" (:opm 'sp) "++)->Val;"
+                              (:opw arg1) " = aux;}")
+                         (:wt1 (:opw arg1) " = (" (:opm 'sp) "++)->Val;")))
+            (POPR    ; LLM3 : sp op
+		     (:wt1 (:opw arg2) " =  (" (:opm arg1) "++)->Val;"))
+            (ADJSTK  (if (and (consp arg1)
+                              (eq (car arg1) '&))
+                         ; cas vicieux (ADJSTK (& n))
+                         (:wt1 "{register FIX aux; aux = " (:fix arg1) "; "
+			       (:opm 'sp) " += aux;}")
+                         (:wt1 (:opm 'sp) (:fixincr arg1) ";")))
+            (ADJSTKR ; LLM3 : sp n
+		     (:wt1 (:opm arg1) " += " (:fix arg2) ";"))
+            (MOVXSP  ; (MOVXSP op index)
+                     (:wt1 "(" (:opw 'sp) " + " (:fix arg2) ")->Val = "
+			   (:opr arg1) ";"))
+            (XSPMOV  ; (XSPMOV index op)
+                     (:wt1 (:opw arg2) " = (" (:opr 'sp) " + " 
+			   (:fixpos arg1) ")->Val;"))
+	    (XTOPST  ; LLM3 : op
+		     (:wt1 "{register Ptr aux; aux = " (:opr 'sp) "->Val;")
+                     (:wt2 (:opr 'sp) "->Val = " (:opr arg1) ";")
+		     (:wt2 (:opw arg1) " = aux;}"))
+	    (TOPST   ; LLM3 : op
+                     (:instruction `(MOV (& 0) ,arg1)))
+	    (TOPSTR  ; LLM3 : sp op
+                     (:wt1 (:opw arg2) " = " (:opr arg1) "->Val;"))
+            (CHKSTK  ; LLM3 : borne lab
+	             (:cmp-ptr-and-branch 'sp "<" arg1 arg2))
+
+; .SSection "Les cellules de liste"
+
+            (BTCONS  (if :31bitfloats
+                         (:cmp-int-and-branch arg1 ">=" 'BCONS arg2)
+                         (:cmp-ptr-and-branch arg1 ">=" 'BCONS arg2)))
+            (BFCONS  (if :31bitfloats
+                         (:cmp-int-and-branch arg1 "<" 'BCONS arg2)
+                         (:cmp-ptr-and-branch arg1 "<" 'BCONS arg2)))
+            ; Ces 2 instructions ne sont pas dans la doc Ch. 13!!!
+            (CAR     (:instruction `(MOV (CAR ,arg1) ,arg1)))
+            (CDR     (:instruction `(MOV (CDR ,arg1) ,arg1)))
+
+
+; .SSection " NIL / Symboles / Variables "
+
+            (BTNIL   (:instruction `(CABEQ ,arg1 nil ,arg2)))
+            (BFNIL   (:instruction `(CABNE ,arg1 nil ,arg2)))
+            (BTSYMB  (:cmp-type-inside  arg1 'BSYMB 'BCONS arg2))
+            (BFSYMB  (:cmp-type-outside arg1 'BSYMB 'BCONS arg2))
+            (BTVAR   (:cmp-type-inside  arg1 'BVAR  'BCONS arg2))
+            (BFVAR   (:cmp-type-outside arg1 'BVAR  'BCONS arg2))
+	    (SETBVAR (:instruction `(MOV ,arg1 bvar)))
+
+
+; .SSection "Les instructions sur les entiers"
+
+            (BTFIX   (:cmp-ptr-and-branch arg1 "<"
+					  (if :31bitfloats 'BVECT 'BFLOAT) arg2))
+            (BFFIX   (:cmp-ptr-and-branch arg1 ">="
+					  (if :31bitfloats 'BVECT 'BFLOAT) arg2))
+            (INCR    (:fix-arith arg1 '+ '1 arg1 arg2))
+            (DECR    (:fix-arith arg1 '- '1 arg1 arg2))
+            (PLUS    (when (nequal arg1 ''0)
+                           (:fix-arith arg2 '+ arg1 arg2 arg3)))
+            (DIFF    (when (nequal arg1 ''0)
+                           (:fix-arith arg2 '- arg1 arg2 arg3)))
+            (NEGATE  (:fix-arith '0   '- arg1 arg1 arg2))
+            (TIMES   (:fix-arith arg2 '* arg1 arg2 arg3))
+            (QUO     (:fix-arith arg2 '/ arg1 arg2 arg3))
+            (REM     (:fix-arith arg2 '% arg1 arg2 arg3))
+            (CNBEQ   (:instruction `(CABEQ ,arg1 ,arg2 ,arg3)))
+            (CNBNE   (:instruction `(CABNE ,arg1 ,arg2 ,arg3)))
+            (CNBLE   (:cmp-fix-and-branch arg1 "<=" arg2 arg3))
+            (CNBLT   (:cmp-fix-and-branch arg1 "<"  arg2 arg3))
+            (CNBGE   (:cmp-fix-and-branch arg1 ">=" arg2 arg3))
+            (CNBGT   (:cmp-fix-and-branch arg1 ">"  arg2 arg3))
+            (LAND    (:fix-logic arg2 "&" arg1 arg2))
+            (LOR     (:fix-logic arg2 "|" arg1 arg2))
+            (LXOR    (:fix-logic arg2 "^" arg1 arg2))
+            (LSHIFT  ; Attention: << et >> ne suivent pas les re`gles
+                     ; de conversions classiques et certains compilos
+                     ; oublient que le type de l'expression est celui
+                     ; du 1er argument, d'ou` le (UFIX) supple'mentaire.
+                     ; Vivement ANSI C!!
+                     (if (and (consp arg1)
+                              (eq (car arg1) 'quote)
+                              (fixp (cadr arg1)))
+                         ; c'est une constante nume'rique
+                         (if (ge (cadr arg1) 0)
+                             (:wt1 (:opw arg2) " = (Ptr) (UFIX) (" 
+				   (:ufix arg2) " << " (cadr arg1) ");")
+                             (:wt1 (:opw arg2) " = (Ptr) (UFIX) ("
+				   (:ufix arg2) " >> " (abs (cadr arg1)) ");"))
+                         ; le nb de de'calage est calcule'
+                         (:wt1 "{register FIX aux;")
+                         (:wt2 "aux = " (:fix arg1) ";")
+                         (:wn2 "if (aux >= 0)")
+                         (:wt0 "aux = " (:ufix arg2) " << aux;")
+                         (:wt2 "else        aux = " (:ufix arg2) " >> -aux;")
+                         (:wt2 (:opw arg2) " = (Ptr) ((UFIX) aux);")
+                         (:wt1 "}")))
+
+; .SSection "Les instructions sur les nombres flottants et les autres nombres"
+
+            (BTNUMB  ; LLM3 : op lab
+                     (:cmp-type-inside  arg1 'BNUMB 
+					(if :31bitfloats 'BVECT 'BFLOAT)
+					arg2))
+            (BFNUMB  ; LLM3 : op lab
+                     (:cmp-type-outside  arg1 'BNUMB 
+					 (if :31bitfloats 'BVECT 'BFLOAT)
+					 arg2))
+            (BTFLOAT (if :31bitfloats
+                         (:cmp-int-and-branch arg1 "<" "0" arg2)
+                         (:cmp-type-inside  arg1 'BFLOAT 'BVECT arg2)))
+            (BFFLOAT (if :31bitfloats
+                         (:cmp-int-and-branch arg1 ">=" "0" arg2)
+                         (:cmp-type-outside  arg1 'BFLOAT 'BVECT arg2)))
+            (FPLUS   (:float-arith arg1 "+" arg2))
+            (FDIFF   (:float-arith arg1 "-" arg2))
+            (FTIMES  (:float-arith arg1 "*" arg2))
+            (FQUO    (:float-arith arg1 "/" arg2))
+            (CFBEQ   (:cmp-float-and-branch arg1 "==" arg2 arg3))
+            (CFBNE   (:cmp-float-and-branch arg1 "!=" arg2 arg3))
+            (CFBLT   (:cmp-float-and-branch arg1 "<"  arg2 arg3))
+            (CFBLE   (:cmp-float-and-branch arg1 "<=" arg2 arg3))
+            (CFBLE   (:cmp-float-and-branch arg1 "<=" arg2 arg3))
+            (CFBGT   (:cmp-float-and-branch arg1 ">"  arg2 arg3))
+            (CFBGE   (:cmp-float-and-branch arg1 ">=" arg2 arg3))
+            (CVFTOA  ; LLM3 src strg cnt
+                     (if :31bitfloats
+                         (:wt1 (:opw arg3) " = (Ptr) cvftoa ( Lfloat_to_Cfloat (" 
+			       (:opr arg1) "), " (:opr arg2) "->Val + 2);")
+                         (:wt1 (:opw arg3) " = (Ptr) cvftoa (((Float) " 
+			       (:opr arg1) ")->Val, " (:opr arg2) "->Val + 2);")))
+            (CVATOF  ; LLM3 : strg slen lab flt
+               (let ((strg arg1) (slen arg2) (lab arg3) (flt arg4))
+		    (:wt1 "{register char *saux;")
+		    (:wt2 "saux = (char *) (" (:opr strg) "->Val + 2);")
+		    (:wt2 "*(saux + " (:fixpos slen) ") = '\0';")
+		    (if :31bitfloats
+			(progn
+                            (:wt2 (:opw flt)
+				  " = Cfloat_to_Lfloat (cvatof (saux));}"))
+		        (progn
+			    (:testfloat)
+			    (:wt3 "aux->Val = cvatof(saux);")
+			    (:wt3 (:opw flt) " = (Ptr) aux;}}")))))
+            (FLOAT   ; LLM3 : op
+                     (if :31bitfloats
+                         (:wt1 (:opw arg1) " = Lfix_to_Lfloat (" (:opr arg1) ");")
+                         (progn 
+                            (:testfloat)
+                            (:wt2 "aux->Val = (FIX) ((UFIX) " (:opr arg1) ";")
+                            (:wt2 (:opw arg1) " = (Ptr) aux;}"))))
+            (FIX     ; LLM3 : op
+                     (if :31bitfloats
+                         (:wt1 (:opw arg1) " = Lfloat_to_Lfix (" (:opr arg1) ");")
+                         (progn 
+                            (:wt1 "{register FIX aux;")
+			    (:wt2 "aux = ((Float) " (:opr arg1) ")->Val;")
+			    (:wt2 (:opw arg1) " = (Ptr) ((UFIX) aux);}"))))
+            (SIN     (:float-funct-2 'sin arg1 arg2))
+            (COS     (:float-funct-2 'cos arg1 arg2))
+            (ASIN    (:float-funct-2 'asin arg1 arg2))
+            (ACOS    (:float-funct-2 'acos arg1 arg2))
+            (ATAN    (:float-funct-2 'atan arg1 arg2))
+            (EXP     (:float-funct-2 'exp arg1 arg2))
+            (LOG     (:float-funct-2 'log arg1 arg2))
+            (LOG10   (:float-funct-2 'log10 arg1 arg2))
+            (SQRT    (:float-funct-2 'sqrt arg1 arg2))
+            (POWER   (:float-funct-3 'pow arg1 arg2 arg3))
+
+            (ECOMP   ; LLM3 : op1 op2 lab1 lab2 lab3
+                (let ((op1 arg1) (op2 arg2) (lab1 arg3) 
+		      (lab2 arg4) (lab3 (nth 5 obj)))
+                     (:wn1 "if (((UFIX) " (:opr op1) 
+			   ") < ((UFIX) " (:opr op2) "))")
+		     (:goto-label-at lab1 "")
+                     (:wn1 "else if (((UFIX) " (:opr op1) 
+			   ") > ((UFIX) " (:opr op2) "))")
+                     (:goto-label-at lab3 "")
+                     (:wn1 "else")
+                     (:goto-label-at lab2 "")))
+            (EPLUS   ; LLM3 : op1 op2 op3 op4 op5
+	        (let ((op1 arg1) (op2 arg2) (op3 arg3)
+		      (op4 arg4) (op5 (nth 5 obj)))
+	             (:wt1 "{register Ad aux;")
+		     (:wt2 "aux = (Ad) " (:opr op1) " + (Ad) " (:opr op2)
+			   " + (Ad) " (:opr op3) ";")
+		     (:wt2 (:opw op4) " = (Ptr) (aux >> HIGHTSHIFT);")
+		     (:wt2 (:opw op5) " = (Ptr) (aux & LOWMASK);}")))
+            (ETIMES  ; LLM3 : op1 op2 op3 op4 op5 op6
+	        (let ((op1 arg1) (op2 arg2) (op3 arg3)
+		      (op4 arg4) (op5 (nth 5 obj)) (op6 (nth 6 obj)))
+	             (:wt1 "{register Ad aux;")
+		     (:wt2 "aux = (Ad) " (:opr op1) " * (Ad) " (:opr op2)
+			   " + (Ad) " (:opr op3) " + (Ad) " (:opr op4) ";")
+		     (:wt2 (:opw op5) " = (Ptr) (aux >> HIGHTSHIFT);")
+		     (:wt2 (:opw op6) " = (Ptr) (aux & LOWMASK);}")))
+            (EDIVIDE ; LLM3 : op1 op2 op3 op4 op5
+	        (let ((op1 arg1) (op2 arg2) (op3 arg3)
+		      (op4 arg4) (op5 (nth 5 obj)))
+	             (:wt1 "{register Ad aux;")
+		     (:wt2 "aux = (Ad) " (:opr op1) ";")
+		     (:wt2 "aux = (aux << HIGHTSHIFT) | ((Ad)" (:opr op2) ");")
+		     (:wt2 (:opw  op5) " = (Ptr) (aux % ((Ad) " (:opr op3) "));")
+		     (:wt2 "aux = aux / ((Ad) " (:opr op3) ");")
+		     (:wt2 (:opw op4) " = (Ptr) ((UFIX) aux);}")))
+
+
+; .SSection "Les instructions sur les vecteurs"
+
+            (BTVECT  (:cmp-type-inside  arg1 'BVECT 'BSTRG arg2))
+            (BFVECT  (:cmp-type-outside arg1 'BVECT 'BSTRG arg2))
+            (HPXMOV  ; (HPXMOV vect ind dest)
+                     (:wt1 (:opw arg3) " = (" (:opr arg1)
+			   "->Val + 2 + " (:fixpos arg2) ")->Val;"))
+            (HPMOVX  ; (HPMOVX val vect ind)
+                     (:wt1 "(" (:opr arg2) "->Val + 2 + " (:fixpos arg3)
+			   ")->Val = " (:opr arg1) ";"))
+            (HPMOVM  ; LLM3 : size vects inds vectd indd
+                (let ((size arg1) (vects arg2) (inds arg3) 
+                      (vectd arg4) (indd (nth 5 obj)))
+                     (:wt1 "{register Ptr r1, r2; register int r3;")
+                     (:wt2 "r1 = (" (:opr vects) "->Val + 2);")
+                     (:wt2 "r2 = (" (:opr vectd) "->Val + 2);")
+                     (:wt2 "r3 = " (:fixpos size) ";")
+                     (if (and (equal inds ''0) (equal indd ''0))
+			 (:wt2 "while (r3--) (r2++)->Val = (r1++)->Val;}")
+                         (progn
+                            (:wt2 "if ((r1 == r2) && (" (:fixpos inds) " < " 
+				  (:fixpos indd) ")) {")
+                            (:wt3 "r1 += r3 + " (:fixpos inds) ";")
+                            (:wt3 "r2 += r3 + " (:fixpos indd) ";")
+                            (:wt3 "while (r3--) (--r2)->Val = (--r1)->Val;")
+                            (:wt2 " } else {")
+                            (:wt3 "r1 += " (:fixpos inds) ";")
+                            (:wt3 "r2 += " (:fixpos indd) ";")
+                            (:wt3 "while (r3--) (r2++)->Val = (r1++)->Val;}}")))))
+
+; .SSection "Les instructions sur les chai^nes de caracte`res et les caracte`res"
+
+            (BTSTRG  (:cmp-type-inside  arg1 'BSTRG 'BSYMB arg2))
+            (BFSTRG  (:cmp-type-outside arg1 'BSTRG 'BSYMB arg2))
+            (HBXMOV  ; (HBXMOV strg ind dest)
+                     (:wt1 (:opw arg3)
+			   " = (Ptr) ((unsigned char) *(((char *) (" 
+			   (:opr arg1)
+			   "->Val + 2)) + " (:fixpos arg2) "));"))
+            (HBMOVX  ; (HBMOVX val strg ind)
+                     (:wt1 "*((char *) (" (:opr arg2) "->Val + 2) + "
+			   (:fixpos arg3) ") = (char) " (:opr arg1) ";"))
+            (HBMOVM  ; LLM3 : size strgs inds strgd indd
+                (let ((size arg1) (strgs arg2) (inds arg3) 
+                      (strgd arg4) (indd (nth 5 obj)))
+                     (:wt1 "{register char *r1, *r2; register int r3;")
+                     (:wt2 "r1 = (char *) (" (:opr strgs) "->Val + 2);")
+                     (:wt2 "r2 = (char *) (" (:opr strgd) "->Val + 2);")
+                     (:wt2 "r3 = " (:fixpos size) ";")
+                     (if (and (equal inds ''0) (equal indd ''0))
+			 (:wt1 " while (r3--) *r2++ = *r1++;}")
+                         (progn
+                            (:wt2 "if ((r1 == r2) && (" (:fixpos inds) " < " 
+				  (:fixpos indd) ")) {")
+                            (:wt3 "r1 += r3 + " (:fixpos inds) ";")
+                            (:wt3 "r2 += r3 + " (:fixpos indd) ";")
+                            (:wt3 "while (r3--) *--r2 = *--r1;")
+                            (:wt2 " } else {")
+                            (:wt3 "r1 += " (:fixpos inds) ";")
+                            (:wt3 "r2 += " (:fixpos indd) ";")
+                            (:wt3 "while (r3--) *r2++ = *r1++;}}")))))
+             (HBTEQ  ; LLM3 : size strg1 ind1 strg2 ind2 lab
+                (let ((size arg1) (strg1 arg2) (ind1 arg3) 
+                      (strg2 arg4) (ind2 (nth 5 obj))
+                      (lab (nth 6 obj)) (et (concat 'hbteq_ (gensym))))
+                            (:wt1 "{register char *r1, *r2; register int r3;")
+                            (:wt2 "r1 = (char *) (" (:opr strg1) "->Val + 2);")
+                            (when (nequal ind1 ''0)
+				  (:wt2 "r1 += " (:fixpos ind1) ";"))
+                            (:wt2 "r2 = (char *) (" (:opr strg2) "->Val + 2);")
+                            (when (nequal ind2 ''0)
+				  (:wt2 "r2 += " (:fixpos ind2) ";"))
+                            (:wt2 "r3 = " (:fixpos size) ";")
+                            (:wt2 "if (r3 > 0) while (r3--) if (*r2++ != *r1++) "
+				  "goto " et ";")
+                            (:wn2)
+                            (:goto-label-at lab "}")
+                            (:wt1 et ":")))
+            (MOVBM   ; LLM3 : size src strg
+                (let ((size arg1) (src arg2) (strg arg3))
+                     (:wt1 "{register char *r1, *r2; register int r3;")
+                     (:wt2 "r1 = (char *) " (:opr src) ";")
+                     (:wt2 "r2 = (char *) (" (:opr strg) "->Val + 2);")
+                     (:wt2 "r3 = " (:fixpos size) " + 1;")
+                     (:wt2 "if (r3 > 0) while (r3--) *r2++ = *r1++;}")))
+            (HGSIZE  ; LLM3 : HGSIZE op dest
+                     (:wt1 (:opw arg2) " = (" (:opr arg1) "->Val + 1)->Val;"))
+            (HSSIZE  ; LLM3 : HSSIZE val op
+                     (:wt1 "(" (:opr arg2) "->Val + 1)->Val = " (:opr arg1) ";"))
+            (HGOBJ   ; LLM3 : op dest
+                     (:wt1 (:opw arg2) " = (" (:opr arg1) "->Val)->Val;"))
+            (HSOBJ   ; LLM3 : HSOBJ val op
+                     (:wt1 "(" (:opr arg2) "->Val)->Val = " (:opr arg1) ";"))
+            (UPPERC  ; LLM3 : arg1
+                     (:wt1 (:opw arg1) " = (Ptr) (" (:fixpos arg1) " - 32);"))
+            (LOWERC  ; LLM3 : arg1
+                     (:wt1 (:opw arg1) " = (Ptr) (" (:fixpos arg1) " + 32);"))
+
+; .SSection "Les instructions spe'ciales rajoute'es par 'modpeep.ll'"
+
+            (NLIST   ; == (JCALL #:LLCP:NLIST)
+
+                     (let* ((lab1 (concat 'nlist_ (gensym)))
+			    (lab2 (concat 'nlist_ (gensym)))
+			    (:local-labels-module 
+			          (mcons lab1 lab2 :local-labels-module)))
+		       (:instruction '(MOV NIL A1))
+		       (:instruction `(BRA ,lab2))
+		       (:instruction lab1)
+		       (:instruction '(POP A2))
+		       (:instruction '(CONS A2 A1))
+		       (:instruction lab2)
+		       (:instruction `(SOBGEZ A4 ,lab1))))
+
+            (MSETFN  ; new instruction to create the body
+                     ; of the elaboration function
+                     (:wt1 "switch (" (:int 'a1) ") {")
+                     (let ((cnt -1))
+                       (mapc (lambda (onef)
+                              (let* ((llname (car onef))
+                                     (typefn (cdr onef))
+                                     (codefn 
+				      (kwote 
+				       (selectq typefn
+						(subr0  1)
+						(subr1  2)
+						(subr2  3)
+						(subr3  4)
+						(nsubr  5)
+						(fsubr  6)
+						(msubr  11)
+						(dmsubr 12)
+						(t (error ':instruction 
+							  'msetfn onef))))))
+                                ; onef == llname typefn cname
+                                (:wt2 "case " (incr cnt) ": /* " 
+				      llname ", " typefn " */" )
+                                (:wt3 (:opw 'a3) " = " (:opr (kwote llname)) "; ")
+                                (:wt3 "if (" (:opr 'a2) " == " (:opr 'nil) ") {"
+                                                 (:opr '(fval a3)) " = ((Ptr) " 
+						 (:get-extern-function llname) 
+						 ");} else {"
+                                                 (:opr '(fval a3)) " = ((Ptr) " 
+						 (:get-trace-function  llname) ");}")
+                                (:wt3 (:opr '(pftype a3)) " = " (:opr codefn) ";")
+                                (:wt3 "break;")))
+                             arg1))
+                      (:wt1 "}"))
+
+            (ICALLG   ; new instruction to call an external procedure
+	              ; (ICALLG <stack> <name> <larg>)
+	              ;    <larg> = (typeret arg1 typearg1 arg2 typearg2 ...)
+	              (let ((n (div (sub arg1 2) 2))
+			    (name (if (eq (chrnth 0 arg2) #/_)
+				      (substring arg2 1)
+				      arg2))
+			    (typeret (nextl arg3))
+			    (listfixvector ())
+			    (listfloatvector ()))
+			(:wt1 "{" (:callg-C-type typeret) " callg_ret;")
+                        (with ((outchan :include-channel))
+			      (:wt0 "extern " (:callg-C-type typeret) 
+				    " " name "();"))
+			(let ((i 1) (larg arg3))
+			  (repeat n
+				  (:wt1 " " (:callg-C-type (cadr larg)) 
+					" callg_arg" i ";")
+				  (setq larg (cddr larg))
+				  (setq i (add1 i))))
+			(let ((i 1) (larg arg3))
+			  (repeat n
+				  (:wn0 "	 callg_arg" i " = ")
+				  (:callg-LL2C-convert (car larg) (cadr larg))
+				  (selectq (cadr larg)
+					   (7 (newl listfixvector (car larg)))
+					   (8 (newl listfloatvector (car larg))))
+				  (setq larg (cddr larg))
+				  (setq i (add1 i))))
+			; ?!?! finir les fixvector et les floatvector
+			(:wn0 "	 callg_ret = ((" (:callg-C-type typeret) ") " 
+			      name "(")
+			(when (gt n 0)
+			      (let ((i 1))
+				(repeat (sub1 n)
+					(:wn0 "callg_arg" i ",")
+					(setq i (add1 i)))
+				(:wn0 "callg_arg" i)))
+			(:wt0 "));")
+			(:callg-C2LL-convert typeret)
+			(:wt1 "}")
+			(:no-register-use)))
+                                
+; .SSection "Les pseudos-instructions spe'ciales LLM3"
+
+            (LISTEXT
+                  (mapc (lambda (name) 
+                          (let ((iname (catenate :prefix-external-llm3 name)))
+			    (with ((outchan :include-channel))
+				  (:wt0 "extern Ptr " iname "();"))
+			    (newl :extern-functions 
+				  (cons name iname))))
+                        arg1))
+            (LENTRY  ; (LENTRY <name> <ftype>) LLM3 FENTRY
+                     (let ((entry (:get-extern-function arg1)))
+                          (:function-entry-point arg1)
+                          (with ((outchan :include-channel))
+                                (:wt0 "#define " :prefix-ftype-llm3 arg1 " " arg2)
+                                (:wt0 "extern Ptr " entry "();"))))
+
+            (XREFI 
+	              (with ((outchan :include-channel))
+			    (let ((val (assq arg2 :register-attribute-list)))
+			         (if val
+				     (print "extern Ptr " 
+					    :prefix-impure-llm3 arg2 ";")
+				     (:wt0  "extern Ptr " 
+					    (:opr arg2) ";")))))
+            (XREFP)
+	    (XDEFI
+                      (with ((outchan :include-channel))
+			    (let ((val (assq arg1 :register-attribute-list)))
+			         (if val
+				     (print "extern Ptr "
+					    :prefix-impure-llm3 arg1 ";")
+				     (:wt0  "extern Ptr "
+					    (:opr arg1) ";")))))
+	    (XDEFP)
+	    (LABEL)
+	    (MAKFNT  ; LLM3 : nom plen pname
+                     (let ((in (:internal-variable arg1)))
+		       (:wt1 "{<<ret>> llrt_inisymb (" (:opr arg2) 
+			     ", (Ptr) " (:strg arg3)
+			     ", "  (:opr `(@ ,arg1))
+			     ", (Ptr) &" in
+			     ", (Ptr) " :prefix-ftype-llm3 arg1 ");}"))
+		     ; c,a fait perdre du temps et de la place ici.
+	             (:no-register-use))
+	    (MAKCST  ; LLM3 : nom plen pname
+                     (let ((in (:internal-variable arg1)))
+		       (:wt1 "{<<ret>> llrt_inicst (" (:opr arg2) ", (Ptr) "
+			     (:strg arg3) ", (Ptr) &" in ");}"))
+		     ; c,a fait perdre du temps et de la place ici.
+	             (:no-register-use))
+	    (INTEST   ; LLM3 : 
+                       (:wt1 "if (" (:opr 'itcount) " != 0) "
+			     "{<<ret>> llrt_ithard ();}"))
+	    (IFEQ)
+	    (ENDC)
+	    (PURE)
+	    (IMPURE)
+	    (LADR
+	          (with ((outchan :include-channel))
+			(print "Ptr " :prefix-impure-llm3 arg1 " = " arg2 ";")))
+
+; .SSection "Les instructions spe'cialise'es"
+
+            (GFTYPE  ; LLM3 : symb dest
+                     (setq arg1 `(PFTYPE ,arg1))
+                     (:wt1 "{register UFIX aux;")
+                     (:wt2 "aux = (UFIX) (" (:opr arg1) ");")
+                     (:wt2 (:opw arg2) " = (Ptr) aux;}"))
+            (SFTYPE  ; LLM3 : src symb
+                     (setq arg2 `(PFTYPE ,arg2))
+                     (:wt1 "{register int aux1, aux2;")
+                     (:wt2 "aux1 = " (:int arg2) ";")
+                     (:wt2 "aux1 = aux1 & HIGHTMASK;")
+                     (:wt2 "aux2 = " (:int arg1) ";")
+                     (:wt2 "aux1 = aux1 | aux2;")
+                     (:wt2 (:opr arg2) " = (Ptr) aux1;}"))
+            (GPTYPE  ; LLM3 : symb dest
+                     (setq arg1 `(PFTYPE ,arg1))
+                     (:wt1 "{register int aux;")
+                     (:wt2 "aux = " (:int arg1) ";")
+                     (:wt2 "aux = aux >> HIGHTSHIFT;")
+                     (:wt2 (:opw arg2) " = (Ptr) aux;}"))
+            (SPTYPE  ; LLM3 : src symb
+                     (setq arg2 `(PFTYPE ,arg2))
+                     (:wt1 "{register int aux1, aux2;")
+                     (:wt2 "aux1 = " (:int arg2) ";")
+                     (:wt2 "aux2 = " (:int arg1) ";")
+                     (:wt2 "aux2 = aux2 << HIGHTSHIFT;")
+                     (:wt2 "aux1 = aux1 | aux2;")
+                     (:wt2 (:opr arg2) " = (Ptr) aux1;}"))
+
+; .SSection "Les instructions de construction de listes"
+
+            (CONS    ; LLM3 : car,cdr/dest
+                     (:wt1 "{register Ptr aux; aux = " (:opr 'fcons) ";")
+                     (:wt2 "if (aux == " (:opr 'nil) ") "
+                          "{<<ret>> llrt_gccons(); aux = " (:opr 'fcons) ";}")
+                     (:wt2 (:opr 'fcons) " = (aux + 1)->Val; aux->Val = "
+			   (:opr arg1) ";")
+                     (:wt2 "(aux + 1)->Val = " (:opr arg2) "; " (:opw arg2)
+			   " = aux;}"))
+            (XCONS   ; LLM3 : cdr,car/dest
+                     (:wt1 "{register Ptr aux; aux = " (:opr 'fcons) ";")
+                     (:wt2 "if (aux == " (:opr 'nil) ") "
+                          "{<<ret>> llrt_gccons(); aux = " (:opr 'fcons) ";}")
+                     (:wt2 (:opr 'fcons) " = (aux + 1)->Val; aux->Val = "
+			   (:opr arg2) ";")
+                     (:wt2 "(aux + 1)->Val = " (:opr arg1) "; " (:opw arg2)
+			   " = aux;}"))
+            (NCONS   ; LLM3 : car/dest
+                     (:wt1 "{register Ptr aux; aux = " (:opr 'fcons) ";")
+                     (:wt2 "if (aux == " (:opr 'nil) ") "
+                          "{<<ret>> llrt_gccons(); aux = " (:opr 'fcons) ";}")
+                     (:wt2 (:opr 'fcons) " = (aux + 1)->Val; aux->Val = "
+			   (:opr arg1) ";")
+                     (:wt2 "(aux + 1)->Val = " (:opr 'nil) "; " 
+			   (:opw arg1) " = aux;}"))
+
+; .SSection "Les instructions sur le bit invisible"
+
+            (STINVSBL ; LLM3 : accu
+                      (:mactabin arg1)
+                      (:wt2 (:opr 'btbin) "[aux] |= mask;}"))
+            (CLINVSBL ; LLM3 : accu
+                      (:mactabin arg1)
+                      (:wt2 (:opr 'btbin) "[aux] &= ~mask;}"))
+            (BTINVSBL ; LLM3 : accu lab
+                      (:mactabin arg1)
+                      (:wt2 "aux = " (:opr 'btbin) "[aux] & mask;")
+                      (:wn2 "if (aux != 0)")
+                      (:goto-label-at arg2 "}"))
+            (BFINVSBL ; accu lab
+                      (:mactabin arg1)
+                      (:wt2 "aux = " (:opr 'btbin) "[aux] & mask;")
+                      (:wn2 "if (aux == 0)")
+                      (:goto-label-at arg2 "}"))
+
+; .SSection "Les instructions du GC"
+
+            (STMARK   ; LLM3 : accu
+                      (:mactabgc arg1)
+                      (:wt2 (:opr 'btbgc) "[aux] |= mask;}"))
+            (BTMARK   ; LLM3 : accu lab
+                      (:mactabgc arg1)
+                      (:wt2 "aux = " (:opr 'btbgc) "[aux] & mask;")
+                      (:wn2 "if (aux != 0)")
+                      (:goto-label-at arg2 "}"))
+            (BFMARK   ; LLM3 : accu lab
+                      (:mactabgc arg1)
+                      (:wt2 "aux = " (:opr 'btbgc) "[aux] & mask;")
+                      (:wn2 "if (aux == 0)")
+                      (:goto-label-at arg2 "}"))
+            (TCMARK   ; LLM3 : accu lab
+                      (:mactabgc arg1)
+                      (:wn2 "if (" (:opr 'btbgc) "[aux] & mask) {" 
+			    (:opr 'btbgc) "[aux] &= ~mask;")
+                      (:goto-label-at arg2 "}}"))
+
+            (CONVTOK  ; LLM3 : first last dest
+                      (:wt1 (:opw arg3) " = (Ptr) (((Ad) " (:opr arg2) " - (Ad) " 
+			   (:opr arg1) ") >> 10);"))
+            (SWPCONS  ; LLM3 : 
+                      (:swpcons arg1 arg2 arg3 arg4))
+            (GCMARK   ; LLM3 :
+                      (:gcmark))
+            (GCSTART  )
+            (GCSTOP   )
+            (SFCONS   ; LLM3 : op
+                      (:instruction `(MOV ,arg1 FCONS)))
+            (GFCONS   ; LLM3 : op
+                      (:instruction `(MOV FCONS ,arg1)))
+            (NXSYMB   ; LLM3 : op lab
+                      (:next-chunk arg1 8 'BCONS arg2))
+            (NXNUMB   ; LLM3 : op lab
+                      (:next-chunk arg1 1 'BFLOAT arg2))
+            (NXFLOAT  ; LLM3 : op lab
+                      (:next-chunk arg1 "(sizeof(union LL_FLOAT) / sizeof(Ptr))"
+			     'BVECT arg2))
+            (NXVECT   ; LLM3 : op lab
+                      (:next-chunk arg1 2 'BSTRG arg2))
+            (NXSTRG   ; LLM3 : op lab
+                      (:next-chunk arg1 2 'BSYMB arg2))
+            (NXCONS   ; LLM3 : op lab
+                      (:next-chunk arg1 2 'ECONS arg2))
+
+; .SSection "Instructions sur le TAS"
+
+            (CHBLT    ; LLM3 : op1 op2 lab
+                      (:cmp-ptr-and-branch arg1 "<" arg2 arg3))
+            (NXHB     ; LLM3 : size op
+                      ; Pour e^tre sur qu'il n'y ait pas de proble`me d'alignement,
+                      ; on debute toutes les adresses du tas sur des frontie`res de 
+                      ; mots (32 bits en ge'ne'ral). 
+                      ; Attention on rajoute a` la main le caracte`re `\0`.
+                      (:wt1 (:opm arg2) " += 3 + ((" 
+			    (:fixpos arg1) ") / sizeof(Ptr));"))
+            (NXHP     ; LLM3 : size op
+                      (:wt1 (:opw arg2) " = (" 
+			    (:opr arg2) " + 2 + " (:fixpos arg1) ");"))
+            (NXHF     ; LLM3 : heap
+                      )
+            (NXHS     ; LLM3 : heap
+                      )
+            (HBLT     ; LLM3 : ssrc esrc sdest
+                 (let ((ssrc arg1) (esrc arg2) (sdest arg3))
+                      (:wt1 "{register char *src, *dest, *fin;")
+                      (:wt2 "src = (char *) " (:opr ssrc) ";")
+                      (:wt2 "dest = (char *) " (:opr sdest) ";")
+                      (:wt2 "fin = (char *) " (:opr esrc) ";")
+                      (:wt2 "while (src != fin) *dest++ = *src++;}")))
+
+; .SSection "Les instructions sur le canal terminal"
+
+            (TTYIN    ; LLM3 : op
+	              (:wt1 (:opw arg1) " = (Ptr) llrt_ttyin();"))
+	    (TTYIS    ; LLM3 : op cc
+	              (:wt1 "{register int aux;")
+		      (:wt2 "aux = llrt_ttys(llrt_charttys);")
+		      (:wt2 (:opw arg2) " = (Ptr) aux;")
+		      (:wt2 "aux = *llrt_charttys;")
+		      (:wt2 (:opw arg1) " = (Ptr) aux;}"))
+	    (TTYINSTR ; LLM3 : strg count
+	              (:wt1 (:opw arg2) " = (Ptr) llrt_ttyinstr(" 
+			    (:opr arg1) "->Val + 2,("
+			    (:opr arg1) "->Val + 1)->Val);"))
+            (TTYMSG   ; LLM3 : n strg
+                      (:wt1 "llrt_ttyout(" (:fixpos arg1) ", " (:strg arg2) ");"))
+            (TTYCRLF  ; LLM3 :
+                      (:wt1 "llrt_ttyout(2, ""\n\r"");"))
+            (TTYSTRG  ; LLM3 : n strg
+                      (:wt1 "llrt_ttyout(" (:fixpos arg1) ", " 
+			    (:opr arg2) "->Val + 2);"))
+
+; .SSection "Les instructions sur les fichiers"
+
+            (INFILE   ; LLM3 : chan strg cc
+                      (:file-funct 'llrt_infile arg1 arg2 arg3))
+            (OUFILE   ; LLM3 : chan strg cc
+                      (:file-funct 'llrt_oufile arg1 arg2 arg3))
+            (APFILE   ; LLM3 : chan strg cc
+                      (:file-funct 'llrt_apfile arg1 arg2 arg3))
+            (INFILEB  ; LLM3 : chan strg cc
+                      (:file-funct 'llrt_infile arg1 arg2 arg3))
+            (OUFILEB  ; LLM3 : chan strg cc
+                      (:file-funct 'llrt_oufile arg1 arg2 arg3))
+            (APFILEB  ; LLM3 : chan strg cc
+                      (:file-funct 'llrt_apfile arg1 arg2 arg3))
+            (INBF     ; LLM3 : chan strg size cc
+                      (:io-funct 'llrt_inbf arg1 arg2 arg3 arg4))
+            (INBFB    ; LLM3 : chan strg size cc
+                      (:io-funct 'llrt_inbfb arg1 arg2 arg3 arg4))
+            (OUTF     ; LLM3 : chan strg size cc
+	              (:wt1 (:opw arg4) " = (Ptr) llrt_outf(" (:opr arg1) 
+			    "," (:opr arg3) "," (:opr arg2) "->Val + 2);"))
+            (OUTFL    ; LLM3 : chan strg size cc
+	              (:wt1 (:opw arg4) " = (Ptr) llrt_outfl(" (:opr arg1)
+			    "," (:opr arg3) "," (:opr arg2) "->Val + 2);"))
+            (OUTFLB   ; LLM3 : chan strg size cc
+	              (:wt1 (:opw arg4) " = (Ptr) llrt_outfl(" (:opr arg1)
+			    "," (:opr arg3) "," (:opr arg2) "->Val + 2);"))
+            (FCLOS    ; LLM3 : chan cc
+	              (:wt1 (:opw arg2) " = (Ptr) llrt_fclos(" (:opr arg1) ");"))
+            (FDELE    ; LLM3 : strg cc
+	              (:system-call-1-cc 'llrt_fdele arg1 arg2))
+	    (FRENA    ; LLM3 : strg1 strg2 cc
+	              (:system-call-2-cc  'llrt_frena arg1 arg2 arg3))
+	    (FCOPY    ; LLM3 : strg1 strg2 cc
+	              (:system-call-2-cc  'llrt_fcopy arg1 arg2 arg3))
+	    (FPROBE   ; LLM3 : strg cc
+	              (:system-call-1-cc 'llrt_fprobe arg1 arg2))
+	    (CORSAV   ; LLM3 : strg cc
+		      (:system-call-1-cc 'llrt_corsav arg1 arg2)
+                      ; c'est vraiment pas le moment de jouer avec les registres.
+		      (:no-register-use))
+	    (COREST   ; LLM3 : strg cc
+		      (:system-call-1-cc 'llrt_corest arg1 arg2)
+                      ; c'est vraiment pas le moment de jouer avec les registres.
+		      (:no-register-use))
+
+; .SSection "Les instructions syste`me"
+
+	    (CLINE    ; LLM3 : strg
+	              (:system-call-1 'llrt_cline arg1))
+	    (DATE     ; LLM3 :op
+	              (:system-call-1 'llrt_cdate arg1))
+	    (GETENVRN ; LLM3 : strg1 strg2 cnt
+	              (:system-call-2-cc 'llrt_getenvrn arg1 arg2 arg3))
+	    (GETGLOBAL ; LLM3 : strg op
+	              (:system-call-1-cc 'llrt_getgloba arg1 arg2))
+	    (CALLG    ; LLM3 : op1 op2
+	              (:wt1 (:opw arg2) " = (Ptr) llrt_callg(" 
+			    (:opr arg1) "," (:opr arg2) ");")
+                      ; c'est vraiment pas le moment de jouer avec les registres.
+		      (:no-register-use))
+	    (RUNTIME  ; LLM3 : op
+	              (if :31bitfloats
+			  (:wt1 (:opw arg1) " = Cfloat_to_Lfloat (llrt_runtime ());")
+			  (progn
+			    (:testfloat)
+			    (:wt2 "aux->Val = llrt_runtime();")
+			    (:wt2 (:opw arg1) " = (Ptr) aux;}"))))
+	    (SLEEP    ; LLM3 : op
+	              (if :31bitfloats
+			  (:wt1 "llrt_csleep (Lfloat_to_Cfloat (" (:opr arg1) "));")
+			  (:wt1 "llrt_csleep(((Float) " (:opr arg1) ")->Val);")))
+	    (SETALARM ; LLM3 : op
+	              (if :31bitfloats
+			  (:wt1 (:opw arg1) 
+				" = Cfloat_to_Lfloat (llrt_setalarm (Lfloat_to_Cfloat ("
+				(:opr arg1) ")));")
+			  (progn
+			    (:testfloat)
+			    (:wt2 "if (((Float) " (:opr arg1) 
+				  ")->Val != 0.) llrt_raz_clkcnt();")
+			    (:wt2 "aux->Val = llrt_setalarm(((Float) " 
+				  (:opr arg1) ")->Val);"
+				  (:wt2 (:opw arg1) " = (Ptr) aux;}")))))
+
+; .SSection "Les instructions d'acce`s a` la me'moire"
+
+            (ADRHL    ; LLM3 : adr h l
+               (let ((adr arg1) (h arg2) (l arg3))
+                      (:wt1 (:opw h) " = (Ptr) ((Ad) " (:opr adr) " >> HIGHTSHIFT);")
+                      (:wt1 (:opw l) " = (Ptr) ((Ad) " (:opr adr) " & LOWMASK);")))
+            (HLADR    ; LLM3 : h l adr
+               (let ((h arg1) (l arg2) (adr arg3))
+                     (:wt1 (:opw adr) " = (Ptr) (((Ad) " (:opr h) 
+                           " << HIGHTSHIFT) + (Ad) " (:opr l) ");")))
+            (ADDADR  ; LLM3 : A3|A1 + A4|A2 -> A3|A1
+                     (:wt1 "{register int aux0, aux1, aux2;")
+                     (:wt2 "aux0 = (int) ((UFIX) " (:opr 'a3) 
+			   "); aux1 = aux0 << HIGHTSHIFT;")
+                     (:wt2 "aux0 = (int) ((UFIX) " (:opr 'a1)
+			   "); aux1 = aux0 + aux1;")
+                     (:wt2 "aux0 = (int) ((UFIX) " (:opr 'a4)
+			   "); aux2 = aux0 << HIGHTSHIFT;")
+                     (:wt2 "aux0 = (int) ((UFIX) " (:opr 'a2)
+			   "); aux2 = aux0 + aux2;")
+                     (:wt2 "aux1 = aux1 + aux2;")
+                     (:wt2 "aux0 = (aux1 >> HIGHTSHIFT) & LOWMASK; "
+			   (:opw 'a3) " = (Ptr) aux0;")
+                     (:wt2 "aux0 = aux1 & LOWMASK; " (:opw 'a1) " = (Ptr) aux0;}"))
+            (SUBADR  ; LLM3 : A3|A1 - A4|A2 -> A3|A1
+                     (:wt1 "{register int aux0, aux1, aux2;")
+                     (:wt2 "aux0 = (int) ((UFIX) " (:opr 'a3)
+			   "); aux1 = aux0 << HIGHTSHIFT;")
+                     (:wt2 "aux0 = (int) ((UFIX) " (:opr 'a1)
+			   "); aux1 = aux0 + aux1;")
+                     (:wt2 "aux0 = (int) ((UFIX) " (:opr 'a4)
+			   "); aux2 = aux0 << HIGHTSHIFT;")
+                     (:wt2 "aux0 = (int) ((UFIX) " (:opr 'a2)
+			   "); aux2 = aux0 + aux2;")
+                     (:wt2 "aux1 = aux1 - aux2;")
+                     (:wt2 "aux0 = (aux1 >> HIGHTSHIFT) & LOWMASK; "
+			   (:opw 'a3) " = (Ptr) aux0;")
+                     (:wt2 "aux0 = aux1 & LOWMASK; " (:opw 'a1) " = (Ptr) aux0;}"))
+            (MEMSET  ; LLM3 : val ad
+                     )
+            (MEMGET  ; LLM3 : ad result
+                     )
+            (MEMMOVM ; LLM3 : src1 cnt dest
+                     )
+
+
+            (t (error ':instruction 'modtoc obj)))))))
+
+
+; .Section "Les Fonctions auxiliaires de ge'ne'ration des extensions LLM3"
+
+(defun :system-call-1 (fnt strg)
+   (:wt1 fnt "(" (:opr strg) "->Val + 2);"))
+
+(defun :system-call-1-cc (fnt strg cc)
+   (:wt1 (:opw cc) " = (Ptr) " fnt "(" (:opr strg) "->Val + 2);"))
+   
+(defun :system-call-2-cc (fnt strg1 strg2 cc)
+   (:wt1 (:opw cc) " = (Ptr) " fnt "(" (:opr strg1) "->Val + 2, " 
+	 (:opr strg2) "->Val + 2);"))
+
+(defun :file-funct (fnt chan strg cc)
+    (:wt1 (:opw cc) " = (Ptr) " fnt "(" (:opr chan) ","
+	  (:opr strg) "->Val + 2);"))
+
+(defun :io-funct (fnt chan strg size cc)
+    (:wt1 (:opw cc) " = (Ptr) " fnt "(" (:opr chan) ", " 
+	  (:opr strg) "->Val + 2, &" (:opr size) ");")
+    ; a` cause du &
+    (:no-register-use))
+
+(defun :internal-variable (name)
+	 (let ((name (catenate :prefix-dot-llm3 name)))
+              (when (not (member name :internal-variables-list))
+                    (newl :internal-variables-list name)
+		    (with ((outchan :include-channel))
+			  (:wt0 "Ptr " name " = 0;")))
+	      name))
+
+(defun :mactabgc (obj)
+   ; Calcule dans le registre "aux" un index de caracte`re associe' a` "obj".
+   ; Calcule dans le registre "mask" le masque associe'e a` "obj".
+   (:wt1 "{register Ad aux, mask;")
+   (:wt2 "aux = (Ad) " (:opr obj) ";")
+   ; Calcule dans "aux" l'index de bits.
+   (:wt2 "aux -= (Ad) " (:opr 'bnumb) ";")
+   (:wt2 "aux >>= MINSHIFTGC;")
+   ; Calcule dans "mask" l'index de bits au niveau caracte`re.
+   (:wt2 "mask = 1; 	mask <<= (aux & MASKCHAR);")
+   ; Calcule dans "aux" l'index de caracte`re.
+   (:wt2 "aux >>= PBITCHAR;"))
+
+(defun :mactabin (obj)
+   ; Calcule dans le registre "aux" un index de caracte`re associe' a` "obj".
+   ; Calcule dans le registre "mask" le masque associe'e a` "obj".
+   (:wt1 "{register Ad aux, mask;")
+   (:wt2 "aux = (Ad) " (:opr obj) ";")
+   ; Calcule dans "aux" l'index de bits.
+   (:wt2 "aux -= (Ad) " (:opr 'bcons) ";")
+   (:wt2 "aux >>= MINSHIFTINVSBL;")
+   ; Calcule dans "mask" l'index de bits au niveau caracte`re.
+   (:wt2 "mask = 1; mask <<= (aux & MASKCHAR);")
+   ; Calcule dans "aux" l'index de caracte`re.
+   (:wt2 "aux >>= PBITCHAR;"))
+
+(defun :next-chunk (op incr borne lab)
+   ; Incre'mente "op" de "incr" Ptr et teste si le re'sultat ne
+   ; de'passe pas "borne".
+   (:wt1 (:opm op) " += " (:fixpos incr) ";")
+   (:cmp-ptr-and-branch op "<" borne lab))
+
+(defun :swpcons (curfreel curcons freel freelm)
+   (:wt1 "{ register Ad aux, mask;")
+   (:wt2 "register Ptr regecons, regbnumb, regbcons;")
+   (:wt2 "register int cnt;")
+   (:wt2 "register unsigned char *regbtbgc, *regbtbin;")
+   (:wt2 "cnt = 0;")
+   (:wt2 "regbnumb = " (:opr 'bnumb) ";")
+   (:wt2 "regbcons = " (:opr 'bcons) ";")
+   (:wt2 "regecons = " (:opr 'econs) ";")
+   (:wt2 "regbtbgc = " (:opr 'btbgc) ";")
+   (:wt2 "regbtbin = " (:opr 'btbin) ";")
+   (:wt2 "do {")
+   (:wt3 "aux = (Ad) " (:opr 'a4) ";")
+   (:wt3 "aux -= (Ad) regbnumb;")
+   (:wt3 "aux >>= MINSHIFTGC;")
+   (:wt3 "mask = 1;")
+   (:wt3 "mask <<= (aux & MASKCHAR);")
+   (:wt3 "aux >>= PBITCHAR;")
+   (:wt3 "if (regbtbgc[aux] & mask) {")
+   (:wt4 "regbtbgc[aux] &= ~mask;")
+   (:wt3 "} else {")
+   (:instruction `(MOV A1 (CDR A4)))
+   (:instruction `(MOV nil (CAR A4)))
+   (:instruction `(MOV A4 A1))
+   (:wt4 "aux = (Ad) " (:opr 'a4) ";")
+   (:wt4 "aux -= (Ad) regbcons;")
+   (:wt4 "aux >>= MINSHIFTINVSBL + PBITCHAR;")
+   (:wt4 "regbtbin[aux] &= ~mask;")
+   (:wt4 "cnt++;")
+   (:wt3 "}")
+   (:wt3 (:opm 'a4) " += 2;")
+   (:wt2 "} while (" (:opr 'a4) " < regecons);")
+   (:wt2 (:opw 'freelm) " = (Ptr) (cnt >> 10);")
+   (:wt2 (:opr 'a2) " = (Ptr) (cnt & 0x3FF); /* 10 bits */")
+   (:wt2 "}"))
+
+(defun :gcmark ()
+   ; suppose que l'e'tiquette juste au dessus est "mark"!!
+  (let ((marki  (concat 'gcmark_ (gensym)))
+	(markc  (concat 'gcmark_ (gensym)))
+	(markr  (concat 'gcmark_ (gensym)))
+	(markt  (concat 'gcmark_ (gensym)))
+	(markl  (concat 'gcmark_ (gensym)))
+	(markv  (concat 'gcmark_ (gensym)))
+	(markv2 (concat 'gcmark_ (gensym))) 
+	(markv4 (concat 'gcmark_ (gensym))))
+    (let ((:local-labels-module 
+	        (mcons marki markr markt markl :local-labels-module)))
+ 
+  (:instruction marki)
+       (:instruction (list 'BFLISP 'A1 markr))              ; je ne sais pas marquer.
+;       (:instruction (list 'BTMARK 'A1 markr))              ; marque' c'est marque'!
+;       (:instruction (list 'STMARK 'A1))                    ; sinon c,a l'est.
+       (:wt1 "{register Ad aux, mask;")
+       (:wt2 "aux = (Ad) " (:opr 'a1) ";")
+       (:wt2 "aux -= (Ad) " (:opr 'bnumb) ";")
+       (:wt2 "aux >>= MINSHIFTGC;")
+       (:wt2 "mask = 1; mask <<= (aux & MASKCHAR);")
+       (:wt2 "aux >>= PBITCHAR;")
+       (:wn2 "if ((" (:opr 'btbgc) "[aux] & mask) != 0)")
+       (:goto-label-at markr "")
+       (:wt2 (:opr 'btbgc) "[aux] |= mask;}")
+       (:instruction (list 'BTCONS 'A1 markl))     ; on privilegie les listes.
+       (:instruction (list 'BTVECT 'A1 markv))     ; marquage spe'cialise' vecteurs
+       (:instruction (list 'BTSTRG 'A1 markt))     ; marquage spe'cialise' chai^nes
+   (:instruction markr)
+       (:instruction (list 'RETURN))     
+   (:instruction markt)                          ;;; marquage d'un type (vect ou strg)
+       (:instruction (list 'MOV '(TYP A1) 'A1))
+       (:instruction (list 'BRA marki))
+   (:instruction markl)
+       (:instruction (list 'CHKSTK 'ESTACK 'ERRFSGC))  ;;; marque la liste dans A1
+       (:instruction (list 'PUSH '(CDR A1)))       ; sauve le reste
+       (:instruction (list 'MOV  '(CAR A1) 'A1))   ; l'e'le'ment de liste a` marquer.
+       (:instruction (list 'PUSH `(@ ,markc)))
+       (:instruction (list 'BRA marki))            ; re'curse sur le CAR     
+   (:instruction markc)
+       (:instruction (list 'POP  'A1))             ; re'cupe`re le reste
+       (:instruction (list 'BRA 'mark))            ; ite`re sur les CDR
+   (:instruction markv)                            ;;; marque le vecteur dans A1
+       (:instruction (list 'PUSH 'A3))             ; A3/A4 inchange's dans MARK.
+       (:instruction (list 'HGSIZE 'A1 'A3))       ; nombre d'e'le'ments du vecteur.
+       (:instruction (list 'PUSH 'A1))             ; le vecteur (en &0)
+       (:instruction (list 'CHKSTK 'ESTACK 'ERRFSGC))  ; erreur fatale!!
+       (:instruction (list 'BRA markv4))           ; de'marre bien la boucle.
+   (:instruction markv2)
+       (:instruction (list 'HPXMOV '(& 0) 'A3 'A1)); e'le'ment suivant.
+       (:instruction (list 'PUSH 'A3))
+       (:instruction (list 'CALL 'mark))           ; marque l'e'le'ment quelconque.
+       (:instruction (list 'POP 'A3))
+   (:instruction markv4)
+       (:instruction (list 'SOBGEZ 'A3 markv2))    ; on boucle sur le nb d'e'le'me.
+       (:instruction (list 'POP 'A1))              ; le vecteur
+       (:instruction (list 'POP 'A3))              ; A3/A4 inchange's dans MARK.
+       (:instruction (list 'MOV '(TYP A1) 'A1))
+       (:instruction (list 'BRA 'mark))
+
+)))
+
+
+; .Section "Les Fonctions auxiliaires de ge'ne'ration du CALLG"
+
+(defun :callg-C2LL-convert (typeret)
+  (selectq typeret
+	   (0 ; pointer
+	    (:wt1 " " (:opr 'a1) " = ((Ptr) callg_ret);"))
+	   (1 ; fix
+	    (:wt1 " " (:opr 'a1) " = ((Ptr) ((UFIX) callg_ret));"))
+	   (2 ; float
+	    (:wt1 " " (:opr 'a1) " = Cfloat_to_Lfloat(callg_ret);"))
+	   (3 ; string
+	    (:wt1 "{int size; char *str;")
+	    (:wt1 " str = (char *) callg_ret;")
+	    (:wt1 " size = 0;")
+	    (:wt1 " while (str[size] != '\0') ++size;")
+	    (:wt1 " " (:opw 'a1) " = (Ptr) ((UFIX) size);")
+	    (:wt1 " " (:opw 'a2) " = (Ptr) callg_ret;")
+	    (:wt1 " llm3_simple_call((Ptr) " :prefix-external-llm3 "crastrg);}"))
+	   (t 
+	    (:print-error "modtoc: CALLG LL->C, type unknow " typeret))))
+
+(defun :callg-LL2C-convert (arg type)
+  (selectq type
+	   (0 ; external (le LOC est fait a` la fin) ou T
+	      (if (and (consp arg) (eq (car arg) 'vag))
+		  (progn (:wn0 "llrt_vag(")
+			 (:opr (cadr arg))
+			 (:wt0 ");"))
+	          (progn (:wn0 "((Ptr) ")
+			 (:opr arg)
+			 (:wt0 ");"))))
+	   (1 ; fix
+	      (:wn0 "((FIX) ")
+	      (:opr arg)
+	      (:wt0 ");"))
+
+	   (2 ; float
+	      (:wn0 "Lfloat_to_Cfloat(")
+	      (:opr arg)
+	      (:wt0 ");"))
+
+	   ((3 4) ; string vector
+	      (:wn0 "((Ptr) (")
+	      (:opr arg)
+	      (:wt0 "->Val)+2);"))
+	   (t
+              (:print-error "modtoc: CALLG C->LL, type unknow " typeret))))
+
+(defun :callg-C-type (type)
+  (selectq type
+	   (0 "Ptr")
+	   (1 "int")
+	   (2 "double")
+	   ((3 4) "Ptr")
+	   (5 "int *")
+	   (6 "double *")
+	   ((7 8) "Ptr")
+	   (t (:print-error "modtoc: CALLG C, type unknow " typeret))))
+
+	   
+; .Section "Les Fonctions auxiliaires de ge'ne'ration des autres instructions"
+
+(defun :get-intern-function (label)
+   (cassq label :intern-functions))
+
+(defun :get-extern-function (label)
+   (cassq label :extern-functions))
+
+(defun :get-trace-function (label)
+   (cassq label :trace-functions))
+
+(defun :make-intern-function (label)
+   ; Retourne le nom C de l'e'tiquette interne <label>
+   (or (:get-intern-function label)
+       (let ((gen (:gen-new-label :prefix-internal-function)))
+            (newl :intern-functions (cons label gen))
+            gen)))
+
+(defun :make-extern-function (label)
+   ; Retourne le nom C de l'e'tiquette externe <label>
+   ; imprime un message pour e'viter les "multiple symbols"
+   (let ((gen (:get-extern-function label)))
+        (if gen
+	    (:print-error "modtoc: multiple defined symbol " label)
+            (progn (setq gen (:gen-new-label :prefix-external-function))
+                   (newl :extern-functions (cons label gen))))
+	gen))
+
+(defun :make-trace-function (label)
+   ; Retourne le nom C de l'e'tiquette externe tracee <label>
+   ; imprime un message pour e'viter les "multiple symbols"
+   (let ((gen (:get-trace-function label)))
+        (if gen
+	    (:print-error "modtoc: multiple defined traced symbol " label)
+            (progn (setq gen (:gen-new-label :prefix-trace-function))
+                   (newl :trace-functions (cons label gen))))
+	gen))
+
+
+(defun :goto-label-at (label endstrg)
+   (:goto-label (list '@ label) endstrg))
+
+(defun :goto-label (label endstrg)
+   ; Un branchement correspond :
+   ;  - a` un branchment vers une e'tiquette locale
+   ;  - a` un appel tailrec
+   ;  - a` un retour au se'quenceur de CO
+   (let ((at-label-p (and (consp label) (eq (car label) '@))))
+     (cond ((and at-label-p
+                 (memq (cadr label) :local-labels-module))
+	    (when (memq (cadr label) :local-procedure-label-list)
+		  (setq :backward-references-p t))
+            (:wt1 "goto " :prefix-local-label (cadr label) ";" endstrg))
+           ((and ; (not :llm3-module-p)
+                 ; les modules LLM3 le font tout seul. Quand c,a se
+                 ; produit, le -O4 devient tre`s mauvais.
+                 at-label-p
+                 (eq (cadr label) :current-name))
+            ; appel tail-rec
+            (setq :tailrec-p t)
+            (:wt1 "goto " :tailrec-label ";" endstrg))
+           (t (if (and at-label-p
+                       (assq (cadr label) :extern-predefined))
+                  (progn 
+                    ; ge'ne'ration en ligne des petits retours.
+                    (selectq (cadr label)
+                      (popj0  (:wn0 " {"))
+                      (popj1  (:wn0 " {" (:opm 'sp) " += (FIX) 1; "))
+                      (popj2  (:wn0 " {" (:opm 'sp) " += (FIX) 2; "))
+                      (popj3  (:wn0 " {" (:opm 'sp) " += (FIX) 3; "))
+                      (popj4  (:wn0 " {" (:opm 'sp) " += (FIX) 4; "))
+                      (popj5  (:wn0 " {" (:opm 'sp) " += (FIX) 5; "))
+                      (popj6  (:wn0 " {" (:opm 'sp) " += (FIX) 6; "))
+                      (popj7  (:wn0 " {" (:opm 'sp) " += (FIX) 7; "))
+                      (popj8  (:wn0 " {" (:opm 'sp) " += (FIX) 8; "))
+                      (popj9  (:wn0 " {" (:opm 'sp) " += (FIX) 9; "))
+                      (popja4 (:wn0 " {" (:opw 'a4) " = (" (:opm 'sp) "++)->Val; ")
+                              (:wn0 (:opm 'sp) " += (FIX) " (:opr 'a4) "; "))
+                      (t (error ':goto-label 'modtoc label)))
+                    (:wt0 "ret_adr = (" (:opm 'sp) "++)->Val; goto ret_fnt;}"
+			  endstrg))
+                  (:wt1 "{ret_adr = " (:opr label) "; goto ret_fnt;}"
+			endstrg))))))
+
+
+(defun :call-internal (lab)
+   ; un appel de fonction Lisp (peut utiliser l'e'tiquette qui suit).
+   (if (listp :next-instruction)
+       (let ((f (concat "call_" (gensym))))
+            (:wt1 "(--" (:opm 'sp) ")->Val = ((Ptr) " (:lab f) ");")
+            (:goto-label lab "")
+            (:function-entry-point f))
+       (:wt1 "(--" (:opm 'sp) ")->Val = ((Ptr) " (:lab :next-instruction) ");")
+       (:goto-label lab "")))
+
+
+(defun :gen-module-name (module)
+   ; Fabrique un nom de module simple pour C en enlevant
+   ; tous les caracte`res bizarres ...
+   (symbol () (mapcan (lambda (x) (if (or (digitp x) (letterp x))
+                                      (ncons x)
+                                      ()))
+                      (explode module))))
+
+(defun :gen-new-label (prefix)
+   ; Fabrique un nouveau nom pre'fixe' par <prefix>
+   ; l'"_" sert a` re'gler le conflit de noms quand des
+   ; noms de modules se terminent par un chiffre.
+   (catenate prefix :C-module-name "_" (incr :gen-new-label-counter)))
+
+(defun :gen-tailrec-label (label)
+   ; Fabrique l'e'tiquette d'une proce'dure C appele'e en tailrec
+   (catenate :prefix-local-label label))
+
+(defun :cmp-ptr-and-branch (arg1 cond arg2 label)
+   ; Compare les 2 adresses de pointeurs <arg1> et <arg2> non signe's.
+   ; Se branche a` <label> si la condition <cond> est ve'rifie'e.
+   ; Travaille en mode naturel : si <arg1> <cond> <arg2> alors goto <label>.
+   (:wn1 "if (" (:opr arg1) " " cond " " (:opr arg2) ")")
+   (:goto-label-at label ""))
+
+(defun :cmp-int-and-branch (arg1 cond arg2 label)
+   ; Compare les 2 adresses de pointeurs <arg1> et <arg2> signe's
+   ; Se branche a` <label> si la condition <cond> est ve'rifie'e.
+   ; Travaille en mode naturel : si <arg1> <cond> <arg2> alors goto <label>.
+   (:wn1 "if ((int) " (:opr arg1) " " cond " (int) " (:opr arg2) ")")
+   (:goto-label-at label ""))
+
+(defun :cmp-type-inside (arg btype etype label)
+   ; Test de type avec 2 bornes.
+   (:wn1 "if ((" (:opr arg) " >= " (:opr btype) ") && ("
+        (:opr arg) " < " (:opr etype) "))")
+   (:goto-label-at label ""))
+
+(defun :cmp-type-outside (arg btype etype label)
+   ; Test de type avec 2 bornes.
+   (:wn1 "if ((" (:opr arg) " < " (:opr btype) ") || (" 
+        (:opr arg) " >= " (:opr etype) "))")
+   (:goto-label-at label ""))
+
+(defun :fix-arith (exp1 op exp2 dest ovfl)
+   ; re'alise l'ope'ration : <exp1> <op> <exp2> -> <dest>  signe'e
+   ; branchement a` <lab> si de'bordement
+   (if (null ovfl)
+       (:wt1 (:opw dest) " = (Ptr) ((UFIX) (" (:fix exp1) " " op 
+	     " " (:fix exp2) "));")
+       (:wt1 "{register int intaux;")
+       (:wt2 "intaux = (int) (" (:fix exp1) " " op " " (:fix exp2) ");")
+       (:wt2 (:opw dest) " = (Ptr) ((UFIX) intaux);")
+       (:wn1 "if ((intaux > HUDGEMAX) || (intaux < HUDGEMIN))")
+       (:goto-label-at ovfl "}")))
+
+(defun :fix-logic (exp1 op exp2 dest)
+   ; re'alise l'ope'ration : <exp1> <op> <exp2> -> <dest> non signe'e
+   (:wt1 (:opw dest) " = (Ptr) (" (:ufix exp1)
+        " " op " " (:ufix exp2) ");"))
+
+(defun :cmp-fix-and-branch (op1 cond op2 lab)
+   ; Compare les 2 nombres entiers <arg1> et <arg2>.
+   ; Se branche a` <label> si la condition <cond> est ve'rifie'e.
+   ; Travaille en mode naturel : si <arg1> <cond> <arg2> alors goto <label>.
+   (:wn1 "if (" (:fix op1) " " cond " " (:fix op2) ")")
+   (:goto-label-at lab ""))
+
+(defun :testfloat ()
+   (:wt1 "if (ffloat == 0) {<<ret>> llrt_gcfloat();}")
+   (:wt1 "{register Float aux = (Float) ffloat;")
+   (:wt2 "ffloat = aux->Next;"))
+
+(defun :float-arith (op1 fnt op2)
+   ; op2 = op1 fnt op2
+   (if :31bitfloats
+       (progn
+         (:wt1 (:opw op2) " = Cfloat_to_Lfloat (Lfloat_to_Cfloat (" 
+              (:opr op2)  ") " fnt " Lfloat_to_Cfloat (" (:opr op1) "));"))
+       (progn
+         (:testfloat)
+         (:wt2 "aux->Val = ((Float) " (:opr op2) ")->Val " fnt
+              " ((Float) " (:opr op1) ")->Val;")
+         (:wt2 (:opw op2) " = (Ptr) aux;")
+         (:wt1 "}"))))
+
+(defun :float-funct-2 (fnt arg1 arg2)
+   ; arg2 = fnt (arg1)
+   (if :31bitfloats
+       (progn
+         (:wt1 (:opw arg2) " = Cfloat_to_Lfloat (" 
+	       fnt " (Lfloat_to_Cfloat (" (:opr arg1) ")));"))
+       (progn
+         (:testfloat)
+         (:wt2 "aux->Val = " fnt " ((Float) " (:opr arg1) ")->Val;")
+         (:wt2 (:opw arg2) " = (Ptr) aux;}"))))
+
+(defun :float-funct-3 (fnt arg1 arg2 arg3)
+   ; arg3 = fnt (arg1, arg2)
+   (if :31bitfloats
+       (progn
+         (:wt1 (:opw arg3) " = Cfloat_to_Lfloat (" 
+	       fnt " (Lfloat_to_Cfloat (" (:opr arg1) "),Lfloat_to_Cfloat ("
+	       (:opr arg2) ")));"))
+       (progn
+         (:testfloat)
+         (:wt2 "aux->Val = " fnt " ((Float) " (:opr arg1) ")->Val, ((Float) "
+	       (:opr arg2) ")->Val;")
+         (:wt2 (:opw arg3) " = (Ptr) aux;}"))))
+
+
+(defun :cmp-float-and-branch (op1 cond op2 lab)
+   ; Compare les 2 nombres flottants <arg1> et <arg2>.
+   ; Se branche a` <label> si la condition <cond> est ve'rifie'e.
+   ; Travaille en mode naturel : si <arg1> <cond> <arg2> alors goto <label>.
+   (if :31bitfloats
+       (:wn1 "if (Lfloat_to_Cfloat (" (:opr op1) ") " cond 
+            " Lfloat_to_Cfloat (" (:opr op2) "))")
+       (:wn1 "if (((Float) " (:opr op1) ")->Val " cond 
+            " ((Float) " (:opr op2) ")->Val)"))
+   (:goto-label-at lab ""))
+
+
+; .Section "Les Fonctions auxilaires d'impression"
+
+; .SSection "Impression dans le terminal"
+
+(defmacro :print-msg lpr
+   ; imprime un message
+   `(with ((outchan ()))
+	  (with ((rmargin (add1 (slen (outbuf)))))
+		(print ,@lpr))))
+
+(defmacro :print-error lpr
+   ; imprime une erreur
+   `(with ((outchan ()))
+	  (with ((rmargin (add1 (slen (outbuf)))))
+		(print "** " ,@lpr))))
+
+; .SSection "Impression dans le canal C"
+
+(defmacro :wn0 lpr
+   ; engendre la se'rie de "prin" 
+   `(progn ,@(mapcar (lambda (x)
+                       (cond ((eq x 'TAB) `(princn #\tab))
+                             ((stringp x) `(prin ,x))
+                             ((consp x)
+                              (cond ((memq (car x) 
+                                           '(:opr :opw :opm :strg :int 
+					     :fix :fixpos :fixincr :ufix :lit))
+				     x)
+                                    (t `(prin ,x))))
+                             (t `(prin ,x))))
+                     lpr)))
+
+(defmacro :wn1 lpr
+   ; imprime: TAB ... 
+   `(:wn0 TAB ,@lpr))
+
+(defmacro :wn2 lpr
+   ; imprime: TAB TAB ...
+   `(:wn0 TAB TAB ,@lpr))
+
+(defmacro :wn3 lpr
+   ; imprime: TAB TAB TAB ... 
+   `(:wn0 TAB TAB TAB ,@lpr))
+
+(defmacro :wn4 lpr
+   ; imprime: TAB TAB TAB TAB ... 
+   `(:wn0 TAB TAB TAB TAB ,@lpr))
+
+(defmacro :wt0 lpr
+   ; imprime: ... RC
+   `(progn (:wn0 ,@lpr) (:terpri)))
+
+(defmacro :wt1 lpr
+   ; imprime: TAB ... RC
+   `(progn (:wn1 ,@lpr) (:terpri)))
+
+(defmacro :wt2 lpr
+   ; imprime: TAB TAB ... RC
+   `(progn (:wn2 ,@lpr) (:terpri)))
+
+(defmacro :wt3 lpr
+   ; imprime: TAB TAB TAB ... RC
+   `(progn (:wn3 ,@lpr) (:terpri)))
+
+(defmacro :wt4 lpr
+   ; imprime: TAB TAB TAB TAB ... RC
+   `(progn (:wn4 ,@lpr) (:terpri)))
+
+
+; .Section "Le Chargeur proprement dit"
+
+(defvar :previous-instruction ())
+(defvar :next-instruction ())
+
+(defmacro :get-next-inst (l)
+   (if (symbolp l)
+       `(progn (while (and (consp (car ,l)) (eq (caar ,l) 'EVAL))
+                      (setq ,l (cdr ,l)))
+               (nextl ,l))
+       (error :get-next-inst 'errsymb l)))
+
+(defun :loader l
+   ; gestion d'un "pipe" pour les instructions.
+   ; A tout moment 3 instructions sont visibles et sans les (EVAL ()) :
+   ; la pre'ce'dente, la courante et la suivante.
+   (let* ((list-of-instructions (car l))
+          (:previous-instruction ())
+          (current-instruction ())
+          (:next-instruction ()))
+        ; ne garde que les symboles (adresses locales inter-loader)
+        (setq :intern-functions (mapcan (lambda (x)
+                                          (if (symbolp (car x)) (list x) ()))
+                                        :intern-functions))
+        '(with ((outchan ())) 
+              (print)
+              (print "====== extern-functions " :extern-functions)
+              (print "====== intern-functions " :intern-functions))
+
+        (when :peephole-optimize-p
+              (setq list-of-instructions
+                    (funcall ':peephole-optimize list-of-instructions)))
+        (setq :local-labels-module
+              (if :optimize-local-labels-p
+                  (funcall ':find-local-labels list-of-instructions)
+                  ()))
+        (setq :next-instruction (:get-next-inst list-of-instructions))
+        (while (consp list-of-instructions)
+               (setq :previous-instruction current-instruction
+                     current-instruction   :next-instruction
+                     :next-instruction     (:get-next-inst list-of-instructions))
+               (:instruction current-instruction))
+        (setq :previous-instruction current-instruction
+              current-instruction :next-instruction
+              :next-instruction ())
+        (:instruction current-instruction)))
+
+ 
+; .Section "Les statistiques de ge'ne'ration"
+
+; Pas bien terrible tout c,a mais cela permet d'avoir une petite apperc,ue
+; des effets des optimisations.
+
+(defvar :stats-global-nb-of-procs   0.)
+(defvar :stats-nb-of-procs          0.)
+(defvar :stats-global-sum           0.)
+
+(defvar :stats-vector-size          32)
+(defvar :stats-vector               ())
+
+(defvar :stats-preloaded-registers  0.)
+(defvar :stats-unloaded-registers   0.)
+
+(defun :stats-start ()
+   (setq :stats-nb-of-procs          0.)
+   (setq :stats-preloaded-registers  0.)
+   (setq :stats-unloaded-registers   0.)
+   (setq :stats-vector (makevector :stats-vector-size 0.)))
+
+(defun :stats-stop ()
+   (with ((outchan ()))
+         (let ((sum 0.) 
+               n 
+               (halfsize (div :stats-vector-size 2)))
+              (print "Nb of C procedures: " :stats-nb-of-procs)
+              (incr :stats-global-nb-of-procs :stats-nb-of-procs)
+              (for (i 0 1 (sub1 halfsize))
+                   (setq n (vref :stats-vector i))
+                   (incr sum (* n i))
+                   (incr :stats-global-sum (* n i))
+                   (outpos 2) (prin i) (outpos 7) (prin n)
+                   (setq n (vref :stats-vector halfsize))
+                   (incr sum (* n halfsize))
+                   (incr :stats-global-sum (* n halfsize))
+                   (outpos 12) (prin halfsize) (outpos 17) (print n)
+                   (setq halfsize (add1 halfsize)))
+              (print "Average per C procedures: " (/ sum :stats-nb-of-procs))
+              (print "Preloaded registers:      " :stats-preloaded-registers)
+              (print "Unloaded  registers:      " :stats-unloaded-registers)
+              (print))))
+
+(defun :stats-global ()
+  (when :stats-on-C-size-p
+        (with ((outchan ()))
+              (print)
+              (print "Global nb of C procedures: "
+                     :stats-global-nb-of-procs)
+              (print " average per C procedures: "
+                     (/ :stats-global-sum :stats-global-nb-of-procs)))))
+
+

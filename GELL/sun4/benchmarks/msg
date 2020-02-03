@@ -1,0 +1,260 @@
+Le (help) en l'e'tat actuel est un benchmark tre`s commode pour les
+versions d'Aida anciennes et nouvelles. C'est un code qui n'a pas
+beaucoup change' depuis longtemps. La fin du message contient les
+valeurs du "profile" de 10 fois l'appel de (help) dans son incarnation
+en GELL/15. On y de'couvre des choses inte'ressantes pour les 
+optimisations en cours de Le-Lisp :
+
+La fonction consommant le plus de temps est la fonction (oblist)!
+A cause de la recherche, a` priori, de l'ensemble des me'thodes
+des objets graphiques par la fonction :
+
+(defun :get-methods (symbol)
+  (mapcan ':is-a-method (sortl (oblist symbol))))
+
+Enfin, et cela conforte l'intuition, le SEND total (cummule' avec
+le FUNCALL final) prend plus de 25% du temps. 
+
+
+sceaux% prof  aidaX11bin | more
+ %time  cumsecs  #call  ms/call  name
+  21.7    22.31    800    27.89  _l_oblist
+  17.4    40.25 373772     0.05  _l_getfn8
+  13.1    53.75                  mcount
+   2.4    56.21     18   136.67  _llm3_execute
+   2.4    58.65  14198     0.17  _Ehash41
+   2.0    60.69  26418     0.08  _l_trysy3s
+   1.6    62.36 352102     0.00  _l_send
+   1.3    63.69 329355     0.00  _l_evalis
+   1.1    64.77 403622     0.00  _l_ffuncall
+   0.9    65.74                  _read
+   0.9    66.67 256745     0.00  _l_8018
+   0.9    67.59 105617     0.01  _l_subtypep
+   0.8    68.41 209306     0.00  _l_mark
+   0.7    69.15 373788     0.00  _l_getfns
+   0.7    69.88 373788     0.00  _l_getfn5
+   0.7    70.59 256464     0.00  _l_evaln
+   0.7    71.28 527435     0.00  _l_evalcar
+   0.7    71.95 358717     0.00  _l_3028
+   0.7    72.62 192024     0.00  _l_llarget
+   0.6    73.27 164670     0.00  _l_gettype
+   0.6    73.91 358717     0.00  _l_send1
+   0.6    74.54   6230     0.10  _Ex11window84
+   0.5    75.06 199428     0.00  _l_evalat
+   0.5    75.58  72957     0.01  _l_strctacc
+   0.5    76.09 256745     0.00  _l_evaln1
+   0.5    76.60                  _write
+   0.5    77.08  65017     0.01  _l_evbnd92
+   0.4    77.54      2   230.00  _l_gcswcons
+   0.4    77.99      2   225.00  _l_gcompact
+   0.4    78.42  96462     0.00  _l_gacomfx0
+   0.4    78.85 365226     0.00  _l_gcpopj
+   0.4    79.26  72957     0.01  _l_3035
+   0.4    79.67 122839     0.00  _l_equal1
+   0.4    80.03  97545     0.00  _l_min3
+   0.3    80.38  48885     0.01  _l_14016
+   0.3    80.73  64254     0.01  _l_8016
+   0.3    81.06 164361     0.00  _l_fncal1
+   0.3    81.38 203542     0.00  _l_equal2
+   0.3    81.69    991     0.31  _Eapplication511
+   0.3    81.99  72006     0.00  _l_string
+   0.3    82.28    290     1.00  _Econstraints66
+   0.3    82.57     70     4.14  _fast_subst_colors
+   0.3    82.85  43539     0.01  _Evirutil24
+   0.3    83.13  16353     0.02  _l_makvect2
+   0.3    83.40  15699     0.02  _Evirgraph8
+   0.2    83.65  11265     0.02  _l_getsym1i
+   0.2    83.89 128016     0.00  _l_8003
+   0.2    84.12  14174     0.02  _Eresource110
+   0.2    84.34                  _Ehelp650
+   0.2    84.56  11318     0.02  _Eresource86
+   0.2    84.78  49222     0.00  _l_asso1
+   0.2    84.99  96879     0.00  _l_gacom1
+   0.2    85.19  15123     0.01  _l_17068
+   0.2    85.38                  _Ex11window103
+   0.2    85.57   1131     0.17  _Ex11window126
+   0.2    85.76  49222     0.00  _l_13040
+   0.2    85.95 192024     0.00  _l_llarg
+   0.2    86.14  48885     0.00  _l_mintwo
+   0.2    86.33  65017     0.00  _l_unbinp1
+   0.2    86.52 102692     0.00  _ll_vag
+   0.2    86.70   8666     0.02  _Ex11graph1
+   0.2    86.88 128113     0.00  _l_8015
+   0.2    87.06  64254     0.00  _l_evalns1
+   0.2    87.24 128796     0.00  _l_popj
+   0.2    87.41  18402     0.01  _l_bltvect
+   0.2    87.58  96879     0.00  _l_gacom
+   0.2    87.74  48885     0.00  _l_min1
+   0.2    87.90  65017     0.00  _l_unbise
+   0.1    88.05    980     0.15  _Ex11window30
+   0.1    88.20 101520     0.00  _l_fncal2
+   0.1    88.35                  _writev
+   0.1    88.49  33694     0.00  _l_14017
+   0.1    88.63  66049     0.00  _l_gacom3
+   0.1    88.77  48660     0.00  _l_min
+   0.1    88.91  18666     0.01  _l_mina4a3
+   0.1    89.04                  .rem
+   0.1    89.17   2963     0.04  _Eview17
+   0.1    89.30                  __nlist
+   0.1    89.43   6994     0.02  _l_gaquomod
+   0.1    89.56  25273     0.01  _l_trysympk
+   0.1    89.68   1600     0.07  _Enodeimage111
+   0.1    89.80  64246     0.00  _l_evalnsn
+   0.1    89.92  69536     0.00  _l_evprogn
+   0.1    90.04  31250     0.00  _l_fncal3
+   0.1    90.16  64031     0.00  _l_fncalex
+   0.1    90.28  50195     0.00  _l_galt
+   0.1    90.40  33694     0.00  _l_max1
+   0.1    90.52 105555     0.00  _l_typep
+   0.1    90.63   2040     0.05  _Evirdraw36
+   0.1    90.74   5770     0.02  _Evirgraph79
+   0.1    90.85    990     0.11  _Evirwindow68
+   0.1    90.96                  __XGenerateGCList
+   0.1    91.07  30830     0.00  _l_gacom2
+   0.1    91.18 127199     0.00  _l_gacomfx1
+   0.1    91.29  23158     0.00  _l_geti
+   0.1    91.40  64141     0.00  _l_quote
+   0.1    91.51  26418     0.00  _l_trysy3d
+   0.1    91.61    992     0.10  _Eapplication63
+   0.1    91.71  14174     0.01  _Ehash111
+   0.1    91.81  51869     0.00  _l_13007
+   0.1    91.91  37079     0.00  _l_funcall0
+   0.1    92.01  11930     0.01  _l_gadivt
+   0.1    92.11  40254     0.00  _l_llgt
+   0.1    92.21 107446     0.00  _l_mark2
+   0.1    92.31  67388     0.00  _l_max3
+   0.1    92.41  51869     0.00  _l_savequal
+   0.1    92.50   3851     0.02  _Esort1
+   0.1    92.59   1669     0.05  _l_nconc
+   0.1    92.68  26199     0.00  _l_nreconc
+   0.1    92.76  14198     0.01  _Ehash5
+   0.1    92.84    712     0.11  _Eview34
+   0.1    92.92    991     0.08  _Evirwindow25
+   0.1    93.00   2013     0.04  _l_delq
+   0.1    93.08  65010     0.00  _l_evbnd
+   0.1    93.16  66193     0.00  _l_evbnd6
+   0.1    93.24  33794     0.00  _l_gagt
+   0.1    93.32  50398     0.00  _l_mark4
+   0.1    93.40  50398     0.00  _l_mark5
+   0.1    93.48  18666     0.00  _l_mina1a3
+   0.1    93.56                  _readv
+   0.1    93.63    990     0.07  _Eapplication614
+   0.1    93.70   2200     0.03  _Earray1
+   0.1    93.77   7110     0.01  _Econnection28
+   0.1    93.84   5720     0.01  _Egenarith17
+   0.1    93.91  17530     0.00  _Eimage47
+   0.1    93.98   1293     0.05  _Eview44
+   0.1    94.05   1446     0.05  _Evirdraw59
+   0.1    94.12   1446     0.05  _Ex11draw20
+   0.1    94.19    120     0.58  _l_17031
+   0.1    94.26  18402     0.00  _l_17067
+   0.1    94.33  52310     0.00  _l_equal
+   0.1    94.40  48466     0.00  _l_equno
+   0.1    94.47  65053     0.00  _l_evexpg
+   0.1    94.54  15736     0.00  _l_list
+   0.1    94.61  33694     0.00  _l_maxtwo
+   0.1    94.68  26396     0.00  _l_trysymre
+   0.1    94.75  10656     0.01  _l_typevect
+   0.1    94.82 101487     0.00  _popj0
+   0.1    94.88   2201     0.03  _Eapplication113
+   0.1    94.94   1240     0.05  _Eclipimage26
+   0.1    95.00   1695     0.04  _Eresource47
+   0.1    95.06   7110     0.01  _Estaircon16
+   0.1    95.12   2343     0.03  _Eview22
+   0.1    95.18   1110     0.05  _Evirgraph193
+   0.1    95.24                  __XFlushGCCache
+   0.1    95.30   2325     0.03  _l_getsymb
+   0.1    95.36  12180     0.00  _l_lltrunc1
+   0.1    95.42  34028     0.00  _l_nfalse
+   0.1    95.48  26463     0.00  _l_trysymbx
+   0.1    95.54  11439     0.01  _l_uapply
+   0.1    95.60  34868     0.00  _popj1
+   0.1    95.66  22401     0.00  _popj2
+   0.0    95.71                  .div
+   0.0    95.76   3142     0.02  _Etranslation12
+   0.0    95.81  12220     0.00  _Eunary10
+   0.0    95.86  11170     0.00  _Eunary9
+   0.0    95.91   2020     0.02  _Eutilities54
+   0.0    95.96   2611     0.02  _Evirinit344
+   0.0    96.01   2372     0.02  _Evirwindow35
+   0.0    96.06    778     0.06  _Ex11draw6
+   0.0    96.11                  _bcopy
+   0.0    96.16   6615     0.01  _l_3031
+   0.0    96.21  25273     0.00  _l_5046
+   0.0    96.26  47853     0.00  _l_asso5
+   0.0    96.31  69338     0.00  _l_evalf
+   0.0    96.36  16605     0.00  _l_gcatm5
+   0.0    96.41  26789     0.00  _l_lllt
+   0.0    96.46  33694     0.00  _l_max
+   0.0    96.51  26180     0.00  _l_sysprot
+   0.0    96.56  64994     0.00  _l_unbind1
+   0.0    96.61                  _stat
+   0.0    96.66   6693     0.01  _x11_set_clip
+   0.0    96.70   1749     0.02  _Econstraints7
+   0.0    96.74   7269     0.01  _Edefstruct49
+   0.0    96.78    800     0.05  _Eelview108
+   0.0    96.82    480     0.08  _Eelview120
+   0.0    96.86    535     0.07  _Efont33
+   0.0    96.90    100     0.40  _Eheader85
+   0.0    96.94     90     0.44  _Eilbuttonbox12
+   0.0    96.98                  _Eilhorscrima84
+   0.0    97.02                  _Eilkernel14
+   0.0    97.06   1640     0.02  _Eimage48
+   0.0    97.10   3200     0.01  _Enode26
+   0.0    97.14   6320     0.01  _Estaircon14
+   0.0    97.18   8666     0.00  _Evirgraph119
+   0.0    97.22    991     0.04  _Evirgraph61
+   0.0    97.26   7408     0.01  _Evirwindow141
+   0.0    97.30   9658     0.00  _Ex11def39
+   0.0    97.34   2040     0.02  _Ex11draw15
+   0.0    97.38   8666     0.00  _Ex11graph21
+   0.0    97.42   2700     0.01  _Ex11graph8
+   0.0    97.46  43882     0.00  _Lfloat_to_Cfloat
+   0.0    97.50                  __XSetClipRectangles
+   0.0    97.54  28393     0.00  _l_13003
+   0.0    97.58   1190     0.03  _l_5043
+   0.0    97.62  62051     0.00  _l_asso8
+   0.0    97.66  11753     0.00  _l_cassq
+   0.0    97.70  12252     0.00  _l_gatim2i
+   0.0    97.74  16605     0.00  _l_gcat5
+   0.0    97.78  16882     0.00  _l_getch
+   0.0    97.82  13144     0.00  _l_lftrue
+   0.0    97.86   3941     0.01  _l_listp
+   0.0    97.90      1    40.00  _l_llinit
+   0.0    97.94   3558     0.01  _l_lllength
+   0.0    97.98  25273     0.00  _l_trysymp1
+   0.0    98.02  26382     0.00  _l_trysyr4
+   0.0    98.06   7397     0.01  _popj6
+   0.0    98.10  23080     0.00  _popja4
+   0.0    98.14   8666     0.00  _x11_set_font
+   0.0    98.17    190     0.16  _Eamenuitem30
+   0.0    98.20   1590     0.02  _Eapplication148
+   0.0    98.23    770     0.04  _Eclipimage33
+   0.0    98.26    480     0.06  _Eelview113
+   0.0    98.29   1992     0.02  _Efont21
+   0.0    98.32    700     0.04  _Eilkernel22
+   0.0    98.35   6780     0.00  _Eimage24
+   0.0    98.38   2121     0.01  _Eimage66
+   0.0    98.41   2393     0.01  _Eimage75
+   0.0    98.44    800     0.04  _Enodeimage61
+   0.0    98.47     30     1.00  _Erow42
+   0.0    98.50   1600     0.02  _Eselectable37
+   0.0    98.53    790     0.04  _Estaircon5
+   0.0    98.56   1870     0.02  _Eutilities37
+   0.0    98.59    752     0.04  _Eview27
+   0.0    98.62   1297     0.02  _Evirgraph25
+   0.0    98.65   2449     0.01  _Evirgraph42
+   0.0    98.68   1241     0.02  _Evirlook59
+   0.0    98.71   3472     0.01  _Ex11def106
+   0.0    98.74   9658     0.00  _Ex11def40
+   0.0    98.77   6693     0.00  _Ex11def85
+   0.0    98.80   3615     0.01  _Ex11graph28
+   0.0    98.83   6510     0.00  _Ex11window80
+   0.0    98.86  14780     0.00  _Lfix_to_Lfloat
+   0.0    98.89                  _XDrawLine
+   0.0    98.92                  _XrmStringToQuark
+   0.0    98.95                  _cfree
+   0.0    98.98    447     0.07  _inbf
+   0.0    99.01  10070     0.00  _l_12012
+   0.0    99.04  23015     0.00  _l_12013
+......

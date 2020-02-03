@@ -1,0 +1,30 @@
+;;; GELL 15.26: elaboration file for the module: triang
+;;;             translation done: "Wed June 16 93 18:18:33 "
+
+(with ((outchan ()))
+	(print ";Loading elaboration file: triang.le"))
+(unless (boundp '#:module:compiled-list)
+	(setq #:module:compiled-list ()))
+(newl #:module:compiled-list 'triang)
+(setq #:system:read-case-flag t)
+
+(defcelaborate "GZtriang" "Wed June 16 93 18:18:33 "
+
+'((check-triang . subr0) (meter-triang . subr0) (test-triang . subr1))
+
+#[(test-triang 1) check-value (count-calls-init) eval (count-calls-stop) t triang-board triang-final triang-sequence triang-answer triang-a triang-b triang-c (triang-final triang-answer) lambda check-triang #:gell-resetfn:function-name #:gell-resetfn:function-0 meter-triang test-triang #:gell-resetfn:function-1]
+)
+
+(defcsetfn 'check-triang "GZtriang" 0)
+(defcsetfn 'meter-triang "GZtriang" 1)
+(defcsetfn 'test-triang "GZtriang" 2)
+(defvar triang-board (makevector 16 1))
+(defvar triang-sequence (makevector 14 0))
+(defvar triang-a (vector 1 2 4 3 5 6 1 3 6 2 5 4 11 12 13 7 8 4 4 7 11 8 12 13 6 10 15 9 14 13 13 14 15 9 10 6 6))
+(defvar triang-b (vector 2 4 7 5 8 9 3 6 10 5 9 8 12 13 14 8 9 5 2 4 7 5 8 9 3 6 10 5 9 8 12 13 14 8 9 5 5))
+(defvar triang-c (vector 4 7 11 8 12 13 6 10 15 9 14 13 13 14 15 9 10 6 1 2 4 3 5 6 1 3 6 2 5 4 11 12 13 7 8 4 4))
+(defvar triang-answer)
+(defvar triang-final)
+((lambda (g104) ((lambda (g105) ((lambda (g103) (vset g104 g105 g103)) 0)) 5)) triang-board)
+
+(defccheck '(eval check-value))

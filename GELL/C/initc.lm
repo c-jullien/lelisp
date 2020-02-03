@@ -1,0 +1,44 @@
+defmodule initc.ll
+
+files    (initc.ll)
+import   (callext)
+export   (defcelaborate
+	  defcsetfn
+	  defccheck
+	  check-for-unresolved-references
+	  gell-save-core
+	  gell-clean-core-image
+	  gell-save-std
+	  llrt_set_trace_fval_p)
+
+;;; Added automatically, don't type beyond this line.
+cpexport (
+(defcelaborate nsubr ())
+(defcsetfn subr3 ())
+(defccheck subr1 ())
+(check-for-unresolved-references subr0 ())
+(gell-save-core subr3 ())
+(gell-clean-core-image subr0 () () (subr1) (()))
+(gell-save-std nsubr ())
+(llrt_set_trace_fval_p subr3 ())
+)
+cpfunctions (
+(#:defC:internal-error subr2)
+(#:defC:gell-getglobal-special-cache subr1)
+(#:defC:c-name subr1)
+(llrt_check_timestamp subr2)
+(llrt_set_lit_table subr3)
+(#:defC:defcelaborate-check subr1)
+(llrt_set_regular_fval subr3)
+(#:defC:check-for-unresolved-references subr0)
+(#:defC:resolved-symbol-p subr1)
+(initialize-elaborated-modules subr1)
+(local_llrt_set_lit_table subr3)
+)
+cpimport
+()
+cpenv (
+sort
+callext
+((putprop '#:sys-package:colon 't '#:complice:globalvar)
+))
