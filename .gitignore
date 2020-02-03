@@ -12,7 +12,6 @@
 ./*/lelisp
 win32/*/*.obj
 llib/startup.ll
-Makefile
 common/config.h
 config.log
 config.status
