@@ -1,0 +1,3041 @@
+#	Le Makefile du systeme GELL 15.24 sur SUN4
+#
+#	% make clean		efface tout
+#
+#	% make lelispbin	../common + ../llm3
+#	% make telispbin	../common + ../llm3 + ../testlap+testext
+#	% make belispbin	../common + ../llm3 + ../benchmarks
+#	% make celispbin	../common + ../llm3 + ../llib
+#	% make celispX11bin	../common + ../llm3 + ../llib + BVX11
+#
+#       % make source		pour avoir llc.s qui est crucial
+###################################################################
+
+DIRL=/nfs/work/lelisp
+DIRG=/nfs/work/lelisp
+DIRS=/nfs/work/lelisp/sun4/C
+DIRO=/udd/sceaux/jerome/sun4
+DIRM=/nfs/work/lelisp/GELL/sun4
+
+CC=	cc
+
+OPT0=   -O1
+OPT=	-O2
+OPT4=	-O4
+
+# OPT0= -p
+# OPT= -p
+# OPT4= -p
+
+CFLAGS=  -I$(DIRS) \
+	-DNBSYST=33 -DBSD4x -DBSD42 \
+	-DINRIA -DSUNOS40 -DSUN4  \
+	-DFOREIGN \
+        -DFILEINI=\"$(DIRL)/llib/startup.ll\" \
+	-pipe -dalign  -fsingle
+
+# CFLAGS=  -I$(DIRS) \
+# 	-DNBSYST=33 -DBSD4x -DBSD42 \
+# 	-DINRIA -DSUNOS40 -DSUN4 -Bstatic \
+# 	-DFOREIGN \
+#       -DFILEINI=\"$(DIRL)/llib/startup.ll\" \
+# 	-pipe -dalign -temp=/usr/share/tmp
+
+# CFLAGS=  -I$(DIRS) \
+# 	-DNBSYST=33 -DBSD4x -DBSD42 \
+# 	-DINRIA -DSUNOS40 -DSUN4 -Bstatic \
+# 	-DFOREIGN \
+# 	-DFILEINI=\"$(DIRL)/llib/startup.ll\" \
+# 	-pipe -temp=/usr/share/tmp
+
+CF=	-I$(DIRG)/GELL/C -I$(DIRL)/common \
+	-temp=/tmp \
+	-pipe -dalign  -fsingle -libmil
+
+# CF=	-I$(DIRG)/GELL/C -I$(DIRL)/common \
+# 	-pipe -temp=/usr/share/tmp
+
+CFX11=	-I$(DIRL)/virbitmap/X11 -I/usr/include/X11R4
+
+CFM11=	-I$(DIRL)/virbitmap/X11 -I/usr/include/X11R4 -I/usr/include/Motif1.1 \
+	-I$(DIRL)/virbitmap/X11/intrinsic \
+	-I$(DIRL)/virbitmap/X11/intrinsic/motif \
+	-DSYSV -DSNAPSHOT -DMALLOC_0_RETURNS_NULL \
+	-DXT_BV -DMOTIF_BV -D_NO_PROTO -DMOTIF1_1
+
+CSRC=	-S -I$(DIRG)/GELL/C -I$(DIRL)/common
+
+LDFLAGS=
+
+LDX11=	-lX11
+LDM11=	-lXm -lXt $(LDX11)
+
+LDLIBS=	-lm -lc
+
+LINT= -a -b -c -h -x -I$(DIRG)/C
+
+# ------------------------------------------------------------------------
+#	Ne rien modifier apres cette ligne (commum a` tous les portages)
+# ------------------------------------------------------------------------
+
+
+# ====================================================================
+#
+#	Les binaires Le-Lisp GELL
+#
+# ====================================================================
+
+#
+#	1) les listes des diffe'rents objets
+#
+
+cobj=	o/llmain.o o/lelisp.o o/Getgloba.o o/llstdio.o o/llfloat.o \
+	o/llc.o 
+
+mobj=	o/llinit.o  o/toperr.o  o/gc.o     o/physio.o o/read.o   \
+	o/macroch.o o/print.o   o/eval.o   o/fspecs.o o/cntrl.o  \
+	o/carcdr.o  o/symbs.o   o/fntstd.o o/number.o o/specnb.o \
+	o/string.o  o/chars.o   o/extend.o o/bllsht.o
+
+LLobjO=	o/LLobjO.o
+obj=	$(cobj) $(mobj) 
+
+tobj=	To/testlap.o To/testext.o
+
+LLibO=	Lo/LLibO.o
+lobj=	Lo/startll.o Lo/initc.o Lo/messages.o Lo/toplevel.o Lo/files.o \
+	Lo/module.o Lo/defs.o Lo/genarith.o \
+	Lo/virtty.o Lo/vt100.o Lo/path.o Lo/llpatch.o \
+	Lo/setf.o Lo/defstruct.o Lo/abbrev.o Lo/microceyx.o \
+	Lo/debug.o Lo/trace.o Lo/pretty.o Lo/libcir.o \
+	Lo/sort.o Lo/array.o Lo/callext.o Lo/format.o Lo/date.o \
+	Lo/libdate.o Lo/hash.o Lo/stringio.o Lo/sets.o Lo/schedule.o \
+	Lo/resetfn.o Lo/queens.o
+
+pobj=	Po/cstcontrol.o Po/pecos.o
+
+asqobj=	Qo/dbms.o Qo/datadbms.o
+
+QOobjO= Qo/QOobjO.o
+oracleobj=	Qo/oracle.o Qo/oracle_def.o \
+		../Casquell/oracle6/oracle_c.o
+ORACLE_HOME=	/nfs/sgbd/oracle6/sun4
+LDORACLE=	$(ORACLE_HOME)/c/lib/libocic.a \
+		$(ORACLE_HOME)/rdbms/lib/osntab.o \
+		$(ORACLE_HOME)/rdbms/lib/libsqlnet.a \
+		$(ORACLE_HOME)/rdbms/lib/libora.a \
+		/usr/5lib/libc.a
+
+ingresobj=	Qo/ingres6.o Qo/ingres6_def.o
+
+bobj=	Lo/startll.o Lo/initc.o Lo/format.o \
+	Bo/fib20.o Bo/tak.o Bo/stak.o Bo/ctak.o Bo/takl.o Bo/takr.o \
+	Bo/boyer.o Bo/browse.o Bo/destru.o Bo/traverse.o Bo/deriv.o \
+	Bo/dderiv.o Bo/div.o Bo/fft.o Bo/puzzle.o Bo/triang.o \
+	Bo/checkmet.o
+
+X11obj=	o/evloop.o o/x11draw.o o/x11lib.o o/x11share.o
+
+M11obj=	o/evloop.o o/x11draw.o o/x11xt.o o/x11share.o \
+	o/widget.o o/Aidashell.o o/aidawid.o \
+	o/motif.o o/newmotif.o
+
+vobj=	Vo/x11color.o Vo/x11graph.o Vo/x11struct.o Vo/x11_def.o \
+	Vo/x11draw.o Vo/x11init.o Vo/x11window.o Vo/x11bitmap.o \
+	Vo/x11event.o Vo/x11menu.o \
+	Vo/virutil.o Vo/virmenu.o Vo/vircolor.o \
+	Vo/virbit.o Vo/virevent.o Vo/virdraw.o Vo/virgraph.o \
+	Vo/virwindow.o Vo/virinit.o Vo/virbitmap.o \
+	Vo/ttywindow.o Lo/evloop.o
+
+# construit automatiquement [BI]
+AidaO= Ao/AidaO.o
+aobj= \
+	Ao/resource.o Ao/node.o Ao/edit.o Ao/editor.o \
+	Ao/systemfile.o Ao/ifor.o Ao/meterutil.o Ao/meterscale.o \
+	Ao/level.o Ao/bitmaputil.o Ao/virlook.o Ao/sbitmap.o \
+	Ao/typecheck.o Ao/tokenanswer.o Ao/token.o Ao/tokenman.o \
+	Ao/image.o Ao/unary.o Ao/view.o Ao/column.o \
+	Ao/row.o Ao/cview.o Ao/box.o Ao/checkimage.o \
+	Ao/verscrima.o Ao/horscrima.o Ao/centered.o Ao/buttonbox.o \
+	Ao/menubox.o Ao/boxedimage.o Ao/connection.o Ao/staircon.o \
+	Ao/filledbox.o Ao/coloredbox.o Ao/font.o Ao/icon.o \
+	Ao/inversion.o Ao/mode.o Ao/pattern.o Ao/line-style.o \
+	Ao/stringimage.o Ao/translation.o Ao/clipimage.o Ao/amenuitem.o \
+	Ao/triangle.o Ao/utilities.o Ao/sscolumn.o Ao/ellipse.o \
+	Ao/circle.o Ao/filledell.o Ao/filledcir.o Ao/elview.o \
+	Ao/elcolumn.o Ao/elcview.o Ao/elrow.o Ao/elbimage.o \
+	Ao/elicon.o Ao/clip.o Ao/graduation.o Ao/levelimage.o \
+	Ao/line.o Ao/zoomicon.o Ao/foreground.o Ao/background.o \
+	Ao/backplane.o Ao/cluster.o Ao/header.o Ao/cross.o \
+	Ao/hcolumn.o Ao/constraints.o Ao/maskicon.o Ao/messagestr.o \
+	Ao/holeimage.o Ao/digit7.o Ao/stddigit.o Ao/application.o \
+	Ao/aidaloop.o Ao/components.o Ao/inhibit.o Ao/protector.o \
+	Ao/applutil.o Ao/dragger.o Ao/stringedit.o Ao/button.o \
+	Ao/checkbox.o Ao/amenuappli.o Ao/selectable.o Ao/greyselect.o \
+	Ao/selector.o Ao/stringsel.o Ao/radiobutton.o Ao/dgdisplay.o \
+	Ao/dgcounter.o Ao/moving.o Ao/moveable.o Ao/scrollbar.o \
+	Ao/scroller.o Ao/ttyappl.o Ao/medite.o Ao/lineedit.o \
+	Ao/nodeimage.o Ao/treeeditor.o Ao/validate.o Ao/objectsel.o \
+	Ao/growing.o Ao/stringmenu.o Ao/asker.o Ao/objectasker.o \
+	Ao/meter.o Ao/objeditor.o Ao/redisplay.o Ao/simpleedit.o \
+	Ao/hselector.o Ao/ttyaida.o Ao/defstate.o Ao/elstate.o \
+	Ao/tokenedit.o Ao/formatedit.o Ao/toolsmsg.o Ao/fileeditor.o \
+	Ao/calculator.o Ao/itreeeditor.o Ao/help.o Ao/niceoblist.o \
+	Ao/paintmsg.o Ao/zoomedit.o Ao/apkernel.o Ao/appanel.o \
+	Ao/apdraw.o Ao/paint.o Ao/simplelook.o Ao/ilkernel.o \
+	Ao/ilbuttonbox.o Ao/ilconnect.o Ao/ilbutton.o Ao/ilradio.o \
+	Ao/ilcase.o Ao/ilverscrima.o Ao/ilhorscrima.o Ao/ilscrollbar.o \
+	Ao/ilscroller.o Ao/ilcheckbox.o Ao/ilsscolumn.o Ao/ilsmenu.o \
+	Ao/ilook.o 
+
+
+MotifO= Ao/MotifO.o
+Maobj= \
+	Ao/xtdefext.o Ao/intrinsic.o Ao/xtwindow.o Ao/mlkernel.o \
+	Ao/motifdefext.o Ao/initmotif.o Ao/wargs.o Ao/motifwidget.o \
+	Ao/motiflabel.o Ao/motifarrow.o Ao/motifbboard.o Ao/motifrowcol.o \
+	Ao/motifmenu.o Ao/motifbutton.o Ao/motiftoggle.o Ao/motifombutton.o \
+	Ao/motiflist.o Ao/motifscale.o Ao/motifscbar.o Ao/motifscroll.o \
+	Ao/motifvpaned.o Ao/motiftext.o Ao/mlradio.o Ao/drawnbutton.o \
+	Ao/motifmbox.o Ao/motifselbox.o Ao/motiffselbox.o Ao/motifdiag.o \
+	Ao/mlook.o Ao/prettyutil.o Ao/newmlook.o  \
+	Ao/patchmtaida.o \
+	Ao/patchxtaida.o
+
+
+AdvO= Ao/AdvO.o
+Advobj= \
+	Ao/ga-ccp.o Ao/ga-celt.o Ao/ga-cgraph.o Ao/ga-cionode.o \
+	Ao/ga-clink.o Ao/ga-cnode.o Ao/ga-copy.o Ao/ga-cplink.o \
+	Ao/ga-cpnode.o Ao/ga-csub.o Ao/ga-elt.o Ao/ga-elts.o \
+	Ao/ga-func.o Ao/ga-graph.o Ao/ga-group.o Ao/ga-ionode.o \
+	Ao/ga-link.o Ao/ga-nccp.o Ao/ga-ncgraph.o Ao/ga-ncode.o \
+	Ao/ga-ncsub.o Ao/ga-node.o Ao/ga-onme.o Ao/ga-plink.o \
+	Ao/ga-pnode.o Ao/ga-pretty.o Ao/ga-sub.o Ao/ga-view.o \
+	Ao/gd-black.o Ao/gd-sensit.o Ao/gd-view.o Ao/ge-all.o \
+	Ao/ge-appli.o Ao/ge-column.o Ao/ge-connect.o Ao/ge-image.o \
+	Ao/ge-line.o Ao/ge-rect.o Ao/ge-row.o Ao/ge-string.o \
+	Ao/ge-transl.o Ao/ge-unary.o Ao/ge-view.o Ao/gp-hier.o \
+	Ao/gp-hpcycle.o Ao/gp-hpdummy.o Ao/gp-hpnode.o Ao/gp-tree.o \
+	Ao/gp-zoom.o Ao/grapher.o Ao/gs-view.o Ao/gv-appli.o \
+	Ao/gv-conn.o Ao/gv-filter.o Ao/gv-sel.o Ao/gv-view.o \
+	Ao/newsmenu.o Ao/pconnection.o Ao/pimage.o Ao/tt-resul.o \
+	Ao/tt-point.o Ao/tt-env.o Ao/tt-zone.o Ao/tt-run.o \
+	Ao/tt-vector.o Ao/tt-prun.o Ao/tt-return.o Ao/tt-tab.o \
+	Ao/tt-image.o Ao/tt-elt.o Ao/tt-esearch.o Ao/tt-cursor.o \
+	Ao/tt-text.o Ao/tt-search.o Ao/tv-select.o Ao/tv-style.o \
+	Ao/tv-show.o Ao/tv-view.o Ao/tb-shape.o Ao/tb-limage.o \
+	Ao/tb-bblit.o Ao/tb-redis.o Ao/tb-block.o Ao/te-cimage.o \
+	Ao/te-edit.o Ao/te-inter.o Ao/textedit.o 
+
+MasaiO1= Mo/MasaiO1.o
+Masaiobj1= \
+	Mo/aidagetset.o \
+	Mo/gridbox.o Mo/gridutil.o Mo/gridcursor.o Mo/dragutil.o \
+	Mo/rootdrag.o Mo/newselect.o Mo/receptor.o Mo/receptdd.o \
+	Mo/drawimage.o Mo/findimage.o Mo/grid.o Mo/grid2.o \
+	Mo/matrixdrag.o Mo/newdragimg.o Mo/position.o Mo/specialdrag.o \
+	Mo/masaistring.o Mo/masaiassert.o Mo/masaiwait.o Mo/aieerror.o \
+	Mo/aievirlook.o Mo/aieevent.o Mo/aiefile.o Mo/aieicon.o \
+	Mo/masaires.o Mo/aieutil.o Mo/actionutil.o Mo/editionutil.o \
+	Mo/aieprint.o Mo/actorres.o Mo/aiefont.o Mo/aiecomment.o \
+	Mo/aiegrab.o Mo/focusutil.o Mo/aiemenu.o Mo/aiemsg.o \
+	Mo/aiefollow.o Mo/masaimode.o Mo/aiefilepa.o Mo/masaierror.o \
+	Mo/codestruct.o Mo/defmsgstr.o Mo/aieversion.o Mo/aidafile.o \
+	Mo/realeditor.o Mo/aiefindpath.o Mo/aiecopy.o Mo/aienameutil.o \
+	Mo/aidautil.o Mo/aiefuncall.o Mo/actorutil.o Mo/actorprop.o \
+	Mo/masaitool.o Mo/masaiicon.o Mo/mmsubst.o Mo/llrescode.o \
+	Mo/linkhandler.o Mo/aiecontext.o Mo/aiebuffer.o Mo/aiekernel.o \
+	Mo/resheader.o Mo/reskernel.o Mo/resdeclar.o Mo/codeutil.o \
+	Mo/resstruct.o Mo/resutil.o Mo/aieprompt.o Mo/aiebroadcst.o \
+	Mo/aieundo.o Mo/aiezoom.o Mo/aiebuffspec.o Mo/aieprimiker.o \
+	Mo/aieprimi.o Mo/aieundoop.o Mo/aiegroup.o Mo/aiezoomop.o \
+	Mo/aiebuffmenu.o Mo/resname.o Mo/aiebuffop.o Mo/rescode.o \
+	Mo/resprint.o Mo/resbuild.o Mo/masaigcode.o Mo/aiebuffcode.o \
+	Mo/aieeditor.o Mo/aieaddutil.o Mo/aieapropos.o Mo/appkernel.o \
+	Mo/aieadd.o Mo/fedition.o Mo/aieedutil.o Mo/aieascii.o \
+	Mo/masaieditor.o Mo/masaibuffer.o Mo/readimage.o Mo/masaiprimi.o \
+	Mo/appapropos.o Mo/masaiappli.o Mo/masaisave.o Mo/aiesession.o \
+	Mo/masaitop.o Mo/aiemsgstr.o Mo/linerelief.o Mo/actorposit.o \
+	Mo/actorascii.o Mo/editutil.o Mo/aiecentered.o Mo/aietextsubs.o \
+	Mo/aietextutil.o Mo/relief.o Mo/aiecheckbox.o Mo/aiebbox.o \
+	Mo/aieheadbox.o Mo/actorimage.o Mo/aieappli.o Mo/aieview.o \
+	Mo/masaiasker.o Mo/actorkernel.o Mo/actorfunc.o Mo/aieselectab.o \
+	Mo/aiebutton.o Mo/aieselector.o Mo/parameter.o Mo/masaimedite.o \
+	Mo/aietextedit.o Mo/usedatt.o Mo/masaiactor.o Mo/copyutil.o \
+	Mo/apputil.o Mo/app-masai.o Mo/app-zoom.o Mo/app-dragger.o \
+	Mo/app-text.o Mo/app-menu.o Mo/app-grid.o Mo/app-code.o \
+	Mo/app-propert.o Mo/app-genecod.o Mo/app-edit.o Mo/app-copy.o \
+	Mo/app-string.o Mo/app-build.o Mo/app-buffer.o Mo/app-res.o \
+	Mo/app-msgstr.o Mo/mmaction.o Mo/mmcode.o Mo/mmcopy.o \
+	Mo/mmexplore.o Mo/mmgroup.o Mo/mmutil.o Mo/mmroot.o \
+	Mo/mmactorim.o Mo/mmaiecheckb.o Mo/mmaieview.o Mo/mmappli.o \
+	Mo/mmbbox.o Mo/mmbitmap.o Mo/mmbox.o Mo/mmbutton.o \
+	Mo/mmcheckbox.o Mo/mmcolor.o Mo/mmcolumn.o Mo/mmconstrain.o
+
+
+MasaiO2= Mo/MasaiO2.o
+Masaiobj2= \
+	Mo/mmcview.o Mo/mmfont.o Mo/mmholeimage.o Mo/mmicon.o \
+	Mo/mmelicon.o Mo/mmmaskicon.o Mo/mminversion.o Mo/mmimage.o \
+	Mo/mmmedite.o Mo/mmlineedit.o Mo/mmlispobj.o Mo/mmmenu.o \
+	Mo/mmmode.o Mo/mmmoveable.o Mo/mmstring.o Mo/mmmsgstring.o \
+	Mo/mmparameter.o Mo/mmpattern.o Mo/mmrbutton.o Mo/mmrectangle.o \
+	Mo/mmrow.o Mo/mmscroller.o Mo/mmselector.o Mo/mmseltab.o \
+	Mo/mmstredit.o Mo/mmstringsel.o Mo/mmstrmenu.o Mo/mmtranslat.o \
+	Mo/mmunary.o Mo/mmview.o Mo/mmwindow.o Mo/mmfilledbox.o \
+	Mo/mmbackgrnd.o Mo/mmforegrnd.o Mo/mmttyappl.o Mo/mmboxedimag.o \
+	Mo/mmcentered.o Mo/mmcolorbox.o Mo/mmdigits.o Mo/mmaiebutton.o \
+	Mo/mmaieseltab.o Mo/hselector1.o Mo/hsapppanel.o Mo/iconasker.o \
+	Mo/modeeditor.o Mo/fonteditor.o Mo/patternedit.o Mo/attribedit.o \
+	Mo/savepanel.o Mo/fileselect.o Mo/loadpanel.o Mo/gridpanel.o \
+	Mo/stretched.o Mo/viewpanel.o Mo/meappli.o Mo/menewdrag.o \
+	Mo/mereceptor.o Mo/aieconfig.o Mo/sysmasai.o Mo/aiemodules.o \
+	Mo/aiegview.o Mo/aietextclip.o Mo/showicons.o Mo/masaisessio.o \
+	Mo/toolsgroup.o Mo/aiemetview.o Mo/extimage.o Mo/aierepeat.o \
+	Mo/app-interf.o Mo/app-local.o Mo/app-arg.o Mo/app-name.o \
+	Mo/app-action.o Mo/app-1tools.o Mo/app-1masai.o Mo/app-library.o \
+	Mo/app-module.o Mo/app-doc.o Mo/app-actor.o Mo/app-help.o \
+	Mo/app-focus.o Mo/app-editmen.o Mo/mmaieamenu.o Mo/mmaieappli.o \
+	Mo/mmaiebbox.o Mo/mmaiehbox.o Mo/mmaieseltor.o Mo/mmaietext.o \
+	Mo/mmrelief.o Mo/mmlinerelie.o Mo/mmaierepeat.o Mo/mmmasaimed.o \
+	Mo/mmmeter.o Mo/mmmetscale.o Mo/mmmetview.o Mo/mmgradua.o \
+	Mo/mmnode.o Mo/mmnodeimage.o Mo/mmobjeditor.o Mo/mmprotector.o \
+	Mo/mmhsbar.o Mo/mmvsbar.o Mo/mmsbar.o Mo/mmtreeed.o \
+	Mo/mmgreysel.o Mo/mmasker.o Mo/mmelrow.o Mo/mmelview.o \
+	Mo/mmelcolumn.o Mo/mmelcview.o Mo/mmextimage.o Mo/mmconnect.o \
+	Mo/mmbackplane.o Mo/mmcircle.o Mo/mmtriangle.o Mo/mmellipse.o \
+	Mo/mmfcircle.o Mo/mmfellipse.o Mo/mmline.o Mo/mmline-styl.o \
+	Mo/mmtokenedit.o Mo/mmtextedit.o Mo/mmhselector.o Mo/mmgd-view.o \
+	Mo/mmmenubox.o Mo/mmamenuitem.o Mo/mmamenuappl.o Mo/actionedito.o \
+	Mo/msgeditor.o Mo/dynamenu.o Mo/evalpanel.o Mo/masaiver.o \
+	Mo/aieobjected.o Mo/align.o Mo/justpanel.o Mo/mainapplipa.o \
+	Mo/editmanager.o Mo/zoomstack.o Mo/propedit.o Mo/treepanel.o \
+	Mo/helpcode.o Mo/menueditor.o Mo/mousehelp.o Mo/keymaped.o \
+	Mo/insertpanel.o Mo/libloadpan.o Mo/codepanel.o Mo/scriptfsel.o \
+	Mo/apropospan.o Mo/apropostext.o Mo/namepanel.o Mo/edgrpselect.o \
+	Mo/fontasker.o Mo/meterannex.o Mo/meterpanel.o Mo/metereditor.o \
+	Mo/aiegpanel.o Mo/helppanel.o Mo/megview.o Mo/stateeditor.o \
+	Mo/colormixer.o Mo/colorselect.o Mo/masaipatches.o Mo/pmmcolor.o \
+	Mo/presource.o
+
+
+InspO= Mo/InspO.o
+inspobj= \
+	Mo/inspropac.o Mo/inspres.o Mo/inspfocus.o Mo/inspconvert.o \
+	Mo/inspinterac.o Mo/idefutil.o Mo/idescstruct.o Mo/inspstructs.o \
+	Mo/inspobjects.o Mo/definspect.o Mo/inspfill.o Mo/inspector.o \
+	Mo/iviewaction.o Mo/inspusrfunc.o Mo/imasaiutil.o Mo/iholder.o \
+	Mo/ipanel.o Mo/meipanel.o Mo/idescutil.o Mo/idescfile.o \
+	Mo/idesctext.o Mo/ivardesc.o Mo/iviewdesc.o Mo/inspdesc.o \
+	Mo/metainspect.o Mo/insplister.o Mo/coloredit.o Mo/fontselect.o \
+	Mo/idimage.o Mo/inspcons.o Mo/idinspxy.o Mo/idzoomimage.o \
+	Mo/idinspappli.o Mo/idpattern.o Mo/idappli.o Mo/idbutton.o \
+	Mo/idcheckbox.o Mo/idcircle.o Mo/idcluster.o Mo/idcolor.o \
+	Mo/idcross.o Mo/iddigit.o Mo/iddgdisplay.o Mo/iddgcounter.o \
+	Mo/idellipse.o Mo/idinspappli.o Mo/idfellipse.o Mo/idfilledbox.o \
+	Mo/idfont.o Mo/idhole.o Mo/idline.o Mo/idmedite.o \
+	Mo/idlineed.o Mo/idmeter.o Mo/idmsgstring.o Mo/idrbutton.o \
+	Mo/idscrollbar.o Mo/idscroller.o Mo/idstring.o Mo/idstringed.o \
+	Mo/idstrmenu.o Mo/idtranslat.o Mo/idtriangle.o Mo/idview.o \
+	Mo/idformedit.o Mo/repeater.o 
+
+MasaimotifO= Mo/MasaimotifO.o
+Masaimotifobj= \
+	Mo/aidacolored.o Mo/defwidget.o Mo/mmxtaida.o Mo/mmxwidget.o \
+	Mo/mmxcomposit.o Mo/xtinspector.o Mo/mmmtarrow.o Mo/mmmtdrawn.o \
+	Mo/mmmtlabel.o Mo/mmmtlist.o Mo/mmmtmenu.o Mo/mmmtpaned.o \
+	Mo/mmmtpush.o Mo/mmmtradio.o Mo/mmmtrowcol.o Mo/mmmtscale.o \
+	Mo/mmmtscbar.o Mo/mmmtscroll.o Mo/mmmttext.o Mo/mmmttoggle.o \
+	Mo/masaixtpatches.o Mo/masaimtpatches.o 
+
+
+#
+#	2) Et c'est parti ...
+#
+
+all:	lelispbin
+
+tout:	lelispbin telispbin celispbin belispbin celispX11bin
+
+
+#
+#	3) fabrication des binaires
+#
+
+
+LLobjO:	$(obj)
+	$(LD) -r $(obj) -o $(LLobjO)
+
+LLibO:	$(lobj)
+	$(LD) -r $(lobj) -o $(LLibO)
+
+AidaO:	$(aobj)
+	$(LD) -r $(aobj) -o $(AidaO)
+
+MotifO:	$(Maobj)
+	$(LD) -r $(Maobj) -o $(MotifO)
+
+AdvO:	$(Advobj)
+	$(LD) -r $(Advobj) -o $(AdvO)
+
+QOobjO:	$(oracleobj)
+	$(LD) -r $(oracleobj) -o $(QOobjO)
+
+# il ne faut pas mettre $(MasaiO1) etc. car sinon on a l'erreur
+# Make: Hash table overflow.  Stop.
+
+MasaiO1: $(Masaiobj1)
+	$(LD) -r $(Masaiobj1) -o $(MasaiO1)
+
+MasaiO2: $(Masaiobj2)
+	$(LD) -r $(Masaiobj2) -o $(MasaiO2)
+
+InspO: $(inspobj)
+	$(LD) -r $(inspobj) -o $(InspO)
+
+MasaimotifO: $(Masaimotifobj)
+	$(LD) -r $(Masaimotifobj) -o $(MasaimotifO)
+
+
+
+lelispbin: $(LLobjO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LDLIBS) \
+		-o $(DIRO)/lelispbin
+
+telispbin: $(LLobjO) $(tobj)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(tobj) $(LDLIBS) \
+		-o $(DIRO)/telispbin
+
+belispbin: $(LLobjO) $(bobj)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(bobj) $(LDLIBS) \
+		-o $(DIRO)/belispbin
+
+celispbin: $(LLobjO) $(LLibO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) $(LDLIBS) \
+		-o $(DIRO)/celispbin
+	$(DIRM)/makesymcache $(DIRO)/celisp
+
+pelispbin: $(LLobjO) $(LLibO) $(pobj)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) \
+		$(LLibO) $(pobj) $(LDLIBS) \
+		-o $(DIRO)/pelispbin
+	$(DIRM)/makesymcache $(DIRO)/pelisp
+
+qolispbin: $(LLobjO) $(LLibO) $(asqobj) $(QOobjO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) \
+		$(LLibO) $(asqobj) $(QOobjO) $(LDLIBS) \
+		$(LDORACLE) \
+		-o $(DIRO)/qolispbin
+	$(DIRM)/makesymcache $(DIRO)/qolisp
+
+qilispbin: $(LLobjO) $(LLibO) $(asqobj) $(ingresobj)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) \
+		$(LLibO) $(asqobj) $(ingresobj) $(LDLIBS) \
+		../Casquell/ingres6/ingres6.o 
+		-o $(DIRO)/qilispbin
+	$(DIRM)/makesymcache $(DIRO)/qilisp
+
+celispX11bin: $(LLobjO) $(LLibO) $(X11obj) $(vobj) 
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) $(X11obj) \
+		$(vobj) $(LDX11) $(LDLIBS) \
+		-o $(DIRO)/celispX11bin
+	$(DIRM)/makesymcache $(DIRO)/celispX11
+
+aidaX11bin: $(LLobjO) $(LLibO) $(X11obj) $(vobj) $(AidaO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(X11obj) $(vobj) $(AidaO) \
+		$(LDX11) $(LDLIBS) \
+		-o $(DIRO)/aidaX11bin
+	$(DIRM)/makesymcache $(DIRO)/aidaX11
+
+aidaAX11bin: $(LLobjO) $(LLibO) $(X11obj) $(vobj) $(AidaO) $(AdvO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(X11obj) $(vobj) $(AidaO) $(AdvO) \
+		$(LDX11) $(LDLIBS) \
+		-o $(DIRO)/aidaAX11bin
+	$(DIRM)/makesymcache $(DIRO)/aidaAX11
+
+aidaQOX11bin: $(LLobjO) $(LLibO) $(X11obj) $(vobj) $(asqobj) $(QOobjO) $(AidaO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(X11obj) $(vobj) $(asqobj) $(QOobjO) $(AidaO) \
+		$(LDX11) $(LDLIBS) $(LDORACLE) \
+		-o $(DIRO)/aidaQOX11bin
+	$(DIRM)/makesymcache $(DIRO)/aidaQOX11
+
+aidaPAX11bin: $(LLobjO) $(LLibO) $(X11obj) $(vobj) $(pobj) $(AidaO) $(AdvO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(X11obj) $(vobj) $(pobj) $(AidaO) $(AdvO) \
+		$(LDX11) $(LDLIBS) \
+		-o $(DIRO)/aidaPAX11bin
+	$(DIRM)/makesymcache $(DIRO)/aidaPAX11
+
+aidaM11bin: $(LLobjO) $(LLibO) $(M11obj) $(vobj) $(AidaO) $(MotifO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(M11obj) $(vobj)  $(AidaO) $(MotifO) \
+		$(LDM11) $(LDX11) $(LDLIBS) \
+		-o $(DIRO)/aidaM11bin
+	$(DIRM)/makesymcache $(DIRO)/aidaM11
+
+aidaAM11bin: $(LLobjO) $(LLibO) $(M11obj) $(vobj) $(AidaO) $(MotifO) $(AdvO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(M11obj) $(vobj)  $(AidaO) $(MotifO) $(AdvO) \
+		$(LDM11) $(LDX11) $(LDLIBS) \
+		-o $(DIRO)/aidaAM11bin
+	$(DIRM)/makesymcache $(DIRO)/aidaAM11
+
+masaiX11bin: $(LLobjO) $(LLibO) $(X11obj) $(vobj) $(AidaO) $(MasaiO1) $(MasaiO2)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(X11obj) $(vobj) $(AidaO) $(MasaiO1) $(MasaiO2) \
+		$(LDX11) $(LDLIBS) \
+		-o $(DIRO)/masaiX11bin
+	$(DIRM)/makesymcache $(DIRO)/masaiX11
+
+masaiAX11bin: $(LLobjO) $(LLibO) $(X11obj) $(vobj) $(AidaO) $(AdvO) $(MasaiO1) $(MasaiO2)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(X11obj) $(vobj) $(AidaO) $(AdvO) $(MasaiO1) $(MasaiO2) \
+		$(LDX11) $(LDLIBS) \
+		-o $(DIRO)/masaiAX11bin
+	$(DIRM)/makesymcache $(DIRO)/masaiAX11
+
+masaiM11bin: $(LLobjO) $(LLibO) $(M11obj) $(vobj) $(AidaO) $(MotifO) $(MasaiO)
+	$(CC) $(CFLAGS) $(OPT) $(LDFLAGS) $(LLobjO) $(LLibO) \
+		$(M11obj) $(vobj)  $(AidaO) $(MotifO) $(MasaiO) \
+		$(LDM11) $(LDX11) $(LDLIBS) \
+		-o $(DIRO)/masaiM11bin
+	$(DIRM)/makesymcache $(DIRO)/masaiAM11
+
+#
+#	($cobj) : les *.o de $(DIRL)/common dans ./o/* pour (Zelispbin)
+#
+
+o/llmain.o: $(DIRL)/common/llmain.c
+	$(CC) $(CFLAGS) $(OPT) -c $(DIRL)/common/llmain.c
+	mv llmain.o o/llmain.o
+o/lelisp.o: $(DIRL)/common/lelisp.c
+	$(CC) $(CFLAGS) $(OPT) -c $(DIRL)/common/lelisp.c
+	mv lelisp.o o/lelisp.o
+o/Getgloba.o: $(DIRS)/Getgloba.c
+	$(CC) $(CFLAGS) $(OPT) -c $(DIRS)/Getgloba.c
+	mv Getgloba.o o/Getgloba.o
+o/llstdio.o: $(DIRL)/common/llstdio.c
+	$(CC) $(CFLAGS) $(OPT) -c $(DIRL)/common/llstdio.c
+	mv llstdio.o o/llstdio.o
+o/llfloat.o: $(DIRL)/common/llfloat.c
+	$(CC) $(CFLAGS) $(OPT) -c $(DIRL)/common/llfloat.c
+	mv llfloat.o o/llfloat.o
+o/llc.o: ../C/llc.c
+	$(CC) $(CF) $(OPT0) -c ../C/llc.c
+	mv llc.o o
+
+#
+#	($mobj) : les *.o des sources LLM3 dans ./o/* pour (Zelispbin)
+#
+
+o/llinit.o:  ../Cllm3/llinit.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/llinit.c  
+	mv llinit.o  o
+o/toperr.o:  ../Cllm3/toperr.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/toperr.c  
+	mv toperr.o  o
+o/gc.o:      ../Cllm3/gc.c      
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/gc.c      
+	mv gc.o      o
+o/physio.o:  ../Cllm3/physio.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/physio.c  
+	mv physio.o  o
+o/read.o:    ../Cllm3/read.c    
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/read.c    
+	mv read.o    o
+o/macroch.o: ../Cllm3/macroch.c 
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/macroch.c 
+	mv macroch.o o
+o/print.o:   ../Cllm3/print.c   
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/print.c   
+	mv print.o   o
+o/eval.o:    ../Cllm3/eval.c    
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/eval.c    
+	mv eval.o    o
+o/fspecs.o:  ../Cllm3/fspecs.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/fspecs.c  
+	mv fspecs.o  o
+o/cntrl.o:   ../Cllm3/cntrl.c   
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/cntrl.c   
+	mv cntrl.o   o
+o/carcdr.o:  ../Cllm3/carcdr.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/carcdr.c  
+	mv carcdr.o  o
+o/symbs.o:   ../Cllm3/symbs.c   
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/symbs.c   
+	mv symbs.o   o
+o/fntstd.o:  ../Cllm3/fntstd.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/fntstd.c  
+	mv fntstd.o  o
+o/number.o:  ../Cllm3/number.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/number.c  
+	mv number.o  o
+o/specnb.o:  ../Cllm3/specnb.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/specnb.c  
+	mv specnb.o  o
+o/string.o:  ../Cllm3/string.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/string.c  
+	mv string.o  o
+o/chars.o:   ../Cllm3/chars.c   
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/chars.c   
+	mv chars.o   o
+o/extend.o:  ../Cllm3/extend.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/extend.c  
+	mv extend.o  o
+o/bllsht.o:  ../Cllm3/bllsht.c  
+	$(CC) $(CF) $(OPT4) -c ../Cllm3/bllsht.c  
+	mv bllsht.o  o
+
+
+#
+#	$(tobj) : les *.o du testlap dans ./To/* pour (telispbin)
+#
+
+To/testlap.o: ../Ctest/testlap.c
+	$(CC) $(CF) $(OPT) -c ../Ctest/testlap.c
+	mv testlap.o To
+To/testext.o:	../../lltest/testext.c
+	$(CC) $(CF) $(OPT) -c ../../lltest/testext.c
+	mv testext.o To
+
+
+#
+#	$(lobj) : les *.o de llib dans ./Lo/* pour (celispbin)
+#
+
+Lo/startll.o: ../Cllib/startll.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/startll.c
+	mv startll.o Lo
+Lo/initc.o: ../Cllib/initc.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/initc.c
+	mv initc.o Lo
+Lo/messages.o: ../Cllib/messages.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/messages.c
+	mv messages.o Lo
+Lo/toplevel.o: ../Cllib/toplevel.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/toplevel.c
+	mv toplevel.o Lo
+Lo/files.o: ../Cllib/files.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/files.c
+	mv files.o Lo
+Lo/module.o: ../Cllib/module.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/module.c
+	mv module.o Lo
+Lo/defs.o: ../Cllib/defs.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/defs.c
+	mv defs.o Lo
+Lo/genarith.o: ../Cllib/genarith.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/genarith.c
+	mv genarith.o Lo
+Lo/virtty.o: ../Cllib/virtty.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/virtty.c
+	mv virtty.o Lo
+Lo/vt100.o: ../Cllib/vt100.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/vt100.c
+	mv vt100.o Lo
+Lo/path.o: ../Cllib/path.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/path.c
+	mv path.o Lo
+Lo/llpatch.o: ../Cllib/llpatch.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/llpatch.c
+	mv llpatch.o Lo
+Lo/setf.o: ../Cllib/setf.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/setf.c
+	mv setf.o Lo
+Lo/defstruct.o: ../Cllib/defstruct.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/defstruct.c
+	mv defstruct.o Lo
+Lo/abbrev.o: ../Cllib/abbrev.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/abbrev.c
+	mv abbrev.o Lo
+Lo/microceyx.o: ../Cllib/microceyx.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/microceyx.c
+	mv microceyx.o Lo
+Lo/debug.o: ../Cllib/debug.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/debug.c
+	mv debug.o Lo
+Lo/trace.o: ../Cllib/trace.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/trace.c
+	mv trace.o Lo
+Lo/pretty.o: ../Cllib/pretty.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/pretty.c
+	mv pretty.o Lo
+Lo/libcir.o: ../Cllib/libcir.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/libcir.c
+	mv libcir.o Lo
+Lo/sort.o: ../Cllib/sort.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/sort.c
+	mv sort.o Lo
+Lo/array.o: ../Cllib/array.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/array.c
+	mv array.o Lo
+Lo/callext.o: ../Cllib/callext.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/callext.c
+	mv callext.o Lo
+Lo/format.o: ../Cllib/format.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/format.c
+	mv format.o Lo
+Lo/date.o: ../Cllib/date.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/date.c
+	mv date.o Lo
+Lo/libdate.o: ../Cllib/libdate.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/libdate.c
+	mv libdate.o Lo
+Lo/hash.o: ../Cllib/hash.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/hash.c
+	mv hash.o Lo
+Lo/stringio.o: ../Cllib/stringio.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/stringio.c
+	mv stringio.o Lo
+Lo/sets.o: ../Cllib/sets.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/sets.c
+	mv sets.o Lo
+Lo/schedule.o: ../Cllib/schedule.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/schedule.c
+	mv schedule.o Lo
+Lo/evloop.o: ../Cllib/evloop.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/evloop.c
+	mv evloop.o Lo
+Lo/resetfn.o: ../Cllib/resetfn.c
+	$(CC) $(CF) $(OPT) -c ../Cllib/resetfn.c
+	mv resetfn.o Lo
+Lo/queens.o: ../Cllib/queens.c
+	$(CC) $(CF) $(OPT4) -c ../Cllib/queens.c
+	mv queens.o Lo
+
+
+#
+#	$(bobj) : les *.o des benchmarks dans ./Bo/* pour (belispbin)
+#
+
+Bo/checkmet.o: ../Cbenchmarks/checkmet.c
+	$(CC) $(CF) $(OPT) -c ../Cbenchmarks/checkmet.c
+	mv checkmet.o Bo 
+Bo/fib20.o: ../Cbenchmarks/fib20.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/fib20.c
+	mv fib20.o Bo 
+Bo/tak.o: ../Cbenchmarks/tak.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/tak.c
+	mv tak.o Bo 
+Bo/stak.o: ../Cbenchmarks/stak.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/stak.c
+	mv stak.o Bo 
+Bo/ctak.o: ../Cbenchmarks/ctak.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/ctak.c
+	mv ctak.o Bo 
+Bo/takl.o: ../Cbenchmarks/takl.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/takl.c
+	mv takl.o Bo 
+Bo/takr.o: ../Cbenchmarks/takr.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/takr.c
+	mv takr.o Bo 
+Bo/boyer.o: ../Cbenchmarks/boyer.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/boyer.c
+	mv boyer.o Bo 
+Bo/browse.o: ../Cbenchmarks/browse.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/browse.c
+	mv browse.o Bo 
+Bo/destru.o: ../Cbenchmarks/destru.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/destru.c
+	mv destru.o Bo 
+Bo/traverse.o: ../Cbenchmarks/traverse.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/traverse.c
+	mv traverse.o Bo 
+Bo/deriv.o: ../Cbenchmarks/deriv.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/deriv.c
+	mv deriv.o Bo 
+Bo/dderiv.o: ../Cbenchmarks/dderiv.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/dderiv.c
+	mv dderiv.o Bo 
+Bo/div.o: ../Cbenchmarks/div.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/div.c
+	mv div.o Bo 
+Bo/fft.o: ../Cbenchmarks/fft.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/fft.c
+	mv fft.o Bo 
+Bo/puzzle.o: ../Cbenchmarks/puzzle.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/puzzle.c
+	mv puzzle.o Bo 
+Bo/triang.o: ../Cbenchmarks/triang.c
+	$(CC) $(CF) $(OPT4) -c ../Cbenchmarks/triang.c
+	mv triang.o Bo 
+
+
+
+#
+#	$(X11obj) $(M11obj) : les *.o de X11, M11 dans ./Vo/*
+#
+
+# C code
+
+o/evloop.o: ../../common/evloop.c
+	$(CC) $(CFLAGS) $(CF) $(OPT) -c ../../common/evloop.c
+	mv evloop.o o
+o/x11draw.o: ../../virbitmap/X11/x11draw.c
+	$(CC) $(CF) $(CFX11) $(OPT) -c ../../virbitmap/X11/x11draw.c
+	mv x11draw.o o
+o/x11lib.o: ../../virbitmap/X11/x11lib.c
+	$(CC) $(CF) $(CFX11) $(OPT) -c ../../virbitmap/X11/x11lib.c
+	mv x11lib.o o
+o/x11share.o: ../../virbitmap/X11/x11share.c
+	$(CC) $(CF) $(CFX11) $(OPT) -c ../../virbitmap/X11/x11share.c
+	mv x11share.o o
+o/x11xt.o: ../../virbitmap/X11/intrinsic/x11xt.c
+	$(CC) $(CF) $(CFM11) $(OPT) -c ../../virbitmap/X11/intrinsic/x11xt.c
+	mv x11xt.o o
+o/widget.o: ../../virbitmap/X11/intrinsic/widget.c
+	$(CC) $(CF) $(CFM11) $(OPT) -c ../../virbitmap/X11/intrinsic/widget.c
+	mv widget.o o
+o/Aidashell.o: ../../virbitmap/X11/intrinsic/Aidashell.c
+	$(CC) $(CF) $(CFM11) $(OPT) -c ../../virbitmap/X11/intrinsic/Aidashell.c
+	mv Aidashell.o o
+o/aidawid.o: ../../virbitmap/X11/intrinsic/aidawid.c
+	$(CC) $(CF) $(CFM11) $(OPT) -c ../../virbitmap/X11/intrinsic/aidawid.c
+	mv aidawid.o o
+o/motif.o: ../../virbitmap/X11/intrinsic/motif/motif.c
+	$(CC) $(CF) $(CFM11) $(OPT) -c ../../virbitmap/X11/intrinsic/motif/motif.c
+	mv motif.o o
+o/newmotif.o: ../../virbitmap/X11/intrinsic/motif/newmotif.c
+	$(CC) $(CF) $(CFM11) $(OPT) -c ../../virbitmap/X11/intrinsic/motif/newmotif.c
+	mv newmotif.o o
+
+Vo/x11color.o: ../Cvirbitmap/x11color.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11color.c
+	mv x11color.o Vo
+Vo/x11graph.o: ../Cvirbitmap/x11graph.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11graph.c
+	mv x11graph.o Vo
+Vo/x11struct.o: ../Cvirbitmap/x11struct.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11struct.c
+	mv x11struct.o Vo
+Vo/x11_def.o: ../Cvirbitmap/x11_def.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11_def.c
+	mv x11_def.o Vo
+Vo/x11draw.o: ../Cvirbitmap/x11draw.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11draw.c
+	mv x11draw.o Vo
+Vo/x11init.o: ../Cvirbitmap/x11init.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11init.c
+	mv x11init.o Vo
+Vo/x11window.o: ../Cvirbitmap/x11window.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11window.c
+	mv x11window.o Vo
+Vo/x11bitmap.o: ../Cvirbitmap/x11bitmap.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11bitmap.c
+	mv x11bitmap.o Vo
+Vo/x11event.o: ../Cvirbitmap/x11event.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11event.c
+	mv x11event.o Vo
+Vo/x11menu.o: ../Cvirbitmap/x11menu.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/x11menu.c
+	mv x11menu.o Vo
+
+# Le-Lisp code
+
+Vo/virutil.o: ../Cvirbitmap/virutil.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virutil.c
+	mv virutil.o Vo
+Vo/virmenu.o: ../Cvirbitmap/virmenu.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virmenu.c
+	mv virmenu.o Vo
+Vo/vircolor.o: ../Cvirbitmap/vircolor.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/vircolor.c
+	mv vircolor.o Vo
+Vo/virbit.o: ../Cvirbitmap/virbit.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virbit.c
+	mv virbit.o Vo
+Vo/virevent.o: ../Cvirbitmap/virevent.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virevent.c
+	mv virevent.o Vo
+Vo/virdraw.o: ../Cvirbitmap/virdraw.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virdraw.c
+	mv virdraw.o Vo
+Vo/virgraph.o: ../Cvirbitmap/virgraph.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virgraph.c
+	mv virgraph.o Vo
+Vo/virwindow.o: ../Cvirbitmap/virwindow.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virwindow.c
+	mv virwindow.o Vo
+Vo/virinit.o: ../Cvirbitmap/virinit.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virinit.c
+	mv virinit.o Vo
+Vo/virbitmap.o: ../Cvirbitmap/virbitmap.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/virbitmap.c
+	mv virbitmap.o Vo
+Vo/ttywindow.o: ../Cvirbitmap/ttywindow.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/ttywindow.c
+	mv ttywindow.o Vo
+
+
+Vo/gellpatch.o: ../Cvirbitmap/gellpatch.c
+	$(CC) $(CF) $(OPT) -c ../Cvirbitmap/gellpatch.c
+	mv gellpatch.o Vo
+
+#
+#	$(pobj) : les *.o de Pecos dans ./Po/*
+#
+
+Po/cstcontrol.o: ../Cpecos/cstcontrol.c
+	$(CC) $(CFLAGS) $(CF) $(OPT) -c ../Cpecos/cstcontrol.c
+	mv cstcontrol.o Po
+Po/pecos.o: ../Cpecos/pecos.c
+	$(CC) $(CFLAGS) $(CF) $(OPT1) -c ../Cpecos/pecos.c
+	mv pecos.o Po
+
+#
+#	$(asqobj) : les *.o de Asquell dans ./Qo/*
+#
+
+
+Qo/dbms.o: ../Casquell/dbms.c
+	$(CC) $(CFLAGS) $(CF) $(OPT) -c ../Casquell/dbms.c
+	mv dbms.o Qo
+Qo/datadbms.o: ../Casquell/datadbms.c
+	$(CC) $(CFLAGS) $(CF) $(OPT) -c ../Casquell/datadbms.c
+	mv datadbms.o Qo
+Qo/oracle.o: ../Casquell/oracle.c
+	$(CC) $(CFLAGS) $(CF) $(OPT) -c ../Casquell/oracle.c
+	mv oracle.o Qo
+Qo/oracle_def.o: ../Casquell/oracle_def.c
+	$(CC) $(CFLAGS) $(CF) $(OPT) -c ../Casquell/oracle_def.c
+	mv oracle_def.o Qo
+Qo/ingres6.o: ../Casquell/ingres6.c
+	$(CC) $(CFLAGS) $(CF) $(OPT) -c ../Casquell/ingres6.c
+	mv ingres6.o Qo
+Qo/ingres6_def.o: ../Casquell/ingres6_def.c
+	$(CC) $(CFLAGS) $(CF) $(OPT) -c ../Casquell/ingres6_def.c
+	mv ingres6_def.o Qo
+
+
+#
+#	Aobj = Aida 1.5
+#
+
+# aida1.5 de work 29/09/91
+
+
+###
+### Construction des objets
+###
+
+Ao/resource.o: ../Caida/resource.c
+	$(CC) $(CF) $(OPT) -c ../Caida/resource.c
+	mv resource.o Ao/
+Ao/node.o: ../Caida/node.c
+	$(CC) $(CF) $(OPT) -c ../Caida/node.c
+	mv node.o Ao/
+Ao/edit.o: ../Caida/edit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/edit.c
+	mv edit.o Ao/
+Ao/editor.o: ../Caida/editor.c
+	$(CC) $(CF) $(OPT) -c ../Caida/editor.c
+	mv editor.o Ao/
+Ao/systemfile.o: ../Caida/systemfile.c
+	$(CC) $(CF) $(OPT) -c ../Caida/systemfile.c
+	mv systemfile.o Ao/
+Ao/ifor.o: ../Caida/ifor.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ifor.c
+	mv ifor.o Ao/
+Ao/meterutil.o: ../Caida/meterutil.c
+	$(CC) $(CF) $(OPT) -c ../Caida/meterutil.c
+	mv meterutil.o Ao/
+Ao/meterscale.o: ../Caida/meterscale.c
+	$(CC) $(CF) $(OPT) -c ../Caida/meterscale.c
+	mv meterscale.o Ao/
+Ao/level.o: ../Caida/level.c
+	$(CC) $(CF) $(OPT) -c ../Caida/level.c
+	mv level.o Ao/
+Ao/bitmaputil.o: ../Caida/bitmaputil.c
+	$(CC) $(CF) $(OPT) -c ../Caida/bitmaputil.c
+	mv bitmaputil.o Ao/
+Ao/virlook.o: ../Caida/virlook.c
+	$(CC) $(CF) $(OPT) -c ../Caida/virlook.c
+	mv virlook.o Ao/
+Ao/sbitmap.o: ../Caida/sbitmap.c
+	$(CC) $(CF) $(OPT) -c ../Caida/sbitmap.c
+	mv sbitmap.o Ao/
+Ao/typecheck.o: ../Caida/typecheck.c
+	$(CC) $(CF) $(OPT) -c ../Caida/typecheck.c
+	mv typecheck.o Ao/
+Ao/tokenanswer.o: ../Caida/tokenanswer.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tokenanswer.c
+	mv tokenanswer.o Ao/
+Ao/token.o: ../Caida/token.c
+	$(CC) $(CF) $(OPT) -c ../Caida/token.c
+	mv token.o Ao/
+Ao/tokenman.o: ../Caida/tokenman.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tokenman.c
+	mv tokenman.o Ao/
+Ao/image.o: ../Caida/image.c
+	$(CC) $(CF) $(OPT) -c ../Caida/image.c
+	mv image.o Ao/
+Ao/unary.o: ../Caida/unary.c
+	$(CC) $(CF) $(OPT) -c ../Caida/unary.c
+	mv unary.o Ao/
+Ao/view.o: ../Caida/view.c
+	$(CC) $(CF) $(OPT) -c ../Caida/view.c
+	mv view.o Ao/
+Ao/column.o: ../Caida/column.c
+	$(CC) $(CF) $(OPT) -c ../Caida/column.c
+	mv column.o Ao/
+Ao/row.o: ../Caida/row.c
+	$(CC) $(CF) $(OPT) -c ../Caida/row.c
+	mv row.o Ao/
+Ao/cview.o: ../Caida/cview.c
+	$(CC) $(CF) $(OPT) -c ../Caida/cview.c
+	mv cview.o Ao/
+Ao/box.o: ../Caida/box.c
+	$(CC) $(CF) $(OPT) -c ../Caida/box.c
+	mv box.o Ao/
+Ao/checkimage.o: ../Caida/checkimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/checkimage.c
+	mv checkimage.o Ao/
+Ao/verscrima.o: ../Caida/verscrima.c
+	$(CC) $(CF) $(OPT) -c ../Caida/verscrima.c
+	mv verscrima.o Ao/
+Ao/horscrima.o: ../Caida/horscrima.c
+	$(CC) $(CF) $(OPT) -c ../Caida/horscrima.c
+	mv horscrima.o Ao/
+Ao/centered.o: ../Caida/centered.c
+	$(CC) $(CF) $(OPT) -c ../Caida/centered.c
+	mv centered.o Ao/
+Ao/buttonbox.o: ../Caida/buttonbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/buttonbox.c
+	mv buttonbox.o Ao/
+Ao/menubox.o: ../Caida/menubox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/menubox.c
+	mv menubox.o Ao/
+Ao/boxedimage.o: ../Caida/boxedimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/boxedimage.c
+	mv boxedimage.o Ao/
+Ao/connection.o: ../Caida/connection.c
+	$(CC) $(CF) $(OPT) -c ../Caida/connection.c
+	mv connection.o Ao/
+Ao/staircon.o: ../Caida/staircon.c
+	$(CC) $(CF) $(OPT) -c ../Caida/staircon.c
+	mv staircon.o Ao/
+Ao/filledbox.o: ../Caida/filledbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/filledbox.c
+	mv filledbox.o Ao/
+Ao/coloredbox.o: ../Caida/coloredbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/coloredbox.c
+	mv coloredbox.o Ao/
+Ao/font.o: ../Caida/font.c
+	$(CC) $(CF) $(OPT) -c ../Caida/font.c
+	mv font.o Ao/
+Ao/icon.o: ../Caida/icon.c
+	$(CC) $(CF) $(OPT) -c ../Caida/icon.c
+	mv icon.o Ao/
+Ao/inversion.o: ../Caida/inversion.c
+	$(CC) $(CF) $(OPT) -c ../Caida/inversion.c
+	mv inversion.o Ao/
+Ao/mode.o: ../Caida/mode.c
+	$(CC) $(CF) $(OPT) -c ../Caida/mode.c
+	mv mode.o Ao/
+Ao/pattern.o: ../Caida/pattern.c
+	$(CC) $(CF) $(OPT) -c ../Caida/pattern.c
+	mv pattern.o Ao/
+Ao/line-style.o: ../Caida/line-style.c
+	$(CC) $(CF) $(OPT) -c ../Caida/line-style.c
+	mv line-style.o Ao/
+Ao/stringimage.o: ../Caida/stringimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/stringimage.c
+	mv stringimage.o Ao/
+Ao/translation.o: ../Caida/translation.c
+	$(CC) $(CF) $(OPT) -c ../Caida/translation.c
+	mv translation.o Ao/
+Ao/clipimage.o: ../Caida/clipimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/clipimage.c
+	mv clipimage.o Ao/
+Ao/amenuitem.o: ../Caida/amenuitem.c
+	$(CC) $(CF) $(OPT) -c ../Caida/amenuitem.c
+	mv amenuitem.o Ao/
+Ao/triangle.o: ../Caida/triangle.c
+	$(CC) $(CF) $(OPT) -c ../Caida/triangle.c
+	mv triangle.o Ao/
+Ao/utilities.o: ../Caida/utilities.c
+	$(CC) $(CF) $(OPT) -c ../Caida/utilities.c
+	mv utilities.o Ao/
+Ao/sscolumn.o: ../Caida/sscolumn.c
+	$(CC) $(CF) $(OPT) -c ../Caida/sscolumn.c
+	mv sscolumn.o Ao/
+Ao/ellipse.o: ../Caida/ellipse.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ellipse.c
+	mv ellipse.o Ao/
+Ao/circle.o: ../Caida/circle.c
+	$(CC) $(CF) $(OPT) -c ../Caida/circle.c
+	mv circle.o Ao/
+Ao/filledell.o: ../Caida/filledell.c
+	$(CC) $(CF) $(OPT) -c ../Caida/filledell.c
+	mv filledell.o Ao/
+Ao/filledcir.o: ../Caida/filledcir.c
+	$(CC) $(CF) $(OPT) -c ../Caida/filledcir.c
+	mv filledcir.o Ao/
+Ao/elview.o: ../Caida/elview.c
+	$(CC) $(CF) $(OPT) -c ../Caida/elview.c
+	mv elview.o Ao/
+Ao/elcolumn.o: ../Caida/elcolumn.c
+	$(CC) $(CF) $(OPT) -c ../Caida/elcolumn.c
+	mv elcolumn.o Ao/
+Ao/elcview.o: ../Caida/elcview.c
+	$(CC) $(CF) $(OPT) -c ../Caida/elcview.c
+	mv elcview.o Ao/
+Ao/elrow.o: ../Caida/elrow.c
+	$(CC) $(CF) $(OPT) -c ../Caida/elrow.c
+	mv elrow.o Ao/
+Ao/elbimage.o: ../Caida/elbimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/elbimage.c
+	mv elbimage.o Ao/
+Ao/elicon.o: ../Caida/elicon.c
+	$(CC) $(CF) $(OPT) -c ../Caida/elicon.c
+	mv elicon.o Ao/
+Ao/clip.o: ../Caida/clip.c
+	$(CC) $(CF) $(OPT) -c ../Caida/clip.c
+	mv clip.o Ao/
+Ao/graduation.o: ../Caida/graduation.c
+	$(CC) $(CF) $(OPT) -c ../Caida/graduation.c
+	mv graduation.o Ao/
+Ao/levelimage.o: ../Caida/levelimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/levelimage.c
+	mv levelimage.o Ao/
+Ao/line.o: ../Caida/line.c
+	$(CC) $(CF) $(OPT) -c ../Caida/line.c
+	mv line.o Ao/
+Ao/zoomicon.o: ../Caida/zoomicon.c
+	$(CC) $(CF) $(OPT) -c ../Caida/zoomicon.c
+	mv zoomicon.o Ao/
+Ao/foreground.o: ../Caida/foreground.c
+	$(CC) $(CF) $(OPT) -c ../Caida/foreground.c
+	mv foreground.o Ao/
+Ao/background.o: ../Caida/background.c
+	$(CC) $(CF) $(OPT) -c ../Caida/background.c
+	mv background.o Ao/
+Ao/backplane.o: ../Caida/backplane.c
+	$(CC) $(CF) $(OPT) -c ../Caida/backplane.c
+	mv backplane.o Ao/
+Ao/cluster.o: ../Caida/cluster.c
+	$(CC) $(CF) $(OPT) -c ../Caida/cluster.c
+	mv cluster.o Ao/
+Ao/header.o: ../Caida/header.c
+	$(CC) $(CF) $(OPT) -c ../Caida/header.c
+	mv header.o Ao/
+Ao/cross.o: ../Caida/cross.c
+	$(CC) $(CF) $(OPT) -c ../Caida/cross.c
+	mv cross.o Ao/
+Ao/hcolumn.o: ../Caida/hcolumn.c
+	$(CC) $(CF) $(OPT) -c ../Caida/hcolumn.c
+	mv hcolumn.o Ao/
+Ao/constraints.o: ../Caida/constraints.c
+	$(CC) $(CF) $(OPT) -c ../Caida/constraints.c
+	mv constraints.o Ao/
+Ao/maskicon.o: ../Caida/maskicon.c
+	$(CC) $(CF) $(OPT) -c ../Caida/maskicon.c
+	mv maskicon.o Ao/
+Ao/messagestr.o: ../Caida/messagestr.c
+	$(CC) $(CF) $(OPT) -c ../Caida/messagestr.c
+	mv messagestr.o Ao/
+Ao/holeimage.o: ../Caida/holeimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/holeimage.c
+	mv holeimage.o Ao/
+Ao/digit7.o: ../Caida/digit7.c
+	$(CC) $(CF) $(OPT) -c ../Caida/digit7.c
+	mv digit7.o Ao/
+Ao/stddigit.o: ../Caida/stddigit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/stddigit.c
+	mv stddigit.o Ao/
+Ao/application.o: ../Caida/application.c
+	$(CC) $(CF) $(OPT) -c ../Caida/application.c
+	mv application.o Ao/
+Ao/aidaloop.o: ../Caida/aidaloop.c
+	$(CC) $(CF) $(OPT) -c ../Caida/aidaloop.c
+	mv aidaloop.o Ao/
+Ao/components.o: ../Caida/components.c
+	$(CC) $(CF) $(OPT) -c ../Caida/components.c
+	mv components.o Ao/
+Ao/inhibit.o: ../Caida/inhibit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/inhibit.c
+	mv inhibit.o Ao/
+Ao/protector.o: ../Caida/protector.c
+	$(CC) $(CF) $(OPT) -c ../Caida/protector.c
+	mv protector.o Ao/
+Ao/applutil.o: ../Caida/applutil.c
+	$(CC) $(CF) $(OPT) -c ../Caida/applutil.c
+	mv applutil.o Ao/
+Ao/dragger.o: ../Caida/dragger.c
+	$(CC) $(CF) $(OPT) -c ../Caida/dragger.c
+	mv dragger.o Ao/
+Ao/stringedit.o: ../Caida/stringedit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/stringedit.c
+	mv stringedit.o Ao/
+Ao/button.o: ../Caida/button.c
+	$(CC) $(CF) $(OPT) -c ../Caida/button.c
+	mv button.o Ao/
+Ao/checkbox.o: ../Caida/checkbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/checkbox.c
+	mv checkbox.o Ao/
+Ao/amenuappli.o: ../Caida/amenuappli.c
+	$(CC) $(CF) $(OPT) -c ../Caida/amenuappli.c
+	mv amenuappli.o Ao/
+Ao/selectable.o: ../Caida/selectable.c
+	$(CC) $(CF) $(OPT) -c ../Caida/selectable.c
+	mv selectable.o Ao/
+Ao/greyselect.o: ../Caida/greyselect.c
+	$(CC) $(CF) $(OPT) -c ../Caida/greyselect.c
+	mv greyselect.o Ao/
+Ao/selector.o: ../Caida/selector.c
+	$(CC) $(CF) $(OPT) -c ../Caida/selector.c
+	mv selector.o Ao/
+Ao/stringsel.o: ../Caida/stringsel.c
+	$(CC) $(CF) $(OPT) -c ../Caida/stringsel.c
+	mv stringsel.o Ao/
+Ao/radiobutton.o: ../Caida/radiobutton.c
+	$(CC) $(CF) $(OPT) -c ../Caida/radiobutton.c
+	mv radiobutton.o Ao/
+Ao/dgdisplay.o: ../Caida/dgdisplay.c
+	$(CC) $(CF) $(OPT) -c ../Caida/dgdisplay.c
+	mv dgdisplay.o Ao/
+Ao/dgcounter.o: ../Caida/dgcounter.c
+	$(CC) $(CF) $(OPT) -c ../Caida/dgcounter.c
+	mv dgcounter.o Ao/
+Ao/moving.o: ../Caida/moving.c
+	$(CC) $(CF) $(OPT) -c ../Caida/moving.c
+	mv moving.o Ao/
+Ao/moveable.o: ../Caida/moveable.c
+	$(CC) $(CF) $(OPT) -c ../Caida/moveable.c
+	mv moveable.o Ao/
+Ao/scrollbar.o: ../Caida/scrollbar.c
+	$(CC) $(CF) $(OPT) -c ../Caida/scrollbar.c
+	mv scrollbar.o Ao/
+Ao/scroller.o: ../Caida/scroller.c
+	$(CC) $(CF) $(OPT) -c ../Caida/scroller.c
+	mv scroller.o Ao/
+Ao/ttyappl.o: ../Caida/ttyappl.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ttyappl.c
+	mv ttyappl.o Ao/
+Ao/medite.o: ../Caida/medite.c
+	$(CC) $(CF) $(OPT) -c ../Caida/medite.c
+	mv medite.o Ao/
+Ao/lineedit.o: ../Caida/lineedit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/lineedit.c
+	mv lineedit.o Ao/
+Ao/nodeimage.o: ../Caida/nodeimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/nodeimage.c
+	mv nodeimage.o Ao/
+Ao/treeeditor.o: ../Caida/treeeditor.c
+	$(CC) $(CF) $(OPT) -c ../Caida/treeeditor.c
+	mv treeeditor.o Ao/
+Ao/validate.o: ../Caida/validate.c
+	$(CC) $(CF) $(OPT) -c ../Caida/validate.c
+	mv validate.o Ao/
+Ao/objectsel.o: ../Caida/objectsel.c
+	$(CC) $(CF) $(OPT) -c ../Caida/objectsel.c
+	mv objectsel.o Ao/
+Ao/growing.o: ../Caida/growing.c
+	$(CC) $(CF) $(OPT) -c ../Caida/growing.c
+	mv growing.o Ao/
+Ao/stringmenu.o: ../Caida/stringmenu.c
+	$(CC) $(CF) $(OPT) -c ../Caida/stringmenu.c
+	mv stringmenu.o Ao/
+Ao/asker.o: ../Caida/asker.c
+	$(CC) $(CF) $(OPT) -c ../Caida/asker.c
+	mv asker.o Ao/
+Ao/objectasker.o: ../Caida/objectasker.c
+	$(CC) $(CF) $(OPT) -c ../Caida/objectasker.c
+	mv objectasker.o Ao/
+Ao/meter.o: ../Caida/meter.c
+	$(CC) $(CF) $(OPT) -c ../Caida/meter.c
+	mv meter.o Ao/
+Ao/objeditor.o: ../Caida/objeditor.c
+	$(CC) $(CF) $(OPT) -c ../Caida/objeditor.c
+	mv objeditor.o Ao/
+Ao/redisplay.o: ../Caida/redisplay.c
+	$(CC) $(CF) $(OPT) -c ../Caida/redisplay.c
+	mv redisplay.o Ao/
+Ao/simpleedit.o: ../Caida/simpleedit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/simpleedit.c
+	mv simpleedit.o Ao/
+Ao/hselector.o: ../Caida/hselector.c
+	$(CC) $(CF) $(OPT) -c ../Caida/hselector.c
+	mv hselector.o Ao/
+Ao/ttyaida.o: ../Caida/ttyaida.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ttyaida.c
+	mv ttyaida.o Ao/
+Ao/defstate.o: ../Caida/defstate.c
+	$(CC) $(CF) $(OPT) -c ../Caida/defstate.c
+	mv defstate.o Ao/
+Ao/elstate.o: ../Caida/elstate.c
+	$(CC) $(CF) $(OPT) -c ../Caida/elstate.c
+	mv elstate.o Ao/
+Ao/tokenedit.o: ../Caida/tokenedit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tokenedit.c
+	mv tokenedit.o Ao/
+Ao/formatedit.o: ../Caida/formatedit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/formatedit.c
+	mv formatedit.o Ao/
+Ao/toolsmsg.o: ../Caida/toolsmsg.c
+	$(CC) $(CF) $(OPT) -c ../Caida/toolsmsg.c
+	mv toolsmsg.o Ao/
+Ao/fileeditor.o: ../Caida/fileeditor.c
+	$(CC) $(CF) $(OPT) -c ../Caida/fileeditor.c
+	mv fileeditor.o Ao/
+Ao/calculator.o: ../Caida/calculator.c
+	$(CC) $(CF) $(OPT) -c ../Caida/calculator.c
+	mv calculator.o Ao/
+Ao/itreeeditor.o: ../Caida/itreeeditor.c
+	$(CC) $(CF) $(OPT) -c ../Caida/itreeeditor.c
+	mv itreeeditor.o Ao/
+Ao/help.o: ../Caida/help.c
+	$(CC) $(CF) $(OPT) -c ../Caida/help.c
+	mv help.o Ao/
+Ao/niceoblist.o: ../Caida/niceoblist.c
+	$(CC) $(CF) $(OPT) -c ../Caida/niceoblist.c
+	mv niceoblist.o Ao/
+Ao/paintmsg.o: ../Caida/paintmsg.c
+	$(CC) $(CF) $(OPT) -c ../Caida/paintmsg.c
+	mv paintmsg.o Ao/
+Ao/zoomedit.o: ../Caida/zoomedit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/zoomedit.c
+	mv zoomedit.o Ao/
+Ao/apkernel.o: ../Caida/apkernel.c
+	$(CC) $(CF) $(OPT) -c ../Caida/apkernel.c
+	mv apkernel.o Ao/
+Ao/appanel.o: ../Caida/appanel.c
+	$(CC) $(CF) $(OPT) -c ../Caida/appanel.c
+	mv appanel.o Ao/
+Ao/apdraw.o: ../Caida/apdraw.c
+	$(CC) $(CF) $(OPT) -c ../Caida/apdraw.c
+	mv apdraw.o Ao/
+Ao/paint.o: ../Caida/paint.c
+	$(CC) $(CF) $(OPT) -c ../Caida/paint.c
+	mv paint.o Ao/
+Ao/simplelook.o: ../Caida/simplelook.c
+	$(CC) $(CF) $(OPT) -c ../Caida/simplelook.c
+	mv simplelook.o Ao/
+Ao/ilkernel.o: ../Caida/ilkernel.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilkernel.c
+	mv ilkernel.o Ao/
+Ao/ilbuttonbox.o: ../Caida/ilbuttonbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilbuttonbox.c
+	mv ilbuttonbox.o Ao/
+Ao/ilconnect.o: ../Caida/ilconnect.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilconnect.c
+	mv ilconnect.o Ao/
+Ao/ilbutton.o: ../Caida/ilbutton.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilbutton.c
+	mv ilbutton.o Ao/
+Ao/ilradio.o: ../Caida/ilradio.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilradio.c
+	mv ilradio.o Ao/
+Ao/ilcase.o: ../Caida/ilcase.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilcase.c
+	mv ilcase.o Ao/
+Ao/ilverscrima.o: ../Caida/ilverscrima.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilverscrima.c
+	mv ilverscrima.o Ao/
+Ao/ilhorscrima.o: ../Caida/ilhorscrima.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilhorscrima.c
+	mv ilhorscrima.o Ao/
+Ao/ilscrollbar.o: ../Caida/ilscrollbar.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilscrollbar.c
+	mv ilscrollbar.o Ao/
+Ao/ilscroller.o: ../Caida/ilscroller.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilscroller.c
+	mv ilscroller.o Ao/
+Ao/ilcheckbox.o: ../Caida/ilcheckbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilcheckbox.c
+	mv ilcheckbox.o Ao/
+Ao/ilsscolumn.o: ../Caida/ilsscolumn.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilsscolumn.c
+	mv ilsscolumn.o Ao/
+Ao/ilsmenu.o: ../Caida/ilsmenu.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilsmenu.c
+	mv ilsmenu.o Ao/
+Ao/ilook.o: ../Caida/ilook.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ilook.c
+	mv ilook.o Ao/
+
+
+###
+### Construction des objets
+###
+
+Ao/xtdefext.o: ../Caida/xtdefext.c
+	$(CC) $(CF) $(OPT) -c ../Caida/xtdefext.c
+	mv xtdefext.o Ao/
+Ao/intrinsic.o: ../Caida/intrinsic.c
+	$(CC) $(CF) $(OPT) -c ../Caida/intrinsic.c
+	mv intrinsic.o Ao/
+Ao/xtwindow.o: ../Caida/xtwindow.c
+	$(CC) $(CF) $(OPT) -c ../Caida/xtwindow.c
+	mv xtwindow.o Ao/
+Ao/mlkernel.o: ../Caida/mlkernel.c
+	$(CC) $(CF) $(OPT) -c ../Caida/mlkernel.c
+	mv mlkernel.o Ao/
+Ao/motifdefext.o: ../Caida/motifdefext.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifdefext.c
+	mv motifdefext.o Ao/
+Ao/initmotif.o: ../Caida/initmotif.c
+	$(CC) $(CF) $(OPT) -c ../Caida/initmotif.c
+	mv initmotif.o Ao/
+Ao/wargs.o: ../Caida/wargs.c
+	$(CC) $(CF) $(OPT) -c ../Caida/wargs.c
+	mv wargs.o Ao/
+Ao/motifwidget.o: ../Caida/motifwidget.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifwidget.c
+	mv motifwidget.o Ao/
+Ao/motiflabel.o: ../Caida/motiflabel.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motiflabel.c
+	mv motiflabel.o Ao/
+Ao/motifarrow.o: ../Caida/motifarrow.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifarrow.c
+	mv motifarrow.o Ao/
+Ao/motifbboard.o: ../Caida/motifbboard.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifbboard.c
+	mv motifbboard.o Ao/
+Ao/motifrowcol.o: ../Caida/motifrowcol.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifrowcol.c
+	mv motifrowcol.o Ao/
+Ao/motifmenu.o: ../Caida/motifmenu.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifmenu.c
+	mv motifmenu.o Ao/
+Ao/motifbutton.o: ../Caida/motifbutton.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifbutton.c
+	mv motifbutton.o Ao/
+Ao/motiftoggle.o: ../Caida/motiftoggle.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motiftoggle.c
+	mv motiftoggle.o Ao/
+Ao/motifombutton.o: ../Caida/motifombutton.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifombutton.c
+	mv motifombutton.o Ao/
+Ao/motiflist.o: ../Caida/motiflist.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motiflist.c
+	mv motiflist.o Ao/
+Ao/motifscale.o: ../Caida/motifscale.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifscale.c
+	mv motifscale.o Ao/
+Ao/motifscbar.o: ../Caida/motifscbar.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifscbar.c
+	mv motifscbar.o Ao/
+Ao/motifscroll.o: ../Caida/motifscroll.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifscroll.c
+	mv motifscroll.o Ao/
+Ao/motifvpaned.o: ../Caida/motifvpaned.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifvpaned.c
+	mv motifvpaned.o Ao/
+Ao/motiftext.o: ../Caida/motiftext.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motiftext.c
+	mv motiftext.o Ao/
+Ao/mlradio.o: ../Caida/mlradio.c
+	$(CC) $(CF) $(OPT) -c ../Caida/mlradio.c
+	mv mlradio.o Ao/
+Ao/drawnbutton.o: ../Caida/drawnbutton.c
+	$(CC) $(CF) $(OPT) -c ../Caida/drawnbutton.c
+	mv drawnbutton.o Ao/
+Ao/motifmbox.o: ../Caida/motifmbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifmbox.c
+	mv motifmbox.o Ao/
+Ao/motifselbox.o: ../Caida/motifselbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifselbox.c
+	mv motifselbox.o Ao/
+Ao/motiffselbox.o: ../Caida/motiffselbox.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motiffselbox.c
+	mv motiffselbox.o Ao/
+Ao/motifdiag.o: ../Caida/motifdiag.c
+	$(CC) $(CF) $(OPT) -c ../Caida/motifdiag.c
+	mv motifdiag.o Ao/
+Ao/mlook.o: ../Caida/mlook.c
+	$(CC) $(CF) $(OPT) -c ../Caida/mlook.c
+	mv mlook.o Ao/
+Ao/prettyutil.o: ../Caida/prettyutil.c
+	$(CC) $(CF) $(OPT) -c ../Caida/prettyutil.c
+	mv prettyutil.o Ao/
+Ao/newmlook.o: ../Caida/newmlook.c
+	$(CC) $(CF) $(OPT) -c ../Caida/newmlook.c
+	mv newmlook.o Ao/
+
+Ao/patchmtaida.o: ../Caida/patchmtaida.c
+	$(CC) $(CF) $(OPT) -c ../Caida/patchmtaida.c
+	mv patchmtaida.o Ao/
+Ao/patchxtaida.o: ../Caida/patchxtaida.c
+	$(CC) $(CF) $(OPT) -c ../Caida/patchxtaida.c
+	mv patchxtaida.o Ao
+
+#
+# les Advanced AIDA (Advobj)
+#
+
+###
+### Construction des objets
+###
+
+Ao/ga-ccp.o: ../Caida/ga-ccp.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-ccp.c
+	mv ga-ccp.o Ao/
+Ao/ga-celt.o: ../Caida/ga-celt.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-celt.c
+	mv ga-celt.o Ao/
+Ao/ga-cgraph.o: ../Caida/ga-cgraph.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-cgraph.c
+	mv ga-cgraph.o Ao/
+Ao/ga-cionode.o: ../Caida/ga-cionode.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-cionode.c
+	mv ga-cionode.o Ao/
+Ao/ga-clink.o: ../Caida/ga-clink.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-clink.c
+	mv ga-clink.o Ao/
+Ao/ga-cnode.o: ../Caida/ga-cnode.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-cnode.c
+	mv ga-cnode.o Ao/
+Ao/ga-copy.o: ../Caida/ga-copy.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-copy.c
+	mv ga-copy.o Ao/
+Ao/ga-cplink.o: ../Caida/ga-cplink.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-cplink.c
+	mv ga-cplink.o Ao/
+Ao/ga-cpnode.o: ../Caida/ga-cpnode.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-cpnode.c
+	mv ga-cpnode.o Ao/
+Ao/ga-csub.o: ../Caida/ga-csub.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-csub.c
+	mv ga-csub.o Ao/
+Ao/ga-elt.o: ../Caida/ga-elt.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-elt.c
+	mv ga-elt.o Ao/
+Ao/ga-elts.o: ../Caida/ga-elts.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-elts.c
+	mv ga-elts.o Ao/
+Ao/ga-func.o: ../Caida/ga-func.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-func.c
+	mv ga-func.o Ao/
+Ao/ga-graph.o: ../Caida/ga-graph.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-graph.c
+	mv ga-graph.o Ao/
+Ao/ga-group.o: ../Caida/ga-group.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-group.c
+	mv ga-group.o Ao/
+Ao/ga-ionode.o: ../Caida/ga-ionode.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-ionode.c
+	mv ga-ionode.o Ao/
+Ao/ga-link.o: ../Caida/ga-link.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-link.c
+	mv ga-link.o Ao/
+Ao/ga-nccp.o: ../Caida/ga-nccp.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-nccp.c
+	mv ga-nccp.o Ao/
+Ao/ga-ncgraph.o: ../Caida/ga-ncgraph.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-ncgraph.c
+	mv ga-ncgraph.o Ao/
+Ao/ga-ncode.o: ../Caida/ga-ncode.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-ncode.c
+	mv ga-ncode.o Ao/
+Ao/ga-ncsub.o: ../Caida/ga-ncsub.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-ncsub.c
+	mv ga-ncsub.o Ao/
+Ao/ga-node.o: ../Caida/ga-node.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-node.c
+	mv ga-node.o Ao/
+Ao/ga-onme.o: ../Caida/ga-onme.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-onme.c
+	mv ga-onme.o Ao/
+Ao/ga-plink.o: ../Caida/ga-plink.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-plink.c
+	mv ga-plink.o Ao/
+Ao/ga-pnode.o: ../Caida/ga-pnode.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-pnode.c
+	mv ga-pnode.o Ao/
+Ao/ga-pretty.o: ../Caida/ga-pretty.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-pretty.c
+	mv ga-pretty.o Ao/
+Ao/ga-sub.o: ../Caida/ga-sub.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-sub.c
+	mv ga-sub.o Ao/
+Ao/ga-view.o: ../Caida/ga-view.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ga-view.c
+	mv ga-view.o Ao/
+Ao/gd-black.o: ../Caida/gd-black.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gd-black.c
+	mv gd-black.o Ao/
+Ao/gd-sensit.o: ../Caida/gd-sensit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gd-sensit.c
+	mv gd-sensit.o Ao/
+Ao/gd-view.o: ../Caida/gd-view.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gd-view.c
+	mv gd-view.o Ao/
+Ao/ge-all.o: ../Caida/ge-all.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-all.c
+	mv ge-all.o Ao/
+Ao/ge-appli.o: ../Caida/ge-appli.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-appli.c
+	mv ge-appli.o Ao/
+Ao/ge-column.o: ../Caida/ge-column.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-column.c
+	mv ge-column.o Ao/
+Ao/ge-connect.o: ../Caida/ge-connect.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-connect.c
+	mv ge-connect.o Ao/
+Ao/ge-image.o: ../Caida/ge-image.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-image.c
+	mv ge-image.o Ao/
+Ao/ge-line.o: ../Caida/ge-line.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-line.c
+	mv ge-line.o Ao/
+Ao/ge-rect.o: ../Caida/ge-rect.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-rect.c
+	mv ge-rect.o Ao/
+Ao/ge-row.o: ../Caida/ge-row.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-row.c
+	mv ge-row.o Ao/
+Ao/ge-string.o: ../Caida/ge-string.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-string.c
+	mv ge-string.o Ao/
+Ao/ge-transl.o: ../Caida/ge-transl.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-transl.c
+	mv ge-transl.o Ao/
+Ao/ge-unary.o: ../Caida/ge-unary.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-unary.c
+	mv ge-unary.o Ao/
+Ao/ge-view.o: ../Caida/ge-view.c
+	$(CC) $(CF) $(OPT) -c ../Caida/ge-view.c
+	mv ge-view.o Ao/
+Ao/gp-hier.o: ../Caida/gp-hier.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gp-hier.c
+	mv gp-hier.o Ao/
+Ao/gp-hpcycle.o: ../Caida/gp-hpcycle.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gp-hpcycle.c
+	mv gp-hpcycle.o Ao/
+Ao/gp-hpdummy.o: ../Caida/gp-hpdummy.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gp-hpdummy.c
+	mv gp-hpdummy.o Ao/
+Ao/gp-hpnode.o: ../Caida/gp-hpnode.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gp-hpnode.c
+	mv gp-hpnode.o Ao/
+Ao/gp-tree.o: ../Caida/gp-tree.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gp-tree.c
+	mv gp-tree.o Ao/
+Ao/gp-zoom.o: ../Caida/gp-zoom.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gp-zoom.c
+	mv gp-zoom.o Ao/
+Ao/grapher.o: ../Caida/grapher.c
+	$(CC) $(CF) $(OPT) -c ../Caida/grapher.c
+	mv grapher.o Ao/
+Ao/gs-view.o: ../Caida/gs-view.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gs-view.c
+	mv gs-view.o Ao/
+Ao/gv-appli.o: ../Caida/gv-appli.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gv-appli.c
+	mv gv-appli.o Ao/
+Ao/gv-conn.o: ../Caida/gv-conn.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gv-conn.c
+	mv gv-conn.o Ao/
+Ao/gv-filter.o: ../Caida/gv-filter.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gv-filter.c
+	mv gv-filter.o Ao/
+Ao/gv-sel.o: ../Caida/gv-sel.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gv-sel.c
+	mv gv-sel.o Ao/
+Ao/gv-view.o: ../Caida/gv-view.c
+	$(CC) $(CF) $(OPT) -c ../Caida/gv-view.c
+	mv gv-view.o Ao/
+Ao/newsmenu.o: ../Caida/newsmenu.c
+	$(CC) $(CF) $(OPT) -c ../Caida/newsmenu.c
+	mv newsmenu.o Ao/
+Ao/pconnection.o: ../Caida/pconnection.c
+	$(CC) $(CF) $(OPT) -c ../Caida/pconnection.c
+	mv pconnection.o Ao/
+Ao/pimage.o: ../Caida/pimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/pimage.c
+	mv pimage.o Ao/
+Ao/tt-resul.o: ../Caida/tt-resul.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-resul.c
+	mv tt-resul.o Ao/
+Ao/tt-point.o: ../Caida/tt-point.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-point.c
+	mv tt-point.o Ao/
+Ao/tt-env.o: ../Caida/tt-env.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-env.c
+	mv tt-env.o Ao/
+Ao/tt-zone.o: ../Caida/tt-zone.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-zone.c
+	mv tt-zone.o Ao/
+Ao/tt-run.o: ../Caida/tt-run.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-run.c
+	mv tt-run.o Ao/
+Ao/tt-vector.o: ../Caida/tt-vector.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-vector.c
+	mv tt-vector.o Ao/
+Ao/tt-prun.o: ../Caida/tt-prun.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-prun.c
+	mv tt-prun.o Ao/
+Ao/tt-return.o: ../Caida/tt-return.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-return.c
+	mv tt-return.o Ao/
+Ao/tt-tab.o: ../Caida/tt-tab.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-tab.c
+	mv tt-tab.o Ao/
+Ao/tt-image.o: ../Caida/tt-image.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-image.c
+	mv tt-image.o Ao/
+Ao/tt-elt.o: ../Caida/tt-elt.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-elt.c
+	mv tt-elt.o Ao/
+Ao/tt-esearch.o: ../Caida/tt-esearch.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-esearch.c
+	mv tt-esearch.o Ao/
+Ao/tt-cursor.o: ../Caida/tt-cursor.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-cursor.c
+	mv tt-cursor.o Ao/
+Ao/tt-text.o: ../Caida/tt-text.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-text.c
+	mv tt-text.o Ao/
+Ao/tt-search.o: ../Caida/tt-search.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tt-search.c
+	mv tt-search.o Ao/
+Ao/tv-select.o: ../Caida/tv-select.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tv-select.c
+	mv tv-select.o Ao/
+Ao/tv-style.o: ../Caida/tv-style.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tv-style.c
+	mv tv-style.o Ao/
+Ao/tv-show.o: ../Caida/tv-show.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tv-show.c
+	mv tv-show.o Ao/
+Ao/tv-view.o: ../Caida/tv-view.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tv-view.c
+	mv tv-view.o Ao/
+Ao/tb-shape.o: ../Caida/tb-shape.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tb-shape.c
+	mv tb-shape.o Ao/
+Ao/tb-limage.o: ../Caida/tb-limage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tb-limage.c
+	mv tb-limage.o Ao/
+Ao/tb-bblit.o: ../Caida/tb-bblit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tb-bblit.c
+	mv tb-bblit.o Ao/
+Ao/tb-redis.o: ../Caida/tb-redis.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tb-redis.c
+	mv tb-redis.o Ao/
+Ao/tb-block.o: ../Caida/tb-block.c
+	$(CC) $(CF) $(OPT) -c ../Caida/tb-block.c
+	mv tb-block.o Ao/
+Ao/te-cimage.o: ../Caida/te-cimage.c
+	$(CC) $(CF) $(OPT) -c ../Caida/te-cimage.c
+	mv te-cimage.o Ao/
+Ao/te-edit.o: ../Caida/te-edit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/te-edit.c
+	mv te-edit.o Ao/
+Ao/te-inter.o: ../Caida/te-inter.c
+	$(CC) $(CF) $(OPT) -c ../Caida/te-inter.c
+	mv te-inter.o Ao/
+Ao/textedit.o: ../Caida/textedit.c
+	$(CC) $(CF) $(OPT) -c ../Caida/textedit.c
+	mv textedit.o Ao/
+
+#
+# Masai (Masaiobj)
+#
+
+
+Mo/holeimage.o: ../Cmasai/holeimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/holeimage.c
+	mv holeimage.o Mo/
+Mo/defstate.o: ../Cmasai/defstate.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/defstate.c
+	mv defstate.o Mo/
+Mo/elstate.o: ../Cmasai/elstate.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/elstate.c
+	mv elstate.o Mo/
+Mo/aidagetset.o: ../Cmasai/aidagetset.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aidagetset.c
+	mv aidagetset.o Mo/
+Mo/gridbox.o: ../Cmasai/gridbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/gridbox.c
+	mv gridbox.o Mo/
+Mo/gridutil.o: ../Cmasai/gridutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/gridutil.c
+	mv gridutil.o Mo/
+Mo/gridcursor.o: ../Cmasai/gridcursor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/gridcursor.c
+	mv gridcursor.o Mo/
+Mo/dragutil.o: ../Cmasai/dragutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/dragutil.c
+	mv dragutil.o Mo/
+Mo/rootdrag.o: ../Cmasai/rootdrag.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/rootdrag.c
+	mv rootdrag.o Mo/
+Mo/newselect.o: ../Cmasai/newselect.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/newselect.c
+	mv newselect.o Mo/
+Mo/receptor.o: ../Cmasai/receptor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/receptor.c
+	mv receptor.o Mo/
+Mo/receptdd.o: ../Cmasai/receptdd.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/receptdd.c
+	mv receptdd.o Mo/
+Mo/drawimage.o: ../Cmasai/drawimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/drawimage.c
+	mv drawimage.o Mo/
+Mo/findimage.o: ../Cmasai/findimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/findimage.c
+	mv findimage.o Mo/
+Mo/grid.o: ../Cmasai/grid.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/grid.c
+	mv grid.o Mo/
+Mo/grid2.o: ../Cmasai/grid2.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/grid2.c
+	mv grid2.o Mo/
+Mo/matrixdrag.o: ../Cmasai/matrixdrag.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/matrixdrag.c
+	mv matrixdrag.o Mo/
+Mo/newdragimg.o: ../Cmasai/newdragimg.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/newdragimg.c
+	mv newdragimg.o Mo/
+Mo/position.o: ../Cmasai/position.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/position.c
+	mv position.o Mo/
+Mo/specialdrag.o: ../Cmasai/specialdrag.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/specialdrag.c
+	mv specialdrag.o Mo/
+Mo/masaistring.o: ../Cmasai/masaistring.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaistring.c
+	mv masaistring.o Mo/
+Mo/masaiassert.o: ../Cmasai/masaiassert.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaiassert.c
+	mv masaiassert.o Mo/
+Mo/masaiwait.o: ../Cmasai/masaiwait.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaiwait.c
+	mv masaiwait.o Mo/
+Mo/aieerror.o: ../Cmasai/aieerror.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieerror.c
+	mv aieerror.o Mo/
+Mo/aievirlook.o: ../Cmasai/aievirlook.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aievirlook.c
+	mv aievirlook.o Mo/
+Mo/aieevent.o: ../Cmasai/aieevent.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieevent.c
+	mv aieevent.o Mo/
+Mo/aiefile.o: ../Cmasai/aiefile.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiefile.c
+	mv aiefile.o Mo/
+Mo/aieicon.o: ../Cmasai/aieicon.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieicon.c
+	mv aieicon.o Mo/
+Mo/masaires.o: ../Cmasai/masaires.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaires.c
+	mv masaires.o Mo/
+Mo/aieutil.o: ../Cmasai/aieutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieutil.c
+	mv aieutil.o Mo/
+Mo/actionutil.o: ../Cmasai/actionutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actionutil.c
+	mv actionutil.o Mo/
+Mo/editionutil.o: ../Cmasai/editionutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/editionutil.c
+	mv editionutil.o Mo/
+Mo/aieprint.o: ../Cmasai/aieprint.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieprint.c
+	mv aieprint.o Mo/
+Mo/actorres.o: ../Cmasai/actorres.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actorres.c
+	mv actorres.o Mo/
+Mo/aiefont.o: ../Cmasai/aiefont.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiefont.c
+	mv aiefont.o Mo/
+Mo/aiecomment.o: ../Cmasai/aiecomment.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiecomment.c
+	mv aiecomment.o Mo/
+Mo/aiegrab.o: ../Cmasai/aiegrab.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiegrab.c
+	mv aiegrab.o Mo/
+Mo/focusutil.o: ../Cmasai/focusutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/focusutil.c
+	mv focusutil.o Mo/
+Mo/aiemenu.o: ../Cmasai/aiemenu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiemenu.c
+	mv aiemenu.o Mo/
+Mo/aiemsg.o: ../Cmasai/aiemsg.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiemsg.c
+	mv aiemsg.o Mo/
+Mo/aiefollow.o: ../Cmasai/aiefollow.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiefollow.c
+	mv aiefollow.o Mo/
+Mo/masaimode.o: ../Cmasai/masaimode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaimode.c
+	mv masaimode.o Mo/
+Mo/aiefilepa.o: ../Cmasai/aiefilepa.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiefilepa.c
+	mv aiefilepa.o Mo/
+Mo/masaierror.o: ../Cmasai/masaierror.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaierror.c
+	mv masaierror.o Mo/
+Mo/codestruct.o: ../Cmasai/codestruct.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/codestruct.c
+	mv codestruct.o Mo/
+Mo/defmsgstr.o: ../Cmasai/defmsgstr.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/defmsgstr.c
+	mv defmsgstr.o Mo/
+Mo/aieversion.o: ../Cmasai/aieversion.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieversion.c
+	mv aieversion.o Mo/
+Mo/aidafile.o: ../Cmasai/aidafile.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aidafile.c
+	mv aidafile.o Mo/
+Mo/realeditor.o: ../Cmasai/realeditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/realeditor.c
+	mv realeditor.o Mo/
+Mo/aiefindpath.o: ../Cmasai/aiefindpath.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiefindpath.c
+	mv aiefindpath.o Mo/
+Mo/aiecopy.o: ../Cmasai/aiecopy.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiecopy.c
+	mv aiecopy.o Mo/
+Mo/aienameutil.o: ../Cmasai/aienameutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aienameutil.c
+	mv aienameutil.o Mo/
+Mo/aidautil.o: ../Cmasai/aidautil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aidautil.c
+	mv aidautil.o Mo/
+Mo/aiefuncall.o: ../Cmasai/aiefuncall.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiefuncall.c
+	mv aiefuncall.o Mo/
+Mo/actorutil.o: ../Cmasai/actorutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actorutil.c
+	mv actorutil.o Mo/
+Mo/actorprop.o: ../Cmasai/actorprop.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actorprop.c
+	mv actorprop.o Mo/
+Mo/masaitool.o: ../Cmasai/masaitool.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaitool.c
+	mv masaitool.o Mo/
+Mo/masaiicon.o: ../Cmasai/masaiicon.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaiicon.c
+	mv masaiicon.o Mo/
+Mo/mmsubst.o: ../Cmasai/mmsubst.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmsubst.c
+	mv mmsubst.o Mo/
+Mo/llrescode.o: ../Cmasai/llrescode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/llrescode.c
+	mv llrescode.o Mo/
+Mo/linkhandler.o: ../Cmasai/linkhandler.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/linkhandler.c
+	mv linkhandler.o Mo/
+Mo/aiecontext.o: ../Cmasai/aiecontext.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiecontext.c
+	mv aiecontext.o Mo/
+Mo/aiebuffer.o: ../Cmasai/aiebuffer.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiebuffer.c
+	mv aiebuffer.o Mo/
+Mo/aiekernel.o: ../Cmasai/aiekernel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiekernel.c
+	mv aiekernel.o Mo/
+Mo/resheader.o: ../Cmasai/resheader.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/resheader.c
+	mv resheader.o Mo/
+Mo/reskernel.o: ../Cmasai/reskernel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/reskernel.c
+	mv reskernel.o Mo/
+Mo/resdeclar.o: ../Cmasai/resdeclar.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/resdeclar.c
+	mv resdeclar.o Mo/
+Mo/codeutil.o: ../Cmasai/codeutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/codeutil.c
+	mv codeutil.o Mo/
+Mo/resstruct.o: ../Cmasai/resstruct.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/resstruct.c
+	mv resstruct.o Mo/
+Mo/resutil.o: ../Cmasai/resutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/resutil.c
+	mv resutil.o Mo/
+Mo/aieprompt.o: ../Cmasai/aieprompt.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieprompt.c
+	mv aieprompt.o Mo/
+Mo/aiebroadcst.o: ../Cmasai/aiebroadcst.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiebroadcst.c
+	mv aiebroadcst.o Mo/
+Mo/aieundo.o: ../Cmasai/aieundo.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieundo.c
+	mv aieundo.o Mo/
+Mo/aiezoom.o: ../Cmasai/aiezoom.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiezoom.c
+	mv aiezoom.o Mo/
+Mo/aiebuffspec.o: ../Cmasai/aiebuffspec.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiebuffspec.c
+	mv aiebuffspec.o Mo/
+Mo/aieprimiker.o: ../Cmasai/aieprimiker.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieprimiker.c
+	mv aieprimiker.o Mo/
+Mo/aieprimi.o: ../Cmasai/aieprimi.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieprimi.c
+	mv aieprimi.o Mo/
+Mo/aieundoop.o: ../Cmasai/aieundoop.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieundoop.c
+	mv aieundoop.o Mo/
+Mo/aiegroup.o: ../Cmasai/aiegroup.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiegroup.c
+	mv aiegroup.o Mo/
+Mo/aiezoomop.o: ../Cmasai/aiezoomop.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiezoomop.c
+	mv aiezoomop.o Mo/
+Mo/aiebuffmenu.o: ../Cmasai/aiebuffmenu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiebuffmenu.c
+	mv aiebuffmenu.o Mo/
+Mo/resname.o: ../Cmasai/resname.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/resname.c
+	mv resname.o Mo/
+Mo/aiebuffop.o: ../Cmasai/aiebuffop.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiebuffop.c
+	mv aiebuffop.o Mo/
+Mo/rescode.o: ../Cmasai/rescode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/rescode.c
+	mv rescode.o Mo/
+Mo/resprint.o: ../Cmasai/resprint.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/resprint.c
+	mv resprint.o Mo/
+Mo/resbuild.o: ../Cmasai/resbuild.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/resbuild.c
+	mv resbuild.o Mo/
+Mo/masaigcode.o: ../Cmasai/masaigcode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaigcode.c
+	mv masaigcode.o Mo/
+Mo/aiebuffcode.o: ../Cmasai/aiebuffcode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiebuffcode.c
+	mv aiebuffcode.o Mo/
+Mo/aieeditor.o: ../Cmasai/aieeditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieeditor.c
+	mv aieeditor.o Mo/
+Mo/aieaddutil.o: ../Cmasai/aieaddutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieaddutil.c
+	mv aieaddutil.o Mo/
+Mo/aieapropos.o: ../Cmasai/aieapropos.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieapropos.c
+	mv aieapropos.o Mo/
+Mo/appkernel.o: ../Cmasai/appkernel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/appkernel.c
+	mv appkernel.o Mo/
+Mo/aieadd.o: ../Cmasai/aieadd.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieadd.c
+	mv aieadd.o Mo/
+Mo/fedition.o: ../Cmasai/fedition.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/fedition.c
+	mv fedition.o Mo/
+Mo/aieedutil.o: ../Cmasai/aieedutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieedutil.c
+	mv aieedutil.o Mo/
+Mo/aieascii.o: ../Cmasai/aieascii.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieascii.c
+	mv aieascii.o Mo/
+Mo/masaieditor.o: ../Cmasai/masaieditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaieditor.c
+	mv masaieditor.o Mo/
+Mo/masaibuffer.o: ../Cmasai/masaibuffer.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaibuffer.c
+	mv masaibuffer.o Mo/
+Mo/readimage.o: ../Cmasai/readimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/readimage.c
+	mv readimage.o Mo/
+Mo/masaiprimi.o: ../Cmasai/masaiprimi.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaiprimi.c
+	mv masaiprimi.o Mo/
+Mo/appapropos.o: ../Cmasai/appapropos.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/appapropos.c
+	mv appapropos.o Mo/
+Mo/masaiappli.o: ../Cmasai/masaiappli.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaiappli.c
+	mv masaiappli.o Mo/
+Mo/masaisave.o: ../Cmasai/masaisave.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaisave.c
+	mv masaisave.o Mo/
+Mo/aiesession.o: ../Cmasai/aiesession.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiesession.c
+	mv aiesession.o Mo/
+Mo/masaitop.o: ../Cmasai/masaitop.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaitop.c
+	mv masaitop.o Mo/
+Mo/aiemsgstr.o: ../Cmasai/aiemsgstr.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiemsgstr.c
+	mv aiemsgstr.o Mo/
+Mo/linerelief.o: ../Cmasai/linerelief.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/linerelief.c
+	mv linerelief.o Mo/
+Mo/actorposit.o: ../Cmasai/actorposit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actorposit.c
+	mv actorposit.o Mo/
+Mo/actorascii.o: ../Cmasai/actorascii.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actorascii.c
+	mv actorascii.o Mo/
+Mo/editutil.o: ../Cmasai/editutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/editutil.c
+	mv editutil.o Mo/
+Mo/aiecentered.o: ../Cmasai/aiecentered.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiecentered.c
+	mv aiecentered.o Mo/
+Mo/aietextsubs.o: ../Cmasai/aietextsubs.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aietextsubs.c
+	mv aietextsubs.o Mo/
+Mo/aietextutil.o: ../Cmasai/aietextutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aietextutil.c
+	mv aietextutil.o Mo/
+Mo/relief.o: ../Cmasai/relief.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/relief.c
+	mv relief.o Mo/
+Mo/aiecheckbox.o: ../Cmasai/aiecheckbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiecheckbox.c
+	mv aiecheckbox.o Mo/
+Mo/aiebbox.o: ../Cmasai/aiebbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiebbox.c
+	mv aiebbox.o Mo/
+Mo/aieheadbox.o: ../Cmasai/aieheadbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieheadbox.c
+	mv aieheadbox.o Mo/
+Mo/actorimage.o: ../Cmasai/actorimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actorimage.c
+	mv actorimage.o Mo/
+Mo/aieappli.o: ../Cmasai/aieappli.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieappli.c
+	mv aieappli.o Mo/
+Mo/aieview.o: ../Cmasai/aieview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieview.c
+	mv aieview.o Mo/
+Mo/masaiasker.o: ../Cmasai/masaiasker.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaiasker.c
+	mv masaiasker.o Mo/
+Mo/actorkernel.o: ../Cmasai/actorkernel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actorkernel.c
+	mv actorkernel.o Mo/
+Mo/actorfunc.o: ../Cmasai/actorfunc.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actorfunc.c
+	mv actorfunc.o Mo/
+Mo/aieselectab.o: ../Cmasai/aieselectab.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieselectab.c
+	mv aieselectab.o Mo/
+Mo/aiebutton.o: ../Cmasai/aiebutton.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiebutton.c
+	mv aiebutton.o Mo/
+Mo/aieselector.o: ../Cmasai/aieselector.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieselector.c
+	mv aieselector.o Mo/
+Mo/parameter.o: ../Cmasai/parameter.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/parameter.c
+	mv parameter.o Mo/
+Mo/masaimedite.o: ../Cmasai/masaimedite.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaimedite.c
+	mv masaimedite.o Mo/
+Mo/aietextedit.o: ../Cmasai/aietextedit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aietextedit.c
+	mv aietextedit.o Mo/
+Mo/usedatt.o: ../Cmasai/usedatt.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/usedatt.c
+	mv usedatt.o Mo/
+Mo/masaiactor.o: ../Cmasai/masaiactor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaiactor.c
+	mv masaiactor.o Mo/
+Mo/copyutil.o: ../Cmasai/copyutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/copyutil.c
+	mv copyutil.o Mo/
+Mo/apputil.o: ../Cmasai/apputil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/apputil.c
+	mv apputil.o Mo/
+Mo/app-masai.o: ../Cmasai/app-masai.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-masai.c
+	mv app-masai.o Mo/
+Mo/app-zoom.o: ../Cmasai/app-zoom.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-zoom.c
+	mv app-zoom.o Mo/
+Mo/app-dragger.o: ../Cmasai/app-dragger.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-dragger.c
+	mv app-dragger.o Mo/
+Mo/app-text.o: ../Cmasai/app-text.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-text.c
+	mv app-text.o Mo/
+Mo/app-menu.o: ../Cmasai/app-menu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-menu.c
+	mv app-menu.o Mo/
+Mo/app-grid.o: ../Cmasai/app-grid.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-grid.c
+	mv app-grid.o Mo/
+Mo/app-code.o: ../Cmasai/app-code.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-code.c
+	mv app-code.o Mo/
+Mo/app-propert.o: ../Cmasai/app-propert.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-propert.c
+	mv app-propert.o Mo/
+Mo/app-genecod.o: ../Cmasai/app-genecod.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-genecod.c
+	mv app-genecod.o Mo/
+Mo/app-edit.o: ../Cmasai/app-edit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-edit.c
+	mv app-edit.o Mo/
+Mo/app-copy.o: ../Cmasai/app-copy.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-copy.c
+	mv app-copy.o Mo/
+Mo/app-string.o: ../Cmasai/app-string.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-string.c
+	mv app-string.o Mo/
+Mo/app-build.o: ../Cmasai/app-build.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-build.c
+	mv app-build.o Mo/
+Mo/app-buffer.o: ../Cmasai/app-buffer.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-buffer.c
+	mv app-buffer.o Mo/
+Mo/app-res.o: ../Cmasai/app-res.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-res.c
+	mv app-res.o Mo/
+Mo/app-msgstr.o: ../Cmasai/app-msgstr.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-msgstr.c
+	mv app-msgstr.o Mo/
+Mo/mmaction.o: ../Cmasai/mmaction.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaction.c
+	mv mmaction.o Mo/
+Mo/mmcode.o: ../Cmasai/mmcode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcode.c
+	mv mmcode.o Mo/
+Mo/mmcopy.o: ../Cmasai/mmcopy.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcopy.c
+	mv mmcopy.o Mo/
+Mo/mmexplore.o: ../Cmasai/mmexplore.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmexplore.c
+	mv mmexplore.o Mo/
+Mo/mmgroup.o: ../Cmasai/mmgroup.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmgroup.c
+	mv mmgroup.o Mo/
+Mo/mmutil.o: ../Cmasai/mmutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmutil.c
+	mv mmutil.o Mo/
+Mo/mmroot.o: ../Cmasai/mmroot.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmroot.c
+	mv mmroot.o Mo/
+Mo/mmactorim.o: ../Cmasai/mmactorim.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmactorim.c
+	mv mmactorim.o Mo/
+Mo/mmaiecheckb.o: ../Cmasai/mmaiecheckb.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaiecheckb.c
+	mv mmaiecheckb.o Mo/
+Mo/mmaieview.o: ../Cmasai/mmaieview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaieview.c
+	mv mmaieview.o Mo/
+Mo/mmappli.o: ../Cmasai/mmappli.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmappli.c
+	mv mmappli.o Mo/
+Mo/mmbbox.o: ../Cmasai/mmbbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmbbox.c
+	mv mmbbox.o Mo/
+Mo/mmbitmap.o: ../Cmasai/mmbitmap.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmbitmap.c
+	mv mmbitmap.o Mo/
+Mo/mmbox.o: ../Cmasai/mmbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmbox.c
+	mv mmbox.o Mo/
+Mo/mmbutton.o: ../Cmasai/mmbutton.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmbutton.c
+	mv mmbutton.o Mo/
+Mo/mmcheckbox.o: ../Cmasai/mmcheckbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcheckbox.c
+	mv mmcheckbox.o Mo/
+Mo/mmcolor.o: ../Cmasai/mmcolor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcolor.c
+	mv mmcolor.o Mo/
+Mo/mmcolumn.o: ../Cmasai/mmcolumn.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcolumn.c
+	mv mmcolumn.o Mo/
+Mo/mmconstrain.o: ../Cmasai/mmconstrain.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmconstrain.c
+	mv mmconstrain.o Mo/
+Mo/mmcview.o: ../Cmasai/mmcview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcview.c
+	mv mmcview.o Mo/
+Mo/mmfont.o: ../Cmasai/mmfont.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmfont.c
+	mv mmfont.o Mo/
+Mo/mmholeimage.o: ../Cmasai/mmholeimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmholeimage.c
+	mv mmholeimage.o Mo/
+Mo/mmicon.o: ../Cmasai/mmicon.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmicon.c
+	mv mmicon.o Mo/
+Mo/mmelicon.o: ../Cmasai/mmelicon.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmelicon.c
+	mv mmelicon.o Mo/
+Mo/mmmaskicon.o: ../Cmasai/mmmaskicon.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmaskicon.c
+	mv mmmaskicon.o Mo/
+Mo/mminversion.o: ../Cmasai/mminversion.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mminversion.c
+	mv mminversion.o Mo/
+Mo/mmimage.o: ../Cmasai/mmimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmimage.c
+	mv mmimage.o Mo/
+Mo/mmmedite.o: ../Cmasai/mmmedite.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmedite.c
+	mv mmmedite.o Mo/
+Mo/mmlineedit.o: ../Cmasai/mmlineedit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmlineedit.c
+	mv mmlineedit.o Mo/
+Mo/mmlispobj.o: ../Cmasai/mmlispobj.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmlispobj.c
+	mv mmlispobj.o Mo/
+Mo/mmmenu.o: ../Cmasai/mmmenu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmenu.c
+	mv mmmenu.o Mo/
+Mo/mmmode.o: ../Cmasai/mmmode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmode.c
+	mv mmmode.o Mo/
+Mo/mmmoveable.o: ../Cmasai/mmmoveable.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmoveable.c
+	mv mmmoveable.o Mo/
+Mo/mmstring.o: ../Cmasai/mmstring.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmstring.c
+	mv mmstring.o Mo/
+Mo/mmmsgstring.o: ../Cmasai/mmmsgstring.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmsgstring.c
+	mv mmmsgstring.o Mo/
+Mo/mmparameter.o: ../Cmasai/mmparameter.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmparameter.c
+	mv mmparameter.o Mo/
+Mo/mmpattern.o: ../Cmasai/mmpattern.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmpattern.c
+	mv mmpattern.o Mo/
+Mo/mmrbutton.o: ../Cmasai/mmrbutton.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmrbutton.c
+	mv mmrbutton.o Mo/
+Mo/mmrectangle.o: ../Cmasai/mmrectangle.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmrectangle.c
+	mv mmrectangle.o Mo/
+Mo/mmrow.o: ../Cmasai/mmrow.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmrow.c
+	mv mmrow.o Mo/
+Mo/mmscroller.o: ../Cmasai/mmscroller.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmscroller.c
+	mv mmscroller.o Mo/
+Mo/mmselector.o: ../Cmasai/mmselector.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmselector.c
+	mv mmselector.o Mo/
+Mo/mmseltab.o: ../Cmasai/mmseltab.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmseltab.c
+	mv mmseltab.o Mo/
+Mo/mmstredit.o: ../Cmasai/mmstredit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmstredit.c
+	mv mmstredit.o Mo/
+Mo/mmstringsel.o: ../Cmasai/mmstringsel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmstringsel.c
+	mv mmstringsel.o Mo/
+Mo/mmstrmenu.o: ../Cmasai/mmstrmenu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmstrmenu.c
+	mv mmstrmenu.o Mo/
+Mo/mmtranslat.o: ../Cmasai/mmtranslat.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmtranslat.c
+	mv mmtranslat.o Mo/
+Mo/mmunary.o: ../Cmasai/mmunary.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmunary.c
+	mv mmunary.o Mo/
+Mo/mmview.o: ../Cmasai/mmview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmview.c
+	mv mmview.o Mo/
+Mo/mmwindow.o: ../Cmasai/mmwindow.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmwindow.c
+	mv mmwindow.o Mo/
+Mo/mmfilledbox.o: ../Cmasai/mmfilledbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmfilledbox.c
+	mv mmfilledbox.o Mo/
+Mo/mmbackgrnd.o: ../Cmasai/mmbackgrnd.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmbackgrnd.c
+	mv mmbackgrnd.o Mo/
+Mo/mmforegrnd.o: ../Cmasai/mmforegrnd.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmforegrnd.c
+	mv mmforegrnd.o Mo/
+Mo/mmttyappl.o: ../Cmasai/mmttyappl.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmttyappl.c
+	mv mmttyappl.o Mo/
+Mo/mmboxedimag.o: ../Cmasai/mmboxedimag.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmboxedimag.c
+	mv mmboxedimag.o Mo/
+Mo/mmcentered.o: ../Cmasai/mmcentered.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcentered.c
+	mv mmcentered.o Mo/
+Mo/mmcolorbox.o: ../Cmasai/mmcolorbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcolorbox.c
+	mv mmcolorbox.o Mo/
+Mo/mmdigits.o: ../Cmasai/mmdigits.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmdigits.c
+	mv mmdigits.o Mo/
+Mo/mmaiebutton.o: ../Cmasai/mmaiebutton.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaiebutton.c
+	mv mmaiebutton.o Mo/
+Mo/mmaieseltab.o: ../Cmasai/mmaieseltab.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaieseltab.c
+	mv mmaieseltab.o Mo/
+Mo/hselector1.o: ../Cmasai/hselector1.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/hselector1.c
+	mv hselector1.o Mo/
+Mo/hsapppanel.o: ../Cmasai/hsapppanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/hsapppanel.c
+	mv hsapppanel.o Mo/
+Mo/iconasker.o: ../Cmasai/iconasker.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/iconasker.c
+	mv iconasker.o Mo/
+Mo/modeeditor.o: ../Cmasai/modeeditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/modeeditor.c
+	mv modeeditor.o Mo/
+Mo/fonteditor.o: ../Cmasai/fonteditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/fonteditor.c
+	mv fonteditor.o Mo/
+Mo/patternedit.o: ../Cmasai/patternedit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/patternedit.c
+	mv patternedit.o Mo/
+Mo/attribedit.o: ../Cmasai/attribedit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/attribedit.c
+	mv attribedit.o Mo/
+Mo/savepanel.o: ../Cmasai/savepanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/savepanel.c
+	mv savepanel.o Mo/
+Mo/fileselect.o: ../Cmasai/fileselect.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/fileselect.c
+	mv fileselect.o Mo/
+Mo/loadpanel.o: ../Cmasai/loadpanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/loadpanel.c
+	mv loadpanel.o Mo/
+Mo/gridpanel.o: ../Cmasai/gridpanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/gridpanel.c
+	mv gridpanel.o Mo/
+Mo/stretched.o: ../Cmasai/stretched.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/stretched.c
+	mv stretched.o Mo/
+Mo/viewpanel.o: ../Cmasai/viewpanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/viewpanel.c
+	mv viewpanel.o Mo/
+Mo/meappli.o: ../Cmasai/meappli.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/meappli.c
+	mv meappli.o Mo/
+Mo/menewdrag.o: ../Cmasai/menewdrag.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/menewdrag.c
+	mv menewdrag.o Mo/
+Mo/mereceptor.o: ../Cmasai/mereceptor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mereceptor.c
+	mv mereceptor.o Mo/
+Mo/aieconfig.o: ../Cmasai/aieconfig.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieconfig.c
+	mv aieconfig.o Mo/
+Mo/sysmasai.o: ../Cmasai/sysmasai.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/sysmasai.c
+	mv sysmasai.o Mo/
+Mo/aiemodules.o: ../Cmasai/aiemodules.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiemodules.c
+	mv aiemodules.o Mo/
+Mo/aiegview.o: ../Cmasai/aiegview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiegview.c
+	mv aiegview.o Mo/
+Mo/aietextclip.o: ../Cmasai/aietextclip.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aietextclip.c
+	mv aietextclip.o Mo/
+Mo/showicons.o: ../Cmasai/showicons.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/showicons.c
+	mv showicons.o Mo/
+Mo/masaisessio.o: ../Cmasai/masaisessio.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaisessio.c
+	mv masaisessio.o Mo/
+Mo/toolsgroup.o: ../Cmasai/toolsgroup.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/toolsgroup.c
+	mv toolsgroup.o Mo/
+Mo/aiemetview.o: ../Cmasai/aiemetview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiemetview.c
+	mv aiemetview.o Mo/
+Mo/extimage.o: ../Cmasai/extimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/extimage.c
+	mv extimage.o Mo/
+Mo/aierepeat.o: ../Cmasai/aierepeat.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aierepeat.c
+	mv aierepeat.o Mo/
+Mo/app-interf.o: ../Cmasai/app-interf.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-interf.c
+	mv app-interf.o Mo/
+Mo/app-local.o: ../Cmasai/app-local.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-local.c
+	mv app-local.o Mo/
+Mo/app-arg.o: ../Cmasai/app-arg.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-arg.c
+	mv app-arg.o Mo/
+Mo/app-name.o: ../Cmasai/app-name.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-name.c
+	mv app-name.o Mo/
+Mo/app-action.o: ../Cmasai/app-action.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-action.c
+	mv app-action.o Mo/
+Mo/app-1tools.o: ../Cmasai/app-1tools.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-1tools.c
+	mv app-1tools.o Mo/
+Mo/app-1masai.o: ../Cmasai/app-1masai.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-1masai.c
+	mv app-1masai.o Mo/
+Mo/app-library.o: ../Cmasai/app-library.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-library.c
+	mv app-library.o Mo/
+Mo/app-module.o: ../Cmasai/app-module.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-module.c
+	mv app-module.o Mo/
+Mo/app-doc.o: ../Cmasai/app-doc.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-doc.c
+	mv app-doc.o Mo/
+Mo/app-actor.o: ../Cmasai/app-actor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-actor.c
+	mv app-actor.o Mo/
+Mo/app-help.o: ../Cmasai/app-help.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-help.c
+	mv app-help.o Mo/
+Mo/app-focus.o: ../Cmasai/app-focus.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-focus.c
+	mv app-focus.o Mo/
+Mo/app-editmen.o: ../Cmasai/app-editmen.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/app-editmen.c
+	mv app-editmen.o Mo/
+Mo/mmaieamenu.o: ../Cmasai/mmaieamenu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaieamenu.c
+	mv mmaieamenu.o Mo/
+Mo/mmaieappli.o: ../Cmasai/mmaieappli.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaieappli.c
+	mv mmaieappli.o Mo/
+Mo/mmaiebbox.o: ../Cmasai/mmaiebbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaiebbox.c
+	mv mmaiebbox.o Mo/
+Mo/mmaiehbox.o: ../Cmasai/mmaiehbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaiehbox.c
+	mv mmaiehbox.o Mo/
+Mo/mmaieseltor.o: ../Cmasai/mmaieseltor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaieseltor.c
+	mv mmaieseltor.o Mo/
+Mo/mmaietext.o: ../Cmasai/mmaietext.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaietext.c
+	mv mmaietext.o Mo/
+Mo/mmrelief.o: ../Cmasai/mmrelief.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmrelief.c
+	mv mmrelief.o Mo/
+Mo/mmlinerelie.o: ../Cmasai/mmlinerelie.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmlinerelie.c
+	mv mmlinerelie.o Mo/
+Mo/mmaierepeat.o: ../Cmasai/mmaierepeat.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmaierepeat.c
+	mv mmaierepeat.o Mo/
+Mo/mmmasaimed.o: ../Cmasai/mmmasaimed.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmasaimed.c
+	mv mmmasaimed.o Mo/
+Mo/mmmeter.o: ../Cmasai/mmmeter.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmeter.c
+	mv mmmeter.o Mo/
+Mo/mmmetscale.o: ../Cmasai/mmmetscale.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmetscale.c
+	mv mmmetscale.o Mo/
+Mo/mmmetview.o: ../Cmasai/mmmetview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmetview.c
+	mv mmmetview.o Mo/
+Mo/mmgradua.o: ../Cmasai/mmgradua.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmgradua.c
+	mv mmgradua.o Mo/
+Mo/mmnode.o: ../Cmasai/mmnode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmnode.c
+	mv mmnode.o Mo/
+Mo/mmnodeimage.o: ../Cmasai/mmnodeimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmnodeimage.c
+	mv mmnodeimage.o Mo/
+Mo/mmobjeditor.o: ../Cmasai/mmobjeditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmobjeditor.c
+	mv mmobjeditor.o Mo/
+Mo/mmprotector.o: ../Cmasai/mmprotector.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmprotector.c
+	mv mmprotector.o Mo/
+Mo/mmhsbar.o: ../Cmasai/mmhsbar.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmhsbar.c
+	mv mmhsbar.o Mo/
+Mo/mmvsbar.o: ../Cmasai/mmvsbar.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmvsbar.c
+	mv mmvsbar.o Mo/
+Mo/mmsbar.o: ../Cmasai/mmsbar.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmsbar.c
+	mv mmsbar.o Mo/
+Mo/mmtreeed.o: ../Cmasai/mmtreeed.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmtreeed.c
+	mv mmtreeed.o Mo/
+Mo/mmgreysel.o: ../Cmasai/mmgreysel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmgreysel.c
+	mv mmgreysel.o Mo/
+Mo/mmasker.o: ../Cmasai/mmasker.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmasker.c
+	mv mmasker.o Mo/
+Mo/mmelrow.o: ../Cmasai/mmelrow.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmelrow.c
+	mv mmelrow.o Mo/
+Mo/mmelview.o: ../Cmasai/mmelview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmelview.c
+	mv mmelview.o Mo/
+Mo/mmelcolumn.o: ../Cmasai/mmelcolumn.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmelcolumn.c
+	mv mmelcolumn.o Mo/
+Mo/mmelcview.o: ../Cmasai/mmelcview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmelcview.c
+	mv mmelcview.o Mo/
+Mo/mmextimage.o: ../Cmasai/mmextimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmextimage.c
+	mv mmextimage.o Mo/
+Mo/mmconnect.o: ../Cmasai/mmconnect.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmconnect.c
+	mv mmconnect.o Mo/
+Mo/mmbackplane.o: ../Cmasai/mmbackplane.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmbackplane.c
+	mv mmbackplane.o Mo/
+Mo/mmcircle.o: ../Cmasai/mmcircle.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmcircle.c
+	mv mmcircle.o Mo/
+Mo/mmtriangle.o: ../Cmasai/mmtriangle.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmtriangle.c
+	mv mmtriangle.o Mo/
+Mo/mmellipse.o: ../Cmasai/mmellipse.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmellipse.c
+	mv mmellipse.o Mo/
+Mo/mmfcircle.o: ../Cmasai/mmfcircle.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmfcircle.c
+	mv mmfcircle.o Mo/
+Mo/mmfellipse.o: ../Cmasai/mmfellipse.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmfellipse.c
+	mv mmfellipse.o Mo/
+Mo/mmline.o: ../Cmasai/mmline.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmline.c
+	mv mmline.o Mo/
+Mo/mmline-styl.o: ../Cmasai/mmline-styl.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmline-styl.c
+	mv mmline-styl.o Mo/
+Mo/mmtokenedit.o: ../Cmasai/mmtokenedit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmtokenedit.c
+	mv mmtokenedit.o Mo/
+Mo/mmtextedit.o: ../Cmasai/mmtextedit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmtextedit.c
+	mv mmtextedit.o Mo/
+Mo/mmhselector.o: ../Cmasai/mmhselector.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmhselector.c
+	mv mmhselector.o Mo/
+Mo/mmgd-view.o: ../Cmasai/mmgd-view.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmgd-view.c
+	mv mmgd-view.o Mo/
+Mo/mmmenubox.o: ../Cmasai/mmmenubox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmenubox.c
+	mv mmmenubox.o Mo/
+Mo/mmamenuitem.o: ../Cmasai/mmamenuitem.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmamenuitem.c
+	mv mmamenuitem.o Mo/
+Mo/mmamenuappl.o: ../Cmasai/mmamenuappl.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmamenuappl.c
+	mv mmamenuappl.o Mo/
+Mo/actionedito.o: ../Cmasai/actionedito.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/actionedito.c
+	mv actionedito.o Mo/
+Mo/msgeditor.o: ../Cmasai/msgeditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/msgeditor.c
+	mv msgeditor.o Mo/
+Mo/dynamenu.o: ../Cmasai/dynamenu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/dynamenu.c
+	mv dynamenu.o Mo/
+Mo/evalpanel.o: ../Cmasai/evalpanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/evalpanel.c
+	mv evalpanel.o Mo/
+Mo/masaiver.o: ../Cmasai/masaiver.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaiver.c
+	mv masaiver.o Mo/
+Mo/aieobjected.o: ../Cmasai/aieobjected.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aieobjected.c
+	mv aieobjected.o Mo/
+Mo/align.o: ../Cmasai/align.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/align.c
+	mv align.o Mo/
+Mo/justpanel.o: ../Cmasai/justpanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/justpanel.c
+	mv justpanel.o Mo/
+Mo/mainapplipa.o: ../Cmasai/mainapplipa.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mainapplipa.c
+	mv mainapplipa.o Mo/
+Mo/editmanager.o: ../Cmasai/editmanager.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/editmanager.c
+	mv editmanager.o Mo/
+Mo/zoomstack.o: ../Cmasai/zoomstack.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/zoomstack.c
+	mv zoomstack.o Mo/
+Mo/propedit.o: ../Cmasai/propedit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/propedit.c
+	mv propedit.o Mo/
+Mo/treepanel.o: ../Cmasai/treepanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/treepanel.c
+	mv treepanel.o Mo/
+Mo/helpcode.o: ../Cmasai/helpcode.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/helpcode.c
+	mv helpcode.o Mo/
+Mo/menueditor.o: ../Cmasai/menueditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/menueditor.c
+	mv menueditor.o Mo/
+Mo/mousehelp.o: ../Cmasai/mousehelp.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mousehelp.c
+	mv mousehelp.o Mo/
+Mo/keymaped.o: ../Cmasai/keymaped.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/keymaped.c
+	mv keymaped.o Mo/
+Mo/insertpanel.o: ../Cmasai/insertpanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/insertpanel.c
+	mv insertpanel.o Mo/
+Mo/libloadpan.o: ../Cmasai/libloadpan.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/libloadpan.c
+	mv libloadpan.o Mo/
+# pas d'optimisation [BI]
+Mo/codepanel.o: ../Cmasai/codepanel.c
+	$(CC) $(CF) -c ../Cmasai/codepanel.c
+	mv codepanel.o Mo/
+Mo/scriptfsel.o: ../Cmasai/scriptfsel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/scriptfsel.c
+	mv scriptfsel.o Mo/
+Mo/apropospan.o: ../Cmasai/apropospan.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/apropospan.c
+	mv apropospan.o Mo/
+Mo/apropostext.o: ../Cmasai/apropostext.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/apropostext.c
+	mv apropostext.o Mo/
+Mo/namepanel.o: ../Cmasai/namepanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/namepanel.c
+	mv namepanel.o Mo/
+Mo/edgrpselect.o: ../Cmasai/edgrpselect.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/edgrpselect.c
+	mv edgrpselect.o Mo/
+Mo/fontasker.o: ../Cmasai/fontasker.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/fontasker.c
+	mv fontasker.o Mo/
+Mo/meterannex.o: ../Cmasai/meterannex.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/meterannex.c
+	mv meterannex.o Mo/
+Mo/meterpanel.o: ../Cmasai/meterpanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/meterpanel.c
+	mv meterpanel.o Mo/
+Mo/metereditor.o: ../Cmasai/metereditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/metereditor.c
+	mv metereditor.o Mo/
+Mo/aiegpanel.o: ../Cmasai/aiegpanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aiegpanel.c
+	mv aiegpanel.o Mo/
+Mo/helppanel.o: ../Cmasai/helppanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/helppanel.c
+	mv helppanel.o Mo/
+Mo/megview.o: ../Cmasai/megview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/megview.c
+	mv megview.o Mo/
+Mo/stateeditor.o: ../Cmasai/stateeditor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/stateeditor.c
+	mv stateeditor.o Mo/
+Mo/colormixer.o: ../Cmasai/colormixer.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/colormixer.c
+	mv colormixer.o Mo/
+Mo/colorselect.o: ../Cmasai/colorselect.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/colorselect.c
+	mv colorselect.o Mo/
+Mo/masaipatches.o: ../Cmasai/masaipatches.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaipatches.c
+	mv masaipatches.o Mo/
+Mo/pmmcolor.o: ../Cmasai/pmmcolor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/pmmcolor.c
+	mv pmmcolor.o Mo/
+Mo/presource.o: ../Cmasai/presource.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/presource.c
+	mv presource.o Mo/
+
+
+###
+### Construction des objets pour les inspecteurs de Masai (uniquement le moteur,
+### la definition des inspecteurs sont charge's en interprete')
+### ATTENTION : maintenant on compile tout. [BI]
+###
+
+
+
+###
+### Construction des objets
+###
+
+Mo/inspropac.o: ../Cmasai/inspropac.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspropac.c
+	mv inspropac.o Mo/
+Mo/inspres.o: ../Cmasai/inspres.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspres.c
+	mv inspres.o Mo/
+Mo/inspfocus.o: ../Cmasai/inspfocus.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspfocus.c
+	mv inspfocus.o Mo/
+Mo/inspconvert.o: ../Cmasai/inspconvert.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspconvert.c
+	mv inspconvert.o Mo/
+Mo/inspinterac.o: ../Cmasai/inspinterac.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspinterac.c
+	mv inspinterac.o Mo/
+Mo/idefutil.o: ../Cmasai/idefutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idefutil.c
+	mv idefutil.o Mo/
+Mo/idescstruct.o: ../Cmasai/idescstruct.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idescstruct.c
+	mv idescstruct.o Mo/
+Mo/inspstructs.o: ../Cmasai/inspstructs.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspstructs.c
+	mv inspstructs.o Mo/
+Mo/inspobjects.o: ../Cmasai/inspobjects.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspobjects.c
+	mv inspobjects.o Mo/
+Mo/definspect.o: ../Cmasai/definspect.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/definspect.c
+	mv definspect.o Mo/
+Mo/inspfill.o: ../Cmasai/inspfill.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspfill.c
+	mv inspfill.o Mo/
+Mo/inspector.o: ../Cmasai/inspector.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspector.c
+	mv inspector.o Mo/
+Mo/iviewaction.o: ../Cmasai/iviewaction.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/iviewaction.c
+	mv iviewaction.o Mo/
+Mo/inspusrfunc.o: ../Cmasai/inspusrfunc.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspusrfunc.c
+	mv inspusrfunc.o Mo/
+Mo/imasaiutil.o: ../Cmasai/imasaiutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/imasaiutil.c
+	mv imasaiutil.o Mo/
+Mo/iholder.o: ../Cmasai/iholder.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/iholder.c
+	mv iholder.o Mo/
+Mo/ipanel.o: ../Cmasai/ipanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/ipanel.c
+	mv ipanel.o Mo/
+Mo/meipanel.o: ../Cmasai/meipanel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/meipanel.c
+	mv meipanel.o Mo/
+Mo/idescutil.o: ../Cmasai/idescutil.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idescutil.c
+	mv idescutil.o Mo/
+Mo/idescfile.o: ../Cmasai/idescfile.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idescfile.c
+	mv idescfile.o Mo/
+Mo/idesctext.o: ../Cmasai/idesctext.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idesctext.c
+	mv idesctext.o Mo/
+Mo/ivardesc.o: ../Cmasai/ivardesc.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/ivardesc.c
+	mv ivardesc.o Mo/
+Mo/iviewdesc.o: ../Cmasai/iviewdesc.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/iviewdesc.c
+	mv iviewdesc.o Mo/
+Mo/inspdesc.o: ../Cmasai/inspdesc.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspdesc.c
+	mv inspdesc.o Mo/
+Mo/metainspect.o: ../Cmasai/metainspect.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/metainspect.c
+	mv metainspect.o Mo/
+Mo/insplister.o: ../Cmasai/insplister.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/insplister.c
+	mv insplister.o Mo/
+Mo/coloredit.o: ../Cmasai/coloredit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/coloredit.c
+	mv coloredit.o Mo/
+Mo/fontselect.o: ../Cmasai/fontselect.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/fontselect.c
+	mv fontselect.o Mo/
+Mo/idimage.o: ../Cmasai/idimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idimage.c
+	mv idimage.o Mo/
+Mo/inspcons.o: ../Cmasai/inspcons.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/inspcons.c
+	mv inspcons.o Mo/
+Mo/idinspxy.o: ../Cmasai/idinspxy.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idinspxy.c
+	mv idinspxy.o Mo/
+Mo/idzoomimage.o: ../Cmasai/idzoomimage.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idzoomimage.c
+	mv idzoomimage.o Mo/
+Mo/idinspappli.o: ../Cmasai/idinspappli.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idinspappli.c
+	mv idinspappli.o Mo/
+Mo/idpattern.o: ../Cmasai/idpattern.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idpattern.c
+	mv idpattern.o Mo/
+Mo/idappli.o: ../Cmasai/idappli.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idappli.c
+	mv idappli.o Mo/
+Mo/idbutton.o: ../Cmasai/idbutton.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idbutton.c
+	mv idbutton.o Mo/
+Mo/idcheckbox.o: ../Cmasai/idcheckbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idcheckbox.c
+	mv idcheckbox.o Mo/
+Mo/idcircle.o: ../Cmasai/idcircle.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idcircle.c
+	mv idcircle.o Mo/
+Mo/idcluster.o: ../Cmasai/idcluster.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idcluster.c
+	mv idcluster.o Mo/
+Mo/idcolor.o: ../Cmasai/idcolor.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idcolor.c
+	mv idcolor.o Mo/
+Mo/idcross.o: ../Cmasai/idcross.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idcross.c
+	mv idcross.o Mo/
+Mo/iddigit.o: ../Cmasai/iddigit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/iddigit.c
+	mv iddigit.o Mo/
+Mo/iddgdisplay.o: ../Cmasai/iddgdisplay.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/iddgdisplay.c
+	mv iddgdisplay.o Mo/
+Mo/iddgcounter.o: ../Cmasai/iddgcounter.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/iddgcounter.c
+	mv iddgcounter.o Mo/
+Mo/idellipse.o: ../Cmasai/idellipse.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idellipse.c
+	mv idellipse.o Mo/
+Mo/idinspappli.o: ../Cmasai/idinspappli.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idinspappli.c
+	mv idinspappli.o Mo/
+Mo/idfellipse.o: ../Cmasai/idfellipse.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idfellipse.c
+	mv idfellipse.o Mo/
+Mo/idfilledbox.o: ../Cmasai/idfilledbox.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idfilledbox.c
+	mv idfilledbox.o Mo/
+Mo/idfont.o: ../Cmasai/idfont.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idfont.c
+	mv idfont.o Mo/
+Mo/idhole.o: ../Cmasai/idhole.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idhole.c
+	mv idhole.o Mo/
+Mo/idline.o: ../Cmasai/idline.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idline.c
+	mv idline.o Mo/
+Mo/idmedite.o: ../Cmasai/idmedite.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idmedite.c
+	mv idmedite.o Mo/
+Mo/idlineed.o: ../Cmasai/idlineed.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idlineed.c
+	mv idlineed.o Mo/
+Mo/idmeter.o: ../Cmasai/idmeter.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idmeter.c
+	mv idmeter.o Mo/
+Mo/idmsgstring.o: ../Cmasai/idmsgstring.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idmsgstring.c
+	mv idmsgstring.o Mo/
+Mo/idrbutton.o: ../Cmasai/idrbutton.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idrbutton.c
+	mv idrbutton.o Mo/
+Mo/idscrollbar.o: ../Cmasai/idscrollbar.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idscrollbar.c
+	mv idscrollbar.o Mo/
+Mo/idscroller.o: ../Cmasai/idscroller.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idscroller.c
+	mv idscroller.o Mo/
+Mo/idstring.o: ../Cmasai/idstring.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idstring.c
+	mv idstring.o Mo/
+Mo/idstringed.o: ../Cmasai/idstringed.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idstringed.c
+	mv idstringed.o Mo/
+Mo/idstrmenu.o: ../Cmasai/idstrmenu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idstrmenu.c
+	mv idstrmenu.o Mo/
+Mo/idtranslat.o: ../Cmasai/idtranslat.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idtranslat.c
+	mv idtranslat.o Mo/
+Mo/idtriangle.o: ../Cmasai/idtriangle.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idtriangle.c
+	mv idtriangle.o Mo/
+Mo/idview.o: ../Cmasai/idview.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idview.c
+	mv idview.o Mo/
+Mo/idformedit.o: ../Cmasai/idformedit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/idformedit.c
+	mv idformedit.o Mo/
+Mo/repeater.o: ../Cmasai/repeater.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/repeater.c
+	mv repeater.o Mo/
+
+
+
+
+###
+### Construction des objets pour Masaimotif
+###
+
+Mo/aidacolored.o: ../Cmasai/aidacolored.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/aidacolored.c
+	mv aidacolored.o Mo/
+Mo/defwidget.o: ../Cmasai/defwidget.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/defwidget.c
+	mv defwidget.o Mo/
+Mo/mmxtaida.o: ../Cmasai/mmxtaida.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmxtaida.c
+	mv mmxtaida.o Mo/
+Mo/mmxwidget.o: ../Cmasai/mmxwidget.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmxwidget.c
+	mv mmxwidget.o Mo/
+Mo/mmxcomposit.o: ../Cmasai/mmxcomposit.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmxcomposit.c
+	mv mmxcomposit.o Mo/
+Mo/xtinspector.o: ../Cmasai/xtinspector.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/xtinspector.c
+	mv xtinspector.o Mo/
+Mo/mmmtarrow.o: ../Cmasai/mmmtarrow.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtarrow.c
+	mv mmmtarrow.o Mo/
+Mo/mmmtdrawn.o: ../Cmasai/mmmtdrawn.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtdrawn.c
+	mv mmmtdrawn.o Mo/
+Mo/mmmtlabel.o: ../Cmasai/mmmtlabel.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtlabel.c
+	mv mmmtlabel.o Mo/
+Mo/mmmtlist.o: ../Cmasai/mmmtlist.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtlist.c
+	mv mmmtlist.o Mo/
+Mo/mmmtmenu.o: ../Cmasai/mmmtmenu.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtmenu.c
+	mv mmmtmenu.o Mo/
+Mo/mmmtpaned.o: ../Cmasai/mmmtpaned.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtpaned.c
+	mv mmmtpaned.o Mo/
+Mo/mmmtpush.o: ../Cmasai/mmmtpush.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtpush.c
+	mv mmmtpush.o Mo/
+Mo/mmmtradio.o: ../Cmasai/mmmtradio.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtradio.c
+	mv mmmtradio.o Mo/
+Mo/mmmtrowcol.o: ../Cmasai/mmmtrowcol.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtrowcol.c
+	mv mmmtrowcol.o Mo/
+Mo/mmmtscale.o: ../Cmasai/mmmtscale.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtscale.c
+	mv mmmtscale.o Mo/
+Mo/mmmtscbar.o: ../Cmasai/mmmtscbar.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtscbar.c
+	mv mmmtscbar.o Mo/
+Mo/mmmtscroll.o: ../Cmasai/mmmtscroll.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmtscroll.c
+	mv mmmtscroll.o Mo/
+Mo/mmmttext.o: ../Cmasai/mmmttext.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmttext.c
+	mv mmmttext.o Mo/
+Mo/mmmttoggle.o: ../Cmasai/mmmttoggle.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/mmmttoggle.c
+	mv mmmttoggle.o Mo/
+Mo/masaixtpatches.o: ../Cmasai/masaixtpatches.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaixtpatches.c
+	mv masaixtpatches.o Mo/
+Mo/masaimtpatches.o: ../Cmasai/masaimtpatches.c
+	$(CC) $(CF) $(OPT) -c ../Cmasai/masaimtpatches.c
+	mv masaimtpatches.o Mo/
+
+
+#
+#	clean: Histoire de tout refaire
+#
+
+clean:
+	rm -f   $(LLobjO) $(obj) $(tobj) $(LLibO) $(lobj) $(bobj) \
+		$(X11obj) $(M11obj) $(vobj) \
+		$(AidaO) $(aobj) $(MotifO) $(Maobj) $(AdvO) $(Advobj) \
+		$(MasaiO1) $(MasaiO2) $(Masaiobj1) $(Masaiobj2) $(InspO) $(inspobj)
+
+
