@@ -1,0 +1,18 @@
+#!/bin/sh
+
+LELISP="../../C/lelispbin -cons 8"
+
+cmd=$1
+bin=${cmd}bin
+output=${cmd}SYM
+cache=${cmd}SCH
+
+nm $bin | grep " _Gl[YZ]_" > $output
+
+HOME=foothebar $LELISP <<EOI
+(loadfile "llsymcache.ll" t)
+(make-getglobal-cache "$output" "$cache")
+(end)
+EOI
+
+rm $output
