@@ -50,7 +50,7 @@ fi
 
 echo "Making C code for files: $files"
 
-/usr/ilog/lelisp/sun4/complice <<EOI
+../../linux/complice <<EOI
 (loadfile "../C/modtoc.lo"  t)
 
 
@@ -68,10 +68,10 @@ echo "Making C code for files: $files"
 (defun makeCllib ()
    (let ((#:system:path (mcons "New/" 
                                "../C/"
-                                "/nfs/work/lelisp/llib/"
-                                "/nfs/work/lelisp/llub/"
-                                "/nfs/work/lelisp/llobj/"
-                                "/nfs/work/lelisp/llmod/"
+                                "../../llib/"
+                                "../../llub/"
+                                "../../llobj/"
+                                "../../llmod/"
                                 #:system:path)))
 
         (mapc  (quote module-to-C) (quote ($files)) )
