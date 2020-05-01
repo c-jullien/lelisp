@@ -329,6 +329,7 @@ AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],  [CFLAGS="$CFLAGS -Wstrict-prototyp
 AX_CHECK_COMPILE_FLAG([-finline-functions],   [CFLAGS="$CFLAGS -finline-functions"])
 AX_CHECK_COMPILE_FLAG([-fomit-frame-pointer], [CFLAGS="$CFLAGS -fomit-frame-pointer"])
 AX_CHECK_COMPILE_FLAG([-funroll-loops],       [CFLAGS="$CFLAGS -funroll-loops"])
+AX_CHECK_COMPILE_FLAG([-fcommon],             [CFLAGS="$CFLAGS -fcommon"])
 
 BUILDARGS="-f Makeport FLT=31 bootstrap"
 
