@@ -550,7 +550,7 @@ inton(void) {
 #endif /* LLFOREGROUND */
 #if defined(SIG_SETMASK) && !defined(APOLLO)
         {
-                struct sigset_t *set = {0,};
+                struct sigset_t *set = {0};
                 sigprocmask(SIG_SETMASK, (sigset_t *)&set, NULL);
         }
 #else
