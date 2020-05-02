@@ -36,7 +36,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script
 
-AC_INIT(llm3)
+AC_INIT([lelisp], [15.26], [jullien@eligis.com])
 
 dnl where to find install.sh, config.sub, and config.guess
 
@@ -119,30 +119,30 @@ AC_PROG_CC
 
 dnl Checks for specific system
 
-AC_AIX
+AC_CHECK_PROGS([AR], gcc-ar ar gar, no)
+AS_IF([test "$AR" != "no"],
+      [AC_SUBST(AR)],
+      [AC_MSG_ERROR(Can\'t find gcc-ar, ar or gar.)])
 
-AC_CHECK_PROGS(AR, ar gar, no)
-if test $AR = no; then
-  AC_MSG_ERROR(Can\'t find ar or gar.)
-fi
+AC_CHECK_PROGS([STRIP], gcc-strip strip gstrip, no)
+AS_IF([test "$STRIP" != "no"],
+      [AC_SUBST(STRIP)],
+      [AC_MSG_ERROR(Can\'t find gcc-strip, strip or strip.)])
 
-AC_CHECK_PROGS(MAKE, gmake, make)
-if test $MAKE = no
-then
-  AC_MSG_ERROR(Can\'t find gmake or make.)
-fi
+AC_CHECK_PROGS([RANLIB], gcc-ranlib ranlib, no)
+AS_IF([test "$RANLIB" != "no"],
+      [AC_SUBST(RANLIB)],
+      [RANLIB="echo INFO: no ranlib on this system"])
 
-AC_CHECK_PROGS(RANLIB, ranlib, no)
-if test $RANLIB = no; then
-  RANLIB="echo INFO: no ranlib on this system "
-fi
-AC_SUBST(RANLIB)
+AC_CHECK_PROGS([MAKE], gmake gnumake make, no)
+AS_IF([test "$MAKE" != "no"],
+      [AC_SUBST(MAKE)],
+      [AC_MSG_ERROR(Can\'t find gmake, gnumake or make.)])
 
-AC_CHECK_PROGS(LDCONFIG, ldconfig, no)
-if test $LDCONFIG = no; then
-  LDCONFIG="echo INFO: no ldconfig on this system "
-fi
-AC_SUBST(LDCONFIG)
+AC_CHECK_PROGS([LDCONFIG], ldconfig, no)
+AS_IF([test "$LDCONFIG" != "no"],
+      [AC_SUBST(LDCONFIG)],
+      [LDCONFIG="echo INFO: no ldconfig on this system"])
 
 AC_CHECK_PROGS(ED, ed, no)
 #if test $ED = no; then
@@ -356,6 +356,10 @@ case "${target_cpu}-${target_os}" in
      ;;
   *86*linux*)
      TARGET=linux
+     ;;
+  *aarch64*linux*)
+     TARGET=C
+     AX_CHECK_COMPILE_FLAG([-mcpu=cortex-a72], [CFLAGS="$CFLAGS -mcpu=cortex-a72"])
      ;;
   *armv7*linux*)
      TARGET=C
