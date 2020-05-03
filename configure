@@ -6476,8 +6476,12 @@ esac
 
 if test $PORTABLE_C = yes
 then
-     TARGET=C
-     if test x"$MODEL" == x64; then CFLAGS="$CFLAGS -DLLC64BITS"; fi
+  TARGET=C
+fi
+
+if test $TARGET = C
+then
+  if test x"$MODEL" == x64; then CFLAGS="$CFLAGS -DLLC64BITS"; fi
 fi
 
 BOOTLISP="$SOURCE/$TARGET/cmplc++"
