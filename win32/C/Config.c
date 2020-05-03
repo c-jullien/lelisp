@@ -1,7 +1,3 @@
-#if     !defined(lint)
-static  char *sccsid = "$Id: Config.c,v 1.11 2017/07/08 08:21:52 jullien Exp $";
-#endif
-
 /*
  *      config.c :      
  */

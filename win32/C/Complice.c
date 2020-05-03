@@ -1,11 +1,7 @@
-#if     !defined(lint)
-static  char *sccsid = "$Id: Complice.c,v 1.11 2017/08/25 21:49:01 jullien Exp $";
-#endif
-
 /*
- *      complice.c :    pre-processor for cmplc++, the real comiler.
+ *      complice.c :    pre-processor for cmplc++, the real compiler.
  *                      On UNIX this is done by a shell script,  but
- *                      Windows 95 is limited by the number of arguments.
+ *                      Windows is limited by the number of arguments.
  */
 
 #if     defined(_MSC_VER) && (_MSC_VER >= 1400)
