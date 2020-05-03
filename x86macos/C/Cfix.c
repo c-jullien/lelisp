@@ -1,9 +1,4 @@
-
-/* Maintenance: automatic genereted file                     */
-/*                                                           */
-/* $Id$ */
 /*************************************************************/
-
 /*                                                           */
 /*       Le-Lisp C fix converters and equo functions         */
 /*                      on x86macos                          */

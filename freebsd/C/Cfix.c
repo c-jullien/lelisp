@@ -1,9 +1,4 @@
-
-/* Maintenance: automatic genereted file                     */
-/*                                                           */
-/* $Id: Cfix.c,v 1.3 2017/08/15 10:19:19 jullien Exp $ */
 /*************************************************************/
-
 /*                                                           */
 /*       Le-Lisp C fix converters and equo functions         */
 /*                      on Linux 386                         */

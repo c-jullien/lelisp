@@ -1,5 +1,3 @@
-/*                                                           */
-/* $Id: Cfix.c,v 1.2 2017/07/08 07:05:41 jullien Exp $ */
 /*************************************************************/
 /*                                                           */
 /*       Le-Lisp C fix converters and equo functions         */
