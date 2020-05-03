@@ -58,6 +58,7 @@ dnl check LIBTOOL options (see aclocal.m4)
 
 dnl AC_PROG_LIBTOOL
 
+TARGET=default
 AC_MSG_CHECKING(for portable C version)
 AC_ARG_ENABLE([portable],
   [AS_HELP_STRING([--enable-portable],
@@ -65,10 +66,9 @@ AC_ARG_ENABLE([portable],
   [],
   [enable_portable=no])
 AS_IF([test "$enable_portable" = "yes"],
-      [PORTABLE_C=yes
+      [TARGET=C
        AC_MSG_RESULT(yes)],
-      [PORTABLE_C=no
-       AC_MSG_RESULT(no)])
+      [AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING(for enabled bignum)
 AC_ARG_ENABLE([bignum],
@@ -270,12 +270,13 @@ AC_CHECK_FUNCS(
 AC_CHECK_FUNC(sigsetjmp, AC_DEFINE(HAVE_SIGSETJMP),
 AC_MSG_CHECKING(for sigsetjmp defined in setjmp.h)
 AC_TRY_COMPILE([#include <setjmp.h>],
-[int main(int argc, char **argv)
-{
-  sigjmp_buf env;
-  exit(sigsetjmp(env,1));
-}],[AC_DEFINE(HAVE_SIGSETJMP) AC_MSG_RESULT(yes)],
-AC_MSG_RESULT(no)))
+               [int main(int argc, char **argv) {
+                 sigjmp_buf env;
+		 exit(sigsetjmp(env,1));
+                }],
+               [AC_DEFINE(HAVE_SIGSETJMP)
+                AC_MSG_RESULT(yes)],
+               [AC_MSG_RESULT(no))])
 
 dnl OS specifics, sets {EXE,OBJ}EXT
 
@@ -295,67 +296,64 @@ dnl gcc -nostdlib -Wl,--export-dynamic -Wl,-r
 
 AS_CASE([${target_cpu}-${target_os}],
   [*cygwin*], [
-     TARGET=cygwin
-     AX_CHECK_COMPILE_FLAG([-Wl,--export-all-symbols],
+     AX_CHECK_COMPILE_FLAG([-Werror -Wl,--export-all-symbols],
                            [LDEXPORT="$LDEXPORT -Wl,--export-all-symbols"])
   ],
   [*darwin*], [
-     AX_CHECK_COMPILE_FLAG([-Wl,-export_dynamic],
+     AX_CHECK_COMPILE_FLAG([-Werror -Wl,-export_dynamic],
                            [LDEXPORT="$LDEXPORT -Wl,-export_dynamic"])
-     AX_CHECK_COMPILE_FLAG([-Wl,-no_pie],
+     AX_CHECK_COMPILE_FLAG([-Werror -Wl,-no_pie],
                            [LDEXPORT="$LDEXPORT -Wl,-no_pie"])
   ],
   [*], [
-     AX_CHECK_COMPILE_FLAG([-Wl,--export-dynamic],
+     AX_CHECK_COMPILE_FLAG([-Werror -Wl,--export-dynamic],
                            [LDEXPORT="$LDEXPORT -Wl,--export-dynamic"])
   ])
 
-AX_CHECK_COMPILE_FLAG([-Wl,-r -nostdlib],
+AX_CHECK_COMPILE_FLAG([-Werror -Wl,-r -nostdlib],
                       [LDRFLAGS="$LDRFLAGS -Wl,-r -nostdlib"])
-AX_CHECK_COMPILE_FLAG([-Wall],
+AX_CHECK_COMPILE_FLAG([-Werror -Wall],
                       [CFLAGS="$CFLAGS -Wall"])
-AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],
+AX_CHECK_COMPILE_FLAG([-Werror -Wstrict-prototypes],
                       [CFLAGS="$CFLAGS -Wstrict-prototypes"])
-AX_CHECK_COMPILE_FLAG([-finline-functions],
+AX_CHECK_COMPILE_FLAG([-Werror -finline-functions],
                       [CFLAGS="$CFLAGS -finline-functions"])
-AX_CHECK_COMPILE_FLAG([-fomit-frame-pointer],
+AX_CHECK_COMPILE_FLAG([-Werror -fomit-frame-pointer],
                       [CFLAGS="$CFLAGS -fomit-frame-pointer"])
-AX_CHECK_COMPILE_FLAG([-funroll-loops],
+AX_CHECK_COMPILE_FLAG([-Werror -funroll-loops],
                       [CFLAGS="$CFLAGS -funroll-loops"])
-AX_CHECK_COMPILE_FLAG([-fcommon],
+AX_CHECK_COMPILE_FLAG([-Werror -fcommon],
                       [CFLAGS="$CFLAGS -fcommon"])
 
 BUILDARGS="-f Makeport FLT=31 bootstrap"
 
 AS_CASE([${target_cpu}-${target_os}],
   [*86*solaris*], [
-     AS_IF([test "$PORTABLE_C" = "no"],
-           [TARGET=solaris386],
-	   [TARGET=C])
+     AS_IF([test "$TARGET" = "default"],
+           [TARGET=solaris386])
   ],
   [*solaris*], [
-     AS_IF([test "$PORTABLE_C" = "no"],
+     AS_IF([test "$TARGET" = "default"],
            [TARGET=solaris
-	    CFLAGS="$CFLAGS -m32"],
-	   [TARGET=C])
+	    CFLAGS="$CFLAGS -m32"])
   ],
   [x86_64*linux*], [
-     AS_IF([test "$PORTABLE_C" = "no"],
+     AS_IF([test "$TARGET" = "default"],
            [TARGET=linux
-	    CFLAGS="$CFLAGS -m32"],
-	   [TARGET=C])
+	    CFLAGS="$CFLAGS -m32"])
   ],
   [*86*linux*], [
-     TARGET=linux
+     AS_IF([test "$TARGET" = "default"],
+           [TARGET=linux])
   ],
   [*aarch64*linux*], [
      TARGET=C
-     AX_CHECK_COMPILE_FLAG([-mcpu=cortex-a72],
+     AX_CHECK_COMPILE_FLAG([-Werror -mcpu=cortex-a72],
                            [CFLAGS="$CFLAGS -mcpu=cortex-a72"])
   ],
   [*armv7*linux*], [
      TARGET=C
-     AX_CHECK_COMPILE_FLAG([-march=armv7-a -mfloat-abi=hard],
+     AX_CHECK_COMPILE_FLAG([-Werror -march=armv7-a -mfloat-abi=hard],
                            [CFLAGS="$CFLAGS -march=armv7-a -mfloat-abi=hard"])
   ],
   [*arm*linux*], [
@@ -363,26 +361,28 @@ AS_CASE([${target_cpu}-${target_os}],
   ],
   [sparc*linux*], [
      TARGET=linuxsparc
-     AX_CHECK_COMPILE_FLAG([-Wl,--no-relax],
+     AX_CHECK_COMPILE_FLAG([-Werror -Wl,--no-relax],
                            [LDRFLAGS="$LDRFLAGS -Wl,--no-relax"])
   ],
   [*x86_64*cygwin*], [
-     PORTABLE_C=yes
+     TARGET=C
   ],
   [*amd64*netbsd*], [
-     TARGET=netbsd
+     AS_IF([test "$TARGET" = "default"],
+           [TARGET=netbsd])
   ],
   [*86*netbsd*], [
-     TARGET=netbsd
+     AS_IF([test "$TARGET" = "default"],
+           [TARGET=netbsd])
   ],
   [*darwin*], [
-     AS_IF([test $PORTABLE_C = no],
+     AS_IF([test "$TARGET" = "default"],
            [AS_IF([test `uname -r | cut -d '.' -f 1` -lt 18],
 	          [TARGET=x86macos],
 		  [TARGET=C])])
   ],
   [i386*freebsd*], [
-     AS_IF([test "$PORTABLE_C" = "no"],
+     AS_IF([test "$TARGET" = "default"],
            [TARGET=freebsd])
   ],
   [*cygwin*], [
@@ -390,15 +390,12 @@ AS_CASE([${target_cpu}-${target_os}],
      TARGET=cygwin
   ],
   [powerpc*aix*], [
-     AS_IF([test "$PORTABLE_C" = "no"],
+     AS_IF([test "$TARGET" = "default"],
            [TARGET=rs6000])
   ],
   [*], [
-     PORTABLE_C=yes
+     TARGET=C
   ])
-
-AS_IF([test "$PORTABLE_C" = "yes"],
-      [TARGET=C])
 
 AS_IF([test "$TARGET" = "C"],
       [AS_IF([test x"$MODEL" = x64]
