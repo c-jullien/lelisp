@@ -296,21 +296,21 @@ dnl gcc -nostdlib -Wl,--export-dynamic -Wl,-r
 
 AS_CASE([${target_cpu}-${target_os}],
   [*cygwin*], [
-     AX_CHECK_COMPILE_FLAG([-Werror -Wl,--export-all-symbols],
-                           [LDEXPORT="$LDEXPORT -Wl,--export-all-symbols"])
+    AX_CHECK_COMPILE_FLAG([-Wl,--export-all-symbols],
+                          [LDEXPORT="$LDEXPORT -Wl,--export-all-symbols"])
   ],
   [*darwin*], [
-     AX_CHECK_COMPILE_FLAG([-Werror -Wl,-export_dynamic],
-                           [LDEXPORT="$LDEXPORT -Wl,-export_dynamic"])
-     AX_CHECK_COMPILE_FLAG([-Werror -Wl,-no_pie],
-                           [LDEXPORT="$LDEXPORT -Wl,-no_pie"])
+    AX_CHECK_COMPILE_FLAG([-Wl,-export_dynamic],
+                          [LDEXPORT="$LDEXPORT -Wl,-export_dynamic"])
+    AX_CHECK_COMPILE_FLAG([-Wl,-no_pie],
+                          [LDEXPORT="$LDEXPORT -Wl,-no_pie"])
   ],
   [*], [
-     AX_CHECK_COMPILE_FLAG([-Werror -Wl,--export-dynamic],
-                           [LDEXPORT="$LDEXPORT -Wl,--export-dynamic"])
+    AX_CHECK_COMPILE_FLAG([-Wl,--export-dynamic],
+                          [LDEXPORT="$LDEXPORT -Wl,--export-dynamic"])
   ])
 
-AX_CHECK_COMPILE_FLAG([-Werror -Wl,-r -nostdlib],
+AX_CHECK_COMPILE_FLAG([-Wl,-r -nostdlib],
                       [LDRFLAGS="$LDRFLAGS -Wl,-r -nostdlib"])
 AX_CHECK_COMPILE_FLAG([-Werror -Wall],
                       [CFLAGS="$CFLAGS -Wall"])
