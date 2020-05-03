@@ -1,9 +1,4 @@
-
-/* Maintenance: automatic genereted file                */
-/*                                                      */
-/* $Id: Getgloba.c,v 1.1 2017/10/07 13:54:53 jullien Exp $ */
 /********************************************************/
-
 /*                                                      */
 /*              Le-Lisp getglobal on NetBSD             */
 /*                                                      */

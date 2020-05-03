@@ -1,12 +1,7 @@
-
-/* Maintenance: automatic genereted file                */
-/*                                                      */
-/* $Id: Getgloba.c,v 1.4 2017/07/30 18:44:30 jullien Exp $ */
 /********************************************************/
-
-/*                                                          */
-/*              Le-Lisp getglobal on SOLARIS                */
-/*                                                          */
+/*                                                      */
+/*              Le-Lisp getglobal on SOLARIS            */
+/*                                                      */
 /********************************************************/
 
 /* includes */

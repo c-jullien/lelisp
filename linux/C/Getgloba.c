@@ -1,9 +1,4 @@
-
-/* Maintenance: automatic genereted file                */
-/*                                                      */
-/* $Id: Getgloba.c,v 1.4 2017/07/30 13:26:51 jullien Exp $ */
 /********************************************************/
-
 /*                                                      */
 /*              Le-Lisp getglobal on LINUX              */
 /*                                                      */
