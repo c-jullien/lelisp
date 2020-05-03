@@ -1,8 +1,3 @@
-/* Maintenance:               automatic genereted file  */
-/*                                                      */
-/* $Id: Machine.h,v 1.5 2017/07/30 13:26:51 jullien Exp $ */
-/********************************************************/
-
 /*      Conditionnals for C compilation  :
         ==================================
 

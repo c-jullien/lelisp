@@ -1,9 +1,3 @@
-
-/* Maintenance: ce fichier est engendre automatiquement */
-/*                                                      */
-/* $Id: Machine.h,v 1.9 2017/07/30 13:26:51 jullien Exp $ */
-/********************************************************/
-
 /*      Liste des conditionnelles de compilation C :
         ============================================
 

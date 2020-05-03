@@ -1,9 +1,3 @@
-
-/* Maintenance:               automatic genereted file  */
-/*                                                      */
-/* $Id$ */
-/********************************************************/
-
 /*	Conditionnals for C compilation  :
 	==================================
 
