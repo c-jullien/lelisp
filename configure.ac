@@ -293,23 +293,22 @@ AROPTS="-q"
 
 dnl gcc -nostdlib -Wl,--export-dynamic -Wl,-r
 
-case "${target_cpu}-${target_os}" in
-  *cygwin*)
+AS_CASE([${target_cpu}-${target_os}],
+  [*cygwin*], [
      TARGET=cygwin
      AX_CHECK_COMPILE_FLAG([-Wl,--export-all-symbols],
                            [LDEXPORT="$LDEXPORT -Wl,--export-all-symbols"])
-     ;;
-  *darwin*)
+  ],
+  [*darwin*], [
      AX_CHECK_COMPILE_FLAG([-Wl,-export_dynamic],
                            [LDEXPORT="$LDEXPORT -Wl,-export_dynamic"])
      AX_CHECK_COMPILE_FLAG([-Wl,-no_pie],
                            [LDEXPORT="$LDEXPORT -Wl,-no_pie"])
-     ;;
-  *)
+  ],
+  [*], [
      AX_CHECK_COMPILE_FLAG([-Wl,--export-dynamic],
                            [LDEXPORT="$LDEXPORT -Wl,--export-dynamic"])
-     ;;
-esac
+  ])
 
 AX_CHECK_COMPILE_FLAG([-Wl,-r -nostdlib],
                       [LDRFLAGS="$LDRFLAGS -Wl,-r -nostdlib"])
@@ -328,76 +327,75 @@ AX_CHECK_COMPILE_FLAG([-fcommon],
 
 BUILDARGS="-f Makeport FLT=31 bootstrap"
 
-case "${target_cpu}-${target_os}" in
-  *86*solaris*)
+AS_CASE([${target_cpu}-${target_os}],
+  [*86*solaris*], [
      AS_IF([test "$PORTABLE_C" = "no"],
            [TARGET=solaris386],
 	   [TARGET=C])
-     ;;
-  *solaris*)
+  ],
+  [*solaris*], [
      AS_IF([test "$PORTABLE_C" = "no"],
            [TARGET=solaris
 	    CFLAGS="$CFLAGS -m32"],
 	   [TARGET=C])
-     ;;
-  x86_64*linux*)
+  ],
+  [x86_64*linux*], [
      AS_IF([test "$PORTABLE_C" = "no"],
            [TARGET=linux
 	    CFLAGS="$CFLAGS -m32"],
 	   [TARGET=C])
-     ;;
-  *86*linux*)
+  ],
+  [*86*linux*], [
      TARGET=linux
-     ;;
-  *aarch64*linux*)
+  ],
+  [*aarch64*linux*], [
      TARGET=C
      AX_CHECK_COMPILE_FLAG([-mcpu=cortex-a72],
                            [CFLAGS="$CFLAGS -mcpu=cortex-a72"])
-     ;;
-  *armv7*linux*)
+  ],
+  [*armv7*linux*], [
      TARGET=C
      AX_CHECK_COMPILE_FLAG([-march=armv7-a -mfloat-abi=hard],
                            [CFLAGS="$CFLAGS -march=armv7-a -mfloat-abi=hard"])
-     ;;
-  *arm*linux*)
+  ],
+  [*arm*linux*], [
      TARGET=C
-     ;;
-  sparc*linux*)
+  ],
+  [sparc*linux*], [
      TARGET=linuxsparc
      AX_CHECK_COMPILE_FLAG([-Wl,--no-relax],
                            [LDRFLAGS="$LDRFLAGS -Wl,--no-relax"])
-     ;;
-  *x86_64*cygwin*)
+  ],
+  [*x86_64*cygwin*], [
      PORTABLE_C=yes
-     ;;
-  *amd64*netbsd*)
+  ],
+  [*amd64*netbsd*], [
      TARGET=netbsd
-     ;;
-  *86*netbsd*)
+  ],
+  [*86*netbsd*], [
      TARGET=netbsd
-     ;;
-  *darwin*)
+  ],
+  [*darwin*], [
      AS_IF([test $PORTABLE_C = no],
            [AS_IF([test `uname -r | cut -d '.' -f 1` -lt 18],
 	          [TARGET=x86macos],
 		  [TARGET=C])])
-     ;;
-  i386*freebsd*)
+  ],
+  [i386*freebsd*], [
      AS_IF([test "$PORTABLE_C" = "no"],
            [TARGET=freebsd])
-     ;;
-  *cygwin*)
-     # X11 requires: xorg-server xproto libX11-devel
+  ],
+  [*cygwin*], [
+     dnl X11 requires: xorg-server xproto libX11-devel
      TARGET=cygwin
-     ;;
-  powerpc*aix*)
+  ],
+  [powerpc*aix*], [
      AS_IF([test "$PORTABLE_C" = "no"],
            [TARGET=rs6000])
-     ;;
-  *)
+  ],
+  [*], [
      PORTABLE_C=yes
-     ;;
-esac
+  ])
 
 AS_IF([test "$PORTABLE_C" = "yes"],
       [TARGET=C])

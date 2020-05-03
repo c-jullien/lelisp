@@ -5871,8 +5871,9 @@ AEXT="a"
 AROPTS="-q"
 
 
-case "${target_cpu}-${target_os}" in
-  *cygwin*)
+case ${target_cpu}-${target_os} in #(
+  *cygwin*) :
+
      TARGET=cygwin
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wl,--export-all-symbols" >&5
 $as_echo_n "checking whether C compiler accepts -Wl,--export-all-symbols... " >&6; }
@@ -5909,8 +5910,9 @@ else
   :
 fi
 
-     ;;
-  *darwin*)
+   ;; #(
+  *darwin*) :
+
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wl,-export_dynamic" >&5
 $as_echo_n "checking whether C compiler accepts -Wl,-export_dynamic... " >&6; }
 if ${ax_cv_check_cflags___Wl__export_dynamic+:} false; then :
@@ -5981,8 +5983,9 @@ else
   :
 fi
 
-     ;;
-  *)
+   ;; #(
+  *) :
+
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wl,--export-dynamic" >&5
 $as_echo_n "checking whether C compiler accepts -Wl,--export-dynamic... " >&6; }
 if ${ax_cv_check_cflags___Wl___export_dynamic+:} false; then :
@@ -6018,6 +6021,8 @@ else
   :
 fi
 
+   ;; #(
+  *) :
      ;;
 esac
 
@@ -6269,34 +6274,39 @@ fi
 
 BUILDARGS="-f Makeport FLT=31 bootstrap"
 
-case "${target_cpu}-${target_os}" in
-  *86*solaris*)
+case ${target_cpu}-${target_os} in #(
+  *86*solaris*) :
+
      if test "$PORTABLE_C" = "no"; then :
   TARGET=solaris386
 else
   TARGET=C
 fi
-     ;;
-  *solaris*)
+   ;; #(
+  *solaris*) :
+
      if test "$PORTABLE_C" = "no"; then :
   TARGET=solaris
 	    CFLAGS="$CFLAGS -m32"
 else
   TARGET=C
 fi
-     ;;
-  x86_64*linux*)
+   ;; #(
+  x86_64*linux*) :
+
      if test "$PORTABLE_C" = "no"; then :
   TARGET=linux
 	    CFLAGS="$CFLAGS -m32"
 else
   TARGET=C
 fi
-     ;;
-  *86*linux*)
+   ;; #(
+  *86*linux*) :
+
      TARGET=linux
-     ;;
-  *aarch64*linux*)
+   ;; #(
+  *aarch64*linux*) :
+
      TARGET=C
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -mcpu=cortex-a72" >&5
 $as_echo_n "checking whether C compiler accepts -mcpu=cortex-a72... " >&6; }
@@ -6333,8 +6343,9 @@ else
   :
 fi
 
-     ;;
-  *armv7*linux*)
+   ;; #(
+  *armv7*linux*) :
+
      TARGET=C
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -march=armv7-a -mfloat-abi=hard" >&5
 $as_echo_n "checking whether C compiler accepts -march=armv7-a -mfloat-abi=hard... " >&6; }
@@ -6371,11 +6382,13 @@ else
   :
 fi
 
-     ;;
-  *arm*linux*)
+   ;; #(
+  *arm*linux*) :
+
      TARGET=C
-     ;;
-  sparc*linux*)
+   ;; #(
+  sparc*linux*) :
+
      TARGET=linuxsparc
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -Wl,--no-relax" >&5
 $as_echo_n "checking whether C compiler accepts -Wl,--no-relax... " >&6; }
@@ -6412,17 +6425,21 @@ else
   :
 fi
 
-     ;;
-  *x86_64*cygwin*)
+   ;; #(
+  *x86_64*cygwin*) :
+
      PORTABLE_C=yes
-     ;;
-  *amd64*netbsd*)
+   ;; #(
+  *amd64*netbsd*) :
+
      TARGET=netbsd
-     ;;
-  *86*netbsd*)
+   ;; #(
+  *86*netbsd*) :
+
      TARGET=netbsd
-     ;;
-  *darwin*)
+   ;; #(
+  *darwin*) :
+
      if test $PORTABLE_C = no; then :
   if test `uname -r | cut -d '.' -f 1` -lt 18; then :
   TARGET=x86macos
@@ -6430,23 +6447,28 @@ else
   TARGET=C
 fi
 fi
-     ;;
-  i386*freebsd*)
+   ;; #(
+  i386*freebsd*) :
+
      if test "$PORTABLE_C" = "no"; then :
   TARGET=freebsd
 fi
-     ;;
-  *cygwin*)
-     # X11 requires: xorg-server xproto libX11-devel
-     TARGET=cygwin
-     ;;
-  powerpc*aix*)
+   ;; #(
+  *cygwin*) :
+
+          TARGET=cygwin
+   ;; #(
+  powerpc*aix*) :
+
      if test "$PORTABLE_C" = "no"; then :
   TARGET=rs6000
 fi
-     ;;
-  *)
+   ;; #(
+  *) :
+
      PORTABLE_C=yes
+   ;; #(
+  *) :
      ;;
 esac
 
