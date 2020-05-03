@@ -693,7 +693,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -769,7 +768,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1022,15 +1020,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1168,7 +1157,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1321,7 +1310,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1360,9 +1348,9 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --enable-portable       enable portable C version default=no
-  --enable-bignum         enable bignum (default=yes]
-  --enable-x11            enable X11 default=yes
+  --enable-portable       enable portable version [default=no]
+  --enable-bignum         enable bignum [default=yes]
+  --enable-x11            enable X11 [default=yes]
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -2454,15 +2442,13 @@ else
   enable_portable=no
 fi
 
-if test "$enable_portable" = "y" || test "$enable_portable" = "yes"
-then
-   enable_portable=yes
-   PORTABLE_C=yes
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+if test "$enable_portable" = "yes"; then :
+  PORTABLE_C=yes
+       { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 else
-   PORTABLE_C=no
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+  PORTABLE_C=no
+       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
@@ -2475,18 +2461,15 @@ else
   enable_bignum=yes
 fi
 
-if test "$enable_bignum" = "y" || test "$enable_bignum" = "yes"
-then
-   enable_bignum=yes
-   BIGNUM=kern.o
-   $as_echo "#define HAVE_BIGNUM 1" >>confdefs.h
+if test "$enable_bignum" = "yes"; then :
+  BIGNUM=kern.o
+       $as_echo "#define HAVE_BIGNUM 1" >>confdefs.h
 
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+       { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 else
-   BIGNUM=
-   enable_bignum=no
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+  BIGNUM=
+       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
@@ -2499,19 +2482,15 @@ else
   enable_x11=yes
 fi
 
-if test "$enable_x11" = "y" || test "$enable_x11" = "yes"
-then
-   enable_x11=yes
-   $as_echo "#define HAVE_X11 1" >>confdefs.h
+if test "$enable_x11" = "yes"; then :
+  $as_echo "#define HAVE_X11 1" >>confdefs.h
 
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+       { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 else
-   enable_x11=no
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
-
 
 
 
@@ -5418,19 +5397,18 @@ $as_echo "#define TM_IN_SYS_TIME 1" >>confdefs.h
 fi
 
 
-if test "$ac_cv_c_inline" != no
-then
+if test "$ac_cv_c_inline" != no; then :
   $as_echo "#define HAVE_INLINE 1" >>confdefs.h
 
 
 
-  cat >>confdefs.h <<_ACEOF
+       cat >>confdefs.h <<_ACEOF
 #define _INLINE_KEYWORD $ac_cv_c_inline
 _ACEOF
 
 else
 
-  cat >>confdefs.h <<_ACEOF
+       cat >>confdefs.h <<_ACEOF
 #define _INLINE_KEYWORD /* no inline */
 _ACEOF
 
@@ -5549,7 +5527,7 @@ else
 /* end confdefs.h.  */
 
 	int main() {
-	return( (SIZEOF_VOID_P == 8) ? 0 : 1 );
+	return ((SIZEOF_VOID_P == 8) ? 0 : 1);
 	}
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
@@ -5565,8 +5543,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_cc_64bit" >&5
 $as_echo "$ac_cv_cc_64bit" >&6; }
 
-if test "$ac_cv_cc_64bit" != no
-then
+if test "$ac_cv_cc_64bit" != no; then :
   MODEL=64
 else
   MODEL=32
@@ -6294,24 +6271,27 @@ BUILDARGS="-f Makeport FLT=31 bootstrap"
 
 case "${target_cpu}-${target_os}" in
   *86*solaris*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=solaris386
-     fi
+     if test "$PORTABLE_C" = "no"; then :
+  TARGET=solaris386
+else
+  TARGET=C
+fi
      ;;
   *solaris*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=solaris
-       CFLAGS="$CFLAGS -m32"
-     fi
+     if test "$PORTABLE_C" = "no"; then :
+  TARGET=solaris
+	    CFLAGS="$CFLAGS -m32"
+else
+  TARGET=C
+fi
      ;;
   x86_64*linux*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=linux
-       CFLAGS="$CFLAGS -m32"
-     fi
+     if test "$PORTABLE_C" = "no"; then :
+  TARGET=linux
+	    CFLAGS="$CFLAGS -m32"
+else
+  TARGET=C
+fi
      ;;
   *86*linux*)
      TARGET=linux
@@ -6443,45 +6423,42 @@ fi
      TARGET=netbsd
      ;;
   *darwin*)
-     if test $PORTABLE_C = no
-     then
-       if test `uname -r | cut -d '.' -f 1` -lt 18
-       then
-         TARGET=x86macos
-       else
-         PORTABLE_C=yes
-       fi
-     fi
+     if test $PORTABLE_C = no; then :
+  if test `uname -r | cut -d '.' -f 1` -lt 18; then :
+  TARGET=x86macos
+else
+  TARGET=C
+fi
+fi
      ;;
   i386*freebsd*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=freebsd
-     fi
+     if test "$PORTABLE_C" = "no"; then :
+  TARGET=freebsd
+fi
      ;;
   *cygwin*)
      # X11 requires: xorg-server xproto libX11-devel
      TARGET=cygwin
      ;;
   powerpc*aix*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=rs6000
-     fi
+     if test "$PORTABLE_C" = "no"; then :
+  TARGET=rs6000
+fi
      ;;
   *)
      PORTABLE_C=yes
      ;;
 esac
 
-if test $PORTABLE_C = yes
-then
+if test "$PORTABLE_C" = "yes"; then :
   TARGET=C
 fi
 
-if test $TARGET = C
-then
-  if test x"$MODEL" == x64; then CFLAGS="$CFLAGS -DLLC64BITS"; fi
+if test "$TARGET" = "C"; then :
+  if test x"$MODEL" = x64
+             CFLAGS="$CFLAGS -DLLC64BITS"; then :
+
+fi
 fi
 
 BOOTLISP="$SOURCE/$TARGET/cmplc++"

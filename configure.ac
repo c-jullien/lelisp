@@ -59,46 +59,40 @@ dnl check LIBTOOL options (see aclocal.m4)
 dnl AC_PROG_LIBTOOL
 
 AC_MSG_CHECKING(for portable C version)
-AC_ARG_ENABLE(portable,
-[  --enable-portable       enable portable C version [default=no]],,enable_portable=no)
-if test "$enable_portable" = "y" || test "$enable_portable" = "yes"
-then
-   enable_portable=yes
-   PORTABLE_C=yes
-   AC_MSG_RESULT(yes)
-else
-   PORTABLE_C=no
-   AC_MSG_RESULT(no)
-fi
+AC_ARG_ENABLE([portable],
+  [AS_HELP_STRING([--enable-portable],
+    [enable portable version [default=no]])],
+  [],
+  [enable_portable=no])
+AS_IF([test "$enable_portable" = "yes"],
+      [PORTABLE_C=yes
+       AC_MSG_RESULT(yes)],
+      [PORTABLE_C=no
+       AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING(for enabled bignum)
-AC_ARG_ENABLE(bignum,
-[  --enable-bignum         enable bignum (default=yes]],,enable_bignum=yes)
-if test "$enable_bignum" = "y" || test "$enable_bignum" = "yes"
-then
-   enable_bignum=yes
-   BIGNUM=kern.o
-   AC_DEFINE(HAVE_BIGNUM)
-   AC_MSG_RESULT(yes)
-else
-   BIGNUM=
-   enable_bignum=no
-   AC_MSG_RESULT(no)
-fi
+AC_ARG_ENABLE([bignum],
+  [AS_HELP_STRING([--enable-bignum],
+    [enable bignum [default=yes]])],
+  [],
+  [enable_bignum=yes])
+AS_IF([test "$enable_bignum" = "yes"],
+      [BIGNUM=kern.o
+       AC_DEFINE(HAVE_BIGNUM)
+       AC_MSG_RESULT(yes)],
+      [BIGNUM=
+       AC_MSG_RESULT(no)])
 
 AC_MSG_CHECKING(for enabled X11 graphics)
-AC_ARG_ENABLE(x11,
-[  --enable-x11            enable X11 [default=yes]],,enable_x11=yes)
-if test "$enable_x11" = "y" || test "$enable_x11" = "yes"
-then
-   enable_x11=yes
-   AC_DEFINE(HAVE_X11)
-   AC_MSG_RESULT(yes)
-else
-   enable_x11=no
-   AC_MSG_RESULT(no)
-fi
-
+AC_ARG_ENABLE([x11],
+  [AS_HELP_STRING([--enable-x11],
+    [enable X11 [default=yes]])],
+  [],
+  [enable_x11=yes])
+AS_IF([test "$enable_x11" = "yes"],
+      [AC_DEFINE(HAVE_X11)
+       AC_MSG_RESULT(yes)],
+      [AC_MSG_RESULT(no)])
 
 dnl Canonicalize the host and os so we can do some tricky things.
 
@@ -209,16 +203,13 @@ AC_TYPE_SIZE_T
 AC_TYPE_MODE_T
 AC_STRUCT_TM
 
-if test "$ac_cv_c_inline" != no
-then
-  AC_DEFINE(HAVE_INLINE)
-  AC_SUBST(HAVE_INLINE)
-  AC_SUBST(_INLINE_KEYWORD)
-  AC_DEFINE_UNQUOTED(_INLINE_KEYWORD, $ac_cv_c_inline)
-else
-  AC_SUBST(_INLINE_KEYWORD)
-  AC_DEFINE_UNQUOTED(_INLINE_KEYWORD, /* no inline */)
-fi
+AS_IF([test "$ac_cv_c_inline" != no],
+      [AC_DEFINE(HAVE_INLINE)
+       AC_SUBST(HAVE_INLINE)
+       AC_SUBST(_INLINE_KEYWORD)
+       AC_DEFINE_UNQUOTED(_INLINE_KEYWORD, $ac_cv_c_inline)],
+      [AC_SUBST(_INLINE_KEYWORD)
+       AC_DEFINE_UNQUOTED(_INLINE_KEYWORD, /* no inline */)])
 
 dnl get type size
 
@@ -229,18 +220,15 @@ AC_CHECK_SIZEOF(size_t, 4)
 AC_CACHE_CHECK([for 64-bit], [ac_cv_cc_64bit],
     [AC_TRY_RUN([
 	int main() {
-	return( (SIZEOF_VOID_P == 8) ? 0 : 1 );
+	return ((SIZEOF_VOID_P == 8) ? 0 : 1);
 	}],
     [ac_cv_cc_64bit=yes],
     [ac_cv_cc_64bit=no],
     [ac_cv_cc_64bit=unknown])])
 
-if test "$ac_cv_cc_64bit" != no
-then
-  MODEL=64
-else
-  MODEL=32
-fi
+AS_IF([test "$ac_cv_cc_64bit" != no],
+      [MODEL=64],
+      [MODEL=32])
 
 dnl Save cache
 
@@ -323,54 +311,61 @@ case "${target_cpu}-${target_os}" in
      ;;
 esac
 
-AX_CHECK_COMPILE_FLAG([-Wl,-r -nostdlib],     [LDRFLAGS="$LDRFLAGS -Wl,-r -nostdlib"])
-AX_CHECK_COMPILE_FLAG([-Wall],                [CFLAGS="$CFLAGS -Wall"])
-AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],  [CFLAGS="$CFLAGS -Wstrict-prototypes"])
-AX_CHECK_COMPILE_FLAG([-finline-functions],   [CFLAGS="$CFLAGS -finline-functions"])
-AX_CHECK_COMPILE_FLAG([-fomit-frame-pointer], [CFLAGS="$CFLAGS -fomit-frame-pointer"])
-AX_CHECK_COMPILE_FLAG([-funroll-loops],       [CFLAGS="$CFLAGS -funroll-loops"])
-AX_CHECK_COMPILE_FLAG([-fcommon],             [CFLAGS="$CFLAGS -fcommon"])
+AX_CHECK_COMPILE_FLAG([-Wl,-r -nostdlib],
+                      [LDRFLAGS="$LDRFLAGS -Wl,-r -nostdlib"])
+AX_CHECK_COMPILE_FLAG([-Wall],
+                      [CFLAGS="$CFLAGS -Wall"])
+AX_CHECK_COMPILE_FLAG([-Wstrict-prototypes],
+                      [CFLAGS="$CFLAGS -Wstrict-prototypes"])
+AX_CHECK_COMPILE_FLAG([-finline-functions],
+                      [CFLAGS="$CFLAGS -finline-functions"])
+AX_CHECK_COMPILE_FLAG([-fomit-frame-pointer],
+                      [CFLAGS="$CFLAGS -fomit-frame-pointer"])
+AX_CHECK_COMPILE_FLAG([-funroll-loops],
+                      [CFLAGS="$CFLAGS -funroll-loops"])
+AX_CHECK_COMPILE_FLAG([-fcommon],
+                      [CFLAGS="$CFLAGS -fcommon"])
 
 BUILDARGS="-f Makeport FLT=31 bootstrap"
 
 case "${target_cpu}-${target_os}" in
   *86*solaris*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=solaris386
-     fi
+     AS_IF([test "$PORTABLE_C" = "no"],
+           [TARGET=solaris386],
+	   [TARGET=C])
      ;;
   *solaris*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=solaris
-       CFLAGS="$CFLAGS -m32"
-     fi
+     AS_IF([test "$PORTABLE_C" = "no"],
+           [TARGET=solaris
+	    CFLAGS="$CFLAGS -m32"],
+	   [TARGET=C])
      ;;
   x86_64*linux*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=linux
-       CFLAGS="$CFLAGS -m32"
-     fi
+     AS_IF([test "$PORTABLE_C" = "no"],
+           [TARGET=linux
+	    CFLAGS="$CFLAGS -m32"],
+	   [TARGET=C])
      ;;
   *86*linux*)
      TARGET=linux
      ;;
   *aarch64*linux*)
      TARGET=C
-     AX_CHECK_COMPILE_FLAG([-mcpu=cortex-a72], [CFLAGS="$CFLAGS -mcpu=cortex-a72"])
+     AX_CHECK_COMPILE_FLAG([-mcpu=cortex-a72],
+                           [CFLAGS="$CFLAGS -mcpu=cortex-a72"])
      ;;
   *armv7*linux*)
      TARGET=C
-     AX_CHECK_COMPILE_FLAG([-march=armv7-a -mfloat-abi=hard], [CFLAGS="$CFLAGS -march=armv7-a -mfloat-abi=hard"])
+     AX_CHECK_COMPILE_FLAG([-march=armv7-a -mfloat-abi=hard],
+                           [CFLAGS="$CFLAGS -march=armv7-a -mfloat-abi=hard"])
      ;;
   *arm*linux*)
      TARGET=C
      ;;
   sparc*linux*)
      TARGET=linuxsparc
-     AX_CHECK_COMPILE_FLAG([-Wl,--no-relax], [LDRFLAGS="$LDRFLAGS -Wl,--no-relax"])
+     AX_CHECK_COMPILE_FLAG([-Wl,--no-relax],
+                           [LDRFLAGS="$LDRFLAGS -Wl,--no-relax"])
      ;;
   *x86_64*cygwin*)
      PORTABLE_C=yes
@@ -382,46 +377,34 @@ case "${target_cpu}-${target_os}" in
      TARGET=netbsd
      ;;
   *darwin*)
-     if test $PORTABLE_C = no
-     then
-       if test `uname -r | cut -d '.' -f 1` -lt 18
-       then
-         TARGET=x86macos
-       else
-         PORTABLE_C=yes
-       fi
-     fi
+     AS_IF([test $PORTABLE_C = no],
+           [AS_IF([test `uname -r | cut -d '.' -f 1` -lt 18],
+	          [TARGET=x86macos],
+		  [TARGET=C])])
      ;;
   i386*freebsd*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=freebsd
-     fi
+     AS_IF([test "$PORTABLE_C" = "no"],
+           [TARGET=freebsd])
      ;;
   *cygwin*)
      # X11 requires: xorg-server xproto libX11-devel
      TARGET=cygwin
      ;;
   powerpc*aix*)
-     if test $PORTABLE_C = no
-     then
-       TARGET=rs6000
-     fi
+     AS_IF([test "$PORTABLE_C" = "no"],
+           [TARGET=rs6000])
      ;;
   *)
      PORTABLE_C=yes
      ;;
 esac
 
-if test $PORTABLE_C = yes
-then
-  TARGET=C
-fi
+AS_IF([test "$PORTABLE_C" = "yes"],
+      [TARGET=C])
 
-if test $TARGET = C
-then
-  if test x"$MODEL" == x64; then CFLAGS="$CFLAGS -DLLC64BITS"; fi
-fi
+AS_IF([test "$TARGET" = "C"],
+      [AS_IF([test x"$MODEL" = x64]
+             [CFLAGS="$CFLAGS -DLLC64BITS"])])
 
 BOOTLISP="$SOURCE/$TARGET/cmplc++"
 
