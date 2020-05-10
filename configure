@@ -6545,7 +6545,12 @@ BOOTLISP="$SOURCE/$TARGET/cmplc++"
 
 
 
-ac_config_files="$ac_config_files Makefile C/Makeport C/Makefile C/config C/complice llib/startup.ll"
+ac_config_files="$ac_config_files C/config"
+
+ac_config_files="$ac_config_files C/complice"
+
+
+ac_config_files="$ac_config_files Makefile C/Makeport C/Makefile llib/startup.ll"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -7237,11 +7242,11 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "common/config.h") CONFIG_HEADERS="$CONFIG_HEADERS common/config.h" ;;
+    "C/config") CONFIG_FILES="$CONFIG_FILES C/config" ;;
+    "C/complice") CONFIG_FILES="$CONFIG_FILES C/complice" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "C/Makeport") CONFIG_FILES="$CONFIG_FILES C/Makeport" ;;
     "C/Makefile") CONFIG_FILES="$CONFIG_FILES C/Makefile" ;;
-    "C/config") CONFIG_FILES="$CONFIG_FILES C/config" ;;
-    "C/complice") CONFIG_FILES="$CONFIG_FILES C/complice" ;;
     "llib/startup.ll") CONFIG_FILES="$CONFIG_FILES llib/startup.ll" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -7788,6 +7793,12 @@ $as_echo "$as_me: $ac_file is unchanged" >&6;}
 
   esac
 
+
+  case $ac_file$ac_mode in
+    "C/config":F) chmod +x C/config ;;
+    "C/complice":F) chmod +x C/complice ;;
+
+  esac
 done # for ac_tag
 
 
@@ -7824,9 +7835,6 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
-
-chmod a+x C/config C/complice
-chmod a-w C/config C/complice
 
 touch C/C3/*.c
 

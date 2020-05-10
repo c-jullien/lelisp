@@ -423,10 +423,10 @@ AC_SUBST(SOURCE)
 AC_SUBST(TARGET)
 AC_SUBST(VERSION)
 
-AC_OUTPUT([Makefile C/Makeport C/Makefile C/config C/complice llib/startup.ll])
+AC_CONFIG_FILES([C/config],   [chmod +x C/config])
+AC_CONFIG_FILES([C/complice], [chmod +x C/complice])
 
-chmod a+x C/config C/complice
-chmod a-w C/config C/complice
+AC_OUTPUT([Makefile C/Makeport C/Makefile llib/startup.ll])
 
 dnl Ensure previoulsy generated .c files are most up to date for the bootstrap
 touch C/C3/*.c
