@@ -220,7 +220,7 @@ AC_CHECK_SIZEOF(size_t, 4)
 AC_CACHE_CHECK([for 64-bit], [ac_cv_cc_64bit],
     [AC_TRY_RUN([
 	int main() {
-	return ((SIZEOF_VOID_P == 8) ? 0 : 1);
+	return ((sizeof(void*) == 8) ? 0 : 1);
 	}],
     [ac_cv_cc_64bit=yes],
     [ac_cv_cc_64bit=no],
@@ -297,33 +297,34 @@ dnl gcc -nostdlib -Wl,--export-dynamic -Wl,-r
 AS_CASE([${target_cpu}-${target_os}],
   [*cygwin*], [
     AX_CHECK_COMPILE_FLAG([-Wl,--export-all-symbols],
-                          [LDEXPORT="$LDEXPORT -Wl,--export-all-symbols"])
+      [AS_VAR_APPEND([LDEXPORT], [" -Wl,--export-all-symbols"])])
   ],
   [*darwin*], [
     AX_CHECK_COMPILE_FLAG([-Wl,-export_dynamic],
-                          [LDEXPORT="$LDEXPORT -Wl,-export_dynamic"])
+      [AS_VAR_APPEND([LDEXPORT], [" -Wl,-export_dynamic"])])
     AX_CHECK_COMPILE_FLAG([-Wl,-no_pie],
-                          [LDEXPORT="$LDEXPORT -Wl,-no_pie"])
+      [AS_VAR_APPEND([LDEXPORT], [" -Wl,-no_pie"])])
   ],
   [*], [
     AX_CHECK_COMPILE_FLAG([-Wl,--export-dynamic],
-                          [LDEXPORT="$LDEXPORT -Wl,--export-dynamic"])
+      [AS_VAR_APPEND([LDEXPORT], [" -Wl,--export-dynamic"])])
   ])
 
 AX_CHECK_COMPILE_FLAG([-Wl,-r -nostdlib],
-                      [LDRFLAGS="$LDRFLAGS -Wl,-r -nostdlib"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wall],
-                      [CFLAGS="$CFLAGS -Wall"])
+                      [AS_VAR_APPEND([LDRFLAGS], [" -Wl,-r -nostdlib"])])
+
+AX_CHECK_COMPILE_FLAG([-Wall],
+                      [AS_VAR_APPEND([CFLAGS], [" -Wall"])])
 AX_CHECK_COMPILE_FLAG([-Werror -Wstrict-prototypes],
-                      [CFLAGS="$CFLAGS -Wstrict-prototypes"])
+                      [AS_VAR_APPEND([CFLAGS], [" -Wstrict-prototypes"])])
 AX_CHECK_COMPILE_FLAG([-Werror -finline-functions],
-                      [CFLAGS="$CFLAGS -finline-functions"])
+                      [AS_VAR_APPEND([CFLAGS], [" -finline-functions"])])
 AX_CHECK_COMPILE_FLAG([-Werror -fomit-frame-pointer],
-                      [CFLAGS="$CFLAGS -fomit-frame-pointer"])
+                      [AS_VAR_APPEND([CFLAGS], [" -fomit-frame-pointer"])])
 AX_CHECK_COMPILE_FLAG([-Werror -funroll-loops],
-                      [CFLAGS="$CFLAGS -funroll-loops"])
+                      [AS_VAR_APPEND([CFLAGS], [" -funroll-loops"])])
 AX_CHECK_COMPILE_FLAG([-Werror -fcommon],
-                      [CFLAGS="$CFLAGS -fcommon"])
+                      [AS_VAR_APPEND([CFLAGS], [" -fcommon"])])
 
 BUILDARGS="-f Makeport FLT=31 bootstrap"
 
@@ -335,12 +336,12 @@ AS_CASE([${target_cpu}-${target_os}],
   [*solaris*], [
      AS_IF([test "$TARGET" = "default"],
            [TARGET=solaris
-	    CFLAGS="$CFLAGS -m32"])
+            AS_VAR_APPEND([CFLAGS], [" -m32"])])
   ],
   [x86_64*linux*], [
      AS_IF([test "$TARGET" = "default"],
            [TARGET=linux
-	    CFLAGS="$CFLAGS -m32"])
+            AS_VAR_APPEND([CFLAGS], [" -m32"])])
   ],
   [*86*linux*], [
      AS_IF([test "$TARGET" = "default"],
@@ -349,12 +350,14 @@ AS_CASE([${target_cpu}-${target_os}],
   [*aarch64*linux*], [
      TARGET=C
      AX_CHECK_COMPILE_FLAG([-Werror -mcpu=cortex-a72],
-                           [CFLAGS="$CFLAGS -mcpu=cortex-a72"])
+                           [AS_VAR_APPEND([CFLAGS], [" -mcpu=cortex-a72"])])
   ],
   [*armv7*linux*], [
      TARGET=C
-     AX_CHECK_COMPILE_FLAG([-Werror -march=armv7-a -mfloat-abi=hard],
-                           [CFLAGS="$CFLAGS -march=armv7-a -mfloat-abi=hard"])
+     AX_CHECK_COMPILE_FLAG([-Werror -march=armv7-a],
+                           [AS_VAR_APPEND([CFLAGS], [" -march=armv7-a"])])
+     AX_CHECK_COMPILE_FLAG([-Werror -mfloat-abi=hard],
+                           [AS_VAR_APPEND([CFLAGS], [" -mfloat-abi=hard"])])
   ],
   [*arm*linux*], [
      TARGET=C
@@ -362,7 +365,7 @@ AS_CASE([${target_cpu}-${target_os}],
   [sparc*linux*], [
      TARGET=linuxsparc
      AX_CHECK_COMPILE_FLAG([-Werror -Wl,--no-relax],
-                           [LDRFLAGS="$LDRFLAGS -Wl,--no-relax"])
+                           [AS_VAR_APPEND([LDRFLAGS], [" -Wl,--no-relax"])])
   ],
   [*x86_64*cygwin*], [
      TARGET=C
@@ -399,7 +402,7 @@ AS_CASE([${target_cpu}-${target_os}],
 
 AS_IF([test "$TARGET" = "C"],
       [AS_IF([test x"$MODEL" = x64]
-             [CFLAGS="$CFLAGS -DLLC64BITS"])])
+             [AS_VAR_APPEND([CFLAGS], [" -DLLC64BITS"])])])
 
 BOOTLISP="$SOURCE/$TARGET/cmplc++"
 
@@ -420,7 +423,7 @@ AC_SUBST(SOURCE)
 AC_SUBST(TARGET)
 AC_SUBST(VERSION)
 
-AC_OUTPUT(Makefile C/Makeport C/Makefile C/config C/complice llib/startup.ll)
+AC_OUTPUT([Makefile C/Makeport C/Makefile C/config C/complice llib/startup.ll])
 
 chmod a+x C/config C/complice
 chmod a-w C/config C/complice
@@ -428,23 +431,22 @@ chmod a-w C/config C/complice
 dnl Ensure previoulsy generated .c files are most up to date for the bootstrap
 touch C/C3/*.c
 
-echo \
-"------------------------------------------------------------------------
-Configuration:
-
- Name:		${NAME}
- Version:	${VERSION}
- Source:        ${srcdir}
- OS:            ${target_os}
- Target:        ${TARGET}
- ARCH:          ${target_cpu}
- Compiler:	${CC} ${CCVERSION}
- Flags:         ${CFLAGS} ${ARCH}
- Libraries:     ${EXTRALIBS}
- Build:         ${build}
- Host:          ${host}
- Target:        ${target}
- Install:       ${prefix}
-
-See common/config.h for further configuration information.
-------------------------------------------------------------------------"
+AS_ECHO("--------------------------------------------------------------------")
+AS_ECHO("Configuration:")
+AS_ECHO("")
+AS_ECHO(" Name:          ${NAME}")
+AS_ECHO(" Version:       ${VERSION}")
+AS_ECHO(" Source:        ${srcdir}")
+AS_ECHO(" OS:            ${target_os}")
+AS_ECHO(" Target:        ${TARGET}")
+AS_ECHO(" ARCH:          ${target_cpu}")
+AS_ECHO(" Compiler:      ${CC} ${CCVERSION}")
+AS_ECHO(" Flags:         ${CFLAGS} ${ARCH}")
+AS_ECHO(" Libraries:     ${EXTRALIBS}")
+AS_ECHO(" Build:         ${build}")
+AS_ECHO(" Host:          ${host}")
+AS_ECHO(" Target:        ${target}")
+AS_ECHO(" Install:       ${prefix}")
+AS_ECHO("")
+AS_ECHO("See src/config.h for further configuration information.")
+AS_ECHO("--------------------------------------------------------------------")
