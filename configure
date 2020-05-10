@@ -6520,9 +6520,8 @@ fi
 esac
 
 if test "$TARGET" = "C"; then :
-  if test x"$MODEL" = x64
-             as_fn_append CFLAGS " -DLLC64BITS"; then :
-
+  if test x"$MODEL" = x64; then :
+  as_fn_append CFLAGS " -DLLC64BITS"
 fi
 fi
 

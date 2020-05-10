@@ -401,7 +401,7 @@ AS_CASE([${target_cpu}-${target_os}],
   ])
 
 AS_IF([test "$TARGET" = "C"],
-      [AS_IF([test x"$MODEL" = x64]
+      [AS_IF([test x"$MODEL" = x64],
              [AS_VAR_APPEND([CFLAGS], [" -DLLC64BITS"])])])
 
 BOOTLISP="$SOURCE/$TARGET/cmplc++"
