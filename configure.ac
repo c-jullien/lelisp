@@ -139,13 +139,12 @@ AS_IF([test "$LDCONFIG" != "no"],
       [LDCONFIG="echo INFO: no ldconfig on this system"])
 
 AC_CHECK_PROGS(ED, ed, no)
-#if test $ED = no; then
-#  AC_MSG_ERROR(Can\'t find ed.)
-#fi
+dnl AS_IF([test "$ED" = "no"],
+dnl      [AC_MSG_ERROR(Can\'t find ed.)])
 AC_SUBST(ED)
 
-AC_CHECK_FUNC([sin],,            [AC_CHECK_LIB(m,      sin)])
-AC_CHECK_FUNC([dlopen],,         [AC_CHECK_LIB(dl,     dlopen)])
+AC_CHECK_FUNC([sin],,    [AC_CHECK_LIB(m,  sin)])
+AC_CHECK_FUNC([dlopen],, [AC_CHECK_LIB(dl, dlopen)])
 
 dnl Checks for header files.
 
