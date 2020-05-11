@@ -36,7 +36,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script
 
-AC_INIT([lelisp], [15.26], [jullien@eligis.com])
+AC_INIT([lelisp],[15.26],[jullien@eligis.com])
 
 dnl where to find install.sh, config.sub, and config.guess
 
@@ -48,7 +48,7 @@ AC_CONFIG_HEADER(common/config.h)
 
 dnl make sure we are using a recent autoconf version
 
-AC_PREREQ(2.63)
+AC_PREREQ([2.69])
 
 NAME=Le-Lisp
 VERSION=15.26
@@ -98,7 +98,7 @@ dnl Canonicalize the host and os so we can do some tricky things.
 
 dnl AC_CANONICAL_HOST
 
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 
 SYSTEM_TYPE="$target_vendor-$target_os"
 MACHINE_TYPE="$target_cpu"
@@ -152,44 +152,46 @@ AC_HEADER_STDC
 AC_HEADER_STAT
 AC_HEADER_TIME
 
-AC_CHECK_HEADER(ctype.h)
-AC_CHECK_HEADER(dirent.h)
-AC_CHECK_HEADER(dir.h)
-AC_CHECK_HEADER(dlfcn.h)
-AC_CHECK_HEADER(elf.h)
-AC_CHECK_HEADER(errno.h)
-AC_CHECK_HEADER(fcntl.h)
-AC_CHECK_HEADER(io.h)
-AC_CHECK_HEADER(malloc.h)
-AC_CHECK_HEADER(math.h)
-AC_CHECK_HEADER(process.h)
-AC_CHECK_HEADER(pwd.h)
-AC_CHECK_HEADER(setjmp.h)
-AC_CHECK_HEADER(signal.h)
-AC_CHECK_HEADER(starlet.h)
-AC_CHECK_HEADER(stdint.h)
-AC_CHECK_HEADER(stdio.h)
-AC_CHECK_HEADER(stdlib.h)
-AC_CHECK_HEADER(string.h)
-AC_CHECK_HEADER(sys/ioctl.h)
-AC_CHECK_HEADER(sys/mman.h)
-AC_CHECK_HEADER(sys/param.h)
-AC_CHECK_HEADER(sys/resource.h)
-AC_CHECK_HEADER(sys/select.h)
-AC_CHECK_HEADER(sys/stat.h)
-AC_CHECK_HEADER(sys/time.h)
-AC_CHECK_HEADER(sys/times.h)
-AC_CHECK_HEADER(sys/types.h)
-AC_CHECK_HEADER(termios.h)
-AC_CHECK_HEADER(time.h)
-AC_CHECK_HEADER(unistd.h)
-AC_CHECK_HEADER(values.h)
+AC_CHECK_HEADER([ctype.h])
+AC_CHECK_HEADER([dirent.h])
+AC_CHECK_HEADER([dir.h])
+AC_CHECK_HEADER([dlfcn.h])
+AC_CHECK_HEADER([elf.h])
+AC_CHECK_HEADER([errno.h])
+AC_CHECK_HEADER([fcntl.h])
+AC_CHECK_HEADER([io.h])
+AC_CHECK_HEADER([malloc.h])
+AC_CHECK_HEADER([math.h])
+AC_CHECK_HEADER([process.h])
+AC_CHECK_HEADER([pwd.h])
+AC_CHECK_HEADER([setjmp.h])
+AC_CHECK_HEADER([signal.h])
+AC_CHECK_HEADER([starlet.h])
+AC_CHECK_HEADER([stdint.h])
+AC_CHECK_HEADER([stdio.h])
+AC_CHECK_HEADER([stdlib.h])
+AC_CHECK_HEADER([string.h])
+AC_CHECK_HEADER([sys/ioctl.h])
+AC_CHECK_HEADER([sys/mman.h])
+AC_CHECK_HEADER([sys/param.h])
+AC_CHECK_HEADER([sys/resource.h])
+AC_CHECK_HEADER([sys/select.h])
+AC_CHECK_HEADER([sys/stat.h])
+AC_CHECK_HEADER([sys/time.h])
+AC_CHECK_HEADER([sys/times.h])
+AC_CHECK_HEADER([sys/types.h])
+AC_CHECK_HEADER([termios.h])
+AC_CHECK_HEADER([time.h])
+AC_CHECK_HEADER([unistd.h])
+AC_CHECK_HEADER([values.h])
 
 dnl Checks for X Window System.
 
 AC_PATH_X
 AC_PATH_XTRA
-AS_IF([test "X$no_x" = "Xyes"], [X11OBJS=], [X11OBJS=x11.o])
+AS_IF([test "X$no_x" = "Xyes"],
+      [X11OBJS=],
+      [X11OBJS=x11.o])
 AC_SUBST(X11OBJS)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -216,25 +218,39 @@ AC_CHECK_SIZEOF(void *, 4)
 AC_CHECK_SIZEOF(long,   4)
 AC_CHECK_SIZEOF(size_t, 4)
 
+MODEL=
 AC_CACHE_CHECK([for 64-bit], [ac_cv_cc_64bit],
-    [AC_TRY_RUN([
-	int main() {
-	return ((sizeof(void*) == 8) ? 0 : 1);
-	}],
-    [ac_cv_cc_64bit=yes],
-    [ac_cv_cc_64bit=no],
-    [ac_cv_cc_64bit=unknown])])
-
+    [AC_RUN_IFELSE([AC_LANG_SOURCE(
+                     [[int main() {
+                        return (sizeof(void*) == 8) ? 0 : 1;
+                      }]])],
+		     [ac_cv_cc_64bit=yes],
+		     [ac_cv_cc_64bit=no],
+		     [ac_cv_cc_64bit=unknown])])
 AS_IF([test "$ac_cv_cc_64bit" != no],
       [MODEL=64],
       [MODEL=32])
+AC_SUBST(MODEL)
 
 dnl Save cache
 
 AC_CACHE_SAVE
 
 AC_PROG_GCC_TRADITIONAL
-AC_TYPE_SIGNAL
+
+AC_CHECK_FUNC(sigsetjmp, AC_DEFINE(HAVE_SIGSETJMP),
+AC_MSG_CHECKING(for sigsetjmp defined in setjmp.h)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+                    [[#include <setjmp.h>]],
+                    [[int main(int argc, char **argv) {
+                       sigjmp_buf env;
+                       exit(sigsetjmp(env,1));
+                      }]])],
+		  [AC_DEFINE(HAVE_SIGSETJMP)
+		   AC_SUBST(HAVE_SIGSETJMP)
+		   AC_MSG_RESULT(yes)],
+		  [AC_MSG_RESULT(no)]))
+
 AC_FUNC_SELECT_ARGTYPES
 
 dnl Checks for library functions.
@@ -268,19 +284,16 @@ AC_CHECK_FUNCS(
 
 AC_CHECK_FUNC(sigsetjmp, AC_DEFINE(HAVE_SIGSETJMP),
 AC_MSG_CHECKING(for sigsetjmp defined in setjmp.h)
-AC_TRY_COMPILE([#include <setjmp.h>],
-               [int main(int argc, char **argv) {
-                 sigjmp_buf env;
-		 exit(sigsetjmp(env,1));
-                }],
-               [AC_DEFINE(HAVE_SIGSETJMP)
-                AC_MSG_RESULT(yes)],
-               [AC_MSG_RESULT(no))])
-
-dnl OS specifics, sets {EXE,OBJ}EXT
-
-AC_EXEEXT
-AC_OBJEXT
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+                    [[#include <setjmp.h>]],
+                    [[int main(int argc, char **argv) {
+                       sigjmp_buf env;
+                       exit(sigsetjmp(env,1));
+                      }]])],
+		  [AC_DEFINE(HAVE_SIGSETJMP)
+		   AC_SUBST(HAVE_SIGSETJMP)
+		   AC_MSG_RESULT(yes)],
+		  [AC_MSG_RESULT(no)]))
 
 dnl Optimization and Warnings options
 
@@ -425,7 +438,8 @@ AC_SUBST(VERSION)
 AC_CONFIG_FILES([C/config],   [chmod +x C/config])
 AC_CONFIG_FILES([C/complice], [chmod +x C/complice])
 
-AC_OUTPUT([Makefile C/Makeport C/Makefile llib/startup.ll])
+AC_CONFIG_FILES([Makefile C/Makeport C/Makefile llib/startup.ll])
+AC_OUTPUT
 
 dnl Ensure previoulsy generated .c files are most up to date for the bootstrap
 touch C/C3/*.c
