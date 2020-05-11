@@ -78,7 +78,7 @@ AC_ARG_ENABLE([bignum],
   [enable_bignum=yes])
 AS_IF([test "$enable_bignum" = "yes"],
       [BIGNUM=kern.o
-       AC_DEFINE(HAVE_BIGNUM)
+       AC_DEFINE([HAVE_BIGNUM], [1], [Define if bignum is wanted.])
        AC_MSG_RESULT(yes)],
       [BIGNUM=
        AC_MSG_RESULT(no)])
@@ -90,7 +90,7 @@ AC_ARG_ENABLE([x11],
   [],
   [enable_x11=yes])
 AS_IF([test "$enable_x11" = "yes"],
-      [AC_DEFINE(HAVE_X11)
+      [AC_DEFINE([HAVE_X11], [1], [Define if X11 is wanted.])
        AC_MSG_RESULT(yes)],
       [AC_MSG_RESULT(no)])
 
@@ -103,9 +103,9 @@ AC_CANONICAL_TARGET
 SYSTEM_TYPE="$target_vendor-$target_os"
 MACHINE_TYPE="$target_cpu"
 AC_SUBST(SYSTEM_TYPE)
-AC_DEFINE_UNQUOTED(SYSTEM_TYPE, "$SYSTEM_TYPE")
+AC_DEFINE_UNQUOTED([SYSTEM_TYPE], ["$SYSTEM_TYPE"], [Define the system type])
 AC_SUBST(MACHINE_TYPE)
-AC_DEFINE_UNQUOTED(MACHINE_TYPE, "$MACHINE_TYPE")
+AC_DEFINE_UNQUOTED([MACHINE_TYPE], ["$MACHINE_TYPE"], [Define the machine type])
 
 dnl Checks for C compiler
 
@@ -197,20 +197,45 @@ AC_SUBST(X11OBJS)
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 AC_C_CONST
-AC_C_RESTRICT
-AC_C_INLINE
 
 AC_TYPE_SIZE_T
 AC_TYPE_MODE_T
 AC_STRUCT_TM
 
+AC_C_INLINE
 AS_IF([test "$ac_cv_c_inline" != no],
-      [AC_DEFINE(HAVE_INLINE)
-       AC_SUBST(HAVE_INLINE)
-       AC_SUBST(_INLINE_KEYWORD)
-       AC_DEFINE_UNQUOTED(_INLINE_KEYWORD, $ac_cv_c_inline)],
-      [AC_SUBST(_INLINE_KEYWORD)
-       AC_DEFINE_UNQUOTED(_INLINE_KEYWORD, /* no inline */)])
+  [AC_DEFINE([HAVE_INLINE], [1], [Define if C supports inline keyword.])
+   AC_SUBST(_INLINE_KEYWORD)
+   AC_DEFINE_UNQUOTED(_INLINE_KEYWORD,
+                      $ac_cv_c_inline,
+		      [Define if C supports inline keyword])],
+  [AC_SUBST(_INLINE_KEYWORD)
+   AC_DEFINE_UNQUOTED(_INLINE_KEYWORD,
+                      [/* no inline */],
+		      [Define if C supports inline keyword])])
+
+AS_IF([test "$ac_cv_c_inline" != no],
+  [AC_DEFINE([HAVE_INLINE], [1], [Define if C supports inline keyword.])
+   AC_SUBST(_INLINE_KEYWORD)
+   AC_DEFINE_UNQUOTED(_INLINE_KEYWORD,
+                      $ac_cv_c_inline,
+		      [Define if C supports inline keyword])],
+  [AC_SUBST(_INLINE_KEYWORD)
+   AC_DEFINE_UNQUOTED(_INLINE_KEYWORD,
+                      [/* no inline */],
+		      [Define if C supports inline keyword])])
+
+AC_C_RESTRICT
+AS_IF([test "$ac_cv_c_restrict" != no],
+  [AC_DEFINE([HAVE_RESTRICT], [1], [Define if C supports restrict.])
+   AC_SUBST(_RESTRICT_KEYWORD)
+   AC_DEFINE_UNQUOTED(_RESTRICT_KEYWORD,
+                      $ac_cv_c_restrict,
+		      [Define if C supports restrict keyword])],
+  [AC_SUBST(_RESTRICT_KEYWORD)
+   AC_DEFINE_UNQUOTED(_RESTRICT_KEYWORD,
+                      [/* no restrict */],
+		      [Define if C supports inline keyword])])
 
 dnl get type size
 
@@ -238,7 +263,8 @@ AC_CACHE_SAVE
 
 AC_PROG_GCC_TRADITIONAL
 
-AC_CHECK_FUNC(sigsetjmp, AC_DEFINE(HAVE_SIGSETJMP),
+AC_CHECK_FUNC([sigsetjmp],
+              AC_DEFINE([HAVE_SIGSETJMP], [1], [Define if sigsetjmp exists.]))
 AC_MSG_CHECKING(for sigsetjmp defined in setjmp.h)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
                     [[#include <setjmp.h>]],
@@ -246,16 +272,15 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
                        sigjmp_buf env;
                        exit(sigsetjmp(env,1));
                       }]])],
-		  [AC_DEFINE(HAVE_SIGSETJMP)
-		   AC_SUBST(HAVE_SIGSETJMP)
+		  [AC_SUBST(HAVE_SIGSETJMP)
 		   AC_MSG_RESULT(yes)],
-		  [AC_MSG_RESULT(no)]))
+		  [AC_MSG_RESULT(no)])
 
 AC_FUNC_SELECT_ARGTYPES
 
 dnl Checks for library functions.
 
-AC_CHECK_FUNCS(
+AC_CHECK_FUNCS( \
  alarm		\
  fork		\
  gethostname	\
@@ -282,7 +307,8 @@ AC_CHECK_FUNCS(
  wait
 )
 
-AC_CHECK_FUNC(sigsetjmp, AC_DEFINE(HAVE_SIGSETJMP),
+AC_CHECK_FUNC([sigsetjmp],
+              AC_DEFINE([HAVE_SIGSETJMP], [1], [Define if sigsetjmp exists.]))
 AC_MSG_CHECKING(for sigsetjmp defined in setjmp.h)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
                     [[#include <setjmp.h>]],
@@ -290,10 +316,9 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
                        sigjmp_buf env;
                        exit(sigsetjmp(env,1));
                       }]])],
-		  [AC_DEFINE(HAVE_SIGSETJMP)
-		   AC_SUBST(HAVE_SIGSETJMP)
+		  [AC_SUBST(HAVE_SIGSETJMP)
 		   AC_MSG_RESULT(yes)],
-		  [AC_MSG_RESULT(no)]))
+		  [AC_MSG_RESULT(no)])
 
 dnl Optimization and Warnings options
 

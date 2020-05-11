@@ -638,8 +638,8 @@ ARCH
 AEXT
 HAVE_SIGSETJMP
 MODEL
+_RESTRICT_KEYWORD
 _INLINE_KEYWORD
-HAVE_INLINE
 X11OBJS
 X_EXTRA_LIBS
 X_LIBS
@@ -2477,7 +2477,8 @@ fi
 
 if test "$enable_bignum" = "yes"; then :
   BIGNUM=kern.o
-       $as_echo "#define HAVE_BIGNUM 1" >>confdefs.h
+
+$as_echo "#define HAVE_BIGNUM 1" >>confdefs.h
 
        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
@@ -2497,7 +2498,8 @@ else
 fi
 
 if test "$enable_x11" = "yes"; then :
-  $as_echo "#define HAVE_X11 1" >>confdefs.h
+
+$as_echo "#define HAVE_X11 1" >>confdefs.h
 
        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
@@ -2622,9 +2624,11 @@ test -n "$target_alias" &&
 SYSTEM_TYPE="$target_vendor-$target_os"
 MACHINE_TYPE="$target_cpu"
 
+
 cat >>confdefs.h <<_ACEOF
 #define SYSTEM_TYPE "$SYSTEM_TYPE"
 _ACEOF
+
 
 
 cat >>confdefs.h <<_ACEOF
@@ -5260,94 +5264,6 @@ $as_echo "#define const /**/" >>confdefs.h
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C/C++ restrict keyword" >&5
-$as_echo_n "checking for C/C++ restrict keyword... " >&6; }
-if ${ac_cv_c_restrict+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_cv_c_restrict=no
-   # The order here caters to the fact that C++ does not require restrict.
-   for ac_kw in __restrict __restrict__ _Restrict restrict; do
-     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-typedef int * int_ptr;
-	int foo (int_ptr $ac_kw ip) {
-	return ip[0];
-       }
-int
-main ()
-{
-int s[1];
-	int * $ac_kw t = s;
-	t[0] = 0;
-	return foo(t)
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_c_restrict=$ac_kw
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-     test "$ac_cv_c_restrict" != no && break
-   done
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_restrict" >&5
-$as_echo "$ac_cv_c_restrict" >&6; }
-
- case $ac_cv_c_restrict in
-   restrict) ;;
-   no) $as_echo "#define restrict /**/" >>confdefs.h
- ;;
-   *)  cat >>confdefs.h <<_ACEOF
-#define restrict $ac_cv_c_restrict
-_ACEOF
- ;;
- esac
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for inline" >&5
-$as_echo_n "checking for inline... " >&6; }
-if ${ac_cv_c_inline+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_cv_c_inline=no
-for ac_kw in inline __inline__ __inline; do
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#ifndef __cplusplus
-typedef int foo_t;
-static $ac_kw foo_t static_foo () {return 0; }
-$ac_kw foo_t foo () {return 0; }
-#endif
-
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_c_inline=$ac_kw
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  test "$ac_cv_c_inline" != no && break
-done
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_inline" >&5
-$as_echo "$ac_cv_c_inline" >&6; }
-
-case $ac_cv_c_inline in
-  inline | yes) ;;
-  *)
-    case $ac_cv_c_inline in
-      no) ac_val=;;
-      *) ac_val=$ac_cv_c_inline;;
-    esac
-    cat >>confdefs.h <<_ACEOF
-#ifndef __cplusplus
-#define inline $ac_val
-#endif
-_ACEOF
-    ;;
-esac
-
 
 ac_fn_c_check_type "$LINENO" "size_t" "ac_cv_type_size_t" "$ac_includes_default"
 if test "x$ac_cv_type_size_t" = xyes; then :
@@ -5407,19 +5323,147 @@ $as_echo "#define TM_IN_SYS_TIME 1" >>confdefs.h
 fi
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for inline" >&5
+$as_echo_n "checking for inline... " >&6; }
+if ${ac_cv_c_inline+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_cv_c_inline=no
+for ac_kw in inline __inline__ __inline; do
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#ifndef __cplusplus
+typedef int foo_t;
+static $ac_kw foo_t static_foo () {return 0; }
+$ac_kw foo_t foo () {return 0; }
+#endif
+
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_c_inline=$ac_kw
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  test "$ac_cv_c_inline" != no && break
+done
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_inline" >&5
+$as_echo "$ac_cv_c_inline" >&6; }
+
+case $ac_cv_c_inline in
+  inline | yes) ;;
+  *)
+    case $ac_cv_c_inline in
+      no) ac_val=;;
+      *) ac_val=$ac_cv_c_inline;;
+    esac
+    cat >>confdefs.h <<_ACEOF
+#ifndef __cplusplus
+#define inline $ac_val
+#endif
+_ACEOF
+    ;;
+esac
+
 if test "$ac_cv_c_inline" != no; then :
-  $as_echo "#define HAVE_INLINE 1" >>confdefs.h
+
+$as_echo "#define HAVE_INLINE 1" >>confdefs.h
 
 
 
-       cat >>confdefs.h <<_ACEOF
+cat >>confdefs.h <<_ACEOF
 #define _INLINE_KEYWORD $ac_cv_c_inline
 _ACEOF
 
 else
 
-       cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define _INLINE_KEYWORD /* no inline */
+_ACEOF
+
+fi
+
+if test "$ac_cv_c_inline" != no; then :
+
+$as_echo "#define HAVE_INLINE 1" >>confdefs.h
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define _INLINE_KEYWORD $ac_cv_c_inline
+_ACEOF
+
+else
+
+
+cat >>confdefs.h <<_ACEOF
+#define _INLINE_KEYWORD /* no inline */
+_ACEOF
+
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C/C++ restrict keyword" >&5
+$as_echo_n "checking for C/C++ restrict keyword... " >&6; }
+if ${ac_cv_c_restrict+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_cv_c_restrict=no
+   # The order here caters to the fact that C++ does not require restrict.
+   for ac_kw in __restrict __restrict__ _Restrict restrict; do
+     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+typedef int * int_ptr;
+	int foo (int_ptr $ac_kw ip) {
+	return ip[0];
+       }
+int
+main ()
+{
+int s[1];
+	int * $ac_kw t = s;
+	t[0] = 0;
+	return foo(t)
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_c_restrict=$ac_kw
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+     test "$ac_cv_c_restrict" != no && break
+   done
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_restrict" >&5
+$as_echo "$ac_cv_c_restrict" >&6; }
+
+ case $ac_cv_c_restrict in
+   restrict) ;;
+   no) $as_echo "#define restrict /**/" >>confdefs.h
+ ;;
+   *)  cat >>confdefs.h <<_ACEOF
+#define restrict $ac_cv_c_restrict
+_ACEOF
+ ;;
+ esac
+
+if test "$ac_cv_c_restrict" != no; then :
+
+$as_echo "#define HAVE_RESTRICT 1" >>confdefs.h
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define _RESTRICT_KEYWORD $ac_cv_c_restrict
+_ACEOF
+
+else
+
+
+cat >>confdefs.h <<_ACEOF
+#define _RESTRICT_KEYWORD /* no restrict */
 _ACEOF
 
 fi
@@ -5691,10 +5735,12 @@ fi
 
 ac_fn_c_check_func "$LINENO" "sigsetjmp" "ac_cv_func_sigsetjmp"
 if test "x$ac_cv_func_sigsetjmp" = xyes; then :
-  $as_echo "#define HAVE_SIGSETJMP 1" >>confdefs.h
 
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sigsetjmp defined in setjmp.h" >&5
+$as_echo "#define HAVE_SIGSETJMP 1" >>confdefs.h
+
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sigsetjmp defined in setjmp.h" >&5
 $as_echo_n "checking for sigsetjmp defined in setjmp.h... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -5711,8 +5757,6 @@ int main(int argc, char **argv) {
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  $as_echo "#define HAVE_SIGSETJMP 1" >>confdefs.h
-
 
 		   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
@@ -5721,8 +5765,6 @@ else
 $as_echo "no" >&6; }
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-
 
 for ac_header in sys/select.h sys/socket.h
 do :
@@ -5801,7 +5843,8 @@ rm -f conftest*
 
 
 
-for ac_func in alarm		\
+for ac_func in \
+ alarm		\
  fork		\
  gethostname	\
  getpagesize	\
@@ -5840,10 +5883,12 @@ done
 
 ac_fn_c_check_func "$LINENO" "sigsetjmp" "ac_cv_func_sigsetjmp"
 if test "x$ac_cv_func_sigsetjmp" = xyes; then :
-  $as_echo "#define HAVE_SIGSETJMP 1" >>confdefs.h
 
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sigsetjmp defined in setjmp.h" >&5
+$as_echo "#define HAVE_SIGSETJMP 1" >>confdefs.h
+
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sigsetjmp defined in setjmp.h" >&5
 $as_echo_n "checking for sigsetjmp defined in setjmp.h... " >&6; }
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -5860,8 +5905,6 @@ int main(int argc, char **argv) {
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  $as_echo "#define HAVE_SIGSETJMP 1" >>confdefs.h
-
 
 		   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
@@ -5870,8 +5913,6 @@ else
 $as_echo "no" >&6; }
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-
 
 
 ARCH=""
