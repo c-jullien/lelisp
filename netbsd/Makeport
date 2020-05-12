@@ -98,7 +98,7 @@ kern.o:
 
 # Use generated .s
 bootstrap:
-	./newdir > /dev/null
+	-./newdir > /dev/null
 	-rm -f ../bignum/o/*.o *.o o/*.o o31/*.o o64/*o
 	touch s31/*.s s64/*.s
 	$(MAKE) -f Makeport kern.o
