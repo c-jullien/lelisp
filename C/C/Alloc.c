@@ -7,21 +7,34 @@
 #endif
 
 void *
-llalloc(size_t size)
-{
+llalloc(size_t size) {
 /*
-  size_t psize = sysconf(_SC_PAGESIZE);
+  size_t psize = sysconf( _SC_PAGESIZE );
 */
   void *mem;
+#if defined(__NetBSD__)
+  int fd = open("/dev/zero", O_RDWR, (S_IRUSR|S_IWUSR));
 
-  mem = mmap(
-              (void *)(VM_START | LLADRBIAS),
-              size,
-              PROT_READ | PROT_WRITE | PROT_EXEC,
-              (MAP_ANON | MAP_FIXED | MAP_PRIVATE),
-              -1,
-              0
-           );
+  if (fd >= 0) {
+    mem = mmap((void *)VM_START,
+               size,
+               PROT_READ | PROT_WRITE,
+               (MAP_FIXED | MAP_PRIVATE),
+               fd,
+               0);
+
+    close(fd);
+  } else {
+    return NULL;
+  }
+#else
+  mem = mmap((void *)VM_START,
+             size,
+             PROT_READ | PROT_WRITE | PROT_EXEC,
+             (MAP_ANON| MAP_FIXED | MAP_PRIVATE),
+             -1,
+             0);
+#endif
 
   if (mem == MAP_FAILED) {
     return NULL;

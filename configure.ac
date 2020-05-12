@@ -10,6 +10,7 @@ dnl The portable 'C' ports are known to work on:
 dnl
 dnl - aarch64-unknown-freebsd12.0
 dnl - aarch64-unknown-linux-gnu
+dnl - aarch64-unknown-netbsd9.0
 dnl - armv7l-unknown-linux-gnueabihf
 dnl - i386-pc-nto-qnx6.5.0
 dnl - i686-unknown-cygwin
