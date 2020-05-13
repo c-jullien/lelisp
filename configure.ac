@@ -1,8 +1,5 @@
 dnl
 dnl Autoconf script for Le-Lisp
-dnl $Id: configure.ac,v 1.12 2017/10/07 16:07:06 jullien Exp $
-dnl
-dnl use autoconf-2.68 (works also with autoconf-2.13)
 dnl
 
 dnl
@@ -293,8 +290,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
                        sigjmp_buf env;
                        exit(sigsetjmp(env,1));
                       }]])],
-		  [AC_SUBST(HAVE_SIGSETJMP)
-		   AC_MSG_RESULT(yes)],
+		  [AC_MSG_RESULT(yes)],
 		  [AC_MSG_RESULT(no)])
 
 AC_FUNC_SELECT_ARGTYPES
