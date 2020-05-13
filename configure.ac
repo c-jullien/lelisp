@@ -38,19 +38,17 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script
 
+AC_PREREQ([2.69])
 AC_INIT([lelisp],[15.26],[jullien@eligis.com])
 
 dnl where to find install.sh, config.sub, and config.guess
-
-AC_CONFIG_AUX_DIR(./conf)
+AC_CONFIG_AUX_DIR([conf])
+dnl where to find source code
+AC_CONFIG_SRCDIR([common/lelisp.c])
 
 dnl use common/config.h.in template.
 
 AC_CONFIG_HEADER(common/config.h)
-
-dnl make sure we are using a recent autoconf version
-
-AC_PREREQ([2.69])
 
 NAME=Le-Lisp
 VERSION=15.26
@@ -58,7 +56,21 @@ SOURCE=`pwd`
 
 dnl check LIBTOOL options (see aclocal.m4)
 
-dnl AC_PROG_LIBTOOL
+# Checks for programs.
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+
+AC_FUNC_FORK
+AC_FUNC_MALLOC
+AC_FUNC_MKTIME
+AC_FUNC_MMAP
+AC_FUNC_SELECT_ARGTYPES
+AC_FUNC_STRTOD
+AC_FUNC_WAIT3
 
 TARGET=default
 AC_MSG_CHECKING(for portable C version)
@@ -109,10 +121,6 @@ AC_DEFINE_UNQUOTED([SYSTEM_TYPE], ["$SYSTEM_TYPE"], [Define the system type])
 AC_SUBST(MACHINE_TYPE)
 AC_DEFINE_UNQUOTED([MACHINE_TYPE], ["$MACHINE_TYPE"], [Define the machine type])
 
-dnl Checks for C compiler
-
-AC_PROG_CC
-
 dnl Checks for specific system
 
 AC_CHECK_PROGS([AR], gcc-ar ar gar, no)
@@ -154,38 +162,39 @@ AC_HEADER_STDC
 AC_HEADER_STAT
 AC_HEADER_TIME
 
-AC_CHECK_HEADER([ctype.h])
-AC_CHECK_HEADER([dirent.h])
-AC_CHECK_HEADER([dir.h])
-AC_CHECK_HEADER([dlfcn.h])
-AC_CHECK_HEADER([elf.h])
-AC_CHECK_HEADER([errno.h])
-AC_CHECK_HEADER([fcntl.h])
-AC_CHECK_HEADER([io.h])
-AC_CHECK_HEADER([malloc.h])
-AC_CHECK_HEADER([math.h])
-AC_CHECK_HEADER([process.h])
-AC_CHECK_HEADER([pwd.h])
-AC_CHECK_HEADER([setjmp.h])
-AC_CHECK_HEADER([signal.h])
-AC_CHECK_HEADER([starlet.h])
-AC_CHECK_HEADER([stdint.h])
-AC_CHECK_HEADER([stdio.h])
-AC_CHECK_HEADER([stdlib.h])
-AC_CHECK_HEADER([string.h])
-AC_CHECK_HEADER([sys/ioctl.h])
-AC_CHECK_HEADER([sys/mman.h])
-AC_CHECK_HEADER([sys/param.h])
-AC_CHECK_HEADER([sys/resource.h])
-AC_CHECK_HEADER([sys/select.h])
-AC_CHECK_HEADER([sys/stat.h])
-AC_CHECK_HEADER([sys/time.h])
-AC_CHECK_HEADER([sys/times.h])
-AC_CHECK_HEADER([sys/types.h])
-AC_CHECK_HEADER([termios.h])
-AC_CHECK_HEADER([time.h])
-AC_CHECK_HEADER([unistd.h])
-AC_CHECK_HEADER([values.h])
+AC_CHECK_HEADERS([ctype.h])
+AC_CHECK_HEADERS([dirent.h])
+AC_CHECK_HEADERS([dir.h])
+AC_CHECK_HEADERS([dlfcn.h])
+AC_CHECK_HEADERS([elf.h])
+AC_CHECK_HEADERS([errno.h])
+AC_CHECK_HEADERS([fcntl.h])
+AC_CHECK_HEADERS([io.h])
+AC_CHECK_HEADERS([malloc.h])
+AC_CHECK_HEADERS([math.h])
+AC_CHECK_HEADERS([nlist.h])
+AC_CHECK_HEADERS([process.h])
+AC_CHECK_HEADERS([pwd.h])
+AC_CHECK_HEADERS([setjmp.h])
+AC_CHECK_HEADERS([signal.h])
+AC_CHECK_HEADERS([starlet.h])
+AC_CHECK_HEADERS([stdint.h])
+AC_CHECK_HEADERS([stdio.h])
+AC_CHECK_HEADERS([stdlib.h])
+AC_CHECK_HEADERS([string.h])
+AC_CHECK_HEADERS([sys/ioctl.h])
+AC_CHECK_HEADERS([sys/mman.h])
+AC_CHECK_HEADERS([sys/param.h])
+AC_CHECK_HEADERS([sys/resource.h])
+AC_CHECK_HEADERS([sys/select.h])
+AC_CHECK_HEADERS([sys/stat.h])
+AC_CHECK_HEADERS([sys/time.h])
+AC_CHECK_HEADERS([sys/times.h])
+AC_CHECK_HEADERS([sys/types.h])
+AC_CHECK_HEADERS([termios.h])
+AC_CHECK_HEADERS([time.h])
+AC_CHECK_HEADERS([unistd.h])
+AC_CHECK_HEADERS([values.h])
 
 dnl Checks for X Window System.
 
@@ -202,6 +211,16 @@ AC_C_CONST
 
 AC_TYPE_SIZE_T
 AC_TYPE_MODE_T
+AC_TYPE_PID_T
+AC_TYPE_UID_T
+AC_TYPE_INT16_T
+AC_TYPE_UINT16_T
+AC_TYPE_INT32_T
+AC_TYPE_UINT32_T
+AC_TYPE_INT64_T
+AC_TYPE_UINT64_T
+AC_CHECK_MEMBERS([struct stat.st_rdev])
+
 AC_STRUCT_TM
 
 AC_C_INLINE
@@ -464,7 +483,6 @@ AC_SUBST(VERSION)
 
 AC_CONFIG_FILES([C/config],   [chmod +x C/config])
 AC_CONFIG_FILES([C/complice], [chmod +x C/complice])
-
 AC_CONFIG_FILES([Makefile C/Makeport C/Makefile llib/startup.ll])
 AC_OUTPUT
 
