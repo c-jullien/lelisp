@@ -36,7 +36,10 @@ dnl
 dnl Process this file with autoconf to produce a configure script
 
 AC_PREREQ([2.69])
-AC_INIT([lelisp],[15.26],[jullien@eligis.com])
+AC_INIT([lelisp],
+        [15.26],
+	[jullien@eligis.com],
+	[https://github.com/c-jullien/lelisp])
 
 dnl where to find install.sh, config.sub, and config.guess
 AC_CONFIG_AUX_DIR([conf])
