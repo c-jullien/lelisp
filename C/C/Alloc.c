@@ -30,7 +30,7 @@ llalloc(size_t size) {
 #else
   mem = mmap((void *)VM_START,
              size,
-             PROT_READ | PROT_WRITE | PROT_EXEC,
+             PROT_READ | PROT_WRITE,
              (MAP_ANON| MAP_FIXED | MAP_PRIVATE),
              -1,
              0);
