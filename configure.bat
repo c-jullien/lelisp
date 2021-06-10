@@ -12,7 +12,7 @@ set LELISP=%CD%
 cl 2>&1 | find "C/C++"
 if errorlevel 1 goto nocl
 
-cl 2>&1 | find "for x86"
+cl 2>&1 | find " x86"
 if errorlevel 1 goto nox86
 
 :build
