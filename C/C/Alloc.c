@@ -6,6 +6,11 @@
 #define VM_START        0x50000000
 #endif
 
+#if defined(__APPLE)
+#undef MAP_FIXED
+#define MAP_FIXED 0
+#endif
+
 void *
 llalloc(size_t size) {
 /*
@@ -31,7 +36,7 @@ llalloc(size_t size) {
   mem = mmap((void *)VM_START,
              size,
              PROT_READ | PROT_WRITE,
-             (MAP_ANON| MAP_FIXED | MAP_PRIVATE),
+             (MAP_ANON | MAP_PRIVATE),
              -1,
              0);
 #endif
