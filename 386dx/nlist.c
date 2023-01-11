@@ -417,6 +417,9 @@ main( int argc, char **argv )
                         if( !strncmp( b1, "__", 2 ) )
                                 continue;
 
+                        if( !strncmp( b1, "_vs", 3 ) )
+                                continue;
+
                         if( !strncmp( b1, "\\177", 4 ) )
                                 continue;
 
